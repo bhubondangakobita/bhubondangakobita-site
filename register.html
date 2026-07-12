@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>লগইন | ভুবনডাঙ্গার কবিতা</title>
+<title>রেজিস্টার | ভুবনডাঙ্গার কবিতা</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
@@ -66,7 +66,9 @@ color:inherit;
 }
 
 button,
-input{
+input,
+textarea,
+select{
 font-family:inherit;
 }
 
@@ -232,18 +234,125 @@ max-width:1180px;
 margin:0 auto;
 padding:46px 30px 34px;
 display:grid;
-grid-template-columns:minmax(0,1fr) 460px;
+grid-template-columns:460px minmax(0,1fr);
 gap:22px;
 align-items:stretch;
 }
 
-.intro-card,
-.login-card{
+.register-card,
+.intro-card{
 background:var(--card);
 border:1px solid var(--border);
 border-radius:18px;
 box-shadow:var(--shadow);
 overflow:hidden;
+}
+
+.register-card{
+padding:28px;
+}
+
+.form-head{
+text-align:center;
+margin-bottom:20px;
+}
+
+.form-head h3{
+font-size:30px;
+font-weight:800;
+color:var(--text);
+}
+
+.form-head p{
+font-size:14.5px;
+color:var(--muted);
+margin-top:4px;
+line-height:1.8;
+}
+
+label{
+display:block;
+font-size:13.5px;
+font-weight:800;
+color:var(--text);
+margin:13px 0 5px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+border-radius:10px;
+padding:0 13px;
+font-size:15px;
+outline:none;
+user-select:text;
+-webkit-user-select:text;
+}
+
+input,
+select{
+height:46px;
+}
+
+textarea{
+min-height:108px;
+resize:none;
+padding-top:10px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.submit-btn{
+width:100%;
+height:46px;
+margin-top:18px;
+background:var(--accent);
+color:var(--card);
+border:none;
+border-radius:10px;
+font-size:15px;
+font-weight:800;
+cursor:pointer;
+}
+
+.switch-box{
+margin-top:16px;
+background:var(--card-2);
+border:1px solid var(--border);
+border-radius:13px;
+padding:14px;
+text-align:center;
+font-size:14px;
+color:var(--text-soft);
+line-height:1.8;
+}
+
+.switch-box a{
+font-weight:800;
+color:var(--accent);
+}
+
+.note-box{
+margin-top:16px;
+background:var(--card-2);
+border:1px dashed var(--border);
+border-radius:13px;
+padding:14px;
+font-size:13.5px;
+color:var(--text-soft);
+line-height:1.8;
+}
+
+.note-box b{
+color:var(--text);
 }
 
 .intro-card{
@@ -254,12 +363,13 @@ linear-gradient(135deg,var(--card),var(--card-2));
 }
 
 .intro-card::after{
-content:"🌿";
+content:"✦";
 position:absolute;
 right:28px;
-top:24px;
-font-size:110px;
-opacity:.10;
+top:14px;
+font-size:140px;
+font-weight:800;
+opacity:.09;
 line-height:1;
 }
 
@@ -310,160 +420,44 @@ color:var(--card);
 border-color:var(--accent);
 }
 
-.feature-grid{
+.rule-list{
+margin-top:26px;
 display:grid;
-grid-template-columns:repeat(2,1fr);
 gap:12px;
-margin-top:28px;
 position:relative;
 z-index:2;
 }
 
-.feature{
+.rule{
 background:rgba(255,255,255,.35);
 border:1px solid var(--border);
 border-radius:13px;
 padding:14px;
 }
 
-html[data-theme="dark"] .feature{
+html[data-theme="dark"] .rule{
 background:rgba(255,255,255,.03);
 }
 
-.feature small{
+.rule small{
 display:block;
 font-size:12px;
 font-weight:800;
 color:var(--accent-2);
 }
 
-.feature h4{
+.rule h4{
 font-size:16px;
 font-weight:800;
 color:var(--text);
 margin-top:4px;
 }
 
-.feature p{
+.rule p{
 font-size:13.5px;
 line-height:1.75;
 margin-top:4px;
 color:var(--text-soft);
-}
-
-.login-card{
-padding:28px;
-}
-
-.form-head{
-text-align:center;
-margin-bottom:20px;
-}
-
-.form-head h3{
-font-size:30px;
-font-weight:800;
-color:var(--text);
-}
-
-.form-head p{
-font-size:14.5px;
-color:var(--muted);
-margin-top:4px;
-line-height:1.8;
-}
-
-label{
-display:block;
-font-size:13.5px;
-font-weight:800;
-color:var(--text);
-margin:13px 0 5px;
-}
-
-input{
-width:100%;
-height:46px;
-border:1px solid var(--border);
-background:var(--card-2);
-color:var(--text);
-border-radius:10px;
-padding:0 13px;
-font-size:15px;
-outline:none;
-user-select:text;
--webkit-user-select:text;
-}
-
-.form-row{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:12px;
-margin-top:12px;
-font-size:13.5px;
-color:var(--muted);
-}
-
-.checkbox-line{
-display:flex;
-align-items:center;
-gap:7px;
-}
-
-.checkbox-line input{
-width:15px;
-height:15px;
-}
-
-.form-row a{
-font-weight:800;
-color:var(--accent);
-}
-
-.submit-btn{
-width:100%;
-height:46px;
-margin-top:18px;
-background:var(--accent);
-color:var(--card);
-border:none;
-border-radius:10px;
-font-size:15px;
-font-weight:800;
-cursor:pointer;
-}
-
-.switch-box{
-margin-top:16px;
-background:var(--card-2);
-border:1px solid var(--border);
-border-radius:13px;
-padding:14px;
-text-align:center;
-font-size:14px;
-color:var(--text-soft);
-line-height:1.8;
-}
-
-.switch-box a{
-font-weight:800;
-color:var(--accent);
-}
-
-.note-box{
-margin-top:16px;
-background:var(--card-2);
-border:1px dashed var(--border);
-border-radius:13px;
-padding:14px;
-font-size:13.5px;
-color:var(--text-soft);
-line-height:1.8;
-}
-
-.note-box b{
-color:var(--text);
 }
 
 /* DRAWER */
@@ -602,6 +596,14 @@ grid-template-columns:1fr;
 max-width:760px;
 }
 
+.register-card{
+order:2;
+}
+
+.intro-card{
+order:1;
+}
+
 }
 
 @media(max-width:880px){
@@ -647,7 +649,7 @@ padding:18px 14px 28px;
 }
 
 .intro-card,
-.login-card{
+.register-card{
 padding:18px;
 border-radius:15px;
 }
@@ -656,7 +658,7 @@ border-radius:15px;
 font-size:31px;
 }
 
-.feature-grid{
+.form-grid{
 grid-template-columns:1fr;
 }
 
@@ -692,15 +694,6 @@ max-width:155px;
 height:36px;
 min-width:36px;
 padding:0 8px;
-}
-
-.form-row{
-display:block;
-}
-
-.form-row a{
-display:inline-block;
-margin-top:8px;
 }
 
 }
@@ -764,88 +757,128 @@ margin-top:8px;
 <a href="discussion-post.html">💬 সাহিত্য আলোচনা</a>
 <a href="contact.html">✉ যোগাযোগ</a>
 <a href="about.html">ℹ আমাদের সম্পর্কে</a>
-<a href="login.html" class="active">↪ লগইন</a>
-<a href="register.html">✦ রেজিস্টার</a>
+<a href="login.html">↪ লগইন</a>
+<a href="register.html" class="active">✦ রেজিস্টার</a>
 <a href="search.html">🔎 সার্চ</a>
 </div>
 </aside>
 
 <main class="auth-wrap">
 
-<section class="intro-card">
-<h2>ভুবনডাঙ্গায় ফিরে আসুন</h2>
-<p>
-আপনার কবিতা, প্রলাপ, অনুকাব্য, চিঠিপত্র এবং সাহিত্য আলোচনার জায়গা—ভুবনডাঙ্গার কবিতা। লগইন করলে আপনি নিজের profile, cover photo, profile photo, লেখা জমা এবং প্রিয় লেখা সংরক্ষণ করতে পারবেন।
-</p>
-
-<div class="intro-actions">
-<a href="index.html" class="primary">হোমে ফিরে যান</a>
-<a href="register.html">নতুন অ্যাকাউন্ট খুলুন</a>
-<a href="about.html">নীতিমালা দেখুন</a>
-</div>
-
-<div class="feature-grid">
-<div class="feature">
-<small>Profile</small>
-<h4>নিজস্ব লেখক প্রোফাইল</h4>
-<p>Cover photo, profile photo, bio, নির্বাচিত লেখা, প্রিয় লেখা ও প্রিয় লেখক।</p>
-</div>
-
-<div class="feature">
-<small>Approval</small>
-<h4>পরিচ্ছন্ন প্রকাশ</h4>
-<p>সব লেখা ও profile edit approval-এর পরে public হবে।</p>
-</div>
-
-<div class="feature">
-<small>Writing</small>
-<h4>Text-only লেখা</h4>
-<p>কবিতা, প্রলাপ, অনুকাব্য ও চিঠিপত্রের ভিতরে image থাকবে না।</p>
-</div>
-
-<div class="feature">
-<small>Theme</small>
-<h4>Light / Dark</h4>
-<p>প্রতিটি user নিজের পছন্দ অনুযায়ী theme বদলাতে পারবে।</p>
-</div>
-</div>
-</section>
-
-<section class="login-card">
+<section class="register-card">
 
 <div class="form-head">
-<h3>লগইন করুন</h3>
-<p>আপনার account-এ প্রবেশ করুন।</p>
+<h3>রেজিস্টার করুন</h3>
+<p>ভুবনডাঙ্গায় আপনার লেখক profile তৈরি করুন।</p>
 </div>
 
-<form id="loginForm">
+<form id="registerForm">
 
-<label>ইমেইল / Username</label>
-<input type="text" placeholder="আপনার ইমেইল বা username লিখুন">
+<div class="form-grid">
+<div>
+<label>পূর্ণ নাম</label>
+<input type="text" placeholder="আপনার নাম লিখুন">
+</div>
 
+<div>
+<label>Username</label>
+<input type="text" placeholder="যেমন: mahmud-sohel">
+</div>
+</div>
+
+<label>ইমেইল</label>
+<input type="email" placeholder="আপনার ইমেইল লিখুন">
+
+<div class="form-grid">
+<div>
 <label>পাসওয়ার্ড</label>
-<input type="password" placeholder="আপনার পাসওয়ার্ড লিখুন">
-
-<div class="form-row">
-<label class="checkbox-line">
-<input type="checkbox">
-<span>মনে রাখুন</span>
-</label>
-
-<a href="contact.html">সাহায্য লাগবে?</a>
+<input type="password" placeholder="পাসওয়ার্ড দিন">
 </div>
 
-<button type="submit" class="submit-btn">লগইন করুন</button>
+<div>
+<label>পাসওয়ার্ড নিশ্চিত করুন</label>
+<input type="password" placeholder="আবার পাসওয়ার্ড দিন">
+</div>
+</div>
+
+<label>আপনার পরিচিতি / Bio</label>
+<textarea placeholder="নিজের সম্পর্কে কয়েকটি কথা লিখুন..."></textarea>
+
+<div class="form-grid">
+<div>
+<label>Profile Photo</label>
+<input type="file" accept="image/*">
+</div>
+
+<div>
+<label>Cover Photo</label>
+<input type="file" accept="image/*">
+</div>
+</div>
+
+<label>লেখার আগ্রহ</label>
+<select>
+<option>কবিতা</option>
+<option>প্রলাপ</option>
+<option>অনুকাব্য</option>
+<option>চিঠিপত্র</option>
+<option>সাহিত্য আলোচনা</option>
+</select>
+
+<button type="submit" class="submit-btn">রেজিস্ট্রেশন জমা দিন</button>
 
 </form>
 
 <div class="switch-box">
-নতুন সদস্য? <a href="register.html">রেজিস্টার করুন</a><br>
+আগেই account আছে? <a href="login.html">লগইন করুন</a><br>
 <a href="index.html">হোমে ফিরে যান</a>
 </div>
 
 <div class="note-box">
-<b>Demo note:</b> এখন এটি static login design। পরে Supabase যুক্ত হলে সত্যিকারের login, user profile, approval system এবং admin moderation চালু হবে।
+<b>Approval note:</b> Profile photo, cover photo এবং profile information ভুবনডাঙ্গা টিম যাচাইয়ের পরে public হবে।
+</div>
+
+</section>
+
+<section class="intro-card">
+
+<h2>আপনার লেখার জন্য একটি পরিচ্ছন্ন ভুবন</h2>
+<p>
+ভুবনডাঙ্গায় নতুন সদস্য হিসেবে যোগ দিলে আপনি নিজের profile তৈরি করতে পারবেন, কবিতা/প্রলাপ/অনুকাব্য/চিঠিপত্র জমা দিতে পারবেন এবং প্রিয় লেখা সংরক্ষণ করতে পারবেন।
+</p>
+
+<div class="intro-actions">
+<a href="index.html" class="primary">হোমে ফিরে যান</a>
+<a href="login.html">লগইন করুন</a>
+<a href="about.html">নিয়ম দেখুন</a>
+</div>
+
+<div class="rule-list">
+
+<div class="rule">
+<small>Approval</small>
+<h4>সবকিছু যাচাইয়ের পরে public</h4>
+<p>Profile edit, লেখা, comment ও discussion অনুমোদনের পরে প্রকাশিত হবে।</p>
+</div>
+
+<div class="rule">
+<small>Writing Limit</small>
+<h4>দৈনিক জমা সীমা</h4>
+<p>সাধারণ লেখক দৈনিক ২টি কবিতা, ২টি প্রলাপ ও ৫টি অনুকাব্য জমা দিতে পারবেন।</p>
+</div>
+
+<div class="rule">
+<small>Text-only</small>
+<h4>লেখায় কোনো ছবি নয়</h4>
+<p>কবিতা, প্রলাপ, অনুকাব্য ও চিঠিপত্র text-only থাকবে। Profile/cover photo আলাদা।</p>
+</div>
+
+<div class="rule">
+<small>Slogan</small>
+<h4>নিজে ভালো থাকুন</h4>
+<p>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।</p>
+</div>
+
 </div>
 
 </section>
@@ -854,10 +887,10 @@ margin-top:8px;
 
 <footer class="site-footer">
 <div>
-<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • <a href="login.html">লগইন</a>
+<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • <a href="register.html">রেজিস্টার</a>
 </div>
 <div class="footer-links">
-<a href="register.html">রেজিস্টার</a>
+<a href="login.html">লগইন</a>
 <a href="about.html">নীতিমালা</a>
 <a href="contact.html">যোগাযোগ</a>
 </div>
@@ -931,7 +964,7 @@ toast.innerHTML = text;
 toast.style.display = "block";
 setTimeout(function(){
 toast.style.display = "none";
-},3700);
+},4500);
 }
 
 function openDrawer(){
@@ -971,9 +1004,10 @@ doSearch();
 });
 }
 
-document.getElementById("loginForm").addEventListener("submit",function(e){
+document.getElementById("registerForm").addEventListener("submit",function(e){
 e.preventDefault();
-showToast("লগইন system Supabase যুক্ত হওয়ার পরে চালু হবে।<br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
+showToast("ধন্যবাদ, আপনার বিষয়টি আমাদের কাছে পৌঁছেছে।<br>ভুবনডাঙ্গা টিম বিষয়টি যত্ন সহকারে যাচাই করে দেখবে।<br>যাচাইয়ের পরে যথাযথ ব্যবস্থা নেওয়া হবে।<br><br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
+this.reset();
 });
 
 document.addEventListener("copy",function(e){
@@ -988,7 +1022,7 @@ showToast("Right click বন্ধ রাখা হয়েছে।");
 
 document.addEventListener("selectstart",function(e){
 const tag = e.target.tagName.toLowerCase();
-if(tag === "input"){
+if(tag === "input" || tag === "textarea" || tag === "select"){
 return;
 }
 e.preventDefault();

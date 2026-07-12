@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="light">
 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>কবি পরিচিতি | ভুবনডাঙ্গার কবিতা</title>
+<title>কবির প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 
 *{
 margin:0;
@@ -20,11 +20,41 @@ html{
 scroll-behavior:smooth;
 }
 
+:root{
+--bg:#f8f2e7;
+--bg-soft:#fbf6ea;
+--card:#fffdf7;
+--card-2:#fff8eb;
+--text:#12345f;
+--text-soft:#4a5a70;
+--muted:#6d7582;
+--border:rgba(18,52,95,.13);
+--accent:#12345f;
+--accent-2:#62733c;
+--gold:#b79a54;
+--shadow:0 8px 22px rgba(67,48,20,.055);
+}
+
+html[data-theme="dark"]{
+--bg:#0d1320;
+--bg-soft:#111827;
+--card:#151d2c;
+--card-2:#1c2638;
+--text:#f4ead8;
+--text-soft:#d7c9a7;
+--muted:#a9a08e;
+--border:rgba(244,234,216,.16);
+--accent:#d8bd75;
+--accent-2:#b99a50;
+--gold:#d8bd75;
+--shadow:0 10px 28px rgba(0,0,0,.35);
+}
+
 body{
 font-family:'Noto Serif Bengali',serif;
-background:#f7f4ec;
-color:#142d5c;
-line-height:1.75;
+background:var(--bg);
+color:var(--text);
+line-height:1.65;
 user-select:none;
 -webkit-user-select:none;
 -ms-user-select:none;
@@ -35,308 +65,729 @@ text-decoration:none;
 color:inherit;
 }
 
-.date-strip{
-background:#123b78;
-color:white;
-text-align:center;
-padding:8px 12px;
-font-size:14px;
+button,
+input,
+select{
+font-family:inherit;
 }
 
-header{
-background:white;
-padding:20px 5%;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
-text-align:center;
+.site-shell{
+min-height:100vh;
+background:
+radial-gradient(circle at top left,rgba(255,255,255,.42),transparent 32%),
+linear-gradient(135deg,var(--bg-soft),var(--bg));
+}
+
+html[data-theme="dark"] .site-shell{
+background:
+radial-gradient(circle at top left,rgba(216,189,117,.08),transparent 32%),
+linear-gradient(135deg,#0a0f1a,#111827);
+}
+
+/* HEADER */
+
+.topbar{
+position:sticky;
+top:0;
+z-index:999;
+background:rgba(250,246,236,.94);
+backdrop-filter:blur(14px);
+border-bottom:1px solid var(--border);
+padding:10px 30px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:18px;
+}
+
+html[data-theme="dark"] .topbar{
+background:rgba(13,19,32,.94);
 }
 
 .brand{
 display:flex;
-justify-content:center;
 align-items:center;
-gap:12px;
-flex-wrap:wrap;
+gap:10px;
+min-width:230px;
 }
 
-.logo{
-font-size:38px;
+.brand-leaf{
+font-size:40px;
+line-height:1;
 }
 
-.brand h1{
-font-size:32px;
-color:#123b78;
-line-height:1.3;
+.brand-text h1{
+font-size:31px;
+font-weight:800;
+letter-spacing:-1px;
+color:var(--text);
+line-height:1.05;
 }
 
-.brand p{
-font-size:15px;
-color:#666;
-margin-top:4px;
+.brand-text p{
+font-size:12.5px;
+color:var(--muted);
+margin-top:2px;
+white-space:nowrap;
 }
 
-nav{
-margin-top:18px;
+.desktop-nav{
 display:flex;
-gap:14px;
-flex-wrap:wrap;
-justify-content:center;
 align-items:center;
-}
-
-nav a{
-font-size:15.5px;
-color:#123b78;
-font-weight:700;
-}
-
-nav a:hover{
-text-decoration:underline;
-}
-
-.search-wrap{
-background:#fff;
-padding:14px 5% 18px;
-border-bottom:1px solid #eee;
-}
-
-.search-box{
-max-width:820px;
-margin:auto;
-display:flex;
-gap:8px;
-background:#f7f4ec;
-border:1px solid #dccca5;
-border-radius:40px;
-padding:7px;
-}
-
-.search-box input{
+justify-content:center;
+gap:19px;
 flex:1;
-border:none;
-background:transparent;
+}
+
+.desktop-nav a{
+font-size:15px;
+font-weight:700;
+color:var(--text);
+padding:9px 2px;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+}
+
+.desktop-nav a.active,
+.desktop-nav a:hover{
+border-color:var(--accent);
+}
+
+.header-actions{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.header-date{
+font-size:12px;
+color:var(--muted);
+white-space:nowrap;
+max-width:210px;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.search-mini{
+height:38px;
+width:160px;
+border:1px solid var(--border);
+background:var(--card-2);
+border-radius:9px;
+padding:0 12px;
 outline:none;
-font-family:inherit;
-font-size:15.5px;
-padding:10px 14px;
-color:#142d5c;
+font-size:13px;
+color:var(--text);
 user-select:text;
 -webkit-user-select:text;
 }
 
-.search-box button{
-border:none;
-background:#123b78;
-color:white;
-font-family:inherit;
-font-weight:700;
+.icon-btn,
+.theme-btn{
+height:38px;
+min-width:38px;
+border-radius:9px;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
 font-size:15px;
-padding:10px 18px;
-border-radius:30px;
-cursor:pointer;
-}
-
-.container{
-width:92%;
-max-width:980px;
-margin:auto;
-padding:28px 0 55px;
-}
-
-.poet-profile{
-background:white;
-border:1px solid rgba(220,204,165,.7);
-border-radius:24px;
-padding:28px;
-box-shadow:0 7px 22px rgba(0,0,0,.07);
-}
-
-.poet-top{
-display:grid;
-grid-template-columns:86px 1fr;
-gap:18px;
-align-items:center;
-}
-
-.poet-avatar{
-width:82px;
-height:82px;
-border-radius:50%;
-background:#123b78;
-color:white;
+font-weight:800;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:36px;
-font-weight:700;
-border:4px solid #f7f4ec;
+cursor:pointer;
+padding:0 10px;
 }
 
-.poet-info h2{
-font-size:34px;
-color:#123b78;
-line-height:1.35;
+.theme-btn{
+gap:6px;
 }
 
-.poet-info p{
-font-size:16px;
-color:#555;
-margin-top:5px;
+.write-btn{
+border:none;
+background:var(--accent);
+color:var(--card)!important;
+padding:10px 15px;
+border-radius:9px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+box-shadow:var(--shadow);
+white-space:nowrap;
 }
 
-.tags{
+.top-profile img{
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid var(--card);
+box-shadow:0 5px 14px rgba(0,0,0,.14);
+}
+
+.menu-btn{
+display:none;
+width:42px;
+height:42px;
+border:none;
+background:transparent;
+font-size:28px;
+color:var(--text);
+cursor:pointer;
+}
+
+/* LAYOUT */
+
+.page-wrap{
+max-width:1510px;
+margin:0 auto;
+padding:18px 30px 0;
+display:grid;
+grid-template-columns:245px minmax(0,1fr) 355px;
+gap:18px;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:13px;
+box-shadow:var(--shadow);
+}
+
+.sidebar{
+position:sticky;
+top:80px;
+height:calc(100vh - 112px);
+overflow:auto;
+padding-right:2px;
+}
+
+.side-card{
+padding:14px;
+position:relative;
+overflow:hidden;
+}
+
+.side-card::after{
+content:"";
+position:absolute;
+left:0;
+bottom:0;
+width:100%;
+height:150px;
+background:radial-gradient(circle at bottom left,rgba(98,115,60,.10),transparent 65%);
+pointer-events:none;
+}
+
+html[data-theme="dark"] .side-card::after{
+background:radial-gradient(circle at bottom left,rgba(216,189,117,.08),transparent 65%);
+}
+
+.side-menu{
 display:flex;
-gap:8px;
-flex-wrap:wrap;
+flex-direction:column;
+gap:4px;
+position:relative;
+z-index:1;
+}
+
+.side-menu a{
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 11px;
+border-radius:9px;
+font-size:15px;
+font-weight:650;
+color:var(--text);
+}
+
+.side-menu a:hover,
+.side-menu a.active{
+background:rgba(98,115,60,.14);
+}
+
+html[data-theme="dark"] .side-menu a:hover,
+html[data-theme="dark"] .side-menu a.active{
+background:rgba(216,189,117,.10);
+}
+
+.side-title{
+font-size:17px;
+font-weight:800;
+color:var(--text);
+margin:18px 0 8px;
+padding:0 8px;
+position:relative;
+z-index:1;
+}
+
+.category-list{
+display:flex;
+flex-direction:column;
+gap:4px;
+padding:0 6px;
+position:relative;
+z-index:1;
+}
+
+.category-list a{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:14px;
+color:var(--text-soft);
+padding:5px 0;
+}
+
+.category-list span{
+background:rgba(98,115,60,.14);
+border-radius:12px;
+padding:2px 8px;
+font-size:12px;
+color:var(--accent-2);
+}
+
+html[data-theme="dark"] .category-list span{
+background:rgba(216,189,117,.10);
+color:var(--gold);
+}
+
+.other-menu{
+margin-top:8px;
+background:var(--card-2);
+border:1px solid var(--border);
+border-radius:12px;
+padding:10px;
+position:relative;
+z-index:1;
+}
+
+.other-menu summary{
+cursor:pointer;
+font-weight:800;
+color:var(--text);
+font-size:14.5px;
+}
+
+.other-menu a{
+display:block;
+font-size:14px;
+color:var(--text-soft);
+padding:7px 0 0 0;
+}
+
+.auth-area{
+margin-top:22px;
+display:grid;
+gap:10px;
+padding:0 6px;
+position:relative;
+z-index:1;
+}
+
+.login-side,
+.register-side{
+display:block;
+text-align:center;
+padding:11px 14px;
+border-radius:9px;
+font-weight:800;
+font-size:15px;
+}
+
+.login-side{
+background:var(--accent);
+color:var(--card)!important;
+}
+
+.register-side{
+background:var(--card-2);
+border:1px solid var(--accent);
+color:var(--accent)!important;
+}
+
+/* POET PROFILE */
+
+.poet-profile{
+overflow:hidden;
+}
+
+.poet-cover{
+height:245px;
+background:
+linear-gradient(135deg,var(--accent),var(--accent-2)),
+radial-gradient(circle at top right,rgba(255,255,255,.18),transparent 40%);
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:22px;
+}
+
+.poet-cover::after{
+content:"ক";
+position:absolute;
+right:34px;
+bottom:-32px;
+font-size:180px;
+font-weight:800;
+color:rgba(255,255,255,.10);
+line-height:1;
+}
+
+.poet-cover h2{
+position:relative;
+z-index:2;
+font-size:44px;
+line-height:1.25;
+font-weight:800;
+color:#fffdf7;
+}
+
+.poet-cover p{
+position:relative;
+z-index:2;
+font-size:15px;
+font-weight:600;
+color:rgba(255,255,255,.82);
+margin-top:6px;
+}
+
+.poet-body{
+padding:0 22px 22px;
+position:relative;
+}
+
+.poet-avatar{
+width:132px;
+height:132px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--gold),var(--accent));
+color:var(--card);
+border:5px solid var(--card);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:54px;
+font-weight:800;
+box-shadow:0 8px 24px rgba(0,0,0,.20);
+margin-top:-66px;
+position:relative;
+z-index:3;
+}
+
+.poet-top{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:14px;
 margin-top:10px;
 }
 
-.tag{
-font-size:13px;
-font-weight:700;
-color:#123b78;
-background:#f7f4ec;
-border:1px solid #dccca5;
-padding:5px 11px;
-border-radius:20px;
+.poet-name h1{
+font-size:34px;
+line-height:1.25;
+font-weight:800;
+color:var(--text);
 }
 
-.btn-row{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:16px;
-}
-
-.btn{
-border:none;
-background:#123b78;
-color:white!important;
-padding:9px 17px;
-border-radius:24px;
-font-family:inherit;
+.poet-name p{
 font-size:14.5px;
-font-weight:700;
-cursor:pointer;
-display:inline-block;
+color:var(--muted);
+margin-top:3px;
 }
 
-.btn.soft{
-background:#f7f4ec;
-color:#123b78!important;
-border:1px solid #dccca5;
+.poet-actions{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
 }
 
-.section{
-background:white;
-border:1px solid rgba(220,204,165,.65);
-border-radius:22px;
-padding:22px;
-box-shadow:0 7px 22px rgba(0,0,0,.06);
-margin-top:20px;
+.poet-actions a{
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+border-radius:9px;
+padding:9px 13px;
+font-size:13.5px;
+font-weight:800;
 }
 
-.section h3{
-font-size:25px;
-color:#123b78;
-line-height:1.35;
+.poet-actions a.primary{
+background:var(--accent);
+color:var(--card);
+border-color:var(--accent);
+}
+
+.poet-bio{
+font-size:15.5px;
+color:var(--text-soft);
+line-height:1.9;
+margin-top:14px;
+max-width:850px;
+}
+
+.info-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-top:17px;
+}
+
+.info-box{
+background:var(--card-2);
+border:1px solid var(--border);
+border-radius:11px;
+padding:12px;
+text-align:center;
+}
+
+.info-box strong{
+display:block;
+font-size:15px;
+color:var(--text);
+}
+
+.info-box span{
+font-size:12.5px;
+color:var(--muted);
+}
+
+.section-card{
+margin-top:16px;
+padding:20px;
+}
+
+.section-card h3{
+font-size:23px;
+font-weight:800;
+color:var(--text);
 margin-bottom:10px;
 }
 
-.section p{
-font-size:16px;
-color:#555;
-margin-top:8px;
+.section-card p{
+font-size:15.5px;
+color:var(--text-soft);
+line-height:1.9;
+margin-top:9px;
 }
 
 .work-list{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+grid-template-columns:repeat(2,1fr);
 gap:10px;
 margin-top:12px;
 }
 
 .work-item{
-background:#f7f4ec;
-border:1px solid #dccca5;
-border-radius:16px;
-padding:13px 14px;
-color:#123b78;
+background:var(--card-2);
+border:1px solid var(--border);
+border-radius:11px;
+padding:13px;
+}
+
+.work-item small{
+font-size:12px;
+font-weight:800;
+color:var(--accent-2);
+}
+
+.work-item h4{
+font-size:15.5px;
 font-weight:700;
-font-size:15px;
+color:var(--text);
+margin-top:5px;
+line-height:1.5;
 }
 
-.notice{
-background:#fff8e5;
-border-left:4px solid #dccca5;
-border-radius:14px;
-padding:14px 16px;
-font-size:15px;
-color:#555;
+.safe-note{
 margin-top:14px;
+background:var(--card-2);
+border:1px dashed var(--border);
+border-radius:12px;
+padding:13px;
+font-size:14px;
+color:var(--text-soft);
+line-height:1.8;
 }
 
-.not-found{
-background:white;
-border:1px solid #dccca5;
-border-radius:22px;
-padding:28px;
+.safe-note b{
+color:var(--text);
+}
+
+/* RIGHT */
+
+.rightbar{
+position:sticky;
+top:80px;
+height:calc(100vh - 112px);
+overflow:auto;
+display:grid;
+gap:16px;
+align-content:start;
+}
+
+.right-card{
+padding:18px;
+}
+
+.right-title{
+font-size:21px;
+font-weight:800;
+color:var(--text);
 text-align:center;
-box-shadow:0 7px 22px rgba(0,0,0,.06);
+margin-bottom:14px;
 }
 
-.not-found h2{
+.related-poet{
+display:block;
+padding:10px 0;
+border-bottom:1px solid var(--border);
+}
+
+.related-poet:last-child{
+border-bottom:none;
+}
+
+.related-poet small{
+font-size:12px;
+font-weight:800;
+color:var(--accent-2);
+}
+
+.related-poet h4{
+font-size:15.5px;
+font-weight:800;
+color:var(--text);
+line-height:1.5;
+margin-top:3px;
+}
+
+.related-poet p{
+font-size:12.8px;
+color:var(--muted);
+margin-top:3px;
+}
+
+.notice-box{
+background:var(--card-2);
+border:1px dashed var(--border);
+border-radius:13px;
+padding:15px;
+font-size:14px;
+color:var(--text-soft);
+line-height:1.8;
+}
+
+.midnight-card{
+background:
+linear-gradient(135deg,rgba(8,13,22,.98),rgba(17,24,39,.98)),
+radial-gradient(circle at top right,rgba(216,189,117,.10),transparent 45%);
+color:#f4ead8;
+border:none;
+padding:20px;
+}
+
+.midnight-card h3{
+font-size:22px;
+font-weight:800;
+color:#f6e8c6;
+}
+
+.midnight-card p{
+font-size:14.5px;
+font-weight:400;
+color:#d9caa8;
+margin-top:8px;
+}
+
+.midnight-card a{
+display:inline-block;
+margin-top:12px;
+color:#fff;
+font-weight:800;
+}
+
+/* DRAWER */
+
+.drawer-backdrop{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.38);
+z-index:1200;
+display:none;
+}
+
+.mobile-drawer{
+position:fixed;
+top:0;
+left:-310px;
+width:290px;
+height:100vh;
+background:var(--card);
+z-index:1300;
+transition:.25s ease;
+padding:18px 16px;
+overflow:auto;
+box-shadow:12px 0 35px rgba(0,0,0,.22);
+}
+
+.mobile-drawer.open{
+left:0;
+}
+
+.drawer-backdrop.show{
+display:block;
+}
+
+.drawer-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:14px;
+}
+
+.drawer-head h3{
+font-size:22px;
+font-weight:800;
+color:var(--text);
+}
+
+.close-drawer{
+border:none;
+background:transparent;
 font-size:30px;
-color:#123b78;
+color:var(--text);
 }
 
-.not-found p{
-color:#555;
-margin-top:10px;
+/* FOOTER */
+
+.site-footer{
+max-width:1510px;
+margin:0 auto;
+padding:18px 30px;
+background:var(--accent);
+color:var(--card);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+font-size:14px;
+}
+
+.site-footer a{
+font-weight:700;
 }
 
 .footer-links{
-background:#fff;
-margin-top:55px;
-padding:24px 15px;
 display:flex;
-justify-content:center;
-gap:13px;
+gap:15px;
 flex-wrap:wrap;
-border-top:1px solid #eee;
-border-bottom:1px solid #eee;
 }
 
-.footer-links a{
-color:#123b78;
-font-weight:700;
-font-size:15px;
-}
-
-.footer-login,
-.footer-register{
-background:#f7f4ec;
-border:1px solid #dccca5;
-color:#123b78!important;
-padding:8px 16px;
-border-radius:22px;
-}
-
-footer{
-background:white;
-text-align:center;
-padding:38px 20px;
-}
-
-footer h2{
-color:#123b78;
-font-size:26px;
-}
-
-footer p{
-color:#555;
-margin-top:7px;
-font-size:15px;
-}
+/* UTIL */
 
 .to-top{
 position:fixed;
@@ -346,8 +797,8 @@ width:43px;
 height:43px;
 border-radius:50%;
 border:none;
-background:#123b78;
-color:white;
+background:var(--accent);
+color:var(--card);
 font-size:21px;
 font-weight:700;
 cursor:pointer;
@@ -361,584 +812,725 @@ position:fixed;
 bottom:76px;
 left:50%;
 transform:translateX(-50%);
-background:#123b78;
-color:white;
-padding:11px 20px;
-border-radius:28px;
+background:var(--accent);
+color:var(--card);
+padding:12px 20px;
+border-radius:20px;
 font-size:14.5px;
 display:none;
 z-index:9999;
 box-shadow:0 8px 25px rgba(0,0,0,.25);
 text-align:center;
-max-width:90%;
+max-width:92%;
+line-height:1.8;
 }
 
-@media(max-width:760px){
+/* RESPONSIVE */
 
-.date-strip{
-font-size:12.5px;
-line-height:1.6;
+@media(max-width:1250px){
+
+.header-date{
+display:none;
 }
 
-header{
-padding:20px 4%;
+.search-mini{
+display:none;
 }
 
-.brand{
+.page-wrap{
+grid-template-columns:220px minmax(0,1fr);
+}
+
+.rightbar{
+display:none;
+}
+
+.info-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:880px){
+
+.topbar{
+padding:10px 15px;
+}
+
+.menu-btn{
 display:block;
 }
 
-.logo{
-font-size:36px;
-margin-bottom:4px;
+.desktop-nav,
+.write-btn{
+display:none;
 }
 
-.brand h1{
-font-size:29px;
+.brand{
+min-width:auto;
 }
 
-.brand p{
-font-size:14px;
+.brand-leaf{
+font-size:31px;
 }
 
-nav{
-gap:10px;
-line-height:2;
-margin-top:16px;
-}
-
-nav a{
-font-size:14px;
-}
-
-.search-wrap{
-padding:12px 4% 16px;
-}
-
-.search-box{
-border-radius:22px;
-align-items:center;
-}
-
-.search-box input{
-font-size:14px;
-padding:9px 10px;
-}
-
-.search-box button{
-font-size:14px;
-padding:9px 13px;
-}
-
-.container{
-padding:24px 0 45px;
-}
-
-.poet-profile{
-padding:20px;
-border-radius:21px;
-}
-
-.poet-top{
-grid-template-columns:66px 1fr;
-gap:13px;
-align-items:start;
-}
-
-.poet-avatar{
-width:62px;
-height:62px;
-font-size:28px;
-border-width:3px;
-}
-
-.poet-info h2{
+.brand-text h1{
 font-size:26px;
 }
 
-.poet-info p{
-font-size:14.8px;
+.brand-text p{
+font-size:11px;
+max-width:180px;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
-.section{
-padding:18px;
-border-radius:20px;
+.top-profile img{
+width:38px;
+height:38px;
 }
 
-.section h3{
-font-size:22px;
+.theme-btn span{
+display:none;
 }
 
-.section p{
-font-size:15px;
+.page-wrap{
+display:block;
+padding:12px 14px 28px;
+}
+
+.sidebar{
+display:none;
+}
+
+.poet-cover{
+height:220px;
+}
+
+.poet-cover h2{
+font-size:32px;
+}
+
+.poet-body{
+padding:0 15px 18px;
+}
+
+.poet-avatar{
+width:112px;
+height:112px;
+font-size:46px;
+margin-top:-56px;
+}
+
+.poet-top{
+display:block;
+}
+
+.poet-name h1{
+font-size:27px;
+}
+
+.poet-actions{
+margin-top:12px;
+}
+
+.info-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+.section-card{
+padding:14px;
 }
 
 .work-list{
 grid-template-columns:1fr;
-gap:9px;
 }
 
-.work-item{
-font-size:14.5px;
+.site-footer{
+display:block;
+text-align:center;
+padding:18px 14px;
 }
 
 .footer-links{
-gap:11px;
-line-height:2.1;
-padding:22px 12px;
+justify-content:center;
+margin-top:8px;
 }
 
-.footer-links a{
-font-size:14px;
 }
 
-footer{
-padding:34px 16px;
+@media(max-width:520px){
+
+.topbar{
+gap:8px;
 }
 
-footer h2{
-font-size:24px;
+.brand-text h1{
+font-size:23px;
 }
 
-.to-top{
-right:14px;
-bottom:17px;
-width:41px;
-height:41px;
-font-size:20px;
+.brand-text p{
+max-width:155px;
+}
+
+.icon-btn,
+.theme-btn{
+height:36px;
+min-width:36px;
+padding:0 8px;
+}
+
+.info-grid{
+grid-template-columns:1fr;
 }
 
 }
 </style>
 </head>
 
-<body id="top">
+<body>
 
-<div class="date-strip" id="dateStrip">তারিখ লোড হচ্ছে...</div>
+<div class="site-shell">
 
-<header>
+<header class="topbar">
 
-<div class="brand">
-<a href="index.html">
-<div class="logo">🌿</div>
-</a>
+<button class="menu-btn" id="menuBtn">☰</button>
 
-<div>
-<a href="index.html">
-<h1>ভুবনডাঙ্গার কবিতা</h1>
-</a>
+<a href="index.html" class="brand">
+<div class="brand-leaf">🌿</div>
+<div class="brand-text">
+<h1>ভুবনডাঙ্গা</h1>
 <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
 </div>
-</div>
+</a>
 
-<nav>
+<nav class="desktop-nav">
 <a href="index.html">হোম</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="today-poem.html">আজকের কবিতা</a>
-<a href="profile.html">আপনার প্রোফাইল</a>
 <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
-<a href="founder-profile.html">মাহমুদ সোহেল</a>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="today-poem.html?type=poem">কবিতা</a>
+<a href="today-poem.html?type=prolap">প্রলাপ</a>
+<a href="famous-poet.html" class="active">খ্যাতিমান কবি</a>
+<a href="founder-profile.html">মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">আপনার প্রোফাইল</a>
 </nav>
+
+<div class="header-actions">
+<div class="header-date" id="headerDate">তারিখ লোড হচ্ছে...</div>
+<input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
+<button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙 <span>Dark</span></button>
+<button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
+<a href="today-poem.html" class="write-btn">✎ লিখুন</a>
+<a href="profile.html" class="top-profile" title="আপনার প্রোফাইল">
+<img src="profile.jpg" alt="Profile">
+</a>
+</div>
 
 </header>
 
-<div class="search-wrap">
-<form class="search-box" id="searchForm">
-<input type="search" id="searchInput" placeholder="কবি, কবিতা, প্রলাপ, লেখা বা আলোচনা খুঁজুন...">
-<button type="submit">সার্চ</button>
-</form>
-</div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
 
-<div class="container" id="mainContent"></div>
-
-<div class="footer-links">
-<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট ইস্যু</a>
-<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
-<a href="search.html">সার্চ</a>
-<a href="login.html" class="footer-login">লগইন করুন</a>
-<a href="register.html" class="footer-register">রেজিস্টার করুন</a>
-</div>
-
-<footer>
-<a href="index.html" style="color:#123b78;">
-<h2>🌿 ভুবনডাঙ্গার কবিতা</h2>
+<aside class="mobile-drawer" id="mobileDrawer">
+<div class="drawer-head">
+<a href="index.html">
+<h3>ভুবনডাঙ্গা</h3>
 </a>
+<button class="close-drawer" id="closeDrawer">×</button>
+</div>
 
-<p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
+<div class="side-menu">
+<a href="index.html">🏠 হোম</a>
+<a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
+<a href="famous-poet.html" class="active">📖 খ্যাতিমান কবি</a>
+<a href="today-poem.html?type=poem">📝 কবিতা</a>
+<a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">👤 আপনার প্রোফাইল</a>
+<a href="discussion-post.html">💬 সাহিত্য আলোচনা</a>
+<a href="search.html">🔎 সার্চ</a>
+</div>
 
-<p>
-সৃজন ভাবনায়:
-<a href="founder-profile.html" style="color:#123b78;font-weight:700;">মাহমুদ সোহেল</a>
+<div class="side-title">বিষয়ের অনুসারে</div>
+
+<div class="category-list">
+<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
+<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
+<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
+<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+</div>
+
+<details class="other-menu">
+<summary>অন্যান্য</summary>
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="contact.html">যোগাযোগ / রিভিউ</a>
+<a href="about.html">নীতিমালা</a>
+<a href="search.html">সার্চ</a>
+</details>
+
+<div class="auth-area">
+<a href="login.html" class="login-side">লগইন করুন</a>
+<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+</div>
+</aside>
+
+<main class="page-wrap">
+
+<aside class="sidebar">
+<div class="card side-card">
+
+<div class="side-menu">
+<a href="index.html">🏠 হোম</a>
+<a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
+<a href="today-poem.html?type=poem">📝 কবিতা</a>
+<a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
+<a href="famous-poet.html" class="active">📖 খ্যাতিমান কবি</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">👤 আপনার প্রোফাইল</a>
+</div>
+
+<div class="side-title">বিষয়ের অনুসারে</div>
+
+<div class="category-list">
+<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
+<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
+<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
+<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+</div>
+
+<details class="other-menu">
+<summary>অন্যান্য</summary>
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট</a>
+<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
+<a href="search.html">সার্চ</a>
+</details>
+
+<div class="auth-area">
+<a href="login.html" class="login-side">↪ লগইন করুন</a>
+<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+</div>
+
+</div>
+</aside>
+
+<section class="main-content">
+
+<section class="card poet-profile">
+
+<div class="poet-cover">
+<div>
+<h2 id="coverName">রবীন্দ্রনাথ ঠাকুর</h2>
+<p id="coverMeta">বাংলা সাহিত্য • কবি profile</p>
+</div>
+</div>
+
+<div class="poet-body">
+
+<div class="poet-avatar" id="poetAvatar">র</div>
+
+<div class="poet-top">
+<div class="poet-name">
+<h1>
+<a href="#" id="poetName">রবীন্দ্রনাথ ঠাকুর</a>
+</h1>
+<p id="poetMeta">ভারতীয় বাংলা • আধুনিক বাংলা সাহিত্য</p>
+</div>
+
+<div class="poet-actions">
+<a href="famous-poet.html" class="primary">সব কবি</a>
+<a href="search.html?q=রবীন্দ্রনাথ" id="searchPoetLink">Search</a>
+<a href="index.html">ভুবনডাঙ্গা</a>
+</div>
+</div>
+
+<p class="poet-bio" id="poetBio">
+রবীন্দ্রনাথ ঠাকুর বাংলা সাহিত্য, সংগীত, নাটক, উপন্যাস ও চিন্তার বিস্তৃত ভুবনের অন্যতম প্রধান স্রষ্টা। তাঁর কবিতায় প্রকৃতি, মানুষ, প্রেম, আধ্যাত্মিকতা ও মানবতার গভীর প্রকাশ দেখা যায়।
 </p>
 
-<p>© 2026 <a href="index.html" style="color:#123b78;font-weight:700;">ভুবনডাঙ্গার কবিতা</a></p>
+<div class="info-grid">
+<div class="info-box">
+<strong id="poetCountry">ভারতীয় বাংলা</strong>
+<span>ভাষা/অঞ্চল</span>
+</div>
+
+<div class="info-box">
+<strong id="poetEra">আধুনিক</strong>
+<span>সময়/ধারা</span>
+</div>
+
+<div class="info-box">
+<strong id="poetGenre">কবিতা</strong>
+<span>প্রধান পরিচয়</span>
+</div>
+
+<div class="info-box">
+<strong>Profile</strong>
+<span>Search-এ থাকবে</span>
+</div>
+</div>
+
+<div class="safe-note">
+<b>কপিরাইট নোট:</b> এখানে কবির পরিচিতি, রচনার নাম ও সাহিত্যিক গুরুত্ব থাকবে। Copyright issue এড়াতে পূর্ণ কবিতা/দীর্ঘ উদ্ধৃতি দেওয়া হবে না।
+</div>
+
+</div>
+
+</section>
+
+<section class="card section-card">
+<h3>পরিচিতি</h3>
+<p id="introText">
+বাংলা ভাষা ও সাহিত্যের ইতিহাসে এই কবির অবদান গুরুত্বপূর্ণ। তাঁর রচনায় সময়, সমাজ, মানুষ, প্রেম, প্রকৃতি ও আত্মিক অনুভূতির নানা স্তর দেখা যায়।
+</p>
+</section>
+
+<section class="card section-card">
+<h3>উল্লেখযোগ্য রচনা / কাব্যগ্রন্থ</h3>
+
+<div class="work-list" id="workList"></div>
+</section>
+
+<section class="card section-card">
+<h3>সাহিত্যিক গুরুত্ব</h3>
+<p id="importanceText">
+বাংলা কবিতার ভাষা, ছন্দ, ভাব ও শিল্পরূপ নির্মাণে তাঁর কাজ পাঠকের কাছে গুরুত্বপূর্ণ। ভুবনডাঙ্গার খ্যাতিমান কবি বিভাগে এই profileটি search-যোগ্য থাকবে।
+</p>
+</section>
+
+</section>
+
+<aside class="rightbar">
+
+<section class="card right-card">
+<h3 class="right-title">সম্পর্কিত কবি</h3>
+
+<a href="poet-details.html?poet=kazi-nazrul-islam" class="related-poet">
+<small>বাংলা সাহিত্য</small>
+<h4>কাজী নজরুল ইসলাম</h4>
+<p>বিদ্রোহ, মানবতা ও প্রেমের কবি</p>
+</a>
+
+<a href="poet-details.html?poet=jibanananda-das" class="related-poet">
+<small>বাংলা সাহিত্য</small>
+<h4>জীবনানন্দ দাশ</h4>
+<p>আধুনিক বাংলা কবিতার স্বতন্ত্র স্বর</p>
+</a>
+
+<a href="poet-details.html?poet=jashimuddin" class="related-poet">
+<small>বাংলাদেশ</small>
+<h4>জসীমউদ্‌দীন</h4>
+<p>পল্লিকবি</p>
+</a>
+
+<a href="poet-details.html?poet=shamsur-rahman" class="related-poet">
+<small>বাংলাদেশ</small>
+<h4>শামসুর রাহমান</h4>
+<p>নাগরিক আধুনিকতা</p>
+</a>
+
+</section>
+
+<section class="card right-card">
+<h3 class="right-title">Search Note</h3>
+
+<div class="notice-box">
+এই কবি profile search result-এ থাকবে। পরে Supabase চালু হলে কবির নাম, ধারা, অঞ্চল ও গুরুত্বপূর্ণ রচনার নাম দিয়েও খুঁজে পাওয়া যাবে।
+</div>
+</section>
+
+<section class="card midnight-card">
+<h3>
+<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+</h3>
+<p>
+মাহমুদ সোহেলের বিশেষ প্রলাপ ভুবন।
+</p>
+<a href="madhyorater-prolap.html">প্রলাপ পড়ুন →</a>
+</section>
+
+</aside>
+
+</main>
+
+<footer class="site-footer">
+<div>
+<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • <a href="famous-poet.html">খ্যাতিমান কবি</a>
+</div>
+<div class="footer-links">
+<a href="founder-profile.html">মাহমুদ সোহেল</a>
+<a href="about.html">নীতিমালা</a>
+<a href="contact.html">যোগাযোগ</a>
+</div>
 </footer>
 
-<button class="to-top" id="toTopBtn" title="উপরে যান">↑</button>
+</div>
 
+<button class="to-top" id="toTopBtn">↑</button>
 <div class="toast" id="toast">এই সুবিধাটি শীঘ্রই যুক্ত হবে।</div>
 
 <script>
-const poets = {
-"rabindranath-tagore":{
-name:"রবীন্দ্রনাথ ঠাকুর",
-type:"বাংলা সাহিত্য",
-period:"কবি, কথাসাহিত্যিক, সংগীতস্রষ্টা, নাট্যকার",
-intro:"রবীন্দ্রনাথ ঠাকুর বাংলা সাহিত্য ও বিশ্বসাহিত্যের এক মহীরুহ। কবিতা, গান, গল্প, উপন্যাস, প্রবন্ধ, নাটক—প্রায় সব শাখাতেই তাঁর অনন্য অবদান রয়েছে।",
-works:["গীতাঞ্জলি","সোনার তরী","বলাকা","মানসী","চিত্রা","চোখের বালি","গোরা","ঘরে বাইরে","শেষের কবিতা","রবীন্দ্রসংগীত"]
-},
-"kazi-nazrul-islam":{
-name:"কাজী নজরুল ইসলাম",
-type:"বাংলা সাহিত্য",
-period:"জাতীয় কবি, বিদ্রোহী কবি",
-intro:"কাজী নজরুল ইসলাম বাংলা সাহিত্যের বিদ্রোহ, সাম্য, প্রেম, মানবতা ও অসাম্প্রদায়িকতার শক্তিশালী কণ্ঠ। কবিতা, গান, গল্প, প্রবন্ধ—সবখানেই তাঁর দীপ্ত উপস্থিতি।",
-works:["বিদ্রোহী","অগ্নিবীণা","বিষের বাঁশী","সাম্যবাদী","দোলনচাঁপা","সন্ধ্যা","চক্রবাক","নজরুলগীতি","বাঁধনহারা","মৃত্যুক্ষুধা"]
-},
-"jibanananda-das":{
-name:"জীবনানন্দ দাশ",
-type:"বাংলা সাহিত্য",
-period:"আধুনিক কবি",
-intro:"জীবনানন্দ দাশ বাংলা আধুনিক কবিতার এক গভীর, নিঃসঙ্গ ও প্রকৃতিমগ্ন কণ্ঠ। তাঁর কবিতায় বাংলার প্রকৃতি, সময়, স্মৃতি ও মানুষের নিঃশব্দ যাত্রা বিশেষভাবে ফুটে ওঠে।",
-works:["বনলতা সেন","রূপসী বাংলা","ধূসর পাণ্ডুলিপি","মহাপৃথিবী","সাতটি তারার তিমির","ঝরা পালক","বেলা অবেলা কালবেলা","আট বছর আগের একদিন","আবার আসিব ফিরে","ক্যাম্পে"]
-},
-"jasimuddin":{
-name:"জসীমউদ্‌দীন",
-type:"বাংলা সাহিত্য",
-period:"পল্লীকবি",
-intro:"জসীমউদ্‌দীন বাংলা পল্লীজীবন, লোকসংস্কৃতি, গ্রামীণ প্রেম ও মানুষের সহজ আবেগকে কবিতায় অনন্যভাবে প্রকাশ করেছেন।",
-works:["নকশী কাঁথার মাঠ","সোজন বাদিয়ার ঘাট","রাখালী","বালুচর","ধানক্ষেত","এক পয়সার বাঁশী","পল্লীবধূ","কবর","মাটির কান্না","হাসু"]
-},
-"sukanta-bhattacharya":{
-name:"সুকান্ত ভট্টাচার্য",
-type:"বাংলা সাহিত্য",
-period:"প্রগতিশীল কবি",
-intro:"সুকান্ত ভট্টাচার্য অল্প বয়সেই বাংলা কবিতায় ক্ষুধা, সংগ্রাম, শ্রমজীবী মানুষ ও ভবিষ্যৎ পৃথিবীর স্বপ্নকে উচ্চারণ করেছেন।",
-works:["ছাড়পত্র","ঘুম নেই","পূর্বাভাস","মিঠে কড়া","অভিযান","হে মহাজীবন","রানার","আঠারো বছর বয়স","কবিতা ও সংগ্রাম","ছাড়পত্রের কবিতা"]
-},
-"michael-madhusudan-dutt":{
-name:"মাইকেল মধুসূদন দত্ত",
-type:"বাংলা সাহিত্য",
-period:"মহাকাব্যিক কবি",
-intro:"মাইকেল মধুসূদন দত্ত বাংলা কাব্যে অমিত্রাক্ষর ছন্দ, মহাকাব্যিক রীতি ও আধুনিক নাট্যধারার পথিকৃৎদের একজন।",
-works:["মেঘনাদবধ কাব্য","বীরাঙ্গনা","তিলোত্তমাসম্ভব কাব্য","ব্রজাঙ্গনা","কৃষ্ণকুমারী","শর্মিষ্ঠা","পদ্মাবতী","বুড়ো শালিকের ঘাড়ে রোঁ","একেই কি বলে সভ্যতা","কপোতাক্ষ নদ"]
-},
-"shamsur-rahman":{
-name:"শামসুর রাহমান",
-type:"বাংলাদেশ",
-period:"আধুনিক কবি",
-intro:"শামসুর রাহমান বাংলাদেশের আধুনিক কবিতার প্রধান কণ্ঠগুলোর একজন। নাগরিক জীবন, স্বাধীনতা, মানবতা ও সময়ের সংকট তাঁর কবিতায় গুরুত্বপূর্ণ।",
-works:["স্বাধীনতা তুমি","তোমাকে পাওয়ার জন্য হে স্বাধীনতা","প্রথম গান দ্বিতীয় মৃত্যুর আগে","রৌদ্র করোটিতে","নিজ বাসভূমে","বন্দী শিবির থেকে","উদ্ভট উটের পিঠে চলেছে স্বদেশ","ফিরিয়ে নাও ঘাতক কাঁটা","আদিগন্ত নগ্ন পদধ্বনি","এক ধরনের অহংকার"]
-},
-"al-mahmud":{
-name:"আল মাহমুদ",
-type:"বাংলাদেশ",
-period:"কবি",
-intro:"আল মাহমুদ বাংলাদেশের কবিতায় লোকজ জীবন, নদী, প্রেম, মাটি, ইতিহাস ও বিশ্বাসের এক স্বতন্ত্র কণ্ঠ।",
-works:["সোনালী কাবিন","লোক লোকান্তর","কালের কলস","মায়াবী পর্দা দুলে ওঠো","অদৃষ্টবাদীদের রান্নাবান্না","বখতিয়ারের ঘোড়া","আরব্য রজনীর রাজহাঁস","একচক্ষু হরিণ","নদীর ভিতরে নদী","পাখির কাছে ফুলের কাছে"]
-},
-"helal-hafiz":{
-name:"হেলাল হাফিজ",
-type:"বাংলাদেশ",
-period:"কবি",
-intro:"হেলাল হাফিজ স্বল্পপ্রকাশিত অথচ পাঠকপ্রিয় কবি। প্রেম, দ্রোহ, অভিমান ও তারুণ্যের ভাষা তাঁর কবিতায় বিশেষ শক্তি পায়।",
-works:["যে জলে আগুন জ্বলে","নিষিদ্ধ সম্পাদকীয়","কষ্ট নেবে কষ্ট","বেদনার বালুচরে","ফেরিওয়ালা","তোমাকে চাই","অশ্লীল সভ্যতা","দুঃসময়ের কবিতা","প্রেমের কবিতা","দ্রোহের কবিতা"]
-},
-"nirmalendu-goon":{
-name:"নির্মলেন্দু গুণ",
-type:"বাংলাদেশ",
-period:"কবি",
-intro:"নির্মলেন্দু গুণ বাংলাদেশের কবিতায় প্রেম, রাজনীতি, মানুষ, সমাজ ও ব্যক্তিগত অনুভূতির সরল অথচ তীক্ষ্ণ কণ্ঠ হিসেবে পরিচিত।",
-works:["প্রেমাংশুর রক্ত চাই","না প্রেমিক না বিপ্লবী","কবিতা সমগ্র","দীর্ঘ দিবস দীর্ঘ রজনী","বাংলার মাটি বাংলার জল","চাষাভুষার কাব্য","মানুষ","স্বাধীনতা","দেশ","প্রেম ও প্রতিবাদ"]
-},
-"rumi":{
-name:"রুমি",
-type:"বিশ্বসাহিত্য",
-period:"সুফি কবি",
-intro:"জালালউদ্দিন রুমি প্রেম, আত্মা, ঈশ্বর, মানবতা ও আধ্যাত্মিকতার বিশ্বজনীন কবি। তাঁর রচনা নানা ভাষার পাঠককে গভীরভাবে প্রভাবিত করেছে।",
-works:["মসনবী","দীওয়ান-এ শামস","ফিহি মা ফিহি","প্রেমের কবিতা","সুফি ভাবনা","আত্মার যাত্রা","ঈশ্বরপ্রেম","নীরবতার কবিতা","আধ্যাত্মিক রচনা","রুমির বাণী"]
-},
-"william-shakespeare":{
-name:"উইলিয়াম শেকসপিয়র",
-type:"বিশ্বসাহিত্য",
-period:"ইংরেজ কবি ও নাট্যকার",
-intro:"উইলিয়াম শেকসপিয়র ইংরেজি সাহিত্যের অন্যতম শ্রেষ্ঠ কবি ও নাট্যকার। তাঁর সনেট ও নাটক বিশ্বসাহিত্যে স্থায়ী প্রভাব রেখেছে।",
-works:["Sonnets","Hamlet","Macbeth","Othello","King Lear","Romeo and Juliet","The Tempest","A Midsummer Night's Dream","Julius Caesar","As You Like It"]
-},
-"pablo-neruda":{
-name:"পাবলো নেরুদা",
-type:"বিশ্বসাহিত্য",
-period:"চিলির কবি",
-intro:"পাবলো নেরুদা প্রেম, রাজনীতি, প্রকৃতি ও মানুষের সংগ্রামের কবি। তাঁর কবিতায় ব্যক্তিগত অনুভূতি ও বিশ্বমানবতার সুর মিলেছে।",
-works:["Twenty Love Poems and a Song of Despair","Canto General","Residence on Earth","The Captain's Verses","Odes","The Book of Questions","Extravagaria","Memorial de Isla Negra","Spain in Our Hearts","Selected Poems"]
-},
-"lalon-shah":{
-name:"লালন শাহ",
-type:"বাংলা ভাবধারা",
-period:"বাউল সাধক",
-intro:"লালন শাহ বাংলা ভাবধারা, মানবধর্ম, দেহতত্ত্ব, সমাজপ্রশ্ন ও আধ্যাত্মিকতার এক অনন্য কণ্ঠ। তাঁর গান বাংলার লোকচেতনার গভীর অংশ।",
-works:["লালনগীতি","খাঁচার ভিতর অচিন পাখি","মানুষ ভজলে সোনার মানুষ হবি","সব লোকে কয় লালন কি জাত","আমি কোথায় পাব তারে","সময় গেলে সাধন হবে না","মানুষতত্ত্ব","দেহতত্ত্ব","বাউল গান","ভাবগীতি"]
-}
-};
+const htmlRoot = document.documentElement;
+const savedTheme = localStorage.getItem("bhubondangaTheme") || "light";
+htmlRoot.setAttribute("data-theme", savedTheme);
 
-const fallbackPoets = [
-["satyendranath-dutta","সত্যেন্দ্রনাথ দত্ত","বাংলা সাহিত্য"],
-["buddhadeb-basu","বুদ্ধদেব বসু","বাংলা সাহিত্য"],
-["bishnu-dey","বিষ্ণু দে","বাংলা সাহিত্য"],
-["sudhindranath-dutta","সুধীন্দ্রনাথ দত্ত","বাংলা সাহিত্য"],
-["abul-hasan","আবুল হাসান","বাংলাদেশ"],
-["rafiq-azad","রফিক আজাদ","বাংলাদেশ"],
-["syed-shamsul-haq","সৈয়দ শামসুল হক","বাংলাদেশ"],
-["mahadev-saha","মহাদেব সাহা","বাংলাদেশ"],
-["farrukh-ahmad","ফররুখ আহমদ","বাংলাদেশ"],
-["sufia-kamal","সুফিয়া কামাল","বাংলাদেশ"],
-["begum-rokeya","বেগম রোকেয়া","বাংলা সাহিত্য"],
-["kamini-roy","কামিনী রায়","বাংলা সাহিত্য"],
-["kusumkumari-das","কুসুমকুমারী দাশ","বাংলা সাহিত্য"],
-["ishwar-chandra-gupta","ঈশ্বরচন্দ্র গুপ্ত","বাংলা সাহিত্য"],
-["hemchandra-bandyopadhyay","হেমচন্দ্র বন্দ্যোপাধ্যায়","বাংলা সাহিত্য"],
-["nabin-chandra-sen","নবীনচন্দ্র সেন","বাংলা সাহিত্য"],
-["ranglal-bandyopadhyay","রঙ্গলাল বন্দ্যোপাধ্যায়","বাংলা সাহিত্য"],
-["dwijendralal-ray","দ্বিজেন্দ্রলাল রায়","বাংলা সাহিত্য"],
-["pramatha-chowdhury","প্রমথ চৌধুরী","বাংলা সাহিত্য"],
-["mohitlal-majumdar","মোহিতলাল মজুমদার","বাংলা সাহিত্য"],
-["amiya-chakravarty","অমিয় চক্রবর্তী","বাংলা সাহিত্য"],
-["premendra-mitra","প্রেমেন্দ্র মিত্র","বাংলা সাহিত্য"],
-["subhash-mukhopadhyay","সুভাষ মুখোপাধ্যায়","বাংলা সাহিত্য"],
-["shakti-chattopadhyay","শক্তি চট্টোপাধ্যায়","বাংলা সাহিত্য"],
-["sunil-gangopadhyay","সুনীল গঙ্গোপাধ্যায়","বাংলা সাহিত্য"],
-["binoy-majumdar","বিনয় মজুমদার","বাংলা সাহিত্য"],
-["joy-goswami","জয় গোস্বামী","বাংলা সাহিত্য"],
-["shankha-ghosh","শঙ্খ ঘোষ","বাংলা সাহিত্য"],
-["nirendranath-chakraborty","নীরেন্দ্রনাথ চক্রবর্তী","বাংলা সাহিত্য"],
-["tarapada-roy","তারাপদ রায়","বাংলা সাহিত্য"],
-["ahsan-habib","আহসান হাবীব","বাংলাদেশ"],
-["belal-chowdhury","বেলাল চৌধুরী","বাংলাদেশ"],
-["asad-chowdhury","আসাদ চৌধুরী","বাংলাদেশ"],
-["shahid-quadri","শহীদ কাদরী","বাংলাদেশ"],
-["abdul-hai-shikder","আবদুল হাই শিকদার","বাংলাদেশ"],
-["humayun-azad","হুমায়ুন আজাদ","বাংলাদেশ"],
-["rudra-muhammad-shahidullah","রুদ্র মুহম্মদ শহিদুল্লাহ","বাংলাদেশ"],
-["taslima-nasrin","তসলিমা নাসরিন","বাংলাদেশ"],
-["selina-hossain","সেলিনা হোসেন","বাংলাদেশ"],
-["nasir-ahmed","নাসির আহমেদ","বাংলাদেশ"],
-["chandidas","চণ্ডীদাস","প্রাচীন/মধ্যযুগ"],
-["vidyapati","বিদ্যাপতি","প্রাচীন/মধ্যযুগ"],
-["gyandas","জ্ঞানদাস","প্রাচীন/মধ্যযুগ"],
-["govindadas","গোবিন্দদাস","প্রাচীন/মধ্যযুগ"],
-["bharatchandra-ray","ভারতচন্দ্র রায়গুণাকর","প্রাচীন/মধ্যযুগ"],
-["alaol","আলাওল","প্রাচীন/মধ্যযুগ"],
-["daulat-kazi","দৌলত কাজী","প্রাচীন/মধ্যযুগ"],
-["shah-muhammad-sagir","শাহ মুহম্মদ সগীর","প্রাচীন/মধ্যযুগ"],
-["mukundaram-chakrabarti","মুকুন্দরাম চক্রবর্তী","প্রাচীন/মধ্যযুগ"],
-["krittibas-ojha","কৃত্তিবাস ওঝা","প্রাচীন/মধ্যযুগ"],
-["hafez","হাফিজ","বিশ্বসাহিত্য"],
-["saadi","সাদি","বিশ্বসাহিত্য"],
-["omar-khayyam","ওমর খৈয়াম","বিশ্বসাহিত্য"],
-["ferdowsi","ফেরদৌসি","বিশ্বসাহিত্য"],
-["kahlil-gibran","খলিল জিবরান","বিশ্বসাহিত্য"],
-["federico-garcia-lorca","ফেদেরিকো গার্সিয়া লোরকা","বিশ্বসাহিত্য"],
-["rainer-maria-rilke","রাইনার মারিয়া রিলকে","বিশ্বসাহিত্য"],
-["t-s-eliot","টি. এস. এলিয়ট","বিশ্বসাহিত্য"],
-["william-wordsworth","উইলিয়াম ওয়ার্ডসওয়ার্থ","বিশ্বসাহিত্য"],
-["john-keats","জন কিটস","বিশ্বসাহিত্য"],
-["p-b-shelley","পি. বি. শেলি","বিশ্বসাহিত্য"],
-["lord-byron","লর্ড বায়রন","বিশ্বসাহিত্য"],
-["robert-browning","রবার্ট ব্রাউনিং","বিশ্বসাহিত্য"],
-["walt-whitman","ওয়াল্ট হুইটম্যান","বিশ্বসাহিত্য"],
-["emily-dickinson","এমিলি ডিকিনসন","বিশ্বসাহিত্য"],
-["robert-frost","রবার্ট ফ্রস্ট","বিশ্বসাহিত্য"],
-["w-b-yeats","ডব্লিউ. বি. ইয়েটস","বিশ্বসাহিত্য"],
-["sylvia-plath","সিলভিয়া প্লাথ","বিশ্বসাহিত্য"],
-["maya-angelou","মায়া অ্যাঞ্জেলু","বিশ্বসাহিত্য"],
-["octavio-paz","অক্টাভিও পাজ","বিশ্বসাহিত্য"],
-["nazim-hikmet","নাজিম হিকমত","বিশ্বসাহিত্য"],
-["mahmoud-darwish","মাহমুদ দারবিশ","বিশ্বসাহিত্য"],
-["faiz-ahmad-faiz","ফয়েজ আহমদ ফয়েজ","বিশ্বসাহিত্য"],
-["allama-iqbal","আল্লামা ইকবাল","বিশ্বসাহিত্য"],
-["mirza-ghalib","মির্জা গালিব","বিশ্বসাহিত্য"],
-["jaishankar-prasad","জয়শঙ্কর প্রসাদ","ভারতীয় সাহিত্য"],
-["mahadevi-verma","মহাদেবী বর্মা","ভারতীয় সাহিত্য"],
-["sumitranandan-pant","সুমিত্রানন্দন পন্ত","ভারতীয় সাহিত্য"],
-["harivansh-rai-bachchan","হরিবংশ রাই বচ্চন","ভারতীয় সাহিত্য"],
-["gulzar","গুলজার","ভারতীয় সাহিত্য"],
-["dushyant-kumar","দুষ্যন্ত কুমার","ভারতীয় সাহিত্য"],
-["kumar-vishwas","কুমার বিশ্বাস","ভারতীয় সাহিত্য"],
-["hason-raja","হাছন রাজা","বাংলা ভাবধারা"],
-["radharamon-dutta","রাধারমণ দত্ত","বাংলা ভাবধারা"],
-["dwija-kanai","দ্বিজ কানাই","বাংলা ভাবধারা"],
-["gagan-harkara","গগন হরকরা","বাংলা ভাবধারা"]
-];
+const menuBtn = document.getElementById("menuBtn");
+const mobileDrawer = document.getElementById("mobileDrawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const closeDrawer = document.getElementById("closeDrawer");
+const searchBtn = document.getElementById("searchBtn");
+const searchMini = document.getElementById("searchMini");
+const toast = document.getElementById("toast");
+const themeBtn = document.getElementById("themeBtn");
+const headerDate = document.getElementById("headerDate");
 
-fallbackPoets.forEach(function(item){
-if(!poets[item[0]]){
-poets[item[0]] = {
-name:item[1],
-type:item[2],
-period:"কবি / সাহিত্যব্যক্তিত্ব",
-intro:item[1] + " বাংলা ও বিশ্বসাহিত্যের পাঠচর্চায় গুরুত্বপূর্ণ একটি নাম। এই profile-এ সংক্ষিপ্ত পরিচিতি, সাহিত্যধারা এবং selected works/রচনার নাম রাখা হয়েছে।",
-works:["নির্বাচিত কবিতা","নির্বাচিত রচনা","সাহিত্যকর্ম","কাব্যধারা","পাঠ-পরিচিতি"]
-};
-}
-});
-
-const mainContent = document.getElementById("mainContent");
-
-function getQueryParam(name){
-const params = new URLSearchParams(window.location.search);
-return params.get(name);
-}
-
-function firstLetter(name){
-return name.trim().charAt(0);
-}
-
-function renderPoet(poet){
-document.title = poet.name + " | ভুবনডাঙ্গার কবিতা";
-
-let worksHtml = "";
-
-poet.works.forEach(function(work){
-worksHtml += `<div class="work-item">${work}</div>`;
-});
-
-mainContent.innerHTML = `
-<section class="poet-profile">
-<div class="poet-top">
-<div class="poet-avatar">${firstLetter(poet.name)}</div>
-
-<div class="poet-info">
-<h2>${poet.name}</h2>
-<p>${poet.period}</p>
-
-<div class="tags">
-<span class="tag">${poet.type}</span>
-<span class="tag">কবি পরিচিতি</span>
-<span class="tag">Selected Works</span>
-</div>
-
-<div class="btn-row">
-<a href="famous-poet.html" class="btn soft">সব কবি দেখুন</a>
-<a href="search.html?q=${encodeURIComponent(poet.name)}" class="btn">এই কবিকে সার্চ করুন</a>
-</div>
-</div>
-</div>
-</section>
-
-<section class="section">
-<h3>পরিচিতি</h3>
-<p>${poet.intro}</p>
-
-<div class="notice">
-এই পরিচিতি static demo হিসেবে রাখা হয়েছে। পরে Supabase চালু হলে reference, জন্ম-মৃত্যু, সাহিত্যধারা, selected works এবং search result আরও বিস্তারিতভাবে যুক্ত করা যাবে।
-</div>
-</section>
-
-<section class="section">
-<h3>নির্বাচিত রচনার নাম</h3>
-<div class="work-list">
-${worksHtml}
-</div>
-
-<div class="notice">
-Copyright-এর কারণে protected/modern কবিদের পূর্ণ কবিতা এখানে দেওয়া হচ্ছে না। এখানে শুধু পরিচিতি ও নির্বাচিত রচনার নাম রাখা হয়েছে। Public domain বা অনুমতিপ্রাপ্ত লেখা পরে আলাদা ভাবে যুক্ত করা যাবে।
-</div>
-</section>
-
-<section class="section">
-<h3>পাঠকের জন্য</h3>
-<p>
-এই page থেকে আপনি কবির পরিচিতি জানতে পারবেন এবং search-এর মাধ্যমে একই কবির সঙ্গে সম্পর্কিত লেখা, আলোচনা বা reference খুঁজতে পারবেন।
-</p>
-</section>
-`;
-}
-
-function renderNotFound(){
-mainContent.innerHTML = `
-<section class="not-found">
-<h2>কবি পাওয়া যায়নি</h2>
-<p>যে কবিকে খুঁজছেন, তার তথ্য এখনো যুক্ত করা হয়নি অথবা link ভুল হতে পারে।</p>
-<div class="btn-row" style="justify-content:center;">
-<a href="famous-poet.html" class="btn">খ্যাতিমান কবি list দেখুন</a>
-<a href="search.html" class="btn soft">সার্চ করুন</a>
-</div>
-</section>
-`;
-}
-
-const slug = getQueryParam("poet");
-
-if(slug && poets[slug]){
-renderPoet(poets[slug]);
+function updateThemeButton(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+if(currentTheme === "dark"){
+themeBtn.innerHTML = "☀️ <span>Light</span>";
 }else{
-renderNotFound();
+themeBtn.innerHTML = "🌙 <span>Dark</span>";
+}
 }
 
-const dateStrip = document.getElementById("dateStrip");
+updateThemeButton();
+
+themeBtn.addEventListener("click",function(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+const nextTheme = currentTheme === "dark" ? "light" : "dark";
+htmlRoot.setAttribute("data-theme",nextTheme);
+localStorage.setItem("bhubondangaTheme",nextTheme);
+updateThemeButton();
+});
+
 const today = new Date();
 
-const banglaWeekday = today.toLocaleDateString("bn-BD", {
-weekday:"long"
-});
-
-const englishDate = today.toLocaleDateString("en-US", {
+const englishDate = today.toLocaleDateString("en-US",{
 year:"numeric",
-month:"long",
+month:"short",
 day:"numeric"
 });
 
-let banglaCalendarDate = "";
-
+let banglaDate = "";
 try{
-banglaCalendarDate = today.toLocaleDateString("bn-BD-u-ca-beng", {
+banglaDate = today.toLocaleDateString("bn-BD-u-ca-beng",{
 year:"numeric",
 month:"long",
 day:"numeric"
 });
 }catch(e){
-banglaCalendarDate = today.toLocaleDateString("bn-BD", {
+banglaDate = today.toLocaleDateString("bn-BD",{
 year:"numeric",
 month:"long",
 day:"numeric"
 });
 }
 
-dateStrip.innerHTML =
-"আজ " + banglaWeekday + " • বাংলা তারিখ: " + banglaCalendarDate + " • " + englishDate + " • তিথি/পক্ষ: শীঘ্রই যুক্ত হবে";
-
-const toast = document.getElementById("toast");
+headerDate.innerText = banglaDate + " • " + englishDate;
 
 function showToast(text){
-toast.innerText = text;
+toast.innerHTML = text;
 toast.style.display = "block";
-
 setTimeout(function(){
 toast.style.display = "none";
-},1900);
+},3300);
 }
 
-const searchForm = document.getElementById("searchForm");
-const searchInput = document.getElementById("searchInput");
-
-searchForm.addEventListener("submit", function(e){
-e.preventDefault();
-
-const q = searchInput.value.trim();
-
-if(q.length === 0){
-showToast("সার্চ করার জন্য কিছু লিখুন।");
-return;
+function openDrawer(){
+mobileDrawer.classList.add("open");
+drawerBackdrop.classList.add("show");
 }
 
-window.location.href = "search.html?q=" + encodeURIComponent(q);
+function closeDrawerFn(){
+mobileDrawer.classList.remove("open");
+drawerBackdrop.classList.remove("show");
+}
+
+menuBtn.addEventListener("click",openDrawer);
+closeDrawer.addEventListener("click",closeDrawerFn);
+drawerBackdrop.addEventListener("click",closeDrawerFn);
+
+function doSearch(){
+let q = "";
+if(searchMini){
+q = searchMini.value.trim();
+}
+if(!q){
+q = prompt("কী খুঁজতে চান?") || "";
+}
+if(q.trim().length > 0){
+window.location.href = "search.html?q=" + encodeURIComponent(q.trim());
+}
+}
+
+searchBtn.addEventListener("click",doSearch);
+
+if(searchMini){
+searchMini.addEventListener("keydown",function(e){
+if(e.key === "Enter"){
+doSearch();
+}
+});
+}
+
+const poetData = {
+"rabindranath-tagore":{
+name:"রবীন্দ্রনাথ ঠাকুর",
+region:"ভারতীয় বাংলা",
+era:"আধুনিক",
+genre:"কবি / সাহিত্যস্রষ্টা",
+coverMeta:"নোবেলজয়ী সাহিত্যস্রষ্টা • বাংলা সাহিত্য",
+bio:"রবীন্দ্রনাথ ঠাকুর বাংলা সাহিত্য, সংগীত, নাটক, উপন্যাস ও চিন্তার বিস্তৃত ভুবনের অন্যতম প্রধান স্রষ্টা। তাঁর কবিতায় প্রকৃতি, মানুষ, প্রেম, আধ্যাত্মিকতা ও মানবতার গভীর প্রকাশ দেখা যায়।",
+intro:"বাংলা ভাষার সাহিত্যভুবনে রবীন্দ্রনাথের অবদান বহুমাত্রিক। কবিতা, গান, গল্প, উপন্যাস, নাটক ও প্রবন্ধ—সব ক্ষেত্রেই তিনি এক গভীর মানবিক ও নান্দনিক ভাষা নির্মাণ করেছেন।",
+importance:"রবীন্দ্রনাথ বাংলা কবিতাকে আধুনিকতার ভেতর মানবিকতা, প্রকৃতি ও আত্মিক অনুভূতির বিস্তৃত রূপ দিয়েছেন। তাঁর সাহিত্য ভাবনা বাংলা ভাষাকে বিশ্বসাহিত্যের আলোচনায় প্রতিষ্ঠিত করেছে।",
+works:["গীতাঞ্জলি","সোনার তরী","বলাকা","মানসী","ক্ষণিকা","চিত্রা"]
+},
+"kazi-nazrul-islam":{
+name:"কাজী নজরুল ইসলাম",
+region:"বাংলাদেশ",
+era:"আধুনিক",
+genre:"জাতীয় কবি",
+coverMeta:"বিদ্রোহ, মানবতা ও প্রেমের কবি",
+bio:"কাজী নজরুল ইসলাম বাংলা সাহিত্যের বিদ্রোহী, মানবতাবাদী ও সাম্যচেতনার শক্তিশালী কণ্ঠস্বর। তাঁর কবিতা ও গানে স্বাধীনতা, প্রতিবাদ, প্রেম ও ধর্মীয় সম্প্রীতির ভাব প্রকাশ পায়।",
+intro:"নজরুলের সাহিত্যিক জীবন ছিল বিস্ফোরণধর্মী। সাম্য, বিদ্রোহ, প্রেম, মানবতা, সুর ও সংগ্রামের শক্তিশালী মিলনে তাঁর রচনা বাংলা সাহিত্যে বিশেষ স্থান অধিকার করে।",
+importance:"বাংলা কবিতায় নজরুল শক্তি, গতি, প্রতিবাদ, অসাম্প্রদায়িকতা ও মানবমুক্তির ভাষা এনেছেন। তাঁর রচনার রাজনৈতিক ও মানবিক চেতনা আজও পাঠকের কাছে প্রাসঙ্গিক।",
+works:["অগ্নিবীণা","বিষের বাঁশী","সাম্যবাদী","দোলনচাঁপা","ফণীমনসা","সর্বহারা"]
+},
+"jibanananda-das":{
+name:"জীবনানন্দ দাশ",
+region:"ভারতীয় বাংলা",
+era:"আধুনিক",
+genre:"আধুনিক কবি",
+coverMeta:"নির্জনতা, প্রকৃতি ও আধুনিকতার কবি",
+bio:"জীবনানন্দ দাশ আধুনিক বাংলা কবিতার এক স্বতন্ত্র ও গভীর স্বর। তাঁর কবিতায় প্রকৃতি, স্মৃতি, ইতিহাস, নিঃসঙ্গতা ও মানবজীবনের রহস্যময় অনুভূতি এক নতুন ভাষায় প্রকাশিত।",
+intro:"জীবনানন্দের কবিতা সরাসরি উচ্চারণের চেয়ে ইঙ্গিত, চিত্রকল্প ও নীরবতার ভাষায় বেশি কথা বলে। বাংলার প্রকৃতি তাঁর কবিতায় এক গভীর স্মৃতি ও আত্মপরিচয়ের প্রতীক হয়ে ওঠে।",
+importance:"তিনি বাংলা কবিতাকে এক অন্তর্মুখী, দৃশ্যনির্ভর ও আধুনিক ভাষা দিয়েছেন। তাঁর চিত্রকল্প বাংলা কবিতার নান্দনিক ধারাকে গভীরভাবে প্রভাবিত করেছে।",
+works:["রূপসী বাংলা","বনলতা সেন","ধূসর পাণ্ডুলিপি","মহাপৃথিবী","সাতটি তারার তিমির","ঝরা পালক"]
+},
+"jashimuddin":{
+name:"জসীমউদ্‌দীন",
+region:"বাংলাদেশ",
+era:"আধুনিক",
+genre:"পল্লিকবি",
+coverMeta:"গ্রামীণ জীবন ও লোকসংস্কৃতির কবি",
+bio:"জসীমউদ্‌দীন বাংলা সাহিত্যে পল্লিজীবন, লোকসংস্কৃতি, গ্রামীণ প্রেম ও মানুষের সহজ জীবনযাপনের এক অনন্য কবি।",
+intro:"তাঁর কবিতায় বাংলার গ্রাম, মাঠ, নদী, লোকজ প্রেম, দুঃখ ও মানুষের সাধারণ জীবন অসাধারণ মমতায় উঠে এসেছে।",
+importance:"বাংলা সাহিত্যে পল্লিজীবনকে হৃদয়গ্রাহী কাব্যভাষায় প্রতিষ্ঠা করার জন্য জসীমউদ্‌দীনের ভূমিকা বিশেষভাবে স্মরণীয়।",
+works:["নকশী কাঁথার মাঠ","সোজন বাদিয়ার ঘাট","রাখালী","বালুচর","ধানক্ষেত","মাটির কান্না"]
+},
+"shamsur-rahman":{
+name:"শামসুর রাহমান",
+region:"বাংলাদেশ",
+era:"আধুনিক",
+genre:"নাগরিক কবি",
+coverMeta:"নাগরিক জীবন ও স্বাধীনতার কবি",
+bio:"শামসুর রাহমান আধুনিক বাংলা কবিতায় নাগরিক চেতনা, স্বাধীনতা, মানবিকতা ও ব্যক্তিমানসের গুরুত্বপূর্ণ কণ্ঠস্বর।",
+intro:"তাঁর কবিতায় শহর, রাজনীতি, স্বাধীনতার আকাঙ্ক্ষা, ব্যক্তিগত যন্ত্রণা ও সময়ের বিবেক একসঙ্গে কাজ করে।",
+importance:"বাংলাদেশের আধুনিক কবিতায় স্বাধীনতা, নাগরিকতা ও ব্যক্তিমানবের ভাষা নির্মাণে তাঁর ভূমিকা অসামান্য।",
+works:["প্রথম গান দ্বিতীয় মৃত্যুর আগে","রৌদ্র করোটিতে","বিধ্বস্ত নীলিমা","নিজ বাসভূমে","ফিরিয়ে নাও ঘাতক কাঁটা","উদ্ভট উটের পিঠে চলেছে স্বদেশ"]
+},
+"al-mahmud":{
+name:"আল মাহমুদ",
+region:"বাংলাদেশ",
+era:"আধুনিক",
+genre:"কবি",
+coverMeta:"লোকজ ভাষা, প্রেম ও ভূগোলের কবি",
+bio:"আল মাহমুদ বাংলা কবিতায় লোকজ অভিজ্ঞতা, নদী, মাটি, প্রেম ও ইতিহাসকে শক্তিশালী কাব্যভাষায় রূপ দিয়েছেন।",
+intro:"তাঁর কবিতায় গ্রামীণ জীবন, সামাজিক চেতনা, প্রেম ও ইতিহাসের মিলন দেখা যায়। ভাষা ও চিত্রকল্পে তিনি স্বতন্ত্র।",
+importance:"বাংলাদেশের কবিতায় লোকজ জীবন ও আধুনিক কাব্যভাষার মেলবন্ধনে তাঁর অবদান গুরুত্বপূর্ণ।",
+works:["লোক লোকান্তর","কালের কলস","সোনালী কাবিন","মায়াবী পর্দা দুলে ওঠো","আরব্য রজনীর রাজহাঁস","বখতিয়ারের ঘোড়া"]
+},
+"sufia-kamal":{
+name:"বেগম সুফিয়া কামাল",
+region:"বাংলাদেশ",
+era:"আধুনিক",
+genre:"কবি / সমাজকর্মী",
+coverMeta:"নারীজাগরণ ও মানবতার কণ্ঠস্বর",
+bio:"বেগম সুফিয়া কামাল বাংলা কবিতা, নারীজাগরণ, সংস্কৃতি ও মানবিক আন্দোলনের গুরুত্বপূর্ণ ব্যক্তিত্ব।",
+intro:"তাঁর কবিতায় মানবতা, দেশপ্রেম, নারীচেতনা ও সামাজিক দায়িত্ববোধ প্রকাশ পায়।",
+importance:"বাংলাদেশের সাহিত্য ও সমাজচিন্তায় সুফিয়া কামালের ভূমিকা ঐতিহাসিকভাবে গুরুত্বপূর্ণ।",
+works:["সাঁঝের মায়া","মায়া কাজল","মন ও জীবন","উদাত্ত পৃথিবী","দিওয়ান","সোভিয়েতের দিনগুলি"]
+},
+"jalaluddin-rumi":{
+name:"জালালউদ্দিন রুমি",
+region:"ফার্সি / সুফি",
+era:"মধ্যযুগ",
+genre:"সুফি কবি",
+coverMeta:"আধ্যাত্মিক প্রেম ও সুফি দর্শন",
+bio:"জালালউদ্দিন রুমি বিশ্বসাহিত্যের অন্যতম প্রভাবশালী সুফি কবি। প্রেম, আত্মা, ঈশ্বর ও মানবতার গভীর আধ্যাত্মিক ভাব তাঁর কবিতার কেন্দ্র।",
+intro:"রুমির কবিতায় বাহ্যিক প্রেমের ভেতর দিয়ে ঈশ্বরপ্রেম, আত্মজিজ্ঞাসা ও মানবিক ঐক্যের দিকে যাত্রা দেখা যায়।",
+importance:"সুফি কাব্য ও আধ্যাত্মিক ভাবনার বিশ্বব্যাপী পাঠে রুমি আজও গভীরভাবে প্রাসঙ্গিক।",
+works:["মসনবি","দিওয়ান-ই শামস","ফিহি মা ফিহি","রুবাইয়াত","মাকতুবাত","মজালিস-ই সাবা"]
+},
+"mirza-ghalib":{
+name:"মির্জা গালিব",
+region:"উর্দু / ফার্সি",
+era:"আধুনিক পূর্ব",
+genre:"গজল কবি",
+coverMeta:"গজল, প্রেম ও দার্শনিক বিষাদ",
+bio:"মির্জা গালিব উর্দু ও ফার্সি কাব্যের অন্যতম প্রধান গজল কবি। প্রেম, অস্তিত্ব, বেদনা ও দার্শনিক ভাব তাঁর কবিতার কেন্দ্রে।",
+intro:"গালিবের গজলে ব্যক্তিগত বিষাদ, প্রেমের জটিলতা, জীবনদর্শন ও ভাষার সূক্ষ্ম শিল্পরূপ মিলিত হয়েছে।",
+importance:"উর্দু গজলের ভাষা ও ভাবধারাকে গভীর দার্শনিকতা ও শিল্পে উন্নীত করার ক্ষেত্রে গালিবের অবদান অনন্য।",
+works:["দিওয়ান-ই গালিব","উর্দু গজলসমূহ","ফার্সি কাব্য","চিঠিপত্র","কাসিদা","রুবাই"]
+},
+"allama-iqbal":{
+name:"আল্লামা ইকবাল",
+region:"উর্দু / ফার্সি",
+era:"আধুনিক",
+genre:"কবি / দার্শনিক",
+coverMeta:"আত্মপরিচয়, জাগরণ ও দর্শন",
+bio:"আল্লামা ইকবাল উর্দু ও ফার্সি ভাষার কবি-দার্শনিক। তাঁর কবিতায় আত্মপরিচয়, চেতনা, জাগরণ ও আধ্যাত্মিক ভাবনার প্রকাশ দেখা যায়।",
+intro:"ইকবালের কবিতায় ব্যক্তিসত্তা, সমাজ, ধর্মীয় চিন্তা ও আত্মমর্যাদার প্রশ্ন এক গভীর দার্শনিক ভাষায় উঠে আসে।",
+importance:"দক্ষিণ এশিয়ার সাহিত্য, দর্শন ও রাজনৈতিক চিন্তায় ইকবালের কবিতা ও ভাবনা গুরুত্বপূর্ণ প্রভাব রেখেছে।",
+works:["আসরার-ই খুদি","রমুজ-ই বেখুদি","বাং-ই দারা","জাবুর-ই আজম","বাল-ই জিবরীল","জাভিদনামা"]
+}
+};
+
+const params = new URLSearchParams(window.location.search);
+const slug = params.get("poet") || "rabindranath-tagore";
+
+const fallbackPoet = {
+name:"কবির প্রোফাইল",
+region:"বাংলা সাহিত্য",
+era:"সাহিত্য",
+genre:"কবি",
+coverMeta:"ভুবনডাঙ্গার খ্যাতিমান কবি বিভাগ",
+bio:"এই কবির পূর্ণ profile পরে যুক্ত করা হবে। খ্যাতিমান কবি বিভাগে নামটি search-যোগ্য থাকবে।",
+intro:"এই profile-এ কবির সংক্ষিপ্ত পরিচিতি, গুরুত্বপূর্ণ রচনার নাম ও সাহিত্যিক গুরুত্ব সংযোজন করা হবে।",
+importance:"ভুবনডাঙ্গা টিম পর্যায়ক্রমে খ্যাতিমান কবিদের profile সমৃদ্ধ করবে।",
+works:["পরিচিতি যুক্ত হবে","রচনার নাম যুক্ত হবে","সাহিত্যধারা যুক্ত হবে","পাঠ নির্দেশনা যুক্ত হবে"]
+};
+
+const poet = poetData[slug] || fallbackPoet;
+
+document.title = poet.name + " | ভুবনডাঙ্গার কবিতা";
+document.getElementById("coverName").innerText = poet.name;
+document.getElementById("coverMeta").innerText = poet.coverMeta;
+document.getElementById("poetAvatar").innerText = poet.name.charAt(0);
+document.getElementById("poetName").innerText = poet.name;
+document.getElementById("poetMeta").innerText = poet.region + " • " + poet.era;
+document.getElementById("poetBio").innerText = poet.bio;
+document.getElementById("poetCountry").innerText = poet.region;
+document.getElementById("poetEra").innerText = poet.era;
+document.getElementById("poetGenre").innerText = poet.genre;
+document.getElementById("introText").innerText = poet.intro;
+document.getElementById("importanceText").innerText = poet.importance;
+document.getElementById("searchPoetLink").href = "search.html?q=" + encodeURIComponent(poet.name);
+
+const workList = document.getElementById("workList");
+workList.innerHTML = "";
+
+poet.works.forEach(function(work){
+const item = document.createElement("div");
+item.className = "work-item";
+item.innerHTML = `
+<small>রচনা / কাব্যগ্রন্থ</small>
+<h4>${work}</h4>
+`;
+workList.appendChild(item);
 });
 
 const toTopBtn = document.getElementById("toTopBtn");
 
-window.addEventListener("scroll", function(){
+window.addEventListener("scroll",function(){
 if(window.scrollY > 400){
 toTopBtn.style.display = "block";
 }else{
@@ -946,30 +1538,28 @@ toTopBtn.style.display = "none";
 }
 });
 
-toTopBtn.addEventListener("click", function(){
+toTopBtn.addEventListener("click",function(){
 window.scrollTo({
 top:0,
 behavior:"smooth"
 });
 });
 
-document.addEventListener("copy", function(e){
+document.addEventListener("copy",function(e){
 e.preventDefault();
 showToast("লেখা কপি করা নিরুৎসাহিত করা হয়েছে।");
 });
 
-document.addEventListener("contextmenu", function(e){
+document.addEventListener("contextmenu",function(e){
 e.preventDefault();
 showToast("Right click বন্ধ রাখা হয়েছে।");
 });
 
-document.addEventListener("selectstart", function(e){
+document.addEventListener("selectstart",function(e){
 const tag = e.target.tagName.toLowerCase();
-
 if(tag === "input" || tag === "textarea" || tag === "select"){
 return;
 }
-
 e.preventDefault();
 });
 </script>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="light">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +20,44 @@ html{
 scroll-behavior:smooth;
 }
 
+:root{
+--bg:#f8f2e7;
+--bg-soft:#fbf6ea;
+--card:#fffdf7;
+--card-2:#fff8eb;
+--text:#12345f;
+--text-soft:#4a5a70;
+--muted:#6d7582;
+--border:rgba(18,52,95,.13);
+--accent:#12345f;
+--accent-2:#62733c;
+--gold:#b79a54;
+--shadow:0 8px 22px rgba(67,48,20,.055);
+--dark-card:#111827;
+--dark-text:#f4ead8;
+}
+
+html[data-theme="dark"]{
+--bg:#0d1320;
+--bg-soft:#111827;
+--card:#151d2c;
+--card-2:#1c2638;
+--text:#f4ead8;
+--text-soft:#d7c9a7;
+--muted:#a9a08e;
+--border:rgba(244,234,216,.16);
+--accent:#d8bd75;
+--accent-2:#b99a50;
+--gold:#d8bd75;
+--shadow:0 10px 28px rgba(0,0,0,.35);
+--dark-card:#080d16;
+--dark-text:#f4ead8;
+}
+
 body{
 font-family:'Noto Serif Bengali',serif;
-background:#f8f2e7;
-color:#12345f;
+background:var(--bg);
+color:var(--text);
 line-height:1.65;
 user-select:none;
 -webkit-user-select:none;
@@ -35,15 +70,22 @@ color:inherit;
 }
 
 button,
-input{
+input,
+select{
 font-family:inherit;
 }
 
 .site-shell{
 min-height:100vh;
 background:
-radial-gradient(circle at top left,rgba(255,255,255,.95),rgba(248,242,231,.94)),
-linear-gradient(135deg,#fbf6ea,#f3ead8);
+radial-gradient(circle at top left,rgba(255,255,255,.42),transparent 32%),
+linear-gradient(135deg,var(--bg-soft),var(--bg));
+}
+
+html[data-theme="dark"] .site-shell{
+background:
+radial-gradient(circle at top left,rgba(216,189,117,.08),transparent 32%),
+linear-gradient(135deg,#0a0f1a,#111827);
 }
 
 /* HEADER */
@@ -52,39 +94,43 @@ linear-gradient(135deg,#fbf6ea,#f3ead8);
 position:sticky;
 top:0;
 z-index:999;
-background:rgba(250,246,236,.96);
+background:rgba(250,246,236,.94);
 backdrop-filter:blur(14px);
-border-bottom:1px solid rgba(18,52,95,.12);
-padding:12px 30px;
+border-bottom:1px solid var(--border);
+padding:10px 30px;
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:18px;
 }
 
+html[data-theme="dark"] .topbar{
+background:rgba(13,19,32,.94);
+}
+
 .brand{
 display:flex;
 align-items:center;
 gap:10px;
-min-width:225px;
+min-width:230px;
 }
 
 .brand-leaf{
-font-size:42px;
+font-size:40px;
 line-height:1;
 }
 
 .brand-text h1{
-font-size:32px;
+font-size:31px;
 font-weight:800;
 letter-spacing:-1px;
-color:#12345f;
+color:var(--text);
 line-height:1.05;
 }
 
 .brand-text p{
 font-size:12.5px;
-color:#66705f;
+color:var(--muted);
 margin-top:2px;
 white-space:nowrap;
 }
@@ -93,14 +139,14 @@ white-space:nowrap;
 display:flex;
 align-items:center;
 justify-content:center;
-gap:21px;
+gap:19px;
 flex:1;
 }
 
 .desktop-nav a{
 font-size:15px;
 font-weight:700;
-color:#17365e;
+color:var(--text);
 padding:9px 2px;
 border-bottom:2px solid transparent;
 white-space:nowrap;
@@ -108,53 +154,69 @@ white-space:nowrap;
 
 .desktop-nav a.active,
 .desktop-nav a:hover{
-border-color:#17365e;
+border-color:var(--accent);
 }
 
 .header-actions{
 display:flex;
 align-items:center;
-gap:12px;
+gap:10px;
+}
+
+.header-date{
+font-size:12px;
+color:var(--muted);
+white-space:nowrap;
+max-width:210px;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
 .search-mini{
-height:39px;
-width:170px;
-border:1px solid rgba(18,52,95,.16);
-background:#fffaf1;
+height:38px;
+width:160px;
+border:1px solid var(--border);
+background:var(--card-2);
 border-radius:9px;
 padding:0 12px;
 outline:none;
 font-size:13px;
-color:#12345f;
+color:var(--text);
 user-select:text;
 -webkit-user-select:text;
 }
 
-.icon-btn{
-width:39px;
-height:39px;
-border-radius:50%;
-border:1px solid rgba(18,52,95,.16);
-background:#fffaf1;
-color:#12345f;
-font-size:18px;
+.icon-btn,
+.theme-btn{
+height:38px;
+min-width:38px;
+border-radius:9px;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+font-size:15px;
+font-weight:800;
 display:flex;
 align-items:center;
 justify-content:center;
 cursor:pointer;
+padding:0 10px;
+}
+
+.theme-btn{
+gap:6px;
 }
 
 .write-btn{
 border:none;
-background:#12345f;
-color:white;
-padding:10px 16px;
+background:var(--accent);
+color:var(--card)!important;
+padding:10px 15px;
 border-radius:9px;
 font-size:14px;
 font-weight:800;
 cursor:pointer;
-box-shadow:0 8px 18px rgba(18,52,95,.18);
+box-shadow:var(--shadow);
 white-space:nowrap;
 }
 
@@ -165,12 +227,12 @@ gap:7px;
 }
 
 .top-profile img{
-width:42px;
-height:42px;
+width:40px;
+height:40px;
 border-radius:50%;
 object-fit:cover;
-border:2px solid #fff;
-box-shadow:0 5px 14px rgba(0,0,0,.12);
+border:2px solid var(--card);
+box-shadow:0 5px 14px rgba(0,0,0,.14);
 }
 
 .menu-btn{
@@ -180,7 +242,7 @@ height:42px;
 border:none;
 background:transparent;
 font-size:28px;
-color:#12345f;
+color:var(--text);
 cursor:pointer;
 }
 
@@ -202,16 +264,16 @@ min-width:0;
 }
 
 .card{
-background:rgba(255,252,246,.92);
-border:1px solid rgba(18,52,95,.12);
+background:var(--card);
+border:1px solid var(--border);
 border-radius:13px;
-box-shadow:0 8px 22px rgba(67,48,20,.045);
+box-shadow:var(--shadow);
 }
 
 .sidebar{
 position:sticky;
-top:86px;
-height:calc(100vh - 116px);
+top:80px;
+height:calc(100vh - 112px);
 overflow:auto;
 padding-right:2px;
 }
@@ -229,9 +291,12 @@ left:0;
 bottom:0;
 width:100%;
 height:150px;
-background:
-radial-gradient(circle at bottom left,rgba(98,115,60,.10),transparent 65%);
+background:radial-gradient(circle at bottom left,rgba(98,115,60,.10),transparent 65%);
 pointer-events:none;
+}
+
+html[data-theme="dark"] .side-card::after{
+background:radial-gradient(circle at bottom left,rgba(216,189,117,.08),transparent 65%);
 }
 
 .side-menu{
@@ -250,18 +315,23 @@ padding:10px 11px;
 border-radius:9px;
 font-size:15px;
 font-weight:650;
-color:#223d61;
+color:var(--text);
 }
 
 .side-menu a:hover,
 .side-menu a.active{
-background:#eee6d6;
+background:rgba(98,115,60,.14);
+}
+
+html[data-theme="dark"] .side-menu a:hover,
+html[data-theme="dark"] .side-menu a.active{
+background:rgba(216,189,117,.10);
 }
 
 .side-title{
 font-size:17px;
 font-weight:800;
-color:#12345f;
+color:var(--text);
 margin:18px 0 8px;
 padding:0 8px;
 position:relative;
@@ -282,22 +352,27 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 font-size:14px;
-color:#41536b;
+color:var(--text-soft);
 padding:5px 0;
 }
 
 .category-list span{
-background:#eee6d6;
+background:rgba(98,115,60,.14);
 border-radius:12px;
 padding:2px 8px;
 font-size:12px;
-color:#536040;
+color:var(--accent-2);
+}
+
+html[data-theme="dark"] .category-list span{
+background:rgba(216,189,117,.10);
+color:var(--gold);
 }
 
 .other-menu{
 margin-top:8px;
-background:#fffaf1;
-border:1px solid rgba(18,52,95,.12);
+background:var(--card-2);
+border:1px solid var(--border);
 border-radius:12px;
 padding:10px;
 position:relative;
@@ -307,14 +382,14 @@ z-index:1;
 .other-menu summary{
 cursor:pointer;
 font-weight:800;
-color:#12345f;
+color:var(--text);
 font-size:14.5px;
 }
 
 .other-menu a{
 display:block;
 font-size:14px;
-color:#41536b;
+color:var(--text-soft);
 padding:7px 0 0 0;
 }
 
@@ -338,73 +413,32 @@ font-size:15px;
 }
 
 .login-side{
-background:#12345f;
-color:white;
+background:var(--accent);
+color:var(--card)!important;
 }
 
 .register-side{
-background:#fffaf1;
-border:1px solid #12345f;
-color:#12345f;
+background:var(--card-2);
+border:1px solid var(--accent);
+color:var(--accent)!important;
 }
 
-/* HERO */
+/* COVER */
 
-.hero-banner{
-position:relative;
-height:268px;
+.cover-box{
+height:270px;
 border-radius:14px;
 overflow:hidden;
-background:#ddd;
-border:1px solid rgba(18,52,95,.13);
-box-shadow:0 10px 26px rgba(67,48,20,.08);
+background:var(--card-2);
+border:1px solid var(--border);
+box-shadow:var(--shadow);
 }
 
-.hero-banner img{
+.cover-box img{
 width:100%;
 height:100%;
 object-fit:cover;
-filter:saturate(.95) contrast(.96);
-}
-
-.hero-overlay{
-position:absolute;
-inset:0;
-background:
-linear-gradient(90deg,rgba(247,242,232,.30),rgba(247,242,232,.20),rgba(247,242,232,.10));
-display:flex;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:25px;
-}
-
-.hero-text{
-max-width:665px;
-background:rgba(255,252,246,.38);
-border-radius:15px;
-padding:20px 28px;
-}
-
-.hero-text h2{
-font-size:42px;
-font-weight:800;
-color:#12345f;
-line-height:1.3;
-}
-
-.hero-ornament{
-font-size:20px;
-color:#7c7f50;
-margin:4px 0;
-letter-spacing:6px;
-}
-
-.hero-text p{
-font-size:17px;
-font-weight:400;
-color:#38485f;
-margin-top:4px;
+display:block;
 }
 
 /* FEED */
@@ -418,7 +452,7 @@ padding:18px;
 display:flex;
 align-items:center;
 gap:24px;
-border-bottom:1px solid rgba(18,52,95,.13);
+border-bottom:1px solid var(--border);
 padding:0 4px 12px;
 overflow:auto;
 }
@@ -426,13 +460,13 @@ overflow:auto;
 .feed-tabs a{
 font-size:15px;
 font-weight:800;
-color:#455770;
+color:var(--muted);
 white-space:nowrap;
 }
 
 .feed-tabs a.active{
-color:#12345f;
-border-bottom:3px solid #12345f;
+color:var(--text);
+border-bottom:3px solid var(--accent);
 padding-bottom:9px;
 }
 
@@ -444,18 +478,18 @@ gap:8px;
 }
 
 .feed-sort select{
-border:1px solid rgba(18,52,95,.16);
-background:#fffaf1;
+border:1px solid var(--border);
+background:var(--card-2);
 border-radius:8px;
 padding:7px 10px;
 font-size:13px;
-color:#12345f;
+color:var(--text);
 outline:none;
 }
 
 .post{
-padding:17px 8px;
-border-bottom:1px solid rgba(18,52,95,.1);
+padding:15px 8px;
+border-bottom:1px solid var(--border);
 }
 
 .post:last-child{
@@ -469,45 +503,45 @@ gap:10px;
 }
 
 .post-head img{
-width:44px;
-height:44px;
+width:42px;
+height:42px;
 border-radius:50%;
 object-fit:cover;
-border:2px solid #fff;
+border:2px solid var(--card);
 box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
 
 .author-line{
-font-size:14px;
+font-size:13.8px;
 font-weight:400;
-color:#657083;
+color:var(--muted);
 }
 
 .author-line a{
 font-weight:800;
-color:#12345f;
+color:var(--text);
 }
 
 .post-more{
 margin-left:auto;
 font-size:20px;
-color:#333;
+color:var(--muted);
 }
 
 .post-title{
-font-size:19px;
+font-size:18px;
 font-weight:500;
-color:#12345f;
-margin-top:10px;
-line-height:1.4;
+color:var(--text);
+margin-top:9px;
+line-height:1.42;
 }
 
 .post-text{
-font-size:15.3px;
+font-size:15px;
 font-weight:400;
-color:#34445c;
-margin-top:6px;
-line-height:1.78;
+color:var(--text-soft);
+margin-top:5px;
+line-height:1.76;
 }
 
 .post-actions{
@@ -515,21 +549,37 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 gap:8px;
-margin-top:13px;
-font-size:14px;
+margin-top:12px;
+font-size:13.8px;
 font-weight:400;
-color:#58656d;
+color:var(--muted);
 }
 
 .post-actions-left{
 display:flex;
-gap:18px;
+gap:17px;
 align-items:center;
 }
 
 .read-more{
 font-weight:800;
-color:#12345f;
+color:var(--accent);
+}
+
+.more-feed{
+text-align:center;
+padding-top:14px;
+}
+
+.more-feed button{
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+border-radius:22px;
+padding:9px 22px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
 }
 
 /* FEATURED */
@@ -549,70 +599,65 @@ margin-bottom:12px;
 
 .section-head h3{
 font-size:21px;
-color:#12345f;
+color:var(--text);
 }
 
 .section-head a{
 font-size:14px;
 font-weight:800;
-color:#12345f;
+color:var(--accent);
 }
 
 .featured-note{
 font-size:14px;
-color:#5d6670;
+color:var(--muted);
 font-weight:400;
 margin-bottom:12px;
 }
 
 .featured-grid{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(5,1fr);
 gap:10px;
 }
 
 .featured-item{
-display:grid;
-grid-template-columns:70px 1fr;
-gap:10px;
-align-items:center;
-background:#fffaf1;
-border:1px solid rgba(18,52,95,.12);
+background:var(--card-2);
+border:1px solid var(--border);
 border-radius:10px;
-overflow:hidden;
-min-height:74px;
-}
-
-.featured-item img{
-width:70px;
-height:74px;
-object-fit:cover;
-filter:saturate(.92);
-}
-
-.featured-item div{
-padding-right:8px;
+padding:13px;
+min-height:118px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
 }
 
 .featured-item small{
 font-size:12px;
 font-weight:800;
-color:#62733c;
+color:var(--accent-2);
 }
 
 .featured-item h4{
-font-size:14px;
+font-size:14.5px;
 font-weight:600;
-color:#12345f;
-line-height:1.35;
+color:var(--text);
+line-height:1.45;
+margin-top:8px;
+}
+
+.featured-item p{
+font-size:12.5px;
+color:var(--muted);
+margin-top:8px;
 }
 
 /* RIGHT */
 
 .rightbar{
 position:sticky;
-top:86px;
-height:calc(100vh - 116px);
+top:80px;
+height:calc(100vh - 112px);
 overflow:auto;
 display:grid;
 gap:16px;
@@ -626,31 +671,9 @@ padding:18px;
 .right-title{
 font-size:21px;
 font-weight:800;
-color:#12345f;
+color:var(--text);
 text-align:center;
 margin-bottom:14px;
-}
-
-.auto-poet-box{
-background:#fffaf1;
-border:1px dashed rgba(18,52,95,.25);
-border-radius:13px;
-padding:16px;
-text-align:center;
-}
-
-.auto-poet-box p{
-font-size:14.5px;
-font-weight:400;
-color:#4a586a;
-line-height:1.8;
-}
-
-.auto-poet-box a{
-display:inline-block;
-margin-top:12px;
-font-weight:800;
-color:#12345f;
 }
 
 .selected-writer{
@@ -658,7 +681,7 @@ display:flex;
 align-items:center;
 gap:12px;
 padding:9px 0;
-border-bottom:1px solid rgba(18,52,95,.1);
+border-bottom:1px solid var(--border);
 }
 
 .selected-writer:last-child{
@@ -675,23 +698,45 @@ object-fit:cover;
 .selected-writer strong{
 display:block;
 font-size:15px;
-color:#12345f;
+color:var(--text);
 }
 
 .selected-writer small{
 font-size:12px;
-color:#657083;
+color:var(--muted);
 }
 
-.follow-btn{
+.view-btn{
 margin-left:auto;
-border:1px solid rgba(18,52,95,.18);
-background:#fffaf1;
-color:#12345f;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--accent);
 padding:5px 10px;
 border-radius:7px;
 font-size:12px;
 font-weight:800;
+}
+
+.auto-poet-box{
+background:var(--card-2);
+border:1px dashed var(--border);
+border-radius:13px;
+padding:16px;
+text-align:center;
+}
+
+.auto-poet-box p{
+font-size:14.5px;
+font-weight:400;
+color:var(--text-soft);
+line-height:1.8;
+}
+
+.auto-poet-box a{
+display:inline-block;
+margin-top:12px;
+font-weight:800;
+color:var(--accent);
 }
 
 .discussion-list{
@@ -706,12 +751,12 @@ justify-content:space-between;
 gap:8px;
 font-size:14.5px;
 font-weight:400;
-color:#34445c;
+color:var(--text-soft);
 }
 
 .discussion-list a::before{
 content:"•";
-color:#62733c;
+color:var(--accent-2);
 font-size:24px;
 line-height:1;
 }
@@ -724,9 +769,9 @@ flex-wrap:wrap;
 
 .tag-cloud a{
 font-size:13px;
-color:#12345f;
-background:#fffaf1;
-border:1px solid rgba(18,52,95,.12);
+color:var(--text);
+background:var(--card-2);
+border:1px solid var(--border);
 border-radius:8px;
 padding:7px 10px;
 }
@@ -740,14 +785,14 @@ overflow:hidden;
 
 .quote-mark{
 font-size:48px;
-color:#8a8f66;
+color:var(--gold);
 line-height:1;
 }
 
 .quote-card p{
 font-size:17px;
 font-weight:500;
-color:#34445c;
+color:var(--text-soft);
 line-height:1.8;
 margin-top:4px;
 }
@@ -756,13 +801,13 @@ margin-top:4px;
 display:block;
 text-align:center;
 margin-top:13px;
-color:#12345f;
+color:var(--text);
 }
 
 .midnight-card{
 background:
-linear-gradient(135deg,rgba(12,19,34,.98),rgba(17,24,39,.98)),
-radial-gradient(circle at top right,rgba(255,255,255,.08),transparent 45%);
+linear-gradient(135deg,rgba(8,13,22,.98),rgba(17,24,39,.98)),
+radial-gradient(circle at top right,rgba(216,189,117,.10),transparent 45%);
 color:#f4ead8;
 border:none;
 padding:20px;
@@ -788,7 +833,7 @@ color:#fff;
 font-weight:800;
 }
 
-/* MOBILE DRAWER */
+/* DRAWER */
 
 .drawer-backdrop{
 position:fixed;
@@ -804,7 +849,7 @@ top:0;
 left:-310px;
 width:290px;
 height:100vh;
-background:#fffaf1;
+background:var(--card);
 z-index:1300;
 transition:.25s ease;
 padding:18px 16px;
@@ -830,14 +875,14 @@ margin-bottom:14px;
 .drawer-head h3{
 font-size:22px;
 font-weight:800;
-color:#12345f;
+color:var(--text);
 }
 
 .close-drawer{
 border:none;
 background:transparent;
 font-size:30px;
-color:#12345f;
+color:var(--text);
 }
 
 /* FOOTER */
@@ -846,8 +891,8 @@ color:#12345f;
 max-width:1510px;
 margin:0 auto;
 padding:18px 30px;
-background:#12345f;
-color:#f4ead8;
+background:var(--accent);
+color:var(--card);
 display:flex;
 align-items:center;
 justify-content:space-between;
@@ -865,7 +910,7 @@ gap:15px;
 flex-wrap:wrap;
 }
 
-/* UTILS */
+/* UTIL */
 
 .to-top{
 position:fixed;
@@ -875,8 +920,8 @@ width:43px;
 height:43px;
 border-radius:50%;
 border:none;
-background:#12345f;
-color:white;
+background:var(--accent);
+color:var(--card);
 font-size:21px;
 font-weight:700;
 cursor:pointer;
@@ -890,8 +935,8 @@ position:fixed;
 bottom:76px;
 left:50%;
 transform:translateX(-50%);
-background:#12345f;
-color:white;
+background:var(--accent);
+color:var(--card);
 padding:11px 20px;
 border-radius:28px;
 font-size:14.5px;
@@ -904,7 +949,11 @@ max-width:90%;
 
 /* RESPONSIVE */
 
-@media(max-width:1180px){
+@media(max-width:1250px){
+
+.header-date{
+display:none;
+}
 
 .search-mini{
 display:none;
@@ -919,7 +968,7 @@ display:none;
 }
 
 .featured-grid{
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(3,1fr);
 }
 
 }
@@ -927,7 +976,7 @@ grid-template-columns:repeat(2,1fr);
 @media(max-width:880px){
 
 .topbar{
-padding:11px 16px;
+padding:10px 15px;
 }
 
 .menu-btn{
@@ -948,16 +997,23 @@ font-size:31px;
 }
 
 .brand-text h1{
-font-size:27px;
+font-size:26px;
 }
 
 .brand-text p{
 font-size:11px;
+max-width:180px;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
 .top-profile img{
 width:38px;
 height:38px;
+}
+
+.theme-btn span{
+display:none;
 }
 
 .page-wrap{
@@ -969,27 +1025,9 @@ padding:12px 14px 28px;
 display:none;
 }
 
-.hero-banner{
-height:232px;
+.cover-box{
+height:220px;
 border-radius:14px;
-}
-
-.hero-overlay{
-align-items:flex-start;
-padding-top:32px;
-}
-
-.hero-text{
-background:rgba(255,252,246,.58);
-padding:14px 16px;
-}
-
-.hero-text h2{
-font-size:30px;
-}
-
-.hero-text p{
-font-size:14.5px;
 }
 
 .feed-card{
@@ -1006,16 +1044,16 @@ display:none;
 }
 
 .post{
-padding:16px 3px;
+padding:15px 3px;
 }
 
 .post-title{
-font-size:18px;
+font-size:17.5px;
 font-weight:500;
 }
 
 .post-text{
-font-size:14.8px;
+font-size:14.7px;
 font-weight:400;
 }
 
@@ -1039,34 +1077,26 @@ margin-top:8px;
 @media(max-width:520px){
 
 .topbar{
-gap:9px;
+gap:8px;
 }
 
 .brand-text h1{
-font-size:24px;
+font-size:23px;
 }
 
 .brand-text p{
-max-width:170px;
-overflow:hidden;
-text-overflow:ellipsis;
+max-width:155px;
 }
 
-.icon-btn{
-width:37px;
-height:37px;
+.icon-btn,
+.theme-btn{
+height:36px;
+min-width:36px;
+padding:0 8px;
 }
 
-.hero-banner{
-height:215px;
-}
-
-.hero-text h2{
-font-size:27px;
-}
-
-.hero-text p{
-font-size:14px;
+.cover-box{
+height:205px;
 }
 
 .post-actions{
@@ -1101,7 +1131,7 @@ gap:14px;
 <nav class="desktop-nav">
 <a href="index.html" class="active">হোম</a>
 <a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="today-poem.html">কবিতা</a>
+<a href="today-poem.html?type=poem">কবিতা</a>
 <a href="today-poem.html?type=prolap">প্রলাপ</a>
 <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
 <a href="founder-profile.html">মাহমুদ সোহেলের কবিতা</a>
@@ -1109,10 +1139,12 @@ gap:14px;
 </nav>
 
 <div class="header-actions">
+<div class="header-date" id="headerDate">তারিখ লোড হচ্ছে...</div>
 <input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
-<button class="icon-btn" id="searchBtn">⌕</button>
+<button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙 <span>Dark</span></button>
+<button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
 <a href="today-poem.html" class="write-btn">✎ লিখুন</a>
-<a href="profile.html" class="top-profile">
+<a href="profile.html" class="top-profile" title="আপনার প্রোফাইল">
 <img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="Profile">
 </a>
 </div>
@@ -1123,14 +1155,16 @@ gap:14px;
 
 <aside class="mobile-drawer" id="mobileDrawer">
 <div class="drawer-head">
+<a href="index.html">
 <h3>ভুবনডাঙ্গা</h3>
+</a>
 <button class="close-drawer" id="closeDrawer">×</button>
 </div>
 
 <div class="side-menu">
 <a href="index.html" class="active">🏠 হোম</a>
 <a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
-<a href="today-poem.html">📝 কবিতা</a>
+<a href="today-poem.html?type=poem">📝 কবিতা</a>
 <a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
 <a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
 <a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
@@ -1170,7 +1204,7 @@ gap:14px;
 <div class="side-menu">
 <a href="index.html" class="active">🏠 হোম</a>
 <a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
-<a href="today-poem.html">📝 কবিতা</a>
+<a href="today-poem.html?type=poem">📝 কবিতা</a>
 <a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
 <a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
 <a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
@@ -1204,15 +1238,8 @@ gap:14px;
 
 <section class="main-content">
 
-<div class="hero-banner">
-<img src="cover.jpg" alt="ভুবনডাঙ্গার কবিতা">
-<div class="hero-overlay">
-<div class="hero-text">
-<h2>স্বাগতম ভুবনডাঙ্গায়</h2>
-<div class="hero-ornament">— ❧ —</div>
-<p>এখানে আমরা লিখি, পড়ি, ভাবি এবং ভাগ করি কবিতা, প্রলাপ, অনুকাব্য, চিঠিপত্র ও মুক্ত আলোচনার একান্ত ভুবন।</p>
-</div>
-</div>
+<div class="cover-box">
+<img src="cover.png" onerror="this.src='cover.jpg'" alt="ভুবনডাঙ্গার কবিতা">
 </div>
 
 <section class="card feed-card">
@@ -1234,71 +1261,11 @@ gap:14px;
 </div>
 </div>
 
-<article class="post">
-<div class="post-head">
-<img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="মাহমুদ সোহেল">
-<div class="author-line">
-<a href="founder-profile.html">মাহমুদ সোহেল</a> · কবিতা · ১ ঘণ্টা আগে
-</div>
-<div class="post-more">···</div>
-</div>
-<h3 class="post-title">নদীর ধারে এক অপেক্ষা</h3>
-<p class="post-text">
-নদীর ধারে বসে থাকতে থাকতে কখন যে অপরাহ্ন মিশে আসে, টের পাই না। নৌকার ছইয়ের পাশে ভেসে আসে বালির গন্ধ, দূরের আজান কানে লাগে আছে...
-</p>
-<div class="post-actions">
-<div class="post-actions-left">
-<span>♥ ১২৮</span>
-<span>💬 ১৭</span>
-<span>🔖 সংরক্ষণ</span>
-</div>
-<a href="founder-profile.html" class="read-more">আরও পড়ুন →</a>
-</div>
-</article>
+<div id="feedList"></div>
 
-<article class="post">
-<div class="post-head">
-<img src="profile.jpg" alt="নতুন সদস্য">
-<div class="author-line">
-<a href="profile.html?user=new-member">নতুন সদস্য</a> · প্রলাপ · ২ ঘণ্টা আগে
+<div class="more-feed">
+<button id="moreFeedBtn">আরও দেখুন</button>
 </div>
-<div class="post-more">···</div>
-</div>
-<h3 class="post-title">কিছু কথা কখনো বলা হয় না</h3>
-<p class="post-text">
-শুধু রাতের জানালার পাশে বসে থাকে কিছু শব্দ। কিন্তু শব্দ কখনো মানুষ হয় না, শুধু প্রতিধ্বনিটুকু নিজের কাছে ফিরে আসে...
-</p>
-<div class="post-actions">
-<div class="post-actions-left">
-<span>♥ ৭৯</span>
-<span>💬 ১৮</span>
-<span>🔖 সংরক্ষণ</span>
-</div>
-<a href="profile.html?user=new-member" class="read-more">আরও পড়ুন →</a>
-</div>
-</article>
-
-<article class="post">
-<div class="post-head">
-<img src="profile.jpg" alt="সদস্য লেখক">
-<div class="author-line">
-<a href="profile.html?user=member-writer">সদস্য লেখক</a> · অনুকাব্য · ৩ ঘণ্টা আগে
-</div>
-<div class="post-more">···</div>
-</div>
-<h3 class="post-title">অরণ্যের অন্ধকারে</h3>
-<p class="post-text">
-বনের পরের শেষ প্রান্তে যে নীরবতা দাঁড়িয়ে থাকে, তার ভেতর লুকিয়ে আছে আলো। মানুষ হারিয়ে যায়, শব্দ থেকে যায়...
-</p>
-<div class="post-actions">
-<div class="post-actions-left">
-<span>♥ ৬৩</span>
-<span>💬 ১১</span>
-<span>🔖 সংরক্ষণ</span>
-</div>
-<a href="profile.html?user=member-writer" class="read-more">আরও পড়ুন →</a>
-</div>
-</article>
 
 </section>
 
@@ -1313,37 +1280,37 @@ gap:14px;
 </p>
 
 <div class="featured-grid">
+
 <a href="founder-profile.html" class="featured-item">
-<img src="cover.jpg" alt="">
-<div>
 <small>কবিতা</small>
 <h4>অপেক্ষার অন্তহীন তুমি</h4>
-</div>
+<p>মাহমুদ সোহেল</p>
 </a>
 
 <a href="madhyorater-prolap.html" class="featured-item">
-<img src="cover.jpg" alt="">
-<div>
 <small>প্রলাপ</small>
 <h4>ভাঙা ঘরের দিনলিপি</h4>
-</div>
+<p>মধ্যরাতের প্রলাপ</p>
 </a>
 
 <a href="founder-profile.html" class="featured-item">
-<img src="cover.jpg" alt="">
-<div>
 <small>অনুকাব্য</small>
 <h4>নৈঃশব্দ্যের শব্দমালা</h4>
-</div>
+<p>মাহমুদ সোহেল</p>
 </a>
 
-<a href="profile.html" class="featured-item">
-<img src="cover.jpg" alt="">
-<div>
+<a href="profile.html?user=new-member" class="featured-item">
 <small>চিঠিপত্র</small>
 <h4>একটি অসমাপ্ত চিঠি</h4>
-</div>
+<p>নতুন সদস্য</p>
 </a>
+
+<a href="profile.html?user=member-writer" class="featured-item">
+<small>কবিতা</small>
+<h4>শব্দের ওপারে</h4>
+<p>সদস্য লেখক</p>
+</a>
+
 </div>
 </section>
 
@@ -1357,23 +1324,27 @@ gap:14px;
 <div class="selected-writer">
 <img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="">
 <div>
+<a href="founder-profile.html">
 <strong>মাহমুদ সোহেল</strong>
+</a>
 <small>প্রতিষ্ঠাতা / লেখক</small>
 </div>
-<a href="founder-profile.html" class="follow-btn">দেখুন</a>
+<a href="founder-profile.html" class="view-btn">দেখুন</a>
 </div>
 
 <div class="selected-writer">
 <img src="profile.jpg" alt="">
 <div>
+<a href="profile.html?user=new-member">
 <strong>নতুন সদস্য</strong>
+</a>
 <small>Approved profile</small>
 </div>
-<a href="profile.html" class="follow-btn">দেখুন</a>
+<a href="profile.html?user=new-member" class="view-btn">দেখুন</a>
 </div>
 
 <div style="text-align:right;margin-top:12px;">
-<a href="search.html?q=লেখক" style="font-weight:800;color:#12345f;">সব লেখক দেখুন →</a>
+<a href="search.html?q=লেখক" style="font-weight:800;color:var(--accent);">সব লেখক দেখুন →</a>
 </div>
 </section>
 
@@ -1382,15 +1353,16 @@ gap:14px;
 
 <div class="auto-poet-box">
 <p>
-এই অংশে খ্যাতিমান কবি তালিকা থেকে কবিরা দেখাবে।  
-সম্পূর্ণ তালিকা থাকবে খ্যাতিমান কবি page-এ।
+বাংলা ভাষাভাষী ১০০ খ্যাতিমান কবির alphabetical তালিকা এবং কয়েকজন উপমহাদেশীয়/সুফি কবির profile থাকবে।
 </p>
 <a href="famous-poet.html">সব খ্যাতিমান কবি দেখুন →</a>
 </div>
 </section>
 
 <section class="card midnight-card">
-<h3>মধ্যরাতের প্রলাপ</h3>
+<h3>
+<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+</h3>
 <p>
 রাত যখন শব্দকে নিজের দিকে টেনে নেয়, তখন কিছু কথা কবিতা হয় না—প্রলাপ হয়ে ওঠে।
 </p>
@@ -1408,7 +1380,7 @@ gap:14px;
 </div>
 
 <div style="text-align:right;margin-top:14px;">
-<a href="discussion-post.html" style="font-weight:800;color:#12345f;">সব আলোচনা দেখুন →</a>
+<a href="discussion-post.html" style="font-weight:800;color:var(--accent);">সব আলোচনা দেখুন →</a>
 </div>
 </section>
 
@@ -1427,7 +1399,9 @@ gap:14px;
 <section class="card quote-card">
 <div class="quote-mark">“</div>
 <p>শব্দরা যখন মনের গভীর থেকে আসে, তখনই তারা হৃদয় ছুঁতে পারে।</p>
-<b>— ভুবনডাঙ্গা</b>
+<b>
+<a href="index.html">— ভুবনডাঙ্গা</a>
+</b>
 </section>
 
 </aside>
@@ -1435,7 +1409,9 @@ gap:14px;
 </main>
 
 <footer class="site-footer">
-<div>🌿 ভুবনডাঙ্গা © ২০২৬ • বাংলা সাহিত্য ও সৃজনশীলতার মুক্ত ভুবন</div>
+<div>
+<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • বাংলা সাহিত্য ও সৃজনশীলতার মুক্ত ভুবন
+</div>
 <div class="footer-links">
 <a href="about.html">আমাদের সম্পর্কে</a>
 <a href="about.html">ব্যবহারের শর্তাবলি</a>
@@ -1449,6 +1425,10 @@ gap:14px;
 <div class="toast" id="toast">এই সুবিধাটি শীঘ্রই যুক্ত হবে।</div>
 
 <script>
+const htmlRoot = document.documentElement;
+const savedTheme = localStorage.getItem("bhubondangaTheme") || "light";
+htmlRoot.setAttribute("data-theme", savedTheme);
+
 const menuBtn = document.getElementById("menuBtn");
 const mobileDrawer = document.getElementById("mobileDrawer");
 const drawerBackdrop = document.getElementById("drawerBackdrop");
@@ -1456,13 +1436,59 @@ const closeDrawer = document.getElementById("closeDrawer");
 const searchBtn = document.getElementById("searchBtn");
 const searchMini = document.getElementById("searchMini");
 const toast = document.getElementById("toast");
+const themeBtn = document.getElementById("themeBtn");
+const headerDate = document.getElementById("headerDate");
+
+function updateThemeButton(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+if(currentTheme === "dark"){
+themeBtn.innerHTML = "☀️ <span>Light</span>";
+}else{
+themeBtn.innerHTML = "🌙 <span>Dark</span>";
+}
+}
+
+updateThemeButton();
+
+themeBtn.addEventListener("click",function(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+const nextTheme = currentTheme === "dark" ? "light" : "dark";
+htmlRoot.setAttribute("data-theme",nextTheme);
+localStorage.setItem("bhubondangaTheme",nextTheme);
+updateThemeButton();
+});
+
+const today = new Date();
+
+const englishDate = today.toLocaleDateString("en-US",{
+year:"numeric",
+month:"short",
+day:"numeric"
+});
+
+let banglaDate = "";
+try{
+banglaDate = today.toLocaleDateString("bn-BD-u-ca-beng",{
+year:"numeric",
+month:"long",
+day:"numeric"
+});
+}catch(e){
+banglaDate = today.toLocaleDateString("bn-BD",{
+year:"numeric",
+month:"long",
+day:"numeric"
+});
+}
+
+headerDate.innerText = banglaDate + " • " + englishDate;
 
 function showToast(text){
 toast.innerText = text;
 toast.style.display = "block";
 setTimeout(function(){
 toast.style.display = "none";
-},1900);
+},2100);
 }
 
 function openDrawer(){
@@ -1502,6 +1528,316 @@ doSearch();
 });
 }
 
+const approvedFeed = [
+{
+author:"মাহমুদ সোহেল",
+username:"mahmud-sohel",
+profileUrl:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
+type:"কবিতা",
+time:"১ ঘণ্টা আগে",
+title:"নদীর ধারে এক অপেক্ষা",
+text:"নদীর ধারে বসে থাকতে থাকতে কখন যে অপরাহ্ন মিশে আসে, টের পাই না। নৌকার ছইয়ের পাশে ভেসে আসে বালির গন্ধ, দূরের আজান কানে লাগে আছে...",
+url:"founder-profile.html",
+likes:"১২৮",
+comments:"১৭"
+},
+{
+author:"নতুন সদস্য",
+username:"new-member",
+profileUrl:"profile.html?user=new-member",
+avatar:"profile.jpg",
+type:"প্রলাপ",
+time:"২ ঘণ্টা আগে",
+title:"কিছু কথা কখনো বলা হয় না",
+text:"শুধু রাতের জানালার পাশে বসে থাকে কিছু শব্দ। কিন্তু শব্দ কখনো মানুষ হয় না, শুধু প্রতিধ্বনিটুকু নিজের কাছে ফিরে আসে...",
+url:"profile.html?user=new-member",
+likes:"৭৯",
+comments:"১৮"
+},
+{
+author:"সদস্য লেখক",
+username:"member-writer",
+profileUrl:"profile.html?user=member-writer",
+avatar:"profile.jpg",
+type:"অনুকাব্য",
+time:"৩ ঘণ্টা আগে",
+title:"অরণ্যের অন্ধকারে",
+text:"বনের পরের শেষ প্রান্তে যে নীরবতা দাঁড়িয়ে থাকে, তার ভেতর লুকিয়ে আছে আলো। মানুষ হারিয়ে যায়, শব্দ থেকে যায়...",
+url:"profile.html?user=member-writer",
+likes:"৬৩",
+comments:"১১"
+},
+{
+author:"শান্ত পাঠক",
+username:"shanto-pathok",
+profileUrl:"profile.html?user=shanto-pathok",
+avatar:"profile.jpg",
+type:"চিঠিপত্র",
+time:"৪ ঘণ্টা আগে",
+title:"একটি অসমাপ্ত চিঠি",
+text:"তোমাকে লিখতে বসে দেখি, কাগজের ভেতর নদীর শব্দ আছে। কিছু কথা পৌঁছায় না, তবু লেখা হয়ে থাকে...",
+url:"profile.html?user=shanto-pathok",
+likes:"৪৯",
+comments:"৬"
+},
+{
+author:"মাহমুদ সোহেল",
+username:"mahmud-sohel",
+profileUrl:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
+type:"প্রলাপ",
+time:"৫ ঘণ্টা আগে",
+title:"রাতের কাছে রাখা প্রশ্ন",
+text:"মাঝরাতে যখন ঘরটা শান্ত হয়ে আসে, তখন কিছু প্রশ্ন দরজায় দাঁড়িয়ে থাকে। ঈশ্বর উত্তর দেন না, শুধু নীরবতা বাড়ে...",
+url:"madhyorater-prolap.html",
+likes:"১৪২",
+comments:"২১"
+},
+{
+author:"অরিন্দম কবি",
+username:"arindam-kobi",
+profileUrl:"profile.html?user=arindam-kobi",
+avatar:"profile.jpg",
+type:"কবিতা",
+time:"৬ ঘণ্টা আগে",
+title:"শব্দের ওপারে",
+text:"শব্দের ওপারে যে নীরবতা, সেখানে মানুষের সবচেয়ে গোপন মুখটি বসে থাকে। কেউ দেখে না, শুধু বাতাস জানে...",
+url:"profile.html?user=arindam-kobi",
+likes:"৩৮",
+comments:"৫"
+},
+{
+author:"নীলাঞ্জনা",
+username:"nilanjana",
+profileUrl:"profile.html?user=nilanjana",
+avatar:"profile.jpg",
+type:"অনুকাব্য",
+time:"৭ ঘণ্টা আগে",
+title:"পাতার ভেতর আলো",
+text:"পাতার ভেতর যত আলো, মানুষের ভেতর তার চেয়ে বেশি অন্ধকার। তবু আমরা সবুজ হতে চাই...",
+url:"profile.html?user=nilanjana",
+likes:"৭১",
+comments:"৯"
+},
+{
+author:"রুদ্র পাঠক",
+username:"rudra-pathok",
+profileUrl:"profile.html?user=rudra-pathok",
+avatar:"profile.jpg",
+type:"প্রলাপ",
+time:"৮ ঘণ্টা আগে",
+title:"নিজের সঙ্গে দেখা",
+text:"কখনো কখনো আয়নায় নিজের চোখের দিকে তাকিয়ে মনে হয়, এই মানুষটিকে আমি চিনতাম না...",
+url:"profile.html?user=rudra-pathok",
+likes:"৫৫",
+comments:"১৩"
+},
+{
+author:"সুবর্ণা",
+username:"suborna",
+profileUrl:"profile.html?user=suborna",
+avatar:"profile.jpg",
+type:"কবিতা",
+time:"৯ ঘণ্টা আগে",
+title:"বৃষ্টির ভেতর যে নাম",
+text:"বৃষ্টির ভেতর তোমার নাম লিখেছিলাম। সকাল হলে দেখি কাগজ নেই, শুধু জানালার কাঁচে জল...",
+url:"profile.html?user=suborna",
+likes:"৮৮",
+comments:"১৪"
+},
+{
+author:"মাহমুদ সোহেল",
+username:"mahmud-sohel",
+profileUrl:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
+type:"অনুকাব্য",
+time:"১০ ঘণ্টা আগে",
+title:"জ্বালা",
+text:"পালা প্রেমে জ্বালা বেশি, জ্বালা আছে জ্বালারও। যে আগুনে মানুষ পোড়ে, সে আগুনে কথা জ্বলে না...",
+url:"founder-profile.html",
+likes:"১১০",
+comments:"১২"
+},
+{
+author:"কাব্যপ্রেমী",
+username:"kabyopremi",
+profileUrl:"profile.html?user=kabyopremi",
+avatar:"profile.jpg",
+type:"চিঠিপত্র",
+time:"১১ ঘণ্টা আগে",
+title:"প্রিয় কবিতাকে চিঠি",
+text:"প্রিয় কবিতা, তুমি না থাকলে মানুষ কি শুধু হিসাব হয়ে যেত? তোমার জন্যই হয়তো এখনো কিছু মানুষ নরম থাকে...",
+url:"profile.html?user=kabyopremi",
+likes:"৪২",
+comments:"৪"
+},
+{
+author:"শুভ্র",
+username:"shuvro",
+profileUrl:"profile.html?user=shuvro",
+avatar:"profile.jpg",
+type:"কবিতা",
+time:"১২ ঘণ্টা আগে",
+title:"আলো থামেনি",
+text:"সব অন্ধকারের শেষে আলো আসে না, কিছু আলো অন্ধকারের ভেতরেই জন্ম নেয়। মানুষ শুধু তাকাতে শেখে না...",
+url:"profile.html?user=shuvro",
+likes:"৬৮",
+comments:"৮"
+},
+{
+author:"মেঘলা",
+username:"meghla",
+profileUrl:"profile.html?user=meghla",
+avatar:"profile.jpg",
+type:"প্রলাপ",
+time:"১৩ ঘণ্টা আগে",
+title:"যে কথা বলা হলো না",
+text:"যে কথা বলা হলো না, সেটাই সবচেয়ে বেশি বেঁচে থাকে। বলা কথা ক্লান্ত হয়, না-বলা কথা হাঁটে...",
+url:"profile.html?user=meghla",
+likes:"৭৬",
+comments:"১০"
+},
+{
+author:"মাহমুদ সোহেল",
+username:"mahmud-sohel",
+profileUrl:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
+type:"কবিতা",
+time:"১৪ ঘণ্টা আগে",
+title:"ইচ্ছে",
+text:"ইচ্ছে করে আকাশ হতে, ইচ্ছে করে পাখি। কোনো একদিন মুক্ত বাতাসে নিজের নাম লিখে রাখি...",
+url:"founder-profile.html",
+likes:"১৫৪",
+comments:"২২"
+},
+{
+author:"অদিতি",
+username:"aditi",
+profileUrl:"profile.html?user=aditi",
+avatar:"profile.jpg",
+type:"অনুকাব্য",
+time:"১৫ ঘণ্টা আগে",
+title:"নীরবতা",
+text:"নীরবতা কখনো ফাঁকা নয়। তার ভেতরে যত শব্দ, মানুষ তত সাহসী নয়...",
+url:"profile.html?user=aditi",
+likes:"৪৪",
+comments:"৭"
+},
+{
+author:"রায়হান",
+username:"rayhan",
+profileUrl:"profile.html?user=rayhan",
+avatar:"profile.jpg",
+type:"চিঠিপত্র",
+time:"১৬ ঘণ্টা আগে",
+title:"বাড়ি ফেরার আগে",
+text:"বাড়ি ফেরার আগে মানুষ অনেক দূরে যায়। দূরত্ব না হলে ঘরের মায়া বোঝা যায় না...",
+url:"profile.html?user=rayhan",
+likes:"৩৬",
+comments:"৩"
+},
+{
+author:"লাবণ্য",
+username:"labonno",
+profileUrl:"profile.html?user=labonno",
+avatar:"profile.jpg",
+type:"কবিতা",
+time:"১৭ ঘণ্টা আগে",
+title:"ছায়ার কাছে ঋণ",
+text:"দুপুরের রোদে যে ছায়া পাশে থাকে, সন্ধ্যায় তাকে আর পাওয়া যায় না। তবু ঋণ থেকে যায়...",
+url:"profile.html?user=labonno",
+likes:"৫৯",
+comments:"৬"
+},
+{
+author:"অভ্র",
+username:"abhro",
+profileUrl:"profile.html?user=abhro",
+avatar:"profile.jpg",
+type:"প্রলাপ",
+time:"১৮ ঘণ্টা আগে",
+title:"নিজের ভেতর দরজা",
+text:"মানুষের ভেতরে কিছু দরজা আছে, যেগুলো খুলতে চাবি লাগে না; লাগে শুধু ভাঙা বিশ্বাস...",
+url:"profile.html?user=abhro",
+likes:"৭২",
+comments:"১২"
+},
+{
+author:"মাহমুদ সোহেল",
+username:"mahmud-sohel",
+profileUrl:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
+type:"প্রলাপ",
+time:"১৯ ঘণ্টা আগে",
+title:"ব্যক্তিকথা",
+text:"সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই জমে থাকা কথার কাছে নরম হয়ে যায়...",
+url:"madhyorater-prolap.html",
+likes:"১৩৭",
+comments:"১৯"
+},
+{
+author:"সাদমান",
+username:"sadman",
+profileUrl:"profile.html?user=sadman",
+avatar:"profile.jpg",
+type:"কবিতা",
+time:"২০ ঘণ্টা আগে",
+title:"শেষ বিকেলের আলো",
+text:"শেষ বিকেলের আলো যেমন নিঃশব্দে জানালায় এসে পড়ে, তেমনি কিছু মানুষ জীবনে এসে থেকে যায়...",
+url:"profile.html?user=sadman",
+likes:"৪৭",
+comments:"৫"
+}
+];
+
+const feedList = document.getElementById("feedList");
+let visibleCount = 20;
+
+function renderFeed(){
+feedList.innerHTML = "";
+
+approvedFeed.slice(0,visibleCount).forEach(function(post){
+const article = document.createElement("article");
+article.className = "post";
+
+article.innerHTML = `
+<div class="post-head">
+<img src="${post.avatar}" onerror="this.src='profile.jpg'" alt="${post.author}">
+<div class="author-line">
+<a href="${post.profileUrl}">${post.author}</a> · ${post.type} · ${post.time}
+</div>
+<div class="post-more">···</div>
+</div>
+<h3 class="post-title">
+<a href="${post.url}">${post.title}</a>
+</h3>
+<p class="post-text">${post.text}</p>
+<div class="post-actions">
+<div class="post-actions-left">
+<span>♥ ${post.likes}</span>
+<span>💬 ${post.comments}</span>
+<span>🔖 সংরক্ষণ</span>
+</div>
+<a href="${post.url}" class="read-more">আরও পড়ুন →</a>
+</div>
+`;
+
+feedList.appendChild(article);
+});
+
+if(visibleCount >= approvedFeed.length){
+document.getElementById("moreFeedBtn").style.display = "none";
+}
+}
+
+renderFeed();
+
+document.getElementById("moreFeedBtn").addEventListener("click",function(){
+visibleCount += 10;
+renderFeed();
+});
+
 document.querySelectorAll(".feed-tabs a").forEach(function(tab){
 tab.addEventListener("click",function(e){
 e.preventDefault();
@@ -1509,7 +1845,7 @@ document.querySelectorAll(".feed-tabs a").forEach(function(t){
 t.classList.remove("active");
 });
 tab.classList.add("active");
-showToast("এই feed filter শীঘ্রই dynamic হবে।");
+showToast("এই feed filter Supabase চালু হলে dynamic হবে।");
 });
 });
 

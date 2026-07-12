@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="light">
 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>আজকের কবিতা | ভুবনডাঙ্গার কবিতা</title>
+<title>কবিতা ও প্রলাপ | ভুবনডাঙ্গার কবিতা</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 
 *{
 margin:0;
@@ -20,11 +20,44 @@ html{
 scroll-behavior:smooth;
 }
 
+:root{
+--bg:#f8f2e7;
+--bg-soft:#fbf6ea;
+--card:#fffdf7;
+--card-2:#fff8eb;
+--text:#12345f;
+--text-soft:#4a5a70;
+--muted:#6d7582;
+--border:rgba(18,52,95,.13);
+--accent:#12345f;
+--accent-2:#62733c;
+--gold:#b79a54;
+--shadow:0 8px 22px rgba(67,48,20,.055);
+}
+
+html[data-theme="dark"]{
+--bg:#0d1320;
+--bg-soft:#111827;
+--card:#151d2c;
+--card-2:#1c2638;
+--text:#f4ead8;
+--text-soft:#d7c9a7;
+--muted:#a9a08e;
+--border:rgba(244,234,216,.16);
+--accent:#d8bd75;
+--accent-2:#b99a50;
+--gold:#d8bd75;
+--shadow:0 10px 28px rgba(0,0,0,.35);
+}
+
 body{
 font-family:'Noto Serif Bengali',serif;
-background:#f7f4ec;
-color:#142d5c;
-line-height:1.8;
+background:var(--bg);
+color:var(--text);
+line-height:1.65;
+user-select:none;
+-webkit-user-select:none;
+-ms-user-select:none;
 }
 
 a{
@@ -32,432 +65,787 @@ text-decoration:none;
 color:inherit;
 }
 
-.date-strip{
-background:#123b78;
-color:white;
-text-align:center;
-padding:8px 12px;
-font-size:14px;
+button,
+input,
+select,
+textarea{
+font-family:inherit;
 }
 
-header{
-background:white;
-padding:22px 5%;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
-text-align:center;
+.site-shell{
+min-height:100vh;
+background:
+radial-gradient(circle at top left,rgba(255,255,255,.42),transparent 32%),
+linear-gradient(135deg,var(--bg-soft),var(--bg));
+}
+
+html[data-theme="dark"] .site-shell{
+background:
+radial-gradient(circle at top left,rgba(216,189,117,.08),transparent 32%),
+linear-gradient(135deg,#0a0f1a,#111827);
+}
+
+/* HEADER */
+
+.topbar{
+position:sticky;
+top:0;
+z-index:999;
+background:rgba(250,246,236,.94);
+backdrop-filter:blur(14px);
+border-bottom:1px solid var(--border);
+padding:10px 30px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:18px;
+}
+
+html[data-theme="dark"] .topbar{
+background:rgba(13,19,32,.94);
 }
 
 .brand{
 display:flex;
-justify-content:center;
 align-items:center;
-gap:14px;
-flex-wrap:wrap;
+gap:10px;
+min-width:230px;
 }
 
-.logo{
-font-size:42px;
-}
-
-.brand h1{
-font-size:34px;
-color:#123b78;
-line-height:1.3;
-}
-
-.brand p{
-font-size:16px;
-color:#666;
-margin-top:5px;
-}
-
-nav{
-margin-top:22px;
-display:flex;
-gap:16px;
-flex-wrap:wrap;
-justify-content:center;
-align-items:center;
-}
-
-nav a{
-font-size:16px;
-color:#123b78;
-font-weight:700;
-}
-
-nav a:hover{
-text-decoration:underline;
-}
-
-.container{
-width:92%;
-max-width:1120px;
-margin:auto;
-padding:36px 0 55px;
-}
-
-.hero{
-background:white;
-border-radius:28px;
-padding:42px 28px;
-text-align:center;
-box-shadow:0 8px 28px rgba(0,0,0,.08);
-border:1px solid rgba(220,204,165,.7);
-margin-bottom:26px;
-}
-
-.hero-icon{
-font-size:54px;
-margin-bottom:10px;
-}
-
-.hero h2{
+.brand-leaf{
 font-size:40px;
-color:#123b78;
-line-height:1.3;
+line-height:1;
 }
 
-.hero p{
-font-size:18px;
-color:#555;
-max-width:820px;
-margin:12px auto 0;
+.brand-text h1{
+font-size:31px;
+font-weight:800;
+letter-spacing:-1px;
+color:var(--text);
+line-height:1.05;
 }
 
-.hero a,
-.section a{
-color:#123b78;
+.brand-text p{
+font-size:12.5px;
+color:var(--muted);
+margin-top:2px;
+white-space:nowrap;
+}
+
+.desktop-nav{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:19px;
+flex:1;
+}
+
+.desktop-nav a{
+font-size:15px;
 font-weight:700;
+color:var(--text);
+padding:9px 2px;
+border-bottom:2px solid transparent;
+white-space:nowrap;
 }
 
-.write-actions{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:18px;
-margin-bottom:26px;
+.desktop-nav a.active,
+.desktop-nav a:hover{
+border-color:var(--accent);
 }
 
-.write-card{
-background:white;
-border-radius:24px;
-padding:24px;
-box-shadow:0 8px 25px rgba(0,0,0,.075);
-border:1px solid rgba(220,204,165,.65);
-text-align:center;
+.header-actions{
+display:flex;
+align-items:center;
+gap:10px;
 }
 
-.write-card h3{
-font-size:26px;
-color:#123b78;
-margin-bottom:8px;
+.header-date{
+font-size:12px;
+color:var(--muted);
+white-space:nowrap;
+max-width:210px;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
-.write-card p{
-font-size:16px;
-color:#555;
-margin-bottom:16px;
+.search-mini{
+height:38px;
+width:160px;
+border:1px solid var(--border);
+background:var(--card-2);
+border-radius:9px;
+padding:0 12px;
+outline:none;
+font-size:13px;
+color:var(--text);
+user-select:text;
+-webkit-user-select:text;
 }
 
-.btn{
-display:inline-block;
+.icon-btn,
+.theme-btn{
+height:38px;
+min-width:38px;
+border-radius:9px;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+font-size:15px;
+font-weight:800;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+padding:0 10px;
+}
+
+.theme-btn{
+gap:6px;
+}
+
+.write-btn{
 border:none;
-background:#123b78;
-color:white!important;
-padding:12px 26px;
-border-radius:30px;
-font-family:inherit;
-font-size:16px;
-font-weight:700;
+background:var(--accent);
+color:var(--card)!important;
+padding:10px 15px;
+border-radius:9px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+box-shadow:var(--shadow);
+white-space:nowrap;
+}
+
+.top-profile img{
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid var(--card);
+box-shadow:0 5px 14px rgba(0,0,0,.14);
+}
+
+.menu-btn{
+display:none;
+width:42px;
+height:42px;
+border:none;
+background:transparent;
+font-size:28px;
+color:var(--text);
 cursor:pointer;
 }
 
-.btn.light{
-background:#dccca5;
-color:#123b78!important;
+/* LAYOUT */
+
+.page-wrap{
+max-width:1510px;
+margin:0 auto;
+padding:18px 30px 0;
+display:grid;
+grid-template-columns:245px minmax(0,1fr) 355px;
+gap:18px;
 }
 
-.submit-panel{
-display:none;
-background:white;
-border-radius:25px;
-padding:28px;
-box-shadow:0 8px 25px rgba(0,0,0,.075);
-border:1px solid rgba(220,204,165,.6);
-margin-bottom:26px;
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:13px;
+box-shadow:var(--shadow);
 }
 
-.submit-panel h3{
-font-size:27px;
-color:#123b78;
-margin-bottom:10px;
+.sidebar{
+position:sticky;
+top:80px;
+height:calc(100vh - 112px);
+overflow:auto;
+padding-right:2px;
 }
 
-.submit-panel p{
-font-size:16px;
-color:#555;
-margin-bottom:15px;
+.side-card{
+padding:14px;
+position:relative;
+overflow:hidden;
+}
+
+.side-card::after{
+content:"";
+position:absolute;
+left:0;
+bottom:0;
+width:100%;
+height:150px;
+background:radial-gradient(circle at bottom left,rgba(98,115,60,.10),transparent 65%);
+pointer-events:none;
+}
+
+html[data-theme="dark"] .side-card::after{
+background:radial-gradient(circle at bottom left,rgba(216,189,117,.08),transparent 65%);
+}
+
+.side-menu{
+display:flex;
+flex-direction:column;
+gap:4px;
+position:relative;
+z-index:1;
+}
+
+.side-menu a{
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 11px;
+border-radius:9px;
+font-size:15px;
+font-weight:650;
+color:var(--text);
+}
+
+.side-menu a:hover,
+.side-menu a.active{
+background:rgba(98,115,60,.14);
+}
+
+html[data-theme="dark"] .side-menu a:hover,
+html[data-theme="dark"] .side-menu a.active{
+background:rgba(216,189,117,.10);
+}
+
+.side-title{
+font-size:17px;
+font-weight:800;
+color:var(--text);
+margin:18px 0 8px;
+padding:0 8px;
+position:relative;
+z-index:1;
+}
+
+.category-list{
+display:flex;
+flex-direction:column;
+gap:4px;
+padding:0 6px;
+position:relative;
+z-index:1;
+}
+
+.category-list a{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:14px;
+color:var(--text-soft);
+padding:5px 0;
+}
+
+.category-list span{
+background:rgba(98,115,60,.14);
+border-radius:12px;
+padding:2px 8px;
+font-size:12px;
+color:var(--accent-2);
+}
+
+html[data-theme="dark"] .category-list span{
+background:rgba(216,189,117,.10);
+color:var(--gold);
+}
+
+.other-menu{
+margin-top:8px;
+background:var(--card-2);
+border:1px solid var(--border);
+border-radius:12px;
+padding:10px;
+position:relative;
+z-index:1;
+}
+
+.other-menu summary{
+cursor:pointer;
+font-weight:800;
+color:var(--text);
+font-size:14.5px;
+}
+
+.other-menu a{
+display:block;
+font-size:14px;
+color:var(--text-soft);
+padding:7px 0 0 0;
+}
+
+.auth-area{
+margin-top:22px;
+display:grid;
+gap:10px;
+padding:0 6px;
+position:relative;
+z-index:1;
+}
+
+.login-side,
+.register-side{
+display:block;
+text-align:center;
+padding:11px 14px;
+border-radius:9px;
+font-weight:800;
+font-size:15px;
+}
+
+.login-side{
+background:var(--accent);
+color:var(--card)!important;
+}
+
+.register-side{
+background:var(--card-2);
+border:1px solid var(--accent);
+color:var(--accent)!important;
+}
+
+/* MAIN */
+
+.hero-card{
+padding:24px;
+overflow:hidden;
+position:relative;
+background:
+linear-gradient(135deg,var(--card),var(--card-2));
+}
+
+.hero-card::after{
+content:"✎";
+position:absolute;
+right:32px;
+top:10px;
+font-size:116px;
+color:rgba(98,115,60,.08);
+line-height:1;
+}
+
+html[data-theme="dark"] .hero-card::after{
+color:rgba(216,189,117,.08);
+}
+
+.hero-card h2{
+font-size:34px;
+line-height:1.3;
+font-weight:800;
+color:var(--text);
+position:relative;
+z-index:2;
+}
+
+.hero-card p{
+font-size:15.5px;
+color:var(--text-soft);
+line-height:1.9;
+margin-top:9px;
+max-width:760px;
+position:relative;
+z-index:2;
+}
+
+.hero-links{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+position:relative;
+z-index:2;
+}
+
+.hero-links a{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+border-radius:9px;
+padding:9px 13px;
+font-size:13.5px;
+font-weight:800;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+}
+
+.hero-links a.primary{
+background:var(--accent);
+color:var(--card);
+border-color:var(--accent);
+}
+
+.compose-card{
+margin-top:16px;
+padding:20px;
+}
+
+.compose-card h3{
+font-size:23px;
+font-weight:800;
+color:var(--text);
+}
+
+.compose-card p{
+font-size:14.5px;
+color:var(--text-soft);
+margin-top:5px;
+line-height:1.8;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
 }
 
 label{
 display:block;
-font-size:15.5px;
-font-weight:700;
-color:#123b78;
-margin:12px 0 6px;
+font-size:13.5px;
+font-weight:800;
+color:var(--text);
+margin:12px 0 5px;
 }
 
 input,
-select,
-textarea{
+textarea,
+select{
 width:100%;
-padding:14px 15px;
-border:1px solid #dccca5;
-border-radius:16px;
-font-family:inherit;
-font-size:16px;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+border-radius:9px;
+padding:10px 12px;
+font-size:14px;
 outline:none;
-background:white;
-color:#142d5c;
+user-select:text;
+-webkit-user-select:text;
 }
 
 textarea{
-height:170px;
+min-height:160px;
 resize:none;
 }
 
-input:focus,
-select:focus,
-textarea:focus{
-border-color:#123b78;
-box-shadow:0 0 0 3px rgba(18,59,120,.08);
+.form-help{
+font-size:13px;
+color:var(--muted);
+margin-top:6px;
+line-height:1.7;
 }
 
-.form-row{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
+.submit-btn{
+background:var(--accent);
+color:var(--card);
+border:none;
+border-radius:9px;
+padding:10px 16px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+margin-top:12px;
 }
 
-.notice-box{
-background:#fff8e5;
-border-left:5px solid #dccca5;
-padding:17px;
-border-radius:15px;
+.feed-card{
 margin-top:16px;
-color:#555;
-font-size:15.8px;
-line-height:1.85;
+padding:18px;
 }
 
-.feed-header{
+.feed-tabs{
 display:flex;
-justify-content:space-between;
-gap:15px;
 align-items:center;
-flex-wrap:wrap;
-margin:28px 0 18px;
+gap:22px;
+border-bottom:1px solid var(--border);
+padding:0 4px 12px;
+overflow:auto;
 }
 
-.feed-header h3{
-font-size:30px;
-color:#123b78;
+.feed-tabs button{
+border:none;
+background:transparent;
+font-size:15px;
+font-weight:800;
+color:var(--muted);
+white-space:nowrap;
+cursor:pointer;
+padding-bottom:8px;
 }
 
-.feed-header p{
-font-size:16px;
-color:#555;
+.feed-tabs button.active{
+color:var(--text);
+border-bottom:3px solid var(--accent);
 }
 
-.feed-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(285px,1fr));
-gap:18px;
+.post{
+padding:15px 8px;
+border-bottom:1px solid var(--border);
 }
 
-.post-card{
-background:white;
-border:1px solid rgba(220,204,165,.65);
-border-radius:24px;
-padding:22px;
-box-shadow:0 8px 25px rgba(0,0,0,.065);
-display:none;
-}
-
-.post-card.show{
-display:block;
+.post:last-child{
+border-bottom:none;
 }
 
 .post-head{
 display:flex;
 align-items:center;
-gap:12px;
-margin-bottom:12px;
+gap:10px;
 }
 
-.avatar{
-width:48px;
-height:48px;
+.post-head img{
+width:42px;
+height:42px;
 border-radius:50%;
-background:#123b78;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:700;
+object-fit:cover;
+border:2px solid var(--card);
+box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+
+.author-line{
+font-size:13.8px;
+font-weight:400;
+color:var(--muted);
+}
+
+.author-line a{
+font-weight:800;
+color:var(--text);
+}
+
+.post-more{
+margin-left:auto;
+font-size:20px;
+color:var(--muted);
+}
+
+.post-title{
 font-size:18px;
-flex-shrink:0;
+font-weight:500;
+color:var(--text);
+margin-top:9px;
+line-height:1.42;
 }
 
-.post-head strong{
-color:#123b78;
-font-size:17px;
-}
-
-.post-head small{
-display:block;
-color:#777;
-font-size:13px;
-}
-
-.type-badge{
-display:inline-block;
-background:#f7f4ec;
-border:1px solid #dccca5;
-color:#123b78;
-border-radius:20px;
-padding:5px 12px;
-font-size:13px;
-font-weight:700;
-margin-bottom:10px;
-}
-
-.post-card h4{
-font-size:22px;
-color:#123b78;
-margin-bottom:8px;
-}
-
-.post-card p{
-font-size:15.8px;
-color:#555;
-line-height:1.85;
+.post-text{
+font-size:15px;
+font-weight:400;
+color:var(--text-soft);
+margin-top:5px;
+line-height:1.76;
 }
 
 .post-actions{
 display:flex;
+align-items:center;
+justify-content:space-between;
 gap:8px;
-flex-wrap:wrap;
-margin-top:16px;
-padding-top:14px;
-border-top:1px solid #eee;
+margin-top:12px;
+font-size:13.8px;
+font-weight:400;
+color:var(--muted);
 }
 
-.action-btn{
-border:1px solid #dccca5;
-background:#f7f4ec;
-color:#123b78;
-padding:7px 12px;
-border-radius:20px;
-font-family:inherit;
-font-size:13.5px;
-cursor:pointer;
-}
-
-.date-bottom{
-font-size:13px!important;
-color:#777!important;
-margin-top:12px!important;
-}
-
-.pagination{
+.post-actions-left{
 display:flex;
-justify-content:center;
-gap:12px;
-flex-wrap:wrap;
-margin-top:28px;
+gap:17px;
+align-items:center;
 }
 
-.section{
-background:white;
-border-radius:25px;
-padding:30px;
-box-shadow:0 8px 25px rgba(0,0,0,.075);
-border:1px solid rgba(220,204,165,.6);
-margin-top:30px;
+.read-more{
+font-weight:800;
+color:var(--accent);
 }
 
-.section h3{
-font-size:28px;
-color:#123b78;
-margin-bottom:12px;
-}
+/* RIGHT */
 
-.section p{
-font-size:17px;
-color:#555;
-margin-top:10px;
-}
-
-.footer-links{
-background:#fff;
-margin-top:60px;
-padding:28px 15px;
-display:flex;
-justify-content:center;
+.rightbar{
+position:sticky;
+top:80px;
+height:calc(100vh - 112px);
+overflow:auto;
+display:grid;
 gap:16px;
-flex-wrap:wrap;
-border-top:1px solid #eee;
-border-bottom:1px solid #eee;
+align-content:start;
 }
 
-.footer-links a{
-color:#123b78;
-font-weight:700;
-font-size:16px;
+.right-card{
+padding:18px;
 }
 
-.footer-login{
-background:#123b78;
-color:white!important;
-padding:10px 20px;
-border-radius:25px;
-}
-
-.footer-register{
-background:#dccca5;
-color:#123b78!important;
-padding:10px 20px;
-border-radius:25px;
-}
-
-footer{
-background:white;
+.right-title{
+font-size:21px;
+font-weight:800;
+color:var(--text);
 text-align:center;
-padding:45px 20px;
+margin-bottom:14px;
 }
 
-footer h2{
-color:#123b78;
-font-size:28px;
+.notice-box{
+background:var(--card-2);
+border:1px dashed var(--border);
+border-radius:13px;
+padding:15px;
+font-size:14px;
+color:var(--text-soft);
+line-height:1.8;
 }
 
-footer p{
-color:#555;
+.notice-box b{
+color:var(--text);
+}
+
+.favorite-writing{
+display:block;
+padding:10px 0;
+border-bottom:1px solid var(--border);
+}
+
+.favorite-writing:last-child{
+border-bottom:none;
+}
+
+.favorite-writing small{
+font-size:12px;
+font-weight:800;
+color:var(--accent-2);
+}
+
+.favorite-writing h4{
+font-size:15px;
+font-weight:600;
+color:var(--text);
+line-height:1.5;
+margin-top:4px;
+}
+
+.favorite-writing p{
+font-size:12.8px;
+color:var(--muted);
+margin-top:3px;
+}
+
+.midnight-card{
+background:
+linear-gradient(135deg,rgba(8,13,22,.98),rgba(17,24,39,.98)),
+radial-gradient(circle at top right,rgba(216,189,117,.10),transparent 45%);
+color:#f4ead8;
+border:none;
+padding:20px;
+}
+
+.midnight-card h3{
+font-size:22px;
+font-weight:800;
+color:#f6e8c6;
+}
+
+.midnight-card p{
+font-size:14.5px;
+font-weight:400;
+color:#d9caa8;
 margin-top:8px;
 }
 
+.midnight-card a{
+display:inline-block;
+margin-top:12px;
+color:#fff;
+font-weight:800;
+}
+
+/* DRAWER */
+
+.drawer-backdrop{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.38);
+z-index:1200;
+display:none;
+}
+
+.mobile-drawer{
+position:fixed;
+top:0;
+left:-310px;
+width:290px;
+height:100vh;
+background:var(--card);
+z-index:1300;
+transition:.25s ease;
+padding:18px 16px;
+overflow:auto;
+box-shadow:12px 0 35px rgba(0,0,0,.22);
+}
+
+.mobile-drawer.open{
+left:0;
+}
+
+.drawer-backdrop.show{
+display:block;
+}
+
+.drawer-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:14px;
+}
+
+.drawer-head h3{
+font-size:22px;
+font-weight:800;
+color:var(--text);
+}
+
+.close-drawer{
+border:none;
+background:transparent;
+font-size:30px;
+color:var(--text);
+}
+
+/* FOOTER */
+
+.site-footer{
+max-width:1510px;
+margin:0 auto;
+padding:18px 30px;
+background:var(--accent);
+color:var(--card);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+font-size:14px;
+}
+
+.site-footer a{
+font-weight:700;
+}
+
+.footer-links{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+}
+
+/* UTIL */
+
 .to-top{
 position:fixed;
-right:20px;
-bottom:22px;
-width:46px;
-height:46px;
+right:18px;
+bottom:20px;
+width:43px;
+height:43px;
 border-radius:50%;
 border:none;
-background:#123b78;
-color:white;
-font-size:22px;
+background:var(--accent);
+color:var(--card);
+font-size:21px;
 font-weight:700;
 cursor:pointer;
 box-shadow:0 8px 22px rgba(0,0,0,.22);
@@ -467,578 +855,692 @@ z-index:999;
 
 .toast{
 position:fixed;
-bottom:80px;
+bottom:76px;
 left:50%;
 transform:translateX(-50%);
-background:#123b78;
-color:white;
-padding:12px 22px;
-border-radius:30px;
-font-size:15px;
+background:var(--accent);
+color:var(--card);
+padding:12px 20px;
+border-radius:20px;
+font-size:14.5px;
 display:none;
 z-index:9999;
 box-shadow:0 8px 25px rgba(0,0,0,.25);
 text-align:center;
-max-width:90%;
+max-width:92%;
+line-height:1.8;
 }
 
-@media(max-width:800px){
+/* RESPONSIVE */
 
-.date-strip{
-font-size:12.5px;
-line-height:1.6;
+@media(max-width:1250px){
+
+.header-date{
+display:none;
 }
 
-header{
-padding:22px 4%;
+.search-mini{
+display:none;
 }
 
-.brand{
+.page-wrap{
+grid-template-columns:220px minmax(0,1fr);
+}
+
+.rightbar{
+display:none;
+}
+
+}
+
+@media(max-width:880px){
+
+.topbar{
+padding:10px 15px;
+}
+
+.menu-btn{
 display:block;
 }
 
-.logo{
-font-size:38px;
-margin-bottom:5px;
+.desktop-nav,
+.write-btn{
+display:none;
 }
 
-.brand h1{
-font-size:31px;
-line-height:1.3;
+.brand{
+min-width:auto;
 }
 
-.brand p{
-font-size:14.5px;
-}
-
-nav{
-gap:11px;
-line-height:2.05;
-margin-top:18px;
-}
-
-nav a{
-font-size:14.5px;
-}
-
-.container{
-padding:28px 0 45px;
-}
-
-.hero{
-padding:32px 20px;
-border-radius:24px;
-}
-
-.hero h2{
+.brand-leaf{
 font-size:31px;
 }
 
-.hero p{
-font-size:16px;
+.brand-text h1{
+font-size:26px;
 }
 
-.write-card{
-padding:22px 18px;
+.brand-text p{
+font-size:11px;
+max-width:180px;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
-.submit-panel{
-padding:23px;
+.top-profile img{
+width:38px;
+height:38px;
 }
 
-.form-row{
+.theme-btn span{
+display:none;
+}
+
+.page-wrap{
+display:block;
+padding:12px 14px 28px;
+}
+
+.sidebar{
+display:none;
+}
+
+.hero-card,
+.compose-card,
+.feed-card{
+padding:14px;
+}
+
+.hero-card h2{
+font-size:27px;
+}
+
+.form-grid{
 grid-template-columns:1fr;
-gap:0;
 }
 
-.feed-header h3{
-font-size:25px;
+.post{
+padding:15px 3px;
 }
 
-.section{
-padding:23px;
-border-radius:22px;
+.post-title{
+font-size:17.5px;
+font-weight:500;
 }
 
-.section h3{
-font-size:24px;
+.post-text{
+font-size:14.7px;
+font-weight:400;
+}
+
+.post-actions{
+align-items:flex-start;
+flex-direction:column;
+}
+
+.site-footer{
+display:block;
+text-align:center;
+padding:18px 14px;
 }
 
 .footer-links{
-gap:13px;
-line-height:2.15;
+justify-content:center;
+margin-top:8px;
 }
 
-.footer-links a{
-font-size:14.5px;
 }
 
-.to-top{
-right:15px;
-bottom:18px;
-width:43px;
-height:43px;
-font-size:20px;
+@media(max-width:520px){
+
+.topbar{
+gap:8px;
+}
+
+.brand-text h1{
+font-size:23px;
+}
+
+.brand-text p{
+max-width:155px;
+}
+
+.icon-btn,
+.theme-btn{
+height:36px;
+min-width:36px;
+padding:0 8px;
 }
 
 }
 </style>
 </head>
 
-<body id="top">
+<body>
 
-<div class="date-strip" id="dateStrip">তারিখ লোড হচ্ছে...</div>
+<div class="site-shell">
 
-<header>
+<header class="topbar">
 
-<div class="brand">
-<a href="index.html">
-<div class="logo">🌿</div>
-</a>
+<button class="menu-btn" id="menuBtn">☰</button>
 
-<div>
-<a href="index.html">
-<h1>ভুবনডাঙ্গার কবিতা</h1>
-</a>
+<a href="index.html" class="brand">
+<div class="brand-leaf">🌿</div>
+<div class="brand-text">
+<h1>ভুবনডাঙ্গা</h1>
 <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
 </div>
-</div>
+</a>
 
-<nav>
+<nav class="desktop-nav">
 <a href="index.html">হোম</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="today-poem.html">আজকের কবিতা</a>
-<a href="profile.html">আপনার প্রোফাইল</a>
 <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
-<a href="founder-profile.html">মাহমুদ সোহেল</a>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="today-poem.html?type=poem" class="active">কবিতা</a>
+<a href="today-poem.html?type=prolap">প্রলাপ</a>
+<a href="famous-poet.html">খ্যাতিমান কবি</a>
+<a href="founder-profile.html">মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">আপনার প্রোফাইল</a>
 </nav>
+
+<div class="header-actions">
+<div class="header-date" id="headerDate">তারিখ লোড হচ্ছে...</div>
+<input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
+<button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙 <span>Dark</span></button>
+<button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
+<a href="#compose" class="write-btn">✎ লিখুন</a>
+<a href="profile.html" class="top-profile" title="আপনার প্রোফাইল">
+<img src="profile.jpg" alt="Profile">
+</a>
+</div>
 
 </header>
 
-<div class="container">
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
 
-<section class="hero">
-<div class="hero-icon">📝</div>
-<h2>আজকের কবিতা</h2>
+<aside class="mobile-drawer" id="mobileDrawer">
+<div class="drawer-head">
+<a href="index.html">
+<h3>ভুবনডাঙ্গা</h3>
+</a>
+<button class="close-drawer" id="closeDrawer">×</button>
+</div>
+
+<div class="side-menu">
+<a href="index.html">🏠 হোম</a>
+<a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
+<a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
+<a href="today-poem.html?type=poem" class="active">📝 কবিতা</a>
+<a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">👤 আপনার প্রোফাইল</a>
+<a href="discussion-post.html">💬 সাহিত্য আলোচনা</a>
+<a href="search.html">🔎 সার্চ</a>
+</div>
+
+<div class="side-title">বিষয়ের অনুসারে</div>
+
+<div class="category-list">
+<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
+<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
+<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
+<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+</div>
+
+<details class="other-menu">
+<summary>অন্যান্য</summary>
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="contact.html">যোগাযোগ / রিভিউ</a>
+<a href="about.html">নীতিমালা</a>
+<a href="search.html">সার্চ</a>
+</details>
+
+<div class="auth-area">
+<a href="login.html" class="login-side">লগইন করুন</a>
+<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+</div>
+</aside>
+
+<main class="page-wrap">
+
+<aside class="sidebar">
+<div class="card side-card">
+
+<div class="side-menu">
+<a href="index.html">🏠 হোম</a>
+<a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
+<a href="today-poem.html?type=poem" class="active">📝 কবিতা</a>
+<a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
+<a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">👤 আপনার প্রোফাইল</a>
+</div>
+
+<div class="side-title">বিষয়ের অনুসারে</div>
+
+<div class="category-list">
+<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
+<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
+<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
+<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+</div>
+
+<details class="other-menu">
+<summary>অন্যান্য</summary>
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট</a>
+<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
+<a href="search.html">সার্চ</a>
+</details>
+
+<div class="auth-area">
+<a href="login.html" class="login-side">↪ লগইন করুন</a>
+<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+</div>
+
+</div>
+</aside>
+
+<section class="main-content">
+
+<section class="card hero-card">
+<h2 id="pageTitle">কবিতা লিখুন, অনুভূতি প্রকাশ করুন</h2>
 <p>
-এখানে কবিতা ও প্রলাপের public feed দেখা যাবে। নতুন লেখা জমা দিলে সেটি review/approval-এর পরে প্রকাশিত হবে।
+ভুবনডাঙ্গায় কবিতা, প্রলাপ, অনুকাব্য ও চিঠিপত্র জমা দেওয়া যাবে। সব লেখা text-only থাকবে। জমা দেওয়ার পরে ভুবনডাঙ্গা টিম যাচাই করে অনুমোদন করলে ফিডে প্রকাশিত হবে।
 </p>
+
+<div class="hero-links">
+<a href="today-poem.html?type=poem" class="primary">কবিতা</a>
+<a href="today-poem.html?type=prolap">প্রলাপ</a>
+<a href="today-poem.html?type=anukabya">অনুকাব্য</a>
+<a href="today-poem.html?type=letter">চিঠিপত্র</a>
+<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+</div>
 </section>
 
-<div class="write-actions">
-
-<div class="write-card">
-<h3>কবিতা লিখুন</h3>
-<p>আপনার কবিতা জমা দিন। approval-এর পরে feed-এ প্রকাশিত হবে।</p>
-<button class="btn" onclick="openPanel('poem')">কবিতা লিখুন</button>
-</div>
-
-<div class="write-card">
-<h3>প্রলাপ লিখুন</h3>
-<p>অনুভূতি, ভাবনা বা নীরব কথাগুলো প্রলাপ হিসেবে জমা দিন।</p>
-<button class="btn light" onclick="openPanel('prolap')">প্রলাপ লিখুন</button>
-</div>
-
-</div>
-
-<section class="submit-panel" id="submitPanel">
-
-<h3 id="panelTitle">লেখা জমা দিন</h3>
-
+<section class="card compose-card" id="compose">
+<h3 id="composeTitle">নতুন লেখা জমা দিন</h3>
 <p>
-এই form এখন demo। Backend যুক্ত হলে লেখা সরাসরি approval queue-তে জমা হবে।
+আপনার লেখা আমাদের কাছে পৌঁছাবে। অনুমোদনের পরে এটি সাম্প্রতিক লেখা / news feed-এ প্রকাশিত হবে।
 </p>
 
-<form id="submitForm">
+<form id="writingForm">
 
-<div class="form-row">
+<div class="form-grid">
 <div>
-<label for="writerName">নাম</label>
-<input type="text" id="writerName" placeholder="আপনার নাম লিখুন">
-</div>
-
-<div>
-<label for="writingType">ধরন</label>
+<label>লেখার ধরন</label>
 <select id="writingType">
-<option>কবিতা</option>
-<option>প্রলাপ</option>
+<option value="কবিতা">কবিতা</option>
+<option value="প্রলাপ">প্রলাপ</option>
+<option value="অনুকাব্য">অনুকাব্য</option>
+<option value="চিঠিপত্র">চিঠিপত্র</option>
 </select>
 </div>
+
+<div>
+<label>শিরোনাম</label>
+<input type="text" placeholder="শিরোনাম লিখুন">
+</div>
 </div>
 
-<label for="title">শিরোনাম</label>
-<input type="text" id="title" placeholder="লেখার শিরোনাম লিখুন">
+<label>আপনার লেখা</label>
+<textarea placeholder="এখানে আপনার লেখা লিখুন..."></textarea>
 
-<label for="content">লেখা</label>
-<textarea id="content" placeholder="আপনার লেখা লিখুন..."></textarea>
+<p class="form-help">
+লেখার ভিতরে কোনো image/photo upload করা যাবে না। Cover photo ও profile photo শুধু profile-এর জন্য।
+</p>
 
-<button type="submit" class="btn">জমা দিন</button>
-<button type="button" class="btn light" onclick="closePanel()">বন্ধ করুন</button>
+<button type="submit" class="submit-btn">জমা দিন</button>
 
 </form>
+</section>
 
-<div class="notice-box">
-সাধারণ লেখক প্রতিদিন ২টি কবিতা এবং ২টি প্রলাপ জমা দিতে পারবেন। ছবি upload করে লেখা প্রকাশের ব্যবস্থা এখন রাখা হয়নি।
+<section class="card feed-card">
+
+<div class="feed-tabs">
+<button class="active" data-filter="all">সব লেখা</button>
+<button data-filter="কবিতা">কবিতা</button>
+<button data-filter="প্রলাপ">প্রলাপ</button>
+<button data-filter="অনুকাব্য">অনুকাব্য</button>
+<button data-filter="চিঠিপত্র">চিঠিপত্র</button>
 </div>
+
+<div id="writingFeed"></div>
 
 </section>
 
-<div class="feed-header">
-<div>
-<h3>সাম্প্রতিক লেখা</h3>
-<p>শেষ activity অনুযায়ী লেখা উপরে আসবে।</p>
-</div>
-</div>
+</section>
 
-<div class="feed-grid" id="feedGrid">
+<aside class="rightbar">
 
-<article class="post-card">
-<div class="post-head">
-<a href="profile.html?user=mahfuz" class="avatar">ম</a>
-<div>
-<a href="profile.html?user=mahfuz"><strong>মাহফুজ রহমান</strong></a>
-<small>শেষ activity: আজ</small>
-</div>
-</div>
-<span class="type-badge">কবিতা</span>
-<h4>বৃষ্টির পর শহর</h4>
-<p>বৃষ্টির পর শহরটা যেন নিজের ভেতরে ফিরে যায়। জানালার পাশে দাঁড়িয়ে মানুষ শুধু ভেজা রাস্তা নয়, নিজের ভেজা মনও দেখে।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: আজ</p>
-</article>
+<section class="card right-card">
+<h3 class="right-title">জমা দেওয়ার নিয়ম</h3>
 
-<article class="post-card">
-<div class="post-head">
-<a href="profile.html?user=shanta" class="avatar">শ</a>
-<div>
-<a href="profile.html?user=shanta"><strong>শান্তা ইসলাম</strong></a>
-<small>শেষ activity: আজ</small>
+<div class="notice-box">
+<b>Text-only:</b> কবিতা / প্রলাপ / অনুকাব্য / চিঠিপত্রের মধ্যে কোনো ছবি থাকবে না।<br><br>
+<b>Approval:</b> Pending লেখা public feed বা search-এ আসবে না। অনুমোদনের পরে প্রকাশিত হবে।<br><br>
+<b>Slogan:</b> নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।
 </div>
-</div>
-<span class="type-badge">প্রলাপ</span>
-<h4>রাতের সঙ্গে কথা</h4>
-<p>রাত মানুষকে ভয় দেখায় না, বরং মানুষের ভেতরের কথাগুলোকে একটু নরম করে বাইরে আনতে সাহায্য করে।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: আজ</p>
-</article>
+</section>
 
-<article class="post-card">
-<div class="post-head">
-<a href="founder-profile.html" class="avatar">মা</a>
-<div>
-<a href="founder-profile.html"><strong>মাহমুদ সোহেল</strong></a>
-<small>শেষ activity: আজ</small>
-</div>
-</div>
-<span class="type-badge">মধ্যরাতের প্রলাপ</span>
-<h4>পর্ব — ১</h4>
-<p>কিছু কথা মানুষকে বলা যায় না, আবার নিজের ভেতরেও আটকে রাখা যায় না। তখন রাতই একমাত্র নির্ভরযোগ্য শ্রোতা হয়ে ওঠে।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: আজ</p>
-</article>
-
-<article class="post-card">
-<div class="post-head">
-<a href="profile.html?user=afrin" class="avatar">আ</a>
-<div>
-<a href="profile.html?user=afrin"><strong>আফরিন নূর</strong></a>
-<small>শেষ activity: গতকাল</small>
-</div>
-</div>
-<span class="type-badge">কবিতা</span>
-<h4>ফুল ফোটার মতো</h4>
-<p>সব সৌন্দর্য দেখা হওয়ার জন্য জন্মায় না। কিছু সৌন্দর্য নিঃশব্দে ফুটে ওঠে, শুধু নিজের সত্যকে সম্মান করার জন্য।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: গতকাল</p>
-</article>
-
-<article class="post-card">
-<div class="post-head">
-<a href="profile.html?user=nabil" class="avatar">ন</a>
-<div>
-<a href="profile.html?user=nabil"><strong>নাবিল হাসান</strong></a>
-<small>শেষ activity: গতকাল</small>
-</div>
-</div>
-<span class="type-badge">প্রলাপ</span>
-<h4>অপেক্ষার ভিতর</h4>
-<p>অপেক্ষা কখনো শুধু কারও আসার জন্য নয়। কখনো অপেক্ষা নিজের ভেতরের মানুষটাকে ফিরে পাওয়ার জন্যও হয়।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: গতকাল</p>
-</article>
-
-<article class="post-card">
-<div class="post-head">
-<a href="profile.html?user=ritu" class="avatar">র</a>
-<div>
-<a href="profile.html?user=ritu"><strong>রিতু দাশ</strong></a>
-<small>শেষ activity: ২ দিন আগে</small>
-</div>
-</div>
-<span class="type-badge">কবিতা</span>
-<h4>নদীর কাছে</h4>
-<p>নদী কাউকে আটকে রাখে না, তবু মানুষ বারবার নদীর কাছেই ফিরে আসে—কারণ নদী জানে ভাঙন মানেই শেষ নয়।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: ২ দিন আগে</p>
-</article>
-
-<article class="post-card">
-<div class="post-head">
-<a href="profile.html?user=sajib" class="avatar">স</a>
-<div>
-<a href="profile.html?user=sajib"><strong>সজীব আহমেদ</strong></a>
-<small>শেষ activity: ২ দিন আগে</small>
-</div>
-</div>
-<span class="type-badge">কবিতা</span>
-<h4>শব্দের ঘর</h4>
-<p>শব্দ দিয়ে মানুষ ঘর বানায়। কেউ থাকে কবিতায়, কেউ থাকে চুপ করে রাখা এক দীর্ঘশ্বাসে।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: ২ দিন আগে</p>
-</article>
-
-<article class="post-card">
-<div class="post-head">
-<a href="profile.html?user=mim" class="avatar">মি</a>
-<div>
-<a href="profile.html?user=mim"><strong>মীম আক্তার</strong></a>
-<small>শেষ activity: ৩ দিন আগে</small>
-</div>
-</div>
-<span class="type-badge">প্রলাপ</span>
-<h4>নিজেকে লেখা চিঠি</h4>
-<p>যে কথা কাউকে বলা হয়নি, একদিন সেই কথাই নিজের কাছে ফিরে আসে—একটা নরম চিঠির মতো।</p>
-<div class="post-actions">
-<button class="action-btn">♡ লাইক</button>
-<button class="action-btn">💬 মন্তব্য</button>
-<button class="action-btn">↗ শেয়ার</button>
-<button class="action-btn">⚑ রিপোর্ট</button>
-</div>
-<p class="date-bottom">তারিখ: ৩ দিন আগে</p>
-</article>
-
-</div>
-
-<div class="pagination">
-<button class="btn light" id="prevBtn">আগের পাতা</button>
-<button class="btn" id="nextBtn">পরের পাতা</button>
-</div>
-
-<section class="section">
-<h3>লেখা প্রকাশের নিয়ম</h3>
-
+<section class="card midnight-card">
+<h3>
+<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+</h3>
 <p>
-নিজের লেখা জমা দিন। অন্যের লেখা কপি করে জমা দেওয়া যাবে না। কোনো লেখা প্রকাশের আগে review/approval-এর জন্য যাবে।
+রাতের নিঃসঙ্গতা, ঈশ্বরের কাছে ফিসফিস, আর নিজের সঙ্গে কথোপকথনের বিশেষ ভুবন।
 </p>
-
-<div class="notice-box">
-অনুকাব্য public feed-এ প্রকাশ করা হবে না। অনুকাব্য লেখকের profile page-এ দেখা যাবে। সাধারণ লেখক প্রতিদিন ৫টি অনুকাব্য profile-এ রাখতে পারবেন।
-</div>
+<a href="madhyorater-prolap.html">প্রলাপ পড়ুন →</a>
 </section>
 
-</div>
+<section class="card right-card">
+<h3 class="right-title">সাম্প্রতিক লেখা</h3>
 
-<div class="footer-links">
-<a href="login.html" class="footer-login">লগইন করুন</a>
-<a href="register.html" class="footer-register">রেজিস্টার করুন</a>
-<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট ইস্যু</a>
-<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
-</div>
-
-<footer>
-<a href="index.html" style="color:#123b78;">
-<h2>🌿 ভুবনডাঙ্গার কবিতা</h2>
+<a href="founder-profile.html" class="favorite-writing">
+<small>কবিতা</small>
+<h4>ইচ্ছে</h4>
+<p>মাহমুদ সোহেল</p>
 </a>
 
-<p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
+<a href="profile.html?user=new-member" class="favorite-writing">
+<small>প্রলাপ</small>
+<h4>কিছু কথা কখনো বলা হয় না</h4>
+<p>নতুন সদস্য</p>
+</a>
 
-<p>
-সৃজন ভাবনায়:
-<a href="founder-profile.html" style="color:#123b78;font-weight:700;">মাহমুদ সোহেল</a>
-</p>
+<a href="profile.html?user=member-writer" class="favorite-writing">
+<small>চিঠিপত্র</small>
+<h4>একটি অসমাপ্ত চিঠি</h4>
+<p>সদস্য লেখক</p>
+</a>
+</section>
 
-<p>© 2026 <a href="index.html" style="color:#123b78;font-weight:700;">ভুবনডাঙ্গার কবিতা</a></p>
+<section class="card right-card">
+<h3 class="right-title">দ্রুত লিংক</h3>
+
+<a href="famous-poet.html" class="favorite-writing">
+<small>Poets</small>
+<h4>খ্যাতিমান কবি</h4>
+<p>বাংলা ভাষাভাষী ১০০ কবি</p>
+</a>
+
+<a href="search.html" class="favorite-writing">
+<small>Search</small>
+<h4>অনুসন্ধান</h4>
+<p>কবি, লেখা, profile</p>
+</a>
+
+<a href="contact.html" class="favorite-writing">
+<small>Report</small>
+<h4>রিভিউ / কপিরাইট</h4>
+<p>ভুবনডাঙ্গা টিম দেখবে</p>
+</a>
+</section>
+
+</aside>
+
+</main>
+
+<footer class="site-footer">
+<div>
+<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • বাংলা সাহিত্য ও সৃজনশীলতার মুক্ত ভুবন
+</div>
+<div class="footer-links">
+<a href="about.html">আমাদের সম্পর্কে</a>
+<a href="about.html">ব্যবহারের শর্তাবলি</a>
+<a href="contact.html">যোগাযোগ</a>
+</div>
 </footer>
 
-<button class="to-top" id="toTopBtn" title="উপরে যান">↑</button>
+</div>
 
+<button class="to-top" id="toTopBtn">↑</button>
 <div class="toast" id="toast">এই সুবিধাটি শীঘ্রই যুক্ত হবে।</div>
 
 <script>
-const dateStrip = document.getElementById("dateStrip");
-const today = new Date();
+const htmlRoot = document.documentElement;
+const savedTheme = localStorage.getItem("bhubondangaTheme") || "light";
+htmlRoot.setAttribute("data-theme", savedTheme);
 
-const banglaWeekday = today.toLocaleDateString("bn-BD", {
-weekday:"long"
+const menuBtn = document.getElementById("menuBtn");
+const mobileDrawer = document.getElementById("mobileDrawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const closeDrawer = document.getElementById("closeDrawer");
+const searchBtn = document.getElementById("searchBtn");
+const searchMini = document.getElementById("searchMini");
+const toast = document.getElementById("toast");
+const themeBtn = document.getElementById("themeBtn");
+const headerDate = document.getElementById("headerDate");
+const writingType = document.getElementById("writingType");
+
+function updateThemeButton(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+if(currentTheme === "dark"){
+themeBtn.innerHTML = "☀️ <span>Light</span>";
+}else{
+themeBtn.innerHTML = "🌙 <span>Dark</span>";
+}
+}
+
+updateThemeButton();
+
+themeBtn.addEventListener("click",function(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+const nextTheme = currentTheme === "dark" ? "light" : "dark";
+htmlRoot.setAttribute("data-theme",nextTheme);
+localStorage.setItem("bhubondangaTheme",nextTheme);
+updateThemeButton();
 });
 
-const englishDate = today.toLocaleDateString("en-US", {
+const today = new Date();
+
+const englishDate = today.toLocaleDateString("en-US",{
 year:"numeric",
-month:"long",
+month:"short",
 day:"numeric"
 });
 
-let banglaCalendarDate = "";
-
+let banglaDate = "";
 try{
-banglaCalendarDate = today.toLocaleDateString("bn-BD-u-ca-beng", {
+banglaDate = today.toLocaleDateString("bn-BD-u-ca-beng",{
 year:"numeric",
 month:"long",
 day:"numeric"
 });
 }catch(e){
-banglaCalendarDate = today.toLocaleDateString("bn-BD", {
+banglaDate = today.toLocaleDateString("bn-BD",{
 year:"numeric",
 month:"long",
 day:"numeric"
 });
 }
 
-dateStrip.innerHTML =
-"আজ " + banglaWeekday + " • বাংলা তারিখ: " + banglaCalendarDate + " • " + englishDate + " • তিথি/পক্ষ: শীঘ্রই যুক্ত হবে";
-
-const submitPanel = document.getElementById("submitPanel");
-const writingType = document.getElementById("writingType");
-const panelTitle = document.getElementById("panelTitle");
-
-function openPanel(type){
-submitPanel.style.display = "block";
-
-if(type === "poem"){
-writingType.value = "কবিতা";
-panelTitle.innerText = "কবিতা জমা দিন";
-}else{
-writingType.value = "প্রলাপ";
-panelTitle.innerText = "প্রলাপ জমা দিন";
-}
-
-submitPanel.scrollIntoView({
-behavior:"smooth",
-block:"start"
-});
-}
-
-function closePanel(){
-submitPanel.style.display = "none";
-}
-
-const toast = document.getElementById("toast");
+headerDate.innerText = banglaDate + " • " + englishDate;
 
 function showToast(text){
-toast.innerText = text;
+toast.innerHTML = text;
 toast.style.display = "block";
-
 setTimeout(function(){
 toast.style.display = "none";
-},1800);
+},4300);
 }
 
-document.getElementById("submitForm").addEventListener("submit", function(e){
+function openDrawer(){
+mobileDrawer.classList.add("open");
+drawerBackdrop.classList.add("show");
+}
+
+function closeDrawerFn(){
+mobileDrawer.classList.remove("open");
+drawerBackdrop.classList.remove("show");
+}
+
+menuBtn.addEventListener("click",openDrawer);
+closeDrawer.addEventListener("click",closeDrawerFn);
+drawerBackdrop.addEventListener("click",closeDrawerFn);
+
+function doSearch(){
+let q = "";
+if(searchMini){
+q = searchMini.value.trim();
+}
+if(!q){
+q = prompt("কী খুঁজতে চান?") || "";
+}
+if(q.trim().length > 0){
+window.location.href = "search.html?q=" + encodeURIComponent(q.trim());
+}
+}
+
+searchBtn.addEventListener("click",doSearch);
+
+if(searchMini){
+searchMini.addEventListener("keydown",function(e){
+if(e.key === "Enter"){
+doSearch();
+}
+});
+}
+
+const params = new URLSearchParams(window.location.search);
+const typeParam = params.get("type");
+
+if(typeParam === "prolap"){
+writingType.value = "প্রলাপ";
+document.getElementById("pageTitle").innerText = "প্রলাপ লিখুন, নিজের সঙ্গে কথা বলুন";
+document.getElementById("composeTitle").innerText = "নতুন প্রলাপ জমা দিন";
+}
+
+if(typeParam === "anukabya"){
+writingType.value = "অনুকাব্য";
+document.getElementById("pageTitle").innerText = "অনুকাব্য লিখুন";
+document.getElementById("composeTitle").innerText = "নতুন অনুকাব্য জমা দিন";
+}
+
+if(typeParam === "letter"){
+writingType.value = "চিঠিপত্র";
+document.getElementById("pageTitle").innerText = "চিঠিপত্র লিখুন";
+document.getElementById("composeTitle").innerText = "নতুন চিঠিপত্র জমা দিন";
+}
+
+const feedData = [
+{
+author:"মাহমুদ সোহেল",
+profile:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
+type:"কবিতা",
+title:"ইচ্ছে",
+text:"ইচ্ছে করে আকাশ হতে, ইচ্ছে করে পাখি। কোনো একদিন মুক্ত বাতাসে নিজের নাম লিখে রাখি...",
+time:"১ ঘণ্টা আগে",
+likes:"১৫৪",
+comments:"২২"
+},
+{
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
+type:"প্রলাপ",
+title:"কিছু কথা কখনো বলা হয় না",
+text:"শুধু রাতের জানালার পাশে বসে থাকে কিছু শব্দ। কিন্তু শব্দ কখনো মানুষ হয় না, শুধু প্রতিধ্বনিটুকু ফিরে আসে...",
+time:"২ ঘণ্টা আগে",
+likes:"৭৯",
+comments:"১৮"
+},
+{
+author:"সদস্য লেখক",
+profile:"profile.html?user=member-writer",
+avatar:"profile.jpg",
+type:"অনুকাব্য",
+title:"নীরবতা",
+text:"নীরবতা কখনো ফাঁকা নয়। তার ভেতরে যত শব্দ, মানুষ তত সাহসী নয়...",
+time:"৩ ঘণ্টা আগে",
+likes:"৫৭",
+comments:"৮"
+},
+{
+author:"শান্ত পাঠক",
+profile:"profile.html?user=shanto-pathok",
+avatar:"profile.jpg",
+type:"চিঠিপত্র",
+title:"একটি অসমাপ্ত চিঠি",
+text:"তোমাকে লিখতে বসে দেখি, কাগজের ভেতর নদীর শব্দ আছে। কিছু কথা পৌঁছায় না, তবু লেখা হয়ে থাকে...",
+time:"৪ ঘণ্টা আগে",
+likes:"৪৯",
+comments:"৬"
+}
+];
+
+const writingFeed = document.getElementById("writingFeed");
+
+function renderFeed(filter){
+writingFeed.innerHTML = "";
+
+const list = feedData.filter(function(item){
+if(filter === "all"){
+return true;
+}
+return item.type === filter;
+});
+
+list.forEach(function(item){
+const article = document.createElement("article");
+article.className = "post";
+
+article.innerHTML = `
+<div class="post-head">
+<img src="${item.avatar}" onerror="this.src='profile.jpg'" alt="${item.author}">
+<div class="author-line">
+<a href="${item.profile}">${item.author}</a> · ${item.type} · ${item.time}
+</div>
+<div class="post-more">···</div>
+</div>
+<h3 class="post-title">
+<a href="${item.profile}">${item.title}</a>
+</h3>
+<p class="post-text">${item.text}</p>
+<div class="post-actions">
+<div class="post-actions-left">
+<span>♥ ${item.likes}</span>
+<span>💬 ${item.comments}</span>
+<span>🔖 সংরক্ষণ</span>
+</div>
+<a href="${item.profile}" class="read-more">আরও পড়ুন →</a>
+</div>
+`;
+
+writingFeed.appendChild(article);
+});
+
+if(list.length === 0){
+writingFeed.innerHTML = `
+<article class="post">
+<h3 class="post-title">এই বিভাগে এখনো approved লেখা নেই</h3>
+<p class="post-text">Pending লেখা public feed বা search-এ দেখা যাবে না। অনুমোদনের পরে প্রকাশিত হবে।</p>
+</article>
+`;
+}
+}
+
+renderFeed("all");
+
+document.querySelectorAll(".feed-tabs button").forEach(function(button){
+button.addEventListener("click",function(){
+document.querySelectorAll(".feed-tabs button").forEach(function(btn){
+btn.classList.remove("active");
+});
+button.classList.add("active");
+renderFeed(button.getAttribute("data-filter"));
+});
+});
+
+document.getElementById("writingForm").addEventListener("submit",function(e){
 e.preventDefault();
-
-document.getElementById("writerName").value = "";
-document.getElementById("title").value = "";
-document.getElementById("content").value = "";
-
-showToast("আপনার লেখা review-এর জন্য জমা হয়েছে।");
-closePanel();
+showToast("ধন্যবাদ, আপনার পোস্টটি আমাদের কাছে পৌঁছেছে।<br>ভুবনডাঙ্গা টিম আপনার পোস্টটি যত্ন সহকারে যাচাই করে দেখবে।<br>অনুমোদনের পরে এটি ফিডে প্রকাশিত হবে।<br><br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
+this.reset();
 });
-
-document.querySelectorAll(".action-btn").forEach(function(btn){
-btn.addEventListener("click", function(){
-showToast("এই সুবিধাটি শীঘ্রই যুক্ত হবে।");
-});
-});
-
-const cards = document.querySelectorAll(".post-card");
-const prevBtn = document.getElementById("prevBtn");
-const nextBtn = document.getElementById("nextBtn");
-
-let currentPage = 1;
-const perPage = 5;
-const totalPages = Math.ceil(cards.length / perPage);
-
-function renderPage(){
-cards.forEach(function(card,index){
-const start = (currentPage - 1) * perPage;
-const end = start + perPage;
-
-if(index >= start && index < end){
-card.classList.add("show");
-}else{
-card.classList.remove("show");
-}
-});
-
-prevBtn.style.display = currentPage === 1 ? "none" : "inline-block";
-nextBtn.style.display = currentPage === totalPages ? "none" : "inline-block";
-}
-
-prevBtn.addEventListener("click", function(){
-if(currentPage > 1){
-currentPage--;
-renderPage();
-window.scrollTo({
-top:document.getElementById("feedGrid").offsetTop - 100,
-behavior:"smooth"
-});
-}
-});
-
-nextBtn.addEventListener("click", function(){
-if(currentPage < totalPages){
-currentPage++;
-renderPage();
-window.scrollTo({
-top:document.getElementById("feedGrid").offsetTop - 100,
-behavior:"smooth"
-});
-}
-});
-
-renderPage();
 
 const toTopBtn = document.getElementById("toTopBtn");
 
-window.addEventListener("scroll", function(){
+window.addEventListener("scroll",function(){
 if(window.scrollY > 400){
 toTopBtn.style.display = "block";
 }else{
@@ -1046,21 +1548,29 @@ toTopBtn.style.display = "none";
 }
 });
 
-toTopBtn.addEventListener("click", function(){
+toTopBtn.addEventListener("click",function(){
 window.scrollTo({
 top:0,
 behavior:"smooth"
 });
 });
 
-document.addEventListener("copy", function(e){
+document.addEventListener("copy",function(e){
 e.preventDefault();
 showToast("লেখা কপি করা নিরুৎসাহিত করা হয়েছে।");
 });
 
-document.addEventListener("contextmenu", function(e){
+document.addEventListener("contextmenu",function(e){
 e.preventDefault();
 showToast("Right click বন্ধ রাখা হয়েছে।");
+});
+
+document.addEventListener("selectstart",function(e){
+const tag = e.target.tagName.toLowerCase();
+if(tag === "input" || tag === "textarea" || tag === "select"){
+return;
+}
+e.preventDefault();
 });
 </script>
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="light">
 
 <head>
 <meta charset="UTF-8">
@@ -8,7 +8,7 @@
 <title>খ্যাতিমান কবি | ভুবনডাঙ্গার কবিতা</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 
 *{
 margin:0;
@@ -20,11 +20,41 @@ html{
 scroll-behavior:smooth;
 }
 
+:root{
+--bg:#f8f2e7;
+--bg-soft:#fbf6ea;
+--card:#fffdf7;
+--card-2:#fff8eb;
+--text:#12345f;
+--text-soft:#4a5a70;
+--muted:#6d7582;
+--border:rgba(18,52,95,.13);
+--accent:#12345f;
+--accent-2:#62733c;
+--gold:#b79a54;
+--shadow:0 8px 22px rgba(67,48,20,.055);
+}
+
+html[data-theme="dark"]{
+--bg:#0d1320;
+--bg-soft:#111827;
+--card:#151d2c;
+--card-2:#1c2638;
+--text:#f4ead8;
+--text-soft:#d7c9a7;
+--muted:#a9a08e;
+--border:rgba(244,234,216,.16);
+--accent:#d8bd75;
+--accent-2:#b99a50;
+--gold:#d8bd75;
+--shadow:0 10px 28px rgba(0,0,0,.35);
+}
+
 body{
 font-family:'Noto Serif Bengali',serif;
-background:#f7f4ec;
-color:#142d5c;
-line-height:1.75;
+background:var(--bg);
+color:var(--text);
+line-height:1.65;
 user-select:none;
 -webkit-user-select:none;
 -ms-user-select:none;
@@ -35,305 +65,712 @@ text-decoration:none;
 color:inherit;
 }
 
-.date-strip{
-background:#123b78;
-color:white;
-text-align:center;
-padding:8px 12px;
-font-size:14px;
+button,
+input,
+select{
+font-family:inherit;
 }
 
-header{
-background:white;
-padding:20px 5%;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
-text-align:center;
+.site-shell{
+min-height:100vh;
+background:
+radial-gradient(circle at top left,rgba(255,255,255,.42),transparent 32%),
+linear-gradient(135deg,var(--bg-soft),var(--bg));
+}
+
+html[data-theme="dark"] .site-shell{
+background:
+radial-gradient(circle at top left,rgba(216,189,117,.08),transparent 32%),
+linear-gradient(135deg,#0a0f1a,#111827);
+}
+
+/* HEADER */
+
+.topbar{
+position:sticky;
+top:0;
+z-index:999;
+background:rgba(250,246,236,.94);
+backdrop-filter:blur(14px);
+border-bottom:1px solid var(--border);
+padding:10px 30px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:18px;
+}
+
+html[data-theme="dark"] .topbar{
+background:rgba(13,19,32,.94);
 }
 
 .brand{
 display:flex;
-justify-content:center;
 align-items:center;
-gap:12px;
-flex-wrap:wrap;
+gap:10px;
+min-width:230px;
 }
 
-.logo{
-font-size:38px;
+.brand-leaf{
+font-size:40px;
+line-height:1;
 }
 
-.brand h1{
-font-size:32px;
-color:#123b78;
-line-height:1.3;
+.brand-text h1{
+font-size:31px;
+font-weight:800;
+letter-spacing:-1px;
+color:var(--text);
+line-height:1.05;
 }
 
-.brand p{
-font-size:15px;
-color:#666;
-margin-top:4px;
+.brand-text p{
+font-size:12.5px;
+color:var(--muted);
+margin-top:2px;
+white-space:nowrap;
 }
 
-nav{
-margin-top:18px;
+.desktop-nav{
 display:flex;
-gap:14px;
-flex-wrap:wrap;
-justify-content:center;
 align-items:center;
-}
-
-nav a{
-font-size:15.5px;
-color:#123b78;
-font-weight:700;
-}
-
-nav a:hover{
-text-decoration:underline;
-}
-
-.search-wrap{
-background:#fff;
-padding:14px 5% 18px;
-border-bottom:1px solid #eee;
-}
-
-.search-box{
-max-width:820px;
-margin:auto;
-display:flex;
-gap:8px;
-background:#f7f4ec;
-border:1px solid #dccca5;
-border-radius:40px;
-padding:7px;
-}
-
-.search-box input{
+justify-content:center;
+gap:19px;
 flex:1;
-border:none;
-background:transparent;
+}
+
+.desktop-nav a{
+font-size:15px;
+font-weight:700;
+color:var(--text);
+padding:9px 2px;
+border-bottom:2px solid transparent;
+white-space:nowrap;
+}
+
+.desktop-nav a.active,
+.desktop-nav a:hover{
+border-color:var(--accent);
+}
+
+.header-actions{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.header-date{
+font-size:12px;
+color:var(--muted);
+white-space:nowrap;
+max-width:210px;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.search-mini{
+height:38px;
+width:160px;
+border:1px solid var(--border);
+background:var(--card-2);
+border-radius:9px;
+padding:0 12px;
 outline:none;
-font-family:inherit;
-font-size:15.5px;
-padding:10px 14px;
-color:#142d5c;
+font-size:13px;
+color:var(--text);
 user-select:text;
 -webkit-user-select:text;
 }
 
-.search-box button{
-border:none;
-background:#123b78;
-color:white;
-font-family:inherit;
-font-weight:700;
+.icon-btn,
+.theme-btn{
+height:38px;
+min-width:38px;
+border-radius:9px;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
 font-size:15px;
-padding:10px 18px;
-border-radius:30px;
+font-weight:800;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+padding:0 10px;
+}
+
+.theme-btn{
+gap:6px;
+}
+
+.write-btn{
+border:none;
+background:var(--accent);
+color:var(--card)!important;
+padding:10px 15px;
+border-radius:9px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+box-shadow:var(--shadow);
+white-space:nowrap;
+}
+
+.top-profile img{
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid var(--card);
+box-shadow:0 5px 14px rgba(0,0,0,.14);
+}
+
+.menu-btn{
+display:none;
+width:42px;
+height:42px;
+border:none;
+background:transparent;
+font-size:28px;
+color:var(--text);
 cursor:pointer;
 }
 
-.container{
-width:92%;
-max-width:1080px;
-margin:auto;
-padding:28px 0 55px;
+/* LAYOUT */
+
+.page-wrap{
+max-width:1510px;
+margin:0 auto;
+padding:18px 30px 0;
+display:grid;
+grid-template-columns:245px minmax(0,1fr) 355px;
+gap:18px;
 }
 
-.hero{
-background:white;
-border:1px solid rgba(220,204,165,.7);
-border-radius:24px;
-padding:30px 24px;
-text-align:center;
-box-shadow:0 7px 22px rgba(0,0,0,.07);
+.card{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:13px;
+box-shadow:var(--shadow);
 }
 
-.hero-icon{
-font-size:46px;
-margin-bottom:8px;
+.sidebar{
+position:sticky;
+top:80px;
+height:calc(100vh - 112px);
+overflow:auto;
+padding-right:2px;
 }
 
-.hero h2{
-font-size:34px;
-color:#123b78;
-line-height:1.35;
+.side-card{
+padding:14px;
+position:relative;
+overflow:hidden;
 }
 
-.hero p{
-font-size:16.5px;
-color:#555;
-max-width:760px;
-margin:10px auto 0;
-}
-
-.local-search{
-background:white;
-border:1px solid rgba(220,204,165,.65);
-border-radius:22px;
-padding:18px;
-box-shadow:0 7px 22px rgba(0,0,0,.06);
-margin-top:20px;
-}
-
-.local-search h3{
-font-size:23px;
-color:#123b78;
-margin-bottom:10px;
-}
-
-.local-search input{
+.side-card::after{
+content:"";
+position:absolute;
+left:0;
+bottom:0;
 width:100%;
-padding:13px 15px;
-border:1px solid #dccca5;
-border-radius:18px;
-font-family:inherit;
+height:150px;
+background:radial-gradient(circle at bottom left,rgba(98,115,60,.10),transparent 65%);
+pointer-events:none;
+}
+
+html[data-theme="dark"] .side-card::after{
+background:radial-gradient(circle at bottom left,rgba(216,189,117,.08),transparent 65%);
+}
+
+.side-menu{
+display:flex;
+flex-direction:column;
+gap:4px;
+position:relative;
+z-index:1;
+}
+
+.side-menu a{
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px 11px;
+border-radius:9px;
+font-size:15px;
+font-weight:650;
+color:var(--text);
+}
+
+.side-menu a:hover,
+.side-menu a.active{
+background:rgba(98,115,60,.14);
+}
+
+html[data-theme="dark"] .side-menu a:hover,
+html[data-theme="dark"] .side-menu a.active{
+background:rgba(216,189,117,.10);
+}
+
+.side-title{
+font-size:17px;
+font-weight:800;
+color:var(--text);
+margin:18px 0 8px;
+padding:0 8px;
+position:relative;
+z-index:1;
+}
+
+.category-list{
+display:flex;
+flex-direction:column;
+gap:4px;
+padding:0 6px;
+position:relative;
+z-index:1;
+}
+
+.category-list a{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:14px;
+color:var(--text-soft);
+padding:5px 0;
+}
+
+.category-list span{
+background:rgba(98,115,60,.14);
+border-radius:12px;
+padding:2px 8px;
+font-size:12px;
+color:var(--accent-2);
+}
+
+html[data-theme="dark"] .category-list span{
+background:rgba(216,189,117,.10);
+color:var(--gold);
+}
+
+.other-menu{
+margin-top:8px;
+background:var(--card-2);
+border:1px solid var(--border);
+border-radius:12px;
+padding:10px;
+position:relative;
+z-index:1;
+}
+
+.other-menu summary{
+cursor:pointer;
+font-weight:800;
+color:var(--text);
+font-size:14.5px;
+}
+
+.other-menu a{
+display:block;
+font-size:14px;
+color:var(--text-soft);
+padding:7px 0 0 0;
+}
+
+.auth-area{
+margin-top:22px;
+display:grid;
+gap:10px;
+padding:0 6px;
+position:relative;
+z-index:1;
+}
+
+.login-side,
+.register-side{
+display:block;
+text-align:center;
+padding:11px 14px;
+border-radius:9px;
+font-weight:800;
+font-size:15px;
+}
+
+.login-side{
+background:var(--accent);
+color:var(--card)!important;
+}
+
+.register-side{
+background:var(--card-2);
+border:1px solid var(--accent);
+color:var(--accent)!important;
+}
+
+/* MAIN */
+
+.hero-card{
+padding:24px;
+position:relative;
+overflow:hidden;
+background:linear-gradient(135deg,var(--card),var(--card-2));
+}
+
+.hero-card::after{
+content:"অ";
+position:absolute;
+right:34px;
+top:4px;
+font-size:130px;
+font-weight:800;
+color:rgba(98,115,60,.08);
+line-height:1;
+}
+
+html[data-theme="dark"] .hero-card::after{
+color:rgba(216,189,117,.08);
+}
+
+.hero-card h2{
+font-size:34px;
+font-weight:800;
+line-height:1.3;
+color:var(--text);
+position:relative;
+z-index:2;
+}
+
+.hero-card p{
 font-size:15.5px;
+color:var(--text-soft);
+line-height:1.9;
+margin-top:9px;
+max-width:820px;
+position:relative;
+z-index:2;
+}
+
+.search-card{
+margin-top:16px;
+padding:16px;
+display:grid;
+grid-template-columns:1fr 200px;
+gap:12px;
+}
+
+.poet-search{
+height:44px;
+border:1px solid var(--border);
+background:var(--card-2);
+border-radius:10px;
+padding:0 13px;
+font-size:15px;
+color:var(--text);
 outline:none;
-background:#f7f4ec;
-color:#142d5c;
 user-select:text;
 -webkit-user-select:text;
 }
 
-.notice{
-background:#fff8e5;
-border-left:4px solid #dccca5;
-border-radius:14px;
-padding:14px 16px;
+.poet-filter{
+height:44px;
+border:1px solid var(--border);
+background:var(--card-2);
+border-radius:10px;
+padding:0 13px;
 font-size:15px;
-color:#555;
-margin-top:14px;
+color:var(--text);
+outline:none;
 }
 
-.count-line{
-font-size:15px;
-color:#666;
-margin-top:10px;
+.alphabet-card{
+margin-top:16px;
+padding:14px;
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.alphabet-card button{
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+border-radius:8px;
+padding:7px 10px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+}
+
+.alphabet-card button.active{
+background:var(--accent);
+color:var(--card);
+border-color:var(--accent);
+}
+
+.poet-card{
+margin-top:16px;
+padding:18px;
+}
+
+.section-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+border-bottom:1px solid var(--border);
+padding-bottom:12px;
+margin-bottom:12px;
+}
+
+.section-head h3{
+font-size:23px;
+font-weight:800;
+color:var(--text);
+}
+
+.section-head p{
+font-size:13.5px;
+color:var(--muted);
 }
 
 .poet-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(245px,1fr));
-gap:14px;
-margin-top:20px;
+grid-template-columns:repeat(2,1fr);
+gap:11px;
 }
 
-.poet-card{
-background:white;
-border:1px solid rgba(220,204,165,.7);
-border-radius:18px;
-padding:17px;
-box-shadow:0 6px 18px rgba(0,0,0,.055);
-transition:.2s ease;
+.poet-item{
+display:flex;
+align-items:center;
+gap:12px;
+background:var(--card-2);
+border:1px solid var(--border);
+border-radius:12px;
+padding:12px;
+min-height:84px;
 }
 
-.poet-card:hover{
-transform:translateY(-2px);
-box-shadow:0 8px 24px rgba(0,0,0,.08);
+.poet-avatar{
+width:46px;
+height:46px;
+border-radius:50%;
+background:linear-gradient(135deg,var(--accent),var(--accent-2));
+color:var(--card);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+font-weight:800;
+flex-shrink:0;
 }
 
-.poet-card h3{
-font-size:21px;
-color:#123b78;
-line-height:1.35;
+.poet-info{
+min-width:0;
 }
 
-.poet-card p{
-font-size:14.5px;
-color:#666;
-margin-top:6px;
-}
-
-.poet-card .type{
-display:inline-block;
-font-size:12.5px;
-font-weight:700;
-color:#123b78;
-background:#f7f4ec;
-border:1px solid #dccca5;
-border-radius:16px;
-padding:4px 9px;
-margin-top:10px;
-}
-
-.empty{
-display:none;
-background:white;
-border:1px solid #dccca5;
-border-radius:18px;
-padding:22px;
-margin-top:20px;
-text-align:center;
-color:#555;
-}
-
-.section{
-background:white;
-border:1px solid rgba(220,204,165,.65);
-border-radius:22px;
-padding:22px;
-box-shadow:0 7px 22px rgba(0,0,0,.06);
-margin-top:24px;
-}
-
-.section h3{
-font-size:25px;
-color:#123b78;
-line-height:1.35;
-}
-
-.section p{
+.poet-info h4{
 font-size:16px;
-color:#555;
+font-weight:800;
+color:var(--text);
+line-height:1.35;
+}
+
+.poet-info p{
+font-size:12.8px;
+color:var(--muted);
+margin-top:2px;
+}
+
+.poet-info small{
+display:block;
+font-size:12px;
+color:var(--accent-2);
+font-weight:800;
+margin-top:3px;
+}
+
+.no-result{
+padding:22px;
+text-align:center;
+font-size:15px;
+color:var(--muted);
+}
+
+/* RIGHT */
+
+.rightbar{
+position:sticky;
+top:80px;
+height:calc(100vh - 112px);
+overflow:auto;
+display:grid;
+gap:16px;
+align-content:start;
+}
+
+.right-card{
+padding:18px;
+}
+
+.right-title{
+font-size:21px;
+font-weight:800;
+color:var(--text);
+text-align:center;
+margin-bottom:14px;
+}
+
+.world-poet{
+display:block;
+padding:11px 0;
+border-bottom:1px solid var(--border);
+}
+
+.world-poet:last-child{
+border-bottom:none;
+}
+
+.world-poet small{
+font-size:12px;
+font-weight:800;
+color:var(--accent-2);
+}
+
+.world-poet h4{
+font-size:16px;
+font-weight:800;
+color:var(--text);
+line-height:1.5;
+margin-top:3px;
+}
+
+.world-poet p{
+font-size:12.8px;
+color:var(--muted);
+margin-top:3px;
+}
+
+.notice-box{
+background:var(--card-2);
+border:1px dashed var(--border);
+border-radius:13px;
+padding:15px;
+font-size:14px;
+color:var(--text-soft);
+line-height:1.8;
+}
+
+.notice-box b{
+color:var(--text);
+}
+
+.midnight-card{
+background:
+linear-gradient(135deg,rgba(8,13,22,.98),rgba(17,24,39,.98)),
+radial-gradient(circle at top right,rgba(216,189,117,.10),transparent 45%);
+color:#f4ead8;
+border:none;
+padding:20px;
+}
+
+.midnight-card h3{
+font-size:22px;
+font-weight:800;
+color:#f6e8c6;
+}
+
+.midnight-card p{
+font-size:14.5px;
+font-weight:400;
+color:#d9caa8;
 margin-top:8px;
 }
 
-.footer-links{
-background:#fff;
-margin-top:55px;
-padding:24px 15px;
+.midnight-card a{
+display:inline-block;
+margin-top:12px;
+color:#fff;
+font-weight:800;
+}
+
+/* DRAWER */
+
+.drawer-backdrop{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.38);
+z-index:1200;
+display:none;
+}
+
+.mobile-drawer{
+position:fixed;
+top:0;
+left:-310px;
+width:290px;
+height:100vh;
+background:var(--card);
+z-index:1300;
+transition:.25s ease;
+padding:18px 16px;
+overflow:auto;
+box-shadow:12px 0 35px rgba(0,0,0,.22);
+}
+
+.mobile-drawer.open{
+left:0;
+}
+
+.drawer-backdrop.show{
+display:block;
+}
+
+.drawer-head{
 display:flex;
-justify-content:center;
-gap:13px;
-flex-wrap:wrap;
-border-top:1px solid #eee;
-border-bottom:1px solid #eee;
+align-items:center;
+justify-content:space-between;
+margin-bottom:14px;
 }
 
-.footer-links a{
-color:#123b78;
+.drawer-head h3{
+font-size:22px;
+font-weight:800;
+color:var(--text);
+}
+
+.close-drawer{
+border:none;
+background:transparent;
+font-size:30px;
+color:var(--text);
+}
+
+/* FOOTER */
+
+.site-footer{
+max-width:1510px;
+margin:0 auto;
+padding:18px 30px;
+background:var(--accent);
+color:var(--card);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+font-size:14px;
+}
+
+.site-footer a{
 font-weight:700;
-font-size:15px;
 }
 
-.footer-login,
-.footer-register{
-background:#f7f4ec;
-border:1px solid #dccca5;
-color:#123b78!important;
-padding:8px 16px;
-border-radius:22px;
+.footer-links{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
 }
 
-footer{
-background:white;
-text-align:center;
-padding:38px 20px;
-}
-
-footer h2{
-color:#123b78;
-font-size:26px;
-}
-
-footer p{
-color:#555;
-margin-top:7px;
-font-size:15px;
-}
+/* UTIL */
 
 .to-top{
 position:fixed;
@@ -343,8 +780,8 @@ width:43px;
 height:43px;
 border-radius:50%;
 border:none;
-background:#123b78;
-color:white;
+background:var(--accent);
+color:var(--card);
 font-size:21px;
 font-weight:700;
 cursor:pointer;
@@ -358,486 +795,678 @@ position:fixed;
 bottom:76px;
 left:50%;
 transform:translateX(-50%);
-background:#123b78;
-color:white;
-padding:11px 20px;
-border-radius:28px;
+background:var(--accent);
+color:var(--card);
+padding:12px 20px;
+border-radius:20px;
 font-size:14.5px;
 display:none;
 z-index:9999;
 box-shadow:0 8px 25px rgba(0,0,0,.25);
 text-align:center;
-max-width:90%;
+max-width:92%;
+line-height:1.8;
 }
 
-@media(max-width:760px){
+/* RESPONSIVE */
 
-.date-strip{
-font-size:12.5px;
-line-height:1.6;
+@media(max-width:1250px){
+
+.header-date{
+display:none;
 }
 
-header{
-padding:20px 4%;
+.search-mini{
+display:none;
 }
 
-.brand{
+.page-wrap{
+grid-template-columns:220px minmax(0,1fr);
+}
+
+.rightbar{
+display:none;
+}
+
+}
+
+@media(max-width:880px){
+
+.topbar{
+padding:10px 15px;
+}
+
+.menu-btn{
 display:block;
 }
 
-.logo{
-font-size:36px;
-margin-bottom:4px;
+.desktop-nav,
+.write-btn{
+display:none;
 }
 
-.brand h1{
-font-size:29px;
+.brand{
+min-width:auto;
 }
 
-.brand p{
-font-size:14px;
+.brand-leaf{
+font-size:31px;
 }
 
-nav{
-gap:10px;
-line-height:2;
-margin-top:16px;
+.brand-text h1{
+font-size:26px;
 }
 
-nav a{
-font-size:14px;
+.brand-text p{
+font-size:11px;
+max-width:180px;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
-.search-wrap{
-padding:12px 4% 16px;
+.top-profile img{
+width:38px;
+height:38px;
 }
 
-.search-box{
-border-radius:22px;
-align-items:center;
+.theme-btn span{
+display:none;
 }
 
-.search-box input{
-font-size:14px;
-padding:9px 10px;
+.page-wrap{
+display:block;
+padding:12px 14px 28px;
 }
 
-.search-box button{
-font-size:14px;
-padding:9px 13px;
+.sidebar{
+display:none;
 }
 
-.container{
-padding:24px 0 45px;
+.hero-card,
+.search-card,
+.poet-card{
+padding:14px;
 }
 
-.hero{
-padding:26px 18px;
-border-radius:21px;
+.hero-card h2{
+font-size:27px;
 }
 
-.hero-icon{
-font-size:40px;
-}
-
-.hero h2{
-font-size:28px;
-}
-
-.hero p{
-font-size:15.3px;
-}
-
-.local-search{
-padding:16px;
-border-radius:20px;
-}
-
-.local-search h3{
-font-size:21px;
+.search-card{
+grid-template-columns:1fr;
 }
 
 .poet-grid{
 grid-template-columns:1fr;
-gap:12px;
 }
 
-.poet-card{
-padding:15px;
-border-radius:16px;
+.section-head{
+display:block;
 }
 
-.poet-card h3{
-font-size:19.5px;
+.section-head p{
+margin-top:4px;
 }
 
-.poet-card p{
-font-size:14px;
-}
-
-.section{
-padding:18px;
-border-radius:20px;
-}
-
-.section h3{
-font-size:22px;
-}
-
-.section p{
-font-size:15px;
+.site-footer{
+display:block;
+text-align:center;
+padding:18px 14px;
 }
 
 .footer-links{
-gap:11px;
-line-height:2.1;
-padding:22px 12px;
+justify-content:center;
+margin-top:8px;
 }
 
-.footer-links a{
-font-size:14px;
 }
 
-footer{
-padding:34px 16px;
+@media(max-width:520px){
+
+.topbar{
+gap:8px;
 }
 
-footer h2{
-font-size:24px;
+.brand-text h1{
+font-size:23px;
 }
 
-.to-top{
-right:14px;
-bottom:17px;
-width:41px;
-height:41px;
-font-size:20px;
+.brand-text p{
+max-width:155px;
+}
+
+.icon-btn,
+.theme-btn{
+height:36px;
+min-width:36px;
+padding:0 8px;
 }
 
 }
 </style>
 </head>
 
-<body id="top">
+<body>
 
-<div class="date-strip" id="dateStrip">তারিখ লোড হচ্ছে...</div>
+<div class="site-shell">
 
-<header>
+<header class="topbar">
 
-<div class="brand">
-<a href="index.html">
-<div class="logo">🌿</div>
-</a>
+<button class="menu-btn" id="menuBtn">☰</button>
 
-<div>
-<a href="index.html">
-<h1>ভুবনডাঙ্গার কবিতা</h1>
-</a>
+<a href="index.html" class="brand">
+<div class="brand-leaf">🌿</div>
+<div class="brand-text">
+<h1>ভুবনডাঙ্গা</h1>
 <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
 </div>
-</div>
+</a>
 
-<nav>
+<nav class="desktop-nav">
 <a href="index.html">হোম</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="today-poem.html">আজকের কবিতা</a>
-<a href="profile.html">আপনার প্রোফাইল</a>
 <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
-<a href="founder-profile.html">মাহমুদ সোহেল</a>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="today-poem.html?type=poem">কবিতা</a>
+<a href="today-poem.html?type=prolap">প্রলাপ</a>
+<a href="famous-poet.html" class="active">খ্যাতিমান কবি</a>
+<a href="founder-profile.html">মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">আপনার প্রোফাইল</a>
 </nav>
+
+<div class="header-actions">
+<div class="header-date" id="headerDate">তারিখ লোড হচ্ছে...</div>
+<input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
+<button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙 <span>Dark</span></button>
+<button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
+<a href="today-poem.html" class="write-btn">✎ লিখুন</a>
+<a href="profile.html" class="top-profile" title="আপনার প্রোফাইল">
+<img src="profile.jpg" alt="Profile">
+</a>
+</div>
 
 </header>
 
-<div class="search-wrap">
-<form class="search-box" id="searchForm">
-<input type="search" id="searchInput" placeholder="কবি, কবিতা, প্রলাপ, লেখা বা আলোচনা খুঁজুন...">
-<button type="submit">সার্চ</button>
-</form>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<aside class="mobile-drawer" id="mobileDrawer">
+<div class="drawer-head">
+<a href="index.html">
+<h3>ভুবনডাঙ্গা</h3>
+</a>
+<button class="close-drawer" id="closeDrawer">×</button>
 </div>
 
-<div class="container">
+<div class="side-menu">
+<a href="index.html">🏠 হোম</a>
+<a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
+<a href="famous-poet.html" class="active">📖 খ্যাতিমান কবি</a>
+<a href="today-poem.html?type=poem">📝 কবিতা</a>
+<a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">👤 আপনার প্রোফাইল</a>
+<a href="discussion-post.html">💬 সাহিত্য আলোচনা</a>
+<a href="search.html">🔎 সার্চ</a>
+</div>
 
-<section class="hero">
-<div class="hero-icon">📚</div>
+<div class="side-title">বিষয়ের অনুসারে</div>
+
+<div class="category-list">
+<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
+<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
+<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
+<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+</div>
+
+<details class="other-menu">
+<summary>অন্যান্য</summary>
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="contact.html">যোগাযোগ / রিভিউ</a>
+<a href="about.html">নীতিমালা</a>
+<a href="search.html">সার্চ</a>
+</details>
+
+<div class="auth-area">
+<a href="login.html" class="login-side">লগইন করুন</a>
+<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+</div>
+</aside>
+
+<main class="page-wrap">
+
+<aside class="sidebar">
+<div class="card side-card">
+
+<div class="side-menu">
+<a href="index.html">🏠 হোম</a>
+<a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
+<a href="today-poem.html?type=poem">📝 কবিতা</a>
+<a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
+<a href="famous-poet.html" class="active">📖 খ্যাতিমান কবি</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="profile.html">👤 আপনার প্রোফাইল</a>
+</div>
+
+<div class="side-title">বিষয়ের অনুসারে</div>
+
+<div class="category-list">
+<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
+<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
+<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
+<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+</div>
+
+<details class="other-menu">
+<summary>অন্যান্য</summary>
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট</a>
+<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
+<a href="search.html">সার্চ</a>
+</details>
+
+<div class="auth-area">
+<a href="login.html" class="login-side">↪ লগইন করুন</a>
+<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+</div>
+
+</div>
+</aside>
+
+<section class="main-content">
+
+<section class="card hero-card">
 <h2>খ্যাতিমান কবি</h2>
 <p>
-বাংলা সাহিত্যসহ বিশ্বসাহিত্যের নির্বাচিত কবিদের একটি সহজ directory। নির্দিষ্ট কবিকে search করে তার পরিচিতি ও নির্বাচিত রচনার নাম দেখা যাবে।
+বাংলা ভাষাভাষী ১০০ কবির অ্যালফাবেটিক্যাল তালিকা। বাংলাদেশ, ভারতীয় বাংলা, মধ্যযুগীয় ও আধুনিক বাংলা সাহিত্যের কবিদের profile এখানে থাকবে। পাশে থাকবে কয়েকজন উপমহাদেশীয়/ফার্সি/সুফি কবির ছোট section।
 </p>
 </section>
 
-<section class="local-search">
-<h3>কবি খুঁজুন</h3>
-<input type="search" id="poetSearch" placeholder="যেমন: রবীন্দ্রনাথ, নজরুল, জীবনানন্দ, রুমি...">
-<p class="count-line" id="countLine">১০০ জন কবি দেখা যাচ্ছে</p>
+<section class="card search-card">
+<input type="text" id="poetSearch" class="poet-search" placeholder="কবির নাম, দেশ, সময়কাল বা ধারা দিয়ে খুঁজুন...">
 
-<div class="notice">
-কবির নামের উপর চাপ দিলে detail page খুলবে। Copyright-এর কারণে protected কবিদের পূর্ণ কবিতা নয়—পরিচিতি ও নির্বাচিত রচনার নাম দেখানো হবে।
-</div>
+<select id="poetFilter" class="poet-filter">
+<option value="all">সব কবি</option>
+<option value="বাংলাদেশ">বাংলাদেশ</option>
+<option value="ভারতীয় বাংলা">ভারতীয় বাংলা</option>
+<option value="মধ্যযুগ">মধ্যযুগ</option>
+<option value="আধুনিক">আধুনিক</option>
+</select>
 </section>
+
+<section class="card alphabet-card" id="alphabetBox"></section>
+
+<section class="card poet-card">
+
+<div class="section-head">
+<div>
+<h3>বাংলা ভাষাভাষী ১০০ কবি</h3>
+<p>সব নাম clickable। Search result-এও এই profile গুলো থাকবে।</p>
+</div>
+<p id="resultCount">১০০ জন কবি</p>
+</div>
 
 <div class="poet-grid" id="poetGrid"></div>
 
-<div class="empty" id="emptyBox">
-কোনো কবি পাওয়া যায়নি। অন্য নাম লিখে চেষ্টা করুন।
-</div>
-
-<section class="section">
-<h3>এই directory সম্পর্কে</h3>
-<p>
-এই page-এর উদ্দেশ্য হলো পাঠককে খ্যাতিমান কবিদের profile-এ সহজে নিয়ে যাওয়া। পরে Supabase চালু হলে কবির জন্ম-মৃত্যু, সাহিত্যধারা, নির্বাচিত রচনা, reference এবং search result আরও dynamic হবে।
-</p>
 </section>
 
-</div>
+</section>
 
-<div class="footer-links">
-<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট ইস্যু</a>
-<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
-<a href="search.html">সার্চ</a>
-<a href="login.html" class="footer-login">লগইন করুন</a>
-<a href="register.html" class="footer-register">রেজিস্টার করুন</a>
-</div>
+<aside class="rightbar">
 
-<footer>
-<a href="index.html" style="color:#123b78;">
-<h2>🌿 ভুবনডাঙ্গার কবিতা</h2>
+<section class="card right-card">
+<h3 class="right-title">উপমহাদেশ / ফার্সি / সুফি</h3>
+
+<a href="poet-details.html?poet=jalaluddin-rumi" class="world-poet">
+<small>সুফি / ফার্সি</small>
+<h4>জালালউদ্দিন রুমি</h4>
+<p>আধ্যাত্মিক প্রেম ও সুফি কাব্য</p>
 </a>
 
-<p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
+<a href="poet-details.html?poet=mirza-ghalib" class="world-poet">
+<small>উর্দু / ফার্সি</small>
+<h4>মির্জা গালিব</h4>
+<p>গজল ও দার্শনিক বিষাদ</p>
+</a>
 
+<a href="poet-details.html?poet=allama-iqbal" class="world-poet">
+<small>উর্দু / ফার্সি</small>
+<h4>আল্লামা ইকবাল</h4>
+<p>চেতনা, আত্মপরিচয় ও দর্শন</p>
+</a>
+
+<a href="poet-details.html?poet=hafiz-shirazi" class="world-poet">
+<small>ফার্সি</small>
+<h4>হাফিজ শিরাজি</h4>
+<p>প্রেম, মরমিয়া ভাব ও রূপক</p>
+</a>
+
+<a href="poet-details.html?poet=saadi-shirazi" class="world-poet">
+<small>ফার্সি</small>
+<h4>সাদি শিরাজি</h4>
+<p>নৈতিকতা, জ্ঞান ও মানবতা</p>
+</a>
+
+</section>
+
+<section class="card right-card">
+<h3 class="right-title">Search Note</h3>
+
+<div class="notice-box">
+<b>Search system:</b> এই কবিদের profile search result-এ থাকবে। পরে Supabase চালু হলে approved writer profile, কবিতা, প্রলাপ, অনুকাব্য, চিঠিপত্র ও আলোচনা search-এ আসবে। Pending কিছু search-এ আসবে না।
+</div>
+</section>
+
+<section class="card midnight-card">
+<h3>
+<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+</h3>
 <p>
-সৃজন ভাবনায়:
-<a href="founder-profile.html" style="color:#123b78;font-weight:700;">মাহমুদ সোহেল</a>
+মাহমুদ সোহেলের বিশেষ প্রলাপ ভুবন।
 </p>
+<a href="madhyorater-prolap.html">প্রলাপ পড়ুন →</a>
+</section>
 
-<p>© 2026 <a href="index.html" style="color:#123b78;font-weight:700;">ভুবনডাঙ্গার কবিতা</a></p>
+</aside>
+
+</main>
+
+<footer class="site-footer">
+<div>
+<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • <a href="famous-poet.html">খ্যাতিমান কবি</a>
+</div>
+<div class="footer-links">
+<a href="founder-profile.html">মাহমুদ সোহেল</a>
+<a href="about.html">নীতিমালা</a>
+<a href="contact.html">যোগাযোগ</a>
+</div>
 </footer>
 
-<button class="to-top" id="toTopBtn" title="উপরে যান">↑</button>
+</div>
 
+<button class="to-top" id="toTopBtn">↑</button>
 <div class="toast" id="toast">এই সুবিধাটি শীঘ্রই যুক্ত হবে।</div>
 
 <script>
-const poets = [
-{ name:"রবীন্দ্রনাথ ঠাকুর", slug:"rabindranath-tagore", type:"বাংলা সাহিত্য" },
-{ name:"কাজী নজরুল ইসলাম", slug:"kazi-nazrul-islam", type:"বাংলা সাহিত্য" },
-{ name:"জীবনানন্দ দাশ", slug:"jibanananda-das", type:"বাংলা সাহিত্য" },
-{ name:"জসীমউদ্‌দীন", slug:"jasimuddin", type:"বাংলা সাহিত্য" },
-{ name:"সুকান্ত ভট্টাচার্য", slug:"sukanta-bhattacharya", type:"বাংলা সাহিত্য" },
-{ name:"মাইকেল মধুসূদন দত্ত", slug:"michael-madhusudan-dutt", type:"বাংলা সাহিত্য" },
-{ name:"সত্যেন্দ্রনাথ দত্ত", slug:"satyendranath-dutta", type:"বাংলা সাহিত্য" },
-{ name:"বুদ্ধদেব বসু", slug:"buddhadeb-basu", type:"বাংলা সাহিত্য" },
-{ name:"বিষ্ণু দে", slug:"bishnu-dey", type:"বাংলা সাহিত্য" },
-{ name:"সুধীন্দ্রনাথ দত্ত", slug:"sudhindranath-dutta", type:"বাংলা সাহিত্য" },
+const htmlRoot = document.documentElement;
+const savedTheme = localStorage.getItem("bhubondangaTheme") || "light";
+htmlRoot.setAttribute("data-theme", savedTheme);
 
-{ name:"শামসুর রাহমান", slug:"shamsur-rahman", type:"বাংলাদেশ" },
-{ name:"আল মাহমুদ", slug:"al-mahmud", type:"বাংলাদেশ" },
-{ name:"আবুল হাসান", slug:"abul-hasan", type:"বাংলাদেশ" },
-{ name:"নির্মলেন্দু গুণ", slug:"nirmalendu-goon", type:"বাংলাদেশ" },
-{ name:"রফিক আজাদ", slug:"rafiq-azad", type:"বাংলাদেশ" },
-{ name:"হেলাল হাফিজ", slug:"helal-hafiz", type:"বাংলাদেশ" },
-{ name:"সৈয়দ শামসুল হক", slug:"syed-shamsul-haq", type:"বাংলাদেশ" },
-{ name:"মহাদেব সাহা", slug:"mahadev-saha", type:"বাংলাদেশ" },
-{ name:"ফররুখ আহমদ", slug:"farrukh-ahmad", type:"বাংলাদেশ" },
-{ name:"সুফিয়া কামাল", slug:"sufia-kamal", type:"বাংলাদেশ" },
-
-{ name:"বেগম রোকেয়া", slug:"begum-rokeya", type:"বাংলা সাহিত্য" },
-{ name:"কামিনী রায়", slug:"kamini-roy", type:"বাংলা সাহিত্য" },
-{ name:"কুসুমকুমারী দাশ", slug:"kusumkumari-das", type:"বাংলা সাহিত্য" },
-{ name:"ঈশ্বরচন্দ্র গুপ্ত", slug:"ishwar-chandra-gupta", type:"বাংলা সাহিত্য" },
-{ name:"হেমচন্দ্র বন্দ্যোপাধ্যায়", slug:"hemchandra-bandyopadhyay", type:"বাংলা সাহিত্য" },
-{ name:"নবীনচন্দ্র সেন", slug:"nabin-chandra-sen", type:"বাংলা সাহিত্য" },
-{ name:"রঙ্গলাল বন্দ্যোপাধ্যায়", slug:"ranglal-bandyopadhyay", type:"বাংলা সাহিত্য" },
-{ name:"দ্বিজেন্দ্রলাল রায়", slug:"dwijendralal-ray", type:"বাংলা সাহিত্য" },
-{ name:"প্রমথ চৌধুরী", slug:"pramatha-chowdhury", type:"বাংলা সাহিত্য" },
-{ name:"মোহিতলাল মজুমদার", slug:"mohitlal-majumdar", type:"বাংলা সাহিত্য" },
-
-{ name:"অমিয় চক্রবর্তী", slug:"amiya-chakravarty", type:"বাংলা সাহিত্য" },
-{ name:"প্রেমেন্দ্র মিত্র", slug:"premendra-mitra", type:"বাংলা সাহিত্য" },
-{ name:"সুভাষ মুখোপাধ্যায়", slug:"subhash-mukhopadhyay", type:"বাংলা সাহিত্য" },
-{ name:"শক্তি চট্টোপাধ্যায়", slug:"shakti-chattopadhyay", type:"বাংলা সাহিত্য" },
-{ name:"সুনীল গঙ্গোপাধ্যায়", slug:"sunil-gangopadhyay", type:"বাংলা সাহিত্য" },
-{ name:"বিনয় মজুমদার", slug:"binoy-majumdar", type:"বাংলা সাহিত্য" },
-{ name:"জয় গোস্বামী", slug:"joy-goswami", type:"বাংলা সাহিত্য" },
-{ name:"শঙ্খ ঘোষ", slug:"shankha-ghosh", type:"বাংলা সাহিত্য" },
-{ name:"নীরেন্দ্রনাথ চক্রবর্তী", slug:"nirendranath-chakraborty", type:"বাংলা সাহিত্য" },
-{ name:"তারাপদ রায়", slug:"tarapada-roy", type:"বাংলা সাহিত্য" },
-
-{ name:"আহসান হাবীব", slug:"ahsan-habib", type:"বাংলাদেশ" },
-{ name:"বেলাল চৌধুরী", slug:"belal-chowdhury", type:"বাংলাদেশ" },
-{ name:"আসাদ চৌধুরী", slug:"asad-chowdhury", type:"বাংলাদেশ" },
-{ name:"শহীদ কাদরী", slug:"shahid-quadri", type:"বাংলাদেশ" },
-{ name:"আবদুল হাই শিকদার", slug:"abdul-hai-shikder", type:"বাংলাদেশ" },
-{ name:"হুমায়ুন আজাদ", slug:"humayun-azad", type:"বাংলাদেশ" },
-{ name:"রুদ্র মুহম্মদ শহিদুল্লাহ", slug:"rudra-muhammad-shahidullah", type:"বাংলাদেশ" },
-{ name:"তসলিমা নাসরিন", slug:"taslima-nasrin", type:"বাংলাদেশ" },
-{ name:"সেলিনা হোসেন", slug:"selina-hossain", type:"বাংলাদেশ" },
-{ name:"নাসির আহমেদ", slug:"nasir-ahmed", type:"বাংলাদেশ" },
-
-{ name:"চণ্ডীদাস", slug:"chandidas", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"বিদ্যাপতি", slug:"vidyapati", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"জ্ঞানদাস", slug:"gyandas", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"গোবিন্দদাস", slug:"govindadas", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"ভারতচন্দ্র রায়গুণাকর", slug:"bharatchandra-ray", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"আলাওল", slug:"alaol", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"দৌলত কাজী", slug:"daulat-kazi", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"শাহ মুহম্মদ সগীর", slug:"shah-muhammad-sagir", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"মুকুন্দরাম চক্রবর্তী", slug:"mukundaram-chakrabarti", type:"প্রাচীন/মধ্যযুগ" },
-{ name:"কৃত্তিবাস ওঝা", slug:"krittibas-ojha", type:"প্রাচীন/মধ্যযুগ" },
-
-{ name:"রুমি", slug:"rumi", type:"বিশ্বসাহিত্য" },
-{ name:"হাফিজ", slug:"hafez", type:"বিশ্বসাহিত্য" },
-{ name:"সাদি", slug:"saadi", type:"বিশ্বসাহিত্য" },
-{ name:"ওমর খৈয়াম", slug:"omar-khayyam", type:"বিশ্বসাহিত্য" },
-{ name:"ফেরদৌসি", slug:"ferdowsi", type:"বিশ্বসাহিত্য" },
-{ name:"খলিল জিবরান", slug:"kahlil-gibran", type:"বিশ্বসাহিত্য" },
-{ name:"পাবলো নেরুদা", slug:"pablo-neruda", type:"বিশ্বসাহিত্য" },
-{ name:"ফেদেরিকো গার্সিয়া লোরকা", slug:"federico-garcia-lorca", type:"বিশ্বসাহিত্য" },
-{ name:"রাইনার মারিয়া রিলকে", slug:"rainer-maria-rilke", type:"বিশ্বসাহিত্য" },
-{ name:"টি. এস. এলিয়ট", slug:"t-s-eliot", type:"বিশ্বসাহিত্য" },
-
-{ name:"উইলিয়াম শেকসপিয়র", slug:"william-shakespeare", type:"বিশ্বসাহিত্য" },
-{ name:"উইলিয়াম ওয়ার্ডসওয়ার্থ", slug:"william-wordsworth", type:"বিশ্বসাহিত্য" },
-{ name:"জন কিটস", slug:"john-keats", type:"বিশ্বসাহিত্য" },
-{ name:"পি. বি. শেলি", slug:"p-b-shelley", type:"বিশ্বসাহিত্য" },
-{ name:"লর্ড বায়রন", slug:"lord-byron", type:"বিশ্বসাহিত্য" },
-{ name:"রবার্ট ব্রাউনিং", slug:"robert-browning", type:"বিশ্বসাহিত্য" },
-{ name:"ওয়াল্ট হুইটম্যান", slug:"walt-whitman", type:"বিশ্বসাহিত্য" },
-{ name:"এমিলি ডিকিনসন", slug:"emily-dickinson", type:"বিশ্বসাহিত্য" },
-{ name:"রবার্ট ফ্রস্ট", slug:"robert-frost", type:"বিশ্বসাহিত্য" },
-{ name:"ডব্লিউ. বি. ইয়েটস", slug:"w-b-yeats", type:"বিশ্বসাহিত্য" },
-
-{ name:"সিলভিয়া প্লাথ", slug:"sylvia-plath", type:"বিশ্বসাহিত্য" },
-{ name:"মায়া অ্যাঞ্জেলু", slug:"maya-angelou", type:"বিশ্বসাহিত্য" },
-{ name:"অক্টাভিও পাজ", slug:"octavio-paz", type:"বিশ্বসাহিত্য" },
-{ name:"নাজিম হিকমত", slug:"nazim-hikmet", type:"বিশ্বসাহিত্য" },
-{ name:"মাহমুদ দারবিশ", slug:"mahmoud-darwish", type:"বিশ্বসাহিত্য" },
-{ name:"ফয়েজ আহমদ ফয়েজ", slug:"faiz-ahmad-faiz", type:"বিশ্বসাহিত্য" },
-{ name:"আল্লামা ইকবাল", slug:"allama-iqbal", type:"বিশ্বসাহিত্য" },
-{ name:"মির্জা গালিব", slug:"mirza-ghalib", type:"বিশ্বসাহিত্য" },
-{ name:"জয়শঙ্কর প্রসাদ", slug:"jaishankar-prasad", type:"ভারতীয় সাহিত্য" },
-{ name:"মহাদেবী বর্মা", slug:"mahadevi-verma", type:"ভারতীয় সাহিত্য" },
-
-{ name:"সুমিত্রানন্দন পন্ত", slug:"sumitranandan-pant", type:"ভারতীয় সাহিত্য" },
-{ name:"হরিবংশ রাই বচ্চন", slug:"harivansh-rai-bachchan", type:"ভারতীয় সাহিত্য" },
-{ name:"গুলজার", slug:"gulzar", type:"ভারতীয় সাহিত্য" },
-{ name:"দুষ্যন্ত কুমার", slug:"dushyant-kumar", type:"ভারতীয় সাহিত্য" },
-{ name:"কুমার বিশ্বাস", slug:"kumar-vishwas", type:"ভারতীয় সাহিত্য" },
-{ name:"লালন শাহ", slug:"lalon-shah", type:"বাংলা ভাবধারা" },
-{ name:"হাছন রাজা", slug:"hason-raja", type:"বাংলা ভাবধারা" },
-{ name:"রাধারমণ দত্ত", slug:"radharamon-dutta", type:"বাংলা ভাবধারা" },
-{ name:"দ্বিজ কানাই", slug:"dwija-kanai", type:"বাংলা ভাবধারা" },
-{ name:"গগন হরকরা", slug:"gagan-harkara", type:"বাংলা ভাবধারা" }
-];
-
+const menuBtn = document.getElementById("menuBtn");
+const mobileDrawer = document.getElementById("mobileDrawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const closeDrawer = document.getElementById("closeDrawer");
+const searchBtn = document.getElementById("searchBtn");
+const searchMini = document.getElementById("searchMini");
+const toast = document.getElementById("toast");
+const themeBtn = document.getElementById("themeBtn");
+const headerDate = document.getElementById("headerDate");
 const poetGrid = document.getElementById("poetGrid");
 const poetSearch = document.getElementById("poetSearch");
-const emptyBox = document.getElementById("emptyBox");
-const countLine = document.getElementById("countLine");
+const poetFilter = document.getElementById("poetFilter");
+const resultCount = document.getElementById("resultCount");
+const alphabetBox = document.getElementById("alphabetBox");
 
-function renderPoets(list){
-poetGrid.innerHTML = "";
-
-list.forEach(function(poet){
-const card = document.createElement("a");
-card.className = "poet-card";
-card.href = "poet-details.html?poet=" + encodeURIComponent(poet.slug);
-
-card.innerHTML = `
-<h3>${poet.name}</h3>
-<p>পরিচিতি, সাহিত্যধারা ও নির্বাচিত রচনার নাম দেখুন।</p>
-<span class="type">${poet.type}</span>
-`;
-
-poetGrid.appendChild(card);
-});
-
-if(list.length === 0){
-emptyBox.style.display = "block";
+function updateThemeButton(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+if(currentTheme === "dark"){
+themeBtn.innerHTML = "☀️ <span>Light</span>";
 }else{
-emptyBox.style.display = "none";
+themeBtn.innerHTML = "🌙 <span>Dark</span>";
+}
 }
 
-countLine.innerText = list.length + " জন কবি দেখা যাচ্ছে";
-}
+updateThemeButton();
 
-renderPoets(poets);
-
-poetSearch.addEventListener("input", function(){
-const q = poetSearch.value.trim().toLowerCase();
-
-const filtered = poets.filter(function(poet){
-return poet.name.toLowerCase().includes(q) || poet.type.toLowerCase().includes(q);
+themeBtn.addEventListener("click",function(){
+const currentTheme = htmlRoot.getAttribute("data-theme");
+const nextTheme = currentTheme === "dark" ? "light" : "dark";
+htmlRoot.setAttribute("data-theme",nextTheme);
+localStorage.setItem("bhubondangaTheme",nextTheme);
+updateThemeButton();
 });
 
-renderPoets(filtered);
-});
-
-const dateStrip = document.getElementById("dateStrip");
 const today = new Date();
 
-const banglaWeekday = today.toLocaleDateString("bn-BD", {
-weekday:"long"
-});
-
-const englishDate = today.toLocaleDateString("en-US", {
+const englishDate = today.toLocaleDateString("en-US",{
 year:"numeric",
-month:"long",
+month:"short",
 day:"numeric"
 });
 
-let banglaCalendarDate = "";
-
+let banglaDate = "";
 try{
-banglaCalendarDate = today.toLocaleDateString("bn-BD-u-ca-beng", {
+banglaDate = today.toLocaleDateString("bn-BD-u-ca-beng",{
 year:"numeric",
 month:"long",
 day:"numeric"
 });
 }catch(e){
-banglaCalendarDate = today.toLocaleDateString("bn-BD", {
+banglaDate = today.toLocaleDateString("bn-BD",{
 year:"numeric",
 month:"long",
 day:"numeric"
 });
 }
 
-dateStrip.innerHTML =
-"আজ " + banglaWeekday + " • বাংলা তারিখ: " + banglaCalendarDate + " • " + englishDate + " • তিথি/পক্ষ: শীঘ্রই যুক্ত হবে";
-
-const toast = document.getElementById("toast");
+headerDate.innerText = banglaDate + " • " + englishDate;
 
 function showToast(text){
-toast.innerText = text;
+toast.innerHTML = text;
 toast.style.display = "block";
-
 setTimeout(function(){
 toast.style.display = "none";
-},1900);
+},3300);
 }
 
-const searchForm = document.getElementById("searchForm");
-const searchInput = document.getElementById("searchInput");
+function openDrawer(){
+mobileDrawer.classList.add("open");
+drawerBackdrop.classList.add("show");
+}
 
-searchForm.addEventListener("submit", function(e){
-e.preventDefault();
+function closeDrawerFn(){
+mobileDrawer.classList.remove("open");
+drawerBackdrop.classList.remove("show");
+}
 
-const q = searchInput.value.trim();
+menuBtn.addEventListener("click",openDrawer);
+closeDrawer.addEventListener("click",closeDrawerFn);
+drawerBackdrop.addEventListener("click",closeDrawerFn);
 
-if(q.length === 0){
-showToast("সার্চ করার জন্য কিছু লিখুন।");
+function doSearch(){
+let q = "";
+if(searchMini){
+q = searchMini.value.trim();
+}
+if(!q){
+q = prompt("কী খুঁজতে চান?") || "";
+}
+if(q.trim().length > 0){
+window.location.href = "search.html?q=" + encodeURIComponent(q.trim());
+}
+}
+
+searchBtn.addEventListener("click",doSearch);
+
+if(searchMini){
+searchMini.addEventListener("keydown",function(e){
+if(e.key === "Enter"){
+doSearch();
+}
+});
+}
+
+const poets = [
+{name:"অক্ষয়কুমার বড়াল",slug:"akshay-kumar-baral",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"অ"},
+{name:"অজিত দত্ত",slug:"ajit-dutta",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"অ"},
+{name:"অতুলপ্রসাদ সেন",slug:"atulprasad-sen",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"অ"},
+{name:"অন্নদাশঙ্কর রায়",slug:"annadashankar-roy",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"অ"},
+{name:"অবনীন্দ্রনাথ ঠাকুর",slug:"abanindranath-tagore",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"অ"},
+{name:"আবদুল কাদির",slug:"abdul-kadir",region:"বাংলাদেশ",era:"আধুনিক",letter:"আ"},
+{name:"আবদুল হাকিম",slug:"abdul-hakim",region:"বাংলাদেশ",era:"মধ্যযুগ",letter:"আ"},
+{name:"আবু জাফর ওবায়দুল্লাহ",slug:"abu-zafar-obaydullah",region:"বাংলাদেশ",era:"আধুনিক",letter:"আ"},
+{name:"আবুল হোসেন",slug:"abul-hossain",region:"বাংলাদেশ",era:"আধুনিক",letter:"আ"},
+{name:"আল মাহমুদ",slug:"al-mahmud",region:"বাংলাদেশ",era:"আধুনিক",letter:"আ"},
+{name:"আহসান হাবীব",slug:"ahsan-habib",region:"বাংলাদেশ",era:"আধুনিক",letter:"আ"},
+{name:"ঈশ্বরচন্দ্র গুপ্ত",slug:"ishwar-chandra-gupta",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ঈ"},
+{name:"উপেন্দ্রকিশোর রায়চৌধুরী",slug:"upendrakishore-ray",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"উ"},
+{name:"ওমর আলী",slug:"omar-ali",region:"বাংলাদেশ",era:"আধুনিক",letter:"ও"},
+{name:"কঙ্কণ মুকুন্দরাম চক্রবর্তী",slug:"mukundaram-chakrabarti",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"ক"},
+{name:"কামিনী রায়",slug:"kamini-roy",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ক"},
+{name:"কায়কোবাদ",slug:"kaykobad",region:"বাংলাদেশ",era:"আধুনিক",letter:"ক"},
+{name:"কালীপ্রসন্ন ঘোষ",slug:"kaliprasanna-ghosh",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ক"},
+{name:"কাজী নজরুল ইসলাম",slug:"kazi-nazrul-islam",region:"বাংলাদেশ",era:"আধুনিক",letter:"ক"},
+{name:"কৃত্তিবাস ওঝা",slug:"krittibas-ojha",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"ক"},
+{name:"কেতকাদাস ক্ষেমানন্দ",slug:"ketakadas-kshemananda",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"ক"},
+{name:"গোবিন্দদাস কবিরাজ",slug:"govindadas-kaviraj",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"গ"},
+{name:"গোলাম মোস্তফা",slug:"golam-mostofa",region:"বাংলাদেশ",era:"আধুনিক",letter:"গ"},
+{name:"গৌরীপ্রসন্ন মজুমদার",slug:"gauriprasanna-majumdar",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"গ"},
+{name:"চন্দ্রাবতী",slug:"chandrabati",region:"বাংলাদেশ",era:"মধ্যযুগ",letter:"চ"},
+{name:"চণ্ডীদাস",slug:"chandidas",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"চ"},
+{name:"চিত্তরঞ্জন দাশ",slug:"chittaranjan-das",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"চ"},
+{name:"জসীমউদ্‌দীন",slug:"jashimuddin",region:"বাংলাদেশ",era:"আধুনিক",letter:"জ"},
+{name:"জয় গোস্বামী",slug:"joy-goswami",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"জ"},
+{name:"জীবনানন্দ দাশ",slug:"jibanananda-das",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"জ"},
+{name:"জহির রায়হান",slug:"zahir-raihan",region:"বাংলাদেশ",era:"আধুনিক",letter:"জ"},
+{name:"জয়দেব",slug:"jayadeva",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"জ"},
+{name:"তরু দত্ত",slug:"toru-dutt",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ত"},
+{name:"দাউদ হায়দার",slug:"daud-haider",region:"বাংলাদেশ",era:"আধুনিক",letter:"দ"},
+{name:"দ্বিজেন্দ্রলাল রায়",slug:"dwijendralal-roy",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"দ"},
+{name:"দীনবন্ধু মিত্র",slug:"dinabandhu-mitra",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"দ"},
+{name:"নবীনচন্দ্র সেন",slug:"nabin-chandra-sen",region:"বাংলাদেশ",era:"আধুনিক",letter:"ন"},
+{name:"নির্মলেন্দু গুণ",slug:"nirmalendu-goon",region:"বাংলাদেশ",era:"আধুনিক",letter:"ন"},
+{name:"নীলমণি ফুকন",slug:"nilmani-phookan",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ন"},
+{name:"পূর্ণেন্দু পত্রী",slug:"purnendu-patri",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"প"},
+{name:"প্রমথ চৌধুরী",slug:"pramatha-chaudhuri",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"প"},
+{name:"প্রেমেন্দ্র মিত্র",slug:"premendra-mitra",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"প"},
+{name:"বঙ্কিমচন্দ্র চট্টোপাধ্যায়",slug:"bankim-chandra-chattopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ব"},
+{name:"বন্দে আলী মিয়া",slug:"bande-ali-mia",region:"বাংলাদেশ",era:"আধুনিক",letter:"ব"},
+{name:"বিষ্ণু দে",slug:"bishnu-de",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ব"},
+{name:"বেগম সুফিয়া কামাল",slug:"sufia-kamal",region:"বাংলাদেশ",era:"আধুনিক",letter:"ব"},
+{name:"বুদ্ধদেব বসু",slug:"buddhadeb-basu",region:"বাংলাদেশ",era:"আধুনিক",letter:"ব"},
+{name:"বিজয় গুপ্ত",slug:"bijay-gupta",region:"বাংলাদেশ",era:"মধ্যযুগ",letter:"ব"},
+{name:"ভারতচন্দ্র রায়গুণাকর",slug:"bharatchandra-ray",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"ভ"},
+{name:"মাইকেল মধুসূদন দত্ত",slug:"michael-madhusudan-dutt",region:"বাংলাদেশ",era:"আধুনিক",letter:"ম"},
+{name:"মুকুন্দ দাস",slug:"mukunda-das",region:"বাংলাদেশ",era:"আধুনিক",letter:"ম"},
+{name:"মোহিতলাল মজুমদার",slug:"mohitlal-majumdar",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ম"},
+{name:"মঙ্গলাচরণ চট্টোপাধ্যায়",slug:"mangalacharan-chattopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"ম"},
+{name:"মহাদেব সাহা",slug:"mahadev-saha",region:"বাংলাদেশ",era:"আধুনিক",letter:"ম"},
+{name:"মোফাজ্জল করিম",slug:"mofazzal-karim",region:"বাংলাদেশ",era:"আধুনিক",letter:"ম"},
+{name:"মোহাম্মদ নূরুল হুদা",slug:"mohammad-nurul-huda",region:"বাংলাদেশ",era:"আধুনিক",letter:"ম"},
+{name:"রবীন্দ্রনাথ ঠাকুর",slug:"rabindranath-tagore",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"র"},
+{name:"রঙ্গলাল বন্দ্যোপাধ্যায়",slug:"rangalal-bandyopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"র"},
+{name:"রজনীকান্ত সেন",slug:"rajanikanta-sen",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"র"},
+{name:"রুদ্র মুহম্মদ শহিদুল্লাহ",slug:"rudra-muhammad-shahidullah",region:"বাংলাদেশ",era:"আধুনিক",letter:"র"},
+{name:"রফিক আজাদ",slug:"rafiq-azad",region:"বাংলাদেশ",era:"আধুনিক",letter:"র"},
+{name:"রামপ্রসাদ সেন",slug:"ramprasad-sen",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"র"},
+{name:"লালন শাহ",slug:"lalon-shah",region:"বাংলাদেশ",era:"মধ্যযুগ",letter:"ল"},
+{name:"শক্তি চট্টোপাধ্যায়",slug:"shakti-chattopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"শ"},
+{name:"শামসুর রাহমান",slug:"shamsur-rahman",region:"বাংলাদেশ",era:"আধুনিক",letter:"শ"},
+{name:"শঙ্খ ঘোষ",slug:"shankha-ghosh",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"শ"},
+{name:"শরৎকুমার মুখোপাধ্যায়",slug:"sharat-kumar-mukhopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"শ"},
+{name:"শহীদ কাদরী",slug:"shahid-qadri",region:"বাংলাদেশ",era:"আধুনিক",letter:"শ"},
+{name:"শামসুর রাহমান চৌধুরী",slug:"shamsur-rahman-chowdhury",region:"বাংলাদেশ",era:"আধুনিক",letter:"শ"},
+{name:"শেখ ফজলল করিম",slug:"sheikh-fazlul-karim",region:"বাংলাদেশ",era:"আধুনিক",letter:"শ"},
+{name:"সুকান্ত ভট্টাচার্য",slug:"sukanta-bhattacharya",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"স"},
+{name:"সত্যেন্দ্রনাথ দত্ত",slug:"satyendranath-dutta",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"স"},
+{name:"সুনীল গঙ্গোপাধ্যায়",slug:"sunil-gangopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"স"},
+{name:"সুভাষ মুখোপাধ্যায়",slug:"subhash-mukhopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"স"},
+{name:"সৈয়দ আলী আহসান",slug:"syed-ali-ahsan",region:"বাংলাদেশ",era:"আধুনিক",letter:"স"},
+{name:"সৈয়দ শামসুল হক",slug:"syed-shamsul-haq",region:"বাংলাদেশ",era:"আধুনিক",letter:"স"},
+{name:"সামসুর রহমান",slug:"samsur-rahman-alt",region:"বাংলাদেশ",era:"আধুনিক",letter:"স"},
+{name:"সানাউল হক",slug:"sanaul-haq",region:"বাংলাদেশ",era:"আধুনিক",letter:"স"},
+{name:"সিকান্‌দার আবু জাফর",slug:"sikandar-abu-zafar",region:"বাংলাদেশ",era:"আধুনিক",letter:"স"},
+{name:"সঞ্জয় ভট্টাচার্য",slug:"sanjay-bhattacharya",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"স"},
+{name:"সুধীন্দ্রনাথ দত্ত",slug:"sudhindranath-dutta",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"স"},
+{name:"সুভাষিত কবিরাজ",slug:"subhashit-kaviraj",region:"ভারতীয় বাংলা",era:"মধ্যযুগ",letter:"স"},
+{name:"হেলাল হাফিজ",slug:"helal-hafiz",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হুমায়ুন আজাদ",slug:"humayun-azad",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাসান হাফিজুর রহমান",slug:"hasan-hafizur-rahman",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাসান আজিজুল হক",slug:"hasan-azizul-haq",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হেমচন্দ্র বন্দ্যোপাধ্যায়",slug:"hemchandra-bandyopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"হ"},
+{name:"হুমায়ুন কবির",slug:"humayun-kabir",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাবীবুল্লাহ সিরাজী",slug:"habibullah-siraji",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাবিবুর রহমান",slug:"habibur-rahman",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হায়াৎ সাইফ",slug:"hayat-saif",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাবীব ওয়াহিদ",slug:"habib-wahid-poetry",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাসান হাফিজ",slug:"hasan-hafiz",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাফিজ রশিদ খান",slug:"hafiz-rashid-khan",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হরপ্রসাদ শাস্ত্রী",slug:"haraprasad-shastri",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"হ"},
+{name:"হরিচরণ বন্দ্যোপাধ্যায়",slug:"haricharan-bandyopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"হ"},
+{name:"হেমাঙ্গ বিশ্বাস",slug:"hemanga-biswas",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"হ"},
+{name:"হেমন্ত বন্দ্যোপাধ্যায়",slug:"hemanta-bandyopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"হ"},
+{name:"হিরণ্ময় বন্দ্যোপাধ্যায়",slug:"hiranmoy-bandyopadhyay",region:"ভারতীয় বাংলা",era:"আধুনিক",letter:"হ"},
+{name:"হৃদয়েশ",slug:"hridoyesh",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাসান আল আবদুল্লাহ",slug:"hasan-al-abdullah",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"},
+{name:"হাসান মাহমুদ",slug:"hasan-mahmud",region:"বাংলাদেশ",era:"আধুনিক",letter:"হ"}
+];
+
+const letters = ["সব","অ","আ","ঈ","উ","ও","ক","গ","চ","জ","ত","দ","ন","প","ব","ভ","ম","র","ল","শ","স","হ"];
+let activeLetter = "সব";
+
+letters.forEach(function(letter){
+const button = document.createElement("button");
+button.innerText = letter;
+if(letter === "সব"){
+button.classList.add("active");
+}
+button.addEventListener("click",function(){
+activeLetter = letter;
+document.querySelectorAll("#alphabetBox button").forEach(function(btn){
+btn.classList.remove("active");
+});
+button.classList.add("active");
+renderPoets();
+});
+alphabetBox.appendChild(button);
+});
+
+function renderPoets(){
+const q = poetSearch.value.trim().toLowerCase();
+const selected = poetFilter.value;
+
+const filtered = poets.filter(function(poet){
+const searchText = (poet.name + " " + poet.region + " " + poet.era + " " + poet.letter).toLowerCase();
+
+const matchSearch = searchText.includes(q);
+const matchFilter = selected === "all" || poet.region === selected || poet.era === selected;
+const matchLetter = activeLetter === "সব" || poet.letter === activeLetter;
+
+return matchSearch && matchFilter && matchLetter;
+});
+
+poetGrid.innerHTML = "";
+
+resultCount.innerText = filtered.length + " জন কবি";
+
+if(filtered.length === 0){
+poetGrid.innerHTML = '<div class="no-result">কোনো কবি পাওয়া যায়নি।</div>';
 return;
 }
 
-window.location.href = "search.html?q=" + encodeURIComponent(q);
+filtered.forEach(function(poet){
+const item = document.createElement("a");
+item.className = "poet-item";
+item.href = "poet-details.html?poet=" + poet.slug;
+
+item.innerHTML = `
+<div class="poet-avatar">${poet.name.charAt(0)}</div>
+<div class="poet-info">
+<h4>${poet.name}</h4>
+<p>${poet.region} • ${poet.era}</p>
+<small>Profile দেখুন →</small>
+</div>
+`;
+
+poetGrid.appendChild(item);
 });
+}
+
+renderPoets();
+
+poetSearch.addEventListener("input",renderPoets);
+poetFilter.addEventListener("change",renderPoets);
 
 const toTopBtn = document.getElementById("toTopBtn");
 
-window.addEventListener("scroll", function(){
+window.addEventListener("scroll",function(){
 if(window.scrollY > 400){
 toTopBtn.style.display = "block";
 }else{
@@ -845,30 +1474,28 @@ toTopBtn.style.display = "none";
 }
 });
 
-toTopBtn.addEventListener("click", function(){
+toTopBtn.addEventListener("click",function(){
 window.scrollTo({
 top:0,
 behavior:"smooth"
 });
 });
 
-document.addEventListener("copy", function(e){
+document.addEventListener("copy",function(e){
 e.preventDefault();
 showToast("লেখা কপি করা নিরুৎসাহিত করা হয়েছে।");
 });
 
-document.addEventListener("contextmenu", function(e){
+document.addEventListener("contextmenu",function(e){
 e.preventDefault();
 showToast("Right click বন্ধ রাখা হয়েছে।");
 });
 
-document.addEventListener("selectstart", function(e){
+document.addEventListener("selectstart",function(e){
 const tag = e.target.tagName.toLowerCase();
-
 if(tag === "input" || tag === "textarea" || tag === "select"){
 return;
 }
-
 e.preventDefault();
 });
 </script>
