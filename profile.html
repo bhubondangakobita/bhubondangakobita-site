@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>আপনার প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
+<title>লেখক প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
@@ -21,20 +21,19 @@ scroll-behavior:smooth;
 }
 
 :root{
---bg:#f8f2e7;
---bg-soft:#fbf6ea;
---card:#fffdf7;
---card-2:#fff8eb;
+--bg:#f7f3eb;
+--bg-soft:#fbf8f1;
+--card:#ffffff;
+--card-2:#fffaf0;
 --text:#12345f;
---text-soft:#4a5a70;
+--text-soft:#42546c;
 --muted:#6d7582;
---border:rgba(18,52,95,.13);
+--border:rgba(18,52,95,.12);
 --accent:#12345f;
---accent-2:#62733c;
+--accent-2:#63743f;
 --gold:#b79a54;
---shadow:0 8px 22px rgba(67,48,20,.055);
---dark-card:#111827;
---dark-text:#f4ead8;
+--danger:#a94442;
+--shadow:0 8px 24px rgba(46,35,16,.06);
 }
 
 html[data-theme="dark"]{
@@ -49,9 +48,8 @@ html[data-theme="dark"]{
 --accent:#d8bd75;
 --accent-2:#b99a50;
 --gold:#d8bd75;
+--danger:#f08a85;
 --shadow:0 10px 28px rgba(0,0,0,.35);
---dark-card:#080d16;
---dark-text:#f4ead8;
 }
 
 body{
@@ -61,7 +59,6 @@ color:var(--text);
 line-height:1.65;
 user-select:none;
 -webkit-user-select:none;
--ms-user-select:none;
 }
 
 a{
@@ -71,7 +68,6 @@ color:inherit;
 
 button,
 input,
-select,
 textarea{
 font-family:inherit;
 }
@@ -79,7 +75,7 @@ font-family:inherit;
 .site-shell{
 min-height:100vh;
 background:
-radial-gradient(circle at top left,rgba(255,255,255,.42),transparent 32%),
+radial-gradient(circle at top left,rgba(255,255,255,.55),transparent 30%),
 linear-gradient(135deg,var(--bg-soft),var(--bg));
 }
 
@@ -94,8 +90,8 @@ linear-gradient(135deg,#0a0f1a,#111827);
 .topbar{
 position:sticky;
 top:0;
-z-index:999;
-background:rgba(250,246,236,.94);
+z-index:1000;
+background:rgba(251,248,241,.94);
 backdrop-filter:blur(14px);
 border-bottom:1px solid var(--border);
 padding:10px 30px;
@@ -109,15 +105,24 @@ html[data-theme="dark"] .topbar{
 background:rgba(13,19,32,.94);
 }
 
+.menu-btn{
+display:none;
+border:none;
+background:transparent;
+font-size:28px;
+color:var(--text);
+cursor:pointer;
+}
+
 .brand{
 display:flex;
 align-items:center;
 gap:10px;
-min-width:230px;
+min-width:245px;
 }
 
 .brand-leaf{
-font-size:40px;
+font-size:38px;
 line-height:1;
 }
 
@@ -125,15 +130,14 @@ line-height:1;
 font-size:31px;
 font-weight:800;
 letter-spacing:-1px;
-color:var(--text);
 line-height:1.05;
 }
 
 .brand-text p{
 font-size:12.5px;
 color:var(--muted);
-margin-top:2px;
 white-space:nowrap;
+margin-top:2px;
 }
 
 .desktop-nav{
@@ -147,14 +151,13 @@ flex:1;
 .desktop-nav a{
 font-size:15px;
 font-weight:700;
-color:var(--text);
-padding:9px 2px;
+padding:9px 0;
 border-bottom:2px solid transparent;
 white-space:nowrap;
 }
 
-.desktop-nav a.active,
-.desktop-nav a:hover{
+.desktop-nav a:hover,
+.desktop-nav a.active{
 border-color:var(--accent);
 }
 
@@ -168,17 +171,32 @@ gap:10px;
 font-size:12px;
 color:var(--muted);
 white-space:nowrap;
-max-width:210px;
+max-width:225px;
 overflow:hidden;
 text-overflow:ellipsis;
 }
 
+.date-strip{
+max-width:1510px;
+margin:0 auto;
+padding:7px 30px;
+font-size:13px;
+font-weight:700;
+color:var(--muted);
+border-bottom:1px solid var(--border);
+background:rgba(255,255,255,.28);
+}
+
+html[data-theme="dark"] .date-strip{
+background:rgba(255,255,255,.03);
+}
+
 .search-mini{
 height:38px;
-width:160px;
+width:165px;
 border:1px solid var(--border);
-background:var(--card-2);
-border-radius:9px;
+background:var(--card);
+border-radius:10px;
 padding:0 12px;
 outline:none;
 font-size:13px;
@@ -191,9 +209,9 @@ user-select:text;
 .theme-btn{
 height:38px;
 min-width:38px;
-border-radius:9px;
+border-radius:10px;
 border:1px solid var(--border);
-background:var(--card-2);
+background:var(--card);
 color:var(--text);
 font-size:15px;
 font-weight:800;
@@ -209,11 +227,11 @@ gap:6px;
 }
 
 .write-btn{
-border:none;
 background:var(--accent);
 color:var(--card)!important;
+border:none;
+border-radius:10px;
 padding:10px 15px;
-border-radius:9px;
 font-size:14px;
 font-weight:800;
 cursor:pointer;
@@ -221,30 +239,21 @@ box-shadow:var(--shadow);
 white-space:nowrap;
 }
 
-.top-profile{
-display:flex;
-align-items:center;
-gap:7px;
+.avatar-btn{
+border:none;
+background:transparent;
+cursor:pointer;
+padding:0;
 }
 
-.top-profile img{
-width:40px;
-height:40px;
+.avatar-btn img{
+width:42px;
+height:42px;
 border-radius:50%;
 object-fit:cover;
 border:2px solid var(--card);
-box-shadow:0 5px 14px rgba(0,0,0,.14);
-}
-
-.menu-btn{
-display:none;
-width:42px;
-height:42px;
-border:none;
-background:transparent;
-font-size:28px;
-color:var(--text);
-cursor:pointer;
+box-shadow:0 5px 14px rgba(0,0,0,.15);
+display:block;
 }
 
 /* LAYOUT */
@@ -258,25 +267,19 @@ grid-template-columns:245px minmax(0,1fr) 355px;
 gap:18px;
 }
 
-.sidebar,
-.rightbar,
-.main-content{
-min-width:0;
-}
-
 .card{
 background:var(--card);
 border:1px solid var(--border);
-border-radius:13px;
+border-radius:14px;
 box-shadow:var(--shadow);
 }
 
-.sidebar{
+.sidebar,
+.rightbar{
 position:sticky;
-top:80px;
-height:calc(100vh - 112px);
+top:118px;
+height:calc(100vh - 150px);
 overflow:auto;
-padding-right:2px;
 }
 
 .side-card{
@@ -313,10 +316,9 @@ display:flex;
 align-items:center;
 gap:10px;
 padding:10px 11px;
-border-radius:9px;
+border-radius:10px;
 font-size:15px;
 font-weight:650;
-color:var(--text);
 }
 
 .side-menu a:hover,
@@ -332,7 +334,6 @@ background:rgba(216,189,117,.10);
 .side-title{
 font-size:17px;
 font-weight:800;
-color:var(--text);
 margin:18px 0 8px;
 padding:0 8px;
 position:relative;
@@ -365,78 +366,20 @@ font-size:12px;
 color:var(--accent-2);
 }
 
-html[data-theme="dark"] .category-list span{
-background:rgba(216,189,117,.10);
-color:var(--gold);
-}
-
-.other-menu{
-margin-top:8px;
-background:var(--card-2);
-border:1px solid var(--border);
-border-radius:12px;
-padding:10px;
-position:relative;
-z-index:1;
-}
-
-.other-menu summary{
-cursor:pointer;
-font-weight:800;
-color:var(--text);
-font-size:14.5px;
-}
-
-.other-menu a{
-display:block;
-font-size:14px;
-color:var(--text-soft);
-padding:7px 0 0 0;
-}
-
-.auth-area{
-margin-top:22px;
-display:grid;
-gap:10px;
-padding:0 6px;
-position:relative;
-z-index:1;
-}
-
-.login-side,
-.register-side{
-display:block;
-text-align:center;
-padding:11px 14px;
-border-radius:9px;
-font-weight:800;
-font-size:15px;
-}
-
-.login-side{
-background:var(--accent);
-color:var(--card)!important;
-}
-
-.register-side{
-background:var(--card-2);
-border:1px solid var(--accent);
-color:var(--accent)!important;
-}
-
 /* PROFILE */
 
 .profile-card{
 overflow:hidden;
 }
 
-.profile-cover{
-height:250px;
+.cover-photo{
+height:260px;
 background:var(--card-2);
-border-bottom:1px solid var(--border);
+position:relative;
+overflow:hidden;
 }
 
-.profile-cover img{
+.cover-photo img{
 width:100%;
 height:100%;
 object-fit:cover;
@@ -444,37 +387,42 @@ display:block;
 }
 
 .profile-body{
-position:relative;
 padding:0 22px 22px;
+position:relative;
 }
 
-.profile-photo{
-width:132px;
-height:132px;
+.profile-photo-btn{
+border:none;
+background:transparent;
+padding:0;
+cursor:pointer;
+margin-top:-62px;
+position:relative;
+z-index:2;
+}
+
+.profile-photo-btn img{
+width:124px;
+height:124px;
 border-radius:50%;
 object-fit:cover;
 border:5px solid var(--card);
-box-shadow:0 8px 24px rgba(0,0,0,.20);
-margin-top:-66px;
-background:var(--card-2);
+box-shadow:0 9px 26px rgba(0,0,0,.20);
+display:block;
 }
 
 .profile-top{
 display:flex;
-justify-content:space-between;
 align-items:flex-start;
+justify-content:space-between;
 gap:14px;
+margin-top:12px;
 }
 
-.profile-name{
-margin-top:10px;
-}
-
-.profile-name h2{
-font-size:32px;
-line-height:1.25;
-color:var(--text);
+.profile-name h1{
+font-size:33px;
 font-weight:800;
+line-height:1.25;
 }
 
 .profile-name p{
@@ -487,7 +435,6 @@ margin-top:3px;
 display:flex;
 gap:9px;
 flex-wrap:wrap;
-margin-top:14px;
 }
 
 .profile-actions a,
@@ -495,38 +442,28 @@ margin-top:14px;
 border:1px solid var(--border);
 background:var(--card-2);
 color:var(--text);
-border-radius:9px;
+border-radius:10px;
 padding:9px 13px;
 font-size:13.5px;
 font-weight:800;
 cursor:pointer;
 }
 
-.profile-actions .primary{
+.profile-actions a.primary{
 background:var(--accent);
 color:var(--card);
 border-color:var(--accent);
 }
 
-.profile-bio{
+.bio{
 font-size:15.5px;
-font-weight:400;
 color:var(--text-soft);
-line-height:1.8;
-margin-top:12px;
-max-width:780px;
+line-height:1.9;
+margin-top:14px;
+max-width:850px;
 }
 
-.profile-meta{
-display:flex;
-gap:16px;
-flex-wrap:wrap;
-margin-top:12px;
-font-size:13.5px;
-color:var(--muted);
-}
-
-.profile-stats{
+.stat-grid{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:10px;
@@ -536,15 +473,15 @@ margin-top:17px;
 .stat{
 background:var(--card-2);
 border:1px solid var(--border);
-border-radius:11px;
+border-radius:12px;
 padding:12px;
 text-align:center;
 }
 
 .stat strong{
 display:block;
-font-size:20px;
-color:var(--text);
+font-size:19px;
+font-weight:800;
 }
 
 .stat span{
@@ -552,38 +489,71 @@ font-size:12.5px;
 color:var(--muted);
 }
 
-.profile-note{
-margin-top:14px;
+.edit-box{
+display:none;
+margin-top:16px;
 background:var(--card-2);
-border:1px solid var(--border);
-border-radius:12px;
-padding:12px 14px;
+border:1px dashed var(--border);
+border-radius:13px;
+padding:15px;
+}
+
+.edit-box h3{
+font-size:20px;
+font-weight:800;
+}
+
+.edit-box p{
 font-size:14px;
 color:var(--text-soft);
+margin-top:6px;
 line-height:1.8;
 }
 
-.profile-note b{
+.edit-box textarea{
+width:100%;
+min-height:110px;
+margin-top:10px;
+border:1px solid var(--border);
+background:var(--card);
+border-radius:10px;
+padding:10px;
+font-size:14px;
 color:var(--text);
+outline:none;
+resize:none;
+user-select:text;
+-webkit-user-select:text;
 }
 
-/* TABS */
+.edit-box button{
+margin-top:10px;
+background:var(--accent);
+color:var(--card);
+border:none;
+border-radius:10px;
+padding:9px 14px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+}
 
-.content-card{
+/* WRITINGS */
+
+.feed-card{
 margin-top:16px;
 padding:18px;
 }
 
-.profile-tabs{
+.feed-tabs{
 display:flex;
-align-items:center;
 gap:22px;
 border-bottom:1px solid var(--border);
 padding:0 4px 12px;
 overflow:auto;
 }
 
-.profile-tabs button{
+.feed-tabs button{
 border:none;
 background:transparent;
 font-size:15px;
@@ -594,13 +564,13 @@ cursor:pointer;
 padding-bottom:8px;
 }
 
-.profile-tabs button.active{
+.feed-tabs button.active{
 color:var(--text);
 border-bottom:3px solid var(--accent);
 }
 
 .post{
-padding:15px 8px;
+padding:17px 8px;
 border-bottom:1px solid var(--border);
 }
 
@@ -620,12 +590,11 @@ height:42px;
 border-radius:50%;
 object-fit:cover;
 border:2px solid var(--card);
-box-shadow:0 4px 10px rgba(0,0,0,.1);
+box-shadow:0 4px 10px rgba(0,0,0,.10);
 }
 
 .author-line{
 font-size:13.8px;
-font-weight:400;
 color:var(--muted);
 }
 
@@ -641,19 +610,19 @@ color:var(--muted);
 }
 
 .post-title{
-font-size:18px;
+font-size:19px;
 font-weight:500;
 color:var(--text);
-margin-top:9px;
-line-height:1.42;
+margin-top:10px;
+line-height:1.45;
 }
 
 .post-text{
-font-size:15px;
+font-size:15.5px;
 font-weight:400;
 color:var(--text-soft);
-margin-top:5px;
-line-height:1.76;
+margin-top:6px;
+line-height:1.82;
 }
 
 .post-actions{
@@ -661,16 +630,37 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 gap:8px;
-margin-top:12px;
+margin-top:14px;
 font-size:13.8px;
-font-weight:400;
 color:var(--muted);
 }
 
 .post-actions-left{
 display:flex;
-gap:17px;
+gap:14px;
 align-items:center;
+flex-wrap:wrap;
+}
+
+.action-btn{
+border:none;
+background:transparent;
+color:var(--muted);
+font-size:13.8px;
+cursor:pointer;
+font-weight:700;
+display:inline-flex;
+align-items:center;
+gap:4px;
+}
+
+.action-btn:hover{
+color:var(--accent);
+}
+
+.action-btn.saved{
+color:var(--accent);
+font-weight:800;
 }
 
 .read-more{
@@ -678,100 +668,36 @@ font-weight:800;
 color:var(--accent);
 }
 
-.pin-label{
-display:inline-block;
-font-size:12px;
-font-weight:800;
-color:var(--accent-2);
-background:rgba(98,115,60,.12);
-border-radius:13px;
-padding:3px 9px;
-margin-bottom:7px;
-}
-
-html[data-theme="dark"] .pin-label{
-background:rgba(216,189,117,.10);
-color:var(--gold);
-}
-
-/* EDIT PANEL */
-
-.edit-panel{
-display:none;
-margin-top:16px;
-background:var(--card);
-border:1px solid var(--border);
-border-radius:13px;
-padding:18px;
-box-shadow:var(--shadow);
-}
-
-.edit-panel h3{
-font-size:21px;
-color:var(--text);
-margin-bottom:10px;
-}
-
-.form-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
+.feed-navigation{
+display:flex;
+align-items:center;
+justify-content:space-between;
 gap:12px;
+padding:15px 4px 2px;
+border-top:1px solid var(--border);
+margin-top:8px;
 }
 
-label{
-display:block;
-font-size:13.5px;
-font-weight:800;
-color:var(--text);
-margin:10px 0 5px;
-}
-
-input,
-textarea,
-select{
-width:100%;
+.feed-navigation button{
 border:1px solid var(--border);
 background:var(--card-2);
 color:var(--text);
-border-radius:9px;
-padding:10px 12px;
-font-size:14px;
-outline:none;
-user-select:text;
--webkit-user-select:text;
-}
-
-textarea{
-min-height:115px;
-resize:none;
-}
-
-.form-help{
-font-size:13px;
-color:var(--muted);
-margin-top:6px;
-line-height:1.7;
-}
-
-.submit-btn{
-background:var(--accent);
-color:var(--card);
-border:none;
-border-radius:9px;
-padding:10px 16px;
+border-radius:22px;
+padding:9px 16px;
 font-size:14px;
 font-weight:800;
 cursor:pointer;
-margin-top:12px;
+}
+
+.feed-navigation span{
+font-size:13px;
+color:var(--muted);
+text-align:center;
 }
 
 /* RIGHT */
 
 .rightbar{
-position:sticky;
-top:80px;
-height:calc(100vh - 112px);
-overflow:auto;
 display:grid;
 gap:16px;
 align-content:start;
@@ -784,102 +710,47 @@ padding:18px;
 .right-title{
 font-size:21px;
 font-weight:800;
-color:var(--text);
 text-align:center;
 margin-bottom:14px;
 }
 
-.favorite-writer{
-display:flex;
-align-items:center;
-gap:12px;
-padding:9px 0;
-border-bottom:1px solid var(--border);
-}
-
-.favorite-writer:last-child{
-border-bottom:none;
-}
-
-.favorite-writer img{
-width:45px;
-height:45px;
-border-radius:50%;
-object-fit:cover;
-}
-
-.favorite-writer strong{
-display:block;
-font-size:15px;
-color:var(--text);
-}
-
-.favorite-writer small{
-font-size:12px;
-color:var(--muted);
-}
-
-.view-btn{
-margin-left:auto;
-border:1px solid var(--border);
-background:var(--card-2);
-color:var(--accent);
-padding:5px 10px;
-border-radius:7px;
-font-size:12px;
-font-weight:800;
-}
-
-.favorite-writing{
+.quick-link{
 display:block;
 padding:10px 0;
 border-bottom:1px solid var(--border);
 }
 
-.favorite-writing:last-child{
+.quick-link:last-child{
 border-bottom:none;
 }
 
-.favorite-writing small{
+.quick-link small{
 font-size:12px;
 font-weight:800;
 color:var(--accent-2);
 }
 
-.favorite-writing h4{
-font-size:15px;
-font-weight:600;
-color:var(--text);
+.quick-link h4{
+font-size:15.5px;
+font-weight:800;
 line-height:1.5;
-margin-top:4px;
+margin-top:3px;
 }
 
-.favorite-writing p{
+.quick-link p{
 font-size:12.8px;
 color:var(--muted);
 margin-top:3px;
 }
 
-.auto-poet-box{
+.memory-card{
 background:var(--card-2);
 border:1px dashed var(--border);
 border-radius:13px;
-padding:16px;
-text-align:center;
-}
-
-.auto-poet-box p{
-font-size:14.5px;
-font-weight:400;
+padding:14px;
+font-size:14px;
 color:var(--text-soft);
 line-height:1.8;
-}
-
-.auto-poet-box a{
-display:inline-block;
-margin-top:12px;
-font-weight:800;
-color:var(--accent);
 }
 
 .midnight-card{
@@ -899,7 +770,6 @@ color:#f6e8c6;
 
 .midnight-card p{
 font-size:14.5px;
-font-weight:400;
 color:#d9caa8;
 margin-top:8px;
 }
@@ -911,24 +781,10 @@ color:#fff;
 font-weight:800;
 }
 
-.tag-cloud{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-}
+/* DRAWERS */
 
-.tag-cloud a{
-font-size:13px;
-color:var(--text);
-background:var(--card-2);
-border:1px solid var(--border);
-border-radius:8px;
-padding:7px 10px;
-}
-
-/* DRAWER */
-
-.drawer-backdrop{
+.drawer-backdrop,
+.account-backdrop{
 position:fixed;
 inset:0;
 background:rgba(0,0,0,.38);
@@ -954,7 +810,8 @@ box-shadow:12px 0 35px rgba(0,0,0,.22);
 left:0;
 }
 
-.drawer-backdrop.show{
+.drawer-backdrop.show,
+.account-backdrop.show{
 display:block;
 }
 
@@ -968,14 +825,154 @@ margin-bottom:14px;
 .drawer-head h3{
 font-size:22px;
 font-weight:800;
-color:var(--text);
 }
 
-.close-drawer{
+.close-drawer,
+.close-account{
 border:none;
 background:transparent;
 font-size:30px;
 color:var(--text);
+cursor:pointer;
+}
+
+/* ACCOUNT SIDEBAR */
+
+.account-panel{
+position:fixed;
+top:0;
+right:-370px;
+width:350px;
+max-width:92vw;
+height:100vh;
+background:var(--card);
+z-index:1300;
+transition:.25s ease;
+padding:18px 16px;
+overflow:auto;
+box-shadow:-12px 0 35px rgba(0,0,0,.22);
+}
+
+.account-panel.open{
+right:0;
+}
+
+.account-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-bottom:14px;
+}
+
+.account-user{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px;
+border:1px solid var(--border);
+border-radius:14px;
+background:var(--card-2);
+}
+
+.account-user img{
+width:58px;
+height:58px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid var(--card);
+}
+
+.account-user h3{
+font-size:19px;
+font-weight:800;
+line-height:1.3;
+}
+
+.account-user p{
+font-size:13px;
+color:var(--muted);
+margin-top:2px;
+}
+
+.account-menu{
+display:grid;
+gap:9px;
+margin-top:14px;
+}
+
+.account-menu a,
+.account-menu button{
+width:100%;
+border:1px solid var(--border);
+background:var(--card);
+color:var(--text);
+border-radius:12px;
+padding:12px 13px;
+font-size:15px;
+font-weight:800;
+text-align:left;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+}
+
+.account-menu button.logout-btn{
+background:#eef0f2;
+color:#111;
+border-color:#e1e4e8;
+justify-content:center;
+}
+
+html[data-theme="dark"] .account-menu button.logout-btn{
+background:#2a3344;
+color:var(--text);
+border-color:var(--border);
+}
+
+.memory-box{
+margin-top:16px;
+border:1px solid var(--border);
+border-radius:14px;
+background:var(--card-2);
+padding:14px;
+}
+
+.memory-box h4{
+font-size:18px;
+font-weight:800;
+margin-bottom:7px;
+}
+
+.memory-empty{
+font-size:13.5px;
+color:var(--muted);
+line-height:1.75;
+}
+
+.memory-item{
+display:block;
+padding:9px 0;
+border-bottom:1px solid var(--border);
+}
+
+.memory-item:last-child{
+border-bottom:none;
+}
+
+.memory-item small{
+font-size:12px;
+color:var(--accent-2);
+font-weight:800;
+}
+
+.memory-item p{
+font-size:14px;
+font-weight:700;
+line-height:1.55;
+margin-top:2px;
 }
 
 /* FOOTER */
@@ -1002,8 +999,6 @@ display:flex;
 gap:15px;
 flex-wrap:wrap;
 }
-
-/* UTIL */
 
 .to-top{
 position:fixed;
@@ -1045,10 +1040,7 @@ line-height:1.8;
 
 @media(max-width:1250px){
 
-.header-date{
-display:none;
-}
-
+.header-date,
 .search-mini{
 display:none;
 }
@@ -1097,13 +1089,19 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
-.top-profile img{
+.theme-btn span{
+display:none;
+}
+
+.avatar-btn img{
 width:38px;
 height:38px;
 }
 
-.theme-btn span{
-display:none;
+.date-strip{
+padding:6px 14px;
+font-size:12.5px;
+text-align:center;
 }
 
 .page-wrap{
@@ -1115,61 +1113,68 @@ padding:12px 14px 28px;
 display:none;
 }
 
-.profile-cover{
-height:205px;
+.cover-photo{
+height:210px;
 }
 
 .profile-body{
 padding:0 15px 18px;
 }
 
-.profile-photo{
-width:112px;
-height:112px;
-margin-top:-56px;
+.profile-photo-btn img{
+width:108px;
+height:108px;
+margin-top:8px;
 }
 
 .profile-top{
 display:block;
 }
 
-.profile-name h2{
-font-size:26px;
+.profile-name h1{
+font-size:28px;
 }
 
 .profile-actions{
-margin-top:11px;
+margin-top:12px;
 }
 
-.profile-stats{
+.stat-grid{
 grid-template-columns:repeat(2,1fr);
 }
 
-.content-card{
-padding:13px;
-}
-
-.profile-tabs{
-gap:20px;
-padding-bottom:8px;
+.feed-card{
+padding:14px;
 }
 
 .post{
-padding:15px 3px;
+padding:16px 3px;
 }
 
 .post-title{
-font-size:17.5px;
-font-weight:500;
+font-size:19px;
 }
 
 .post-text{
-font-size:14.7px;
-font-weight:400;
+font-size:15.5px;
 }
 
-.form-grid{
-grid-template-columns:1fr;
+.post-actions{
+align-items:flex-start;
+flex-direction:column;
+}
+
+.post-actions-left{
+gap:13px;
+}
+
+.feed-navigation button{
+padding:8px 12px;
+font-size:13.5px;
+}
+
+.feed-navigation span{
+display:none;
 }
 
 .site-footer{
@@ -1206,13 +1211,8 @@ min-width:36px;
 padding:0 8px;
 }
 
-.post-actions{
-align-items:flex-start;
-flex-direction:column;
-}
-
-.post-actions-left{
-gap:14px;
+.stat-grid{
+grid-template-columns:1fr 1fr;
 }
 
 }
@@ -1240,23 +1240,26 @@ gap:14px;
 <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
 <a href="today-poem.html?type=poem">কবিতা</a>
 <a href="today-poem.html?type=prolap">প্রলাপ</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="founder-profile.html">মাহমুদ সোহেলের কবিতা</a>
+<a href="famous-poet.html">কবির প্রোফাইল</a>
+<a href="founder-profile.html">মাহমুদ সোহেল</a>
 <a href="profile.html" class="active">আপনার প্রোফাইল</a>
 </nav>
 
 <div class="header-actions">
-<div class="header-date" id="headerDate">তারিখ লোড হচ্ছে...</div>
+<div class="header-date" id="headerDateTop">তারিখ লোড হচ্ছে...</div>
 <input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
 <button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙 <span>Dark</span></button>
 <button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
 <a href="today-poem.html" class="write-btn">✎ লিখুন</a>
-<a href="profile.html" class="top-profile" title="আপনার প্রোফাইল">
-<img src="profile.jpg" alt="Profile">
-</a>
+
+<button class="avatar-btn" id="accountBtn" title="Account menu">
+<img src="profile.jpg" alt="আপনার প্রোফাইল">
+</button>
 </div>
 
 </header>
+
+<div class="date-strip" id="headerDateStrip">তারিখ লোড হচ্ছে...</div>
 
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
@@ -1271,36 +1274,55 @@ gap:14px;
 <div class="side-menu">
 <a href="index.html">🏠 হোম</a>
 <a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
-<a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
+<a href="famous-poet.html">📖 কবির প্রোফাইল</a>
 <a href="today-poem.html?type=poem">📝 কবিতা</a>
 <a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
-<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেল</a>
 <a href="profile.html" class="active">👤 আপনার প্রোফাইল</a>
 <a href="discussion-post.html">💬 সাহিত্য আলোচনা</a>
+<a href="contact.html">✉ যোগাযোগ</a>
+<a href="about.html">ℹ আমাদের সম্পর্কে</a>
 <a href="search.html">🔎 সার্চ</a>
 </div>
+</aside>
 
-<div class="side-title">বিষয়ের অনুসারে</div>
+<div class="account-backdrop" id="accountBackdrop"></div>
 
-<div class="category-list">
-<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
-<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
-<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
-<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+<aside class="account-panel" id="accountPanel">
+
+<div class="account-head">
+<h3>Account</h3>
+<button class="close-account" id="closeAccount">×</button>
 </div>
 
-<details class="other-menu">
-<summary>অন্যান্য</summary>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
-<a href="contact.html">যোগাযোগ / রিভিউ</a>
-<a href="about.html">নীতিমালা</a>
-<a href="search.html">সার্চ</a>
-</details>
-
-<div class="auth-area">
-<a href="login.html" class="login-side">লগইন করুন</a>
-<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+<div class="account-user">
+<img src="profile.jpg" alt="আপনার প্রোফাইল">
+<div>
+<h3><a href="profile.html">আপনার প্রোফাইল</a></h3>
+<p>Writer • Reader • Memories</p>
 </div>
+</div>
+
+<div class="account-menu">
+<a href="profile.html">আপনার প্রোফাইল <span>›</span></a>
+<a href="famous-poet.html">কবির প্রোফাইল <span>›</span></a>
+<a href="today-poem.html">লেখা জমা দিন <span>›</span></a>
+<a href="search.html?q=প্রিয় লেখা">প্রিয় লেখা খুঁজুন <span>›</span></a>
+<a href="famous-poet.html">প্রিয় লেখক যোগ করুন <span>›</span></a>
+<a href="contact.html">রিপোর্ট / কপিরাইট <span>›</span></a>
+<button id="accountThemeBtn">Theme বদলান <span>☀️/🌙</span></button>
+<button class="logout-btn" id="logoutBtn">Log out</button>
+</div>
+
+<div class="memory-box">
+<h4>মেমোরিস</h4>
+<div id="memoryList">
+<p class="memory-empty">
+আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে। যত ইচ্ছে তত লেখা save করা যাবে।
+</p>
+</div>
+</div>
+
 </aside>
 
 <main class="page-wrap">
@@ -1311,33 +1333,20 @@ gap:14px;
 <div class="side-menu">
 <a href="index.html">🏠 হোম</a>
 <a href="madhyorater-prolap.html">☾ মধ্যরাতের প্রলাপ</a>
+<a href="famous-poet.html">📖 কবির প্রোফাইল</a>
 <a href="today-poem.html?type=poem">📝 কবিতা</a>
 <a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
-<a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
-<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেল</a>
 <a href="profile.html" class="active">👤 আপনার প্রোফাইল</a>
 </div>
 
-<div class="side-title">বিষয়ের অনুসারে</div>
+<div class="side-title">লেখকের ভুবন</div>
 
 <div class="category-list">
-<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
-<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
-<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
-<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
-</div>
-
-<details class="other-menu">
-<summary>অন্যান্য</summary>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
-<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট</a>
-<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
-<a href="search.html">সার্চ</a>
-</details>
-
-<div class="auth-area">
-<a href="login.html" class="login-side">↪ লগইন করুন</a>
-<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+<a href="#profileWriting">লেখা <span>১৮</span></a>
+<a href="#profileWriting">কবিতা <span>৮</span></a>
+<a href="#profileWriting">প্রলাপ <span>৫</span></a>
+<a href="#profileWriting">অনুকাব্য <span>৫</span></a>
 </div>
 
 </div>
@@ -1347,126 +1356,69 @@ gap:14px;
 
 <section class="card profile-card">
 
-<div class="profile-cover">
-<img src="profile-cover.jpg" onerror="this.src='cover.jpg'" alt="Profile Cover">
+<div class="cover-photo">
+<img src="profile-cover.jpg" onerror="this.onerror=null;this.src='cover.jpg';" alt="Profile Cover">
 </div>
 
 <div class="profile-body">
 
-<img class="profile-photo" src="profile.jpg" alt="Profile Photo">
+<button class="profile-photo-btn" id="profilePhotoBtn" title="Account sidebar">
+<img src="profile.jpg" alt="Profile Photo">
+</button>
 
 <div class="profile-top">
-
 <div class="profile-name">
-<h2>
-<a href="profile.html">নতুন সদস্য</a>
-</h2>
-<p>@new-member • লেখক / পাঠক</p>
+<h1 id="profileName">নতুন সদস্য</h1>
+<p>Writer • কবিতা, প্রলাপ, অনুকাব্য ও চিঠিপত্র</p>
 </div>
 
 <div class="profile-actions">
-<a href="today-poem.html" class="primary">নতুন লেখা লিখুন</a>
+<a href="today-poem.html" class="primary">লেখা জমা দিন</a>
 <button id="editProfileBtn">Edit Profile</button>
-<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+</div>
 </div>
 
-</div>
-
-<p class="profile-bio">
-কবিতা, প্রলাপ, অনুকাব্য ও চিঠিপত্রের মাধ্যমে নিজের ভেতরের কথা প্রকাশ করতে ভালোবাসি। ভুবনডাঙ্গা আমার জন্য একটি শান্ত, সম্মানজনক ও সৃজনশীল জায়গা।
+<p class="bio">
+কবিতা ও প্রলাপের মাধ্যমে নিজের ভেতরের কথাগুলো প্রকাশ করতে ভালোবাসি। ভুবনডাঙ্গার এই সাহিত্যভুবনে নতুন লেখক হিসেবে নিজেকে গড়ে তুলতে চাই।
 </p>
 
-<div class="profile-meta">
-<span>📍 বাংলাদেশ</span>
-<span>🌿 ভুবনডাঙ্গার সদস্য</span>
-<span>📅 যুক্ত হয়েছেন: ২০২৬</span>
+<div class="stat-grid">
+<div class="stat"><strong>১৮</strong><span>লেখা</span></div>
+<div class="stat"><strong>০৮</strong><span>কবিতা</span></div>
+<div class="stat"><strong>০৫</strong><span>প্রলাপ</span></div>
+<div class="stat"><strong>১২</strong><span>মেমোরিস</span></div>
 </div>
 
-<div class="profile-stats">
-<div class="stat">
-<strong>২৪</strong>
-<span>পোস্ট</span>
-</div>
-
-<div class="stat">
-<strong>১২</strong>
-<span>কবিতা</span>
-</div>
-
-<div class="stat">
-<strong>৭</strong>
-<span>প্রলাপ</span>
-</div>
-
-<div class="stat">
-<strong>৫</strong>
-<span>নির্বাচিত</span>
-</div>
-</div>
-
-<div class="profile-note">
-<b>নিয়ম:</b> Cover photo এবং profile photo ব্যবহার করা যাবে। কিন্তু কবিতা / প্রলাপ / অনুকাব্য / চিঠিপত্রের ভিতরে কোনো image ব্যবহার করা যাবে না। লেখা হবে text-only।
+<div class="edit-box" id="editBox">
+<h3>Profile Edit Request</h3>
+<p>
+আপনার profile edit আমাদের কাছে পৌঁছাবে। ভুবনডাঙ্গা টিম যাচাইয়ের পরে public করবে।
+</p>
+<textarea placeholder="আপনার নতুন bio বা পরিবর্তনের কথা লিখুন..."></textarea>
+<button id="submitEditBtn">জমা দিন</button>
 </div>
 
 </div>
 
 </section>
 
-<section class="edit-panel" id="editPanel">
-<h3>Edit Profile</h3>
+<section class="card feed-card" id="profileWriting">
 
-<form id="profileEditForm">
-
-<div class="form-grid">
-<div>
-<label>নাম</label>
-<input type="text" value="নতুন সদস্য">
+<div class="feed-tabs">
+<button class="active" data-filter="all">সব লেখা</button>
+<button data-filter="কবিতা">কবিতা</button>
+<button data-filter="প্রলাপ">প্রলাপ</button>
+<button data-filter="অনুকাব্য">অনুকাব্য</button>
+<button data-filter="চিঠিপত্র">চিঠিপত্র</button>
 </div>
 
-<div>
-<label>Username</label>
-<input type="text" value="new-member">
+<div id="writingList"></div>
+
+<div class="feed-navigation">
+<button id="prevWritingBtn">← পূর্বের লেখা</button>
+<span id="writingPageInfo">পৃষ্ঠা ১</span>
+<button id="nextWritingBtn">পরের লেখা →</button>
 </div>
-</div>
-
-<label>লেখক পরিচিতি / Bio</label>
-<textarea>কবিতা, প্রলাপ, অনুকাব্য ও চিঠিপত্রের মাধ্যমে নিজের ভেতরের কথা প্রকাশ করতে ভালোবাসি।</textarea>
-
-<div class="form-grid">
-<div>
-<label>Profile Photo</label>
-<input type="file" accept="image/*">
-<p class="form-help">Profile photo approval-এর পরে public হবে।</p>
-</div>
-
-<div>
-<label>Cover Photo</label>
-<input type="file" accept="image/*">
-<p class="form-help">Cover photo approval-এর পরে public হবে।</p>
-</div>
-</div>
-
-<p class="form-help">
-লেখার মধ্যে কোনো photo/image upload করা যাবে না। শুধু profile photo এবং cover photo ব্যবহার করা যাবে।
-</p>
-
-<button type="submit" class="submit-btn">পরিবর্তন জমা দিন</button>
-
-</form>
-</section>
-
-<section class="card content-card">
-
-<div class="profile-tabs">
-<button class="active" data-tab="all">পোস্ট</button>
-<button data-tab="poem">কবিতা</button>
-<button data-tab="prolap">প্রলাপ</button>
-<button data-tab="anukabya">অনুকাব্য</button>
-<button data-tab="letter">চিঠিপত্র</button>
-<button data-tab="pinned">নির্বাচিত লেখা</button>
-</div>
-
-<div id="profilePosts"></div>
 
 </section>
 
@@ -1475,96 +1427,33 @@ gap:14px;
 <aside class="rightbar">
 
 <section class="card right-card">
-<h3 class="right-title">প্রিয় লেখক</h3>
+<h3 class="right-title">প্রিয় লেখা</h3>
 
-<div class="favorite-writer">
-<img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="">
-<div>
-<a href="founder-profile.html">
-<strong>মাহমুদ সোহেল</strong>
-</a>
-<small>কবি / প্রতিষ্ঠাতা</small>
+<div class="memory-card">
+আপনার প্রিয় লেখা ও saved writings account sidebar-এর মেমোরিস section-এ দেখা যাবে।
 </div>
-<a href="founder-profile.html" class="view-btn">দেখুন</a>
-</div>
-
-<div class="favorite-writer">
-<img src="profile.jpg" alt="">
-<div>
-<a href="profile.html?user=member-writer">
-<strong>সদস্য লেখক</strong>
-</a>
-<small>কবিতা / প্রলাপ</small>
-</div>
-<a href="profile.html?user=member-writer" class="view-btn">দেখুন</a>
-</div>
-
-<div class="favorite-writer">
-<img src="profile.jpg" alt="">
-<div>
-<a href="profile.html?user=nilanjana">
-<strong>নীলাঞ্জনা</strong>
-</a>
-<small>অনুকাব্য</small>
-</div>
-<a href="profile.html?user=nilanjana" class="view-btn">দেখুন</a>
-</div>
-
 </section>
 
 <section class="card right-card">
-<h3 class="right-title">প্রিয় লেখা</h3>
+<h3 class="right-title">প্রিয় লেখক</h3>
 
-<a href="founder-profile.html" class="favorite-writing">
-<small>কবিতা</small>
-<h4>ইচ্ছে</h4>
-<p>মাহমুদ সোহেল</p>
+<a href="founder-profile.html" class="quick-link">
+<small>Founder</small>
+<h4>মাহমুদ সোহেল</h4>
+<p>Founder profile ও লেখা</p>
 </a>
 
-<a href="madhyorater-prolap.html" class="favorite-writing">
-<small>প্রলাপ</small>
-<h4>ব্যক্তিকথা</h4>
-<p>মধ্যরাতের প্রলাপ</p>
+<a href="famous-poet.html" class="quick-link">
+<small>Poets</small>
+<h4>কবির প্রোফাইল</h4>
+<p>খ্যাতিমান কবিদের তালিকা</p>
 </a>
-
-<a href="profile.html?user=member-writer" class="favorite-writing">
-<small>চিঠিপত্র</small>
-<h4>একটি অসমাপ্ত চিঠি</h4>
-<p>সদস্য লেখক</p>
-</a>
-
 </section>
 
 <section class="card midnight-card">
-<h3>
-<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
-</h3>
-<p>
-রাত যখন শব্দকে নিজের দিকে টেনে নেয়, তখন কিছু কথা কবিতা হয় না—প্রলাপ হয়ে ওঠে।
-</p>
+<h3><a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a></h3>
+<p>রাতের নিঃসঙ্গতা, ঈশ্বরের কাছে ফিসফিস, আর নিজের সঙ্গে কথোপকথনের বিশেষ ভুবন।</p>
 <a href="madhyorater-prolap.html">প্রলাপ পড়ুন →</a>
-</section>
-
-<section class="card right-card">
-<h3 class="right-title">খ্যাতিমান কবি</h3>
-
-<div class="auto-poet-box">
-<p>
-বাংলা ভাষাভাষী ১০০ খ্যাতিমান কবি এবং কয়েকজন উপমহাদেশীয়/সুফি কবির profile search-এ পাওয়া যাবে।
-</p>
-<a href="famous-poet.html">সব খ্যাতিমান কবি দেখুন →</a>
-</div>
-</section>
-
-<section class="card right-card">
-<h3 class="right-title">Profile Tag</h3>
-<div class="tag-cloud">
-<a href="search.html?q=কবিতা">কবিতা</a>
-<a href="search.html?q=প্রলাপ">প্রলাপ</a>
-<a href="search.html?q=অনুকাব্য">অনুকাব্য</a>
-<a href="search.html?q=চিঠিপত্র">চিঠিপত্র</a>
-<a href="search.html?q=ভুবনডাঙ্গা">ভুবনডাঙ্গা</a>
-</div>
 </section>
 
 </aside>
@@ -1573,12 +1462,12 @@ gap:14px;
 
 <footer class="site-footer">
 <div>
-<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • বাংলা সাহিত্য ও সৃজনশীলতার মুক্ত ভুবন
+<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • লেখক প্রোফাইল
 </div>
 <div class="footer-links">
 <a href="about.html">আমাদের সম্পর্কে</a>
-<a href="about.html">ব্যবহারের শর্তাবলি</a>
 <a href="contact.html">যোগাযোগ</a>
+<a href="search.html">সার্চ</a>
 </div>
 </footer>
 
@@ -1596,13 +1485,29 @@ const menuBtn = document.getElementById("menuBtn");
 const mobileDrawer = document.getElementById("mobileDrawer");
 const drawerBackdrop = document.getElementById("drawerBackdrop");
 const closeDrawer = document.getElementById("closeDrawer");
+
+const accountBtn = document.getElementById("accountBtn");
+const profilePhotoBtn = document.getElementById("profilePhotoBtn");
+const accountPanel = document.getElementById("accountPanel");
+const accountBackdrop = document.getElementById("accountBackdrop");
+const closeAccount = document.getElementById("closeAccount");
+
 const searchBtn = document.getElementById("searchBtn");
 const searchMini = document.getElementById("searchMini");
 const toast = document.getElementById("toast");
 const themeBtn = document.getElementById("themeBtn");
-const headerDate = document.getElementById("headerDate");
-const editProfileBtn = document.getElementById("editProfileBtn");
-const editPanel = document.getElementById("editPanel");
+const accountThemeBtn = document.getElementById("accountThemeBtn");
+const headerDateTop = document.getElementById("headerDateTop");
+const headerDateStrip = document.getElementById("headerDateStrip");
+const memoryList = document.getElementById("memoryList");
+
+const prevWritingBtn = document.getElementById("prevWritingBtn");
+const nextWritingBtn = document.getElementById("nextWritingBtn");
+const writingPageInfo = document.getElementById("writingPageInfo");
+
+let activeFilter = "all";
+let currentPage = 1;
+const perPage = 3;
 
 function updateThemeButton(){
 const currentTheme = htmlRoot.getAttribute("data-theme");
@@ -1613,15 +1518,18 @@ themeBtn.innerHTML = "🌙 <span>Dark</span>";
 }
 }
 
-updateThemeButton();
-
-themeBtn.addEventListener("click",function(){
+function toggleTheme(){
 const currentTheme = htmlRoot.getAttribute("data-theme");
 const nextTheme = currentTheme === "dark" ? "light" : "dark";
 htmlRoot.setAttribute("data-theme",nextTheme);
 localStorage.setItem("bhubondangaTheme",nextTheme);
 updateThemeButton();
-});
+}
+
+updateThemeButton();
+
+themeBtn.addEventListener("click",toggleTheme);
+accountThemeBtn.addEventListener("click",toggleTheme);
 
 const today = new Date();
 
@@ -1646,14 +1554,16 @@ day:"numeric"
 });
 }
 
-headerDate.innerText = banglaDate + " • " + englishDate;
+const finalDateText = banglaDate + " • " + englishDate;
+headerDateTop.innerText = finalDateText;
+headerDateStrip.innerText = finalDateText;
 
 function showToast(text){
 toast.innerHTML = text;
 toast.style.display = "block";
 setTimeout(function(){
 toast.style.display = "none";
-},3600);
+},4000);
 }
 
 function openDrawer(){
@@ -1666,9 +1576,25 @@ mobileDrawer.classList.remove("open");
 drawerBackdrop.classList.remove("show");
 }
 
+function openAccount(){
+accountPanel.classList.add("open");
+accountBackdrop.classList.add("show");
+renderMemories();
+}
+
+function closeAccountFn(){
+accountPanel.classList.remove("open");
+accountBackdrop.classList.remove("show");
+}
+
 menuBtn.addEventListener("click",openDrawer);
 closeDrawer.addEventListener("click",closeDrawerFn);
 drawerBackdrop.addEventListener("click",closeDrawerFn);
+
+accountBtn.addEventListener("click",openAccount);
+profilePhotoBtn.addEventListener("click",openAccount);
+closeAccount.addEventListener("click",closeAccountFn);
+accountBackdrop.addEventListener("click",closeAccountFn);
 
 function doSearch(){
 let q = "";
@@ -1693,162 +1619,332 @@ doSearch();
 });
 }
 
-editProfileBtn.addEventListener("click",function(){
-if(editPanel.style.display === "block"){
-editPanel.style.display = "none";
-}else{
-editPanel.style.display = "block";
-editPanel.scrollIntoView({
-behavior:"smooth",
-block:"start"
-});
-}
-});
-
-document.getElementById("profileEditForm").addEventListener("submit",function(e){
-e.preventDefault();
-showToast("ধন্যবাদ, আপনার বিষয়টি আমাদের কাছে পৌঁছেছে।<br>ভুবনডাঙ্গা টিম বিষয়টি যত্ন সহকারে যাচাই করে দেখবে।<br>যাচাইয়ের পরে যথাযথ ব্যবস্থা নেওয়া হবে।<br><br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
-editPanel.style.display = "none";
-});
-
-const profileWriting = [
+const writingData = [
 {
+id:"w1",
 type:"কবিতা",
-tab:"poem",
-title:"শব্দের ওপারে",
-text:"শব্দের ওপারে যে নীরবতা, সেখানে মানুষের সবচেয়ে গোপন মুখটি বসে থাকে। কেউ দেখে না, শুধু বাতাস জানে...",
+title:"শেষ বিকেলের আলো",
+text:"শেষ বিকেলের আলো যেমন নিঃশব্দে জানালায় এসে পড়ে, তেমনই কিছু মানুষ জীবনের ভিতর আলো রেখে যায়...",
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
 time:"১ ঘণ্টা আগে",
-pinned:true,
-likes:"৪৮",
-comments:"৬"
+likes:"৭২",
+comments:"১১",
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=w1"
 },
 {
-type:"প্রলাপ",
-tab:"prolap",
-title:"নিজের সঙ্গে দেখা",
-text:"কখনো কখনো আয়নায় নিজের চোখের দিকে তাকিয়ে মনে হয়, এই মানুষটিকে আমি চিনতাম না...",
-time:"২ ঘণ্টা আগে",
-pinned:true,
-likes:"৩৯",
-comments:"৫"
-},
-{
+id:"w2",
 type:"অনুকাব্য",
-tab:"anukabya",
 title:"নীরবতা",
 text:"নীরবতা কখনো ফাঁকা নয়। তার ভেতরে যত শব্দ, মানুষ তত সাহসী নয়...",
-time:"৩ ঘণ্টা আগে",
-pinned:true,
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
+time:"২ ঘণ্টা আগে",
 likes:"৫৭",
-comments:"৮"
+comments:"৮",
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=w2"
 },
 {
+id:"w3",
 type:"চিঠিপত্র",
-tab:"letter",
 title:"একটি অসমাপ্ত চিঠি",
 text:"তোমাকে লিখতে বসে দেখি, কাগজের ভেতর নদীর শব্দ আছে। কিছু কথা পৌঁছায় না, তবু লেখা হয়ে থাকে...",
-time:"৪ ঘণ্টা আগে",
-pinned:true,
-likes:"৪৪",
-comments:"৪"
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
+time:"৩ ঘণ্টা আগে",
+likes:"৪৯",
+comments:"৬",
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=w3"
 },
 {
-type:"কবিতা",
-tab:"poem",
-title:"শেষ বিকেলের আলো",
-text:"শেষ বিকেলের আলো যেমন নিঃশব্দে জানালায় এসে পড়ে, তেমনি কিছু মানুষ জীবনে এসে থেকে যায়...",
-time:"৫ ঘণ্টা আগে",
-pinned:true,
-likes:"৬২",
-comments:"৯"
-},
-{
+id:"w4",
 type:"প্রলাপ",
-tab:"prolap",
-title:"যে কথা বলা হলো না",
-text:"যে কথা বলা হলো না, সেটাই সবচেয়ে বেশি বেঁচে থাকে। বলা কথা ক্লান্ত হয়, না-বলা কথা হাঁটে...",
-time:"৬ ঘণ্টা আগে",
-pinned:false,
-likes:"৩৩",
-comments:"৩"
+title:"নিজের সঙ্গে দেখা",
+text:"কখনো কখনো আয়নায় নিজের চোখের দিকে তাকিয়ে মনে হয়, এই মানুষটাকে আমি কতদিন ঠিকমতো দেখিনি...",
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
+time:"৪ ঘণ্টা আগে",
+likes:"৬৩",
+comments:"৯",
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=w4"
 },
 {
+id:"w5",
+type:"কবিতা",
+title:"অপেক্ষার ভেতর",
+text:"অপেক্ষা কখনো শেষ হয় না, শুধু মানুষের ভেতর আরেকটি দীর্ঘ রাস্তা খুলে দেয়...",
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
+time:"৫ ঘণ্টা আগে",
+likes:"৮৩",
+comments:"১২",
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=w5"
+},
+{
+id:"w6",
 type:"অনুকাব্য",
-tab:"anukabya",
-title:"পাতার ভেতর আলো",
-text:"পাতার ভেতর যত আলো, মানুষের ভেতর তার চেয়ে বেশি অন্ধকার। তবু আমরা সবুজ হতে চাই...",
-time:"৭ ঘণ্টা আগে",
-pinned:false,
+title:"জল",
+text:"জলকে কেউ আটকে রাখতে পারে না; মানুষের কান্নাও তেমনই একদিন নিজের রাস্তা খুঁজে নেয়...",
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
+time:"৬ ঘণ্টা আগে",
 likes:"৪১",
-comments:"৭"
+comments:"৫",
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=w6"
 }
 ];
 
-const profilePosts = document.getElementById("profilePosts");
-
-function renderProfilePosts(filter){
-profilePosts.innerHTML = "";
-
-let list = profileWriting.filter(function(item){
-if(filter === "all"){
-return true;
+function getMemories(){
+return JSON.parse(localStorage.getItem("bhubondangaMemories") || "[]");
 }
-if(filter === "pinned"){
-return item.pinned === true;
+
+function saveMemories(items){
+localStorage.setItem("bhubondangaMemories",JSON.stringify(items));
 }
-return item.tab === filter;
+
+function isSaved(id){
+return getMemories().some(function(item){
+return item.id === id;
+});
+}
+
+function toggleMemory(post){
+let memories = getMemories();
+const exists = memories.some(function(item){
+return item.id === post.id;
 });
 
-list.forEach(function(item){
+if(exists){
+memories = memories.filter(function(item){
+return item.id !== post.id;
+});
+showToast("মেমোরিস থেকে সরানো হয়েছে।");
+}else{
+memories.unshift({
+id:post.id,
+title:post.title,
+type:post.type,
+author:post.author,
+url:post.url
+});
+showToast("মেমোরিসে সংরক্ষণ করা হয়েছে।");
+}
+
+saveMemories(memories);
+renderWriting();
+renderMemories();
+}
+
+function renderMemories(){
+const memories = getMemories();
+
+if(memories.length === 0){
+memoryList.innerHTML = `
+<p class="memory-empty">
+আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে। যত ইচ্ছে তত লেখা save করা যাবে।
+</p>
+`;
+return;
+}
+
+memoryList.innerHTML = "";
+
+memories.forEach(function(item){
+const a = document.createElement("a");
+a.className = "memory-item";
+a.href = item.url;
+a.innerHTML = `
+<small>${item.type} • ${item.author}</small>
+<p>${item.title}</p>
+`;
+memoryList.appendChild(a);
+});
+}
+
+function sharePost(post){
+const shareText = post.title + " — " + post.author;
+const shareUrl = window.location.origin + "/" + post.url;
+
+if(navigator.share){
+navigator.share({
+title:post.title,
+text:shareText,
+url:shareUrl
+}).catch(function(){});
+}else{
+navigator.clipboard.writeText(shareUrl).then(function(){
+showToast("Share link copy করা হয়েছে।");
+}).catch(function(){
+showToast("Share link: " + shareUrl);
+});
+}
+}
+
+function getFilteredWriting(){
+return writingData.filter(function(item){
+return activeFilter === "all" || item.type === activeFilter;
+});
+}
+
+function renderWriting(){
+const writingList = document.getElementById("writingList");
+writingList.innerHTML = "";
+
+const filtered = getFilteredWriting();
+const totalPage = Math.max(1,Math.ceil(filtered.length / perPage));
+
+if(currentPage > totalPage){
+currentPage = totalPage;
+}
+
+const start = (currentPage - 1) * perPage;
+const pageItems = filtered.slice(start,start + perPage);
+
+if(pageItems.length === 0){
+writingList.innerHTML = `
+<article class="post">
+<h3 class="post-title">এই বিভাগে কোনো approved লেখা নেই</h3>
+<p class="post-text">Pending লেখা public profile বা search result-এ দেখা যাবে না।</p>
+</article>
+`;
+}
+
+pageItems.forEach(function(item){
+const saved = isSaved(item.id);
+
 const article = document.createElement("article");
 article.className = "post";
 
 article.innerHTML = `
-${item.pinned ? '<span class="pin-label">Pinned / নির্বাচিত লেখা</span>' : ''}
 <div class="post-head">
-<img src="profile.jpg" alt="নতুন সদস্য">
+<img src="${item.avatar}" onerror="this.src='profile.jpg'" alt="${item.author}">
 <div class="author-line">
-<a href="profile.html">নতুন সদস্য</a> · ${item.type} · ${item.time}
+<a href="${item.profile}">${item.author}</a> · ${item.type} · ${item.time}
 </div>
 <div class="post-more">···</div>
 </div>
+
 <h3 class="post-title">
-<a href="profile.html">${item.title}</a>
+<a href="${item.url}">${item.title}</a>
 </h3>
+
 <p class="post-text">${item.text}</p>
+
 <div class="post-actions">
 <div class="post-actions-left">
-<span>♥ ${item.likes}</span>
-<span>💬 ${item.comments}</span>
-<span>🔖 সংরক্ষণ</span>
+<button class="action-btn like-btn" data-id="${item.id}">❤️ ${item.likes}</button>
+<a class="action-btn comment-btn" href="${item.commentUrl}">💬 ${item.comments}</a>
+<button class="action-btn save-btn ${saved ? "saved" : ""}" data-id="${item.id}">
+${saved ? "✓ মেমোরিসে আছে" : "🔖 মেমোরিতে রাখুন"}
+</button>
+<button class="action-btn share-btn" data-id="${item.id}">↗ Share</button>
 </div>
-<a href="profile.html" class="read-more">আরও পড়ুন →</a>
+<a href="${item.url}" class="read-more">আরও পড়ুন →</a>
 </div>
 `;
 
-profilePosts.appendChild(article);
+writingList.appendChild(article);
 });
 
-if(list.length === 0){
-profilePosts.innerHTML = `
-<article class="post">
-<h3 class="post-title">এখনো কোনো লেখা নেই</h3>
-<p class="post-text">এই section-এ approved লেখা প্রকাশিত হলে দেখা যাবে। Pending লেখা public হবে না।</p>
-</article>
-`;
-}
+document.querySelectorAll(".save-btn").forEach(function(btn){
+btn.addEventListener("click",function(){
+const id = btn.getAttribute("data-id");
+const post = writingData.find(function(item){
+return item.id === id;
+});
+toggleMemory(post);
+});
+});
+
+document.querySelectorAll(".share-btn").forEach(function(btn){
+btn.addEventListener("click",function(){
+const id = btn.getAttribute("data-id");
+const post = writingData.find(function(item){
+return item.id === id;
+});
+sharePost(post);
+});
+});
+
+document.querySelectorAll(".like-btn").forEach(function(){
+this.addEventListener("click",function(){
+showToast("Like system Supabase যুক্ত হলে live হবে।");
+});
+});
+
+writingPageInfo.innerText = "পৃষ্ঠা " + currentPage + " / " + totalPage;
+prevWritingBtn.disabled = currentPage === 1;
+nextWritingBtn.disabled = currentPage === totalPage;
+prevWritingBtn.style.opacity = currentPage === 1 ? ".45" : "1";
+nextWritingBtn.style.opacity = currentPage === totalPage ? ".45" : "1";
 }
 
-renderProfilePosts("all");
+renderWriting();
+renderMemories();
 
-document.querySelectorAll(".profile-tabs button").forEach(function(button){
+document.querySelectorAll(".feed-tabs button").forEach(function(button){
 button.addEventListener("click",function(){
-document.querySelectorAll(".profile-tabs button").forEach(function(btn){
+document.querySelectorAll(".feed-tabs button").forEach(function(btn){
 btn.classList.remove("active");
 });
 button.classList.add("active");
-renderProfilePosts(button.getAttribute("data-tab"));
+activeFilter = button.getAttribute("data-filter");
+currentPage = 1;
+renderWriting();
 });
+});
+
+prevWritingBtn.addEventListener("click",function(){
+if(currentPage > 1){
+currentPage--;
+renderWriting();
+window.scrollTo({
+top:document.querySelector(".feed-card").offsetTop - 120,
+behavior:"smooth"
+});
+}
+});
+
+nextWritingBtn.addEventListener("click",function(){
+const totalPage = Math.ceil(getFilteredWriting().length / perPage);
+if(currentPage < totalPage){
+currentPage++;
+renderWriting();
+window.scrollTo({
+top:document.querySelector(".feed-card").offsetTop - 120,
+behavior:"smooth"
+});
+}
+});
+
+document.getElementById("editProfileBtn").addEventListener("click",function(){
+const editBox = document.getElementById("editBox");
+editBox.style.display = editBox.style.display === "block" ? "none" : "block";
+});
+
+document.getElementById("submitEditBtn").addEventListener("click",function(){
+showToast("ধন্যবাদ, আপনার বিষয়টি আমাদের কাছে পৌঁছেছে।<br>ভুবনডাঙ্গা টিম বিষয়টি যত্ন সহকারে যাচাই করে দেখবে।<br>যাচাইয়ের পরে যথাযথ ব্যবস্থা নেওয়া হবে।<br><br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
+});
+
+document.getElementById("logoutBtn").addEventListener("click",function(){
+localStorage.removeItem("bhubondangaUserRole");
+localStorage.removeItem("bhubondangaUserName");
+showToast("আপনি সফলভাবে লগ আউট করেছেন।<br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
+setTimeout(function(){
+window.location.href = "login.html";
+},1500);
 });
 
 const toTopBtn = document.getElementById("toTopBtn");
@@ -1880,7 +1976,7 @@ showToast("Right click বন্ধ রাখা হয়েছে।");
 
 document.addEventListener("selectstart",function(e){
 const tag = e.target.tagName.toLowerCase();
-if(tag === "input" || tag === "textarea" || tag === "select"){
+if(tag === "input" || tag === "textarea"){
 return;
 }
 e.preventDefault();

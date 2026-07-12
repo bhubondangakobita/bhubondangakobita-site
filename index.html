@@ -175,6 +175,21 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
+.date-strip{
+max-width:1510px;
+margin:0 auto;
+padding:7px 30px;
+font-size:13px;
+font-weight:700;
+color:var(--muted);
+border-bottom:1px solid var(--border);
+background:rgba(255,255,255,.28);
+}
+
+html[data-theme="dark"] .date-strip{
+background:rgba(255,255,255,.03);
+}
+
 .search-mini{
 height:38px;
 width:165px;
@@ -261,8 +276,8 @@ box-shadow:var(--shadow);
 .sidebar,
 .rightbar{
 position:sticky;
-top:80px;
-height:calc(100vh - 112px);
+top:118px;
+height:calc(100vh - 150px);
 overflow:auto;
 }
 
@@ -395,36 +410,6 @@ display:block;
 background:var(--card-2);
 }
 
-.community-card{
-margin-top:16px;
-padding:20px;
-display:grid;
-grid-template-columns:76px 1fr;
-gap:14px;
-align-items:center;
-}
-
-.community-card img{
-width:76px;
-height:76px;
-border-radius:50%;
-object-fit:cover;
-border:4px solid var(--card-2);
-}
-
-.community-card h2{
-font-size:28px;
-font-weight:800;
-line-height:1.25;
-}
-
-.community-card p{
-font-size:15px;
-color:var(--text-soft);
-line-height:1.8;
-margin-top:4px;
-}
-
 /* FEED */
 
 .feed-card{
@@ -457,7 +442,7 @@ border-bottom:3px solid var(--accent);
 }
 
 .post{
-padding:15px 8px;
+padding:17px 8px;
 border-bottom:1px solid var(--border);
 }
 
@@ -497,19 +482,19 @@ color:var(--muted);
 }
 
 .post-title{
-font-size:18px;
+font-size:19px;
 font-weight:500;
 color:var(--text);
-margin-top:9px;
+margin-top:10px;
 line-height:1.45;
 }
 
 .post-text{
-font-size:15px;
+font-size:15.5px;
 font-weight:400;
 color:var(--text-soft);
-margin-top:5px;
-line-height:1.78;
+margin-top:6px;
+line-height:1.82;
 }
 
 .post-actions{
@@ -517,28 +502,35 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 gap:8px;
-margin-top:12px;
+margin-top:14px;
 font-size:13.8px;
 color:var(--muted);
 }
 
 .post-actions-left{
 display:flex;
-gap:17px;
+gap:14px;
 align-items:center;
 flex-wrap:wrap;
 }
 
-.save-btn{
+.action-btn{
 border:none;
 background:transparent;
 color:var(--muted);
 font-size:13.8px;
 cursor:pointer;
 font-weight:700;
+display:inline-flex;
+align-items:center;
+gap:4px;
 }
 
-.save-btn.saved{
+.action-btn:hover{
+color:var(--accent);
+}
+
+.action-btn.saved{
 color:var(--accent);
 font-weight:800;
 }
@@ -1020,6 +1012,12 @@ width:38px;
 height:38px;
 }
 
+.date-strip{
+padding:6px 14px;
+font-size:12.5px;
+text-align:center;
+}
+
 .page-wrap{
 display:block;
 padding:12px 14px 28px;
@@ -1033,31 +1031,29 @@ display:none;
 height:210px;
 }
 
-.community-card{
-grid-template-columns:58px 1fr;
-padding:14px;
-}
-
-.community-card img{
-width:58px;
-height:58px;
-}
-
-.community-card h2{
-font-size:22px;
-}
-
 .feed-card{
 padding:14px;
 }
 
 .post{
-padding:15px 3px;
+padding:16px 3px;
+}
+
+.post-title{
+font-size:19px;
+}
+
+.post-text{
+font-size:15.5px;
 }
 
 .post-actions{
 align-items:flex-start;
 flex-direction:column;
+}
+
+.post-actions-left{
+gap:13px;
 }
 
 .feed-navigation{
@@ -1138,7 +1134,7 @@ padding:0 8px;
 </nav>
 
 <div class="header-actions">
-<div class="header-date" id="headerDate">তারিখ লোড হচ্ছে...</div>
+<div class="header-date" id="headerDateTop">তারিখ লোড হচ্ছে...</div>
 <input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
 <button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙 <span>Dark</span></button>
 <button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
@@ -1150,6 +1146,8 @@ padding:0 8px;
 </div>
 
 </header>
+
+<div class="date-strip" id="headerDateStrip">তারিখ লোড হচ্ছে...</div>
 
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
@@ -1251,16 +1249,6 @@ padding:0 8px;
 
 <section class="card cover-card">
 <img class="cover-img" src="cover.png" onerror="this.onerror=null;this.src='cover.jpg';" alt="ভুবনডাঙ্গার কবিতা">
-</section>
-
-<section class="card community-card">
-<img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="ভুবনডাঙ্গা">
-<div>
-<h2><a href="index.html">ভুবনডাঙ্গার কবিতা</a></h2>
-<p>
-ভুবনডাঙ্গার কবিতা—আপনাদের ভালোবাসা, অনুভূতি ও সৃজনশীল প্রকাশের জন্য উন্মুক্ত এক সাহিত্যভুবন।
-</p>
-</div>
 </section>
 
 <section class="card feed-card">
@@ -1368,7 +1356,8 @@ const searchMini = document.getElementById("searchMini");
 const toast = document.getElementById("toast");
 const themeBtn = document.getElementById("themeBtn");
 const accountThemeBtn = document.getElementById("accountThemeBtn");
-const headerDate = document.getElementById("headerDate");
+const headerDateTop = document.getElementById("headerDateTop");
+const headerDateStrip = document.getElementById("headerDateStrip");
 const memoryList = document.getElementById("memoryList");
 
 const prevFeedBtn = document.getElementById("prevFeedBtn");
@@ -1420,7 +1409,9 @@ day:"numeric"
 });
 }
 
-headerDate.innerText = banglaDate + " • " + englishDate;
+const finalDateText = banglaDate + " • " + englishDate;
+headerDateTop.innerText = finalDateText;
+headerDateStrip.innerText = finalDateText;
 
 function showToast(text){
 toast.innerHTML = text;
@@ -1494,7 +1485,8 @@ text:"ইচ্ছে করে আকাশ হতে, ইচ্ছে কর�
 time:"১ ঘণ্টা আগে",
 likes:"১৫৪",
 comments:"২২",
-url:"founder-profile.html"
+url:"founder-profile.html",
+commentUrl:"discussion-post.html?post=p1"
 },
 {
 id:"p2",
@@ -1507,7 +1499,8 @@ text:"সব কথা বলা যায় না। কিছু কথা ন�
 time:"২ ঘণ্টা আগে",
 likes:"১৩৭",
 comments:"১৯",
-url:"madhyorater-prolap.html"
+url:"madhyorater-prolap.html",
+commentUrl:"discussion-post.html?post=p2"
 },
 {
 id:"p3",
@@ -1520,7 +1513,8 @@ text:"নীরবতা কখনো ফাঁকা নয়। তার ভে
 time:"৩ ঘণ্টা আগে",
 likes:"৫৭",
 comments:"৮",
-url:"profile.html?user=new-member"
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=p3"
 },
 {
 id:"p4",
@@ -1533,7 +1527,8 @@ text:"তোমাকে লিখতে বসে দেখি, কাগজে
 time:"৪ ঘণ্টা আগে",
 likes:"৪৯",
 comments:"৬",
-url:"profile.html?user=member-writer"
+url:"profile.html?user=member-writer",
+commentUrl:"discussion-post.html?post=p4"
 },
 {
 id:"p5",
@@ -1546,7 +1541,8 @@ text:"প্রলাপ কখন শুধু ব্যক্তিগত থ�
 time:"৫ ঘণ্টা আগে",
 likes:"১২৮",
 comments:"১৮",
-url:"discussion-post.html"
+url:"discussion-post.html",
+commentUrl:"discussion-post.html?post=p5"
 },
 {
 id:"p6",
@@ -1559,7 +1555,8 @@ text:"শেষ বিকেলের আলো যেমন নিঃশব্�
 time:"৬ ঘণ্টা আগে",
 likes:"৭২",
 comments:"১১",
-url:"profile.html?user=shanto-pathok"
+url:"profile.html?user=shanto-pathok",
+commentUrl:"discussion-post.html?post=p6"
 },
 {
 id:"p7",
@@ -1572,7 +1569,8 @@ text:"অপেক্ষা কখনো শেষ হয় না, শুধু �
 time:"৭ ঘণ্টা আগে",
 likes:"৮৩",
 comments:"১২",
-url:"profile.html?user=member-writer"
+url:"profile.html?user=member-writer",
+commentUrl:"discussion-post.html?post=p7"
 },
 {
 id:"p8",
@@ -1585,7 +1583,8 @@ text:"মনখারাপের কোনো কারণ লাগে না�
 time:"৮ ঘণ্টা আগে",
 likes:"১২১",
 comments:"১৬",
-url:"madhyorater-prolap.html"
+url:"madhyorater-prolap.html",
+commentUrl:"discussion-post.html?post=p8"
 }
 ];
 
@@ -1659,6 +1658,25 @@ memoryList.appendChild(a);
 });
 }
 
+function sharePost(post){
+const shareText = post.title + " — " + post.author;
+const shareUrl = window.location.origin + "/" + post.url;
+
+if(navigator.share){
+navigator.share({
+title:post.title,
+text:shareText,
+url:shareUrl
+}).catch(function(){});
+}else{
+navigator.clipboard.writeText(shareUrl).then(function(){
+showToast("Share link copy করা হয়েছে।");
+}).catch(function(){
+showToast("Share link: " + shareUrl);
+});
+}
+}
+
 function renderFeed(){
 const feedList = document.getElementById("feedList");
 feedList.innerHTML = "";
@@ -1690,11 +1708,12 @@ article.innerHTML = `
 
 <div class="post-actions">
 <div class="post-actions-left">
-<span>♥ ${item.likes}</span>
-<span>💬 ${item.comments}</span>
-<button class="save-btn ${saved ? "saved" : ""}" data-id="${item.id}">
-${saved ? "✓ মেমোরিসে আছে" : "🔖 সংরক্ষণ"}
+<button class="action-btn like-btn" data-id="${item.id}">❤️ ${item.likes}</button>
+<a class="action-btn comment-btn" href="${item.commentUrl}">💬 ${item.comments}</a>
+<button class="action-btn save-btn ${saved ? "saved" : ""}" data-id="${item.id}">
+${saved ? "✓ মেমোরিসে আছে" : "🔖 মেমোরিতে রাখুন"}
 </button>
+<button class="action-btn share-btn" data-id="${item.id}">↗ Share</button>
 </div>
 <a href="${item.url}" class="read-more">আরও পড়ুন →</a>
 </div>
@@ -1710,6 +1729,22 @@ const post = feedData.find(function(item){
 return item.id === id;
 });
 toggleMemory(post);
+});
+});
+
+document.querySelectorAll(".share-btn").forEach(function(btn){
+btn.addEventListener("click",function(){
+const id = btn.getAttribute("data-id");
+const post = feedData.find(function(item){
+return item.id === id;
+});
+sharePost(post);
+});
+});
+
+document.querySelectorAll(".like-btn").forEach(function(btn){
+btn.addEventListener("click",function(){
+showToast("Like system Supabase যুক্ত হলে live হবে।");
 });
 });
 
@@ -1731,7 +1766,7 @@ if(currentPage > 1){
 currentPage--;
 renderFeed();
 window.scrollTo({
-top:document.querySelector(".feed-card").offsetTop - 80,
+top:document.querySelector(".feed-card").offsetTop - 120,
 behavior:"smooth"
 });
 }
@@ -1743,7 +1778,7 @@ if(currentPage < totalPage){
 currentPage++;
 renderFeed();
 window.scrollTo({
-top:document.querySelector(".feed-card").offsetTop - 80,
+top:document.querySelector(".feed-card").offsetTop - 120,
 behavior:"smooth"
 });
 }
@@ -1759,6 +1794,8 @@ document.querySelectorAll(".feed-tabs button").forEach(function(btn){
 btn.classList.remove("active");
 });
 button.classList.add("active");
+currentPage = 1;
+renderFeed();
 showToast("এই tab-এর dynamic feed Supabase যুক্ত হলে চালু হবে।");
 });
 });

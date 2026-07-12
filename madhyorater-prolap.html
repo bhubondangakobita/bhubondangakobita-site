@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn" data-theme="dark">
+<html lang="bn" data-theme="light">
 
 <head>
 <meta charset="UTF-8">
@@ -21,25 +21,26 @@ scroll-behavior:smooth;
 }
 
 :root{
---bg:#f8f2e7;
---bg-soft:#fbf6ea;
---card:#fffdf7;
---card-2:#fff8eb;
+--bg:#f7f3eb;
+--bg-soft:#fbf8f1;
+--card:#ffffff;
+--card-2:#fffaf0;
 --text:#12345f;
---text-soft:#4a5a70;
+--text-soft:#42546c;
 --muted:#6d7582;
---border:rgba(18,52,95,.13);
+--border:rgba(18,52,95,.12);
 --accent:#12345f;
---accent-2:#62733c;
+--accent-2:#63743f;
 --gold:#b79a54;
---shadow:0 8px 22px rgba(67,48,20,.055);
+--danger:#a94442;
+--shadow:0 8px 24px rgba(46,35,16,.06);
 }
 
 html[data-theme="dark"]{
---bg:#070b13;
---bg-soft:#0d1320;
---card:#111827;
---card-2:#182235;
+--bg:#0d1320;
+--bg-soft:#111827;
+--card:#151d2c;
+--card-2:#1c2638;
 --text:#f4ead8;
 --text-soft:#d7c9a7;
 --muted:#a9a08e;
@@ -47,17 +48,17 @@ html[data-theme="dark"]{
 --accent:#d8bd75;
 --accent-2:#b99a50;
 --gold:#d8bd75;
---shadow:0 10px 28px rgba(0,0,0,.42);
+--danger:#f08a85;
+--shadow:0 10px 28px rgba(0,0,0,.35);
 }
 
 body{
 font-family:'Noto Serif Bengali',serif;
 background:var(--bg);
 color:var(--text);
-line-height:1.7;
+line-height:1.65;
 user-select:none;
 -webkit-user-select:none;
--ms-user-select:none;
 }
 
 a{
@@ -75,15 +76,14 @@ font-family:inherit;
 .site-shell{
 min-height:100vh;
 background:
-radial-gradient(circle at top left,rgba(216,189,117,.13),transparent 34%),
-radial-gradient(circle at top right,rgba(98,115,60,.10),transparent 30%),
-linear-gradient(135deg,var(--bg),var(--bg-soft));
+radial-gradient(circle at top left,rgba(255,255,255,.55),transparent 30%),
+linear-gradient(135deg,var(--bg-soft),var(--bg));
 }
 
-html[data-theme="light"] .site-shell{
+html[data-theme="dark"] .site-shell{
 background:
-radial-gradient(circle at top left,rgba(255,255,255,.45),transparent 32%),
-linear-gradient(135deg,var(--bg-soft),var(--bg));
+radial-gradient(circle at top left,rgba(216,189,117,.08),transparent 32%),
+linear-gradient(135deg,#0a0f1a,#111827);
 }
 
 /* HEADER */
@@ -91,8 +91,8 @@ linear-gradient(135deg,var(--bg-soft),var(--bg));
 .topbar{
 position:sticky;
 top:0;
-z-index:999;
-background:rgba(7,11,19,.94);
+z-index:1000;
+background:rgba(251,248,241,.94);
 backdrop-filter:blur(14px);
 border-bottom:1px solid var(--border);
 padding:10px 30px;
@@ -102,19 +102,28 @@ justify-content:space-between;
 gap:18px;
 }
 
-html[data-theme="light"] .topbar{
-background:rgba(250,246,236,.94);
+html[data-theme="dark"] .topbar{
+background:rgba(13,19,32,.94);
+}
+
+.menu-btn{
+display:none;
+border:none;
+background:transparent;
+font-size:28px;
+color:var(--text);
+cursor:pointer;
 }
 
 .brand{
 display:flex;
 align-items:center;
 gap:10px;
-min-width:230px;
+min-width:245px;
 }
 
 .brand-leaf{
-font-size:40px;
+font-size:38px;
 line-height:1;
 }
 
@@ -122,15 +131,14 @@ line-height:1;
 font-size:31px;
 font-weight:800;
 letter-spacing:-1px;
-color:var(--text);
 line-height:1.05;
 }
 
 .brand-text p{
 font-size:12.5px;
 color:var(--muted);
-margin-top:2px;
 white-space:nowrap;
+margin-top:2px;
 }
 
 .desktop-nav{
@@ -144,14 +152,13 @@ flex:1;
 .desktop-nav a{
 font-size:15px;
 font-weight:700;
-color:var(--text);
-padding:9px 2px;
+padding:9px 0;
 border-bottom:2px solid transparent;
 white-space:nowrap;
 }
 
-.desktop-nav a.active,
-.desktop-nav a:hover{
+.desktop-nav a:hover,
+.desktop-nav a.active{
 border-color:var(--accent);
 }
 
@@ -165,17 +172,32 @@ gap:10px;
 font-size:12px;
 color:var(--muted);
 white-space:nowrap;
-max-width:210px;
+max-width:225px;
 overflow:hidden;
 text-overflow:ellipsis;
 }
 
+.date-strip{
+max-width:1510px;
+margin:0 auto;
+padding:7px 30px;
+font-size:13px;
+font-weight:700;
+color:var(--muted);
+border-bottom:1px solid var(--border);
+background:rgba(255,255,255,.28);
+}
+
+html[data-theme="dark"] .date-strip{
+background:rgba(255,255,255,.03);
+}
+
 .search-mini{
 height:38px;
-width:160px;
+width:165px;
 border:1px solid var(--border);
-background:var(--card-2);
-border-radius:9px;
+background:var(--card);
+border-radius:10px;
 padding:0 12px;
 outline:none;
 font-size:13px;
@@ -188,9 +210,9 @@ user-select:text;
 .theme-btn{
 height:38px;
 min-width:38px;
-border-radius:9px;
+border-radius:10px;
 border:1px solid var(--border);
-background:var(--card-2);
+background:var(--card);
 color:var(--text);
 font-size:15px;
 font-weight:800;
@@ -206,11 +228,11 @@ gap:6px;
 }
 
 .write-btn{
-border:none;
 background:var(--accent);
-color:#07101d!important;
+color:var(--card)!important;
+border:none;
+border-radius:10px;
 padding:10px 15px;
-border-radius:9px;
 font-size:14px;
 font-weight:800;
 cursor:pointer;
@@ -218,28 +240,21 @@ box-shadow:var(--shadow);
 white-space:nowrap;
 }
 
-html[data-theme="light"] .write-btn{
-color:var(--card)!important;
+.avatar-btn{
+border:none;
+background:transparent;
+cursor:pointer;
+padding:0;
 }
 
-.top-profile img{
-width:40px;
-height:40px;
+.avatar-btn img{
+width:42px;
+height:42px;
 border-radius:50%;
 object-fit:cover;
 border:2px solid var(--card);
-box-shadow:0 5px 14px rgba(0,0,0,.16);
-}
-
-.menu-btn{
-display:none;
-width:42px;
-height:42px;
-border:none;
-background:transparent;
-font-size:28px;
-color:var(--text);
-cursor:pointer;
+box-shadow:0 5px 14px rgba(0,0,0,.15);
+display:block;
 }
 
 /* LAYOUT */
@@ -256,16 +271,16 @@ gap:18px;
 .card{
 background:var(--card);
 border:1px solid var(--border);
-border-radius:13px;
+border-radius:14px;
 box-shadow:var(--shadow);
 }
 
-.sidebar{
+.sidebar,
+.rightbar{
 position:sticky;
-top:80px;
-height:calc(100vh - 112px);
+top:118px;
+height:calc(100vh - 150px);
 overflow:auto;
-padding-right:2px;
 }
 
 .side-card{
@@ -281,8 +296,12 @@ left:0;
 bottom:0;
 width:100%;
 height:150px;
-background:radial-gradient(circle at bottom left,rgba(216,189,117,.11),transparent 65%);
+background:radial-gradient(circle at bottom left,rgba(98,115,60,.10),transparent 65%);
 pointer-events:none;
+}
+
+html[data-theme="dark"] .side-card::after{
+background:radial-gradient(circle at bottom left,rgba(216,189,117,.08),transparent 65%);
 }
 
 .side-menu{
@@ -298,21 +317,24 @@ display:flex;
 align-items:center;
 gap:10px;
 padding:10px 11px;
-border-radius:9px;
+border-radius:10px;
 font-size:15px;
 font-weight:650;
-color:var(--text);
 }
 
 .side-menu a:hover,
 .side-menu a.active{
-background:rgba(216,189,117,.12);
+background:rgba(98,115,60,.14);
+}
+
+html[data-theme="dark"] .side-menu a:hover,
+html[data-theme="dark"] .side-menu a.active{
+background:rgba(216,189,117,.10);
 }
 
 .side-title{
 font-size:17px;
 font-weight:800;
-color:var(--text);
 margin:18px 0 8px;
 padding:0 8px;
 position:relative;
@@ -338,192 +360,204 @@ padding:5px 0;
 }
 
 .category-list span{
-background:rgba(216,189,117,.11);
+background:rgba(98,115,60,.14);
 border-radius:12px;
 padding:2px 8px;
 font-size:12px;
-color:var(--gold);
-}
-
-.other-menu{
-margin-top:8px;
-background:var(--card-2);
-border:1px solid var(--border);
-border-radius:12px;
-padding:10px;
-position:relative;
-z-index:1;
-}
-
-.other-menu summary{
-cursor:pointer;
-font-weight:800;
-color:var(--text);
-font-size:14.5px;
-}
-
-.other-menu a{
-display:block;
-font-size:14px;
-color:var(--text-soft);
-padding:7px 0 0 0;
-}
-
-.auth-area{
-margin-top:22px;
-display:grid;
-gap:10px;
-padding:0 6px;
-position:relative;
-z-index:1;
-}
-
-.login-side,
-.register-side{
-display:block;
-text-align:center;
-padding:11px 14px;
-border-radius:9px;
-font-weight:800;
-font-size:15px;
-}
-
-.login-side{
-background:var(--accent);
-color:#07101d!important;
-}
-
-html[data-theme="light"] .login-side{
-color:var(--card)!important;
-}
-
-.register-side{
-background:var(--card-2);
-border:1px solid var(--accent);
-color:var(--accent)!important;
+color:var(--accent-2);
 }
 
 /* HERO */
 
 .midnight-hero{
+padding:26px;
 overflow:hidden;
 position:relative;
 background:
-linear-gradient(135deg,rgba(7,11,19,.94),rgba(17,24,39,.96)),
-radial-gradient(circle at top right,rgba(216,189,117,.20),transparent 45%);
+linear-gradient(135deg,rgba(8,13,22,.98),rgba(17,24,39,.98)),
+radial-gradient(circle at top right,rgba(216,189,117,.12),transparent 45%);
+color:#f4ead8;
 border:none;
-min-height:330px;
-display:flex;
-align-items:center;
-padding:34px;
 }
 
-html[data-theme="light"] .midnight-hero{
-background:
-linear-gradient(135deg,#fffdf7,#fff4df),
-radial-gradient(circle at top right,rgba(183,154,84,.14),transparent 45%);
-border:1px solid var(--border);
-}
-
-.midnight-hero::before{
+.midnight-hero::after{
 content:"☾";
 position:absolute;
-right:38px;
-top:8px;
-font-size:150px;
-line-height:1;
+right:28px;
+top:4px;
+font-size:132px;
+font-weight:800;
 color:rgba(216,189,117,.10);
+line-height:1;
 }
 
-.hero-inner{
-max-width:720px;
+.midnight-hero small{
 position:relative;
 z-index:2;
-}
-
-.eyebrow{
-font-size:14px;
+display:inline-flex;
+background:rgba(216,189,117,.14);
+color:#f6e8c6;
+border:1px solid rgba(216,189,117,.22);
+border-radius:999px;
+padding:5px 12px;
+font-size:13px;
 font-weight:800;
-color:var(--gold);
-letter-spacing:.5px;
 }
 
 .midnight-hero h2{
-font-size:46px;
-line-height:1.25;
+position:relative;
+z-index:2;
+font-size:39px;
 font-weight:800;
-color:var(--text);
-margin-top:8px;
+line-height:1.25;
+margin-top:13px;
+color:#f6e8c6;
 }
 
 .midnight-hero p{
-font-size:17px;
-font-weight:400;
-color:var(--text-soft);
+position:relative;
+z-index:2;
+font-size:15.8px;
+color:#d9caa8;
 line-height:1.95;
-margin-top:14px;
+margin-top:10px;
+max-width:850px;
 }
 
 .hero-actions{
+position:relative;
+z-index:2;
 display:flex;
 gap:10px;
 flex-wrap:wrap;
-margin-top:22px;
+margin-top:18px;
 }
 
 .hero-actions a{
 display:inline-flex;
 align-items:center;
 justify-content:center;
-border-radius:9px;
-padding:10px 15px;
+border-radius:10px;
+padding:9px 14px;
 font-size:14px;
 font-weight:800;
-border:1px solid var(--border);
-background:var(--card-2);
-color:var(--text);
+border:1px solid rgba(216,189,117,.26);
+background:rgba(255,255,255,.06);
+color:#f6e8c6;
 }
 
 .hero-actions a.primary{
-background:var(--accent);
-color:#07101d;
-border-color:var(--accent);
+background:#d8bd75;
+color:#111827;
+border-color:#d8bd75;
 }
 
-html[data-theme="light"] .hero-actions a.primary{
+/* FORM */
+
+.compose-card{
+margin-top:16px;
+padding:20px;
+}
+
+.compose-card h3{
+font-size:24px;
+font-weight:800;
+color:var(--text);
+}
+
+.compose-card p{
+font-size:14.5px;
+color:var(--text-soft);
+line-height:1.8;
+margin-top:5px;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+label{
+display:block;
+font-size:13.5px;
+font-weight:800;
+color:var(--text);
+margin:12px 0 5px;
+}
+
+input,
+textarea,
+select{
+width:100%;
+border:1px solid var(--border);
+background:var(--card-2);
+color:var(--text);
+border-radius:10px;
+padding:10px 12px;
+font-size:14px;
+outline:none;
+user-select:text;
+-webkit-user-select:text;
+}
+
+textarea{
+min-height:130px;
+resize:none;
+}
+
+.submit-btn{
+background:var(--accent);
 color:var(--card);
+border:none;
+border-radius:10px;
+padding:10px 16px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+margin-top:12px;
+}
+
+.form-help{
+font-size:13px;
+color:var(--muted);
+margin-top:7px;
+line-height:1.7;
 }
 
 /* FEED */
 
-.content-card{
+.feed-card{
 margin-top:16px;
 padding:18px;
 }
 
-.section-head{
+.feed-tabs{
 display:flex;
-align-items:center;
-justify-content:space-between;
-gap:12px;
+gap:22px;
 border-bottom:1px solid var(--border);
-padding-bottom:12px;
-margin-bottom:4px;
+padding:0 4px 12px;
+overflow:auto;
 }
 
-.section-head h3{
-font-size:23px;
+.feed-tabs button{
+border:none;
+background:transparent;
+font-size:15px;
 font-weight:800;
-color:var(--text);
+color:var(--muted);
+white-space:nowrap;
+cursor:pointer;
+padding-bottom:8px;
 }
 
-.section-head p{
-font-size:13.5px;
-color:var(--muted);
+.feed-tabs button.active{
+color:var(--text);
+border-bottom:3px solid var(--accent);
 }
 
 .post{
-padding:18px 8px;
+padding:17px 8px;
 border-bottom:1px solid var(--border);
 }
 
@@ -543,12 +577,11 @@ height:42px;
 border-radius:50%;
 object-fit:cover;
 border:2px solid var(--card);
-box-shadow:0 4px 10px rgba(0,0,0,.1);
+box-shadow:0 4px 10px rgba(0,0,0,.10);
 }
 
 .author-line{
 font-size:13.8px;
-font-weight:400;
 color:var(--muted);
 }
 
@@ -564,19 +597,19 @@ color:var(--muted);
 }
 
 .post-title{
-font-size:20px;
+font-size:19px;
 font-weight:500;
 color:var(--text);
 margin-top:10px;
-line-height:1.42;
+line-height:1.45;
 }
 
 .post-text{
 font-size:15.5px;
 font-weight:400;
 color:var(--text-soft);
-margin-top:7px;
-line-height:1.9;
+margin-top:6px;
+line-height:1.82;
 }
 
 .post-actions{
@@ -584,16 +617,37 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 gap:8px;
-margin-top:12px;
+margin-top:14px;
 font-size:13.8px;
-font-weight:400;
 color:var(--muted);
 }
 
 .post-actions-left{
 display:flex;
-gap:17px;
+gap:14px;
 align-items:center;
+flex-wrap:wrap;
+}
+
+.action-btn{
+border:none;
+background:transparent;
+color:var(--muted);
+font-size:13.8px;
+cursor:pointer;
+font-weight:700;
+display:inline-flex;
+align-items:center;
+gap:4px;
+}
+
+.action-btn:hover{
+color:var(--accent);
+}
+
+.action-btn.saved{
+color:var(--accent);
+font-weight:800;
 }
 
 .read-more{
@@ -601,100 +655,36 @@ font-weight:800;
 color:var(--accent);
 }
 
-.more-feed{
-text-align:center;
-padding-top:14px;
+.feed-navigation{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+padding:15px 4px 2px;
+border-top:1px solid var(--border);
+margin-top:8px;
 }
 
-.more-feed button{
+.feed-navigation button{
 border:1px solid var(--border);
 background:var(--card-2);
 color:var(--text);
 border-radius:22px;
-padding:9px 22px;
+padding:9px 16px;
 font-size:14px;
 font-weight:800;
 cursor:pointer;
 }
 
-/* SUBMIT */
-
-.submit-card{
-margin-top:16px;
-padding:20px;
-}
-
-.submit-card h3{
-font-size:23px;
-font-weight:800;
-color:var(--text);
-}
-
-.submit-card p{
-font-size:14.5px;
-color:var(--text-soft);
-margin-top:5px;
-line-height:1.8;
-}
-
-label{
-display:block;
-font-size:13.5px;
-font-weight:800;
-color:var(--text);
-margin:12px 0 5px;
-}
-
-input,
-textarea,
-select{
-width:100%;
-border:1px solid var(--border);
-background:var(--card-2);
-color:var(--text);
-border-radius:9px;
-padding:10px 12px;
-font-size:14px;
-outline:none;
-user-select:text;
--webkit-user-select:text;
-}
-
-textarea{
-min-height:145px;
-resize:none;
-}
-
-.form-help{
+.feed-navigation span{
 font-size:13px;
 color:var(--muted);
-margin-top:6px;
-line-height:1.7;
-}
-
-.submit-btn{
-background:var(--accent);
-color:#07101d;
-border:none;
-border-radius:9px;
-padding:10px 16px;
-font-size:14px;
-font-weight:800;
-cursor:pointer;
-margin-top:12px;
-}
-
-html[data-theme="light"] .submit-btn{
-color:var(--card);
+text-align:center;
 }
 
 /* RIGHT */
 
 .rightbar{
-position:sticky;
-top:80px;
-height:calc(100vh - 112px);
-overflow:auto;
 display:grid;
 gap:16px;
 align-content:start;
@@ -707,112 +697,89 @@ padding:18px;
 .right-title{
 font-size:21px;
 font-weight:800;
-color:var(--text);
 text-align:center;
 margin-bottom:14px;
 }
 
-.founder-mini{
-text-align:center;
-}
-
-.founder-mini img{
-width:88px;
-height:88px;
-border-radius:50%;
-object-fit:cover;
-border:4px solid var(--card-2);
-box-shadow:0 8px 20px rgba(0,0,0,.18);
-}
-
-.founder-mini h3{
-font-size:21px;
-font-weight:800;
-margin-top:9px;
-color:var(--text);
-}
-
-.founder-mini p{
-font-size:14px;
-color:var(--muted);
-margin-top:3px;
-}
-
-.founder-mini a.btn{
-display:inline-block;
-margin-top:12px;
-background:var(--accent);
-color:#07101d;
-padding:8px 14px;
-border-radius:9px;
-font-size:13px;
-font-weight:800;
-}
-
-html[data-theme="light"] .founder-mini a.btn{
-color:var(--card);
-}
-
-.favorite-writing{
+.quick-link{
 display:block;
 padding:10px 0;
 border-bottom:1px solid var(--border);
 }
 
-.favorite-writing:last-child{
+.quick-link:last-child{
 border-bottom:none;
 }
 
-.favorite-writing small{
+.quick-link small{
 font-size:12px;
 font-weight:800;
 color:var(--accent-2);
 }
 
-.favorite-writing h4{
-font-size:15px;
-font-weight:600;
-color:var(--text);
+.quick-link h4{
+font-size:15.5px;
+font-weight:800;
 line-height:1.5;
-margin-top:4px;
+margin-top:3px;
 }
 
-.favorite-writing p{
+.quick-link p{
 font-size:12.8px;
 color:var(--muted);
 margin-top:3px;
 }
 
-.quote-card{
-position:relative;
-padding:26px 22px;
-overflow:hidden;
-}
-
-.quote-mark{
-font-size:48px;
-color:var(--gold);
-line-height:1;
-}
-
-.quote-card p{
-font-size:16.5px;
-font-weight:500;
+.notice-box{
+background:var(--card-2);
+border:1px dashed var(--border);
+border-radius:13px;
+padding:14px;
+font-size:14px;
 color:var(--text-soft);
-line-height:1.85;
-margin-top:4px;
+line-height:1.8;
 }
 
-.quote-card b{
-display:block;
+.founder-card{
 text-align:center;
-margin-top:13px;
-color:var(--text);
 }
 
-/* DRAWER */
+.founder-card img{
+width:88px;
+height:88px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid var(--card-2);
+box-shadow:0 8px 20px rgba(0,0,0,.14);
+}
 
-.drawer-backdrop{
+.founder-card h3{
+font-size:21px;
+font-weight:800;
+margin-top:9px;
+}
+
+.founder-card p{
+font-size:14px;
+color:var(--muted);
+margin-top:3px;
+}
+
+.founder-card a.btn{
+display:inline-block;
+margin-top:12px;
+background:var(--accent);
+color:var(--card);
+padding:8px 14px;
+border-radius:10px;
+font-size:13px;
+font-weight:800;
+}
+
+/* DRAWERS */
+
+.drawer-backdrop,
+.account-backdrop{
 position:fixed;
 inset:0;
 background:rgba(0,0,0,.38);
@@ -838,7 +805,8 @@ box-shadow:12px 0 35px rgba(0,0,0,.22);
 left:0;
 }
 
-.drawer-backdrop.show{
+.drawer-backdrop.show,
+.account-backdrop.show{
 display:block;
 }
 
@@ -852,14 +820,154 @@ margin-bottom:14px;
 .drawer-head h3{
 font-size:22px;
 font-weight:800;
-color:var(--text);
 }
 
-.close-drawer{
+.close-drawer,
+.close-account{
 border:none;
 background:transparent;
 font-size:30px;
 color:var(--text);
+cursor:pointer;
+}
+
+/* ACCOUNT SIDEBAR */
+
+.account-panel{
+position:fixed;
+top:0;
+right:-370px;
+width:350px;
+max-width:92vw;
+height:100vh;
+background:var(--card);
+z-index:1300;
+transition:.25s ease;
+padding:18px 16px;
+overflow:auto;
+box-shadow:-12px 0 35px rgba(0,0,0,.22);
+}
+
+.account-panel.open{
+right:0;
+}
+
+.account-head{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-bottom:14px;
+}
+
+.account-user{
+display:flex;
+align-items:center;
+gap:12px;
+padding:12px;
+border:1px solid var(--border);
+border-radius:14px;
+background:var(--card-2);
+}
+
+.account-user img{
+width:58px;
+height:58px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid var(--card);
+}
+
+.account-user h3{
+font-size:19px;
+font-weight:800;
+line-height:1.3;
+}
+
+.account-user p{
+font-size:13px;
+color:var(--muted);
+margin-top:2px;
+}
+
+.account-menu{
+display:grid;
+gap:9px;
+margin-top:14px;
+}
+
+.account-menu a,
+.account-menu button{
+width:100%;
+border:1px solid var(--border);
+background:var(--card);
+color:var(--text);
+border-radius:12px;
+padding:12px 13px;
+font-size:15px;
+font-weight:800;
+text-align:left;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+}
+
+.account-menu button.logout-btn{
+background:#eef0f2;
+color:#111;
+border-color:#e1e4e8;
+justify-content:center;
+}
+
+html[data-theme="dark"] .account-menu button.logout-btn{
+background:#2a3344;
+color:var(--text);
+border-color:var(--border);
+}
+
+.memory-box{
+margin-top:16px;
+border:1px solid var(--border);
+border-radius:14px;
+background:var(--card-2);
+padding:14px;
+}
+
+.memory-box h4{
+font-size:18px;
+font-weight:800;
+margin-bottom:7px;
+}
+
+.memory-empty{
+font-size:13.5px;
+color:var(--muted);
+line-height:1.75;
+}
+
+.memory-item{
+display:block;
+padding:9px 0;
+border-bottom:1px solid var(--border);
+}
+
+.memory-item:last-child{
+border-bottom:none;
+}
+
+.memory-item small{
+font-size:12px;
+color:var(--accent-2);
+font-weight:800;
+}
+
+.memory-item p{
+font-size:14px;
+font-weight:700;
+line-height:1.55;
+margin-top:2px;
 }
 
 /* FOOTER */
@@ -869,16 +977,12 @@ max-width:1510px;
 margin:0 auto;
 padding:18px 30px;
 background:var(--accent);
-color:#07101d;
+color:var(--card);
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:12px;
 font-size:14px;
-}
-
-html[data-theme="light"] .site-footer{
-color:var(--card);
 }
 
 .site-footer a{
@@ -891,8 +995,6 @@ gap:15px;
 flex-wrap:wrap;
 }
 
-/* UTIL */
-
 .to-top{
 position:fixed;
 right:18px;
@@ -902,7 +1004,7 @@ height:43px;
 border-radius:50%;
 border:none;
 background:var(--accent);
-color:#07101d;
+color:var(--card);
 font-size:21px;
 font-weight:700;
 cursor:pointer;
@@ -911,17 +1013,13 @@ display:none;
 z-index:999;
 }
 
-html[data-theme="light"] .to-top{
-color:var(--card);
-}
-
 .toast{
 position:fixed;
 bottom:76px;
 left:50%;
 transform:translateX(-50%);
 background:var(--accent);
-color:#07101d;
+color:var(--card);
 padding:12px 20px;
 border-radius:20px;
 font-size:14.5px;
@@ -933,18 +1031,11 @@ max-width:92%;
 line-height:1.8;
 }
 
-html[data-theme="light"] .toast{
-color:var(--card);
-}
-
 /* RESPONSIVE */
 
 @media(max-width:1250px){
 
-.header-date{
-display:none;
-}
-
+.header-date,
 .search-mini{
 display:none;
 }
@@ -993,13 +1084,19 @@ overflow:hidden;
 text-overflow:ellipsis;
 }
 
-.top-profile img{
+.theme-btn span{
+display:none;
+}
+
+.avatar-btn img{
 width:38px;
 height:38px;
 }
 
-.theme-btn span{
-display:none;
+.date-strip{
+padding:6px 14px;
+font-size:12.5px;
+text-align:center;
 }
 
 .page-wrap{
@@ -1011,22 +1108,18 @@ padding:12px 14px 28px;
 display:none;
 }
 
-.midnight-hero{
-min-height:300px;
-padding:24px 18px;
+.midnight-hero,
+.compose-card,
+.feed-card{
+padding:14px;
 }
 
 .midnight-hero h2{
-font-size:34px;
+font-size:30px;
 }
 
-.midnight-hero p{
-font-size:15.5px;
-}
-
-.content-card,
-.submit-card{
-padding:14px;
+.form-grid{
+grid-template-columns:1fr;
 }
 
 .post{
@@ -1034,11 +1127,29 @@ padding:16px 3px;
 }
 
 .post-title{
-font-size:18px;
+font-size:19px;
 }
 
 .post-text{
-font-size:14.8px;
+font-size:15.5px;
+}
+
+.post-actions{
+align-items:flex-start;
+flex-direction:column;
+}
+
+.post-actions-left{
+gap:13px;
+}
+
+.feed-navigation button{
+padding:8px 12px;
+font-size:13.5px;
+}
+
+.feed-navigation span{
+display:none;
 }
 
 .site-footer{
@@ -1075,15 +1186,6 @@ min-width:36px;
 padding:0 8px;
 }
 
-.post-actions{
-align-items:flex-start;
-flex-direction:column;
-}
-
-.post-actions-left{
-gap:14px;
-}
-
 }
 </style>
 </head>
@@ -1109,23 +1211,26 @@ gap:14px;
 <a href="madhyorater-prolap.html" class="active">মধ্যরাতের প্রলাপ</a>
 <a href="today-poem.html?type=poem">কবিতা</a>
 <a href="today-poem.html?type=prolap">প্রলাপ</a>
-<a href="famous-poet.html">খ্যাতিমান কবি</a>
-<a href="founder-profile.html">মাহমুদ সোহেলের কবিতা</a>
+<a href="famous-poet.html">কবির প্রোফাইল</a>
+<a href="founder-profile.html">মাহমুদ সোহেল</a>
 <a href="profile.html">আপনার প্রোফাইল</a>
 </nav>
 
 <div class="header-actions">
-<div class="header-date" id="headerDate">তারিখ লোড হচ্ছে...</div>
+<div class="header-date" id="headerDateTop">তারিখ লোড হচ্ছে...</div>
 <input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
-<button class="theme-btn" id="themeBtn" title="Theme বদলান">☀️ <span>Light</span></button>
+<button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙 <span>Dark</span></button>
 <button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
-<a href="today-poem.html" class="write-btn">✎ লিখুন</a>
-<a href="founder-profile.html" class="top-profile" title="মাহমুদ সোহেল">
-<img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="মাহমুদ সোহেল">
-</a>
+<a href="#writeProlap" class="write-btn">✎ প্রলাপ</a>
+
+<button class="avatar-btn" id="accountBtn" title="Account menu">
+<img src="profile.jpg" alt="আপনার প্রোফাইল">
+</button>
 </div>
 
 </header>
+
+<div class="date-strip" id="headerDateStrip">তারিখ লোড হচ্ছে...</div>
 
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
@@ -1140,36 +1245,55 @@ gap:14px;
 <div class="side-menu">
 <a href="index.html">🏠 হোম</a>
 <a href="madhyorater-prolap.html" class="active">☾ মধ্যরাতের প্রলাপ</a>
-<a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
+<a href="famous-poet.html">📖 কবির প্রোফাইল</a>
 <a href="today-poem.html?type=poem">📝 কবিতা</a>
 <a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
-<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেল</a>
 <a href="profile.html">👤 আপনার প্রোফাইল</a>
 <a href="discussion-post.html">💬 সাহিত্য আলোচনা</a>
+<a href="contact.html">✉ যোগাযোগ</a>
+<a href="about.html">ℹ আমাদের সম্পর্কে</a>
 <a href="search.html">🔎 সার্চ</a>
 </div>
+</aside>
 
-<div class="side-title">বিষয়ের অনুসারে</div>
+<div class="account-backdrop" id="accountBackdrop"></div>
 
-<div class="category-list">
-<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
-<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
-<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
-<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
+<aside class="account-panel" id="accountPanel">
+
+<div class="account-head">
+<h3>Account</h3>
+<button class="close-account" id="closeAccount">×</button>
 </div>
 
-<details class="other-menu">
-<summary>অন্যান্য</summary>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
-<a href="contact.html">যোগাযোগ / রিভিউ</a>
-<a href="about.html">নীতিমালা</a>
-<a href="search.html">সার্চ</a>
-</details>
-
-<div class="auth-area">
-<a href="login.html" class="login-side">লগইন করুন</a>
-<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+<div class="account-user">
+<img src="profile.jpg" alt="আপনার প্রোফাইল">
+<div>
+<h3><a href="profile.html">আপনার প্রোফাইল</a></h3>
+<p>Writer • Reader • Memories</p>
 </div>
+</div>
+
+<div class="account-menu">
+<a href="profile.html">আপনার প্রোফাইল <span>›</span></a>
+<a href="famous-poet.html">কবির প্রোফাইল <span>›</span></a>
+<a href="today-poem.html">লেখা জমা দিন <span>›</span></a>
+<a href="search.html?q=প্রিয় লেখা">প্রিয় লেখা খুঁজুন <span>›</span></a>
+<a href="famous-poet.html">প্রিয় লেখক যোগ করুন <span>›</span></a>
+<a href="contact.html">রিপোর্ট / কপিরাইট <span>›</span></a>
+<button id="accountThemeBtn">Theme বদলান <span>☀️/🌙</span></button>
+<button class="logout-btn" id="logoutBtn">Log out</button>
+</div>
+
+<div class="memory-box">
+<h4>মেমোরিস</h4>
+<div id="memoryList">
+<p class="memory-empty">
+আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে। যত ইচ্ছে তত লেখা save করা যাবে।
+</p>
+</div>
+</div>
+
 </aside>
 
 <main class="page-wrap">
@@ -1180,33 +1304,20 @@ gap:14px;
 <div class="side-menu">
 <a href="index.html">🏠 হোম</a>
 <a href="madhyorater-prolap.html" class="active">☾ মধ্যরাতের প্রলাপ</a>
+<a href="famous-poet.html">📖 কবির প্রোফাইল</a>
 <a href="today-poem.html?type=poem">📝 কবিতা</a>
 <a href="today-poem.html?type=prolap">✐ প্রলাপ</a>
-<a href="famous-poet.html">📖 খ্যাতিমান কবি</a>
-<a href="founder-profile.html">✒ মাহমুদ সোহেলের কবিতা</a>
+<a href="founder-profile.html">✒ মাহমুদ সোহেল</a>
 <a href="profile.html">👤 আপনার প্রোফাইল</a>
 </div>
 
-<div class="side-title">বিষয়ের অনুসারে</div>
+<div class="side-title">প্রলাপের ভুবন</div>
 
 <div class="category-list">
-<a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
-<a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
-<a href="search.html?q=অনুকাব্য">অনুকাব্য <span>৩৪২</span></a>
-<a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
-</div>
-
-<details class="other-menu">
-<summary>অন্যান্য</summary>
-<a href="discussion-post.html">সাহিত্য আলোচনা</a>
-<a href="contact.html">যোগাযোগ / রিভিউ / কপিরাইট</a>
-<a href="about.html">আমাদের সম্পর্কে / নীতিমালা</a>
-<a href="search.html">সার্চ</a>
-</details>
-
-<div class="auth-area">
-<a href="login.html" class="login-side">↪ লগইন করুন</a>
-<a href="register.html" class="register-side">রেজিস্টার করুন</a>
+<a href="#prolapFeed">সব প্রলাপ <span>১৮</span></a>
+<a href="#prolapFeed">মাহমুদ সোহেল <span>৮</span></a>
+<a href="#prolapFeed">নতুন লেখক <span>৬</span></a>
+<a href="#prolapFeed">আলোচিত <span>৪</span></a>
 </div>
 
 </div>
@@ -1215,56 +1326,49 @@ gap:14px;
 <section class="main-content">
 
 <section class="card midnight-hero">
-<div class="hero-inner">
-<div class="eyebrow">☾ মাহমুদ সোহেলের বিশেষ প্রলাপ ভুবন</div>
-<h2>
-<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
-</h2>
+<small>☾ মধ্যরাতের প্রলাপ</small>
+<h2>যে কথাগুলো রাত জানে</h2>
 <p>
-রাত যখন শব্দকে নিজের দিকে টেনে নেয়, তখন কিছু কথা কবিতা হয় না—প্রলাপ হয়ে ওঠে। এখানে মানুষের নিঃসঙ্গতা, ঈশ্বরের কাছে ফিসফিস, জীবন-আক্ষেপ এবং অন্ধকারের ভিতর আলো খোঁজার কথাগুলো রাখা থাকে।
+মধ্যরাতের প্রলাপ—নিজের সঙ্গে কথোপকথন, ঈশ্বরের কাছে ফিসফিস, আক্ষেপ, নীরবতা, ভালোবাসা এবং মানুষের ভেতরের অপ্রকাশিত ভাষার একটি বিশেষ ভুবন।
 </p>
 
 <div class="hero-actions">
-<a href="founder-profile.html" class="primary">মাহমুদ সোহেল</a>
-<a href="today-poem.html?type=prolap">প্রলাপ লিখুন</a>
-<a href="index.html">ভুবনডাঙ্গায় ফিরুন</a>
-</div>
+<a href="#writeProlap" class="primary">প্রলাপ লিখুন</a>
+<a href="founder-profile.html">মাহমুদ সোহেল</a>
+<a href="discussion-post.html">আলোচনা করুন</a>
 </div>
 </section>
 
-<section class="card content-card">
-
-<div class="section-head">
-<div>
-<h3>প্রলাপের খাতা</h3>
-<p>শুধু approved লেখা public হবে। Pending লেখা search বা feed-এ আসবে না।</p>
-</div>
-</div>
-
-<div id="prolapList"></div>
-
-<div class="more-feed">
-<button id="moreFeedBtn">আরও দেখুন</button>
-</div>
-
-</section>
-
-<section class="card submit-card">
+<section class="card compose-card" id="writeProlap">
 <h3>প্রলাপ জমা দিন</h3>
 <p>
-আপনার প্রলাপ আমাদের কাছে পৌঁছাবে। ভুবনডাঙ্গা টিম যাচাইয়ের পরে অনুমোদন করলে এটি প্রকাশিত হবে।
+আপনার প্রলাপ আমাদের কাছে পৌঁছাবে। ভুবনডাঙ্গা টিম যাচাইয়ের পরে অনুমোদন করলে public feed-এ প্রকাশিত হবে।
 </p>
 
 <form id="prolapForm">
 
+<div class="form-grid">
+<div>
 <label>শিরোনাম</label>
-<input type="text" placeholder="আপনার প্রলাপের শিরোনাম লিখুন">
+<input type="text" placeholder="প্রলাপের শিরোনাম লিখুন">
+</div>
+
+<div>
+<label>ধরন</label>
+<select>
+<option>প্রলাপ</option>
+<option>ব্যক্তিকথা</option>
+<option>আক্ষেপ</option>
+<option>নীরবতা</option>
+</select>
+</div>
+</div>
 
 <label>আপনার প্রলাপ</label>
-<textarea placeholder="এখানে লিখুন..."></textarea>
+<textarea placeholder="মধ্যরাতের ভেতরের কথাগুলো লিখুন..."></textarea>
 
 <p class="form-help">
-লেখার মধ্যে কোনো image/photo ব্যবহার করা যাবে না। এই section text-only।
+প্রলাপ text-only। কোনো image/photo থাকবে না। Pending লেখা public বা search result-এ দেখা যাবে না।
 </p>
 
 <button type="submit" class="submit-btn">জমা দিন</button>
@@ -1272,73 +1376,64 @@ gap:14px;
 </form>
 </section>
 
+<section class="card feed-card" id="prolapFeed">
+
+<div class="feed-tabs">
+<button class="active" data-filter="all">সব প্রলাপ</button>
+<button data-filter="মাহমুদ সোহেল">মাহমুদ সোহেল</button>
+<button data-filter="নতুন লেখক">নতুন লেখক</button>
+<button data-filter="আলোচিত">আলোচিত</button>
+</div>
+
+<div id="prolapList"></div>
+
+<div class="feed-navigation">
+<button id="prevProlapBtn">← পূর্বের প্রলাপ</button>
+<span id="prolapPageInfo">পৃষ্ঠা ১</span>
+<button id="nextProlapBtn">পরের প্রলাপ →</button>
+</div>
+
+</section>
+
 </section>
 
 <aside class="rightbar">
 
 <section class="card right-card">
-<div class="founder-mini">
+<div class="founder-card">
 <img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="মাহমুদ সোহেল">
-<h3>
-<a href="founder-profile.html">মাহমুদ সোহেল</a>
-</h3>
-<p>Founder • কবি • প্রলাপকার</p>
+<h3><a href="founder-profile.html">মাহমুদ সোহেল</a></h3>
+<p>Founder • মধ্যরাতের প্রলাপ</p>
 <a href="founder-profile.html" class="btn">Founder Profile</a>
 </div>
 </section>
 
 <section class="card right-card">
-<h3 class="right-title">নির্বাচিত প্রলাপ</h3>
-
-<a href="madhyorater-prolap.html" class="favorite-writing">
-<small>প্রলাপ</small>
-<h4>ব্যক্তিকথা</h4>
-<p>মাহমুদ সোহেল</p>
-</a>
-
-<a href="madhyorater-prolap.html" class="favorite-writing">
-<small>প্রলাপ</small>
-<h4>আমার মন খারাপের কারণ লাগে না</h4>
-<p>মাহমুদ সোহেল</p>
-</a>
-
-<a href="madhyorater-prolap.html" class="favorite-writing">
-<small>প্রলাপ</small>
-<h4>রাতের কাছে রাখা প্রশ্ন</h4>
-<p>মাহমুদ সোহেল</p>
-</a>
-
-</section>
-
-<section class="card quote-card">
-<div class="quote-mark">“</div>
-<p>
-মাঝরাতে মানুষ নিজের কাছেই সবচেয়ে সত্য হয়ে ওঠে।
-</p>
-<b>
-<a href="madhyorater-prolap.html">— মধ্যরাতের প্রলাপ</a>
-</b>
+<h3 class="right-title">প্রলাপ নোট</h3>
+<div class="notice-box">
+প্রলাপ ব্যক্তিগত হতে পারে, কিন্তু ভাষার সততা থাকলে সেটি পাঠকের হৃদয়ে পৌঁছায়। সব প্রলাপ approval-এর পরে public হবে।
+</div>
 </section>
 
 <section class="card right-card">
-<h3 class="right-title">আরও পড়ুন</h3>
+<h3 class="right-title">দ্রুত লিংক</h3>
 
-<a href="founder-profile.html" class="favorite-writing">
-<small>Profile</small>
-<h4>মাহমুদ সোহেলের কবিতা</h4>
-<p>Founder profile</p>
+<a href="today-poem.html?type=prolap" class="quick-link">
+<small>Writing</small>
+<h4>প্রলাপ feed</h4>
+<p>Approved প্রলাপগুলো পড়ুন</p>
 </a>
 
-<a href="today-poem.html?type=prolap" class="favorite-writing">
-<small>Feed</small>
-<h4>সাধারণ প্রলাপ</h4>
-<p>সব approved প্রলাপ</p>
+<a href="discussion-post.html" class="quick-link">
+<small>Discussion</small>
+<h4>প্রলাপ: ব্যক্তিগত না সাহিত্য?</h4>
+<p>এই বিষয় নিয়ে আলোচনা</p>
 </a>
 
-<a href="famous-poet.html" class="favorite-writing">
-<small>Poets</small>
-<h4>খ্যাতিমান কবি</h4>
-<p>বাংলা ভাষাভাষী ১০০ কবি</p>
+<a href="search.html?q=প্রলাপ" class="quick-link">
+<small>Search</small>
+<h4>প্রলাপ খুঁজুন</h4>
+<p>Approved প্রলাপ search করুন</p>
 </a>
 
 </section>
@@ -1349,7 +1444,7 @@ gap:14px;
 
 <footer class="site-footer">
 <div>
-<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+<a href="index.html">🌿 ভুবনডাঙ্গা</a> © ২০২৬ • মধ্যরাতের প্রলাপ
 </div>
 <div class="footer-links">
 <a href="founder-profile.html">মাহমুদ সোহেল</a>
@@ -1365,18 +1460,35 @@ gap:14px;
 
 <script>
 const htmlRoot = document.documentElement;
-const savedTheme = localStorage.getItem("bhubondangaTheme") || "dark";
+const savedTheme = localStorage.getItem("bhubondangaTheme") || "light";
 htmlRoot.setAttribute("data-theme", savedTheme);
 
 const menuBtn = document.getElementById("menuBtn");
 const mobileDrawer = document.getElementById("mobileDrawer");
 const drawerBackdrop = document.getElementById("drawerBackdrop");
 const closeDrawer = document.getElementById("closeDrawer");
+
+const accountBtn = document.getElementById("accountBtn");
+const accountPanel = document.getElementById("accountPanel");
+const accountBackdrop = document.getElementById("accountBackdrop");
+const closeAccount = document.getElementById("closeAccount");
+
 const searchBtn = document.getElementById("searchBtn");
 const searchMini = document.getElementById("searchMini");
 const toast = document.getElementById("toast");
 const themeBtn = document.getElementById("themeBtn");
-const headerDate = document.getElementById("headerDate");
+const accountThemeBtn = document.getElementById("accountThemeBtn");
+const headerDateTop = document.getElementById("headerDateTop");
+const headerDateStrip = document.getElementById("headerDateStrip");
+const memoryList = document.getElementById("memoryList");
+
+const prevProlapBtn = document.getElementById("prevProlapBtn");
+const nextProlapBtn = document.getElementById("nextProlapBtn");
+const prolapPageInfo = document.getElementById("prolapPageInfo");
+
+let activeFilter = "all";
+let currentPage = 1;
+const perPage = 3;
 
 function updateThemeButton(){
 const currentTheme = htmlRoot.getAttribute("data-theme");
@@ -1387,15 +1499,18 @@ themeBtn.innerHTML = "🌙 <span>Dark</span>";
 }
 }
 
-updateThemeButton();
-
-themeBtn.addEventListener("click",function(){
+function toggleTheme(){
 const currentTheme = htmlRoot.getAttribute("data-theme");
 const nextTheme = currentTheme === "dark" ? "light" : "dark";
 htmlRoot.setAttribute("data-theme",nextTheme);
 localStorage.setItem("bhubondangaTheme",nextTheme);
 updateThemeButton();
-});
+}
+
+updateThemeButton();
+
+themeBtn.addEventListener("click",toggleTheme);
+accountThemeBtn.addEventListener("click",toggleTheme);
 
 const today = new Date();
 
@@ -1420,14 +1535,16 @@ day:"numeric"
 });
 }
 
-headerDate.innerText = banglaDate + " • " + englishDate;
+const finalDateText = banglaDate + " • " + englishDate;
+headerDateTop.innerText = finalDateText;
+headerDateStrip.innerText = finalDateText;
 
 function showToast(text){
 toast.innerHTML = text;
 toast.style.display = "block";
 setTimeout(function(){
 toast.style.display = "none";
-},4200);
+},4000);
 }
 
 function openDrawer(){
@@ -1440,9 +1557,24 @@ mobileDrawer.classList.remove("open");
 drawerBackdrop.classList.remove("show");
 }
 
+function openAccount(){
+accountPanel.classList.add("open");
+accountBackdrop.classList.add("show");
+renderMemories();
+}
+
+function closeAccountFn(){
+accountPanel.classList.remove("open");
+accountBackdrop.classList.remove("show");
+}
+
 menuBtn.addEventListener("click",openDrawer);
 closeDrawer.addEventListener("click",closeDrawerFn);
 drawerBackdrop.addEventListener("click",closeDrawerFn);
+
+accountBtn.addEventListener("click",openAccount);
+closeAccount.addEventListener("click",closeAccountFn);
+accountBackdrop.addEventListener("click",closeAccountFn);
 
 function doSearch(){
 let q = "";
@@ -1469,100 +1601,332 @@ doSearch();
 
 const prolapData = [
 {
+id:"m1",
+type:"মাহমুদ সোহেল",
 title:"ব্যক্তিকথা",
-text:"সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই জমে থাকা কথার কাছে নরম হয়ে যায়। মাঝরাত শুধু অন্ধকার নয়, মাঝরাত মানুষের নিজের কাছে ফিরে যাওয়ার পথ...",
+text:"সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই জমে থাকা কথার কাছে নরম হয়ে যায়...",
+author:"মাহমুদ সোহেল",
+profile:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
 time:"১ ঘণ্টা আগে",
 likes:"১৩৭",
-comments:"১৯"
+comments:"১৯",
+url:"madhyorater-prolap.html",
+commentUrl:"discussion-post.html?post=m1"
 },
 {
+id:"m2",
+type:"মাহমুদ সোহেল",
 title:"আমার মন খারাপের কারণ লাগে না",
-text:"মনখারাপের কোনো কারণ লাগে না। কখনো রাত, কখনো বৃষ্টি, কখনো নিজের কাছেই নিজেকে ভালো না লাগা—এসব মিলেই মানুষের ভিতরে এক দীর্ঘ নীরবতা তৈরি করে...",
-time:"৩ ঘণ্টা আগে",
+text:"মনখারাপের কোনো কারণ লাগে না। কখনো রাত, কখনো বৃষ্টি, কখনো নিজের কাছেই নিজেকে ভালো না লাগা...",
+author:"মাহমুদ সোহেল",
+profile:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
+time:"২ ঘণ্টা আগে",
 likes:"১২১",
-comments:"১৬"
+comments:"১৬",
+url:"madhyorater-prolap.html",
+commentUrl:"discussion-post.html?post=m2"
 },
 {
-title:"রাতের কাছে রাখা প্রশ্ন",
-text:"মাঝরাতে যখন ঘরটা শান্ত হয়ে আসে, তখন কিছু প্রশ্ন দরজায় দাঁড়িয়ে থাকে। ঈশ্বর উত্তর দেন না, শুধু নীরবতা বাড়ে; আর মানুষ সেই নীরবতাকেই উত্তর ভেবে বসে...",
+id:"m3",
+type:"নতুন লেখক",
+title:"নিজের সঙ্গে দেখা",
+text:"কখনো কখনো আয়নায় নিজের চোখের দিকে তাকিয়ে মনে হয়, এই মানুষটাকে আমি কতদিন ঠিকমতো দেখিনি...",
+author:"নতুন সদস্য",
+profile:"profile.html?user=new-member",
+avatar:"profile.jpg",
+time:"৩ ঘণ্টা আগে",
+likes:"৬৩",
+comments:"৯",
+url:"profile.html?user=new-member",
+commentUrl:"discussion-post.html?post=m3"
+},
+{
+id:"m4",
+type:"আলোচিত",
+title:"রাতের শেষে",
+text:"রাত শেষ হলে সবাই আলো খোঁজে, কিন্তু কেউ কেউ অন্ধকারের ভেতরই নিজের সত্য চিনে নেয়...",
+author:"সদস্য লেখক",
+profile:"profile.html?user=member-writer",
+avatar:"profile.jpg",
+time:"৪ ঘণ্টা আগে",
+likes:"৮৪",
+comments:"১৪",
+url:"profile.html?user=member-writer",
+commentUrl:"discussion-post.html?post=m4"
+},
+{
+id:"m5",
+type:"মাহমুদ সোহেল",
+title:"ঈশ্বরের কাছে ফিসফিস",
+text:"মানুষ যখন কাউকে কিছু বলতে পারে না, তখন হয়তো ঈশ্বরের কাছে খুব আস্তে আস্তে বলে...",
+author:"মাহমুদ সোহেল",
+profile:"founder-profile.html",
+avatar:"bhubondanga-profile.jpg",
 time:"৫ ঘণ্টা আগে",
-likes:"১৪২",
-comments:"২১"
+likes:"১৪৫",
+comments:"২১",
+url:"madhyorater-prolap.html",
+commentUrl:"discussion-post.html?post=m5"
 },
 {
-title:"ঘৃণা করি",
-text:"ঘৃণা করি মানুষের মুখোশ, অথচ মানুষকেই ভালোবাসতে চাই। এই দ্বন্দ্ব নিয়েই হয়তো বেঁচে থাকা—মুখে হাসি, ভিতরে আহত বিশ্বাস...",
-time:"৮ ঘণ্টা আগে",
-likes:"১০৪",
-comments:"১২"
+id:"m6",
+type:"নতুন লেখক",
+title:"নীরবতার ভেতর",
+text:"নীরবতা কখনো ফাঁকা নয়। তার ভেতরে যত শব্দ, মানুষ তত সাহসী নয়...",
+author:"শান্ত পাঠক",
+profile:"profile.html?user=shanto-pathok",
+avatar:"profile.jpg",
+time:"৬ ঘণ্টা আগে",
+likes:"৫৭",
+comments:"৮",
+url:"profile.html?user=shanto-pathok",
+commentUrl:"discussion-post.html?post=m6"
 },
 {
-title:"অতঃপর",
-text:"অতঃপর একদিন মানুষ বুঝে যায়, সব হারানো শেষ নয়। কিছু হারানো মানুষকে নিজের কাছে ফিরিয়ে দেয়, কিছু দুঃখ মানুষকে আরেকটু মানুষ করে...",
-time:"১২ ঘণ্টা আগে",
-likes:"৯৬",
-comments:"৯"
-},
-{
-title:"ভবঘুরে",
-text:"আমি হয়তো কোনো স্থায়ী ঠিকানার মানুষ নই। কিছু রাস্তা, কিছু রাত, কিছু মানুষের চোখ আর কিছু অদৃশ্য প্রশ্ন—এসব নিয়েই আমার ভ্রমণ...",
-time:"১ দিন আগে",
-likes:"৮৮",
-comments:"৭"
+id:"m7",
+type:"আলোচিত",
+title:"যে কথা বলা হলো না",
+text:"যে কথা বলা হলো না, সেটাই সবচেয়ে বেশি বেঁচে থাকে; মানুষের চোখে, নীরবতায়, অপেক্ষায়...",
+author:"সদস্য লেখক",
+profile:"profile.html?user=member-writer",
+avatar:"profile.jpg",
+time:"৭ ঘণ্টা আগে",
+likes:"৯১",
+comments:"১৫",
+url:"profile.html?user=member-writer",
+commentUrl:"discussion-post.html?post=m7"
 }
 ];
 
-const prolapList = document.getElementById("prolapList");
-let visibleCount = 6;
+function getMemories(){
+return JSON.parse(localStorage.getItem("bhubondangaMemories") || "[]");
+}
+
+function saveMemories(items){
+localStorage.setItem("bhubondangaMemories",JSON.stringify(items));
+}
+
+function isSaved(id){
+return getMemories().some(function(item){
+return item.id === id;
+});
+}
+
+function toggleMemory(post){
+let memories = getMemories();
+const exists = memories.some(function(item){
+return item.id === post.id;
+});
+
+if(exists){
+memories = memories.filter(function(item){
+return item.id !== post.id;
+});
+showToast("মেমোরিস থেকে সরানো হয়েছে।");
+}else{
+memories.unshift({
+id:post.id,
+title:post.title,
+type:post.type,
+author:post.author,
+url:post.url
+});
+showToast("মেমোরিসে সংরক্ষণ করা হয়েছে।");
+}
+
+saveMemories(memories);
+renderProlap();
+renderMemories();
+}
+
+function renderMemories(){
+const memories = getMemories();
+
+if(memories.length === 0){
+memoryList.innerHTML = `
+<p class="memory-empty">
+আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে। যত ইচ্ছে তত লেখা save করা যাবে।
+</p>
+`;
+return;
+}
+
+memoryList.innerHTML = "";
+
+memories.forEach(function(item){
+const a = document.createElement("a");
+a.className = "memory-item";
+a.href = item.url;
+a.innerHTML = `
+<small>${item.type} • ${item.author}</small>
+<p>${item.title}</p>
+`;
+memoryList.appendChild(a);
+});
+}
+
+function sharePost(post){
+const shareText = post.title + " — " + post.author;
+const shareUrl = window.location.origin + "/" + post.url;
+
+if(navigator.share){
+navigator.share({
+title:post.title,
+text:shareText,
+url:shareUrl
+}).catch(function(){});
+}else{
+navigator.clipboard.writeText(shareUrl).then(function(){
+showToast("Share link copy করা হয়েছে।");
+}).catch(function(){
+showToast("Share link: " + shareUrl);
+});
+}
+}
+
+function getFilteredProlap(){
+return prolapData.filter(function(item){
+return activeFilter === "all" || item.type === activeFilter;
+});
+}
 
 function renderProlap(){
+const prolapList = document.getElementById("prolapList");
 prolapList.innerHTML = "";
 
-prolapData.slice(0,visibleCount).forEach(function(item){
+const filtered = getFilteredProlap();
+const totalPage = Math.max(1,Math.ceil(filtered.length / perPage));
+
+if(currentPage > totalPage){
+currentPage = totalPage;
+}
+
+const start = (currentPage - 1) * perPage;
+const pageItems = filtered.slice(start,start + perPage);
+
+pageItems.forEach(function(item){
+const saved = isSaved(item.id);
+
 const article = document.createElement("article");
 article.className = "post";
 
 article.innerHTML = `
 <div class="post-head">
-<img src="bhubondanga-profile.jpg" onerror="this.src='profile.jpg'" alt="মাহমুদ সোহেল">
+<img src="${item.avatar}" onerror="this.src='profile.jpg'" alt="${item.author}">
 <div class="author-line">
-<a href="founder-profile.html">মাহমুদ সোহেল</a> · মধ্যরাতের প্রলাপ · ${item.time}
+<a href="${item.profile}">${item.author}</a> · প্রলাপ · ${item.time}
 </div>
 <div class="post-more">···</div>
 </div>
+
 <h3 class="post-title">
-<a href="madhyorater-prolap.html">${item.title}</a>
+<a href="${item.url}">${item.title}</a>
 </h3>
+
 <p class="post-text">${item.text}</p>
+
 <div class="post-actions">
 <div class="post-actions-left">
-<span>♥ ${item.likes}</span>
-<span>💬 ${item.comments}</span>
-<span>🔖 সংরক্ষণ</span>
+<button class="action-btn like-btn" data-id="${item.id}">❤️ ${item.likes}</button>
+<a class="action-btn comment-btn" href="${item.commentUrl}">💬 ${item.comments}</a>
+<button class="action-btn save-btn ${saved ? "saved" : ""}" data-id="${item.id}">
+${saved ? "✓ মেমোরিসে আছে" : "🔖 মেমোরিতে রাখুন"}
+</button>
+<button class="action-btn share-btn" data-id="${item.id}">↗ Share</button>
 </div>
-<a href="madhyorater-prolap.html" class="read-more">আরও পড়ুন →</a>
+<a href="${item.url}" class="read-more">আরও পড়ুন →</a>
 </div>
 `;
 
 prolapList.appendChild(article);
 });
 
-if(visibleCount >= prolapData.length){
-document.getElementById("moreFeedBtn").style.display = "none";
-}
+document.querySelectorAll(".save-btn").forEach(function(btn){
+btn.addEventListener("click",function(){
+const id = btn.getAttribute("data-id");
+const post = prolapData.find(function(item){
+return item.id === id;
+});
+toggleMemory(post);
+});
+});
+
+document.querySelectorAll(".share-btn").forEach(function(btn){
+btn.addEventListener("click",function(){
+const id = btn.getAttribute("data-id");
+const post = prolapData.find(function(item){
+return item.id === id;
+});
+sharePost(post);
+});
+});
+
+document.querySelectorAll(".like-btn").forEach(function(btn){
+btn.addEventListener("click",function(){
+showToast("Like system Supabase যুক্ত হলে live হবে।");
+});
+});
+
+prolapPageInfo.innerText = "পৃষ্ঠা " + currentPage + " / " + totalPage;
+prevProlapBtn.disabled = currentPage === 1;
+nextProlapBtn.disabled = currentPage === totalPage;
+prevProlapBtn.style.opacity = currentPage === 1 ? ".45" : "1";
+nextProlapBtn.style.opacity = currentPage === totalPage ? ".45" : "1";
 }
 
 renderProlap();
+renderMemories();
 
-document.getElementById("moreFeedBtn").addEventListener("click",function(){
-visibleCount += 4;
+document.querySelectorAll(".feed-tabs button").forEach(function(button){
+button.addEventListener("click",function(){
+document.querySelectorAll(".feed-tabs button").forEach(function(btn){
+btn.classList.remove("active");
+});
+button.classList.add("active");
+activeFilter = button.getAttribute("data-filter");
+currentPage = 1;
 renderProlap();
+});
+});
+
+prevProlapBtn.addEventListener("click",function(){
+if(currentPage > 1){
+currentPage--;
+renderProlap();
+window.scrollTo({
+top:document.querySelector(".feed-card").offsetTop - 120,
+behavior:"smooth"
+});
+}
+});
+
+nextProlapBtn.addEventListener("click",function(){
+const totalPage = Math.ceil(getFilteredProlap().length / perPage);
+if(currentPage < totalPage){
+currentPage++;
+renderProlap();
+window.scrollTo({
+top:document.querySelector(".feed-card").offsetTop - 120,
+behavior:"smooth"
+});
+}
 });
 
 document.getElementById("prolapForm").addEventListener("submit",function(e){
 e.preventDefault();
 showToast("ধন্যবাদ, আপনার পোস্টটি আমাদের কাছে পৌঁছেছে।<br>ভুবনডাঙ্গা টিম আপনার পোস্টটি যত্ন সহকারে যাচাই করে দেখবে।<br>অনুমোদনের পরে এটি ফিডে প্রকাশিত হবে।<br><br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
 this.reset();
+});
+
+document.getElementById("logoutBtn").addEventListener("click",function(){
+localStorage.removeItem("bhubondangaUserRole");
+localStorage.removeItem("bhubondangaUserName");
+showToast("আপনি সফলভাবে লগ আউট করেছেন।<br>নিজে ভালো থাকুন, অন্যকেও ভালো রাখুন।");
+setTimeout(function(){
+window.location.href = "login.html";
+},1500);
 });
 
 const toTopBtn = document.getElementById("toTopBtn");
