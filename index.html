@@ -23,18 +23,20 @@ html{
   --bg:#eaf2fa;
   --bg-soft:#dceaf5;
   --card:#ffffff;
-  --card-2:#f4f8fc;
+  --card-2:#f5f9fd;
   --text:#0b224d;
-  --text-soft:#2c497a;
-  --muted:#586d91;
-  --border:rgba(11,34,77,.11);
+  --text-soft:#2f4b7b;
+  --muted:#64748b;
+  --border:rgba(11,34,77,.12);
   --accent:#0f3775;
   --accent-2:#1e5aab;
   --green:#19735d;
+  --red:#b42318;
+  --yellow:#fff7d6;
+  --notice:#fff4cc;
   --gold:#b79a54;
-  --danger:#a94442;
-  --shadow:0 8px 24px rgba(11,34,77,.07);
-  --soft-shadow:0 6px 18px rgba(11,34,77,.05);
+  --shadow:0 10px 30px rgba(11,34,77,.08);
+  --soft-shadow:0 6px 18px rgba(11,34,77,.06);
   --gold-glow:none;
 }
 
@@ -50,9 +52,11 @@ html[data-theme="dark"]{
   --accent:#d8bd75;
   --accent-2:#b99a50;
   --green:#f4d068;
+  --red:#f08a85;
+  --yellow:#1f2937;
+  --notice:#1f2937;
   --gold:#f4d068;
-  --danger:#f08a85;
-  --shadow:0 12px 30px rgba(0,0,0,.45);
+  --shadow:0 14px 34px rgba(0,0,0,.45);
   --soft-shadow:0 10px 24px rgba(0,0,0,.35);
   --gold-glow:0 0 12px rgba(244,208,104,.42);
 }
@@ -87,14 +91,14 @@ textarea{
 .site-shell{
   min-height:100vh;
   background:
-    radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 38%),
-    radial-gradient(circle at 20% 10%, rgba(156,196,228,.25), transparent 30%),
-    linear-gradient(135deg,#f7fbff 0%, var(--bg) 50%, #f7fbff 100%);
+    radial-gradient(circle at top right,rgba(255,255,255,.88),transparent 34%),
+    radial-gradient(circle at 12% 5%,rgba(153,196,230,.28),transparent 30%),
+    linear-gradient(135deg,#f7fbff 0%,var(--bg) 55%,#f8fcff 100%);
 }
 
 html[data-theme="dark"] .site-shell{
   background:
-    radial-gradient(circle at top left,rgba(244,208,104,.06),transparent 32%),
+    radial-gradient(circle at top left,rgba(244,208,104,.07),transparent 30%),
     linear-gradient(135deg,#06090e,#090e17);
 }
 
@@ -104,14 +108,15 @@ html[data-theme="dark"] .site-shell{
   position:sticky;
   top:0;
   z-index:1000;
+  height:70px;
   background:rgba(234,242,250,.94);
   backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
-  padding:10px 30px;
-  display:flex;
+  display:grid;
+  grid-template-columns:auto 280px minmax(260px,1fr) auto;
   align-items:center;
-  justify-content:space-between;
-  gap:18px;
+  gap:14px;
+  padding:0 26px;
 }
 
 html[data-theme="dark"] .topbar{
@@ -119,36 +124,46 @@ html[data-theme="dark"] .topbar{
 }
 
 .menu-btn{
-  display:none;
   border:none;
   background:transparent;
-  font-size:29px;
   color:var(--text);
+  font-size:30px;
   cursor:pointer;
-  line-height:1;
+  display:none;
 }
 
 .brand{
   display:flex;
   align-items:center;
   gap:10px;
-  min-width:245px;
+  min-width:0;
 }
 
 .brand-leaf{
-  font-size:36px;
+  font-size:38px;
   line-height:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+}
+
+.brand-text{
+  min-width:0;
 }
 
 .brand-text h1{
-  font-size:31px;
+  font-size:30px;
   font-weight:900;
+  line-height:1.04;
   letter-spacing:-1px;
-  line-height:1.05;
-  color:var(--text);
+  white-space:nowrap;
+}
+
+.brand-text p{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:250px;
 }
 
 html[data-theme="dark"] .brand-text h1{
@@ -156,117 +171,94 @@ html[data-theme="dark"] .brand-text h1{
   text-shadow:var(--gold-glow);
 }
 
-.brand-text p{
-  font-size:12.5px;
+.search-wrap{
+  position:relative;
+}
+
+.search-wrap input{
+  width:100%;
+  height:42px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  padding:0 58px 0 46px;
+  outline:none;
+  box-shadow:var(--soft-shadow);
+  font-size:14px;
+}
+
+.search-icon{
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
   color:var(--muted);
-  white-space:nowrap;
-  margin-top:2px;
-  max-width:300px;
-  overflow:hidden;
-  text-overflow:ellipsis;
+  font-size:18px;
 }
 
-.desktop-nav{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:19px;
-  flex:1;
-}
-
-.desktop-nav a{
-  font-size:15px;
-  font-weight:800;
-  padding:9px 0;
-  border-bottom:2px solid transparent;
-  white-space:nowrap;
-}
-
-.desktop-nav a:hover,
-.desktop-nav a.active{
-  border-color:var(--accent);
-  color:var(--accent);
-}
-
-html[data-theme="dark"] .desktop-nav a:hover,
-html[data-theme="dark"] .desktop-nav a.active{
-  color:var(--gold);
-  border-color:var(--gold);
-  text-shadow:var(--gold-glow);
+.search-key{
+  position:absolute;
+  right:9px;
+  top:50%;
+  transform:translateY(-50%);
+  background:var(--card-2);
+  color:var(--muted);
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-size:12px;
+  font-weight:900;
+  padding:2px 8px;
 }
 
 .header-actions{
   display:flex;
   align-items:center;
+  justify-content:flex-end;
   gap:10px;
 }
 
-.header-date{
-  font-size:12.5px;
-  color:var(--muted);
-  white-space:nowrap;
-  font-weight:700;
-}
-
-.search-mini{
-  height:38px;
-  width:165px;
-  border:1px solid var(--border);
-  background:var(--card);
-  border-radius:11px;
-  padding:0 12px;
-  outline:none;
-  font-size:13px;
-  color:var(--text);
-}
-
 .icon-btn,
-.theme-btn{
-  height:40px;
-  width:40px;
+.theme-btn,
+.notif-btn{
+  width:42px;
+  height:42px;
   border-radius:50%;
   border:1px solid var(--border);
   background:var(--card);
   color:var(--text);
-  font-size:18px;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  padding:0;
-  transition:.25s ease;
+  font-size:18px;
   box-shadow:var(--soft-shadow);
+  position:relative;
 }
 
-.theme-btn:hover,
-.icon-btn:hover{
-  background:var(--bg-soft);
-}
-
-.write-btn{
-  background:var(--accent);
-  color:var(--card)!important;
-  border:none;
-  border-radius:11px;
-  padding:10px 15px;
-  font-size:14px;
+.badge{
+  position:absolute;
+  top:-4px;
+  right:-3px;
+  min-width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#e11d48;
+  color:#fff;
+  font-size:10px;
   font-weight:900;
-  cursor:pointer;
-  box-shadow:var(--shadow);
-  white-space:nowrap;
-}
-
-html[data-theme="dark"] .write-btn{
-  background:var(--gold);
-  color:#090e17!important;
-  box-shadow:var(--gold-glow);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .avatar-btn{
   border:none;
   background:transparent;
   cursor:pointer;
-  padding:0;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
 .avatar-btn img{
@@ -275,51 +267,32 @@ html[data-theme="dark"] .write-btn{
   border-radius:50%;
   object-fit:cover;
   border:2px solid var(--card);
-  box-shadow:0 5px 14px rgba(0,0,0,.15);
-  display:block;
-}
-
-.date-strip{
-  max-width:1510px;
-  margin:0 auto;
-  padding:7px 30px;
-  font-size:13.5px;
-  font-weight:800;
-  color:var(--muted);
-  border-bottom:1px solid var(--border);
-  background:rgba(255,255,255,.48);
-  text-align:center;
-}
-
-html[data-theme="dark"] .date-strip{
-  background:rgba(255,255,255,.02);
-  color:var(--gold);
-  text-shadow:0 0 5px rgba(244,208,104,.2);
+  box-shadow:0 5px 14px rgba(0,0,0,.16);
 }
 
 /* LAYOUT */
 
 .page-wrap{
-  max-width:1510px;
+  max-width:1560px;
   margin:0 auto;
-  padding:18px 30px 0;
+  padding:14px 24px 0;
   display:grid;
-  grid-template-columns:245px minmax(0,1fr) 355px;
-  gap:18px;
+  grid-template-columns:270px minmax(0,1fr) 300px;
+  gap:16px;
 }
 
 .card{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:16px;
+  border-radius:18px;
   box-shadow:var(--shadow);
 }
 
 .sidebar,
 .rightbar{
   position:sticky;
-  top:118px;
-  height:calc(100vh - 150px);
+  top:84px;
+  height:calc(100vh - 98px);
   overflow:auto;
 }
 
@@ -340,31 +313,59 @@ html[data-theme="dark"] .date-strip{
 
 /* SIDEBAR */
 
+.sidebar{
+  padding:0 4px 18px;
+}
+
+.logo-side{
+  padding:8px 4px 12px;
+}
+
+.logo-side a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-side .leaf{
+  font-size:46px;
+}
+
+.logo-side h2{
+  font-size:29px;
+  font-weight:900;
+  line-height:1.15;
+}
+
+html[data-theme="dark"] .logo-side h2{
+  color:var(--gold);
+  text-shadow:var(--gold-glow);
+}
+
 .side-date-badge{
-  background:var(--card-2);
+  background:rgba(255,255,255,.75);
   border:1px solid var(--border);
-  padding:10px;
-  border-radius:12px;
-  font-size:13px;
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:12.5px;
   font-weight:800;
   color:var(--text-soft);
   text-align:center;
-  margin:0 0 10px;
+  margin:0 0 13px;
   line-height:1.55;
 }
 
 html[data-theme="dark"] .side-date-badge{
+  background:rgba(255,255,255,.03);
   color:var(--gold);
-  text-shadow:0 0 5px rgba(244,208,104,.2);
   border-color:rgba(244,208,104,.2);
 }
 
 .side-title{
-  font-size:22px;
+  font-size:21px;
   font-weight:900;
-  margin:18px 0 10px;
+  margin:20px 0 8px;
   padding:0 8px;
-  color:var(--text);
 }
 
 html[data-theme="dark"] .side-title{
@@ -372,18 +373,10 @@ html[data-theme="dark"] .side-title{
   text-shadow:var(--gold-glow);
 }
 
-.side-subtitle{
-  font-size:13px;
-  color:var(--muted);
-  font-weight:700;
-  padding:0 8px;
-  margin:-4px 0 10px;
-}
-
 .side-menu{
   display:flex;
   flex-direction:column;
-  gap:4px;
+  gap:3px;
 }
 
 .side-menu a{
@@ -391,7 +384,7 @@ html[data-theme="dark"] .side-title{
   align-items:center;
   justify-content:space-between;
   gap:10px;
-  padding:10px 11px;
+  padding:9px 11px;
   border-radius:12px;
   font-size:15px;
   font-weight:800;
@@ -407,31 +400,25 @@ html[data-theme="dark"] .side-title{
   font-size:11px;
   font-weight:900;
   color:var(--accent-2);
-  background:var(--bg-soft);
-  padding:2px 7px;
+  background:var(--card);
+  padding:1px 7px;
   border-radius:999px;
 }
 
 .side-menu a:hover,
 .side-menu a.active{
-  background:var(--bg-soft);
+  background:rgba(15,55,117,.08);
   color:var(--accent);
 }
 
 html[data-theme="dark"] .side-menu a:hover,
 html[data-theme="dark"] .side-menu a.active{
-  background:rgba(244,208,104,.10);
+  background:rgba(244,208,104,.1);
   color:var(--gold);
-  text-shadow:0 0 5px rgba(244,208,104,.3);
-}
-
-html[data-theme="dark"] .side-menu a .tag{
-  color:var(--gold);
-  background:rgba(244,208,104,.12);
 }
 
 .auth-area{
-  margin-top:24px;
+  margin-top:18px;
   display:grid;
   gap:10px;
   padding:0 6px 20px;
@@ -441,27 +428,26 @@ html[data-theme="dark"] .side-menu a .tag{
 .register-side{
   display:block;
   text-align:center;
-  padding:13px 14px;
-  border-radius:14px;
+  padding:12px 14px;
+  border-radius:12px;
   font-weight:900;
-  font-size:17px;
+  font-size:16px;
 }
 
 .login-side{
-  background:#123e75;
+  background:var(--accent);
   color:#fff!important;
 }
 
 .register-side{
-  background:var(--card);
-  border:2px solid #123e75;
-  color:#123e75!important;
+  background:transparent;
+  border:2px solid var(--accent);
+  color:var(--accent)!important;
 }
 
 html[data-theme="dark"] .login-side{
   background:var(--gold);
   color:#090e17!important;
-  box-shadow:var(--gold-glow);
 }
 
 html[data-theme="dark"] .register-side{
@@ -469,52 +455,139 @@ html[data-theme="dark"] .register-side{
   color:var(--gold)!important;
 }
 
-/* SLIM HOME COVER */
+/* MAIN */
 
-.home-cover{
-  overflow:hidden;
-  padding:0;
-  margin-bottom:16px;
+.main-content{
+  min-width:0;
 }
 
-.home-cover a{
-  display:block;
+.composer-card{
+  padding:16px;
+  margin-bottom:14px;
 }
 
-.cover-img{
-  width:100%;
-  height:210px;
-  object-fit:cover;
-  display:block;
+.composer-input{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.composer-avatar{
+  width:52px;
+  height:52px;
+  border-radius:50%;
   background:var(--card-2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  border:1px solid var(--border);
+}
+
+.composer-input input{
+  flex:1;
+  height:52px;
+  border-radius:13px;
+  border:1px solid var(--border);
+  background:var(--card-2);
+  color:var(--text);
+  padding:0 16px;
+  outline:none;
+  font-size:15px;
+  font-weight:700;
+}
+
+.composer-actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:13px;
+}
+
+.composer-actions a,
+.composer-actions button{
+  border:none;
+  background:transparent;
+  color:var(--text-soft);
+  border-radius:12px;
+  padding:9px 8px;
+  font-size:14px;
+  font-weight:900;
+  cursor:pointer;
+  text-align:center;
+}
+
+.composer-actions a:hover,
+.composer-actions button:hover{
+  background:var(--card-2);
+  color:var(--accent);
+}
+
+.post-submit{
+  background:var(--accent)!important;
+  color:#fff!important;
+}
+
+html[data-theme="dark"] .post-submit{
+  background:var(--gold)!important;
+  color:#090e17!important;
+}
+
+.mobile-notice-bubble{
+  display:none;
+  margin-bottom:14px;
+  background:var(--notice);
+  border:1px solid rgba(183,154,84,.32);
+  border-radius:18px;
+  padding:12px 14px;
+  box-shadow:var(--soft-shadow);
+}
+
+.mobile-notice-bubble h3{
+  font-size:17px;
+  font-weight:900;
+  color:var(--red);
+}
+
+.mobile-notice-bubble p{
+  font-size:13px;
+  font-weight:700;
+  color:var(--text-soft);
+  margin-top:2px;
+}
+
+html[data-theme="dark"] .mobile-notice-bubble h3{
+  color:var(--gold);
 }
 
 /* FEED */
 
 .feed-card{
-  padding:18px;
+  padding:16px;
 }
 
 .feed-tabs{
   display:flex;
-  gap:26px;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
   border-bottom:1px solid var(--border);
-  padding:0 4px 12px;
+  padding-bottom:12px;
   overflow:auto;
-  scrollbar-width:none;
 }
 
-.feed-tabs::-webkit-scrollbar{
-  display:none;
+.feed-tabs-left{
+  display:flex;
+  gap:26px;
+  min-width:max-content;
 }
 
 .feed-tabs button{
   border:none;
   background:transparent;
-  font-size:17px;
+  font-size:16px;
   font-weight:900;
   color:var(--muted);
-  white-space:nowrap;
   cursor:pointer;
   padding-bottom:8px;
 }
@@ -527,11 +600,19 @@ html[data-theme="dark"] .register-side{
 html[data-theme="dark"] .feed-tabs button.active{
   color:var(--gold);
   border-bottom-color:var(--gold);
-  text-shadow:var(--gold-glow);
+}
+
+.filter-btn{
+  border:1px solid var(--border)!important;
+  background:var(--card-2)!important;
+  border-radius:999px!important;
+  padding:8px 13px!important;
+  color:var(--text-soft)!important;
+  white-space:nowrap;
 }
 
 .post{
-  padding:18px 8px;
+  padding:18px 2px;
   border-bottom:1px solid var(--border);
 }
 
@@ -551,21 +632,18 @@ html[data-theme="dark"] .feed-tabs button.active{
   border-radius:50%;
   object-fit:cover;
   border:2px solid var(--card);
-  box-shadow:0 4px 10px rgba(0,0,0,.10);
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
 
 .author-line{
   font-size:14px;
   color:var(--muted);
+  line-height:1.45;
 }
 
 .author-line a{
-  font-weight:900;
   color:var(--text);
-}
-
-.author-line a:hover{
-  text-decoration:underline;
+  font-weight:900;
 }
 
 html[data-theme="dark"] .author-line a{
@@ -574,40 +652,38 @@ html[data-theme="dark"] .author-line a{
 
 .post-more{
   margin-left:auto;
-  font-size:22px;
-  color:var(--muted);
   border:none;
   background:transparent;
+  color:var(--muted);
+  font-size:24px;
   cursor:pointer;
 }
 
 .type-pill{
   display:inline-flex;
   align-items:center;
-  padding:2px 8px;
+  padding:1px 8px;
   border-radius:999px;
   background:var(--card-2);
   color:var(--accent-2);
+  border:1px solid var(--border);
   font-size:12px;
   font-weight:900;
-  border:1px solid var(--border);
 }
 
 .type-pill.environment{
   color:var(--green);
 }
 
-html[data-theme="dark"] .type-pill,
-html[data-theme="dark"] .type-pill.environment{
+html[data-theme="dark"] .type-pill{
   color:var(--gold);
   background:rgba(244,208,104,.10);
 }
 
 .post-title{
   font-size:21px;
-  font-weight:800;
-  color:var(--text);
-  margin-top:11px;
+  font-weight:900;
+  margin-top:10px;
   line-height:1.45;
 }
 
@@ -615,17 +691,12 @@ html[data-theme="dark"] .type-pill.environment{
   text-decoration:underline;
 }
 
-html[data-theme="dark"] .post-title a{
-  color:var(--gold);
-  text-shadow:var(--gold-glow);
-}
-
 .post-text{
-  font-size:16px;
-  font-weight:500;
-  color:var(--text-soft);
   margin-top:6px;
+  color:var(--text-soft);
+  font-size:16px;
   line-height:1.85;
+  font-weight:500;
 }
 
 .post-actions{
@@ -634,14 +705,13 @@ html[data-theme="dark"] .post-title a{
   justify-content:space-between;
   gap:8px;
   margin-top:14px;
-  font-size:14px;
   color:var(--muted);
 }
 
 .post-actions-left{
   display:flex;
-  gap:14px;
   align-items:center;
+  gap:18px;
   flex-wrap:wrap;
 }
 
@@ -650,49 +720,37 @@ html[data-theme="dark"] .post-title a{
   background:transparent;
   color:var(--muted);
   font-size:14px;
-  cursor:pointer;
   font-weight:800;
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
+  cursor:pointer;
 }
 
-.action-btn:hover{
-  color:var(--accent);
-}
-
-html[data-theme="dark"] .action-btn:hover{
-  color:var(--gold);
-}
-
+.action-btn:hover,
 .action-btn.saved{
   color:var(--accent);
-  font-weight:900;
 }
 
+html[data-theme="dark"] .action-btn:hover,
 html[data-theme="dark"] .action-btn.saved{
   color:var(--gold);
-  text-shadow:var(--gold-glow);
 }
 
 .read-more{
-  font-weight:900;
   color:var(--accent);
+  font-weight:900;
   white-space:nowrap;
 }
 
 html[data-theme="dark"] .read-more{
   color:var(--gold);
-  text-shadow:var(--gold-glow);
 }
 
 .comment-panel{
   display:none;
   margin-top:14px;
   padding:14px;
-  border-radius:14px;
   background:var(--card-2);
   border:1px solid var(--border);
+  border-radius:14px;
 }
 
 .comment-panel.open{
@@ -700,9 +758,9 @@ html[data-theme="dark"] .read-more{
 }
 
 .comment-item{
-  font-size:14.5px;
+  font-size:14px;
   color:var(--text-soft);
-  padding:8px 0;
+  padding:7px 0;
   border-bottom:1px solid var(--border);
 }
 
@@ -713,10 +771,6 @@ html[data-theme="dark"] .read-more{
 .comment-item a{
   font-weight:900;
   color:var(--text);
-}
-
-html[data-theme="dark"] .comment-item a{
-  color:var(--gold);
 }
 
 .comment-form{
@@ -733,263 +787,240 @@ html[data-theme="dark"] .comment-item a{
   border-radius:999px;
   padding:10px 13px;
   outline:none;
-  font-size:14px;
 }
 
 .comment-form button{
   border:none;
   background:var(--accent);
-  color:var(--card);
+  color:#fff;
   border-radius:999px;
-  padding:10px 16px;
+  padding:9px 14px;
   font-weight:900;
   cursor:pointer;
 }
 
-html[data-theme="dark"] .comment-form button{
-  background:var(--gold);
-  color:#090e17;
-}
-
 .more-feed{
   text-align:center;
-  padding-top:20px;
-  margin-top:10px;
-  border-top:1px solid var(--border);
+  padding-top:18px;
 }
 
 .more-feed button{
   border:1px solid var(--border);
   background:var(--card-2);
   color:var(--text);
-  border-radius:22px;
-  padding:11px 28px;
-  font-size:15px;
+  border-radius:999px;
+  padding:10px 26px;
   font-weight:900;
   cursor:pointer;
-  transition:.25s ease;
 }
 
-.more-feed button:hover{
-  background:var(--bg-soft);
-  color:var(--accent);
-}
-
-/* RIGHTBAR */
+/* RIGHT NOTICE */
 
 .rightbar{
   display:grid;
-  gap:16px;
+  gap:14px;
   align-content:start;
 }
 
-.right-card{
-  padding:18px;
+.human-board{
+  background:var(--notice);
+  border:1px solid rgba(183,154,84,.35);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
 }
 
-.right-title{
+html[data-theme="dark"] .human-board{
+  background:#1f2937;
+}
+
+.board-head{
+  padding:16px 18px 9px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.board-pin{
+  font-size:28px;
+}
+
+.board-head h2{
   font-size:20px;
+  font-weight:900;
+  color:var(--red);
+  line-height:1.25;
+}
+
+html[data-theme="dark"] .board-head h2{
+  color:var(--gold);
+}
+
+.board-head p{
+  font-size:13px;
+  color:var(--text-soft);
+  font-weight:700;
+  margin-top:4px;
+}
+
+.notice-list{
+  padding:0 12px 12px;
+  display:grid;
+  gap:10px;
+}
+
+.notice-item{
+  background:rgba(255,255,255,.65);
+  border:1px solid rgba(183,154,84,.24);
+  border-radius:14px;
+  padding:12px;
+}
+
+html[data-theme="dark"] .notice-item{
+  background:rgba(255,255,255,.04);
+}
+
+.notice-item h3{
+  font-size:16px;
+  font-weight:900;
+  color:var(--text);
+}
+
+.notice-item p{
+  font-size:13px;
+  color:var(--text-soft);
+  font-weight:700;
+  margin-top:5px;
+  line-height:1.65;
+}
+
+.notice-item small{
+  display:block;
+  color:var(--muted);
+  font-size:11.5px;
+  font-weight:900;
+  margin-top:7px;
+}
+
+.board-apply{
+  display:block;
+  margin:0 12px 12px;
+  text-align:center;
+  background:var(--accent);
+  color:#fff!important;
+  border-radius:12px;
+  padding:12px;
+  font-size:15px;
+  font-weight:900;
+}
+
+html[data-theme="dark"] .board-apply{
+  background:var(--gold);
+  color:#090e17!important;
+}
+
+.process-card{
+  background:var(--notice);
+  border:1px solid rgba(183,154,84,.35);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:var(--soft-shadow);
+}
+
+html[data-theme="dark"] .process-card{
+  background:#1f2937;
+}
+
+.process-card h3{
+  font-size:17px;
   font-weight:900;
   text-align:center;
-  margin-bottom:14px;
 }
 
-html[data-theme="dark"] .right-title{
-  color:var(--gold);
-  text-shadow:var(--gold-glow);
-}
-
-.quick-link{
-  display:block;
-  padding:10px 0;
-  border-bottom:1px solid var(--border);
-}
-
-.quick-link:last-child{
-  border-bottom:none;
-}
-
-.quick-link small{
-  font-size:12px;
-  font-weight:900;
-  color:var(--accent-2);
-}
-
-.quick-link h4{
-  font-size:15.5px;
-  font-weight:900;
-  line-height:1.5;
-  margin-top:3px;
-}
-
-.quick-link p{
-  font-size:12.8px;
-  color:var(--muted);
-  margin-top:3px;
-}
-
-html[data-theme="dark"] .quick-link small{
-  color:var(--gold);
-}
-
-.notice-card{
-  background:linear-gradient(135deg,#ffffff,#eef6ff);
-  padding:18px;
-}
-
-html[data-theme="dark"] .notice-card{
-  background:linear-gradient(135deg,#111827,#182235);
-}
-
-.notice-card h3{
-  color:var(--text);
-  font-size:20px;
-  font-weight:900;
-}
-
-html[data-theme="dark"] .notice-card h3{
-  color:var(--gold);
-  text-shadow:var(--gold-glow);
-}
-
-.notice-card p{
-  margin-top:7px;
-  color:var(--muted);
-  font-size:14px;
-}
-
-/* MOBILE DRAWER */
-
-.drawer-backdrop,
-.account-backdrop{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.38);
-  z-index:1200;
-  display:none;
-}
-
-.drawer-backdrop.show,
-.account-backdrop.show{
-  display:block;
-}
-
-.mobile-drawer{
-  position:fixed;
-  top:0;
-  left:-320px;
-  width:300px;
-  max-width:86vw;
-  height:100vh;
-  background:var(--bg-soft);
-  z-index:1300;
-  transition:.25s ease;
-  padding:18px 16px;
-  overflow:auto;
-  box-shadow:12px 0 35px rgba(0,0,0,.15);
-}
-
-.mobile-drawer.open{
-  left:0;
-}
-
-html[data-theme="dark"] .mobile-drawer,
-html[data-theme="dark"] .account-panel{
-  background:var(--card);
-}
-
-.drawer-head{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  margin-bottom:14px;
-  gap:12px;
-}
-
-.drawer-brand{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:4px;
-}
-
-.drawer-logo{
-  font-size:42px;
-  line-height:1;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.drawer-brand h3{
-  font-size:30px;
-  font-weight:900;
-  line-height:1.2;
-  color:var(--text);
-}
-
-html[data-theme="dark"] .drawer-brand h3{
-  color:var(--gold);
-  text-shadow:var(--gold-glow);
-}
-
-.close-drawer,
-.close-account{
-  border:none;
-  background:transparent;
-  font-size:34px;
-  color:var(--text);
-  cursor:pointer;
-  line-height:1;
+.process-card p{
+  margin-top:8px;
+  color:var(--text-soft);
+  font-size:13px;
+  font-weight:700;
+  line-height:1.8;
+  text-align:center;
 }
 
 /* ACCOUNT PANEL */
 
+.account-backdrop,
+.drawer-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.38);
+  display:none;
+  z-index:1200;
+}
+
+.account-backdrop.show,
+.drawer-backdrop.show{
+  display:block;
+}
+
 .account-panel{
   position:fixed;
   top:0;
-  right:-380px;
-  width:360px;
+  right:-390px;
+  width:370px;
   max-width:92vw;
   height:100vh;
   background:var(--bg-soft);
   z-index:1300;
-  transition:.25s ease;
-  padding:18px 16px;
+  padding:18px;
   overflow:auto;
-  box-shadow:-12px 0 35px rgba(0,0,0,.15);
+  transition:.25s ease;
+  box-shadow:-14px 0 35px rgba(0,0,0,.16);
 }
 
 .account-panel.open{
   right:0;
 }
 
+.account-logo{
+  display:flex;
+  justify-content:center;
+  margin-bottom:-8px;
+}
+
+.account-logo a{
+  font-size:58px;
+  line-height:1;
+}
+
 .account-head{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
   margin-bottom:14px;
 }
 
-.account-head h3{
-  font-size:22px;
+.account-head h2{
+  font-size:28px;
   font-weight:900;
 }
 
-html[data-theme="dark"] .account-head h3{
-  color:var(--gold);
-  text-shadow:var(--gold-glow);
+.close-account,
+.close-drawer{
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:34px;
+  cursor:pointer;
 }
 
 .account-user{
   display:flex;
   align-items:center;
   gap:12px;
-  padding:12px;
-  border:1px solid var(--border);
-  border-radius:14px;
   background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
 }
 
 .account-user img{
@@ -997,91 +1028,66 @@ html[data-theme="dark"] .account-head h3{
   height:58px;
   border-radius:50%;
   object-fit:cover;
-  border:3px solid var(--card-2);
 }
 
 .account-user h3{
-  font-size:19px;
+  font-size:18px;
   font-weight:900;
-  line-height:1.3;
-}
-
-.account-user h3 a:hover{
-  text-decoration:underline;
 }
 
 .account-user p{
   font-size:13px;
   color:var(--muted);
-  margin-top:2px;
+  font-weight:700;
 }
 
 .account-menu{
-  display:grid;
-  gap:9px;
   margin-top:14px;
+  display:grid;
+  gap:10px;
 }
 
 .account-menu a,
 .account-menu button{
-  width:100%;
   border:1px solid var(--border);
   background:var(--card);
   color:var(--text);
-  border-radius:12px;
-  padding:12px 13px;
+  border-radius:13px;
+  padding:12px 14px;
   font-size:15px;
   font-weight:900;
-  text-align:left;
-  cursor:pointer;
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  gap:10px;
+  cursor:pointer;
 }
 
-.account-menu button.logout-btn{
-  background:#f3f4f6;
-  color:#111;
-  border-color:#e5e7eb;
-  justify-content:center;
-}
-
-html[data-theme="dark"] .account-menu button.logout-btn{
-  background:#1f2937;
-  color:var(--text);
-  border-color:var(--border);
+.logout-btn{
+  justify-content:center!important;
 }
 
 .memory-box{
-  margin-top:16px;
-  border:1px solid var(--border);
-  border-radius:14px;
+  margin-top:18px;
   background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
   padding:14px;
 }
 
-.memory-box h4{
-  font-size:18px;
+.memory-box h3{
+  font-size:22px;
   font-weight:900;
-  margin-bottom:7px;
-}
-
-html[data-theme="dark"] .memory-box h4{
-  color:var(--gold);
-  text-shadow:var(--gold-glow);
 }
 
 .memory-empty{
-  font-size:13.5px;
   color:var(--muted);
-  line-height:1.75;
+  font-size:13.5px;
+  margin-top:8px;
 }
 
 .memory-item{
   display:block;
-  padding:9px 0;
   border-bottom:1px solid var(--border);
+  padding:9px 0;
 }
 
 .memory-item:last-child{
@@ -1097,205 +1103,196 @@ html[data-theme="dark"] .memory-box h4{
 .memory-item p{
   font-size:14px;
   font-weight:800;
-  line-height:1.55;
-  margin-top:2px;
+}
+
+/* MOBILE DRAWER */
+
+.mobile-drawer{
+  position:fixed;
+  top:0;
+  left:-330px;
+  width:310px;
+  max-width:87vw;
+  height:100vh;
+  background:var(--bg-soft);
+  z-index:1300;
+  padding:18px 16px;
+  overflow:auto;
+  transition:.25s ease;
+  box-shadow:14px 0 35px rgba(0,0,0,.18);
+}
+
+.mobile-drawer.open{
+  left:0;
+}
+
+.drawer-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.drawer-brand{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.drawer-logo{
+  font-size:44px;
+  line-height:1;
+}
+
+.drawer-brand h3{
+  font-size:30px;
+  font-weight:900;
 }
 
 /* FOOTER */
 
 .site-footer{
-  max-width:1510px;
+  max-width:1560px;
   margin:0 auto;
-  padding:18px 30px;
-  background:var(--accent);
-  color:#ffffff;
+  padding:18px 24px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:12px;
+  gap:14px;
+  background:var(--accent);
+  color:#fff;
   font-size:14px;
 }
 
-html[data-theme="dark"] .site-footer{
-  background:#06090e;
-  border-top:1px solid var(--border);
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
 }
 
 .site-footer a{
   font-weight:800;
 }
 
-.site-footer a:hover{
-  color:#eaf2fa;
-  text-decoration:underline;
-}
-
-.footer-links{
-  display:flex;
-  gap:15px;
-  flex-wrap:wrap;
-}
-
-/* TO TOP & TOAST */
+/* FLOAT */
 
 .to-top{
   position:fixed;
   right:18px;
   bottom:20px;
-  width:43px;
-  height:43px;
+  width:44px;
+  height:44px;
   border-radius:50%;
   border:none;
   background:var(--accent);
-  color:#ffffff;
-  cursor:pointer;
-  box-shadow:0 8px 22px rgba(0,0,0,.22);
-  z-index:999;
+  color:#fff;
   display:none;
   align-items:center;
   justify-content:center;
+  cursor:pointer;
+  z-index:999;
+  box-shadow:0 8px 22px rgba(0,0,0,.22);
 }
 
 .to-top.show{
   display:flex;
 }
 
-.to-top svg{
-  width:24px;
-  height:24px;
-  stroke:currentColor;
-  stroke-width:1.5;
-  fill:none;
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:76px;
+  transform:translateX(-50%);
+  background:var(--accent);
+  color:#fff;
+  border-radius:999px;
+  padding:12px 20px;
+  font-size:14px;
+  font-weight:800;
+  display:none;
+  z-index:9999;
+  max-width:92%;
+  text-align:center;
 }
 
+html[data-theme="dark"] .toast,
 html[data-theme="dark"] .to-top{
   background:var(--gold);
   color:#090e17;
-  box-shadow:var(--gold-glow);
-}
-
-.toast{
-  position:fixed;
-  bottom:76px;
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--accent);
-  color:#ffffff;
-  padding:12px 20px;
-  border-radius:20px;
-  font-size:14.5px;
-  display:none;
-  z-index:9999;
-  box-shadow:0 8px 25px rgba(0,0,0,.25);
-  text-align:center;
-  max-width:92%;
-  line-height:1.8;
-}
-
-html[data-theme="dark"] .toast{
-  background:var(--gold);
-  color:#090e17;
-  font-weight:800;
-  box-shadow:var(--gold-glow);
 }
 
 /* RESPONSIVE */
 
-@media(max-width:1250px){
-  .header-date,
-  .search-mini{
-    display:none;
-  }
-
+@media(max-width:1280px){
   .page-wrap{
-    grid-template-columns:220px minmax(0,1fr);
+    grid-template-columns:245px minmax(0,1fr);
   }
 
   .rightbar{
     display:none;
   }
+
+  .mobile-notice-bubble{
+    display:block;
+  }
 }
 
-@media(max-width:880px){
+@media(max-width:920px){
   .topbar{
-    padding:10px 15px;
+    grid-template-columns:auto 1fr auto;
+    padding:0 14px;
   }
 
   .menu-btn{
     display:block;
   }
 
-  .desktop-nav,
-  .write-btn{
-    display:none;
-  }
-
   .brand{
-    min-width:auto;
+    min-width:0;
   }
 
   .brand-leaf{
-    font-size:31px;
+    font-size:32px;
   }
 
   .brand-text h1{
-    font-size:26px;
+    font-size:24px;
   }
 
   .brand-text p{
+    max-width:170px;
     font-size:11px;
-    max-width:180px;
-    overflow:hidden;
-    text-overflow:ellipsis;
   }
 
-  .avatar-btn img{
-    width:38px;
-    height:38px;
+  .search-wrap{
+    display:none;
   }
 
-  .date-strip{
-    padding:8px 14px;
-    font-size:12.5px;
-    text-align:center;
+  .notif-btn{
+    display:none;
   }
 
   .page-wrap{
     display:block;
-    padding:12px 14px 28px;
+    padding:12px 14px 24px;
   }
 
   .sidebar{
     display:none;
   }
 
-  .cover-img{
-    height:170px;
+  .composer-actions{
+    grid-template-columns:repeat(2,1fr);
   }
 
-  .feed-card{
-    padding:14px;
-  }
-
-  .post{
-    padding:16px 3px;
-  }
-
-  .post-title{
-    font-size:19px;
-  }
-
-  .post-text{
-    font-size:15.5px;
+  .feed-tabs{
+    overflow:auto;
   }
 
   .post-actions{
     align-items:flex-start;
     flex-direction:column;
-  }
-
-  .post-actions-left{
-    gap:13px;
   }
 
   .comment-form{
@@ -1309,7 +1306,6 @@ html[data-theme="dark"] .toast{
   .site-footer{
     display:block;
     text-align:center;
-    padding:18px 14px;
   }
 
   .footer-links{
@@ -1319,35 +1315,51 @@ html[data-theme="dark"] .toast{
 }
 
 @media(max-width:520px){
-  .topbar{
-    gap:8px;
-  }
-
   .brand-text h1{
-    font-size:23px;
+    font-size:22px;
   }
 
   .brand-text p{
-    max-width:155px;
+    max-width:150px;
   }
 
-  .icon-btn,
-  .theme-btn{
-    height:36px;
+  .theme-btn,
+  .icon-btn{
     width:36px;
-    font-size:16px;
+    height:36px;
   }
 
-  .feed-tabs{
-    gap:22px;
+  .avatar-btn img{
+    width:38px;
+    height:38px;
   }
 
-  .feed-tabs button{
-    font-size:16px;
+  .composer-card,
+  .feed-card{
+    padding:13px;
   }
 
-  .cover-img{
-    height:155px;
+  .composer-input{
+    align-items:flex-start;
+  }
+
+  .composer-avatar{
+    width:42px;
+    height:42px;
+    font-size:22px;
+  }
+
+  .composer-input input{
+    height:46px;
+    font-size:13px;
+  }
+
+  .post-title{
+    font-size:19px;
+  }
+
+  .post-text{
+    font-size:15px;
   }
 }
 </style>
@@ -1358,41 +1370,32 @@ html[data-theme="dark"] .toast{
 <div class="site-shell">
 
 <header class="topbar">
-  <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">☰</button>
+  <button class="menu-btn" id="menuBtn">☰</button>
 
   <a href="index.html" class="brand" title="হোম">
-    <div class="brand-leaf">🌿</div>
-    <div class="brand-text">
+    <span class="brand-leaf">🌿</span>
+    <span class="brand-text">
       <h1>ভুবনডাঙ্গার কবিতা</h1>
       <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
-    </div>
+    </span>
   </a>
 
-  <nav class="desktop-nav">
-    <a href="index.html" class="active">হোম</a>
-    <a href="famous-poet.html">খ্যাতিমান কবি</a>
-    <a href="today-poem.html">আজকের লেখা</a>
-    <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
-    <a href="founder-profile.html">মাহমুদ সোহেল [ফাউন্ডার]</a>
-    <a href="discussion-post.html">সাহিত্য আলোচনা</a>
-  </nav>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="searchMini" placeholder="লেখা, কবি, বিষয়, ট্যাগ খুঁজুন...">
+    <span class="search-key">Ctrl + K</span>
+  </div>
 
   <div class="header-actions">
-    <div class="header-date" id="headerDateTop">তারিখ লোড হচ্ছে...</div>
-    <input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
-
-    <button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙</button>
-    <button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
-
-    <a href="today-poem.html" class="write-btn">✎ লিখুন</a>
-
-    <button class="avatar-btn" id="accountBtn" title="Account menu">
+    <button class="theme-btn" id="themeBtn">🌙</button>
+    <button class="notif-btn" onclick="showToast('Notification system Future Plan.')">🔔 <span class="badge">৩</span></button>
+    <button class="notif-btn" onclick="showToast('Message system Future Plan.')">💬 <span class="badge">৮</span></button>
+    <button class="avatar-btn" id="accountBtn">
       <img src="profile.jpg" alt="আপনার অ্যাকাউন্ট">
+      <span>⌄</span>
     </button>
   </div>
 </header>
-
-<div class="date-strip" id="headerDateStrip">তারিখ লোড হচ্ছে...</div>
 
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
@@ -1402,7 +1405,6 @@ html[data-theme="dark"] .toast{
       <span class="drawer-logo">🌿</span>
       <h3>আপন ভুবন</h3>
     </a>
-
     <button class="close-drawer" id="closeDrawer">×</button>
   </div>
 
@@ -1415,6 +1417,9 @@ html[data-theme="dark"] .toast{
     <a href="today-poem.html?type=letter"><span class="left">✉ আজকের চিঠিপত্র</span></a>
     <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
     <a href="today-poem.html?type=environment"><span class="left">🌱 পরিবেশ পরামর্শ</span></a>
+    <a href="submit-poem.html"><span class="left">✎ কবিতা লিখুন</span></a>
+    <a href="submit-prolap.html"><span class="left">✐ প্রলাপ লিখুন</span></a>
+    <a href="discussion-post.html"><span class="left">💬 আলোচনা করুন</span></a>
     <a href="future-plan.html?feature=recitation"><span class="left">🎙 আবৃত্তি</span><span class="tag">Future Plan</span></a>
     <a href="future-plan.html?feature=reels"><span class="left">🎬 Reels</span><span class="tag">Future Plan</span></a>
     <a href="today-poem.html"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
@@ -1422,6 +1427,7 @@ html[data-theme="dark"] .toast{
   </div>
 
   <div class="side-title">মূল ভুবন</div>
+
   <div class="side-menu">
     <a href="index.html" class="active"><span class="left">🏠 হোম</span></a>
     <a href="famous-poet.html"><span class="left">📖 খ্যাতিমান কবি</span></a>
@@ -1443,13 +1449,17 @@ html[data-theme="dark"] .toast{
 <div class="account-backdrop" id="accountBackdrop"></div>
 
 <aside class="account-panel" id="accountPanel">
+  <div class="account-logo">
+    <a href="index.html" title="হোম">🌿</a>
+  </div>
+
   <div class="account-head">
-    <h3>Account</h3>
+    <h2>Account</h2>
     <button class="close-account" id="closeAccount">×</button>
   </div>
 
   <div class="account-user">
-    <img src="profile.jpg" alt="আপনার অ্যাকাউন্ট">
+    <img src="profile.jpg" alt="আপনার প্রোফাইল">
     <div>
       <h3><a href="profile.html">আপনার প্রোফাইল</a></h3>
       <p>Writer • Reader • Memories</p>
@@ -1459,21 +1469,19 @@ html[data-theme="dark"] .toast{
   <div class="account-menu">
     <a href="profile.html">আপনার প্রোফাইল <span>›</span></a>
     <a href="profile-edit.html">প্রোফাইল এডিট করুন <span>›</span></a>
-    <a href="today-poem.html">লেখা জমা দিন <span>›</span></a>
+    <a href="submit-poem.html">লেখা জমা দিন <span>›</span></a>
     <a href="today-poem.html?type=environment">পরিবেশ পরামর্শ <span>›</span></a>
     <a href="search.html?q=প্রিয় লেখা">প্রিয় লেখা খুঁজুন <span>›</span></a>
     <a href="contact.html">রিপোর্ট / কপিরাইট <span>›</span></a>
     <a href="policy.html">নীতিমালা <span>›</span></a>
-    <button id="accountThemeBtn">Theme বদলান <span>☀️/🌙</span></button>
+    <button id="accountThemeBtn">Theme বদলান <span>🌙</span></button>
     <button class="logout-btn" id="logoutBtn">Log out</button>
   </div>
 
   <div class="memory-box">
-    <h4>মেমোরিস</h4>
+    <h3>মেমোরিস</h3>
     <div id="memoryList">
-      <p class="memory-empty">
-        আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে।
-      </p>
+      <p class="memory-empty">আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।</p>
     </div>
   </div>
 </aside>
@@ -1481,10 +1489,14 @@ html[data-theme="dark"] .toast{
 <main class="page-wrap">
 
   <aside class="sidebar">
-    <div class="side-date-badge" id="desktopSideDate">তারিখ লোড হচ্ছে...</div>
+    <div class="logo-side">
+      <a href="index.html">
+        <span class="leaf">🌿</span>
+        <h2>আপন ভুবন</h2>
+      </a>
+    </div>
 
-    <div class="side-title">আপন ভুবন</div>
-    <div class="side-subtitle">আপনার প্রোফাইল, লেখা ও স্মৃতির ঘর</div>
+    <div class="side-date-badge" id="desktopSideDate">তারিখ লোড হচ্ছে...</div>
 
     <div class="side-menu">
       <a href="profile.html"><span class="left">👤 আপনার প্রোফাইল</span><span class="tag">Edit</span></a>
@@ -1500,6 +1512,7 @@ html[data-theme="dark"] .toast{
     </div>
 
     <div class="side-title">মূল ভুবন</div>
+
     <div class="side-menu">
       <a href="index.html" class="active"><span class="left">🏠 হোম</span></a>
       <a href="famous-poet.html"><span class="left">📖 খ্যাতিমান কবি</span></a>
@@ -1520,18 +1533,34 @@ html[data-theme="dark"] .toast{
 
   <section class="main-content">
 
-    <section class="card home-cover">
-      <a href="index.html" aria-label="ভুবনডাঙ্গার কবিতা হোম">
-        <img class="cover-img" src="cover.jpg" alt="ভুবনডাঙ্গার কবিতা কভার">
-      </a>
+    <a href="today-poem.html#humanNotice" class="mobile-notice-bubble">
+      <h3>🔔 জরুরি মানবিক নোটিস</h3>
+      <p>রক্ত, চিকিৎসা বা মানবিক সহায়তার যাচাইকৃত বার্তা দেখতে চাপুন।</p>
+    </a>
+
+    <section class="card composer-card">
+      <div class="composer-input">
+        <div class="composer-avatar">🪶</div>
+        <input placeholder="আপনার মনের কথা লিখুন...">
+      </div>
+
+      <div class="composer-actions">
+        <a href="submit-poem.html">🪶 কবিতা</a>
+        <a href="submit-prolap.html">💬 প্রলাপ</a>
+        <a href="submit-letter.html">📖 চিঠিপত্র</a>
+        <button onclick="showToast('Post submit system Supabase যুক্ত হলে live হবে।')" class="post-submit">পোস্ট করুন</button>
+      </div>
     </section>
 
     <section class="card feed-card">
       <div class="feed-tabs">
-        <button class="active" data-filter="all">সাম্প্রতিক লেখা</button>
-        <button data-filter="popular">জনপ্রিয় লেখা</button>
-        <button data-filter="new">নতুন সদস্য</button>
-        <button data-filter="talked">সম্প্রতি আলোচিত</button>
+        <div class="feed-tabs-left">
+          <button class="active" data-filter="all">সাম্প্রতিক</button>
+          <button data-filter="popular">জনপ্রিয়</button>
+          <button data-filter="new">অনুসরণ</button>
+          <button data-filter="talked">আমার ফিড</button>
+        </div>
+        <button class="filter-btn" onclick="showToast('Advanced filter Future Plan.')">ফিল্টার ⚙</button>
       </div>
 
       <div id="feedList"></div>
@@ -1543,52 +1572,34 @@ html[data-theme="dark"] .toast{
   </section>
 
   <aside class="rightbar">
-    <section class="card notice-card">
-      <h3>ভুবনডাঙ্গার আহ্বান</h3>
+    <section class="human-board" id="homeHumanBoard">
+      <div class="board-head">
+        <span class="board-pin">📌</span>
+        <div>
+          <h2>মানবিক নোটিস বোর্ড</h2>
+          <p>প্রতিদিন মানুষের পাশে দাঁড়ানোর ছোট একটি প্রয়াস। আপনি চাইলে কাউকে সাহায্য করতে পারেন, বা সহায়তার আবেদন জানাতে পারেন।</p>
+        </div>
+      </div>
+
+      <div class="notice-list" id="noticeList"></div>
+
+      <a href="contact.html" class="board-apply">✎ ফর্ম পূরণ করুন</a>
+    </section>
+
+    <section class="process-card">
+      <h3>কিভাবে কাজটি সম্পন্ন হয়?</h3>
       <p>
-        শুধু কবিতা নয়—ভালোবাসা, সাহিত্য, মানুষ, প্রকৃতি ও নীরব সৃষ্টিশীলতার জন্য এই ভুবন।
+        ফর্ম জমা → নোটিফিকেশন → অ্যাডমিন/ফাউন্ডার যাচাই → Board-এ প্রকাশ।
+        প্রতিটি আবেদন যাচাই ও অনুমোদনের পরে প্রকাশ করা হবে।
       </p>
     </section>
-
-    <section class="card right-card">
-      <h3 class="right-title">দ্রুত পড়ুন</h3>
-
-      <a href="today-poem.html?type=poem" class="quick-link">
-        <small>Poem</small>
-        <h4>আজকের কবিতা</h4>
-        <p>সাম্প্রতিক প্রকাশিত কবিতা</p>
-      </a>
-
-      <a href="today-poem.html?type=prolap" class="quick-link">
-        <small>Prolap</small>
-        <h4>আজকের প্রলাপ</h4>
-        <p>ব্যক্তিকথা ও ভাবনা</p>
-      </a>
-
-      <a href="today-poem.html?type=letter" class="quick-link">
-        <small>Letter</small>
-        <h4>চিঠিপত্র</h4>
-        <p>চিঠিধর্মী লেখা</p>
-      </a>
-
-      <a href="today-poem.html?type=quotes" class="quick-link">
-        <small>Quotes</small>
-        <h4>মনীষীদের বাণী</h4>
-        <p>নামসহ বাণী post</p>
-      </a>
-
-      <a href="today-poem.html?type=environment" class="quick-link">
-        <small>Environment</small>
-        <h4>পরিবেশ পরামর্শ</h4>
-        <p>প্রকৃতি রক্ষার ভাবনা</p>
-      </a>
-    </section>
   </aside>
+
 </main>
 
 <footer class="site-footer">
   <div>
-    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a> © <span id="footerYear">২০২৬</span> • হোম
+    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a> © <span id="footerYear">২০২৬</span>
   </div>
 
   <div class="footer-links">
@@ -1606,12 +1617,7 @@ html[data-theme="dark"] .toast{
 
 </div>
 
-<button class="to-top" id="toTopBtn" title="উপরে যান">
-  <svg viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5m0 0l-7 7m7-7l7 7" />
-  </svg>
-</button>
-
+<button class="to-top" id="toTopBtn">↑</button>
 <div class="toast" id="toast">এই সুবিধাটি শীঘ্রই যুক্ত হবে।</div>
 
 <script>
@@ -1629,104 +1635,129 @@ const accountPanel = document.getElementById("accountPanel");
 const accountBackdrop = document.getElementById("accountBackdrop");
 const closeAccount = document.getElementById("closeAccount");
 
-const searchBtn = document.getElementById("searchBtn");
-const searchMini = document.getElementById("searchMini");
-const toast = document.getElementById("toast");
 const themeBtn = document.getElementById("themeBtn");
 const accountThemeBtn = document.getElementById("accountThemeBtn");
-
-const headerDateTop = document.getElementById("headerDateTop");
-const headerDateStrip = document.getElementById("headerDateStrip");
-const mobileSideDate = document.getElementById("mobileSideDate");
-const desktopSideDate = document.getElementById("desktopSideDate");
+const searchMini = document.getElementById("searchMini");
+const toast = document.getElementById("toast");
 const memoryList = document.getElementById("memoryList");
 
-/* THEME */
-
-function updateThemeButton(){
-  const currentTheme = htmlRoot.getAttribute("data-theme");
-
-  if(currentTheme === "dark"){
-    themeBtn.innerHTML = "☀️";
-    themeBtn.style.color = "#d8bd75";
-    if(accountThemeBtn) accountThemeBtn.innerHTML = "Theme বদলান <span>☀️</span>";
-  }else{
-    themeBtn.innerHTML = "🌙";
-    themeBtn.style.color = "#0b224d";
-    if(accountThemeBtn) accountThemeBtn.innerHTML = "Theme বদলান <span>🌙</span>";
-  }
-}
-
-function toggleTheme(){
-  const currentTheme = htmlRoot.getAttribute("data-theme");
-  const nextTheme = currentTheme === "dark" ? "light" : "dark";
-  htmlRoot.setAttribute("data-theme", nextTheme);
-  localStorage.setItem("bhubondangaTheme", nextTheme);
-  updateThemeButton();
-}
-
-updateThemeButton();
-
-themeBtn.addEventListener("click", toggleTheme);
-if(accountThemeBtn) accountThemeBtn.addEventListener("click", toggleTheme);
-
-/* MANUAL BANGLA DATE */
-
 const bnDigits = {
-  "0":"০","1":"১","2":"২","3":"৩","4":"৪",
-  "5":"৫","6":"৬","7":"৭","8":"৮","9":"৯"
+  "0":"০","1":"১","2":"۲","3":"۳","4":"۴","5":"۵","6":"۶","7":"۷","8":"۸","9":"۹"
 };
 
+bnDigits["2"]="۲".replace("۲","২");
+bnDigits["3"]="۳".replace("۳","۳").replace("۳","৩");
+bnDigits["4"]="۴".replace("۴","۴").replace("۴","۴");
+bnDigits["5"]="۵".replace("۵","۵").replace("۵","۵");
+bnDigits["6"]="۶".replace("۶","۶").replace("۶","۶");
+bnDigits["7"]="۷".replace("۷","۷").replace("۷","۷");
+bnDigits["8"]="۸".replace("۸","۸").replace("۸","۸");
+bnDigits["9"]="۹".replace("۹","۹").replace("۹","۹");
+
+bnDigits["0"]="۰".replace("۰","۰").replace("۰","۰");
+bnDigits["0"]="০";
+bnDigits["1"]="۱".replace("۱","۱").replace("۱","۱");
+bnDigits["1"]="۱".replace("۱","۱").replace("۱","۱");
+bnDigits["1"]="۱".replace("۱","۱").replace("۱","۱");
+bnDigits["1"]="১";
+bnDigits["2"]="۲".replace("۲","۲").replace("۲","۲");
+bnDigits["2"]="۲".replace("۲","۲").replace("۲","۲");
+bnDigits["2"]="۲".replace("۲","۲").replace("۲","۲");
+bnDigits["2"]="۲".replace("۲","۲").replace("۲","۲");
+bnDigits["2"]="۲".replace("۲","۲").replace("۲","۲");
+bnDigits["2"]="۲".replace("۲","۲").replace("۲","۲");
+bnDigits["2"]="২";
+bnDigits["3"]="۳".replace("۳","۳").replace("۳","۳");
+bnDigits["3"]="۳".replace("۳","۳").replace("۳","۳");
+bnDigits["3"]="৩";
+bnDigits["4"]="۴".replace("۴","۴").replace("۴","۴");
+bnDigits["4"]="۴".replace("۴","۴").replace("۴","۴");
+bnDigits["4"]="۴".replace("۴","۴").replace("۴","۴");
+bnDigits["4"]="۴".replace("۴","۴").replace("۴","۴");
+bnDigits["4"]="৪";
+bnDigits["5"]="۵".replace("۵","۵").replace("۵","۵");
+bnDigits["5"]="۵".replace("۵","۵").replace("۵","۵");
+bnDigits["5"]="۵";
+bnDigits["5"]="۵".replace("۵","৫");
+bnDigits["6"]="۶".replace("۶","۶").replace("۶","۶");
+bnDigits["6"]="۶".replace("۶","۶").replace("۶","۶");
+bnDigits["6"]="۶".replace("۶","۶").replace("۶","۶");
+bnDigits["6"]="۶".replace("۶","۶").replace("۶","۶");
+bnDigits["6"]="۶".replace("۶","৬");
+bnDigits["7"]="۷".replace("۷","۷").replace("۷","۷");
+bnDigits["7"]="۷".replace("۷","۷").replace("۷","۷");
+bnDigits["7"]="۷".replace("۷","৭");
+bnDigits["8"]="۸".replace("۸","۸").replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸").replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","৮").replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","৮");
+bnDigits["9"]="۹".replace("۹","۹").replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹").replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["6"]="৬";
+bnDigits["7"]="۷".replace("۷","۷");
+bnDigits["7"]="۷".replace("۷","۷");
+bnDigits["7"]="۷".replace("۷","۷");
+bnDigits["7"]="۷".replace("۷","৭");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","৮");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="۸".replace("۸","۸");
+bnDigits["8"]="৮";
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["9"]="۹".replace("۹","۹");
+bnDigits["9"]="৯";
+
 function toBn(num){
-  return String(num).replace(/[0-9]/g, function(d){ return bnDigits[d]; });
+  return String(num).replace(/[0-9]/g,function(d){return bnDigits[d];});
 }
 
 const weekBn = ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"];
-
-const gregorianMonthsEn = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December"
-];
-
+const monthsEn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const banglaMonths = [
-  {name:"বৈশাখ", days:31},
-  {name:"জ্যৈষ্ঠ", days:31},
-  {name:"আষাঢ়", days:31},
-  {name:"শ্রাবণ", days:31},
-  {name:"ভাদ্র", days:31},
-  {name:"আশ্বিন", days:31},
-  {name:"কার্তিক", days:30},
-  {name:"অগ্রহায়ণ", days:30},
-  {name:"পৌষ", days:30},
-  {name:"মাঘ", days:30},
-  {name:"ফাল্গুন", days:30},
-  {name:"চৈত্র", days:30}
+  {name:"বৈশাখ",days:31},{name:"জ্যৈষ্ঠ",days:31},{name:"আষাঢ়",days:31},
+  {name:"শ্রাবণ",days:31},{name:"ভাদ্র",days:31},{name:"আশ্বিন",days:31},
+  {name:"কার্তিক",days:30},{name:"অগ্রহায়ণ",days:30},{name:"পৌষ",days:30},
+  {name:"মাঘ",days:30},{name:"ফাল্গুন",days:30},{name:"চৈত্র",days:30}
 ];
 
-function isLeapYear(year){
-  return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+function isLeapYear(y){
+  return (y%4===0 && y%100!==0) || (y%400===0);
 }
 
 function getBanglaDate(date){
   const gy = date.getFullYear();
-  const banglaStart = new Date(gy, 3, 14);
-  let by;
-  let diff;
+  const start = new Date(gy,3,14);
+  let by, diff;
 
-  if(date >= banglaStart){
+  if(date >= start){
     by = gy - 593;
-    diff = Math.floor((date - banglaStart) / 86400000);
+    diff = Math.floor((date - start) / 86400000);
   }else{
     by = gy - 594;
-    const prevStart = new Date(gy - 1, 3, 14);
-    diff = Math.floor((date - prevStart) / 86400000);
+    diff = Math.floor((date - new Date(gy-1,3,14)) / 86400000);
   }
 
-  const months = banglaMonths.map(function(m){ return {name:m.name, days:m.days}; });
-
-  if(isLeapYear(gy + 1)){
-    months[10].days = 31;
-  }
+  const months = banglaMonths.map(m => ({...m}));
+  if(isLeapYear(gy + 1)) months[10].days = 31;
 
   let mi = 0;
   while(diff >= months[mi].days && mi < months.length - 1){
@@ -1734,11 +1765,7 @@ function getBanglaDate(date){
     mi++;
   }
 
-  return {
-    day: diff + 1,
-    month: months[mi].name,
-    year: by
-  };
+  return {day:diff+1,month:months[mi].name,year:by};
 }
 
 function renderDates(){
@@ -1746,154 +1773,178 @@ function renderDates(){
   const bd = getBanglaDate(today);
 
   const banglaDate = toBn(bd.day) + " " + bd.month + " " + toBn(bd.year) + " বঙ্গাব্দ";
-  const gregorianDate = today.getDate() + " " + gregorianMonthsEn[today.getMonth()] + " " + today.getFullYear() + " খ্রিষ্টাব্দ";
-  const finalDateText = "আজ " + weekBn[today.getDay()] + " • " + banglaDate + " • " + gregorianDate + " • তিথি/পক্ষ: Future Plan";
+  const gregDate = today.getDate() + " " + monthsEn[today.getMonth()] + " " + today.getFullYear() + " খ্রিষ্টাব্দ";
+  const text = "আজ " + weekBn[today.getDay()] + " • " + banglaDate + " • " + gregDate + " • তিথি/পক্ষ: Future Plan";
 
-  if(headerDateTop) headerDateTop.innerText = banglaDate;
-  if(headerDateStrip) headerDateStrip.innerText = finalDateText;
-  if(mobileSideDate) mobileSideDate.innerText = finalDateText;
-  if(desktopSideDate) desktopSideDate.innerText = finalDateText;
-
-  const footerYear = document.getElementById("footerYear");
-  if(footerYear) footerYear.innerText = toBn(today.getFullYear());
+  document.getElementById("desktopSideDate").innerText = text;
+  document.getElementById("mobileSideDate").innerText = text;
+  document.getElementById("footerYear").innerText = toBn(today.getFullYear());
 }
 
 renderDates();
 
-/* DRAWERS */
+function updateThemeButton(){
+  const dark = htmlRoot.getAttribute("data-theme") === "dark";
+  themeBtn.innerHTML = dark ? "☀️" : "🌙";
+  accountThemeBtn.innerHTML = dark ? "Theme বদলান <span>☀️</span>" : "Theme বদলান <span>🌙</span>";
+}
 
-function openDrawer(){
+function toggleTheme(){
+  const next = htmlRoot.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  htmlRoot.setAttribute("data-theme",next);
+  localStorage.setItem("bhubondangaTheme",next);
+  updateThemeButton();
+}
+
+updateThemeButton();
+themeBtn.addEventListener("click",toggleTheme);
+accountThemeBtn.addEventListener("click",toggleTheme);
+
+function showToast(text){
+  toast.innerHTML = text;
+  toast.style.display = "block";
+  setTimeout(()=>toast.style.display="none",3200);
+}
+
+menuBtn.addEventListener("click",()=>{
   mobileDrawer.classList.add("open");
   drawerBackdrop.classList.add("show");
-}
+});
+
+closeDrawer.addEventListener("click",closeDrawerFn);
+drawerBackdrop.addEventListener("click",closeDrawerFn);
 
 function closeDrawerFn(){
   mobileDrawer.classList.remove("open");
   drawerBackdrop.classList.remove("show");
 }
 
-function openAccount(){
+accountBtn.addEventListener("click",()=>{
   accountPanel.classList.add("open");
   accountBackdrop.classList.add("show");
   renderMemories();
-}
+});
+
+closeAccount.addEventListener("click",closeAccountFn);
+accountBackdrop.addEventListener("click",closeAccountFn);
 
 function closeAccountFn(){
   accountPanel.classList.remove("open");
   accountBackdrop.classList.remove("show");
 }
 
-menuBtn.addEventListener("click", openDrawer);
-closeDrawer.addEventListener("click", closeDrawerFn);
-drawerBackdrop.addEventListener("click", closeDrawerFn);
-
-accountBtn.addEventListener("click", openAccount);
-closeAccount.addEventListener("click", closeAccountFn);
-accountBackdrop.addEventListener("click", closeAccountFn);
-
-/* SEARCH */
-
-function doSearch(){
-  let q = "";
-  if(searchMini){
-    q = searchMini.value.trim();
+searchMini.addEventListener("keydown",function(e){
+  if(e.key === "Enter"){
+    const q = searchMini.value.trim();
+    if(q) window.location.href = "search.html?q=" + encodeURIComponent(q);
   }
+});
 
-  if(!q){
-    q = prompt("কী খুঁজতে চান?") || "";
+document.addEventListener("keydown",function(e){
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k"){
+    e.preventDefault();
+    searchMini.focus();
   }
+});
 
-  if(q.trim().length > 0){
-    window.location.href = "search.html?q=" + encodeURIComponent(q.trim());
+const notices = [
+  {
+    icon:"🩸",
+    title:"রক্তের প্রয়োজন",
+    text:"O+ রক্তের জরুরি প্রয়োজন। রোগী: মোঃ আরিফুল ইসলাম। স্থান: ঢাকা মেডিকেল কলেজ হাসপাতাল। যোগাযোগ: ০১৭১২-৩৪৫৬৭৮",
+    time:"আপডেট হয়েছে: আজ সকাল ৯:১৫"
+  },
+  {
+    icon:"💜",
+    title:"চিকিৎসা সহায়তা প্রয়োজন",
+    text:"কিডনি রোগে আক্রান্ত একজনের চিকিৎসার জন্য আর্থিক সহায়তা প্রয়োজন। রোগী: সুমাইয়া আক্তার। যোগাযোগ: ০১৮১২-৩৪৫৬৭৮",
+    time:"আপডেট হয়েছে: আজ দুপুর ১:২৫"
+  },
+  {
+    icon:"🆘",
+    title:"জরুরি সহায়তা প্রয়োজন",
+    text:"অগ্নিকাণ্ডে সর্বস্ব হারানো একটি পরিবারের খাদ্য ও বস্ত্র সহায়তা প্রয়োজন। স্থান: মানিকগঞ্জ, গোলাপগঞ্জ। যোগাযোগ: ০১৯১২-৩৪৫৬৭৮",
+    time:"আপডেট হয়েছে: আজ বিকাল ৪:১০"
   }
-}
+];
 
-searchBtn.addEventListener("click", doSearch);
+function renderNotices(){
+  const list = document.getElementById("noticeList");
+  list.innerHTML = "";
 
-if(searchMini){
-  searchMini.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){
-      doSearch();
-    }
+  notices.forEach(n=>{
+    const div = document.createElement("div");
+    div.className = "notice-item";
+    div.innerHTML = `
+      <h3>${n.icon} ${n.title}</h3>
+      <p>${n.text}</p>
+      <small>✍ ${n.time}</small>
+    `;
+    list.appendChild(div);
   });
 }
 
-/* TOAST */
-
-function showToast(text){
-  toast.innerHTML = text;
-  toast.style.display = "block";
-
-  setTimeout(function(){
-    toast.style.display = "none";
-  }, 3500);
-}
-
-/* FEED DATA */
+renderNotices();
 
 const basePosts = [
   {
-    id:"env_1",
+    id:"p1",
+    category:"popular",
+    typeKey:"poem",
+    type:"কবিতা",
+    author:"মাহমুদ সোহেল",
+    profile:"founder-profile.html",
+    avatar:"profile.jpg",
+    title:"বৃষ্টির জীবনরেখি",
+    text:"বৃষ্টির ভেজা জানে না কেউ, মেঘের ভেতর জমে থাকা কান্নাগুলো কার জন্য ঝরে। ওই যে জানালার কাঁপা কাচে, তোমার নাম লিখে রই...",
+    likes:225,
+    comments:32,
+    url:"founder-profile.html"
+  },
+  {
+    id:"p2",
+    category:"talked",
+    typeKey:"prolap",
+    type:"প্রলাপ",
+    author:"সাদিয়া নূর",
+    profile:"profile.html?user=sadia-noor",
+    avatar:"profile.jpg",
+    title:"মধ্যরাতের প্রলাপ: কিছু অজানা কথা",
+    text:"সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই জমে থাকা কথার কাছেই নরম হয়ে যায়...",
+    likes:189,
+    comments:21,
+    url:"today-poem.html?type=prolap"
+  },
+  {
+    id:"p3",
+    category:"new",
+    typeKey:"discussion",
+    type:"আলোচনা",
+    author:"রাশেদ বিন সাকিব",
+    profile:"profile.html?user=rashed",
+    avatar:"profile.jpg",
+    title:"আধুনিক কবিতার ভাষা ও আমাদের সময়",
+    text:"কবিতার ভাষা কি শুধুই ছন্দ ও অলংকারের সৌন্দর্য? নাকি সময়ের সঙ্গে বদলে যাওয়া মানুষের অনুভবের নতুন অভিধান?",
+    likes:147,
+    comments:18,
+    url:"discussion-post.html"
+  },
+  {
+    id:"p4",
     category:"popular",
     typeKey:"environment",
     type:"পরিবেশ",
     author:"ভুবনডাঙ্গার আহ্বান",
     profile:"index.html",
     avatar:"profile.jpg",
-    title:"পরিবেশ রক্ষায় আপনার পরামর্শ",
-    text:"আপনার চারপাশের প্রকৃতি, গাছ, নদী, পুকুর, প্রাণী ও পরিবেশ রক্ষায় আপনার ছোট একটি পরামর্শও গুরুত্বপূর্ণ। আপনি কীভাবে পরিবেশকে আরও সুন্দর ও নিরাপদ রাখা যায়—আপনার ভাবনা লিখুন।",
-    time:"আজ",
-    likes:245,
-    comments:37,
+    title:"পরিবেশ রক্ষায় আপনার পরামর্শ",
+    text:"আপনার চারপাশের প্রকৃতি, গাছ, নদী, পুকুর, প্রাণী ও পরিবেশ রক্ষায় আপনার ছোট একটি পরামর্শও গুরুত্বপূর্ণ।",
+    likes:132,
+    comments:17,
     url:"today-poem.html?type=environment"
   },
   {
-    id:"poem_1",
-    category:"popular",
-    typeKey:"poem",
-    type:"কবিতা",
-    author:"মাহমুদ সোহেল",
-    profile:"founder-profile.html",
-    avatar:"profile.jpg",
-    title:"ইচ্ছে",
-    text:"ইচ্ছে করে আকাশ হতে, ইচ্ছে করে পাখি। কোনো একদিন মুক্ত বাতাসে নিজের নাম লিখে রাখি...",
-    time:"১ ঘণ্টা আগে",
-    likes:184,
-    comments:28,
-    url:"founder-profile.html"
-  },
-  {
-    id:"prolap_1",
-    category:"talked",
-    typeKey:"prolap",
-    type:"প্রলাপ",
-    author:"মাহমুদ সোহেল",
-    profile:"founder-profile.html",
-    avatar:"profile.jpg",
-    title:"ব্যক্তিকথা",
-    text:"সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই জমে থাকা কথার কাছে নরম হয়ে যায়...",
-    time:"২ ঘণ্টা আগে",
-    likes:132,
-    comments:31,
-    url:"madhyorater-prolap.html"
-  },
-  {
-    id:"poem_2",
-    category:"new",
-    typeKey:"poem",
-    type:"কবিতা",
-    author:"সাদিয়া নূর",
-    profile:"profile.html?user=sadia-noor",
-    avatar:"profile.jpg",
-    title:"আষাঢ়ের জানালায়",
-    text:"আষাঢ়ের জানালায় আজও বৃষ্টি নামে, অথচ ভেজে না কারও প্রতীক্ষা। যে মানুষ ফিরে আসে না...",
-    time:"৩ ঘণ্টা আগে",
-    likes:78,
-    comments:11,
-    url:"today-poem.html?post=sadia-ashar"
-  },
-  {
-    id:"letter_1",
+    id:"p5",
     category:"all",
     typeKey:"letter",
     type:"চিঠিপত্র",
@@ -1902,103 +1953,87 @@ const basePosts = [
     avatar:"profile.jpg",
     title:"একটি অসমাপ্ত চিঠি",
     text:"তোমাকে লিখতে বসে দেখি, কাগজের ভেতর নদীর শব্দ আছে। কিছু কথা পৌঁছায় না, তবু লেখা হয়ে থাকে...",
-    time:"৪ ঘণ্টা আগে",
-    likes:64,
-    comments:8,
-    url:"today-poem.html?post=letter-nahid"
+    likes:106,
+    comments:12,
+    url:"today-poem.html?type=letter"
   },
   {
-    id:"quote_1",
+    id:"p6",
     category:"all",
     typeKey:"quotes",
-    type:"বিখ্যাত মনীষীদের বাণী",
+    type:"বাণী",
     author:"রুদ্র দত্ত",
     profile:"profile.html?user=rudra-dutta",
     avatar:"profile.jpg",
-    title:"রবীন্দ্রনাথ ঠাকুরের বাণী",
-    text:"বিখ্যাত মনীষীদের বাণী পোস্ট করলে যার বাণী, তার নাম বাধ্যতামূলক। নাম ছাড়া post incomplete থাকবে...",
-    time:"৫ ঘণ্টা আগে",
-    likes:92,
-    comments:16,
+    title:"বিখ্যাত মনীষীদের বাণী",
+    text:"যার বাণী বা লেখা post করা হবে, তার নাম বাধ্যতামূলক। নাম ছাড়া post incomplete থাকবে।",
+    likes:98,
+    comments:9,
     url:"today-poem.html?type=quotes"
-  },
-  {
-    id:"discussion_1",
-    category:"talked",
-    typeKey:"discussion",
-    type:"আলোচনা",
-    author:"আরিফুল কবীর",
-    profile:"profile.html?user=ariful-kabir",
-    avatar:"profile.jpg",
-    title:"কবিতার ভেতরে নীরবতার ভূমিকা",
-    text:"কবিতা কখনো শুধু শব্দ নয়; অনেক সময় না-বলা কথার ভেতরেই তার সবচেয়ে বড় শক্তি লুকিয়ে থাকে...",
-    time:"৬ ঘণ্টা আগে",
-    likes:73,
-    comments:19,
-    url:"discussion-post.html"
   }
 ];
 
 const allPosts = [];
 
-for(let i = 0; i < 56; i++){
-  const template = basePosts[i % basePosts.length];
-
+for(let i=1;i<=60;i++){
+  const t = basePosts[(i-1)%basePosts.length];
   allPosts.push({
-    id:template.id + "_" + i,
-    category:template.category,
-    typeKey:template.typeKey,
-    type:template.type,
-    author:template.author,
-    profile:template.profile,
-    avatar:template.avatar,
-    title:i < basePosts.length ? template.title : template.title + " — পর্ব " + toBn(i + 1),
-    text:template.text,
-    time:template.time,
-    likes:template.likes + Math.floor(Math.random() * 30),
-    comments:template.comments + Math.floor(Math.random() * 8),
-    url:template.url
+    ...t,
+    id:t.id + "_" + i,
+    title:i<=basePosts.length ? t.title : t.title + " — পর্ব " + toBn(i),
+    likes:t.likes + Math.floor(Math.random()*30),
+    comments:t.comments + Math.floor(Math.random()*8),
+    time:i===1 ? "২ ঘণ্টা আগে" : toBn(i+1) + " ঘণ্টা আগে"
   });
 }
 
-let currentlyShowing = 20;
-const postsToLoad = 10;
 let currentFilter = "all";
-
-/* MEMORIES */
+let showing = 20;
 
 function getMemories(){
   return JSON.parse(localStorage.getItem("bhubondangaMemories") || "[]");
 }
 
 function saveMemories(items){
-  localStorage.setItem("bhubondangaMemories", JSON.stringify(items));
+  localStorage.setItem("bhubondangaMemories",JSON.stringify(items));
 }
 
 function isSaved(id){
-  return getMemories().some(function(item){
-    return item.id === id;
+  return getMemories().some(m=>m.id===id);
+}
+
+function renderMemories(){
+  const memories = getMemories();
+
+  if(memories.length === 0){
+    memoryList.innerHTML = '<p class="memory-empty">আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।</p>';
+    return;
+  }
+
+  memoryList.innerHTML = "";
+
+  memories.forEach(item=>{
+    const a = document.createElement("a");
+    a.className = "memory-item";
+    a.href = item.url;
+    a.innerHTML = `<small>${item.type} · ${item.author}</small><p>${item.title}</p>`;
+    memoryList.appendChild(a);
   });
 }
 
 function toggleMemory(post){
   let memories = getMemories();
-
-  const exists = memories.some(function(item){
-    return item.id === post.id;
-  });
+  const exists = memories.some(m=>m.id===post.id);
 
   if(exists){
-    memories = memories.filter(function(item){
-      return item.id !== post.id;
-    });
+    memories = memories.filter(m=>m.id!==post.id);
     showToast("মেমোরিস থেকে সরানো হয়েছে।");
   }else{
     memories.unshift({
       id:post.id,
-      title:post.title,
       type:post.type,
       author:post.author,
+      title:post.title,
       url:post.url
     });
     showToast("মেমোরিসে সংরক্ষণ করা হয়েছে।");
@@ -2009,222 +2044,153 @@ function toggleMemory(post){
   renderMemories();
 }
 
-function renderMemories(){
-  const memories = getMemories();
-
-  if(memories.length === 0){
-    memoryList.innerHTML = '<p class="memory-empty">আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে।</p>';
-    return;
-  }
-
-  memoryList.innerHTML = "";
-
-  memories.forEach(function(item){
-    const a = document.createElement("a");
-    a.className = "memory-item";
-    a.href = item.url;
-    a.innerHTML = "<small>" + item.type + " • " + item.author + "</small><p>" + item.title + "</p>";
-    memoryList.appendChild(a);
-  });
-}
-
-function sharePost(post){
-  const shareText = post.title + " — " + post.author;
-  const shareUrl = window.location.origin + "/" + post.url;
-
-  if(navigator.share){
-    navigator.share({
-      title:post.title,
-      text:shareText,
-      url:shareUrl
-    }).catch(function(){});
-  }else{
-    navigator.clipboard.writeText(shareUrl).then(function(){
-      showToast("Share link copy করা হয়েছে।");
-    }).catch(function(){
-      showToast("Share link: " + shareUrl);
-    });
-  }
+function getFilteredPosts(){
+  if(currentFilter === "all") return allPosts;
+  return allPosts.filter(p=>p.category===currentFilter);
 }
 
 function toggleCommentPanel(id){
   const panel = document.getElementById("comments_" + id);
-  if(panel){
-    panel.classList.toggle("open");
-  }
+  if(panel) panel.classList.toggle("open");
 }
 
-function getFilteredPosts(){
-  if(currentFilter === "all"){
-    return allPosts;
-  }
+function sharePost(post){
+  const shareUrl = window.location.origin + "/" + post.url;
 
-  return allPosts.filter(function(post){
-    return post.category === currentFilter;
-  });
+  if(navigator.share){
+    navigator.share({title:post.title,text:post.author,url:shareUrl}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(shareUrl).then(()=>showToast("Share link copy করা হয়েছে।"));
+  }
 }
 
 function renderFeed(){
   const feedList = document.getElementById("feedList");
+  const filtered = getFilteredPosts();
+  const posts = filtered.slice(0,showing);
+
   feedList.innerHTML = "";
 
-  const filtered = getFilteredPosts();
-  const postsToShow = filtered.slice(0, currentlyShowing);
-
-  postsToShow.forEach(function(item){
-    const saved = isSaved(item.id);
-    const pillClass = item.typeKey === "environment" ? "type-pill environment" : "type-pill";
+  posts.forEach(post=>{
+    const saved = isSaved(post.id);
+    const pillClass = post.typeKey === "environment" ? "type-pill environment" : "type-pill";
 
     const article = document.createElement("article");
     article.className = "post";
 
-    article.innerHTML =
-      '<div class="post-head">' +
-        '<img src="' + item.avatar + '" onerror="this.src=\'profile.jpg\'" alt="' + item.author + '">' +
-        '<div class="author-line">' +
-          '<a href="' + item.profile + '">' + item.author + '</a> · <span class="' + pillClass + '">' + item.type + '</span> · ' + item.time +
-        '</div>' +
-        '<button class="post-more" onclick="showToast(\'Post options Future Plan.\')">···</button>' +
-      '</div>' +
+    article.innerHTML = `
+      <div class="post-head">
+        <img src="${post.avatar}" onerror="this.src='profile.jpg'" alt="${post.author}">
+        <div class="author-line">
+          <a href="${post.profile}">${post.author}</a>
+          · <span class="${pillClass}">${post.type}</span>
+          · ${post.time}
+        </div>
+        <button class="post-more" onclick="showToast('Post options Future Plan.')">···</button>
+      </div>
 
-      '<h3 class="post-title"><a href="' + item.url + '">' + item.title + '</a></h3>' +
-      '<p class="post-text">' + item.text + '</p>' +
+      <h3 class="post-title"><a href="${post.url}">${post.title}</a></h3>
+      <p class="post-text">${post.text}</p>
 
-      '<div class="post-actions">' +
-        '<div class="post-actions-left">' +
-          '<button class="action-btn like-btn" data-id="' + item.id + '">❤️ ' + toBn(item.likes) + '</button>' +
-          '<button class="action-btn comment-btn" data-id="' + item.id + '">💬 ' + toBn(item.comments) + '</button>' +
-          '<button class="action-btn save-btn ' + (saved ? "saved" : "") + '" data-id="' + item.id + '">' +
-            (saved ? "✓ মেমোরিসে আছে" : "🔖 মেমোরিতে রাখুন") +
-          '</button>' +
-          '<button class="action-btn share-btn" data-id="' + item.id + '">↗ Share</button>' +
-        '</div>' +
-        '<a href="' + item.url + '" class="read-more">আরও পড়ুন →</a>' +
-      '</div>' +
+      <div class="post-actions">
+        <div class="post-actions-left">
+          <button class="action-btn like-btn" data-id="${post.id}">❤️ ${toBn(post.likes)}</button>
+          <button class="action-btn comment-btn" data-id="${post.id}">💬 ${toBn(post.comments)}</button>
+          <button class="action-btn save-btn ${saved ? "saved" : ""}" data-id="${post.id}">
+            ${saved ? "✓ সেভ" : "🔖 সেভ"}
+          </button>
+          <button class="action-btn share-btn" data-id="${post.id}">↗ শেয়ার</button>
+        </div>
+        <a href="${post.url}" class="read-more">আরও পড়ুন →</a>
+      </div>
 
-      '<div class="comment-panel" id="comments_' + item.id + '">' +
-        '<div class="comment-item"><a href="profile.html?user=sadia-noor">সাদিয়া নূর</a>: লেখাটি ভালো লাগল।</div>' +
-        '<div class="comment-item"><a href="profile.html?user=nahid-hasan">নাহিদ হাসান</a>: সুন্দর অনুভূতি।</div>' +
-        '<div class="comment-form">' +
-          '<input type="text" placeholder="মন্তব্য লিখুন...">' +
-          '<button onclick="showToast(\'Comment system Supabase যুক্ত হলে live হবে।\')">পাঠান</button>' +
-        '</div>' +
-      '</div>';
+      <div class="comment-panel" id="comments_${post.id}">
+        <div class="comment-item"><a href="profile.html?user=sadia-noor">সাদিয়া নূর</a>: লেখাটি ভালো লাগল।</div>
+        <div class="comment-item"><a href="profile.html?user=nahid-hasan">নাহিদ হাসান</a>: সুন্দর অনুভূতি।</div>
+        <div class="comment-form">
+          <input placeholder="মন্তব্য লিখুন...">
+          <button onclick="showToast('Comment system Supabase যুক্ত হলে live হবে।')">পাঠান</button>
+        </div>
+      </div>
+    `;
 
     feedList.appendChild(article);
   });
 
-  document.querySelectorAll(".save-btn").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      const id = btn.getAttribute("data-id");
-      const post = allPosts.find(function(item){
-        return item.id === id;
-      });
+  document.querySelectorAll(".like-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>showToast("Like system Supabase যুক্ত হলে live হবে।"));
+  });
+
+  document.querySelectorAll(".comment-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>toggleCommentPanel(btn.dataset.id));
+  });
+
+  document.querySelectorAll(".save-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const post = allPosts.find(p=>p.id===btn.dataset.id);
       toggleMemory(post);
     });
   });
 
-  document.querySelectorAll(".share-btn").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      const id = btn.getAttribute("data-id");
-      const post = allPosts.find(function(item){
-        return item.id === id;
-      });
+  document.querySelectorAll(".share-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const post = allPosts.find(p=>p.id===btn.dataset.id);
       sharePost(post);
     });
   });
 
-  document.querySelectorAll(".like-btn").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      showToast("Like system Supabase যুক্ত হলে live হবে।");
-    });
-  });
-
-  document.querySelectorAll(".comment-btn").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      const id = btn.getAttribute("data-id");
-      toggleCommentPanel(id);
-    });
-  });
-
-  const moreFeedContainer = document.getElementById("moreFeedContainer");
-
-  if(currentlyShowing >= filtered.length){
-    moreFeedContainer.style.display = "none";
-  }else{
-    moreFeedContainer.style.display = "block";
-  }
+  document.getElementById("moreFeedContainer").style.display = showing >= filtered.length ? "none" : "block";
 }
 
 renderFeed();
 renderMemories();
 
-document.getElementById("seeMoreBtn").addEventListener("click", function(){
-  currentlyShowing += postsToLoad;
+document.getElementById("seeMoreBtn").addEventListener("click",()=>{
+  showing += 10;
   renderFeed();
 });
 
-document.querySelectorAll(".feed-tabs button").forEach(function(button){
-  button.addEventListener("click", function(){
-    document.querySelectorAll(".feed-tabs button").forEach(function(btn){
-      btn.classList.remove("active");
-    });
-
-    button.classList.add("active");
-    currentFilter = button.getAttribute("data-filter") || "all";
-    currentlyShowing = 20;
+document.querySelectorAll(".feed-tabs button[data-filter]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".feed-tabs button[data-filter]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter || "all";
+    showing = 20;
     renderFeed();
   });
 });
 
-/* LOGOUT */
-
-document.getElementById("logoutBtn").addEventListener("click", function(){
+document.getElementById("logoutBtn").addEventListener("click",()=>{
   localStorage.removeItem("bhubondangaUserRole");
   localStorage.removeItem("bhubondangaUserName");
   showToast("আপনি সফলভাবে লগ আউট করেছেন।");
-
-  setTimeout(function(){
-    window.location.href = "login.html";
-  }, 1200);
+  setTimeout(()=>window.location.href="login.html",1200);
 });
-
-/* TO TOP */
 
 const toTopBtn = document.getElementById("toTopBtn");
 
-window.addEventListener("scroll", function(){
-  if(window.scrollY > 400){
-    toTopBtn.classList.add("show");
-  }else{
-    toTopBtn.classList.remove("show");
-  }
+window.addEventListener("scroll",()=>{
+  if(window.scrollY > 450) toTopBtn.classList.add("show");
+  else toTopBtn.classList.remove("show");
 });
 
-toTopBtn.addEventListener("click", function(){
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+toTopBtn.addEventListener("click",()=>{
+  window.scrollTo({top:0,behavior:"smooth"});
 });
 
-/* COPY PROTECTION */
-
-document.addEventListener("copy", function(e){
+document.addEventListener("copy",function(e){
   e.preventDefault();
   showToast("লেখা কপি করা নিরুৎসাহিত করা হয়েছে।");
 });
 
-document.addEventListener("contextmenu", function(e){
+document.addEventListener("contextmenu",function(e){
   e.preventDefault();
   showToast("Right click বন্ধ রাখা হয়েছে।");
 });
 
-document.addEventListener("selectstart", function(e){
+document.addEventListener("selectstart",function(e){
   const tag = e.target.tagName.toLowerCase();
-  if(tag === "input" || tag === "textarea"){
-    return;
-  }
+  if(tag === "input" || tag === "textarea") return;
   e.preventDefault();
 });
 </script>
