@@ -22,7 +22,6 @@ html{
 :root{
   --bg:#eaf2fa;
   --bg-soft:#dceaf5;
-  --bg-water:#f6fbff;
   --card:#ffffff;
   --card-2:#f4f8fc;
   --text:#0b224d;
@@ -32,8 +31,8 @@ html{
   --accent:#0f3775;
   --accent-2:#1e5aab;
   --green:#19735d;
+  --red:#a94442;
   --gold:#b79a54;
-  --danger:#a94442;
   --shadow:0 8px 24px rgba(11,34,77,.07);
   --soft-shadow:0 6px 18px rgba(11,34,77,.05);
   --gold-glow:none;
@@ -42,7 +41,6 @@ html{
 html[data-theme="dark"]{
   --bg:#090e17;
   --bg-soft:#0d1320;
-  --bg-water:#06090e;
   --card:#111827;
   --card-2:#182235;
   --text:#f4ead8;
@@ -52,8 +50,8 @@ html[data-theme="dark"]{
   --accent:#d8bd75;
   --accent-2:#b99a50;
   --green:#f4d068;
+  --red:#f08a85;
   --gold:#f4d068;
-  --danger:#f08a85;
   --shadow:0 12px 30px rgba(0,0,0,.45);
   --soft-shadow:0 10px 24px rgba(0,0,0,.35);
   --gold-glow:0 0 12px rgba(244,208,104,.42);
@@ -76,8 +74,7 @@ a{
 
 button,
 input,
-textarea,
-select{
+textarea{
   font-family:inherit;
 }
 
@@ -384,8 +381,6 @@ html[data-theme="dark"] .side-title{
   display:flex;
   flex-direction:column;
   gap:4px;
-  position:relative;
-  z-index:1;
 }
 
 .side-menu a{
@@ -471,144 +466,207 @@ html[data-theme="dark"] .register-side{
   color:var(--gold)!important;
 }
 
-/* COVER WITH PROFILE */
+/* HUMAN NOTICE */
 
-.feed-cover-card{
+.human-notice{
+  padding:0;
   overflow:hidden;
   margin-bottom:16px;
-  padding:0;
+  border-color:rgba(169,68,66,.18);
 }
 
-.feed-cover-image{
-  width:100%;
-  height:260px;
-  object-fit:cover;
-  display:block;
-  background:var(--card-2);
-}
-
-.feed-cover-overlay{
-  position:relative;
-  margin-top:-92px;
-  padding:0 18px 18px;
-}
-
-.feed-cover-caption{
-  background:rgba(255,255,255,.93);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(11,34,77,.08);
-  border-radius:18px;
-  padding:18px 20px;
-  box-shadow:var(--soft-shadow);
-}
-
-.feed-cover-caption.with-profile{
+.notice-top{
+  padding:14px 18px;
+  background:linear-gradient(135deg,rgba(169,68,66,.10),rgba(25,115,93,.07));
+  border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
-  gap:16px;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
 }
 
-.feed-cover-profile img{
-  width:88px;
-  height:88px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid #ffffff;
-  box-shadow:0 8px 20px rgba(0,0,0,.14);
-  display:block;
-  background:#fff;
+.notice-top strong{
+  font-size:17px;
+  font-weight:900;
+  color:var(--red);
 }
 
-.feed-cover-text{
-  flex:1;
+html[data-theme="dark"] .notice-top strong{
+  color:var(--gold);
 }
 
-.feed-cover-text h2{
-  font-size:28px;
+.notice-status{
+  font-size:12px;
+  font-weight:900;
+  color:#fff;
+  background:var(--red);
+  padding:5px 10px;
+  border-radius:999px;
+}
+
+html[data-theme="dark"] .notice-status{
+  background:var(--gold);
+  color:#090e17;
+}
+
+.notice-body{
+  padding:20px 18px;
+}
+
+.notice-body h2{
+  font-size:27px;
   font-weight:900;
   color:var(--text);
-  line-height:1.25;
+  line-height:1.35;
 }
 
-.feed-cover-text p{
-  margin-top:7px;
-  color:var(--muted);
-  font-size:14.5px;
-  font-weight:700;
-  line-height:1.8;
-}
-
-html[data-theme="dark"] .feed-cover-caption{
-  background:rgba(17,24,39,.92);
-  border-color:var(--border);
-}
-
-html[data-theme="dark"] .feed-cover-text h2{
+html[data-theme="dark"] .notice-body h2{
   color:var(--gold);
   text-shadow:var(--gold-glow);
 }
 
-/* PAGE HEAD */
+.notice-body p{
+  color:var(--text-soft);
+  font-size:16px;
+  font-weight:700;
+  margin-top:8px;
+}
 
-.feed-head{
-  padding:18px 18px 16px;
+.notice-info{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.notice-info div{
+  background:var(--card-2);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:11px 12px;
+}
+
+.notice-info small{
+  display:block;
+  font-size:12px;
+  font-weight:900;
+  color:var(--muted);
+}
+
+.notice-info span{
+  display:block;
+  margin-top:3px;
+  font-size:15px;
+  font-weight:900;
+  color:var(--text);
+}
+
+html[data-theme="dark"] .notice-info span{
+  color:var(--gold);
+}
+
+.notice-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.notice-actions a,
+.notice-actions button{
+  border:none;
+  border-radius:999px;
+  padding:10px 14px;
+  font-size:14px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.notice-actions .primary{
+  background:var(--red);
+  color:#fff;
+}
+
+.notice-actions .light{
+  background:var(--card-2);
+  color:var(--accent);
+  border:1px solid var(--border);
+}
+
+html[data-theme="dark"] .notice-actions .primary{
+  background:var(--gold);
+  color:#090e17;
+}
+
+html[data-theme="dark"] .notice-actions .light{
+  color:var(--gold);
+}
+
+/* WRITE BOX */
+
+.write-panel{
+  padding:18px;
   margin-bottom:16px;
 }
 
-.feed-head h2{
-  font-size:30px;
+.write-panel h2{
+  font-size:27px;
   font-weight:900;
-  color:var(--text);
-  line-height:1.25;
+  line-height:1.35;
 }
 
-html[data-theme="dark"] .feed-head h2{
+html[data-theme="dark"] .write-panel h2{
   color:var(--gold);
   text-shadow:var(--gold-glow);
 }
 
-.feed-head p{
+.write-panel p{
+  margin-top:6px;
   color:var(--muted);
   font-size:15px;
   font-weight:700;
-  margin-top:5px;
 }
 
-.write-actions{
+.write-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
   margin-top:15px;
 }
 
-.write-actions a{
+.write-grid a{
   text-align:center;
   padding:15px 12px;
   border-radius:14px;
-  font-size:18px;
+  font-size:17px;
   font-weight:900;
   border:1px solid var(--border);
   box-shadow:var(--soft-shadow);
 }
 
-.write-actions a:first-child{
+.write-grid a.primary{
   background:var(--accent);
   color:#fff;
 }
 
-.write-actions a:last-child{
+.write-grid a.green{
+  background:var(--green);
+  color:#fff;
+}
+
+.write-grid a.light{
   background:var(--card-2);
   color:var(--accent);
-  border-color:rgba(15,55,117,.25);
 }
 
-html[data-theme="dark"] .write-actions a:first-child{
+html[data-theme="dark"] .write-grid a.primary,
+html[data-theme="dark"] .write-grid a.green{
   background:var(--gold);
   color:#090e17;
-  box-shadow:var(--gold-glow);
 }
 
-html[data-theme="dark"] .write-actions a:last-child{
+html[data-theme="dark"] .write-grid a.light{
   color:var(--gold);
   border-color:rgba(244,208,104,.25);
 }
@@ -982,7 +1040,7 @@ html[data-theme="dark"] .notice-card h3{
   font-size:14px;
 }
 
-/* MOBILE DRAWER */
+/* DRAWER + ACCOUNT */
 
 .drawer-backdrop,
 .account-backdrop{
@@ -1017,11 +1075,6 @@ html[data-theme="dark"] .notice-card h3{
   left:0;
 }
 
-html[data-theme="dark"] .mobile-drawer,
-html[data-theme="dark"] .account-panel{
-  background:var(--card);
-}
-
 .drawer-head{
   display:flex;
   align-items:flex-start;
@@ -1040,9 +1093,6 @@ html[data-theme="dark"] .account-panel{
 .drawer-logo{
   font-size:42px;
   line-height:1;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
 }
 
 .drawer-brand h3{
@@ -1067,8 +1117,6 @@ html[data-theme="dark"] .drawer-brand h3{
   line-height:1;
 }
 
-/* ACCOUNT PANEL */
-
 .account-panel{
   position:fixed;
   top:0;
@@ -1086,6 +1134,11 @@ html[data-theme="dark"] .drawer-brand h3{
 
 .account-panel.open{
   right:0;
+}
+
+html[data-theme="dark"] .mobile-drawer,
+html[data-theme="dark"] .account-panel{
+  background:var(--card);
 }
 
 .account-head{
@@ -1128,10 +1181,6 @@ html[data-theme="dark"] .account-head h3{
   font-size:19px;
   font-weight:900;
   line-height:1.3;
-}
-
-.account-user h3 a:hover{
-  text-decoration:underline;
 }
 
 .account-user p{
@@ -1369,8 +1418,6 @@ html[data-theme="dark"] .toast{
   .brand-text p{
     font-size:11px;
     max-width:180px;
-    overflow:hidden;
-    text-overflow:ellipsis;
   }
 
   .avatar-btn img{
@@ -1381,7 +1428,6 @@ html[data-theme="dark"] .toast{
   .date-strip{
     padding:8px 14px;
     font-size:12.5px;
-    text-align:center;
   }
 
   .page-wrap{
@@ -1393,47 +1439,11 @@ html[data-theme="dark"] .toast{
     display:none;
   }
 
-  .feed-cover-image{
-    height:210px;
+  .notice-info{
+    grid-template-columns:1fr;
   }
 
-  .feed-cover-overlay{
-    margin-top:-78px;
-    padding:0 12px 14px;
-  }
-
-  .feed-cover-caption{
-    padding:15px 16px;
-  }
-
-  .feed-cover-caption.with-profile{
-    align-items:center;
-    gap:12px;
-  }
-
-  .feed-cover-profile img{
-    width:72px;
-    height:72px;
-  }
-
-  .feed-cover-text h2{
-    font-size:23px;
-  }
-
-  .feed-cover-text p{
-    font-size:13.5px;
-    line-height:1.7;
-  }
-
-  .feed-head{
-    padding:16px 14px;
-  }
-
-  .feed-head h2{
-    font-size:26px;
-  }
-
-  .write-actions{
+  .write-grid{
     grid-template-columns:1fr 1fr;
   }
 
@@ -1449,17 +1459,9 @@ html[data-theme="dark"] .toast{
     font-size:19px;
   }
 
-  .post-text{
-    font-size:15.5px;
-  }
-
   .post-actions{
     align-items:flex-start;
     flex-direction:column;
-  }
-
-  .post-actions-left{
-    gap:13px;
   }
 
   .comment-form{
@@ -1483,10 +1485,6 @@ html[data-theme="dark"] .toast{
 }
 
 @media(max-width:520px){
-  .topbar{
-    gap:8px;
-  }
-
   .brand-text h1{
     font-size:23px;
   }
@@ -1502,30 +1500,21 @@ html[data-theme="dark"] .toast{
     font-size:16px;
   }
 
+  .notice-body h2,
+  .write-panel h2{
+    font-size:23px;
+  }
+
+  .write-grid{
+    grid-template-columns:1fr;
+  }
+
   .feed-tabs{
     gap:22px;
   }
 
   .feed-tabs button{
     font-size:16px;
-  }
-
-  .write-actions a{
-    font-size:16px;
-  }
-
-  .feed-cover-caption.with-profile{
-    flex-direction:column;
-    align-items:flex-start;
-  }
-
-  .feed-cover-profile img{
-    width:68px;
-    height:68px;
-  }
-
-  .feed-cover-text{
-    width:100%;
   }
 }
 </style>
@@ -1538,7 +1527,7 @@ html[data-theme="dark"] .toast{
 <header class="topbar">
   <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">☰</button>
 
-  <a href="index.html" class="brand">
+  <a href="index.html" class="brand" title="হোম">
     <div class="brand-leaf">🌿</div>
     <div class="brand-text">
       <h1>ভুবনডাঙ্গার কবিতা</h1>
@@ -1562,7 +1551,7 @@ html[data-theme="dark"] .toast{
     <button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙</button>
     <button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
 
-    <a href="today-poem.html" class="write-btn">✎ লিখুন</a>
+    <a href="submit-poem.html" class="write-btn">✎ লিখুন</a>
 
     <button class="avatar-btn" id="accountBtn" title="Account menu">
       <img src="profile.jpg" alt="আপনার অ্যাকাউন্ট">
@@ -1580,7 +1569,6 @@ html[data-theme="dark"] .toast{
       <span class="drawer-logo">🌿</span>
       <h3>আপন ভুবন</h3>
     </a>
-
     <button class="close-drawer" id="closeDrawer">×</button>
   </div>
 
@@ -1595,7 +1583,7 @@ html[data-theme="dark"] .toast{
     <a href="today-poem.html?type=environment"><span class="left">🌱 পরিবেশ পরামর্শ</span></a>
     <a href="future-plan.html?feature=recitation"><span class="left">🎙 আবৃত্তি</span><span class="tag">Future Plan</span></a>
     <a href="future-plan.html?feature=reels"><span class="left">🎬 Reels</span><span class="tag">Future Plan</span></a>
-    <a href="today-poem.html"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
+    <a href="today-poem.html" class="active"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
     <a href="profile.html#anukabya"><span class="left">🌸 অনুকাব্য</span></a>
   </div>
 
@@ -1637,9 +1625,9 @@ html[data-theme="dark"] .toast{
   <div class="account-menu">
     <a href="profile.html">আপনার প্রোফাইল <span>›</span></a>
     <a href="profile-edit.html">প্রোফাইল এডিট করুন <span>›</span></a>
-    <a href="today-poem.html">লেখা জমা দিন <span>›</span></a>
+    <a href="submit-poem.html">কবিতা লিখুন <span>›</span></a>
+    <a href="submit-prolap.html">প্রলাপ লিখুন <span>›</span></a>
     <a href="today-poem.html?type=environment">পরিবেশ পরামর্শ <span>›</span></a>
-    <a href="search.html?q=প্রিয় লেখা">প্রিয় লেখা খুঁজুন <span>›</span></a>
     <a href="contact.html">রিপোর্ট / কপিরাইট <span>›</span></a>
     <a href="policy.html">নীতিমালা <span>›</span></a>
     <button id="accountThemeBtn">Theme বদলান <span>☀️/🌙</span></button>
@@ -1649,9 +1637,7 @@ html[data-theme="dark"] .toast{
   <div class="memory-box">
     <h4>মেমোরিস</h4>
     <div id="memoryList">
-      <p class="memory-empty">
-        আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে।
-      </p>
+      <p class="memory-empty">আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।</p>
     </div>
   </div>
 </aside>
@@ -1698,32 +1684,55 @@ html[data-theme="dark"] .toast{
 
   <section class="main-content">
 
-    <section class="card feed-cover-card">
-      <img class="feed-cover-image" src="cover.jpg" alt="আজকের লেখার কাভার">
+    <section class="card human-notice" id="humanNotice">
+      <div class="notice-top">
+        <strong>মানবিক নোটিস বোর্ড</strong>
+        <span class="notice-status" id="noticeStatus">ACTIVE</span>
+      </div>
 
-      <div class="feed-cover-overlay">
-        <div class="feed-cover-caption with-profile">
+      <div class="notice-body">
+        <h2 id="noticeTitle">জরুরি মানবিক নোটিস</h2>
+        <p id="noticeText">
+          ভুবনডাঙ্গার পক্ষ থেকে মানবিক প্রয়োজনে জরুরি নোটিস এখানে প্রকাশ করা হবে।
+        </p>
 
-          <div class="feed-cover-profile">
-            <img src="profile.jpg" alt="পরিচয় ছবি">
+        <div class="notice-info">
+          <div>
+            <small>ধরন</small>
+            <span id="noticeType">মানবিক সহায়তা</span>
           </div>
-
-          <div class="feed-cover-text">
-            <h2 id="coverTitle">আজকের লেখা</h2>
-            <p id="coverSubtitle">কবিতা, প্রলাপ, চিঠিপত্র, বাণী, পরিবেশ ভাবনা এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content-এর জন্য একটি সাহিত্যিক ভুবন।</p>
+          <div>
+            <small>স্থান</small>
+            <span id="noticePlace">আপডেট হবে</span>
           </div>
+          <div>
+            <small>যোগাযোগ</small>
+            <span id="noticeContact">Admin / Founder</span>
+          </div>
+          <div>
+            <small>যাচাই</small>
+            <span id="noticeVerified">Founder/Admin যাচাই সাপেক্ষে</span>
+          </div>
+        </div>
 
+        <div class="notice-actions">
+          <a class="primary" href="contact.html">নোটিস পাঠান / যোগাযোগ করুন</a>
+          <button class="light" id="copyNoticeBtn">নোটিস কপি করুন</button>
         </div>
       </div>
     </section>
 
-    <section class="card feed-head">
-      <h2 id="pageTitle">সাম্প্রতিক লেখা</h2>
-      <p id="pageSubtitle">কবিতা, প্রলাপ, চিঠিপত্র, বাণী, পরিবেশ ভাবনা এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content এখানে একসাথে আসবে।</p>
+    <section class="card write-panel">
+      <h2 id="pageTitle">আজকের লেখা</h2>
+      <p id="pageSubtitle">
+        এটা ভুবনডাঙ্গার newsfeed—এখানে কবিতা, প্রলাপ, চিঠিপত্র, বাণী, পরিবেশ ভাবনা ও সাহিত্য আলোচনা একসাথে থাকবে।
+      </p>
 
-      <div class="write-actions">
-        <a href="submit-poem.html">কবিতা লিখুন</a>
-        <a href="submit-prolap.html">প্রলাপ লিখুন</a>
+      <div class="write-grid">
+        <a class="primary" href="submit-poem.html">কবিতা লিখুন</a>
+        <a class="light" href="submit-prolap.html">প্রলাপ লিখুন</a>
+        <a class="light" href="submit-letter.html">চিঠিপত্র লিখুন</a>
+        <a class="green" href="submit-environment.html">পরিবেশ পরামর্শ লিখুন</a>
       </div>
     </section>
 
@@ -1745,9 +1754,9 @@ html[data-theme="dark"] .toast{
 
   <aside class="rightbar">
     <section class="card notice-card">
-      <h3>আজকের লেখা</h3>
+      <h3>মানবিক নোটিস</h3>
       <p>
-        এই পেজে কবিতা, প্রলাপ, চিঠিপত্র, বাণী, পরিবেশ পরামর্শ ও সাহিত্য আলোচনা একসাথে দেখা যাবে।
+        জরুরি রক্ত, চিকিৎসা সহায়তা বা গুরুত্বপূর্ণ মানবিক আহ্বান এখানে Founder/Admin যাচাই করে প্রকাশ করবে।
       </p>
     </section>
 
@@ -1842,6 +1851,8 @@ const mobileSideDate = document.getElementById("mobileSideDate");
 const desktopSideDate = document.getElementById("desktopSideDate");
 const memoryList = document.getElementById("memoryList");
 
+/* THEME */
+
 function updateThemeButton(){
   const currentTheme = htmlRoot.getAttribute("data-theme");
 
@@ -1869,11 +1880,11 @@ updateThemeButton();
 themeBtn.addEventListener("click", toggleTheme);
 if(accountThemeBtn) accountThemeBtn.addEventListener("click", toggleTheme);
 
-/* MANUAL BANGLA DATE */
+/* DATE */
 
 const bnDigits = {
-  "0":"০","1":"১","2":"২","3":"৩","4":"৪",
-  "5":"۵","6":"৬","7":"۷","8":"۸","9":"۹"
+  "0":"০","1":"১","2":"۲","3":"۳","4":"۴",
+  "5":"۵","6":"۶","7":"۷","8":"۸","9":"۹"
 };
 
 function toBn(num){
@@ -1881,25 +1892,13 @@ function toBn(num){
 }
 
 const weekBn = ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"];
-
-const gregorianMonthsEn = [
-  "January","February","March","April","May","June",
-  "July","August","September","October","November","December"
-];
+const gregorianMonthsEn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
 const banglaMonths = [
-  {name:"বৈশাখ", days:31},
-  {name:"জ্যৈষ্ঠ", days:31},
-  {name:"আষাঢ়", days:31},
-  {name:"শ্রাবণ", days:31},
-  {name:"ভাদ্র", days:31},
-  {name:"আশ্বিন", days:31},
-  {name:"কার্তিক", days:30},
-  {name:"অগ্রহায়ণ", days:30},
-  {name:"পৌষ", days:30},
-  {name:"মাঘ", days:30},
-  {name:"ফাল্গুন", days:30},
-  {name:"চৈত্র", days:30}
+  {name:"বৈশাখ", days:31},{name:"জ্যৈষ্ঠ", days:31},{name:"আষাঢ়", days:31},
+  {name:"শ্রাবণ", days:31},{name:"ভাদ্র", days:31},{name:"আশ্বিন", days:31},
+  {name:"কার্তিক", days:30},{name:"অগ্রহায়ণ", days:30},{name:"পৌষ", days:30},
+  {name:"মাঘ", days:30},{name:"ফাল্গুন", days:30},{name:"চৈত্র", days:30}
 ];
 
 function isLeapYear(year){
@@ -1933,11 +1932,7 @@ function getBanglaDate(date){
     mi++;
   }
 
-  return {
-    day: diff + 1,
-    month: months[mi].name,
-    year: by
-  };
+  return { day: diff + 1, month: months[mi].name, year: by };
 }
 
 function renderDates(){
@@ -1948,13 +1943,11 @@ function renderDates(){
   const gregorianDate = today.getDate() + " " + gregorianMonthsEn[today.getMonth()] + " " + today.getFullYear() + " খ্রিষ্টাব্দ";
   const finalDateText = "আজ " + weekBn[today.getDay()] + " • " + banglaDate + " • " + gregorianDate + " • তিথি/পক্ষ: Future Plan";
 
-  if(headerDateTop) headerDateTop.innerText = banglaDate;
-  if(headerDateStrip) headerDateStrip.innerText = finalDateText;
-  if(mobileSideDate) mobileSideDate.innerText = finalDateText;
-  if(desktopSideDate) desktopSideDate.innerText = finalDateText;
-
-  const footerYear = document.getElementById("footerYear");
-  if(footerYear) footerYear.innerText = toBn(today.getFullYear());
+  headerDateTop.innerText = banglaDate;
+  headerDateStrip.innerText = finalDateText;
+  mobileSideDate.innerText = finalDateText;
+  desktopSideDate.innerText = finalDateText;
+  document.getElementById("footerYear").innerText = toBn(today.getFullYear());
 }
 
 renderDates();
@@ -1993,10 +1986,7 @@ accountBackdrop.addEventListener("click", closeAccountFn);
 /* SEARCH */
 
 function doSearch(){
-  let q = "";
-  if(searchMini){
-    q = searchMini.value.trim();
-  }
+  let q = searchMini.value.trim();
 
   if(!q){
     q = prompt("কী খুঁজতে চান?") || "";
@@ -2009,22 +1999,57 @@ function doSearch(){
 
 searchBtn.addEventListener("click", doSearch);
 
-if(searchMini){
-  searchMini.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){
-      doSearch();
-    }
-  });
-}
+searchMini.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    doSearch();
+  }
+});
 
 function showToast(text){
   toast.innerHTML = text;
   toast.style.display = "block";
-
-  setTimeout(function(){
-    toast.style.display = "none";
-  }, 3500);
+  setTimeout(function(){ toast.style.display = "none"; }, 3500);
 }
+
+/* HUMAN NOTICE STATIC DATA */
+
+const humanNotice = {
+  active:true,
+  status:"ACTIVE",
+  title:"জরুরি মানবিক নোটিস",
+  text:"ভুবনডাঙ্গার নোটিস বোর্ডে Founder/Admin যাচাই করা জরুরি মানবিক বার্তা প্রকাশ করা হবে। রক্ত, চিকিৎসা সহায়তা, হারানো ব্যক্তি/ডকুমেন্ট বা জরুরি সামাজিক আহ্বান এখানে রাখা যাবে।",
+  type:"মানবিক সহায়তা",
+  place:"প্রয়োজন অনুযায়ী আপডেট হবে",
+  contact:"Admin / Founder",
+  verified:"Founder/Admin যাচাই সাপেক্ষে"
+};
+
+function renderHumanNotice(){
+  if(!humanNotice.active){
+    document.getElementById("humanNotice").style.display = "none";
+    return;
+  }
+
+  document.getElementById("noticeStatus").innerText = humanNotice.status;
+  document.getElementById("noticeTitle").innerText = humanNotice.title;
+  document.getElementById("noticeText").innerText = humanNotice.text;
+  document.getElementById("noticeType").innerText = humanNotice.type;
+  document.getElementById("noticePlace").innerText = humanNotice.place;
+  document.getElementById("noticeContact").innerText = humanNotice.contact;
+  document.getElementById("noticeVerified").innerText = humanNotice.verified;
+}
+
+renderHumanNotice();
+
+document.getElementById("copyNoticeBtn").addEventListener("click", function(){
+  const text = humanNotice.title + "\n" + humanNotice.text + "\nধরন: " + humanNotice.type + "\nস্থান: " + humanNotice.place + "\nযোগাযোগ: " + humanNotice.contact;
+
+  navigator.clipboard.writeText(text).then(function(){
+    showToast("নোটিস কপি করা হয়েছে।");
+  }).catch(function(){
+    showToast("Copy করা যায়নি।");
+  });
+});
 
 /* URL TYPE */
 
@@ -2099,7 +2124,7 @@ const baseTemplates = [
     profile:"profile.html?user=rudra-dutta",
     avatar:"profile.jpg",
     title:"রবীন্দ্রনাথ ঠাকুরের বাণী",
-    text:"বিখ্যাত মনীষীদের বাণী পোস্ট করলে যার বাণী, তার নাম বাধ্যতামূলক। নাম ছাড়া post incomplete থাকবে...",
+    text:"বিখ্যাত মনীষীদের বাণী post করলে যার বাণী, তার নাম বাধ্যতামূলক। নাম ছাড়া post incomplete থাকবে...",
     url:"today-poem.html?type=quotes"
   },
   {
@@ -2130,7 +2155,7 @@ for(let i = 1; i <= 70; i++){
     avatar:template.avatar,
     title:template.title + (i > baseTemplates.length ? " — পর্ব " + toBn(i) : ""),
     text:template.text,
-    time:i === 1 ? "আজ" : i + " ঘণ্টা আগে",
+    time:i === 1 ? "আজ" : toBn(i) + " ঘণ্টা আগে",
     likes:Math.floor(Math.random() * 220) + 10,
     comments:Math.floor(Math.random() * 35) + 1,
     url:template.url
@@ -2145,50 +2170,26 @@ let currentType = getUrlType();
 function applyPageTypeTitle(){
   const pageTitle = document.getElementById("pageTitle");
   const pageSubtitle = document.getElementById("pageSubtitle");
-  const coverTitle = document.getElementById("coverTitle");
-  const coverSubtitle = document.getElementById("coverSubtitle");
-
-  let title = "সাম্প্রতিক লেখা";
-  let subtitle = "কবিতা, প্রলাপ, চিঠিপত্র, বাণী, পরিবেশ ভাবনা এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content এখানে একসাথে আসবে।";
-  let cover = "আজকের লেখা";
-  let coverSub = "কবিতা, প্রলাপ, চিঠিপত্র, বাণী, পরিবেশ ভাবনা এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content-এর জন্য একটি সাহিত্যিক ভুবন।";
 
   if(currentType === "poem"){
-    title = "আজকের কবিতা";
-    subtitle = "সাম্প্রতিক প্রকাশিত কবিতাগুলো এখানে একসাথে দেখা যাবে।";
-    cover = "আজকের কবিতা";
-    coverSub = "আজকের প্রকাশিত কবিতার সাহিত্যিক ভুবন।";
+    pageTitle.innerText = "আজকের কবিতা";
+    pageSubtitle.innerText = "সাম্প্রতিক প্রকাশিত কবিতাগুলো এখানে একসাথে দেখা যাবে।";
   }else if(currentType === "prolap"){
-    title = "আজকের প্রলাপ";
-    subtitle = "সাম্প্রতিক প্রলাপগুলো এখানে একসাথে দেখা যাবে।";
-    cover = "আজকের প্রলাপ";
-    coverSub = "ব্যক্তিকথা, অনুভূতি ও নীরব ভাবনার প্রলাপঘর।";
+    pageTitle.innerText = "আজকের প্রলাপ";
+    pageSubtitle.innerText = "সাম্প্রতিক প্রলাপগুলো এখানে একসাথে দেখা যাবে।";
   }else if(currentType === "letter"){
-    title = "আজকের চিঠিপত্র";
-    subtitle = "চিঠিপত্রধর্মী লেখা এখানে দেখা যাবে।";
-    cover = "আজকের চিঠিপত্র";
-    coverSub = "অসমাপ্ত কথা, চিঠি ও স্মৃতির সাহিত্যিক জায়গা।";
+    pageTitle.innerText = "আজকের চিঠিপত্র";
+    pageSubtitle.innerText = "চিঠিপত্রধর্মী লেখা এখানে দেখা যাবে।";
   }else if(currentType === "quotes"){
-    title = "বিখ্যাত মনীষীদের বাণী";
-    subtitle = "যার বাণী বা লেখা post করা হবে, তার নাম বাধ্যতামূলক।";
-    cover = "বিখ্যাত মনীষীদের বাণী";
-    coverSub = "যার বাণী, তার নাম অবশ্যই দিতে হবে। নাম ছাড়া post incomplete থাকবে।";
+    pageTitle.innerText = "বিখ্যাত মনীষীদের বাণী";
+    pageSubtitle.innerText = "যার বাণী বা লেখা post করা হবে, তার নাম বাধ্যতামূলক।";
   }else if(currentType === "environment"){
-    title = "পরিবেশ রক্ষায় আপনার পরামর্শ";
-    subtitle = "প্রকৃতি, গাছ, নদী, পুকুর, প্রাণী ও পরিবেশ রক্ষায় আপনার ছোট পরামর্শও মূল্যবান।";
-    cover = "পরিবেশ রক্ষায় আপনার পরামর্শ";
-    coverSub = "আপনার চারপাশের প্রকৃতি ও পরিবেশকে আরও সুন্দর ও নিরাপদ রাখার ভাবনা এখানে লিখুন।";
+    pageTitle.innerText = "পরিবেশ রক্ষায় আপনার পরামর্শ";
+    pageSubtitle.innerText = "প্রকৃতি, গাছ, নদী, পুকুর, প্রাণী ও পরিবেশ রক্ষায় আপনার ছোট পরামর্শও মূল্যবান।";
   }else if(currentType === "discussion"){
-    title = "সাহিত্য আলোচনা";
-    subtitle = "সাহিত্য, কবিতা, বই, ভাষা ও ভাবনা নিয়ে আলোচনাগুলো এখানে দেখা যাবে।";
-    cover = "সাহিত্য আলোচনা";
-    coverSub = "কথা, মত, ভাবনা ও যুক্তির সাহিত্যিক আড্ডা।";
+    pageTitle.innerText = "সাহিত্য আলোচনা";
+    pageSubtitle.innerText = "সাহিত্য, কবিতা, বই, ভাষা ও ভাবনা নিয়ে আলোচনাগুলো এখানে দেখা যাবে।";
   }
-
-  pageTitle.innerText = title;
-  pageSubtitle.innerText = subtitle;
-  coverTitle.innerText = cover;
-  coverSubtitle.innerText = coverSub;
 }
 
 applyPageTypeTitle();
@@ -2204,22 +2205,16 @@ function saveMemories(items){
 }
 
 function isSaved(id){
-  return getMemories().some(function(item){
-    return item.id === id;
-  });
+  return getMemories().some(function(item){ return item.id === id; });
 }
 
 function toggleMemory(post){
   let memories = getMemories();
 
-  const exists = memories.some(function(item){
-    return item.id === post.id;
-  });
+  const exists = memories.some(function(item){ return item.id === post.id; });
 
   if(exists){
-    memories = memories.filter(function(item){
-      return item.id !== post.id;
-    });
+    memories = memories.filter(function(item){ return item.id !== post.id; });
     showToast("মেমোরিস থেকে সরানো হয়েছে।");
   }else{
     memories.unshift({
@@ -2241,7 +2236,7 @@ function renderMemories(){
   const memories = getMemories();
 
   if(memories.length === 0){
-    memoryList.innerHTML = '<p class="memory-empty">আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে।</p>';
+    memoryList.innerHTML = '<p class="memory-empty">আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।</p>';
     return;
   }
 
@@ -2261,11 +2256,7 @@ function sharePost(post){
   const shareUrl = window.location.origin + "/" + post.url;
 
   if(navigator.share){
-    navigator.share({
-      title:post.title,
-      text:shareText,
-      url:shareUrl
-    }).catch(function(){});
+    navigator.share({ title:post.title, text:shareText, url:shareUrl }).catch(function(){});
   }else{
     navigator.clipboard.writeText(shareUrl).then(function(){
       showToast("Share link copy করা হয়েছে।");
@@ -2277,24 +2268,18 @@ function sharePost(post){
 
 function toggleCommentPanel(id){
   const panel = document.getElementById("comments_" + id);
-  if(panel){
-    panel.classList.toggle("open");
-  }
+  if(panel) panel.classList.toggle("open");
 }
 
 function getFilteredPosts(){
   let posts = allPosts;
 
   if(currentType !== "all"){
-    posts = posts.filter(function(post){
-      return post.typeKey === currentType;
-    });
+    posts = posts.filter(function(post){ return post.typeKey === currentType; });
   }
 
   if(currentFilter !== "all"){
-    posts = posts.filter(function(post){
-      return post.category === currentFilter;
-    });
+    posts = posts.filter(function(post){ return post.category === currentFilter; });
   }
 
   return posts;
@@ -2334,9 +2319,7 @@ function renderFeed(){
         '<div class="post-actions-left">' +
           '<button class="action-btn like-btn" data-id="' + item.id + '">❤️ ' + toBn(item.likes) + '</button>' +
           '<button class="action-btn comment-btn" data-id="' + item.id + '">💬 ' + toBn(item.comments) + '</button>' +
-          '<button class="action-btn save-btn ' + (saved ? "saved" : "") + '" data-id="' + item.id + '">' +
-            (saved ? "✓ মেমোরিসে আছে" : "🔖 মেমোরিতে রাখুন") +
-          '</button>' +
+          '<button class="action-btn save-btn ' + (saved ? "saved" : "") + '" data-id="' + item.id + '">' + (saved ? "✓ মেমোরিসে আছে" : "🔖 মেমোরিতে রাখুন") + '</button>' +
           '<button class="action-btn share-btn" data-id="' + item.id + '">↗ Share</button>' +
         '</div>' +
         '<a href="' + item.url + '" class="read-more">আরও পড়ুন →</a>' +
@@ -2357,9 +2340,7 @@ function renderFeed(){
   document.querySelectorAll(".save-btn").forEach(function(btn){
     btn.addEventListener("click", function(){
       const id = btn.getAttribute("data-id");
-      const post = allPosts.find(function(item){
-        return item.id === id;
-      });
+      const post = allPosts.find(function(item){ return item.id === id; });
       toggleMemory(post);
     });
   });
@@ -2367,9 +2348,7 @@ function renderFeed(){
   document.querySelectorAll(".share-btn").forEach(function(btn){
     btn.addEventListener("click", function(){
       const id = btn.getAttribute("data-id");
-      const post = allPosts.find(function(item){
-        return item.id === id;
-      });
+      const post = allPosts.find(function(item){ return item.id === id; });
       sharePost(post);
     });
   });
@@ -2382,18 +2361,12 @@ function renderFeed(){
 
   document.querySelectorAll(".comment-btn").forEach(function(btn){
     btn.addEventListener("click", function(){
-      const id = btn.getAttribute("data-id");
-      toggleCommentPanel(id);
+      toggleCommentPanel(btn.getAttribute("data-id"));
     });
   });
 
   const moreFeedContainer = document.getElementById("moreFeedContainer");
-
-  if(currentlyShowing >= filtered.length){
-    moreFeedContainer.style.display = "none";
-  }else{
-    moreFeedContainer.style.display = "block";
-  }
+  moreFeedContainer.style.display = currentlyShowing >= filtered.length ? "none" : "block";
 }
 
 renderFeed();
@@ -2417,6 +2390,8 @@ document.querySelectorAll(".feed-tabs button").forEach(function(button){
   });
 });
 
+/* LOGOUT */
+
 document.getElementById("logoutBtn").addEventListener("click", function(){
   localStorage.removeItem("bhubondangaUserRole");
   localStorage.removeItem("bhubondangaUserName");
@@ -2426,6 +2401,8 @@ document.getElementById("logoutBtn").addEventListener("click", function(){
     window.location.href = "login.html";
   }, 1200);
 });
+
+/* TO TOP */
 
 const toTopBtn = document.getElementById("toTopBtn");
 
@@ -2438,11 +2415,10 @@ window.addEventListener("scroll", function(){
 });
 
 toTopBtn.addEventListener("click", function(){
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  window.scrollTo({ top:0, behavior:"smooth" });
 });
+
+/* COPY PROTECTION */
 
 document.addEventListener("copy", function(e){
   e.preventDefault();
@@ -2456,9 +2432,7 @@ document.addEventListener("contextmenu", function(e){
 
 document.addEventListener("selectstart", function(e){
   const tag = e.target.tagName.toLowerCase();
-  if(tag === "input" || tag === "textarea"){
-    return;
-  }
+  if(tag === "input" || tag === "textarea") return;
   e.preventDefault();
 });
 </script>
