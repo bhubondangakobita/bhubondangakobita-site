@@ -7,493 +7,3202 @@
 <title>আপনার প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
 
 <style>
-/* INDEX.HTML এর মূল CSS হুবহু কপি করা হলো */
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800;900&display=swap');
 
-*{ margin:0; padding:0; box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
 
 :root{
-  --bg:#eaf2fa;
-  --bg-soft:#dceaf5;
-  --bg-water:#f6fbff;
-  --card:#ffffff;
-  --card-2:#f4f8fc;
-  --text:#0b224d;
-  --text-soft:#2c497a;
-  --muted:#586d91;
-  --border:rgba(11,34,77,.11);
-  --accent:#0f3775;
-  --accent-2:#1e5aab;
-  --gold:#b79a54;
-  --green:#15705c;
-  --danger:#a94442;
-  --shadow:0 8px 24px rgba(11,34,77,.07);
-  --soft-shadow:0 6px 18px rgba(11,34,77,.05);
-  --gold-glow:none;
+--bg:#eaf2fa;
+--bg-soft:#dceaf5;
+--card:#ffffff;
+--card-2:#f4f8fc;
+--text:#0b224d;
+--text-soft:#2c497a;
+--muted:#586d91;
+--border:rgba(11,34,77,.11);
+--accent:#0f3775;
+--accent-2:#1e5aab;
+--gold:#b79a54;
+--shadow:0 8px 24px rgba(11,34,77,.07);
+--soft-shadow:0 6px 18px rgba(11,34,77,.05);
+--gold-glow:none;
 }
 
 html[data-theme="dark"]{
-  --bg:#090e17;
-  --bg-soft:#0d1320;
-  --bg-water:#06090e;
-  --card:#111827;
-  --card-2:#182235;
-  --text:#f4ead8;
-  --text-soft:#d7c9a7;
-  --muted:#a9a08e;
-  --border:rgba(244,234,216,.13);
-  --accent:#d8bd75;
-  --accent-2:#b99a50;
-  --gold:#f4d068;
-  --green:#f4d068;
-  --danger:#f08a85;
-  --shadow:0 12px 30px rgba(0,0,0,.45);
-  --soft-shadow:0 10px 24px rgba(0,0,0,.35);
-  --gold-glow:0 0 12px rgba(244,208,104,.42);
+
+--bg:#090e17;
+--bg-soft:#0d1320;
+--card:#111827;
+--card-2:#182235;
+--text:#f4ead8;
+--text-soft:#d7c9a7;
+--muted:#a9a08e;
+--border:rgba(244,234,216,.13);
+--accent:#d8bd75;
+--accent-2:#b99a50;
+--gold:#f4d068;
+--shadow:0 12px 30px rgba(0,0,0,.45);
+--soft-shadow:0 10px 24px rgba(0,0,0,.35);
+--gold-glow:0 0 12px rgba(244,208,104,.42);
+
 }
 
 body{
-  font-family:'Noto Serif Bengali', Georgia, serif;
-  background:var(--bg);
-  color:var(--text);
-  line-height:1.65;
-  user-select:none;
-  -webkit-user-select:none;
-  overflow-x:hidden;
+
+font-family:'Noto Serif Bengali',Georgia,serif;
+background:var(--bg);
+color:var(--text);
+line-height:1.65;
+overflow-x:hidden;
+
 }
 
-a{ text-decoration:none; color:inherit; }
-button, input{ font-family:inherit; }
-input{ user-select:text; -webkit-user-select:text; }
+
+a{
+text-decoration:none;
+color:inherit;
+}
+
+
+button,input{
+font-family:inherit;
+}
+
 
 .site-shell{
-  min-height:100vh;
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,.85), transparent 38%),
-    radial-gradient(circle at 20% 10%, rgba(156,196,228,.25), transparent 30%),
-    linear-gradient(135deg,#f7fbff 0%, var(--bg) 50%, #f7fbff 100%);
+
+min-height:100vh;
+
+background:
+radial-gradient(circle at top right,rgba(255,255,255,.8),transparent 40%),
+linear-gradient(135deg,#f7fbff,var(--bg));
+
 }
+
 
 html[data-theme="dark"] .site-shell{
-  background:
-    radial-gradient(circle at top left,rgba(244,208,104,.06),transparent 32%),
-    linear-gradient(135deg,#06090e,#090e17);
+
+background:
+radial-gradient(circle at top left,rgba(244,208,104,.06),transparent 35%),
+linear-gradient(135deg,#06090e,#090e17);
+
 }
 
-/* HEADER & DRAWERS (Index Standard) */
-.topbar{ position:sticky; top:0; z-index:1000; background:rgba(234,242,250,.94); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:10px 30px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
-html[data-theme="dark"] .topbar{ background:rgba(9,14,23,.94); }
-.menu-btn{ display:none; border:none; background:transparent; font-size:29px; color:var(--text); cursor:pointer; line-height:1; }
-.brand{ display:flex; align-items:center; gap:10px; min-width:245px; }
-.brand-leaf{ font-size:36px; line-height:1; }
-.brand-text h1{ font-size:31px; font-weight:900; letter-spacing:-1px; line-height:1.05; color:var(--text); }
-html[data-theme="dark"] .brand-text h1{ color:var(--gold); text-shadow:var(--gold-glow); }
-.brand-text p{ font-size:12.5px; color:var(--muted); white-space:nowrap; margin-top:2px; max-width:300px; overflow:hidden; text-overflow:ellipsis; }
-.desktop-nav{ display:flex; align-items:center; justify-content:center; gap:19px; flex:1; }
-.desktop-nav a{ font-size:15px; font-weight:800; padding:9px 0; border-bottom:2px solid transparent; white-space:nowrap; }
-.desktop-nav a:hover, .desktop-nav a.active{ border-color:var(--accent); color:var(--accent); }
-html[data-theme="dark"] .desktop-nav a:hover, html[data-theme="dark"] .desktop-nav a.active{ color:var(--gold); border-color:var(--gold); text-shadow:var(--gold-glow); }
-.header-actions{ display:flex; align-items:center; gap:10px; }
-.header-date{ font-size:12.5px; color:var(--muted); white-space:nowrap; font-weight:700; }
-.search-mini{ height:38px; width:165px; border:1px solid var(--border); background:var(--card); border-radius:11px; padding:0 12px; outline:none; font-size:13px; color:var(--text); }
-.icon-btn, .theme-btn{ height:40px; width:40px; border-radius:50%; border:1px solid var(--border); background:var(--card); color:var(--text); font-size:18px; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0; transition:.25s ease; box-shadow:var(--soft-shadow); }
-.theme-btn:hover, .icon-btn:hover{ background:var(--bg-soft); }
-.write-btn{ background:var(--accent); color:var(--card)!important; border:none; border-radius:11px; padding:10px 15px; font-size:14px; font-weight:900; cursor:pointer; box-shadow:var(--shadow); white-space:nowrap; }
-html[data-theme="dark"] .write-btn{ background:var(--gold); color:#090e17!important; box-shadow:var(--gold-glow); }
-.avatar-btn{ border:none; background:transparent; cursor:pointer; padding:0; }
-.avatar-btn img{ width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid var(--card); box-shadow:0 5px 14px rgba(0,0,0,.15); display:block; }
-.date-strip{ max-width:1510px; margin:0 auto; padding:7px 30px; font-size:13.5px; font-weight:800; color:var(--muted); border-bottom:1px solid var(--border); background:rgba(255,255,255,.48); text-align:center; }
-html[data-theme="dark"] .date-strip{ background:rgba(255,255,255,.02); color:var(--gold); text-shadow:0 0 5px rgba(244,208,104,.2); }
 
-/* LAYOUT & SIDEBARS */
-.page-wrap{ max-width:1510px; margin:0 auto; padding:18px 30px 0; display:grid; grid-template-columns:245px minmax(0,1fr) 355px; gap:18px; }
-.card{ background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); }
-.sidebar, .rightbar{ position:sticky; top:118px; height:calc(100vh - 150px); overflow:auto; scrollbar-width:none; }
-.sidebar::-webkit-scrollbar, .rightbar::-webkit-scrollbar{ display:none; }
-.side-card{ padding:0; position:relative; }
-.side-date-badge{ background:var(--card-2); border:1px solid var(--border); padding:10px; border-radius:12px; font-size:13px; font-weight:800; color:var(--text-soft); text-align:center; margin:0 0 10px; line-height:1.55; }
-html[data-theme="dark"] .side-date-badge{ color:var(--gold); text-shadow:0 0 5px rgba(244,208,104,.2); border-color:rgba(244,208,104,.2); }
-.side-title{ font-size:22px; font-weight:900; margin:18px 0 10px; padding:0 8px; color:var(--text); }
-html[data-theme="dark"] .side-title{ color:var(--gold); text-shadow:var(--gold-glow); }
-.side-subtitle{ font-size:13px; color:var(--muted); font-weight:700; padding:0 8px; margin:-4px 0 10px; }
-.side-menu{ display:flex; flex-direction:column; gap:4px; position:relative; z-index:1; }
-.side-menu a{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 11px; border-radius:12px; font-size:15px; font-weight:800; }
-.side-menu a .left{ display:flex; align-items:center; gap:10px; }
-.side-menu a .tag{ font-size:11px; font-weight:900; color:var(--accent-2); background:var(--bg-soft); padding:2px 7px; border-radius:999px; }
-.side-menu a:hover, .side-menu a.active{ background:var(--bg-soft); color:var(--accent); }
-html[data-theme="dark"] .side-menu a:hover, html[data-theme="dark"] .side-menu a.active{ background:rgba(244,208,104,.10); color:var(--gold); text-shadow:0 0 5px rgba(244,208,104,.3); }
-html[data-theme="dark"] .side-menu a .tag{ color:var(--gold); background:rgba(244,208,104,.12); }
-.category-list{ display:flex; flex-direction:column; gap:6px; padding:0 6px; }
-.category-list a{ display:flex; justify-content:space-between; align-items:center; font-size:15px; color:var(--text-soft); padding:5px 0; font-weight:700; }
-.category-list a:hover{ color:var(--accent); }
-.category-list span{ background:#e8ede5; border-radius:16px; padding:3px 10px; font-size:13px; color:var(--accent-2); font-weight:900; }
-html[data-theme="dark"] .category-list span{ background:rgba(244,208,104,.15); color:var(--gold); }
+/* HEADER */
 
-/* =========== PROFILE SPECIFIC STYLES =========== */
-.profile-cover-wrap { position: relative; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none; }
-.cover-img { width:100%; height:260px; object-fit:cover; display:block; background:var(--card-2); border-radius: 16px 16px 0 0; }
-.profile-details-card { border-top-left-radius: 0; border-top-right-radius: 0; padding: 0 25px 25px; text-align: center; border-top: none; }
-.profile-avatar-large { width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--card); background:var(--card-2); box-shadow:0 8px 24px rgba(0,0,0,.15); margin-top:-60px; position:relative; z-index:2; }
-.profile-name { font-size:26px; font-weight:900; color:var(--text); margin-top:8px; line-height:1.2; }
-html[data-theme="dark"] .profile-name { color:var(--gold); text-shadow:var(--gold-glow); }
-.profile-tagline { font-size:14.5px; color:var(--accent-2); font-weight:900; margin-top:4px; }
-html[data-theme="dark"] .profile-tagline { color:var(--gold); }
-.profile-bio { font-size:15.5px; color:var(--text-soft); font-weight:500; margin-top:12px; line-height:1.7; max-width:650px; margin-left:auto; margin-right:auto; }
-.profile-actions { display:flex; justify-content:center; gap:12px; margin-top:18px; }
-.btn-outline { border:2px solid var(--border); background:transparent; color:var(--text); padding:9px 22px; border-radius:12px; font-size:14px; font-weight:900; cursor:pointer; transition:0.25s ease; }
-.btn-outline:hover { background:var(--bg-soft); color:var(--accent); border-color:var(--accent); }
-html[data-theme="dark"] .btn-outline { border-color:rgba(244,208,104,0.3); color:var(--gold); }
-html[data-theme="dark"] .btn-outline:hover { background:rgba(244,208,104,0.1); border-color:var(--gold); text-shadow:var(--gold-glow); }
-.profile-stats { display:flex; justify-content:center; gap:40px; margin-top:24px; padding-top:20px; border-top:1px solid var(--border); }
-.stat-box { text-align:center; }
-.stat-num { font-size:22px; font-weight:900; color:var(--text); }
-html[data-theme="dark"] .stat-num { color:var(--gold); text-shadow:var(--gold-glow); }
-.stat-label { font-size:13.5px; color:var(--muted); font-weight:700; margin-top:2px; }
 
-/* FEED & POSTS (Index Standard) */
-.feed-card{ margin-top:16px; padding:18px; }
-.feed-tabs{ display:flex; gap:26px; border-bottom:1px solid var(--border); padding:0 4px 12px; overflow:auto; scrollbar-width:none; }
-.feed-tabs::-webkit-scrollbar{ display:none; }
-.feed-tabs button{ border:none; background:transparent; font-size:17px; font-weight:900; color:var(--muted); white-space:nowrap; cursor:pointer; padding-bottom:8px; }
-.feed-tabs button.active{ color:var(--text); border-bottom:4px solid var(--accent); }
-html[data-theme="dark"] .feed-tabs button.active{ color:var(--gold); border-bottom-color:var(--gold); text-shadow:var(--gold-glow); }
-.post{ padding:18px 8px; border-bottom:1px solid var(--border); }
-.post:last-child{ border-bottom:none; }
-.post-head{ display:flex; align-items:center; gap:10px; }
-.post-head img{ width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid var(--card); box-shadow:0 4px 10px rgba(0,0,0,.10); }
-.author-line{ font-size:14px; color:var(--muted); }
-.author-line a{ font-weight:900; color:var(--text); }
-.author-line a:hover{ text-decoration:underline; }
-html[data-theme="dark"] .author-line a{ color:var(--gold); }
-.post-more{ margin-left:auto; font-size:22px; color:var(--muted); border:none; background:transparent; cursor:pointer; }
-.post-title{ font-size:21px; font-weight:800; color:var(--text); margin-top:11px; line-height:1.45; }
-.post-title a:hover{ text-decoration:underline; }
-html[data-theme="dark"] .post-title a{ color:var(--gold); text-shadow:var(--gold-glow); }
-.post-text{ font-size:16px; font-weight:500; color:var(--text-soft); margin-top:6px; line-height:1.85; }
-.post-actions{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:14px; font-size:14px; color:var(--muted); }
-.post-actions-left{ display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
-.action-btn{ border:none; background:transparent; color:var(--muted); font-size:14px; cursor:pointer; font-weight:800; display:inline-flex; align-items:center; gap:4px; }
-.action-btn:hover{ color:var(--accent); }
-html[data-theme="dark"] .action-btn:hover{ color:var(--gold); }
-.action-btn.saved{ color:var(--accent); font-weight:900; }
-html[data-theme="dark"] .action-btn.saved{ color:var(--gold); text-shadow:var(--gold-glow); }
-.read-more{ font-weight:900; color:var(--accent); white-space:nowrap; }
-html[data-theme="dark"] .read-more{ color:var(--gold); text-shadow:var(--gold-glow); }
+.topbar{
 
-/* RIGHTBAR, FOOTER, TOAST, DRAWERS... (Keeping index standards) */
-.rightbar{ display:grid; gap:16px; align-content:start; }
-.right-card{ padding:18px; }
-.right-title{ font-size:20px; font-weight:900; text-align:center; margin-bottom:14px; }
-html[data-theme="dark"] .right-title{ color:var(--gold); text-shadow:var(--gold-glow); }
-.founder-mini{ text-align:center; }
-.founder-mini img{ width:88px; height:88px; border-radius:50%; object-fit:cover; border:4px solid var(--card); box-shadow:0 8px 20px rgba(0,0,0,.10); }
-.founder-mini h3{ font-size:21px; font-weight:900; margin-top:9px; }
-html[data-theme="dark"] .founder-mini h3 a{ color:var(--gold); text-shadow:var(--gold-glow); }
-.founder-mini p{ font-size:14px; color:var(--muted); margin-top:3px; }
-.founder-mini a.btn{ display:inline-block; margin-top:12px; background:var(--accent); color:var(--card); padding:8px 14px; border-radius:10px; font-size:13px; font-weight:900; }
-html[data-theme="dark"] .founder-mini a.btn{ background:var(--gold); color:#090e17; box-shadow:var(--gold-glow); }
-.quick-link{ display:block; padding:10px 0; border-bottom:1px solid var(--border); }
-.quick-link:last-child{ border-bottom:none; }
-.quick-link small{ font-size:12px; font-weight:900; color:var(--accent-2); }
-html[data-theme="dark"] .quick-link small{ color:var(--gold); }
-.quick-link h4{ font-size:15.5px; font-weight:900; line-height:1.5; margin-top:3px; }
-.quick-link p{ font-size:12.8px; color:var(--muted); margin-top:3px; }
+position:sticky;
+top:0;
+z-index:1000;
 
-.site-footer{ max-width:1510px; margin:0 auto; padding:18px 30px; background:var(--accent); color:#ffffff; display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:14px; }
-html[data-theme="dark"] .site-footer{ background:#06090e; border-top:1px solid var(--border); }
-.site-footer a{ font-weight:800; }
-.site-footer a:hover{ color:#eaf2fa; text-decoration:underline; }
-html[data-theme="dark"] .site-footer a:hover{ color:var(--gold); }
-.footer-links{ display:flex; gap:15px; flex-wrap:wrap; }
+display:flex;
+align-items:center;
+justify-content:space-between;
 
-.toast{ position:fixed; bottom:76px; left:50%; transform:translateX(-50%); background:var(--accent); color:#ffffff; padding:12px 20px; border-radius:20px; font-size:14.5px; display:none; z-index:9999; box-shadow:0 8px 25px rgba(0,0,0,.25); text-align:center; max-width:92%; line-height:1.8; }
-html[data-theme="dark"] .toast{ background:var(--gold); color:#090e17; font-weight:800; box-shadow:var(--gold-glow); }
+padding:10px 30px;
 
-/* MOBILE RESPONSIVE */
-@media(max-width:1250px){
-  .header-date, .search-mini{ display:none; }
-  .page-wrap{ grid-template-columns:220px minmax(0,1fr); }
-  .rightbar{ display:none; }
+background:rgba(234,242,250,.94);
+backdrop-filter:blur(16px);
+
+border-bottom:1px solid var(--border);
+
+gap:18px;
+
 }
+
+
+html[data-theme="dark"] .topbar{
+
+background:rgba(9,14,23,.94);
+
+}
+
+
+.menu-btn{
+
+display:none;
+border:none;
+background:none;
+font-size:28px;
+color:var(--text);
+cursor:pointer;
+
+}
+
+
+.brand{
+
+display:flex;
+align-items:center;
+gap:10px;
+
+min-width:245px;
+
+}
+
+
+.brand-leaf{
+
+font-size:35px;
+
+}
+
+
+.brand-text h1{
+
+font-size:30px;
+font-weight:900;
+
+}
+
+
+html[data-theme="dark"] .brand-text h1{
+
+color:var(--gold);
+text-shadow:var(--gold-glow);
+
+}
+
+
+.brand-text p{
+
+font-size:12px;
+color:var(--muted);
+
+}
+
+
+.desktop-nav{
+
+display:flex;
+gap:18px;
+flex:1;
+justify-content:center;
+
+}
+
+
+.desktop-nav a{
+
+font-size:15px;
+font-weight:800;
+
+}
+
+
+.desktop-nav a:hover,
+.desktop-nav a.active{
+
+color:var(--accent);
+
+}
+
+
+.header-actions{
+
+display:flex;
+align-items:center;
+gap:10px;
+
+}
+
+
+.theme-btn,
+.icon-btn{
+
+height:40px;
+width:40px;
+
+border-radius:50%;
+border:1px solid var(--border);
+
+background:var(--card);
+cursor:pointer;
+
+}
+
+
+.avatar-btn{
+
+border:none;
+background:none;
+
+}
+
+
+.avatar-btn img{
+
+width:42px;
+height:42px;
+border-radius:50%;
+object-fit:cover;
+
+}
+
+
+.write-btn{
+
+background:var(--accent);
+color:white!important;
+
+padding:10px 15px;
+
+border-radius:12px;
+
+font-weight:900;
+
+}
+
+
+
+/* DATE */
+
+
+.date-strip{
+
+padding:8px;
+
+text-align:center;
+
+font-weight:800;
+font-size:13px;
+
+border-bottom:1px solid var(--border);
+
+color:var(--muted);
+
+}
+
+
+
+/* LAYOUT */
+
+
+.page-wrap{
+
+max-width:1510px;
+
+margin:auto;
+
+padding:18px 30px;
+
+display:grid;
+
+grid-template-columns:245px minmax(0,1fr) 355px;
+
+gap:18px;
+
+}
+
+
+.card{
+
+background:var(--card);
+
+border:1px solid var(--border);
+
+border-radius:16px;
+
+box-shadow:var(--shadow);
+
+}
+
+
+
+/* SIDEBAR */
+
+
+.sidebar{
+
+position:sticky;
+
+top:120px;
+
+height:calc(100vh - 150px);
+
+}
+
+
+.side-title{
+
+font-size:22px;
+font-weight:900;
+
+margin:18px 0 10px;
+
+}
+
+
+.side-menu{
+
+display:flex;
+flex-direction:column;
+gap:5px;
+
+}
+
+
+.side-menu a{
+
+padding:10px;
+
+border-radius:12px;
+
+font-weight:800;
+
+}
+
+
+.side-menu a:hover,
+.side-menu a.active{
+
+background:var(--bg-soft);
+
+color:var(--accent);
+
+}
+
+
+.side-date-badge{
+
+padding:10px;
+
+background:var(--card-2);
+
+border-radius:12px;
+
+font-weight:800;
+
+font-size:13px;
+
+}
+
+
+
+/* PROFILE */
+
+
+.profile-cover{
+
+overflow:hidden;
+
+}
+
+
+.cover-img{
+
+width:100%;
+height:280px;
+
+object-fit:cover;
+
+}
+
+
+.profile-info{
+
+text-align:center;
+
+padding:0 25px 25px;
+
+}
+
+
+.profile-avatar{
+
+width:120px;
+height:120px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:5px solid var(--card);
+
+margin-top:-60px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.15);
+
+}
+
+
+.profile-name{
+
+font-size:28px;
+font-weight:900;
+
+margin-top:10px;
+
+}
+
+
+.profile-tag{
+
+color:var(--accent-2);
+
+font-weight:900;
+
+}
+
+
+.profile-bio{
+
+margin:15px auto;
+
+max-width:650px;
+
+color:var(--text-soft);
+
+}
+
+
+.profile-buttons{
+
+display:flex;
+
+justify-content:center;
+
+gap:12px;
+
+}
+
+
+.btn{
+
+padding:10px 20px;
+
+border-radius:12px;
+
+background:var(--accent);
+
+color:white!important;
+
+font-weight:900;
+
+}
+
+
+.btn-outline{
+
+padding:10px 20px;
+
+border-radius:12px;
+
+border:2px solid var(--border);
+
+font-weight:900;
+
+}
+
+
+.stats{
+
+display:flex;
+
+justify-content:center;
+
+gap:45px;
+
+margin-top:25px;
+
+padding-top:20px;
+
+border-top:1px solid var(--border);
+
+}
+
+
+.stat-number{
+
+font-size:22px;
+
+font-weight:900;
+
+}
+
+
+
+/* FEED */
+
+
+.feed-card{
+
+margin-top:18px;
+
+padding:18px;
+
+}
+
+
+.tabs{
+
+display:flex;
+
+gap:25px;
+
+border-bottom:1px solid var(--border);
+
+padding-bottom:12px;
+
+}
+
+
+.tabs button{
+
+border:none;
+
+background:none;
+
+font-weight:900;
+
+font-size:16px;
+
+cursor:pointer;
+
+color:var(--muted);
+
+}
+
+
+.tabs button.active{
+
+color:var(--accent);
+
+border-bottom:3px solid var(--accent);
+
+}
+
+
+.post{
+
+padding:18px 5px;
+
+border-bottom:1px solid var(--border);
+
+}
+
+
+.post-head{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+}
+
+
+.post-head img{
+
+width:45px;
+height:45px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+}
+
+
+.post-title{
+
+margin-top:12px;
+
+font-size:21px;
+
+font-weight:900;
+
+}
+
+
+.post-text{
+
+color:var(--text-soft);
+
+margin-top:8px;
+
+}
+
+
+.post-actions{
+
+margin-top:15px;
+
+display:flex;
+
+gap:15px;
+
+}
+
+
+
+/* RIGHTBAR */
+
+
+.rightbar{
+
+display:grid;
+
+gap:15px;
+
+}
+
+
+.right-card{
+
+padding:18px;
+
+}
+
+
+.right-title{
+
+font-size:20px;
+
+font-weight:900;
+
+text-align:center;
+
+}
+
+
+.quick-link{
+
+display:block;
+
+padding:10px 0;
+
+border-bottom:1px solid var(--border);
+
+}
+
+
+/* FOOTER */
+
+
+.site-footer{
+
+padding:18px 30px;
+
+background:var(--accent);
+
+color:white;
+
+display:flex;
+
+justify-content:space-between;
+
+}
+
+
+.footer-links{
+
+display:flex;
+gap:15px;
+
+}
+
+
+
+/* MOBILE */
+
+
 @media(max-width:880px){
-  .topbar{ padding:10px 15px; }
-  .menu-btn{ display:block; }
-  .desktop-nav, .write-btn{ display:none; }
-  .brand{ min-width:auto; }
-  .brand-leaf{ font-size:31px; }
-  .brand-text h1{ font-size:26px; }
-  .brand-text p{ font-size:11px; max-width:180px; overflow:hidden; text-overflow:ellipsis; }
-  .avatar-btn img{ width:38px; height:38px; }
-  .date-strip{ padding:8px 14px; font-size:12.5px; text-align:center; }
-  .page-wrap{ display:block; padding:12px 14px 28px; }
-  .sidebar{ display:none; }
-  .cover-img{ height:180px; }
-  .profile-avatar-large{ width:96px; height:96px; margin-top:-48px; }
-  .profile-name{ font-size:22px; }
-  .feed-card{ padding:14px; }
-  .post{ padding:16px 3px; }
-  .post-title{ font-size:19px; }
-  .post-text{ font-size:15.5px; }
-  .post-actions{ align-items:flex-start; flex-direction:column; }
-  .post-actions-left{ gap:13px; }
-  .site-footer{ display:block; text-align:center; padding:18px 14px; }
-  .footer-links{ justify-content:center; margin-top:8px; }
+
+.menu-btn{
+
+display:block;
+
 }
-@media(max-width:520px){
-  .topbar{ gap:8px; }
-  .brand-text h1{ font-size:23px; }
-  .brand-text p{ max-width:155px; }
-  .icon-btn, .theme-btn{ height:36px; width:36px; font-size:16px; }
-  .feed-tabs{ gap:22px; }
-  .feed-tabs button{ font-size:16px; }
-  .profile-stats{ gap:20px; }
+
+
+.desktop-nav{
+
+display:none;
+
 }
+
+
+.write-btn{
+
+display:none;
+
+}
+
+
+.page-wrap{
+
+display:block;
+
+padding:12px;
+
+}
+
+
+.sidebar,
+.rightbar{
+
+display:none;
+
+}
+
+
+.cover-img{
+
+height:200px;
+
+}
+
+
+.profile-avatar{
+
+width:95px;
+height:95px;
+
+}
+
+
+.site-footer{
+
+display:block;
+text-align:center;
+
+}
+
+.footer-links{
+
+justify-content:center;
+margin-top:10px;
+
+}
+
+}
+
 </style>
 </head>
-
 <body>
 
 <div class="site-shell">
 
+
+<!-- ================= HEADER ================= -->
+
 <header class="topbar">
-  <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">☰</button>
-  <a href="index.html" class="brand">
-    <div class="brand-leaf">🌿</div>
-    <div class="brand-text">
-      <h1>ভুবনডাঙ্গার কবিতা</h1>
-      <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
-    </div>
-  </a>
-  <nav class="desktop-nav">
-    <a href="index.html">হোম</a>
-    <a href="famous-poet.html">খ্যাতিমান কবি</a>
-    <a href="today-poem.html">আজকের লেখা</a>
-    <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
-    <a href="founder-profile.html">মাহমুদ সোহেল [ফাউন্ডার]</a>
-    <a href="discussion-post.html">সাহিত্য আলোচনা</a>
-  </nav>
-  <div class="header-actions">
-    <div class="header-date" id="headerDateTop">তারিখ লোড হচ্ছে...</div>
-    <input class="search-mini" id="searchMini" placeholder="অনুসন্ধান করুন...">
-    <button class="theme-btn" id="themeBtn" title="Theme বদলান">🌙</button>
-    <button class="icon-btn" id="searchBtn" title="সার্চ">⌕</button>
-    <a href="today-poem.html" class="write-btn">✎ লিখুন</a>
-    <button class="avatar-btn" id="accountBtn" title="Account menu">
-      <img src="profile.jpg" alt="আপনার প্রোফাইল">
-    </button>
-  </div>
-</header>
 
-<div class="date-strip" id="headerDateStrip">তারিখ লোড হচ্ছে...</div>
+<button class="menu-btn" id="menuBtn">☰</button>
 
-<main class="page-wrap">
 
-  <aside class="sidebar">
-    <div class="card side-card" style="background:transparent;border:none;box-shadow:none;padding:0;">
-      <div class="side-date-badge" id="desktopSideDate">তারিখ লোড হচ্ছে...</div>
-      <div class="side-title">আপন ভুবন</div>
-      <div class="side-subtitle">আপনার প্রোফাইল, লেখা ও স্মৃতির ঘর</div>
-      <div class="side-menu">
-        <a href="profile.html" class="active"><span class="left">👤 আপনার প্রোফাইল</span><span class="tag">Edit</span></a>
-        <a href="today-poem.html?type=poem"><span class="left">📝 আজকের কবিতা</span></a>
-        <a href="today-poem.html?type=prolap"><span class="left">✐ আজকের প্রলাপ</span></a>
-        <a href="today-poem.html?type=letter"><span class="left">✉ আজকের চিঠিপত্র</span></a>
-        <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
-      </div>
-      <div class="side-title">মূল ভুবন</div>
-      <div class="side-menu">
-        <a href="index.html"><span class="left">🏠 হোম</span></a>
-        <a href="famous-poet.html"><span class="left">📖 খ্যাতিমান কবি</span></a>
-        <a href="madhyorater-prolap.html"><span class="left">☾ মধ্যরাতের প্রলাপ</span></a>
-      </div>
-    </div>
-  </aside>
+<a href="index.html" class="brand">
 
-  <section class="main-content">
-    
-    <section class="card profile-cover-wrap">
-      <img class="cover-img" src="cover.jpg" alt="আপনার প্রোফাইল কভার">
-    </section>
-    
-    <section class="card profile-details-card">
-      <img src="profile.jpg" class="profile-avatar-large" alt="আপনার প্রোফাইল ছবি">
-      <h1 class="profile-name">আপনার নাম</h1>
-      <p class="profile-tagline">Writer • Reader • Dreamer</p>
-      
-      <p class="profile-bio">
-        এখানে আপনার নিজের সম্পর্কে কিছু কথা লিখতে পারেন। কবিতা, প্রলাপ, অনুভূতি বা নিজের কোনো প্রিয় উক্তি যা আপনার ব্যক্তিত্বকে তুলে ধরে।
-      </p>
+<div class="brand-leaf">🌿</div>
 
-      <div class="profile-actions">
-        <button class="write-btn" onclick="window.location.href='profile-edit.html'">প্রোফাইল এডিট</button>
-        <button class="btn-outline" onclick="window.location.href='today-poem.html'">নতুন লেখা দিন</button>
-      </div>
+<div class="brand-text">
 
-      <div class="profile-stats">
-        <div class="stat-box">
-          <div class="stat-num">০</div>
-          <div class="stat-label">লেখা</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num">০</div>
-          <div class="stat-label">স্মৃতি/সেভড</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num">০</div>
-          <div class="stat-label">মন্তব্য</div>
-        </div>
-      </div>
-    </section>
+<h1>ভুবনডাঙ্গার কবিতা</h1>
 
-    <section class="card feed-card">
-      <div class="feed-tabs">
-        <button class="active" data-filter="myposts">আপনার লেখা</button>
-        <button data-filter="saved">সেভ করা লেখা</button>
-        <button data-filter="anukabya">অনুকাব্য</button>
-      </div>
-
-      <div id="feedList">
-        <article class="post">
-          <div class="post-head">
-            <img src="profile.jpg" alt="আপনার নাম">
-            <div class="author-line">
-              <a href="profile.html">আপনার নাম</a> · কবিতা · ২ ঘণ্টা আগে
-            </div>
-            <button class="post-more" onclick="showToast('Post options')">···</button>
-          </div>
-          <h3 class="post-title"><a href="#">প্রথম লেখা</a></h3>
-          <p class="post-text">এখানে আপনার লেখা কবিতা বা প্রলাপগুলো প্রদর্শিত হবে। আপনি চাইলে আপনার পুরোনো লেখাগুলো এখান থেকে সহজেই খুঁজে পেতে পারেন।</p>
-          <div class="post-actions">
-            <div class="post-actions-left">
-              <button class="action-btn">❤️ ৫</button>
-              <button class="action-btn">💬 ২</button>
-              <button class="action-btn">↗ Share</button>
-            </div>
-            <a href="#" class="read-more">আরও পড়ুন →</a>
-          </div>
-        </article>
-      </div>
-    </section>
-    
-  </section>
-
-  <aside class="rightbar">
-    <section class="card right-card">
-      <div class="founder-mini">
-        <img src="profile.jpg" alt="মাহমুদ সোহেল">
-        <h3><a href="founder-profile.html">মাহমুদ সোহেল</a></h3>
-        <p>Founder • কবি • প্রলাপকার</p>
-        <a href="founder-profile.html" class="btn">Founder Profile</a>
-      </div>
-    </section>
-    <section class="card right-card">
-      <h3 class="right-title">দ্রুত লিংক</h3>
-      <a href="today-poem.html?type=poem" class="quick-link"><small>Today</small><h4>আজকের কবিতা</h4><p>সাম্প্রতিক কবিতাগুলো পড়ুন</p></a>
-      <a href="discussion-post.html" class="quick-link"><small>Discussion</small><h4>সাহিত্য আলোচনা</h4><p>কবিতা, প্রলাপ ও পাঠ ভাবনা</p></a>
-    </section>
-  </aside>
-</main>
-
-<footer class="site-footer">
-  <div>
-    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a> © <span id="footerYear">২০২৬</span>
-  </div>
-  <div class="footer-links">
-    <a href="index.html">হোম</a>
-    <a href="about.html">আমাদের সম্পর্কে</a>
-    <a href="contact.html">যোগাযোগ</a>
-    <a href="policy.html">নীতিমালা</a>
-  </div>
-</footer>
+<p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
 
 </div>
 
-<div class="toast" id="toast">এই সুবিধাটি শীঘ্রই যুক্ত হবে।</div>
+</a>
+
+
+
+<nav class="desktop-nav">
+
+<a href="index.html">হোম</a>
+
+<a href="famous-poet.html">খ্যাতিমান কবি</a>
+
+<a href="today-poem.html">আজকের লেখা</a>
+
+<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+
+<a href="founder-profile.html">মাহমুদ সোহেল [ফাউন্ডার]</a>
+
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+
+</nav>
+
+
+
+
+<div class="header-actions">
+
+
+<div class="header-date" id="headerDateTop">
+তারিখ লোড হচ্ছে...
+</div>
+
+
+<input 
+class="search-mini"
+id="searchMini"
+placeholder="অনুসন্ধান করুন..."
+>
+
+
+<button class="theme-btn" id="themeBtn">
+🌙
+</button>
+
+
+<button class="icon-btn" id="searchBtn">
+⌕
+</button>
+
+
+<a href="today-poem.html" class="write-btn">
+✎ লিখুন
+</a>
+
+
+<button class="avatar-btn" id="accountBtn">
+
+<img src="profile.jpg">
+
+</button>
+
+
+</div>
+
+
+</header>
+
+
+
+<div class="date-strip" id="headerDateStrip">
+
+তারিখ লোড হচ্ছে...
+
+</div>
+
+
+
+<!-- ================= MOBILE DRAWER ================= -->
+
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+
+<aside class="mobile-drawer" id="mobileDrawer">
+
+
+<div class="drawer-head">
+
+<h3>আপন ভুবন</h3>
+
+<button id="closeDrawer">
+×
+</button>
+
+</div>
+
+
+
+<div class="side-menu">
+
+
+<a href="profile.html" class="active">
+👤 আপনার প্রোফাইল
+</a>
+
+
+<a href="today-poem.html?type=poem">
+📝 আজকের কবিতা
+</a>
+
+
+<a href="today-poem.html?type=prolap">
+✐ আজকের প্রলাপ
+</a>
+
+
+<a href="today-poem.html?type=letter">
+✉ আজকের চিঠিপত্র
+</a>
+
+
+<a href="future-plan.html">
+🎙 আবৃত্তি
+<span>Future Plan</span>
+</a>
+
+
+<a href="future-plan.html">
+🎬 Reels
+<span>Future Plan</span>
+</a>
+
+
+<a href="today-poem.html?type=quotes">
+📜 বিখ্যাত মনীষীদের বাণী
+</a>
+
+
+<a href="profile.html#anukabya">
+🌸 অনুকাব্য
+</a>
+
+
+</div>
+
+
+
+<div class="side-title">
+মূল ভুবন
+</div>
+
+
+<div class="side-menu">
+
+
+<a href="index.html">
+🏠 হোম
+</a>
+
+
+<a href="famous-poet.html">
+📖 খ্যাতিমান কবি
+</a>
+
+
+<a href="madhyorater-prolap.html">
+☾ মধ্যরাতের প্রলাপ
+</a>
+
+
+<a href="discussion-post.html">
+💬 সাহিত্য আলোচনা
+</a>
+
+
+<a href="contact.html">
+✉ যোগাযোগ
+</a>
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+<!-- ================= ACCOUNT PANEL ================= -->
+
+
+<div class="account-backdrop" id="accountBackdrop"></div>
+
+
+
+<aside class="account-panel" id="accountPanel">
+
+
+<div class="drawer-head">
+
+<h3>Account</h3>
+
+<button id="closeAccount">
+×
+</button>
+
+</div>
+
+
+
+<div class="account-user">
+
+
+<img src="profile.jpg">
+
+
+<div>
+
+<h3>
+<a href="profile.html">
+আপনার প্রোফাইল
+</a>
+</h3>
+
+
+<p>
+Writer • Reader • Memories
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="account-menu">
+
+
+<a href="profile.html">
+আপনার প্রোফাইল →
+</a>
+
+
+<a href="profile-edit.html">
+প্রোফাইল এডিট →
+</a>
+
+
+<a href="today-poem.html">
+নতুন লেখা দিন →
+</a>
+
+
+<a href="contact.html">
+রিপোর্ট / কপিরাইট →
+</a>
+
+
+<button id="accountThemeBtn">
+Theme বদলান 🌙
+</button>
+
+
+<button id="logoutBtn">
+Log out
+</button>
+
+
+
+</div>
+
+
+
+<div class="memory-box">
+
+
+<h4>
+মেমোরিস
+</h4>
+
+
+<div id="memoryList">
+
+
+<p>
+আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+
+
+<!-- ================= MAIN LAYOUT ================= -->
+
+
+<main class="page-wrap">
+
+
+
+<!-- ================= LEFT SIDEBAR ================= -->
+
+
+<aside class="sidebar">
+
+
+<div class="side-date-badge" id="desktopSideDate">
+
+তারিখ লোড হচ্ছে...
+
+</div>
+
+
+
+<div class="side-title">
+আপন ভুবন
+</div>
+
+
+<div class="side-subtitle">
+
+আপনার প্রোফাইল, লেখা ও স্মৃতির ঘর
+
+</div>
+
+
+
+<div class="side-menu">
+
+
+<a href="profile.html" class="active">
+
+👤 আপনার প্রোফাইল
+
+</a>
+
+
+<a href="today-poem.html?type=poem">
+
+📝 আজকের কবিতা
+
+</a>
+
+
+<a href="today-poem.html?type=prolap">
+
+✐ আজকের প্রলাপ
+
+</a>
+
+
+<a href="today-poem.html?type=letter">
+
+✉ আজকের চিঠিপত্র
+
+</a>
+
+
+<a href="future-plan.html">
+
+🎙 আবৃত্তি
+
+</a>
+
+
+<a href="future-plan.html">
+
+🎬 Reels
+
+</a>
+
+
+<a href="today-poem.html?type=quotes">
+
+📜 বিখ্যাত মনীষীদের বাণী
+
+</a>
+
+
+<a href="#anukabya">
+
+🌸 অনুকাব্য
+
+</a>
+
+
+</div>
+
+
+
+<div class="side-title">
+
+মূল ভুবন
+
+</div>
+
+
+<div class="side-menu">
+
+
+<a href="index.html">
+🏠 হোম
+</a>
+
+
+<a href="famous-poet.html">
+📖 খ্যাতিমান কবি
+</a>
+
+
+<a href="founder-profile.html">
+✒ মাহমুদ সোহেল
+</a>
+
+
+<a href="discussion-post.html">
+💬 সাহিত্য আলোচনা
+</a>
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+
+<!-- ================= PROFILE CONTENT ================= -->
+
+
+<section class="main-content">
+
+
+
+<section class="card profile-cover">
+
+
+<img 
+src="cover.jpg"
+class="cover-img"
+alt="Profile Cover"
+>
+
+
+</section>
+
+
+
+
+<section class="card profile-info">
+
+
+<img 
+src="profile.jpg"
+class="profile-avatar"
+>
+
+
+
+<h1 class="profile-name">
+
+আপনার নাম
+
+</h1>
+
+
+
+<p class="profile-tag">
+
+Writer • Reader • Poet
+
+</p>
+
+
+
+
+<p class="profile-bio">
+
+
+এখানে আপনার ব্যক্তিকথা, সাহিত্য ভাবনা,
+কবিতা লেখার অনুভূতি এবং নিজের পরিচয় তুলে ধরতে পারবেন।
+
+</p>
+
+
+
+
+<div class="profile-buttons">
+
+
+<a href="profile-edit.html" class="btn">
+
+প্রোফাইল এডিট
+
+</a>
+
+
+
+<a href="today-poem.html" class="btn-outline">
+
+নতুন লেখা দিন
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="stats">
+
+
+<div>
+
+<div class="stat-number">
+০
+</div>
+
+লেখা
+
+</div>
+
+
+
+<div>
+
+<div class="stat-number">
+০
+</div>
+
+সেভ
+
+</div>
+
+
+
+
+<div>
+
+<div class="stat-number">
+০
+</div>
+
+মন্তব্য
+
+</div>
+
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+
+<section class="card feed-card">
+
+
+
+<div class="tabs">
+
+
+<button class="active">
+আপনার লেখা
+</button>
+
+
+<button>
+সেভ করা লেখা
+</button>
+
+
+<button>
+অনুকাব্য
+</button>
+
+
+</div>
+
+
+
+
+<div id="feedList">
+
+
+
+<article class="post">
+
+
+<div class="post-head">
+
+
+<img src="profile.jpg">
+
+
+<div>
+
+<a href="profile.html">
+আপনার নাম
+</a>
+
+· কবিতা · ২ ঘণ্টা আগে
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<h3 class="post-title">
+
+প্রথম লেখা
+
+</h3>
+
+
+
+
+<p class="post-text">
+
+আপনার লেখা কবিতা, প্রলাপ ও অনুভূতিগুলো এখানে দেখা যাবে।
+
+</p>
+
+
+
+
+<div class="post-actions">
+
+
+<button>
+❤️ ৫
+</button>
+
+
+<button>
+💬 ২
+</button>
+
+
+<button>
+↗ Share
+</button>
+
+
+</div>
+
+
+
+</article>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+</section>
+
+
+
+
+
+
+<!-- ================= RIGHT SIDEBAR ================= -->
+
+
+<aside class="rightbar">
+
+
+
+<section class="card right-card">
+
+
+<div class="founder-mini">
+
+
+<img src="profile.jpg">
+
+
+<h3>
+
+<a href="founder-profile.html">
+
+মাহমুদ সোহেল
+
+</a>
+
+</h3>
+
+
+<p>
+Founder • কবি • প্রলাপকার
+</p>
+
+
+
+<a href="founder-profile.html" class="btn">
+
+Founder Profile
+
+</a>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+<section class="card right-card">
+
+
+<h3 class="right-title">
+
+দ্রুত লিংক
+
+</h3>
+
+
+<a class="quick-link" href="today-poem.html">
+
+আজকের কবিতা
+
+</a>
+
+
+<a class="quick-link" href="discussion-post.html">
+
+সাহিত্য আলোচনা
+
+</a>
+
+
+<a class="quick-link" href="contact.html">
+
+যোগাযোগ
+
+</a>
+
+
+</section>
+
+
+
+</aside>
+
+
+
+
+</main>
+<body>
+
+<div class="site-shell">
+
+
+<!-- ================= HEADER ================= -->
+
+<header class="topbar">
+
+<button class="menu-btn" id="menuBtn">☰</button>
+
+
+<a href="index.html" class="brand">
+
+<div class="brand-leaf">🌿</div>
+
+<div class="brand-text">
+
+<h1>ভুবনডাঙ্গার কবিতা</h1>
+
+<p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
+
+</div>
+
+</a>
+
+
+
+<nav class="desktop-nav">
+
+<a href="index.html">হোম</a>
+
+<a href="famous-poet.html">খ্যাতিমান কবি</a>
+
+<a href="today-poem.html">আজকের লেখা</a>
+
+<a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+
+<a href="founder-profile.html">মাহমুদ সোহেল [ফাউন্ডার]</a>
+
+<a href="discussion-post.html">সাহিত্য আলোচনা</a>
+
+</nav>
+
+
+
+
+<div class="header-actions">
+
+
+<div class="header-date" id="headerDateTop">
+তারিখ লোড হচ্ছে...
+</div>
+
+
+<input 
+class="search-mini"
+id="searchMini"
+placeholder="অনুসন্ধান করুন..."
+>
+
+
+<button class="theme-btn" id="themeBtn">
+🌙
+</button>
+
+
+<button class="icon-btn" id="searchBtn">
+⌕
+</button>
+
+
+<a href="today-poem.html" class="write-btn">
+✎ লিখুন
+</a>
+
+
+<button class="avatar-btn" id="accountBtn">
+
+<img src="profile.jpg">
+
+</button>
+
+
+</div>
+
+
+</header>
+
+
+
+<div class="date-strip" id="headerDateStrip">
+
+তারিখ লোড হচ্ছে...
+
+</div>
+
+
+
+<!-- ================= MOBILE DRAWER ================= -->
+
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+
+<aside class="mobile-drawer" id="mobileDrawer">
+
+
+<div class="drawer-head">
+
+<h3>আপন ভুবন</h3>
+
+<button id="closeDrawer">
+×
+</button>
+
+</div>
+
+
+
+<div class="side-menu">
+
+
+<a href="profile.html" class="active">
+👤 আপনার প্রোফাইল
+</a>
+
+
+<a href="today-poem.html?type=poem">
+📝 আজকের কবিতা
+</a>
+
+
+<a href="today-poem.html?type=prolap">
+✐ আজকের প্রলাপ
+</a>
+
+
+<a href="today-poem.html?type=letter">
+✉ আজকের চিঠিপত্র
+</a>
+
+
+<a href="future-plan.html">
+🎙 আবৃত্তি
+<span>Future Plan</span>
+</a>
+
+
+<a href="future-plan.html">
+🎬 Reels
+<span>Future Plan</span>
+</a>
+
+
+<a href="today-poem.html?type=quotes">
+📜 বিখ্যাত মনীষীদের বাণী
+</a>
+
+
+<a href="profile.html#anukabya">
+🌸 অনুকাব্য
+</a>
+
+
+</div>
+
+
+
+<div class="side-title">
+মূল ভুবন
+</div>
+
+
+<div class="side-menu">
+
+
+<a href="index.html">
+🏠 হোম
+</a>
+
+
+<a href="famous-poet.html">
+📖 খ্যাতিমান কবি
+</a>
+
+
+<a href="madhyorater-prolap.html">
+☾ মধ্যরাতের প্রলাপ
+</a>
+
+
+<a href="discussion-post.html">
+💬 সাহিত্য আলোচনা
+</a>
+
+
+<a href="contact.html">
+✉ যোগাযোগ
+</a>
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+<!-- ================= ACCOUNT PANEL ================= -->
+
+
+<div class="account-backdrop" id="accountBackdrop"></div>
+
+
+
+<aside class="account-panel" id="accountPanel">
+
+
+<div class="drawer-head">
+
+<h3>Account</h3>
+
+<button id="closeAccount">
+×
+</button>
+
+</div>
+
+
+
+<div class="account-user">
+
+
+<img src="profile.jpg">
+
+
+<div>
+
+<h3>
+<a href="profile.html">
+আপনার প্রোফাইল
+</a>
+</h3>
+
+
+<p>
+Writer • Reader • Memories
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="account-menu">
+
+
+<a href="profile.html">
+আপনার প্রোফাইল →
+</a>
+
+
+<a href="profile-edit.html">
+প্রোফাইল এডিট →
+</a>
+
+
+<a href="today-poem.html">
+নতুন লেখা দিন →
+</a>
+
+
+<a href="contact.html">
+রিপোর্ট / কপিরাইট →
+</a>
+
+
+<button id="accountThemeBtn">
+Theme বদলান 🌙
+</button>
+
+
+<button id="logoutBtn">
+Log out
+</button>
+
+
+
+</div>
+
+
+
+<div class="memory-box">
+
+
+<h4>
+মেমোরিস
+</h4>
+
+
+<div id="memoryList">
+
+
+<p>
+আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+
+
+<!-- ================= MAIN LAYOUT ================= -->
+
+
+<main class="page-wrap">
+
+
+
+<!-- ================= LEFT SIDEBAR ================= -->
+
+
+<aside class="sidebar">
+
+
+<div class="side-date-badge" id="desktopSideDate">
+
+তারিখ লোড হচ্ছে...
+
+</div>
+
+
+
+<div class="side-title">
+আপন ভুবন
+</div>
+
+
+<div class="side-subtitle">
+
+আপনার প্রোফাইল, লেখা ও স্মৃতির ঘর
+
+</div>
+
+
+
+<div class="side-menu">
+
+
+<a href="profile.html" class="active">
+
+👤 আপনার প্রোফাইল
+
+</a>
+
+
+<a href="today-poem.html?type=poem">
+
+📝 আজকের কবিতা
+
+</a>
+
+
+<a href="today-poem.html?type=prolap">
+
+✐ আজকের প্রলাপ
+
+</a>
+
+
+<a href="today-poem.html?type=letter">
+
+✉ আজকের চিঠিপত্র
+
+</a>
+
+
+<a href="future-plan.html">
+
+🎙 আবৃত্তি
+
+</a>
+
+
+<a href="future-plan.html">
+
+🎬 Reels
+
+</a>
+
+
+<a href="today-poem.html?type=quotes">
+
+📜 বিখ্যাত মনীষীদের বাণী
+
+</a>
+
+
+<a href="#anukabya">
+
+🌸 অনুকাব্য
+
+</a>
+
+
+</div>
+
+
+
+<div class="side-title">
+
+মূল ভুবন
+
+</div>
+
+
+<div class="side-menu">
+
+
+<a href="index.html">
+🏠 হোম
+</a>
+
+
+<a href="famous-poet.html">
+📖 খ্যাতিমান কবি
+</a>
+
+
+<a href="founder-profile.html">
+✒ মাহমুদ সোহেল
+</a>
+
+
+<a href="discussion-post.html">
+💬 সাহিত্য আলোচনা
+</a>
+
+
+</div>
+
+
+
+</aside>
+
+
+
+
+
+
+<!-- ================= PROFILE CONTENT ================= -->
+
+
+<section class="main-content">
+
+
+
+<section class="card profile-cover">
+
+
+<img 
+src="cover.jpg"
+class="cover-img"
+alt="Profile Cover"
+>
+
+
+</section>
+
+
+
+
+<section class="card profile-info">
+
+
+<img 
+src="profile.jpg"
+class="profile-avatar"
+>
+
+
+
+<h1 class="profile-name">
+
+আপনার নাম
+
+</h1>
+
+
+
+<p class="profile-tag">
+
+Writer • Reader • Poet
+
+</p>
+
+
+
+
+<p class="profile-bio">
+
+
+এখানে আপনার ব্যক্তিকথা, সাহিত্য ভাবনা,
+কবিতা লেখার অনুভূতি এবং নিজের পরিচয় তুলে ধরতে পারবেন।
+
+</p>
+
+
+
+
+<div class="profile-buttons">
+
+
+<a href="profile-edit.html" class="btn">
+
+প্রোফাইল এডিট
+
+</a>
+
+
+
+<a href="today-poem.html" class="btn-outline">
+
+নতুন লেখা দিন
+
+</a>
+
+
+</div>
+
+
+
+
+<div class="stats">
+
+
+<div>
+
+<div class="stat-number">
+০
+</div>
+
+লেখা
+
+</div>
+
+
+
+<div>
+
+<div class="stat-number">
+০
+</div>
+
+সেভ
+
+</div>
+
+
+
+
+<div>
+
+<div class="stat-number">
+০
+</div>
+
+মন্তব্য
+
+</div>
+
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+
+<section class="card feed-card">
+
+
+
+<div class="tabs">
+
+
+<button class="active">
+আপনার লেখা
+</button>
+
+
+<button>
+সেভ করা লেখা
+</button>
+
+
+<button>
+অনুকাব্য
+</button>
+
+
+</div>
+
+
+
+
+<div id="feedList">
+
+
+
+<article class="post">
+
+
+<div class="post-head">
+
+
+<img src="profile.jpg">
+
+
+<div>
+
+<a href="profile.html">
+আপনার নাম
+</a>
+
+· কবিতা · ২ ঘণ্টা আগে
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<h3 class="post-title">
+
+প্রথম লেখা
+
+</h3>
+
+
+
+
+<p class="post-text">
+
+আপনার লেখা কবিতা, প্রলাপ ও অনুভূতিগুলো এখানে দেখা যাবে।
+
+</p>
+
+
+
+
+<div class="post-actions">
+
+
+<button>
+❤️ ৫
+</button>
+
+
+<button>
+💬 ২
+</button>
+
+
+<button>
+↗ Share
+</button>
+
+
+</div>
+
+
+
+</article>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+</section>
+
+
+
+
+
+
+<!-- ================= RIGHT SIDEBAR ================= -->
+
+
+<aside class="rightbar">
+
+
+
+<section class="card right-card">
+
+
+<div class="founder-mini">
+
+
+<img src="profile.jpg">
+
+
+<h3>
+
+<a href="founder-profile.html">
+
+মাহমুদ সোহেল
+
+</a>
+
+</h3>
+
+
+<p>
+Founder • কবি • প্রলাপকার
+</p>
+
+
+
+<a href="founder-profile.html" class="btn">
+
+Founder Profile
+
+</a>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+<section class="card right-card">
+
+
+<h3 class="right-title">
+
+দ্রুত লিংক
+
+</h3>
+
+
+<a class="quick-link" href="today-poem.html">
+
+আজকের কবিতা
+
+</a>
+
+
+<a class="quick-link" href="discussion-post.html">
+
+সাহিত্য আলোচনা
+
+</a>
+
+
+<a class="quick-link" href="contact.html">
+
+যোগাযোগ
+
+</a>
+
+
+</section>
+
+
+
+</aside>
+
+
+
+
+</main>
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+
+
+<div>
+
+<a href="index.html">
+🌿 ভুবনডাঙ্গার কবিতা
+</a>
+
+©
+
+<span id="footerYear">
+২০২৬
+</span>
+
+•
+
+বাংলা সাহিত্য ও সৃজনশীলতার মুক্ত ভুবন
+
+
+</div>
+
+
+
+<div class="footer-links">
+
+
+<a href="index.html">
+হোম
+</a>
+
+
+<a href="login.html">
+লগইন
+</a>
+
+
+<a href="register.html">
+রেজিস্টার
+</a>
+
+
+<a href="about.html">
+আমাদের সম্পর্কে
+</a>
+
+
+<a href="contact.html">
+যোগাযোগ
+</a>
+
+
+<a href="policy.html">
+নীতিমালা
+</a>
+
+
+<a href="search.html">
+সার্চ
+</a>
+
+
+</div>
+
+
+</footer>
+
+
+
+</div>
+
+
+
+
+<div class="toast" id="toast">
+
+এই সুবিধাটি শীঘ্রই যুক্ত হবে।
+
+</div>
+
+
+
+
+
 
 <script>
-// --- Index.html থেকে নেওয়া কোর স্ক্রিপ্ট সমূহ --- //
-const htmlRoot = document.documentElement;
-const savedTheme = localStorage.getItem("bhubondangaTheme") || "light";
-htmlRoot.setAttribute("data-theme", savedTheme);
 
-const themeBtn = document.getElementById("themeBtn");
-const toast = document.getElementById("toast");
-const headerDateTop = document.getElementById("headerDateTop");
-const headerDateStrip = document.getElementById("headerDateStrip");
-const desktopSideDate = document.getElementById("desktopSideDate");
+
+/* ================= THEME SYSTEM ================= */
+
+
+const htmlRoot=document.documentElement;
+
+
+const savedTheme=
+localStorage.getItem("bhubondangaTheme") || "light";
+
+
+htmlRoot.setAttribute(
+"data-theme",
+savedTheme
+);
+
+
+
+const themeBtn=
+document.getElementById("themeBtn");
+
+
+const accountThemeBtn=
+document.getElementById("accountThemeBtn");
+
+
 
 function updateThemeButton(){
-  const currentTheme = htmlRoot.getAttribute("data-theme");
-  if(currentTheme === "dark"){
-    themeBtn.innerHTML = "☀️"; themeBtn.style.color = "#d8bd75";
-  }else{
-    themeBtn.innerHTML = "🌙"; themeBtn.style.color = "#0b224d";
-  }
+
+
+const theme=
+htmlRoot.getAttribute("data-theme");
+
+
+
+if(theme==="dark"){
+
+
+themeBtn.innerHTML="☀️";
+
+
+if(accountThemeBtn)
+
+accountThemeBtn.innerHTML=
+"Theme বদলান ☀️";
+
+
+}else{
+
+
+themeBtn.innerHTML="🌙";
+
+
+if(accountThemeBtn)
+
+accountThemeBtn.innerHTML=
+"Theme বদলান 🌙";
+
+
 }
+
+
+}
+
+
+
+
 function toggleTheme(){
-  const currentTheme = htmlRoot.getAttribute("data-theme");
-  const nextTheme = currentTheme === "dark" ? "light" : "dark";
-  htmlRoot.setAttribute("data-theme", nextTheme);
-  localStorage.setItem("bhubondangaTheme", nextTheme);
-  updateThemeButton();
-}
+
+
+const current=
+htmlRoot.getAttribute("data-theme");
+
+
+const next=
+current==="dark"
+?"light"
+:"dark";
+
+
+
+htmlRoot.setAttribute(
+"data-theme",
+next
+);
+
+
+
+localStorage.setItem(
+"bhubondangaTheme",
+next
+);
+
+
+
 updateThemeButton();
-themeBtn.addEventListener("click", toggleTheme);
 
-function showToast(text){
-  toast.innerHTML = text;
-  toast.style.display = "block";
-  setTimeout(function(){ toast.style.display = "none"; }, 3500);
+
 }
 
-// বাংলা ডেট ফাংশনালিটি (Index Standard)
-const bnDigits = {"0":"০","1":"১","2":"২","3":"৩","4":"৪","5":"৫","6":"৬","7":"৭","8":"৮","9":"৯"};
-function toBn(num){ return String(num).replace(/[0-9]/g, function(d){ return bnDigits[d]; }); }
-const weekBn = ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"];
-const gregorianMonthsEn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+
+updateThemeButton();
+
+
+
+themeBtn.addEventListener(
+"click",
+toggleTheme
+);
+
+
+
+accountThemeBtn.addEventListener(
+"click",
+toggleTheme
+);
+
+
+
+
+
+
+
+/* ================= DATE ================= */
+
+
+const bnDigits={
+
+"0":"০",
+"1":"১",
+"2":"২",
+"3":"৩",
+"4":"৪",
+"5":"৫",
+"6":"৬",
+"7":"৭",
+"8":"৮",
+"9":"৯"
+
+};
+
+
+
+function toBn(num){
+
+
+return String(num).replace(
+/[0-9]/g,
+d=>bnDigits[d]
+);
+
+
+}
+
+
+
+
+const weekBn=[
+
+"রবিবার",
+"সোমবার",
+"মঙ্গলবার",
+"বুধবার",
+"বৃহস্পতিবার",
+"শুক্রবার",
+"শনিবার"
+
+];
+
+
+
 function renderDates(){
-  const today = new Date();
-  const gregorianDate = today.getDate() + " " + gregorianMonthsEn[today.getMonth()] + " " + today.getFullYear() + " খ্রিষ্টাব্দ";
-  const finalDateText = "আজ " + weekBn[today.getDay()] + " • " + gregorianDate;
-  if(headerDateTop) headerDateTop.innerText = finalDateText;
-  if(headerDateStrip) headerDateStrip.innerText = finalDateText;
-  if(desktopSideDate) desktopSideDate.innerText = finalDateText;
-  const footerYear = document.getElementById("footerYear");
-  if(footerYear) footerYear.innerText = toBn(today.getFullYear());
+
+
+const today=new Date();
+
+
+
+const text=
+
+"আজ "
++
+weekBn[today.getDay()]
++
+" • "
++
+today.getDate()
++
+" "
++
+(today.getMonth()+1)
++
+" "
++
+today.getFullYear()
++
+" খ্রিষ্টাব্দ";
+
+
+
+
+document.getElementById(
+"headerDateTop"
+).innerText=text;
+
+
+
+document.getElementById(
+"headerDateStrip"
+).innerText=text;
+
+
+
+document.getElementById(
+"desktopSideDate"
+).innerText=text;
+
+
+
+document.getElementById(
+"footerYear"
+).innerText=
+toBn(today.getFullYear());
+
+
 }
+
+
 renderDates();
 
-// Profile Tabs Script
-document.querySelectorAll(".feed-tabs button").forEach(function(button){
-  button.addEventListener("click", function(){
-    document.querySelectorAll(".feed-tabs button").forEach(function(btn){
-      btn.classList.remove("active");
-    });
-    button.classList.add("active");
-    const filter = button.getAttribute("data-filter");
-    
-    // ডেমো ফিল্টার মেসেজ
-    if(filter === 'saved') {
-        document.getElementById('feedList').innerHTML = '<p style="padding:20px; text-align:center; color:var(--muted);">আপনার সেভ করা কোনো লেখা পাওয়া যায়নি।</p>';
-    } else if(filter === 'anukabya') {
-        document.getElementById('feedList').innerHTML = '<p style="padding:20px; text-align:center; color:var(--muted);">আপনি এখনো কোনো অনুকাব্য লিখেননি।</p>';
-    } else {
-        document.getElementById('feedList').innerHTML = `
-        <article class="post">
-          <div class="post-head">
-            <img src="profile.jpg" alt="আপনার নাম">
-            <div class="author-line"><a href="profile.html">আপনার নাম</a> · কবিতা · ২ ঘণ্টা আগে</div>
-          </div>
-          <h3 class="post-title"><a href="#">প্রথম লেখা</a></h3>
-          <p class="post-text">এখানে আপনার লেখা কবিতা বা প্রলাপগুলো প্রদর্শিত হবে।</p>
-        </article>`;
-    }
-  });
+
+
+
+
+
+
+
+/* ================= MOBILE DRAWER ================= */
+
+
+const menuBtn=
+document.getElementById("menuBtn");
+
+
+const drawer=
+document.getElementById("mobileDrawer");
+
+
+const drawerBackdrop=
+document.getElementById("drawerBackdrop");
+
+
+
+document.getElementById(
+"closeDrawer"
+)
+.onclick=function(){
+
+
+drawer.style.left="-320px";
+
+
+drawerBackdrop.style.display="none";
+
+
+};
+
+
+
+menuBtn.onclick=function(){
+
+
+drawer.style.left="0";
+
+
+drawerBackdrop.style.display="block";
+
+
+};
+
+
+
+drawerBackdrop.onclick=function(){
+
+
+drawer.style.left="-320px";
+
+
+drawerBackdrop.style.display="none";
+
+
+};
+
+
+
+
+
+
+
+
+
+/* ================= ACCOUNT PANEL ================= */
+
+
+const accountBtn=
+document.getElementById("accountBtn");
+
+
+const accountPanel=
+document.getElementById("accountPanel");
+
+
+const accountBackdrop=
+document.getElementById("accountBackdrop");
+
+
+
+accountBtn.onclick=function(){
+
+
+accountPanel.style.right="0";
+
+
+accountBackdrop.style.display="block";
+
+
+};
+
+
+
+document.getElementById(
+"closeAccount"
+)
+.onclick=function(){
+
+
+accountPanel.style.right="-380px";
+
+
+accountBackdrop.style.display="none";
+
+
+};
+
+
+
+accountBackdrop.onclick=function(){
+
+
+accountPanel.style.right="-380px";
+
+
+accountBackdrop.style.display="none";
+
+
+};
+
+
+
+
+
+
+
+
+
+/* ================= MEMORY SYSTEM ================= */
+
+
+const memoryList=
+document.getElementById("memoryList");
+
+
+
+function loadMemory(){
+
+
+const memories=
+JSON.parse(
+localStorage.getItem(
+"bhubondangaMemories"
+)
+||
+"[]"
+
+);
+
+
+
+if(memories.length===0){
+
+memoryList.innerHTML=
+
+"<p>আপনার save করা লেখা এখানে থাকবে।</p>";
+
+return;
+
+}
+
+
+
+memoryList.innerHTML="";
+
+
+
+memories.forEach(item=>{
+
+
+const div=
+document.createElement("div");
+
+
+div.innerHTML=
+
+"<b>"
++
+item.title
++
+"</b><br>"
++
+item.type;
+
+
+
+memoryList.appendChild(div);
+
+
+
 });
 
-document.addEventListener("contextmenu", function(e){ e.preventDefault(); showToast("Right click বন্ধ রাখা হয়েছে।"); });
+
+}
+
+
+
+loadMemory();
+
+
+
+
+
+
+
+
+
+/* ================= PROFILE TABS ================= */
+
+
+const tabs=
+document.querySelectorAll(
+".tabs button"
+);
+
+
+
+tabs.forEach(tab=>{
+
+
+tab.onclick=function(){
+
+
+tabs.forEach(t=>
+t.classList.remove("active")
+);
+
+
+
+tab.classList.add("active");
+
+
+
+const feed=
+document.getElementById(
+"feedList"
+);
+
+
+
+if(tab.innerText==="সেভ করা লেখা"){
+
+
+feed.innerHTML=
+
+`
+<p style="
+padding:30px;
+text-align:center;
+color:var(--muted)
+">
+
+আপনার সেভ করা লেখা এখানে থাকবে।
+
+</p>
+`;
+
+
+}
+
+
+
+else if(tab.innerText==="অনুকাব্য"){
+
+
+feed.innerHTML=
+
+`
+<p style="
+padding:30px;
+text-align:center;
+color:var(--muted)
+">
+
+আপনার অনুকাব্য এখানে প্রদর্শিত হবে।
+
+</p>
+`;
+
+
+}
+
+
+
+else{
+
+
+feed.innerHTML=
+
+`
+
+<article class="post">
+
+<div class="post-head">
+
+<img src="profile.jpg">
+
+<div>
+আপনার নাম · কবিতা
+</div>
+
+</div>
+
+
+<h3 class="post-title">
+প্রথম লেখা
+</h3>
+
+
+<p class="post-text">
+আপনার লেখা এখানে থাকবে।
+</p>
+
+
+</article>
+
+`;
+
+}
+
+
+};
+
+
+});
+
+
+
+
+
+
+
+
+/* ================= SEARCH ================= */
+
+
+document.getElementById(
+"searchBtn"
+)
+.onclick=function(){
+
+
+const q=
+document.getElementById(
+"searchMini"
+).value.trim();
+
+
+
+if(q){
+
+location.href=
+"search.html?q="
++
+encodeURIComponent(q);
+
+}
+
+
+};
+
+
+
+
+
+
+/* ================= TOAST ================= */
+
+
+function showToast(text){
+
+
+const toast=
+document.getElementById("toast");
+
+
+toast.innerHTML=text;
+
+
+toast.style.display="block";
+
+
+
+setTimeout(()=>{
+
+
+toast.style.display="none";
+
+
+},3000);
+
+
+
+}
+
+
+
+
+
+
+/* ================= LOGOUT ================= */
+
+
+document.getElementById(
+"logoutBtn"
+)
+.onclick=function(){
+
+
+localStorage.removeItem(
+"bhubondangaUserRole"
+);
+
+
+
+showToast(
+"আপনি সফলভাবে লগ আউট করেছেন।"
+);
+
+
+
+setTimeout(()=>{
+
+
+location.href="login.html";
+
+
+},1200);
+
+
+};
+
+
+
+
+
+/* ================= COPY PROTECTION ================= */
+
+
+document.addEventListener(
+"contextmenu",
+function(e){
+
+
+e.preventDefault();
+
+
+showToast(
+"Right click বন্ধ রাখা হয়েছে।"
+);
+
+
+}
+
+);
+
+
+
 </script>
 
+
 </body>
+
 </html>
