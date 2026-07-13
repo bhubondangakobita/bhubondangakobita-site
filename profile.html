@@ -430,41 +430,6 @@ html[data-theme="dark"] .side-menu a .tag{
   background:rgba(244,208,104,.12);
 }
 
-.category-list{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  padding:0 6px;
-}
-
-.category-list a{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:15px;
-  color:var(--text-soft);
-  padding:5px 0;
-  font-weight:700;
-}
-
-.category-list a:hover{
-  color:var(--accent);
-}
-
-.category-list span{
-  background:#e8ede5;
-  border-radius:16px;
-  padding:3px 10px;
-  font-size:13px;
-  color:var(--accent-2);
-  font-weight:900;
-}
-
-html[data-theme="dark"] .category-list span{
-  background:rgba(244,208,104,.15);
-  color:var(--gold);
-}
-
 .auth-area{
   margin-top:24px;
   display:grid;
@@ -502,6 +467,83 @@ html[data-theme="dark"] .login-side{
 html[data-theme="dark"] .register-side{
   border-color:var(--gold);
   color:var(--gold)!important;
+}
+
+/* COVER WITH PROFILE */
+
+.feed-cover-card{
+  overflow:hidden;
+  margin-bottom:16px;
+  padding:0;
+}
+
+.feed-cover-image{
+  width:100%;
+  height:290px;
+  object-fit:cover;
+  display:block;
+  background:var(--card-2);
+}
+
+.feed-cover-overlay{
+  position:relative;
+  margin-top:-92px;
+  padding:0 18px 18px;
+}
+
+.feed-cover-caption{
+  background:rgba(255,255,255,.93);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(11,34,77,.08);
+  border-radius:18px;
+  padding:18px 20px;
+  box-shadow:var(--soft-shadow);
+}
+
+.feed-cover-caption.with-profile{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.feed-cover-profile img{
+  width:88px;
+  height:88px;
+  border-radius:50%;
+  object-fit:cover;
+  border:4px solid #ffffff;
+  box-shadow:0 8px 20px rgba(0,0,0,.14);
+  display:block;
+  background:#fff;
+}
+
+.feed-cover-text{
+  flex:1;
+}
+
+.feed-cover-text h2{
+  font-size:28px;
+  font-weight:900;
+  color:var(--text);
+  line-height:1.25;
+}
+
+.feed-cover-text p{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:14.5px;
+  font-weight:700;
+  line-height:1.8;
+}
+
+html[data-theme="dark"] .feed-cover-caption{
+  background:rgba(17,24,39,.92);
+  border-color:var(--border);
+}
+
+html[data-theme="dark"] .feed-cover-text h2{
+  color:var(--gold);
+  text-shadow:var(--gold-glow);
 }
 
 /* PAGE HEAD */
@@ -1308,6 +1350,38 @@ html[data-theme="dark"] .toast{
     display:none;
   }
 
+  .feed-cover-image{
+    height:220px;
+  }
+
+  .feed-cover-overlay{
+    margin-top:-78px;
+    padding:0 12px 14px;
+  }
+
+  .feed-cover-caption{
+    padding:15px 16px;
+  }
+
+  .feed-cover-caption.with-profile{
+    align-items:center;
+    gap:12px;
+  }
+
+  .feed-cover-profile img{
+    width:72px;
+    height:72px;
+  }
+
+  .feed-cover-text h2{
+    font-size:23px;
+  }
+
+  .feed-cover-text p{
+    font-size:13.5px;
+    line-height:1.7;
+  }
+
   .feed-head{
     padding:16px 14px;
   }
@@ -1395,6 +1469,20 @@ html[data-theme="dark"] .toast{
 
   .write-actions a{
     font-size:16px;
+  }
+
+  .feed-cover-caption.with-profile{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .feed-cover-profile img{
+    width:68px;
+    height:68px;
+  }
+
+  .feed-cover-text{
+    width:100%;
   }
 }
 </style>
@@ -1559,6 +1647,26 @@ html[data-theme="dark"] .toast{
   </aside>
 
   <section class="main-content">
+
+    <section class="card feed-cover-card">
+      <img class="feed-cover-image" src="cover.jpg" alt="আজকের লেখার কাভার">
+
+      <div class="feed-cover-overlay">
+        <div class="feed-cover-caption with-profile">
+
+          <div class="feed-cover-profile">
+            <img src="profile.jpg" alt="প্রোফাইল ছবি">
+          </div>
+
+          <div class="feed-cover-text">
+            <h2 id="coverTitle">আজকের লেখা</h2>
+            <p id="coverSubtitle">কবিতা, প্রলাপ, চিঠিপত্র, বাণী এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content-এর জন্য একটি সাহিত্যিক ভুবন।</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
     <section class="card feed-head">
       <h2 id="pageTitle">সাম্প্রতিক লেখা</h2>
       <p id="pageSubtitle">কবিতা, প্রলাপ, চিঠিপত্র, বাণী এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content এখানে একসাথে আসবে।</p>
@@ -1588,7 +1696,7 @@ html[data-theme="dark"] .toast{
   <aside class="rightbar">
     <section class="card notice-card">
       <h3>আজকের লেখা</h3>
-      <p>এই পেজে cover নেই, যাতে বেশি লেখা একসাথে পড়া যায়। প্রথমে ২০টি লেখা load হবে।</p>
+      <p>এই পেজে cover ও profile identity আছে। নিচে সাম্প্রতিক নিউজফিডে সব public content একসাথে আসবে।</p>
     </section>
 
     <section class="card right-card">
@@ -1957,23 +2065,40 @@ let currentType = getUrlType();
 function applyPageTypeTitle(){
   const pageTitle = document.getElementById("pageTitle");
   const pageSubtitle = document.getElementById("pageSubtitle");
+  const coverTitle = document.getElementById("coverTitle");
+  const coverSubtitle = document.getElementById("coverSubtitle");
+
+  let title = "সাম্প্রতিক লেখা";
+  let subtitle = "কবিতা, প্রলাপ, চিঠিপত্র, বাণী এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content এখানে একসাথে আসবে।";
+  let cover = "আজকের লেখা";
+  let coverSub = "কবিতা, প্রলাপ, চিঠিপত্র, বাণী এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content-এর জন্য একটি সাহিত্যিক ভুবন।";
 
   if(currentType === "poem"){
-    pageTitle.innerText = "আজকের কবিতা";
-    pageSubtitle.innerText = "সাম্প্রতিক প্রকাশিত কবিতাগুলো এখানে একসাথে দেখা যাবে।";
+    title = "আজকের কবিতা";
+    subtitle = "সাম্প্রতিক প্রকাশিত কবিতাগুলো এখানে একসাথে দেখা যাবে।";
+    cover = "আজকের কবিতা";
+    coverSub = "আজকের প্রকাশিত কবিতার সাহিত্যিক ভুবন।";
   }else if(currentType === "prolap"){
-    pageTitle.innerText = "আজকের প্রলাপ";
-    pageSubtitle.innerText = "সাম্প্রতিক প্রলাপগুলো এখানে একসাথে দেখা যাবে।";
+    title = "আজকের প্রলাপ";
+    subtitle = "সাম্প্রতিক প্রলাপগুলো এখানে একসাথে দেখা যাবে।";
+    cover = "আজকের প্রলাপ";
+    coverSub = "ব্যক্তিকথা, অনুভূতি ও নীরব ভাবনার প্রলাপঘর।";
   }else if(currentType === "letter"){
-    pageTitle.innerText = "আজকের চিঠিপত্র";
-    pageSubtitle.innerText = "চিঠিপত্রধর্মী লেখা এখানে দেখা যাবে।";
+    title = "আজকের চিঠিপত্র";
+    subtitle = "চিঠিপত্রধর্মী লেখা এখানে দেখা যাবে।";
+    cover = "আজকের চিঠিপত্র";
+    coverSub = "অসমাপ্ত কথা, চিঠি ও স্মৃতির সাহিত্যিক জায়গা।";
   }else if(currentType === "quotes"){
-    pageTitle.innerText = "বিখ্যাত মনীষীদের বাণী";
-    pageSubtitle.innerText = "যার বাণী বা লেখা পোস্ট করা হবে, তার নাম বাধ্যতামূলক।";
-  }else{
-    pageTitle.innerText = "সাম্প্রতিক লেখা";
-    pageSubtitle.innerText = "কবিতা, প্রলাপ, চিঠিপত্র, বাণী এবং ভবিষ্যতের আবৃত্তি/Reels—সব public content এখানে একসাথে আসবে।";
+    title = "বিখ্যাত মনীষীদের বাণী";
+    subtitle = "যার বাণী বা লেখা পোস্ট করা হবে, তার নাম বাধ্যতামূলক।";
+    cover = "বিখ্যাত মনীষীদের বাণী";
+    coverSub = "যার বাণী, তার নাম অবশ্যই দিতে হবে। নাম ছাড়া পোস্ট incomplete থাকবে।";
   }
+
+  pageTitle.innerText = title;
+  pageSubtitle.innerText = subtitle;
+  coverTitle.innerText = cover;
+  coverSubtitle.innerText = coverSub;
 }
 
 applyPageTypeTitle();
