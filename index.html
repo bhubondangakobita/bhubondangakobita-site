@@ -22,7 +22,6 @@ html{
 :root{
   --bg:#eaf2fa;
   --bg-soft:#dceaf5;
-  --bg-water:#f6fbff;
   --card:#ffffff;
   --card-2:#f4f8fc;
   --text:#0b224d;
@@ -31,8 +30,8 @@ html{
   --border:rgba(11,34,77,.11);
   --accent:#0f3775;
   --accent-2:#1e5aab;
+  --green:#19735d;
   --gold:#b79a54;
-  --green:#15705c;
   --danger:#a94442;
   --shadow:0 8px 24px rgba(11,34,77,.07);
   --soft-shadow:0 6px 18px rgba(11,34,77,.05);
@@ -42,7 +41,6 @@ html{
 html[data-theme="dark"]{
   --bg:#090e17;
   --bg-soft:#0d1320;
-  --bg-water:#06090e;
   --card:#111827;
   --card-2:#182235;
   --text:#f4ead8;
@@ -51,8 +49,8 @@ html[data-theme="dark"]{
   --border:rgba(244,234,216,.13);
   --accent:#d8bd75;
   --accent-2:#b99a50;
-  --gold:#f4d068;
   --green:#f4d068;
+  --gold:#f4d068;
   --danger:#f08a85;
   --shadow:0 12px 30px rgba(0,0,0,.45);
   --soft-shadow:0 10px 24px rgba(0,0,0,.35);
@@ -70,16 +68,18 @@ body{
 }
 
 a{
-  text-decoration:none;
   color:inherit;
+  text-decoration:none;
 }
 
 button,
-input{
+input,
+textarea{
   font-family:inherit;
 }
 
-input{
+input,
+textarea{
   user-select:text;
   -webkit-user-select:text;
 }
@@ -328,7 +328,7 @@ html[data-theme="dark"] .date-strip{
 }
 
 .sidebar,
-rightbar,
+.rightbar,
 .mobile-drawer,
 .account-panel{
   -ms-overflow-style:none;
@@ -336,11 +336,6 @@ rightbar,
 }
 
 /* SIDEBAR */
-
-.side-card{
-  padding:0;
-  position:relative;
-}
 
 .side-date-badge{
   background:var(--card-2);
@@ -386,8 +381,6 @@ html[data-theme="dark"] .side-title{
   display:flex;
   flex-direction:column;
   gap:4px;
-  position:relative;
-  z-index:1;
 }
 
 .side-menu a{
@@ -434,41 +427,6 @@ html[data-theme="dark"] .side-menu a .tag{
   background:rgba(244,208,104,.12);
 }
 
-.category-list{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  padding:0 6px;
-}
-
-.category-list a{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:15px;
-  color:var(--text-soft);
-  padding:5px 0;
-  font-weight:700;
-}
-
-.category-list a:hover{
-  color:var(--accent);
-}
-
-.category-list span{
-  background:#e8ede5;
-  border-radius:16px;
-  padding:3px 10px;
-  font-size:13px;
-  color:var(--accent-2);
-  font-weight:900;
-}
-
-html[data-theme="dark"] .category-list span{
-  background:rgba(244,208,104,.15);
-  color:var(--gold);
-}
-
 .auth-area{
   margin-top:24px;
   display:grid;
@@ -508,26 +466,137 @@ html[data-theme="dark"] .register-side{
   color:var(--gold)!important;
 }
 
-/* COVER */
+/* SLIM HOME COVER */
 
-.cover-card{
+.home-cover{
   overflow:hidden;
-  background:var(--card);
-  border-radius:16px;
+  padding:0;
+  margin-bottom:16px;
+  position:relative;
 }
 
 .cover-img{
   width:100%;
-  height:315px;
+  height:210px;
   object-fit:cover;
   display:block;
   background:var(--card-2);
 }
 
+.cover-shade{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(11,34,77,.58),rgba(11,34,77,.18),rgba(255,255,255,.05));
+}
+
+html[data-theme="dark"] .cover-shade{
+  background:linear-gradient(90deg,rgba(0,0,0,.70),rgba(0,0,0,.32),rgba(244,208,104,.06));
+}
+
+.cover-text{
+  position:absolute;
+  left:24px;
+  bottom:22px;
+  right:24px;
+  color:#fff;
+  max-width:760px;
+}
+
+.cover-text h2{
+  font-size:35px;
+  font-weight:900;
+  line-height:1.25;
+  text-shadow:0 4px 18px rgba(0,0,0,.35);
+}
+
+.cover-text p{
+  font-size:15px;
+  margin-top:7px;
+  font-weight:700;
+  line-height:1.75;
+  color:rgba(255,255,255,.94);
+  text-shadow:0 4px 16px rgba(0,0,0,.35);
+}
+
+.cover-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.cover-actions a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:13.5px;
+  font-weight:900;
+  background:rgba(255,255,255,.92);
+  color:#0b224d;
+  backdrop-filter:blur(10px);
+}
+
+.cover-actions a.green{
+  background:rgba(25,115,93,.94);
+  color:#fff;
+}
+
+/* ENVIRONMENT HIGHLIGHT */
+
+.environment-highlight{
+  padding:18px;
+  margin-bottom:16px;
+  background:
+    radial-gradient(circle at top right,rgba(25,115,93,.12),transparent 34%),
+    linear-gradient(135deg,#ffffff,#effbf5);
+}
+
+html[data-theme="dark"] .environment-highlight{
+  background:
+    radial-gradient(circle at top right,rgba(244,208,104,.10),transparent 34%),
+    linear-gradient(135deg,#111827,#182235);
+}
+
+.environment-highlight h3{
+  font-size:24px;
+  font-weight:900;
+  color:var(--green);
+  line-height:1.35;
+}
+
+html[data-theme="dark"] .environment-highlight h3{
+  color:var(--gold);
+  text-shadow:var(--gold-glow);
+}
+
+.environment-highlight p{
+  margin-top:7px;
+  font-size:15px;
+  font-weight:700;
+  color:var(--text-soft);
+}
+
+.environment-highlight a{
+  display:inline-flex;
+  margin-top:12px;
+  padding:10px 14px;
+  border-radius:999px;
+  background:var(--green);
+  color:#fff;
+  font-size:14px;
+  font-weight:900;
+}
+
+html[data-theme="dark"] .environment-highlight a{
+  background:var(--gold);
+  color:#090e17;
+}
+
 /* FEED */
 
 .feed-card{
-  margin-top:16px;
   padding:18px;
 }
 
@@ -615,6 +684,28 @@ html[data-theme="dark"] .author-line a{
   border:none;
   background:transparent;
   cursor:pointer;
+}
+
+.type-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:2px 8px;
+  border-radius:999px;
+  background:var(--card-2);
+  color:var(--accent-2);
+  font-size:12px;
+  font-weight:900;
+  border:1px solid var(--border);
+}
+
+.type-pill.environment{
+  color:var(--green);
+}
+
+html[data-theme="dark"] .type-pill,
+html[data-theme="dark"] .type-pill.environment{
+  color:var(--gold);
+  background:rgba(244,208,104,.10);
 }
 
 .post-title{
@@ -789,12 +880,6 @@ html[data-theme="dark"] .comment-form button{
   color:var(--accent);
 }
 
-html[data-theme="dark"] .more-feed button{
-  background:rgba(244,208,104,.10);
-  border-color:rgba(244,208,104,.30);
-  color:var(--gold);
-}
-
 /* RIGHTBAR */
 
 .rightbar{
@@ -819,57 +904,6 @@ html[data-theme="dark"] .right-title{
   text-shadow:var(--gold-glow);
 }
 
-.founder-mini{
-  text-align:center;
-}
-
-.founder-mini img{
-  width:88px;
-  height:88px;
-  border-radius:50%;
-  object-fit:cover;
-  border:4px solid var(--card);
-  box-shadow:0 8px 20px rgba(0,0,0,.10);
-}
-
-.founder-mini h3{
-  font-size:21px;
-  font-weight:900;
-  margin-top:9px;
-}
-
-.founder-mini h3 a:hover{
-  text-decoration:underline;
-}
-
-html[data-theme="dark"] .founder-mini h3 a{
-  color:var(--gold);
-  text-shadow:var(--gold-glow);
-}
-
-.founder-mini p{
-  font-size:14px;
-  color:var(--muted);
-  margin-top:3px;
-}
-
-.founder-mini a.btn{
-  display:inline-block;
-  margin-top:12px;
-  background:var(--accent);
-  color:var(--card);
-  padding:8px 14px;
-  border-radius:10px;
-  font-size:13px;
-  font-weight:900;
-}
-
-html[data-theme="dark"] .founder-mini a.btn{
-  background:var(--gold);
-  color:#090e17;
-  box-shadow:var(--gold-glow);
-}
-
 .quick-link{
   display:block;
   padding:10px 0;
@@ -886,10 +920,6 @@ html[data-theme="dark"] .founder-mini a.btn{
   color:var(--accent-2);
 }
 
-html[data-theme="dark"] .quick-link small{
-  color:var(--gold);
-}
-
 .quick-link h4{
   font-size:15.5px;
   font-weight:900;
@@ -903,42 +933,34 @@ html[data-theme="dark"] .quick-link small{
   margin-top:3px;
 }
 
-.midnight-card{
-  background:linear-gradient(135deg,#0b224d,#14356e);
-  color:#ffffff;
-  border:none;
-  padding:20px;
-  box-shadow:0 8px 24px rgba(11,34,77,.2);
+html[data-theme="dark"] .quick-link small{
+  color:var(--gold);
 }
 
-html[data-theme="dark"] .midnight-card{
-  background:linear-gradient(135deg,#0d1320,#151d2c);
-  border:1px solid rgba(244,208,104,.15);
+.notice-card{
+  background:linear-gradient(135deg,#ffffff,#eef6ff);
+  padding:18px;
 }
 
-.midnight-card h3{
-  font-size:22px;
+html[data-theme="dark"] .notice-card{
+  background:linear-gradient(135deg,#111827,#182235);
+}
+
+.notice-card h3{
+  color:var(--text);
+  font-size:20px;
   font-weight:900;
-  color:#eaf2fa;
-  text-shadow:0 0 10px rgba(255,255,255,.2);
 }
 
-html[data-theme="dark"] .midnight-card h3{
-  color:#f6e8c6;
-  text-shadow:0 0 10px rgba(246,232,198,.4);
+html[data-theme="dark"] .notice-card h3{
+  color:var(--gold);
+  text-shadow:var(--gold-glow);
 }
 
-.midnight-card p{
-  font-size:14.5px;
-  color:#b8cdeb;
-  margin-top:8px;
-}
-
-.midnight-card a{
-  display:inline-block;
-  margin-top:12px;
-  color:#ffffff;
-  font-weight:900;
+.notice-card p{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:14px;
 }
 
 /* MOBILE DRAWER */
@@ -1158,10 +1180,6 @@ html[data-theme="dark"] .memory-box h4{
   font-weight:900;
 }
 
-html[data-theme="dark"] .memory-item small{
-  color:var(--gold);
-}
-
 .memory-item p{
   font-size:14px;
   font-weight:800;
@@ -1196,10 +1214,6 @@ html[data-theme="dark"] .site-footer{
 .site-footer a:hover{
   color:#eaf2fa;
   text-decoration:underline;
-}
-
-html[data-theme="dark"] .site-footer a:hover{
-  color:var(--gold);
 }
 
 .footer-links{
@@ -1342,7 +1356,34 @@ html[data-theme="dark"] .toast{
   }
 
   .cover-img{
-    height:210px;
+    height:170px;
+  }
+
+  .cover-text{
+    left:16px;
+    right:16px;
+    bottom:14px;
+  }
+
+  .cover-text h2{
+    font-size:26px;
+  }
+
+  .cover-text p{
+    font-size:13.5px;
+    line-height:1.6;
+  }
+
+  .cover-actions{
+    display:none;
+  }
+
+  .environment-highlight{
+    padding:16px 14px;
+  }
+
+  .environment-highlight h3{
+    font-size:21px;
   }
 
   .feed-card{
@@ -1417,6 +1458,18 @@ html[data-theme="dark"] .toast{
   .feed-tabs button{
     font-size:16px;
   }
+
+  .cover-img{
+    height:155px;
+  }
+
+  .cover-text h2{
+    font-size:23px;
+  }
+
+  .cover-text p{
+    display:none;
+  }
 }
 </style>
 </head>
@@ -1455,14 +1508,13 @@ html[data-theme="dark"] .toast{
     <a href="today-poem.html" class="write-btn">✎ লিখুন</a>
 
     <button class="avatar-btn" id="accountBtn" title="Account menu">
-      <img src="profile.jpg" alt="আপনার প্রোফাইল">
+      <img src="profile.jpg" alt="আপনার অ্যাকাউন্ট">
     </button>
   </div>
 </header>
 
 <div class="date-strip" id="headerDateStrip">তারিখ লোড হচ্ছে...</div>
 
-<!-- Mobile Left Sidebar -->
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
 
 <aside class="mobile-drawer" id="mobileDrawer">
@@ -1480,9 +1532,10 @@ html[data-theme="dark"] .toast{
     <a href="today-poem.html?type=poem"><span class="left">📝 আজকের কবিতা</span></a>
     <a href="today-poem.html?type=prolap"><span class="left">✐ আজকের প্রলাপ</span></a>
     <a href="today-poem.html?type=letter"><span class="left">✉ আজকের চিঠিপত্র</span></a>
+    <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
+    <a href="today-poem.html?type=environment"><span class="left">🌱 পরিবেশ পরামর্শ</span></a>
     <a href="future-plan.html?feature=recitation"><span class="left">🎙 আবৃত্তি</span><span class="tag">Future Plan</span></a>
     <a href="future-plan.html?feature=reels"><span class="left">🎬 Reels</span><span class="tag">Future Plan</span></a>
-    <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
     <a href="today-poem.html"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
     <a href="profile.html#anukabya"><span class="left">🌸 অনুকাব্য</span></a>
   </div>
@@ -1496,15 +1549,8 @@ html[data-theme="dark"] .toast{
     <a href="discussion-post.html"><span class="left">💬 সাহিত্য আলোচনা</span></a>
     <a href="contact.html"><span class="left">✉ যোগাযোগ</span></a>
     <a href="about.html"><span class="left">ℹ আমাদের সম্পর্কে</span></a>
+    <a href="policy.html"><span class="left">📌 নীতিমালা</span></a>
     <a href="search.html"><span class="left">🔎 সার্চ</span></a>
-  </div>
-
-  <div class="side-title">বিষয়ের অনুসারে</div>
-  <div class="category-list">
-    <a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
-    <a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
-    <a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
-    <a href="search.html?q=বাণী">বাণী <span>১৮০</span></a>
   </div>
 
   <div class="auth-area">
@@ -1513,7 +1559,6 @@ html[data-theme="dark"] .toast{
   </div>
 </aside>
 
-<!-- Right Account Sidebar -->
 <div class="account-backdrop" id="accountBackdrop"></div>
 
 <aside class="account-panel" id="accountPanel">
@@ -1523,7 +1568,7 @@ html[data-theme="dark"] .toast{
   </div>
 
   <div class="account-user">
-    <img src="profile.jpg" alt="আপনার প্রোফাইল">
+    <img src="profile.jpg" alt="আপনার অ্যাকাউন্ট">
     <div>
       <h3><a href="profile.html">আপনার প্রোফাইল</a></h3>
       <p>Writer • Reader • Memories</p>
@@ -1534,9 +1579,10 @@ html[data-theme="dark"] .toast{
     <a href="profile.html">আপনার প্রোফাইল <span>›</span></a>
     <a href="profile-edit.html">প্রোফাইল এডিট করুন <span>›</span></a>
     <a href="today-poem.html">লেখা জমা দিন <span>›</span></a>
+    <a href="today-poem.html?type=environment">পরিবেশ পরামর্শ <span>›</span></a>
     <a href="search.html?q=প্রিয় লেখা">প্রিয় লেখা খুঁজুন <span>›</span></a>
-    <a href="famous-poet.html">প্রিয় লেখক যোগ করুন <span>›</span></a>
     <a href="contact.html">রিপোর্ট / কপিরাইট <span>›</span></a>
+    <a href="policy.html">নীতিমালা <span>›</span></a>
     <button id="accountThemeBtn">Theme বদলান <span>☀️/🌙</span></button>
     <button class="logout-btn" id="logoutBtn">Log out</button>
   </div>
@@ -1545,7 +1591,7 @@ html[data-theme="dark"] .toast{
     <h4>মেমোরিস</h4>
     <div id="memoryList">
       <p class="memory-empty">
-        আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে। যত ইচ্ছে তত লেখা save করা যাবে।
+        আপনি যে কবিতা/প্রলাপ save করবেন, সেগুলো এখানে থাকবে।
       </p>
     </div>
   </div>
@@ -1553,57 +1599,72 @@ html[data-theme="dark"] .toast{
 
 <main class="page-wrap">
 
-  <!-- Desktop Sidebar -->
   <aside class="sidebar">
-    <div class="card side-card" style="background:transparent;border:none;box-shadow:none;padding:0;">
-      <div class="side-date-badge" id="desktopSideDate">তারিখ লোড হচ্ছে...</div>
+    <div class="side-date-badge" id="desktopSideDate">তারিখ লোড হচ্ছে...</div>
 
-      <div class="side-title">আপন ভুবন</div>
-      <div class="side-subtitle">আপনার প্রোফাইল, লেখা ও স্মৃতির ঘর</div>
+    <div class="side-title">আপন ভুবন</div>
+    <div class="side-subtitle">আপনার প্রোফাইল, লেখা ও স্মৃতির ঘর</div>
 
-      <div class="side-menu">
-        <a href="profile.html"><span class="left">👤 আপনার প্রোফাইল</span><span class="tag">Edit</span></a>
-        <a href="today-poem.html?type=poem"><span class="left">📝 আজকের কবিতা</span></a>
-        <a href="today-poem.html?type=prolap"><span class="left">✐ আজকের প্রলাপ</span></a>
-        <a href="today-poem.html?type=letter"><span class="left">✉ আজকের চিঠিপত্র</span></a>
-        <a href="future-plan.html?feature=recitation"><span class="left">🎙 আবৃত্তি</span><span class="tag">Future Plan</span></a>
-        <a href="future-plan.html?feature=reels"><span class="left">🎬 Reels</span><span class="tag">Future Plan</span></a>
-        <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
-        <a href="today-poem.html"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
-        <a href="profile.html#anukabya"><span class="left">🌸 অনুকাব্য</span></a>
-      </div>
+    <div class="side-menu">
+      <a href="profile.html"><span class="left">👤 আপনার প্রোফাইল</span><span class="tag">Edit</span></a>
+      <a href="today-poem.html?type=poem"><span class="left">📝 আজকের কবিতা</span></a>
+      <a href="today-poem.html?type=prolap"><span class="left">✐ আজকের প্রলাপ</span></a>
+      <a href="today-poem.html?type=letter"><span class="left">✉ আজকের চিঠিপত্র</span></a>
+      <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
+      <a href="today-poem.html?type=environment"><span class="left">🌱 পরিবেশ পরামর্শ</span></a>
+      <a href="future-plan.html?feature=recitation"><span class="left">🎙 আবৃত্তি</span><span class="tag">Future Plan</span></a>
+      <a href="future-plan.html?feature=reels"><span class="left">🎬 Reels</span><span class="tag">Future Plan</span></a>
+      <a href="today-poem.html"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
+      <a href="profile.html#anukabya"><span class="left">🌸 অনুকাব্য</span></a>
+    </div>
 
-      <div class="side-title">মূল ভুবন</div>
-      <div class="side-menu">
-        <a href="index.html" class="active"><span class="left">🏠 হোম</span></a>
-        <a href="famous-poet.html"><span class="left">📖 খ্যাতিমান কবি</span></a>
-        <a href="madhyorater-prolap.html"><span class="left">☾ মধ্যরাতের প্রলাপ</span></a>
-        <a href="founder-profile.html"><span class="left">✒ মাহমুদ সোহেল</span></a>
-        <a href="discussion-post.html"><span class="left">💬 সাহিত্য আলোচনা</span></a>
-        <a href="contact.html"><span class="left">✉ যোগাযোগ</span></a>
-        <a href="about.html"><span class="left">ℹ আমাদের সম্পর্কে</span></a>
-        <a href="search.html"><span class="left">🔎 সার্চ</span></a>
-      </div>
+    <div class="side-title">মূল ভুবন</div>
+    <div class="side-menu">
+      <a href="index.html" class="active"><span class="left">🏠 হোম</span></a>
+      <a href="famous-poet.html"><span class="left">📖 খ্যাতিমান কবি</span></a>
+      <a href="madhyorater-prolap.html"><span class="left">☾ মধ্যরাতের প্রলাপ</span></a>
+      <a href="founder-profile.html"><span class="left">✒ মাহমুদ সোহেল</span></a>
+      <a href="discussion-post.html"><span class="left">💬 সাহিত্য আলোচনা</span></a>
+      <a href="contact.html"><span class="left">✉ যোগাযোগ</span></a>
+      <a href="about.html"><span class="left">ℹ আমাদের সম্পর্কে</span></a>
+      <a href="policy.html"><span class="left">📌 নীতিমালা</span></a>
+      <a href="search.html"><span class="left">🔎 সার্চ</span></a>
+    </div>
 
-      <div class="side-title">বিষয়ের অনুসারে</div>
-      <div class="category-list">
-        <a href="search.html?q=কবিতা">কবিতা <span>১,২৪৪</span></a>
-        <a href="search.html?q=প্রলাপ">প্রলাপ <span>৬৪২</span></a>
-        <a href="search.html?q=চিঠিপত্র">চিঠিপত্র <span>২৭৮</span></a>
-        <a href="search.html?q=বাণী">বাণী <span>১৮০</span></a>
-      </div>
-
-      <div class="auth-area">
-        <a href="login.html" class="login-side">↪ লগইন করুন</a>
-        <a href="register.html" class="register-side">রেজিস্টার করুন</a>
-      </div>
+    <div class="auth-area">
+      <a href="login.html" class="login-side">↪ লগইন করুন</a>
+      <a href="register.html" class="register-side">রেজিস্টার করুন</a>
     </div>
   </aside>
 
-  <!-- Main Content -->
   <section class="main-content">
-    <section class="card cover-card">
-      <img class="cover-img" src="cover.jpg" alt="ভুবনডাঙ্গার কবিতা">
+
+    <section class="card home-cover">
+      <img class="cover-img" src="cover.jpg" alt="ভুবনডাঙ্গার কবিতা কভার">
+      <div class="cover-shade"></div>
+
+      <div class="cover-text">
+        <h2>স্বাগতম ভুবনডাঙ্গার কবিতায়</h2>
+        <p>
+          ভুবনডাঙ্গার কবিতা—আপনাদের ভালোবাসা, অনুভূতি ও সৃজনশীল প্রকাশের জন্য উন্মুক্ত এক সাহিত্যভুবন।
+        </p>
+
+        <div class="cover-actions">
+          <a href="today-poem.html">আজকের লেখা পড়ুন</a>
+          <a href="today-poem.html?type=poem">কবিতা</a>
+          <a href="today-poem.html?type=prolap">প্রলাপ</a>
+          <a class="green" href="today-poem.html?type=environment">🌱 পরিবেশ পরামর্শ</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card environment-highlight">
+      <h3>🌱 পরিবেশ রক্ষায় আপনার পরামর্শ</h3>
+      <p>
+        আপনার চারপাশের প্রকৃতি, গাছ, নদী, পুকুর, প্রাণী ও পরিবেশ রক্ষায় আপনার ছোট একটি পরামর্শও গুরুত্বপূর্ণ।
+        আপনি কীভাবে পরিবেশকে আরও সুন্দর ও নিরাপদ রাখা যায়—আপনার ভাবনা লিখুন।
+      </p>
+      <a href="today-poem.html?type=environment">পরামর্শ লিখুন / পড়ুন</a>
     </section>
 
     <section class="card feed-card">
@@ -1622,54 +1683,45 @@ html[data-theme="dark"] .toast{
     </section>
   </section>
 
-  <!-- Rightbar -->
   <aside class="rightbar">
-    <section class="card right-card">
-      <div class="founder-mini">
-        <img src="profile.jpg" alt="মাহমুদ সোহেল">
-        <h3><a href="founder-profile.html">মাহমুদ সোহেল</a></h3>
-        <p>Founder • কবি • প্রলাপকার</p>
-        <a href="founder-profile.html" class="btn">Founder Profile</a>
-      </div>
-    </section>
-
-    <section class="card midnight-card">
-      <h3><a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a></h3>
-      <p>রাতের নিঃসঙ্গতা, ঈশ্বরতত্ত্ব, আর নিজের সঙ্গে কথোপকথনের বিশেষ ভুবন।</p>
-      <a href="madhyorater-prolap.html">প্রলাপ পড়ুন →</a>
+    <section class="card notice-card">
+      <h3>ভুবনডাঙ্গার আহ্বান</h3>
+      <p>
+        শুধু কবিতা নয়—ভালোবাসা, সাহিত্য, মানুষ, প্রকৃতি ও নীরব সৃষ্টিশীলতার জন্য এই ভুবন।
+      </p>
     </section>
 
     <section class="card right-card">
-      <h3 class="right-title">দ্রুত লিংক</h3>
+      <h3 class="right-title">দ্রুত পড়ুন</h3>
 
       <a href="today-poem.html?type=poem" class="quick-link">
-        <small>Today</small>
+        <small>Poem</small>
         <h4>আজকের কবিতা</h4>
-        <p>সাম্প্রতিক কবিতাগুলো পড়ুন</p>
+        <p>সাম্প্রতিক প্রকাশিত কবিতা</p>
       </a>
 
       <a href="today-poem.html?type=prolap" class="quick-link">
         <small>Prolap</small>
         <h4>আজকের প্রলাপ</h4>
-        <p>ব্যক্তিগত ভাবনা ও প্রলাপ</p>
+        <p>ব্যক্তিকথা ও ভাবনা</p>
+      </a>
+
+      <a href="today-poem.html?type=letter" class="quick-link">
+        <small>Letter</small>
+        <h4>চিঠিপত্র</h4>
+        <p>চিঠিধর্মী লেখা</p>
       </a>
 
       <a href="today-poem.html?type=quotes" class="quick-link">
         <small>Quotes</small>
-        <h4>বিখ্যাত মনীষীদের বাণী</h4>
-        <p>যার বাণী, তার নাম বাধ্যতামূলক</p>
+        <h4>মনীষীদের বাণী</h4>
+        <p>নামসহ বাণী post</p>
       </a>
 
-      <a href="discussion-post.html" class="quick-link">
-        <small>Discussion</small>
-        <h4>সাহিত্য আলোচনা</h4>
-        <p>কবিতা, প্রলাপ ও পাঠ ভাবনা</p>
-      </a>
-
-      <a href="contact.html" class="quick-link">
-        <small>Contact</small>
-        <h4>যোগাযোগ / রিভিউ / কপিরাইট</h4>
-        <p>আপনার বার্তা, অভিযোগ বা রিভিউ পাঠান।</p>
+      <a href="today-poem.html?type=environment" class="quick-link">
+        <small>Environment</small>
+        <h4>পরিবেশ পরামর্শ</h4>
+        <p>প্রকৃতি রক্ষার ভাবনা</p>
       </a>
     </section>
   </aside>
@@ -1677,7 +1729,7 @@ html[data-theme="dark"] .toast{
 
 <footer class="site-footer">
   <div>
-    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a> © <span id="footerYear">২০২৬</span> • বাংলা সাহিত্য ও সৃজনশীলতার মুক্ত ভুবন
+    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a> © <span id="footerYear">২০২৬</span> • হোম
   </div>
 
   <div class="footer-links">
@@ -1763,7 +1815,7 @@ if(accountThemeBtn) accountThemeBtn.addEventListener("click", toggleTheme);
 
 const bnDigits = {
   "0":"০","1":"১","2":"২","3":"৩","4":"৪",
-  "5":"৫","6":"৬","7":"৭","8":"৮","9":"৯"
+  "5":"৫","6":"৬","7":"৭","8":"۸","9":"۹"
 };
 
 function toBn(num){
@@ -1920,76 +1972,132 @@ function showToast(text){
 
 /* FEED DATA */
 
-const baseTemplates = [
+const basePosts = [
   {
+    id:"env_1",
     category:"popular",
+    typeKey:"environment",
+    type:"পরিবেশ",
+    author:"ভুবনডাঙ্গার আহ্বান",
+    profile:"index.html",
+    avatar:"profile.jpg",
+    title:"পরিবেশ রক্ষায় আপনার পরামর্শ",
+    text:"আপনার চারপাশের প্রকৃতি, গাছ, নদী, পুকুর, প্রাণী ও পরিবেশ রক্ষায় আপনার ছোট একটি পরামর্শও গুরুত্বপূর্ণ। আপনি কীভাবে পরিবেশকে আরও সুন্দর ও নিরাপদ রাখা যায়—আপনার ভাবনা লিখুন।",
+    time:"আজ",
+    likes:245,
+    comments:37,
+    url:"today-poem.html?type=environment"
+  },
+  {
+    id:"poem_1",
+    category:"popular",
+    typeKey:"poem",
     type:"কবিতা",
     author:"মাহমুদ সোহেল",
     profile:"founder-profile.html",
     avatar:"profile.jpg",
     title:"ইচ্ছে",
     text:"ইচ্ছে করে আকাশ হতে, ইচ্ছে করে পাখি। কোনো একদিন মুক্ত বাতাসে নিজের নাম লিখে রাখি...",
+    time:"১ ঘণ্টা আগে",
+    likes:184,
+    comments:28,
     url:"founder-profile.html"
   },
   {
+    id:"prolap_1",
     category:"talked",
+    typeKey:"prolap",
     type:"প্রলাপ",
     author:"মাহমুদ সোহেল",
     profile:"founder-profile.html",
     avatar:"profile.jpg",
     title:"ব্যক্তিকথা",
     text:"সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই জমে থাকা কথার কাছে নরম হয়ে যায়...",
+    time:"২ ঘণ্টা আগে",
+    likes:132,
+    comments:31,
     url:"madhyorater-prolap.html"
   },
   {
+    id:"poem_2",
     category:"new",
+    typeKey:"poem",
     type:"কবিতা",
     author:"সাদিয়া নূর",
     profile:"profile.html?user=sadia-noor",
     avatar:"profile.jpg",
     title:"আষাঢ়ের জানালায়",
     text:"আষাঢ়ের জানালায় আজও বৃষ্টি নামে, অথচ ভেজে না কারও প্রতীক্ষা। যে মানুষ ফিরে আসে না...",
+    time:"৩ ঘণ্টা আগে",
+    likes:78,
+    comments:11,
     url:"today-poem.html?post=sadia-ashar"
   },
   {
+    id:"letter_1",
     category:"all",
+    typeKey:"letter",
     type:"চিঠিপত্র",
     author:"নাহিদ হাসান",
     profile:"profile.html?user=nahid-hasan",
     avatar:"profile.jpg",
     title:"একটি অসমাপ্ত চিঠি",
     text:"তোমাকে লিখতে বসে দেখি, কাগজের ভেতর নদীর শব্দ আছে। কিছু কথা পৌঁছায় না, তবু লেখা হয়ে থাকে...",
+    time:"৪ ঘণ্টা আগে",
+    likes:64,
+    comments:8,
     url:"today-poem.html?post=letter-nahid"
   },
   {
+    id:"quote_1",
     category:"all",
+    typeKey:"quotes",
     type:"বিখ্যাত মনীষীদের বাণী",
     author:"রুদ্র দত্ত",
     profile:"profile.html?user=rudra-dutta",
     avatar:"profile.jpg",
     title:"রবীন্দ্রনাথ ঠাকুরের বাণী",
-    text:"বিখ্যাত মনীষীদের বাণী পোস্ট করলে যার বাণী, তার নাম বাধ্যতামূলক। নাম ছাড়া পোস্ট incomplete থাকবে...",
+    text:"বিখ্যাত মনীষীদের বাণী পোস্ট করলে যার বাণী, তার নাম বাধ্যতামূলক। নাম ছাড়া post incomplete থাকবে...",
+    time:"৫ ঘণ্টা আগে",
+    likes:92,
+    comments:16,
     url:"today-poem.html?type=quotes"
+  },
+  {
+    id:"discussion_1",
+    category:"talked",
+    typeKey:"discussion",
+    type:"আলোচনা",
+    author:"আরিফুল কবীর",
+    profile:"profile.html?user=ariful-kabir",
+    avatar:"profile.jpg",
+    title:"কবিতার ভেতরে নীরবতার ভূমিকা",
+    text:"কবিতা কখনো শুধু শব্দ নয়; অনেক সময় না-বলা কথার ভেতরেই তার সবচেয়ে বড় শক্তি লুকিয়ে থাকে...",
+    time:"৬ ঘণ্টা আগে",
+    likes:73,
+    comments:19,
+    url:"discussion-post.html"
   }
 ];
 
 const allPosts = [];
 
-for(let i = 1; i <= 45; i++){
-  const template = baseTemplates[(i - 1) % baseTemplates.length];
+for(let i = 0; i < 56; i++){
+  const template = basePosts[i % basePosts.length];
 
   allPosts.push({
-    id:"post_" + i,
+    id:template.id + "_" + i,
     category:template.category,
+    typeKey:template.typeKey,
     type:template.type,
     author:template.author,
     profile:template.profile,
     avatar:template.avatar,
-    title:template.title + (i > 5 ? " — পর্ব " + i : ""),
+    title:i < basePosts.length ? template.title : template.title + " — পর্ব " + toBn(i + 1),
     text:template.text,
-    time:i + " ঘণ্টা আগে",
-    likes:Math.floor(Math.random() * 220) + 10,
-    comments:Math.floor(Math.random() * 35) + 1,
+    time:template.time,
+    likes:template.likes + Math.floor(Math.random() * 30),
+    comments:template.comments + Math.floor(Math.random() * 8),
     url:template.url
   });
 }
@@ -2061,8 +2169,6 @@ function renderMemories(){
   });
 }
 
-/* POST ACTIONS */
-
 function sharePost(post){
   const shareText = post.title + " — " + post.author;
   const shareUrl = window.location.origin + "/" + post.url;
@@ -2089,8 +2195,6 @@ function toggleCommentPanel(id){
   }
 }
 
-/* FEED RENDER */
-
 function getFilteredPosts(){
   if(currentFilter === "all"){
     return allPosts;
@@ -2110,6 +2214,7 @@ function renderFeed(){
 
   postsToShow.forEach(function(item){
     const saved = isSaved(item.id);
+    const pillClass = item.typeKey === "environment" ? "type-pill environment" : "type-pill";
 
     const article = document.createElement("article");
     article.className = "post";
@@ -2118,7 +2223,7 @@ function renderFeed(){
       '<div class="post-head">' +
         '<img src="' + item.avatar + '" onerror="this.src=\'profile.jpg\'" alt="' + item.author + '">' +
         '<div class="author-line">' +
-          '<a href="' + item.profile + '">' + item.author + '</a> · ' + item.type + ' · ' + item.time +
+          '<a href="' + item.profile + '">' + item.author + '</a> · <span class="' + pillClass + '">' + item.type + '</span> · ' + item.time +
         '</div>' +
         '<button class="post-more" onclick="showToast(\'Post options Future Plan.\')">···</button>' +
       '</div>' +
@@ -2258,7 +2363,7 @@ document.addEventListener("contextmenu", function(e){
 
 document.addEventListener("selectstart", function(e){
   const tag = e.target.tagName.toLowerCase();
-  if(tag === "input"){
+  if(tag === "input" || tag === "textarea"){
     return;
   }
   e.preventDefault();
