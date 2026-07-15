@@ -26,7 +26,7 @@ html{
 
   --bg:#eaf4fb;
   --surface:#ffffff;
-  --surface-2:#f5f9fd;
+  --surface-2:#f4f9fd;
   --text:#102f5c;
   --text-soft:#4b698e;
   --muted:#7589a5;
@@ -40,11 +40,8 @@ html{
   --gold:#a8751f;
   --gold-soft:rgba(168,117,31,.11);
 
-  --green:#198265;
-  --green-soft:rgba(25,130,101,.10);
-
   --red:#d44756;
-  --red-soft:rgba(212,71,86,.10);
+  --green:#198265;
 
   --shadow:0 12px 32px rgba(11,51,104,.09);
   --soft-shadow:0 5px 18px rgba(11,51,104,.07);
@@ -58,9 +55,7 @@ html{
     radial-gradient(circle at 9% 18%,rgba(255,255,255,.88),transparent 32%),
     linear-gradient(110deg,#f8fcff 0%,#edf8ff 52%,#e5f2fb 100%);
 
-  --ticker-bg:
-    linear-gradient(90deg,#eef8ff,#e4f3ff,#eef8ff);
-
+  --ticker-bg:linear-gradient(90deg,#eef8ff,#e4f3ff,#eef8ff);
   --nav-bg:rgba(255,255,255,.96);
   --drawer-bg:rgba(244,250,254,.98);
 }
@@ -82,11 +77,8 @@ html[data-theme="dark"]{
   --gold:#ffd06c;
   --gold-soft:rgba(255,208,108,.10);
 
-  --green:#73e0c0;
-  --green-soft:rgba(115,224,192,.10);
-
   --red:#ff7d8e;
-  --red-soft:rgba(255,125,142,.10);
+  --green:#73e0c0;
 
   --shadow:0 17px 44px rgba(0,0,0,.44);
   --soft-shadow:0 0 24px rgba(54,166,255,.11);
@@ -113,7 +105,7 @@ body{
   font-family:'Noto Serif Bengali',Georgia,serif;
   background:var(--bg);
   color:var(--text);
-  line-height:1.75;
+  line-height:1.7;
   overflow-x:hidden;
 }
 
@@ -298,21 +290,21 @@ html[data-theme="dark"] .header-icon{
 }
 
 .avatar-btn{
-  border:none;
-  background:transparent;
+  width:46px;
+  height:46px;
+  border:3px solid rgba(255,255,255,.94);
+  border-radius:50%;
+  background:var(--accent-soft);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  font-weight:800;
   cursor:pointer;
 }
 
-.avatar-btn img{
-  width:46px;
-  height:46px;
-  display:block;
-  border-radius:50%;
-  object-fit:cover;
-  border:3px solid rgba(255,255,255,.94);
-}
-
-/* DATE */
+/* DATE TICKER */
 
 .date-ticker{
   position:sticky;
@@ -363,6 +355,7 @@ html[data-theme="dark"] .header-icon{
   top:calc(var(--header-h) + var(--ticker-h));
   z-index:1200;
   background:var(--nav-bg);
+  backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
 }
 
@@ -442,6 +435,7 @@ html[data-theme="dark"] .header-icon{
 
 .notice-links a.primary{
   background:var(--accent);
+  border-color:var(--accent);
   color:#fff;
 }
 
@@ -472,7 +466,14 @@ html[data-theme="dark"] .header-icon{
   scrollbar-width:none;
 }
 
-/* SIDEBAR */
+.left-sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar,
+.mobile-drawer::-webkit-scrollbar,
+.account-panel::-webkit-scrollbar{
+  display:none;
+}
+
+/* SIDE MENU */
 
 .side-brand{
   display:flex;
@@ -508,7 +509,7 @@ html[data-theme="dark"] .header-icon{
   background:transparent;
   color:var(--text);
   text-align:left;
-  font-size:13.2px;
+  font-size:13px;
   cursor:pointer;
 }
 
@@ -542,6 +543,32 @@ html[data-theme="dark"] .header-icon{
   background:var(--border);
 }
 
+.auth-area{
+  display:grid;
+  gap:8px;
+  margin-top:15px;
+  padding:0 5px 10px;
+}
+
+.login-side,
+.register-side{
+  padding:9px 11px;
+  border-radius:10px;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+}
+
+.login-side{
+  background:var(--accent);
+  color:#fff!important;
+}
+
+.register-side{
+  border:1.5px solid var(--accent);
+  color:var(--accent)!important;
+}
+
 /* HERO */
 
 .main-content{
@@ -557,20 +584,20 @@ html[data-theme="dark"] .header-icon{
 
 .hero-top{
   display:flex;
-  gap:12px;
   align-items:flex-start;
+  gap:12px;
 }
 
 .hero-icon{
-  width:56px;
-  height:56px;
-  flex:0 0 56px;
+  width:58px;
+  height:58px;
+  flex:0 0 58px;
   border-radius:16px;
   display:flex;
   align-items:center;
   justify-content:center;
   background:var(--gold-soft);
-  font-size:28px;
+  font-size:29px;
 }
 
 .hero-copy h1{
@@ -581,6 +608,7 @@ html[data-theme="dark"] .header-icon{
   margin-top:5px;
   color:var(--text-soft);
   font-size:13px;
+  line-height:1.9;
 }
 
 .hero-actions{
@@ -605,65 +633,33 @@ html[data-theme="dark"] .header-icon{
 
 .hero-actions .primary{
   background:var(--accent);
+  border-color:var(--accent);
   color:#fff;
 }
 
-/* OPEN MESSAGE */
+/* POLICY */
 
-.open-message{
+.policy-card{
   margin-top:12px;
   padding:17px;
   border-color:rgba(168,117,31,.30);
   background:linear-gradient(135deg,var(--gold-soft),var(--surface) 45%);
 }
 
-.open-message h2{
+.policy-card h2{
   color:var(--gold);
   font-size:20px;
 }
 
-.open-message p{
+.policy-card p{
   margin-top:8px;
   color:var(--text-soft);
   font-size:12.3px;
   line-height:1.9;
 }
 
-.open-message strong{
+.policy-card strong{
   color:var(--text);
-}
-
-/* DIVERSITY */
-
-.diversity-card{
-  margin-top:12px;
-  padding:16px;
-}
-
-.diversity-card h2{
-  font-size:20px;
-}
-
-.diversity-card p{
-  margin-top:6px;
-  color:var(--text-soft);
-  font-size:12px;
-}
-
-.diversity-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:11px;
-}
-
-.diversity-tag{
-  padding:5px 9px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  background:var(--surface-2);
-  color:var(--text-soft);
-  font-size:9.5px;
 }
 
 /* TOOLBAR */
@@ -675,12 +671,12 @@ html[data-theme="dark"] .header-icon{
 
 .toolbar-top{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 190px;
+  grid-template-columns:minmax(0,1fr) 220px;
   gap:9px;
 }
 
-.quote-search input,
-.quote-sort{
+.thinker-search input,
+.thinker-filter{
   width:100%;
   height:42px;
   border:1px solid var(--border);
@@ -691,156 +687,192 @@ html[data-theme="dark"] .header-icon{
   font-size:11.5px;
 }
 
-.quote-search input{
+.thinker-search input{
   padding:0 12px;
 }
 
-.quote-sort{
+.thinker-filter{
   padding:0 10px;
 }
 
-.filter-row{
+.alphabet-nav{
   display:flex;
-  gap:6px;
+  gap:5px;
   margin-top:10px;
+  padding-bottom:3px;
   overflow-x:auto;
   scrollbar-width:none;
 }
 
-.filter-btn{
-  padding:6px 11px;
+.alphabet-nav::-webkit-scrollbar{
+  display:none;
+}
+
+.alphabet-btn{
+  min-width:34px;
+  height:34px;
   border:1px solid var(--border);
-  border-radius:999px;
+  border-radius:9px;
   background:var(--surface-2);
   color:var(--text-soft);
-  font-size:10px;
-  font-weight:700;
-  white-space:nowrap;
+  font-size:11px;
+  font-weight:800;
   cursor:pointer;
 }
 
-.filter-btn.active{
+.alphabet-btn:hover,
+.alphabet-btn.active{
   background:var(--accent);
+  border-color:var(--accent);
   color:#fff;
 }
 
 .result-meta{
-  margin-top:8px;
+  margin-top:9px;
   color:var(--muted);
   font-size:10px;
 }
 
-/* QUOTES */
+/* DIRECTORY */
 
-.quote-grid{
+.thinker-directory{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:11px;
+  gap:12px;
   margin-top:12px;
 }
 
-.quote-card{
-  padding:16px;
+.letter-section{
+  scroll-margin-top:200px;
+}
+
+.letter-heading{
+  min-height:47px;
+  padding:8px 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border-left:5px solid var(--accent);
+}
+
+.letter-heading h2{
+  color:var(--accent);
+  font-size:22px;
+}
+
+.letter-heading span{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.thinker-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:9px;
+}
+
+.thinker-card{
   position:relative;
   overflow:hidden;
+  padding:13px;
 }
 
-.quote-card::after{
-  content:"“";
+.thinker-card::after{
+  content:"";
   position:absolute;
-  right:18px;
-  top:-18px;
-  color:var(--accent-soft);
-  font-size:110px;
-  line-height:1;
-  font-weight:900;
+  right:-38px;
+  bottom:-50px;
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  background:var(--accent-soft);
+  pointer-events:none;
 }
 
-.quote-category{
-  position:relative;
-  z-index:1;
-  color:var(--gold);
-  font-size:9px;
-  font-weight:800;
-}
-
-.quote-text{
-  position:relative;
-  z-index:1;
-  margin-top:8px;
-  color:var(--text);
-  font-size:17px;
-  line-height:1.9;
-}
-
-.quote-author{
+.thinker-head{
   position:relative;
   z-index:1;
   display:flex;
   align-items:center;
-  gap:9px;
-  margin-top:14px;
+  gap:10px;
 }
 
-.quote-author img{
-  width:44px;
-  height:44px;
+.thinker-avatar{
+  width:57px;
+  height:57px;
+  flex:0 0 57px;
   border-radius:50%;
-  object-fit:cover;
-  background:var(--surface-2);
-}
-
-.quote-author strong{
-  display:block;
-  font-size:12px;
-}
-
-.quote-author small{
-  color:var(--muted);
-  font-size:9px;
-}
-
-.quote-source{
-  position:relative;
-  z-index:1;
-  margin-top:9px;
-  padding:7px 9px;
-  border-radius:9px;
-  background:var(--surface-2);
-  color:var(--muted);
-  font-size:9px;
-}
-
-.quote-actions{
-  position:relative;
-  z-index:1;
   display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:11px;
-  padding-top:10px;
-  border-top:1px solid var(--border);
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--accent-soft),var(--gold-soft));
+  border:2px solid var(--border);
+  color:var(--accent);
+  font-size:20px;
+  font-weight:900;
 }
 
-.quote-actions button,
-.quote-actions a{
-  padding:5px 9px;
+.thinker-info{
+  min-width:0;
+}
+
+.thinker-info h3{
+  font-size:14.5px;
+  line-height:1.45;
+}
+
+.thinker-info small{
+  display:block;
+  margin-top:2px;
+  color:var(--gold);
+  font-size:8.3px;
+  font-weight:700;
+}
+
+.thinker-description{
+  position:relative;
+  z-index:1;
+  min-height:48px;
+  margin-top:9px;
+  color:var(--text-soft);
+  font-size:10.3px;
+  line-height:1.7;
+}
+
+.thinker-actions{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin-top:10px;
+}
+
+.thinker-actions a,
+.thinker-actions button{
+  min-height:32px;
+  padding:5px 7px;
   border:1px solid var(--border);
-  border-radius:999px;
+  border-radius:8px;
   background:var(--surface-2);
   color:var(--text-soft);
-  font-size:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:8.7px;
   font-weight:700;
   cursor:pointer;
 }
 
-.quote-actions a.primary{
+.thinker-actions a.primary{
   background:var(--accent);
+  border-color:var(--accent);
   color:#fff;
 }
 
 .empty-state{
-  grid-column:1 / -1;
   padding:30px;
   text-align:center;
 }
@@ -850,7 +882,13 @@ html[data-theme="dark"] .header-icon{
   font-size:46px;
 }
 
+.empty-state h3{
+  margin-top:6px;
+  font-size:20px;
+}
+
 .empty-state p{
+  margin-top:4px;
   color:var(--muted);
   font-size:11px;
 }
@@ -895,9 +933,35 @@ html[data-theme="dark"] .header-icon{
   line-height:1.65;
 }
 
+.stat-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.stat-item{
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface-2);
+  text-align:center;
+}
+
+.stat-item strong{
+  display:block;
+  color:var(--accent);
+  font-size:21px;
+}
+
+.stat-item span{
+  color:var(--muted);
+  font-size:9px;
+}
+
 .right-link{
   display:flex;
   justify-content:space-between;
+  gap:8px;
   padding:8px 0;
   border-bottom:1px solid var(--border);
   color:var(--text-soft);
@@ -922,7 +986,7 @@ html[data-theme="dark"] .header-icon{
 }
 
 .editor-modal{
-  width:700px;
+  width:720px;
   max-width:100%;
   max-height:90vh;
   overflow:auto;
@@ -930,6 +994,7 @@ html[data-theme="dark"] .header-icon{
   border:1px solid var(--border);
   border-radius:17px;
   background:var(--surface);
+  box-shadow:var(--shadow);
 }
 
 .modal-head{
@@ -960,6 +1025,7 @@ html[data-theme="dark"] .header-icon{
   display:flex;
   gap:6px;
   margin-top:13px;
+  overflow-x:auto;
 }
 
 .editor-tab{
@@ -970,11 +1036,13 @@ html[data-theme="dark"] .header-icon{
   color:var(--text-soft);
   font-size:10px;
   font-weight:700;
+  white-space:nowrap;
   cursor:pointer;
 }
 
 .editor-tab.active{
   background:var(--accent);
+  border-color:var(--accent);
   color:#fff;
 }
 
@@ -1107,6 +1175,7 @@ html[data-theme="dark"] .header-icon{
   overflow:auto;
   background:var(--drawer-bg);
   border-right:1px solid var(--border);
+  box-shadow:16px 0 42px rgba(0,0,0,.31);
   transition:left .25s ease;
 }
 
@@ -1114,7 +1183,8 @@ html[data-theme="dark"] .header-icon{
   left:0;
 }
 
-.drawer-head{
+.drawer-head,
+.account-head{
   display:flex;
   justify-content:space-between;
   gap:10px;
@@ -1125,7 +1195,8 @@ html[data-theme="dark"] .header-icon{
   font-size:40px;
 }
 
-.drawer-brand h2{
+.drawer-brand h2,
+.account-head h2{
   font-size:24px;
 }
 
@@ -1134,6 +1205,62 @@ html[data-theme="dark"] .header-icon{
   background:transparent;
   color:var(--text);
   font-size:32px;
+  cursor:pointer;
+}
+
+.account-panel{
+  position:fixed;
+  top:0;
+  right:-405px;
+  z-index:1500;
+  width:385px;
+  max-width:92vw;
+  height:100vh;
+  padding:17px 16px;
+  overflow:auto;
+  background:var(--drawer-bg);
+  border-left:1px solid var(--border);
+  box-shadow:-16px 0 42px rgba(0,0,0,.31);
+  transition:right .25s ease;
+}
+
+.account-panel.open{
+  right:0;
+}
+
+.account-summary{
+  margin-bottom:12px;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--surface);
+}
+
+.account-summary h3{
+  font-size:16px;
+}
+
+.account-summary p{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.account-menu{
+  display:grid;
+  gap:7px;
+}
+
+.account-menu a,
+.account-menu button{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface);
+  color:var(--text);
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
   cursor:pointer;
 }
 
@@ -1157,10 +1284,30 @@ html[data-theme="dark"] .header-icon{
   gap:12px;
 }
 
+.to-top{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:1300;
+  width:42px;
+  height:42px;
+  display:none;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.to-top.show{
+  display:block;
+}
+
 .toast{
   position:fixed;
   left:50%;
-  bottom:28px;
+  bottom:72px;
   z-index:2100;
   display:none;
   transform:translateX(-50%);
@@ -1174,6 +1321,21 @@ html[data-theme="dark"] .header-icon{
 }
 
 /* RESPONSIVE */
+
+@media(max-width:1320px){
+  .topbar{
+    grid-template-columns:330px minmax(240px,1fr) auto;
+    padding:9px 20px;
+  }
+
+  .header-date-pill{
+    display:none;
+  }
+
+  .thinker-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
 
 @media(max-width:1260px){
   .page-layout{
@@ -1217,11 +1379,8 @@ html[data-theme="dark"] .header-icon{
   .brand-copy p{
     max-width:210px;
     overflow:hidden;
+    text-overflow:ellipsis;
     font-size:8.3px;
-  }
-
-  .header-date-pill{
-    display:none;
   }
 
   .header-icon{
@@ -1229,7 +1388,7 @@ html[data-theme="dark"] .header-icon{
     height:33px;
   }
 
-  .avatar-btn img{
+  .avatar-btn{
     width:37px;
     height:37px;
   }
@@ -1242,6 +1401,21 @@ html[data-theme="dark"] .header-icon{
     height:35px;
   }
 
+  .ticker-group{
+    padding:0 24px;
+    gap:40px;
+    font-size:10px;
+  }
+
+  .category-inner{
+    padding:0 12px;
+    gap:21px;
+  }
+
+  .category-inner a{
+    font-size:12px;
+  }
+
   .page-layout{
     display:block;
     padding:10px 11px 24px;
@@ -1250,10 +1424,6 @@ html[data-theme="dark"] .header-icon{
   .left-sidebar,
   .right-sidebar{
     display:none;
-  }
-
-  .quote-grid{
-    grid-template-columns:1fr;
   }
 
   .site-footer{
@@ -1277,8 +1447,20 @@ html[data-theme="dark"] .header-icon{
     grid-column:auto;
   }
 
+  .thinker-grid{
+    grid-template-columns:1fr;
+  }
+
   .hero-copy h1{
     font-size:23px;
+  }
+
+  .notice-inner{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+
+  .notice-links{
+    grid-column:2;
   }
 
   .form-actions{
@@ -1301,15 +1483,19 @@ html[data-theme="dark"] .header-icon{
 
   <div class="header-left">
 
-    <button class="menu-btn" id="menuBtn">☰</button>
+    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">
+      ☰
+    </button>
 
     <a href="index.html" class="brand">
+
       <span class="brand-leaf">🌿</span>
 
       <span class="brand-copy">
         <h1>ভুবনডাঙ্গার কবিতা</h1>
         <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
       </span>
+
     </a>
 
   </div>
@@ -1319,10 +1505,12 @@ html[data-theme="dark"] .header-icon{
     <input
       id="headerSearchInput"
       type="search"
-      placeholder="মনীষী, বাণী, দর্শন অথবা বিষয় খুঁজুন..."
+      placeholder="মনীষী, দার্শনিক, বিজ্ঞানী অথবা বাণী খুঁজুন..."
     >
 
-    <button id="headerSearchButton">⌕</button>
+    <button id="headerSearchButton" aria-label="সার্চ">
+      ⌕
+    </button>
 
   </div>
 
@@ -1333,15 +1521,20 @@ html[data-theme="dark"] .header-icon{
       <span id="headerDateText">তারিখ লোড হচ্ছে...</span>
     </div>
 
-    <a href="notifications.html" class="header-icon">🔔</a>
-    <a href="messages.html" class="header-icon">💬</a>
+    <a href="notifications.html" class="header-icon" aria-label="নোটিফিকেশন">
+      🔔
+    </a>
 
-    <button class="header-icon" id="headerThemeBtn">
+    <a href="messages.html" class="header-icon" aria-label="বার্তা">
+      💬
+    </a>
+
+    <button class="header-icon" id="headerThemeBtn" aria-label="থিম পরিবর্তন">
       <span id="headerThemeIcon">🌙</span>
     </button>
 
-    <button class="avatar-btn" id="accountBtn">
-      <img src="profile.jpg" alt="আপনার প্রোফাইল">
+    <button class="avatar-btn" id="accountBtn" aria-label="অ্যাকাউন্ট">
+      আ
     </button>
 
   </div>
@@ -1353,19 +1546,49 @@ html[data-theme="dark"] .header-icon{
   <div class="ticker-track">
 
     <div class="ticker-group">
-      <span><span class="ticker-label">বাংলা:</span> <span class="banglaDateTicker"></span></span>
+
+      <span>
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker"></span>
+      </span>
+
       <span class="ticker-dot">✦</span>
-      <span><span class="ticker-label">ইংরেজি:</span> <span class="englishDateTicker"></span></span>
+
+      <span>
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker"></span>
+      </span>
+
       <span class="ticker-dot">✦</span>
-      <span><span class="ticker-label">আরবি:</span> <span class="arabicDateTicker"></span></span>
+
+      <span>
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker"></span>
+      </span>
+
     </div>
 
     <div class="ticker-group" aria-hidden="true">
-      <span><span class="ticker-label">বাংলা:</span> <span class="banglaDateTicker"></span></span>
+
+      <span>
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker"></span>
+      </span>
+
       <span class="ticker-dot">✦</span>
-      <span><span class="ticker-label">ইংরেজি:</span> <span class="englishDateTicker"></span></span>
+
+      <span>
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker"></span>
+      </span>
+
       <span class="ticker-dot">✦</span>
-      <span><span class="ticker-label">আরবি:</span> <span class="arabicDateTicker"></span></span>
+
+      <span>
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker"></span>
+      </span>
+
     </div>
 
   </div>
@@ -1426,24 +1649,17 @@ html[data-theme="dark"] .header-icon{
 
   <div class="side-menu">
 
+    <a href="index.html">
+      <span class="side-left">
+        <span class="side-icon">🏠</span>
+        হোম
+      </span>
+    </a>
+
     <a href="profile.html">
       <span class="side-left">
         <span class="side-icon">👤</span>
         আপনার প্রোফাইল
-      </span>
-    </a>
-
-    <a href="today-poem.html?type=poem">
-      <span class="side-left">
-        <span class="side-icon">📝</span>
-        আজকের কবিতা
-      </span>
-    </a>
-
-    <a href="famous-quotes.html" class="active">
-      <span class="side-left">
-        <span class="side-icon">📜</span>
-        বিখ্যাত মনীষীদের বাণী
       </span>
     </a>
 
@@ -1454,9 +1670,23 @@ html[data-theme="dark"] .header-icon{
       </span>
     </a>
 
-    <button class="open-editor-btn" data-tab="quote">
+    <a href="famous-quotes.html" class="active">
+      <span class="side-left">
+        <span class="side-icon">📜</span>
+        বিখ্যাত মনীষীদের বাণী
+      </span>
+    </a>
+
+    <button class="open-editor-btn" data-tab="thinker">
       <span class="side-left">
         <span class="side-icon">＋</span>
+        নতুন মনীষী যুক্ত করুন
+      </span>
+    </button>
+
+    <button class="open-editor-btn" data-tab="quote">
+      <span class="side-left">
+        <span class="side-icon">✎</span>
         নতুন বাণী যুক্ত করুন
       </span>
     </button>
@@ -1471,8 +1701,68 @@ html[data-theme="dark"] .header-icon{
     <a href="policy.html">
       <span class="side-left">
         <span class="side-icon">📌</span>
-        নীতিমালা
+        সম্পাদনার নীতিমালা
       </span>
+    </a>
+
+  </div>
+
+  <div class="auth-area">
+    <a href="login.html" class="login-side">লগইন করুন</a>
+    <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+  </div>
+
+</aside>
+
+<div class="backdrop" id="accountBackdrop"></div>
+
+<aside class="account-panel" id="accountPanel">
+
+  <div class="account-head">
+    <h2>Account</h2>
+    <button class="close-btn" id="closeAccount">×</button>
+  </div>
+
+  <div class="account-summary">
+    <h3>আপনার প্রোফাইল</h3>
+    <p>লেখক • পাঠক • স্মৃতি</p>
+  </div>
+
+  <div class="account-menu">
+
+    <a href="profile.html">
+      আপনার প্রোফাইল
+      <span>›</span>
+    </a>
+
+    <a href="favorite-authors.html">
+      প্রিয় লেখক
+      <span>›</span>
+    </a>
+
+    <a href="notifications.html">
+      নোটিফিকেশন
+      <span>›</span>
+    </a>
+
+    <a href="messages.html">
+      বার্তাসমূহ
+      <span>›</span>
+    </a>
+
+    <button class="open-editor-btn" data-tab="thinker">
+      নতুন মনীষী যুক্ত করুন
+      <span>＋</span>
+    </button>
+
+    <button id="accountThemeBtn">
+      Theme বদলান
+      <span id="accountThemeIcon">🌙</span>
+    </button>
+
+    <a href="login.html">
+      লগইন পেজে যান
+      <span>›</span>
     </a>
 
   </div>
@@ -1518,6 +1808,13 @@ html[data-theme="dark"] .header-icon{
         </span>
       </a>
 
+      <a href="famous-poet.html">
+        <span class="side-left">
+          <span class="side-icon">📖</span>
+          খ্যাতিমান কবি
+        </span>
+      </a>
+
       <a href="famous-quotes.html" class="active">
         <span class="side-left">
           <span class="side-icon">📜</span>
@@ -1525,10 +1822,10 @@ html[data-theme="dark"] .header-icon{
         </span>
       </a>
 
-      <a href="famous-poet.html">
+      <a href="environment-advice.html">
         <span class="side-left">
-          <span class="side-icon">📖</span>
-          খ্যাতিমান কবি
+          <span class="side-icon">🌱</span>
+          পরিবেশ পরামর্শ
         </span>
       </a>
 
@@ -1550,7 +1847,7 @@ html[data-theme="dark"] .header-icon{
       <button class="open-editor-btn" data-tab="quote">
         <span class="side-left">
           <span class="side-icon">✎</span>
-          বাণী যুক্ত করুন
+          নতুন বাণী যুক্ত করুন
         </span>
       </button>
 
@@ -1570,6 +1867,11 @@ html[data-theme="dark"] .header-icon{
 
     </div>
 
+    <div class="auth-area">
+      <a href="login.html" class="login-side">লগইন করুন</a>
+      <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+    </div>
+
   </aside>
 
   <section class="main-content">
@@ -1582,12 +1884,13 @@ html[data-theme="dark"] .header-icon{
 
         <div class="hero-copy">
 
-          <h1>বিখ্যাত মনীষীদের বাণী</h1>
+          <h1>বিখ্যাত মনীষী, দার্শনিক ও চিন্তাবিদ</h1>
 
           <p>
-            বাংলাদেশ, বাংলা অঞ্চল, মধ্যযুগীয় ইসলামি জ্ঞানধারা এবং বিশ্বের
-            বিভিন্ন ধর্ম, সংস্কৃতি, দর্শন ও মানবিক চিন্তার মনীষীদের বাণীর
-            একটি উন্মুক্ত ও বৈচিত্র্যময় সংগ্রহ।
+            বাংলাদেশের মনীষী, মধ্যযুগীয় ইসলামি জ্ঞানধারার ব্যক্তিত্ব,
+            দার্শনিক, বিজ্ঞানী, সমাজসংস্কারক এবং বিশ্বের বিভিন্ন ধর্ম,
+            সংস্কৃতি ও মানবিক চিন্তার ১০০ জন ব্যক্তিত্বকে বাংলা
+            বর্ণানুক্রমে সাজানো হয়েছে।
           </p>
 
         </div>
@@ -1596,16 +1899,16 @@ html[data-theme="dark"] .header-icon{
 
       <div class="hero-actions">
 
-        <button class="primary open-editor-btn" data-tab="quote">
-          ＋ নতুন বাণী যুক্ত করুন
+        <button class="primary open-editor-btn" data-tab="thinker">
+          ＋ নতুন মনীষী যুক্ত করুন
         </button>
 
-        <button class="open-editor-btn" data-tab="thinker">
-          👤 নতুন মনীষী যুক্ত করুন
+        <button class="open-editor-btn" data-tab="quote">
+          ✎ নতুন বাণী যুক্ত করুন
         </button>
 
         <button class="open-editor-btn" data-tab="correction">
-          ✓ ভুল সংশোধন করুন
+          ✓ ভুল তথ্য সংশোধন করুন
         </button>
 
         <a href="famous-poet.html">
@@ -1616,56 +1919,40 @@ html[data-theme="dark"] .header-icon{
 
     </section>
 
-    <section class="card open-message">
+    <section class="card policy-card">
 
       <h2>সুপ্রিয় সাহিত্যপ্রেমী,</h2>
 
       <p>
-        সুন্দর ও সৃজনশীল সাহিত্যচর্চাকে সবার জন্য সহজ ও সমৃদ্ধ করতেই
-        আমাদের এই ক্ষুদ্র প্রয়াস।
+        সুন্দর ও সৃজনশীল সাহিত্যচর্চাকে সবার জন্য সহজ করতেই আমাদের এই ক্ষুদ্র প্রয়াস।
+        মনীষী, দার্শনিক ও চিন্তাবিদদের পরিচিতি এবং বাণী যুক্ত বা সংশোধনের
+        সুযোগটি সবার জন্য উন্মুক্ত রাখা হয়েছে।
       </p>
 
       <p>
-        লেখক, কবি ও চিন্তাবিদদের পরিচিতি এবং বাণী যুক্ত বা সংশোধনের
-        সুযোগ সবার জন্য উন্মুক্ত। নির্ভুল ও বিশ্বস্ত তথ্য যুক্ত করে
-        আপনিও আমাদের এই যাত্রার অংশীদার হতে পারেন।
-      </p>
-
-      <p>
-        আপনার জমা দেওয়া তথ্য <strong>‘ভুবনডাঙ্গার সাহিত্য টিম’</strong>
-        যাচাই ও অনুমোদনের পর প্রকাশ করবে। বর্তমান Static সংস্করণে জমা
-        দেওয়া প্রস্তাব শুধু এই Browser-এ সংরক্ষিত হবে; এখনো কোনো
-        সার্ভার বা সাহিত্য টিমের কাছে পাঠানো হবে না।
-      </p>
-
-      <p>
-        নিজে ভালো থাকুন, অন্যকে ভালো রাখুন।<br>
-        <strong>ভালোবাসা অবিরাম।</strong>
-      </p>
-
-    </section>
-
-    <section class="card diversity-card">
-
-      <h2>বৈচিত্র্য ও অগ্রাধিকার</h2>
-
-      <p>
-        বাংলাদেশের মনীষী এবং মধ্যযুগীয় ইসলামি জ্ঞানধারার মনীষীদের
-        যথাযথ গুরুত্ব দেওয়া হবে। পাশাপাশি হিন্দু, বৌদ্ধ, খ্রিষ্টীয়,
-        ইসলামি, মানবতাবাদী, দার্শনিক, বৈজ্ঞানিক, সাহিত্যিক ও বিভিন্ন
-        সাংস্কৃতিক ঐতিহ্যের ব্যক্তিত্বদেরও সম্মানের সঙ্গে রাখা হবে।
+        বাংলাদেশের মনীষী এবং মধ্যযুগীয় ইসলামি জ্ঞানধারার মনীষীদের যথাযথ
+        গুরুত্ব দেওয়া হয়েছে। পাশাপাশি বিভিন্ন ধর্ম, সংস্কৃতি, দর্শন,
+        বিজ্ঞান ও বিশ্বমানবিক চিন্তার ব্যক্তিত্বদেরও সম্মানের সঙ্গে রাখা হয়েছে।
         এটি কোনো নির্দিষ্ট ধর্মীয় সাহিত্যাঙ্গন নয়।
       </p>
 
-      <div class="diversity-tags">
-        <span class="diversity-tag">বাংলাদেশ</span>
-        <span class="diversity-tag">বাংলা অঞ্চল</span>
-        <span class="diversity-tag">মধ্যযুগীয় ইসলামি জ্ঞানধারা</span>
-        <span class="diversity-tag">বিশ্বদর্শন</span>
-        <span class="diversity-tag">বিজ্ঞান</span>
-        <span class="diversity-tag">মানবতা</span>
-        <span class="diversity-tag">বিভিন্ন ধর্ম ও সংস্কৃতি</span>
-      </div>
+      <p>
+        আপনার জমা দেওয়া তথ্য সরাসরি প্রকাশ হবে না।
+        <strong>‘ভুবনডাঙ্গার সাহিত্য টিম’</strong> বিশ্বস্ত তথ্যসূত্রের সঙ্গে
+        মিলিয়ে যাচাই ও অনুমোদনের পর প্রকাশ করবে।
+      </p>
+
+      <p>
+        Bot, Script, Auto-clicker বা Third-party engagement tool ব্যবহার করে
+        Like, Comment, Share বা Memory সংখ্যা কৃত্রিমভাবে বাড়ানো সম্পূর্ণ নিষিদ্ধ।
+        প্রমাণিত হলে সংশ্লিষ্ট অ্যাকাউন্ট স্থায়ীভাবে নিষিদ্ধ করা হবে।
+      </p>
+
+      <p>
+        নিজে ভালো থাকুন,<br>
+        অন্যকে ভালো রাখুন।<br><br>
+        <strong>ভালোবাসা অবিরাম।</strong>
+      </p>
 
     </section>
 
@@ -1673,39 +1960,41 @@ html[data-theme="dark"] .header-icon{
 
       <div class="toolbar-top">
 
-        <div class="quote-search">
+        <div class="thinker-search">
+
           <input
-            id="quoteSearchInput"
+            id="thinkerSearchInput"
             type="search"
-            placeholder="মনীষীর নাম, বাণী অথবা বিষয় খুঁজুন..."
+            placeholder="মনীষীর নাম, পরিচয় বা বিষয় খুঁজুন..."
           >
+
         </div>
 
-        <select class="quote-sort" id="quoteSort">
-          <option value="priority">অগ্রাধিকারভিত্তিক</option>
-          <option value="name">নাম অনুযায়ী</option>
-          <option value="popular">জনপ্রিয়তা অনুযায়ী</option>
+        <select class="thinker-filter" id="thinkerCategoryFilter">
+
+          <option value="all">সকল বিভাগ</option>
+          <option value="বাংলাদেশ">বাংলাদেশ</option>
+          <option value="বাংলা অঞ্চল">বাংলা অঞ্চল</option>
+          <option value="মধ্যযুগীয় ইসলামি জ্ঞানধারা">মধ্যযুগীয় ইসলামি জ্ঞানধারা</option>
+          <option value="দর্শন">দর্শন</option>
+          <option value="বিজ্ঞান">বিজ্ঞান</option>
+          <option value="সমাজসংস্কার">সমাজসংস্কার</option>
+          <option value="সাহিত্য ও সংস্কৃতি">সাহিত্য ও সংস্কৃতি</option>
+          <option value="বিশ্বমানবিক চিন্তা">বিশ্বমানবিক চিন্তা</option>
+
         </select>
 
       </div>
 
-      <div class="filter-row">
+      <div class="alphabet-nav" id="alphabetNav"></div>
 
-        <button class="filter-btn active" data-filter="all">সকল বাণী</button>
-        <button class="filter-btn" data-filter="bangladesh">বাংলাদেশ</button>
-        <button class="filter-btn" data-filter="islamic-medieval">মধ্যযুগীয় ইসলামি মনীষী</button>
-        <button class="filter-btn" data-filter="bangla">বাংলা অঞ্চল</button>
-        <button class="filter-btn" data-filter="world">বিশ্বমনীষী</button>
-        <button class="filter-btn" data-filter="science">বিজ্ঞান</button>
-        <button class="filter-btn" data-filter="humanity">মানবতা</button>
-
-      </div>
-
-      <p class="result-meta" id="resultMeta"></p>
+      <p class="result-meta" id="resultMeta">
+        মনীষীদের তালিকা লোড হচ্ছে...
+      </p>
 
     </section>
 
-    <section class="quote-grid" id="quoteGrid"></section>
+    <section class="thinker-directory" id="thinkerDirectory"></section>
 
   </section>
 
@@ -1713,49 +2002,107 @@ html[data-theme="dark"] .header-icon{
 
     <section class="card right-card">
 
-      <h3 class="right-title">প্রকাশের নীতি</h3>
+      <h3 class="right-title">তালিকার সারাংশ</h3>
 
-      <div class="right-rule">
-        <h3>বিশ্বস্ত উৎস প্রয়োজন</h3>
-        <p>বই, প্রামাণ্য প্রকাশনা, বক্তৃতা বা নির্ভরযোগ্য আর্কাইভ উল্লেখ করতে হবে।</p>
-      </div>
+      <div class="stat-grid">
 
-      <div class="right-rule">
-        <h3>ভুল নামে বাণী নয়</h3>
-        <p>সামাজিক মাধ্যমে প্রচলিত কিন্তু যাচাইহীন উক্তি সরাসরি প্রকাশ করা হবে না।</p>
-      </div>
+        <div class="stat-item">
+          <strong id="totalThinkers">০</strong>
+          <span>সর্বমোট মনীষী</span>
+        </div>
 
-      <div class="right-rule">
-        <h3>অনুবাদ পরিষ্কারভাবে উল্লেখ</h3>
-        <p>মূল ভাষা, অনুবাদক ও অনুবাদের উৎস পাওয়া গেলে উল্লেখ করতে হবে।</p>
-      </div>
+        <div class="stat-item">
+          <strong>১০০</strong>
+          <span>প্রতি পেজে</span>
+        </div>
 
-    </section>
+        <div class="stat-item">
+          <strong id="visibleThinkers">০</strong>
+          <span>দেখা যাচ্ছে</span>
+        </div>
 
-    <section class="card right-card">
+        <div class="stat-item">
+          <strong id="letterCount">০</strong>
+          <span>বর্ণ বিভাগ</span>
+        </div>
 
-      <h3 class="right-title">সবার সাহিত্যভুবন</h3>
-
-      <div class="right-rule">
-        <h3>অগ্রাধিকার মানে একমাত্র নয়</h3>
-        <p>
-          বাংলাদেশি ও মধ্যযুগীয় ইসলামি মনীষীরা গুরুত্ব পাবেন, তবে সংগ্রহটি
-          বিভিন্ন ধর্ম, দর্শন ও সংস্কৃতির প্রতিনিধিত্ব করবে।
-        </p>
-      </div>
-
-      <div class="right-rule">
-        <h3>অসম্মানজনক উপস্থাপন নিষিদ্ধ</h3>
-        <p>
-          ধর্ম, জাতি, সংস্কৃতি বা কোনো মনীষীকে বিদ্বেষপূর্ণভাবে উপস্থাপন করা যাবে না।
-        </p>
       </div>
 
     </section>
 
     <section class="card right-card">
 
-      <h3 class="right-title">প্রয়োজনীয় লিংক</h3>
+      <h3 class="right-title">বৈচিত্র্যের নীতি</h3>
+
+      <div class="right-rule">
+
+        <h3>বাংলাদেশকে অগ্রাধিকার</h3>
+
+        <p>
+          বাংলাদেশের মনীষী, সমাজসংস্কারক, বিজ্ঞানী ও চিন্তাবিদদের যথাযথ গুরুত্ব থাকবে।
+        </p>
+
+      </div>
+
+      <div class="right-rule">
+
+        <h3>ইসলামি জ্ঞানধারার গুরুত্ব</h3>
+
+        <p>
+          মধ্যযুগীয় ইসলামি দর্শন, বিজ্ঞান, চিকিৎসা ও জ্ঞানচর্চার মনীষীরা গুরুত্ব পাবেন।
+        </p>
+
+      </div>
+
+      <div class="right-rule">
+
+        <h3>কোনো একক ধর্মীয় মঞ্চ নয়</h3>
+
+        <p>
+          বিভিন্ন ধর্ম, সংস্কৃতি, দর্শন ও বিশ্বমানবিক চিন্তার ব্যক্তিত্বদেরও রাখা হবে।
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="card right-card">
+
+      <h3 class="right-title">সম্পাদনার নীতি</h3>
+
+      <div class="right-rule">
+
+        <h3>বিশ্বস্ত তথ্যসূত্র দিন</h3>
+
+        <p>
+          বই, গবেষণা, প্রামাণ্য প্রকাশনা, বক্তৃতা বা নির্ভরযোগ্য আর্কাইভ উল্লেখ করুন।
+        </p>
+
+      </div>
+
+      <div class="right-rule">
+
+        <h3>যাচাইহীন বাণী নয়</h3>
+
+        <p>
+          সামাজিক মাধ্যমে প্রচলিত কিন্তু উৎসহীন বাণী সরাসরি প্রকাশ করা হবে না।
+        </p>
+
+      </div>
+
+      <div class="right-rule">
+
+        <h3>Bot ব্যবহার নিষিদ্ধ</h3>
+
+        <p>
+          কৃত্রিম Engagement বাড়ানোর চেষ্টা ধরা পড়লে অ্যাকাউন্ট স্থায়ীভাবে নিষিদ্ধ হবে।
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="card right-card">
 
       <a href="famous-poet.html" class="right-link">
         খ্যাতিমান কবি
@@ -1787,8 +2134,8 @@ html[data-theme="dark"] .header-icon{
 
   <div class="footer-links">
     <a href="index.html">হোম</a>
-    <a href="famous-quotes.html">বাণী</a>
     <a href="famous-poet.html">খ্যাতিমান কবি</a>
+    <a href="famous-quotes.html">বাণী</a>
     <a href="contact.html">যোগাযোগ</a>
     <a href="policy.html">নীতিমালা</a>
   </div>
@@ -1804,24 +2151,30 @@ html[data-theme="dark"] .header-icon{
     <div class="modal-head">
 
       <div>
+
         <h2>মনীষী ও বাণী সম্পাদনা</h2>
+
         <p>
-          তথ্য জমা দেওয়ার আগে বিশ্বস্ত উৎস যাচাই করুন।
+          বর্তমান Static সংস্করণে জমা দেওয়া তথ্য শুধু এই Browser-এ
+          Pending Review হিসেবে সংরক্ষিত হবে।
         </p>
+
       </div>
 
-      <button class="modal-close" id="closeEditorModal">×</button>
+      <button class="modal-close" id="closeEditorModal">
+        ×
+      </button>
 
     </div>
 
     <div class="editor-tabs">
 
-      <button class="editor-tab active" data-tab="quote">
-        নতুন বাণী
+      <button class="editor-tab active" data-tab="thinker">
+        নতুন মনীষী
       </button>
 
-      <button class="editor-tab" data-tab="thinker">
-        নতুন মনীষী
+      <button class="editor-tab" data-tab="quote">
+        নতুন বাণী
       </button>
 
       <button class="editor-tab" data-tab="correction">
@@ -1832,41 +2185,117 @@ html[data-theme="dark"] .header-icon{
 
     <form id="editorForm">
 
-      <section class="form-section active" data-section="quote">
+      <section class="form-section active" data-section="thinker">
 
         <div class="form-grid">
 
           <div class="form-group">
 
-            <label class="form-label" for="quotePersonName">
+            <label class="form-label" for="newThinkerName">
               মনীষীর নাম
               <span class="required">*</span>
             </label>
 
             <input
               class="form-input"
-              id="quotePersonName"
+              id="newThinkerName"
               type="text"
               maxlength="150"
-              placeholder="মনীষীর পূর্ণ নাম লিখুন"
+              placeholder="পূর্ণ নাম লিখুন"
             >
 
           </div>
 
           <div class="form-group">
 
-            <label class="form-label" for="quoteCategory">
+            <label class="form-label" for="newThinkerCategory">
               বিভাগ
             </label>
 
-            <select class="form-select" id="quoteCategory">
+            <select class="form-select" id="newThinkerCategory">
               <option value="বাংলাদেশ">বাংলাদেশ</option>
-              <option value="মধ্যযুগীয় ইসলামি মনীষী">মধ্যযুগীয় ইসলামি মনীষী</option>
               <option value="বাংলা অঞ্চল">বাংলা অঞ্চল</option>
-              <option value="বিশ্বমনীষী">বিশ্বমনীষী</option>
+              <option value="মধ্যযুগীয় ইসলামি জ্ঞানধারা">মধ্যযুগীয় ইসলামি জ্ঞানধারা</option>
+              <option value="দর্শন">দর্শন</option>
               <option value="বিজ্ঞান">বিজ্ঞান</option>
-              <option value="মানবতা ও দর্শন">মানবতা ও দর্শন</option>
+              <option value="সমাজসংস্কার">সমাজসংস্কার</option>
+              <option value="সাহিত্য ও সংস্কৃতি">সাহিত্য ও সংস্কৃতি</option>
+              <option value="বিশ্বমানবিক চিন্তা">বিশ্বমানবিক চিন্তা</option>
             </select>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label" for="newThinkerBio">
+              সংক্ষিপ্ত পরিচিতি
+              <span class="required">*</span>
+            </label>
+
+            <textarea
+              class="form-textarea"
+              id="newThinkerBio"
+              maxlength="3500"
+              placeholder="তথ্যভিত্তিক পরিচিতি লিখুন..."
+            ></textarea>
+
+          </div>
+
+          <div class="form-group full">
+
+            <label class="form-label" for="newThinkerSource">
+              বিশ্বস্ত তথ্যসূত্র
+              <span class="required">*</span>
+            </label>
+
+            <input
+              class="form-input"
+              id="newThinkerSource"
+              type="text"
+              maxlength="500"
+              placeholder="বই, গবেষণা, প্রকাশনা বা নির্ভরযোগ্য লিংক"
+            >
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <section class="form-section" data-section="quote">
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label class="form-label" for="quoteThinkerName">
+              মনীষীর নাম
+              <span class="required">*</span>
+            </label>
+
+            <input
+              class="form-input"
+              id="quoteThinkerName"
+              type="text"
+              maxlength="150"
+              placeholder="মনীষীর নাম লিখুন"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label class="form-label" for="quoteLanguage">
+              মূল ভাষা
+            </label>
+
+            <input
+              class="form-input"
+              id="quoteLanguage"
+              type="text"
+              maxlength="80"
+              placeholder="বাংলা, আরবি, ফারসি, ইংরেজি..."
+            >
 
           </div>
 
@@ -1880,25 +2309,9 @@ html[data-theme="dark"] .header-icon{
             <textarea
               class="form-textarea"
               id="quoteText"
-              maxlength="1500"
+              maxlength="1800"
               placeholder="বাণীটি নির্ভুলভাবে লিখুন..."
             ></textarea>
-
-          </div>
-
-          <div class="form-group">
-
-            <label class="form-label" for="quoteOriginalLanguage">
-              মূল ভাষা
-            </label>
-
-            <input
-              class="form-input"
-              id="quoteOriginalLanguage"
-              type="text"
-              maxlength="80"
-              placeholder="যেমন: বাংলা, আরবি, ফারসি"
-            >
 
           </div>
 
@@ -1914,6 +2327,22 @@ html[data-theme="dark"] .header-icon{
               type="text"
               maxlength="120"
               placeholder="অনুবাদ হলে নাম লিখুন"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label class="form-label" for="quoteWork">
+              গ্রন্থ বা বক্তৃতা
+            </label>
+
+            <input
+              class="form-input"
+              id="quoteWork"
+              type="text"
+              maxlength="200"
+              placeholder="প্রযোজ্য হলে লিখুন"
             >
 
           </div>
@@ -1939,95 +2368,20 @@ html[data-theme="dark"] .header-icon{
 
       </section>
 
-      <section class="form-section" data-section="thinker">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label class="form-label" for="thinkerName">
-              মনীষীর নাম
-              <span class="required">*</span>
-            </label>
-
-            <input
-              class="form-input"
-              id="thinkerName"
-              type="text"
-              maxlength="150"
-              placeholder="পূর্ণ নাম লিখুন"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label class="form-label" for="thinkerGroup">
-              পরিচিতির বিভাগ
-            </label>
-
-            <select class="form-select" id="thinkerGroup">
-              <option value="বাংলাদেশ">বাংলাদেশ</option>
-              <option value="মধ্যযুগীয় ইসলামি জ্ঞানধারা">মধ্যযুগীয় ইসলামি জ্ঞানধারা</option>
-              <option value="বাংলা অঞ্চল">বাংলা অঞ্চল</option>
-              <option value="বিশ্বদর্শন">বিশ্বদর্শন</option>
-              <option value="বিজ্ঞান">বিজ্ঞান</option>
-              <option value="অন্যান্য">অন্যান্য</option>
-            </select>
-
-          </div>
-
-          <div class="form-group full">
-
-            <label class="form-label" for="thinkerBio">
-              সংক্ষিপ্ত পরিচিতি
-              <span class="required">*</span>
-            </label>
-
-            <textarea
-              class="form-textarea"
-              id="thinkerBio"
-              maxlength="3000"
-              placeholder="তথ্যভিত্তিক পরিচিতি লিখুন..."
-            ></textarea>
-
-          </div>
-
-          <div class="form-group full">
-
-            <label class="form-label" for="thinkerSource">
-              বিশ্বস্ত তথ্যসূত্র
-              <span class="required">*</span>
-            </label>
-
-            <input
-              class="form-input"
-              id="thinkerSource"
-              type="text"
-              maxlength="500"
-              placeholder="প্রামাণ্য বই, প্রকাশনা বা নির্ভরযোগ্য লিংক"
-            >
-
-          </div>
-
-        </div>
-
-      </section>
-
       <section class="form-section" data-section="correction">
 
         <div class="form-grid">
 
           <div class="form-group">
 
-            <label class="form-label" for="correctionPerson">
+            <label class="form-label" for="correctionThinkerName">
               মনীষীর নাম
               <span class="required">*</span>
             </label>
 
             <input
               class="form-input"
-              id="correctionPerson"
+              id="correctionThinkerName"
               type="text"
               maxlength="150"
               placeholder="মনীষীর নাম লিখুন"
@@ -2042,10 +2396,11 @@ html[data-theme="dark"] .header-icon{
             </label>
 
             <select class="form-select" id="correctionType">
-              <option value="বাণীর ভুল">বাণীর ভুল</option>
-              <option value="ভুল ব্যক্তির নামে">ভুল ব্যক্তির নামে</option>
-              <option value="অনুবাদের ভুল">অনুবাদের ভুল</option>
+              <option value="নামের বানান">নামের বানান</option>
               <option value="পরিচিতির ভুল">পরিচিতির ভুল</option>
+              <option value="বাণীর ভুল">বাণীর ভুল</option>
+              <option value="ভুল ব্যক্তির নামে বাণী">ভুল ব্যক্তির নামে বাণী</option>
+              <option value="অনুবাদের ভুল">অনুবাদের ভুল</option>
               <option value="তথ্যসূত্রের ভুল">তথ্যসূত্রের ভুল</option>
             </select>
 
@@ -2053,30 +2408,30 @@ html[data-theme="dark"] .header-icon{
 
           <div class="form-group full">
 
-            <label class="form-label" for="currentQuoteInfo">
+            <label class="form-label" for="currentInformation">
               বর্তমানে প্রকাশিত তথ্য
             </label>
 
             <textarea
               class="form-textarea"
-              id="currentQuoteInfo"
-              maxlength="2500"
-              placeholder="বর্তমান ভুল বা অসম্পূর্ণ অংশ লিখুন..."
+              id="currentInformation"
+              maxlength="4000"
+              placeholder="বর্তমান ভুল বা অসম্পূর্ণ তথ্য লিখুন..."
             ></textarea>
 
           </div>
 
           <div class="form-group full">
 
-            <label class="form-label" for="correctedQuoteInfo">
+            <label class="form-label" for="correctedInformation">
               প্রস্তাবিত সঠিক তথ্য
               <span class="required">*</span>
             </label>
 
             <textarea
               class="form-textarea"
-              id="correctedQuoteInfo"
-              maxlength="3000"
+              id="correctedInformation"
+              maxlength="6000"
               placeholder="সংশোধিত তথ্য লিখুন..."
             ></textarea>
 
@@ -2094,7 +2449,7 @@ html[data-theme="dark"] .header-icon{
               id="correctionSource"
               type="text"
               maxlength="500"
-              placeholder="প্রামাণ্য উৎস লিখুন"
+              placeholder="প্রামাণ্য তথ্যসূত্র লিখুন"
             >
 
           </div>
@@ -2119,8 +2474,19 @@ html[data-theme="dark"] .header-icon{
         <input id="respectCheck" type="checkbox" required>
 
         <label for="respectCheck">
-          আমি কোনো ধর্ম, সংস্কৃতি, সম্প্রদায় বা মনীষীর প্রতি অসম্মানজনক,
-          বিদ্বেষমূলক বা বিভ্রান্তিকর তথ্য জমা দিচ্ছি না।
+          আমি কোনো ধর্ম, সংস্কৃতি, জাতি, সম্প্রদায় বা ব্যক্তিত্বকে
+          অসম্মান করে কোনো তথ্য জমা দিচ্ছি না।
+        </label>
+
+      </div>
+
+      <div class="checkbox-row">
+
+        <input id="botCheck" type="checkbox" required>
+
+        <label for="botCheck">
+          আমি Bot, Script, Auto-clicker বা Third-party engagement tool
+          ব্যবহার করব না এবং এ ধরনের ব্যবহারে স্থায়ী নিষেধাজ্ঞা হতে পারে।
         </label>
 
       </div>
@@ -2130,8 +2496,8 @@ html[data-theme="dark"] .header-icon{
         <input id="reviewCheck" type="checkbox" required>
 
         <label for="reviewCheck">
-          আমি বুঝতে পেরেছি, বর্তমান Static সংস্করণে প্রস্তাবটি শুধু এই
-          Browser-এ সংরক্ষিত হবে; এখনো সাহিত্য টিমের কাছে বাস্তবে পাঠানো হবে না।
+          আমি বুঝতে পেরেছি, Backend যুক্ত না হওয়া পর্যন্ত প্রস্তাবটি
+          শুধু এই Browser-এ Pending Review হিসেবে সংরক্ষিত হবে।
         </label>
 
       </div>
@@ -2153,6 +2519,8 @@ html[data-theme="dark"] .header-icon{
   </section>
 
 </div>
+
+<button class="to-top" id="toTopBtn">↑</button>
 
 <div class="toast" id="toast"></div>
 
@@ -2192,7 +2560,23 @@ function escapeHtml(value){
     .replace(/'/g,"&#039;");
 }
 
-/* DATE */
+function slugify(value){
+  return value
+    .trim()
+    .toLocaleLowerCase("bn")
+    .replace(/\s+/g,"-")
+    .replace(/[^\u0980-\u09FFa-z0-9-]/gi,"");
+}
+
+function firstLetter(name){
+  const clean = name.trim();
+
+  if(clean.startsWith("অ্যা")){
+    return "অ";
+  }
+
+  return clean.charAt(0);
+}
 
 function renderDate(){
   const today = new Date();
@@ -2253,8 +2637,6 @@ function renderDate(){
 
 renderDate();
 
-/* TOAST */
-
 const toast = document.getElementById("toast");
 
 function showToast(message){
@@ -2268,10 +2650,392 @@ function showToast(message){
   },3200);
 }
 
+const thinkers = [
+  ["অক্ষয়কুমার দত্ত","বাংলা অঞ্চল","সমাজসংস্কার","যুক্তিবাদী লেখক, চিন্তাবিদ ও সমাজসংস্কারক।"],
+  ["অতীশ দীপঙ্কর","বাংলা অঞ্চল","দর্শন","বৌদ্ধ পণ্ডিত, দার্শনিক ও শিক্ষাচার্য।"],
+  ["অমর্ত্য সেন","বাংলাদেশ","বিশ্বমানবিক চিন্তা","অর্থনীতিবিদ, দার্শনিক ও মানবকল্যাণবিষয়ক চিন্তাবিদ।"],
+  ["অরবিন্দ ঘোষ","বাংলা অঞ্চল","দর্শন","দার্শনিক, লেখক ও আধ্যাত্মিক চিন্তাবিদ।"],
+  ["আবদুল করিম সাহিত্যবিশারদ","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","পুঁথি সংগ্রাহক, গবেষক ও সাহিত্যবিশারদ।"],
+  ["আবদুল্লাহ আল মামুন","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","নাট্যকার, পরিচালক ও সাংস্কৃতিক ব্যক্তিত্ব।"],
+  ["আবু নাসর আল-ফারাবি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","দর্শন","দার্শনিক, যুক্তিবিদ ও রাজনৈতিক চিন্তাবিদ।"],
+  ["আবু বকর আল-রাজি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","বিজ্ঞান","চিকিৎসাবিদ, দার্শনিক ও বিজ্ঞানী।"],
+  ["আবু রায়হান আল-বিরুনি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","বিজ্ঞান","জ্যোতির্বিদ, গণিতবিদ, ইতিহাসবিদ ও গবেষক।"],
+  ["আবুল ফজল","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","শিক্ষাবিদ, প্রাবন্ধিক ও মানবতাবাদী চিন্তাবিদ।"],
+  ["আল-কিন্দি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","দর্শন","দার্শনিক, গণিতবিদ ও বিজ্ঞানচিন্তক।"],
+  ["আল-খাওয়ারিজমি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","বিজ্ঞান","গণিতবিদ, জ্যোতির্বিদ ও বীজগণিতের পথিকৃৎ।"],
+  ["আল-গাজালি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","দর্শন","দার্শনিক, ধর্মতাত্ত্বিক ও নৈতিক চিন্তাবিদ।"],
+  ["আল-জাহিজ","মধ্যযুগীয় ইসলামি জ্ঞানধারা","সাহিত্য ও সংস্কৃতি","লেখক, চিন্তাবিদ ও পর্যবেক্ষক।"],
+  ["আল-মাসুদি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","বিজ্ঞান","ইতিহাসবিদ, ভূগোলবিদ ও ভ্রমণলেখক।"],
+  ["আল-হাজেন","মধ্যযুগীয় ইসলামি জ্ঞানধারা","বিজ্ঞান","পদার্থবিদ, গণিতবিদ ও আলোকবিজ্ঞানী।"],
+  ["আলী শরিয়তি","বিশ্বমানবিক চিন্তা","দর্শন","সমাজচিন্তক, লেখক ও দার্শনিক।"],
+  ["আহমদ ছফা","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","লেখক, প্রাবন্ধিক ও সমাজচিন্তক।"],
+  ["ইবনে আরাবি","মধ্যযুগীয় ইসলামি জ্ঞানধারা","দর্শন","দার্শনিক, আধ্যাত্মিক চিন্তাবিদ ও লেখক।"],
+  ["ইবনে খালদুন","মধ্যযুগীয় ইসলামি জ্ঞানধারা","দর্শন","ইতিহাসবিদ, সমাজচিন্তক ও রাষ্ট্রদার্শনিক।"],
+  ["ইবনে রুশদ","মধ্যযুগীয় ইসলামি জ্ঞানধারা","দর্শন","দার্শনিক, চিকিৎসাবিদ ও আইনজ্ঞ।"],
+  ["ইবনে সিনা","মধ্যযুগীয় ইসলামি জ্ঞানধারা","বিজ্ঞান","চিকিৎসাবিদ, দার্শনিক ও বিজ্ঞানী।"],
+  ["ইবনে বতুতা","মধ্যযুগীয় ইসলামি জ্ঞানধারা","সাহিত্য ও সংস্কৃতি","পর্যটক, ভ্রমণলেখক ও পর্যবেক্ষক।"],
+  ["ঈশ্বরচন্দ্র বিদ্যাসাগর","বাংলা অঞ্চল","সমাজসংস্কার","শিক্ষাবিদ, সমাজসংস্কারক ও গদ্যকার।"],
+  ["উমর খৈয়াম","মধ্যযুগীয় ইসলামি জ্ঞানধারা","বিজ্ঞান","গণিতবিদ, জ্যোতির্বিদ, দার্শনিক ও কবি।"],
+  ["এ পি জে আবদুল কালাম","বিশ্বমানবিক চিন্তা","বিজ্ঞান","বিজ্ঞানী, শিক্ষাবিদ ও অনুপ্রেরণামূলক চিন্তাবিদ।"],
+  ["এডওয়ার্ড সাঈদ","বিশ্বমানবিক চিন্তা","দর্শন","সাহিত্যসমালোচক, চিন্তাবিদ ও সাংস্কৃতিক তাত্ত্বিক।"],
+  ["এরিস্টটল","দর্শন","দর্শন","দার্শনিক, যুক্তিবিদ ও প্রাকৃতিক জগতের গবেষক।"],
+  ["ওয়াংগারি মাথাই","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","পরিবেশকর্মী, সমাজসংস্কারক ও মানবাধিকারকর্মী।"],
+  ["কাজী আবদুল ওদুদ","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","প্রাবন্ধিক, শিক্ষাবিদ ও মুক্তবুদ্ধির চিন্তাবিদ।"],
+  ["কাজী মোতাহার হোসেন","বাংলাদেশ","বিজ্ঞান","বিজ্ঞানী, শিক্ষাবিদ, সাহিত্যিক ও চিন্তাবিদ।"],
+  ["কনফুসিয়াস","দর্শন","দর্শন","নৈতিকতা, শিক্ষা ও সামাজিক দায়িত্বের দার্শনিক।"],
+  ["কার্ল মার্কস","দর্শন","দর্শন","দার্শনিক, অর্থনৈতিক ও সামাজিক তাত্ত্বিক।"],
+  ["গ্যালিলিও গ্যালিলেই","বিজ্ঞান","বিজ্ঞান","জ্যোতির্বিদ, পদার্থবিদ ও বৈজ্ঞানিক চিন্তার পথিকৃৎ।"],
+  ["গৌতম বুদ্ধ","বিশ্বমানবিক চিন্তা","দর্শন","নৈতিকতা, করুণা ও আত্মজিজ্ঞাসার শিক্ষক।"],
+  ["চার্লস ডারউইন","বিজ্ঞান","বিজ্ঞান","প্রকৃতিবিদ ও বিবর্তনবিষয়ক গবেষক।"],
+  ["জগদীশচন্দ্র বসু","বাংলা অঞ্চল","বিজ্ঞান","বিজ্ঞানী, উদ্ভিদবিদ ও গবেষক।"],
+  ["জন লক","দর্শন","দর্শন","দার্শনিক ও রাজনৈতিক চিন্তাবিদ।"],
+  ["জন স্টুয়ার্ট মিল","দর্শন","দর্শন","দার্শনিক, অর্থনীতিবিদ ও স্বাধীনতার চিন্তাবিদ।"],
+  ["জাঁ জাক রুশো","দর্শন","দর্শন","দার্শনিক, লেখক ও সামাজিক চুক্তির চিন্তাবিদ।"],
+  ["জ্যোতিরাও ফুলে","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","শিক্ষাবিদ ও সামাজিক ন্যায়ের সংস্কারক।"],
+  ["টমাস পেইন","দর্শন","দর্শন","লেখক, রাজনৈতিক চিন্তাবিদ ও মানবাধিকারের প্রবক্তা।"],
+  ["ডেভিড হিউম","দর্শন","দর্শন","দার্শনিক, ইতিহাসবিদ ও অভিজ্ঞতাবাদী চিন্তাবিদ।"],
+  ["ড. মুহম্মদ শহীদুল্লাহ","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","ভাষাবিদ, গবেষক ও শিক্ষাবিদ।"],
+  ["নজরুল ইসলাম বাবু","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","গীতিকার ও সাংস্কৃতিক ব্যক্তিত্ব।"],
+  ["নার্গিস মোহাম্মদি","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","মানবাধিকারকর্মী ও সামাজিক ন্যায়ের কণ্ঠ।"],
+  ["নিকোলা টেসলা","বিজ্ঞান","বিজ্ঞান","উদ্ভাবক, প্রকৌশলী ও বিদ্যুৎবিজ্ঞানী।"],
+  ["নিকোলাস কোপার্নিকাস","বিজ্ঞান","বিজ্ঞান","জ্যোতির্বিদ ও বৈজ্ঞানিক চিন্তার গুরুত্বপূর্ণ ব্যক্তিত্ব।"],
+  ["নেলসন ম্যান্ডেলা","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","বর্ণবৈষম্যবিরোধী নেতা ও মানবাধিকারের কণ্ঠ।"],
+  ["পাওলো ফ্রেইরি","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","শিক্ষাতাত্ত্বিক ও মুক্তিমুখী শিক্ষার চিন্তাবিদ।"],
+  ["প্লেটো","দর্শন","দর্শন","দার্শনিক, শিক্ষাচিন্তক ও রাজনৈতিক তাত্ত্বিক।"],
+  ["ফজলুর রহমান মালিক","বিশ্বমানবিক চিন্তা","দর্শন","ইসলামি চিন্তাবিদ, শিক্ষাবিদ ও গবেষক।"],
+  ["ফ্রান্সিস বেকন","দর্শন","বিজ্ঞান","দার্শনিক ও বৈজ্ঞানিক পদ্ধতির প্রবক্তা।"],
+  ["ফ্রেডরিখ নীটশে","দর্শন","দর্শন","দার্শনিক, ভাষাতাত্ত্বিক ও সংস্কৃতি-সমালোচক।"],
+  ["বঙ্কিমচন্দ্র চট্টোপাধ্যায়","বাংলা অঞ্চল","সাহিত্য ও সংস্কৃতি","সাহিত্যিক, প্রাবন্ধিক ও চিন্তাবিদ।"],
+  ["বেগম রোকেয়া","বাংলাদেশ","সমাজসংস্কার","লেখক, শিক্ষাবিদ ও নারীজাগরণের অগ্রদূত।"],
+  ["বার্ট্রান্ড রাসেল","দর্শন","দর্শন","দার্শনিক, যুক্তিবিদ ও শান্তিবাদী চিন্তাবিদ।"],
+  ["বিআর আম্বেদকর","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","আইনজ্ঞ, অর্থনীতিবিদ ও সামাজিক ন্যায়ের সংস্কারক।"],
+  ["বিবেকানন্দ","বাংলা অঞ্চল","দর্শন","দার্শনিক, বক্তা ও মানবসেবার চিন্তাবিদ।"],
+  ["ব্রাহ্মগুপ্ত","বিজ্ঞান","বিজ্ঞান","গণিতবিদ ও জ্যোতির্বিদ।"],
+  ["ভলতেয়ার","দর্শন","দর্শন","লেখক, দার্শনিক ও মতপ্রকাশের স্বাধীনতার প্রবক্তা।"],
+  ["মওলানা আবদুল হামিদ খান ভাসানী","বাংলাদেশ","সমাজসংস্কার","রাজনৈতিক নেতা ও কৃষক-শ্রমিকের অধিকারকর্মী।"],
+  ["মুহাম্মদ আবদুহ","বিশ্বমানবিক চিন্তা","দর্শন","সংস্কারক, শিক্ষাবিদ ও ইসলামি চিন্তাবিদ।"],
+  ["মুহাম্মদ ইকবাল","বিশ্বমানবিক চিন্তা","দর্শন","কবি, দার্শনিক ও আত্মমর্যাদার চিন্তাবিদ।"],
+  ["মুহাম্মদ এনামুল হক","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","গবেষক, শিক্ষাবিদ ও সাহিত্যতাত্ত্বিক।"],
+  ["মুহাম্মদ কুদরাত-এ-খুদা","বাংলাদেশ","বিজ্ঞান","বিজ্ঞানী, শিক্ষাবিদ ও গবেষক।"],
+  ["মুহাম্মদ ইউনূস","বাংলাদেশ","বিশ্বমানবিক চিন্তা","অর্থনীতিবিদ ও সামাজিক উদ্যোগের প্রবক্তা।"],
+  ["মাইকেল ফ্যারাডে","বিজ্ঞান","বিজ্ঞান","পদার্থবিদ ও বিদ্যুৎচুম্বকত্বের গবেষক।"],
+  ["মারি কুরি","বিজ্ঞান","বিজ্ঞান","পদার্থবিদ, রসায়নবিদ ও তেজস্ক্রিয়তার গবেষক।"],
+  ["মার্টিন লুথার কিং জুনিয়র","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","নাগরিক অধিকার ও অহিংস আন্দোলনের নেতা।"],
+  ["মাদার তেরেসা","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","মানবসেবা ও দরিদ্র মানুষের সেবায় পরিচিত ব্যক্তিত্ব।"],
+  ["মহাত্মা গান্ধী","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","অহিংস আন্দোলন ও মানবিক রাজনীতির চিন্তাবিদ।"],
+  ["রবীন্দ্রনাথ ঠাকুর","বাংলা অঞ্চল","সাহিত্য ও সংস্কৃতি","কবি, শিক্ষাচিন্তক ও বিশ্বমানবতার কণ্ঠ।"],
+  ["রাজা রামমোহন রায়","বাংলা অঞ্চল","সমাজসংস্কার","সমাজসংস্কারক, শিক্ষাচিন্তক ও লেখক।"],
+  ["রেনে দেকার্ত","দর্শন","দর্শন","দার্শনিক, গণিতবিদ ও যুক্তিবাদী চিন্তাবিদ।"],
+  ["রোজা পার্কস","বিশ্বমানবিক চিন্তা","সমাজসংস্কার","নাগরিক অধিকার আন্দোলনের গুরুত্বপূর্ণ ব্যক্তিত্ব।"],
+  ["লালন শাহ","বাংলা অঞ্চল","দর্শন","সাধক, গীতিকার ও মানবতাবাদী চিন্তাবিদ।"],
+  ["লিওনার্দো দা ভিঞ্চি","বিজ্ঞান","বিজ্ঞান","শিল্পী, উদ্ভাবক ও বহুমুখী গবেষক।"],
+  ["শেখ মুজিবুর রহমান","বাংলাদেশ","সমাজসংস্কার","রাজনৈতিক নেতা ও বাংলাদেশের স্বাধীনতার প্রধান ব্যক্তিত্ব।"],
+  ["সক্রেটিস","দর্শন","দর্শন","প্রশ্ন, নৈতিকতা ও আত্মজিজ্ঞাসার দার্শনিক।"],
+  ["সত্যজিৎ রায়","বাংলা অঞ্চল","সাহিত্য ও সংস্কৃতি","চলচ্চিত্রকার, লেখক, চিত্রকর ও সাংস্কৃতিক ব্যক্তিত্ব।"],
+  ["সত্যেন্দ্রনাথ বসু","বাংলা অঞ্চল","বিজ্ঞান","পদার্থবিদ ও কোয়ান্টাম পরিসংখ্যানের গবেষক।"],
+  ["সুলতানা কামাল","বাংলাদেশ","সমাজসংস্কার","মানবাধিকারকর্মী ও সামাজিক ন্যায়ের কণ্ঠ।"],
+  ["সুফিয়া কামাল","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","কবি, সমাজকর্মী ও নারীজাগরণের ব্যক্তিত্ব।"],
+  ["সেলিনা হোসেন","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","লেখক, গবেষক ও সাহিত্যিক।"],
+  ["সেনেকা","দর্শন","দর্শন","স্টোইক দার্শনিক, লেখক ও নৈতিক চিন্তাবিদ।"],
+  ["সিমোন দ্য বোভোয়ার","দর্শন","দর্শন","দার্শনিক, লেখক ও নারীবাদী চিন্তাবিদ।"],
+  ["সিমোন ওয়েইল","দর্শন","দর্শন","দার্শনিক, সামাজিক চিন্তাবিদ ও মানবতাবাদী লেখক।"],
+  ["স্টিফেন হকিং","বিজ্ঞান","বিজ্ঞান","পদার্থবিদ, মহাকাশতত্ত্ববিদ ও বিজ্ঞানলেখক।"],
+  ["হান্না আরেন্ট","দর্শন","দর্শন","রাজনৈতিক দার্শনিক ও সামাজিক চিন্তাবিদ।"],
+  ["হাসান আজিজুল হক","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","কথাসাহিত্যিক, প্রাবন্ধিক ও চিন্তাবিদ।"],
+  ["হেগেল","দর্শন","দর্শন","দার্শনিক ও ইতিহাস-চেতনার তাত্ত্বিক।"],
+  ["হেনরি ডেভিড থোরো","বিশ্বমানবিক চিন্তা","দর্শন","লেখক, প্রকৃতিচিন্তক ও নাগরিক অবাধ্যতার প্রবক্তা।"],
+  ["হোমি জে ভাবা","বিশ্বমানবিক চিন্তা","দর্শন","সাংস্কৃতিক তাত্ত্বিক ও উত্তর-ঔপনিবেশিক চিন্তাবিদ।"],
+  ["হুমায়ুন আজাদ","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","ভাষাবিজ্ঞানী, লেখক, প্রাবন্ধিক ও চিন্তাবিদ।"],
+  ["হুমায়ূন আহমেদ","বাংলাদেশ","সাহিত্য ও সংস্কৃতি","কথাসাহিত্যিক, নাট্যকার ও চলচ্চিত্রকার।"],
+  ["হোসেন শহীদ সোহরাওয়ার্দী","বাংলাদেশ","সমাজসংস্কার","রাজনৈতিক নেতা ও গণতান্ত্রিক চিন্তার ব্যক্তিত্ব।"],
+  ["হযরত ইনায়েত খান","বিশ্বমানবিক চিন্তা","দর্শন","সংগীতজ্ঞ, আধ্যাত্মিক চিন্তাবিদ ও লেখক।"]
+]
+.slice(0,100)
+.map(function(item,index){
+  return {
+    id:index + 1,
+    name:item[0],
+    region:item[1],
+    category:item[2],
+    description:item[3],
+    slug:slugify(item[0])
+  };
+});
+
+thinkers.sort(function(a,b){
+  return a.name.localeCompare(b.name,"bn");
+});
+
+let thinkerQuery = "";
+let categoryFilter = "all";
+let activeLetter = "all";
+
+function groupedThinkers(){
+  const filtered = thinkers.filter(function(thinker){
+    const queryMatch =
+      !thinkerQuery ||
+      thinker.name.toLocaleLowerCase("bn").includes(thinkerQuery) ||
+      thinker.description.toLocaleLowerCase("bn").includes(thinkerQuery) ||
+      thinker.category.toLocaleLowerCase("bn").includes(thinkerQuery);
+
+    const categoryMatch =
+      categoryFilter === "all" ||
+      thinker.region === categoryFilter ||
+      thinker.category === categoryFilter;
+
+    const letterMatch =
+      activeLetter === "all" ||
+      firstLetter(thinker.name) === activeLetter;
+
+    return queryMatch && categoryMatch && letterMatch;
+  });
+
+  const groups = {};
+
+  filtered.forEach(function(thinker){
+    const letter = firstLetter(thinker.name);
+
+    if(!groups[letter]){
+      groups[letter] = [];
+    }
+
+    groups[letter].push(thinker);
+  });
+
+  return {
+    filtered:filtered,
+    groups:groups
+  };
+}
+
+function renderAlphabet(){
+  const alphabetNav =
+    document.getElementById("alphabetNav");
+
+  const letters = Array.from(
+    new Set(
+      thinkers.map(function(thinker){
+        return firstLetter(thinker.name);
+      })
+    )
+  ).sort(function(a,b){
+    return a.localeCompare(b,"bn");
+  });
+
+  alphabetNav.innerHTML = "";
+
+  const allButton = document.createElement("button");
+
+  allButton.className =
+    "alphabet-btn" +
+    (activeLetter === "all" ? " active" : "");
+
+  allButton.innerText = "সব";
+
+  allButton.addEventListener("click",function(){
+    activeLetter = "all";
+    renderAlphabet();
+    renderThinkers();
+  });
+
+  alphabetNav.appendChild(allButton);
+
+  letters.forEach(function(letter){
+    const button = document.createElement("button");
+
+    button.className =
+      "alphabet-btn" +
+      (activeLetter === letter ? " active" : "");
+
+    button.innerText = letter;
+
+    button.addEventListener("click",function(){
+      activeLetter = letter;
+      renderAlphabet();
+      renderThinkers();
+    });
+
+    alphabetNav.appendChild(button);
+  });
+}
+
+function renderThinkers(){
+  const directory =
+    document.getElementById("thinkerDirectory");
+
+  const data = groupedThinkers();
+
+  const letters = Object.keys(data.groups).sort(function(a,b){
+    return a.localeCompare(b,"bn");
+  });
+
+  directory.innerHTML = "";
+
+  if(data.filtered.length === 0){
+    directory.innerHTML = `
+      <section class="card empty-state">
+        <span>📜</span>
+        <h3>কোনো মনীষী পাওয়া যায়নি</h3>
+        <p>অন্য নাম, বিভাগ বা বর্ণ দিয়ে আবার খুঁজুন।</p>
+      </section>
+    `;
+  }
+
+  letters.forEach(function(letter){
+    const section = document.createElement("section");
+
+    section.className = "letter-section";
+
+    const heading = document.createElement("div");
+
+    heading.className = "card letter-heading";
+
+    heading.innerHTML = `
+      <h2>${escapeHtml(letter)}</h2>
+      <span>${toBn(data.groups[letter].length)} জন মনীষী</span>
+    `;
+
+    const grid = document.createElement("div");
+
+    grid.className = "thinker-grid";
+
+    data.groups[letter].forEach(function(thinker){
+      const article = document.createElement("article");
+
+      article.className = "card thinker-card";
+
+      article.innerHTML = `
+        <div class="thinker-head">
+
+          <div class="thinker-avatar">
+            ${escapeHtml(firstLetter(thinker.name))}
+          </div>
+
+          <div class="thinker-info">
+
+            <h3>${escapeHtml(thinker.name)}</h3>
+
+            <small>
+              ${escapeHtml(thinker.region)} •
+              ${escapeHtml(thinker.category)}
+            </small>
+
+          </div>
+
+        </div>
+
+        <p class="thinker-description">
+          ${escapeHtml(thinker.description)}
+        </p>
+
+        <div class="thinker-actions">
+
+          <a
+            class="primary"
+            href="thinker-details.html?person=${encodeURIComponent(thinker.slug)}"
+          >
+            বিস্তারিত পরিচিতি
+          </a>
+
+          <a
+            href="thinker-details.html?person=${encodeURIComponent(thinker.slug)}#quotes"
+          >
+            বাণী পড়ুন
+          </a>
+
+          <button
+            class="add-quote-btn"
+            data-name="${escapeHtml(thinker.name)}"
+          >
+            বাণী যুক্ত করুন
+          </button>
+
+          <button
+            class="correct-thinker-btn"
+            data-name="${escapeHtml(thinker.name)}"
+          >
+            তথ্য সংশোধন
+          </button>
+
+        </div>
+      `;
+
+      grid.appendChild(article);
+    });
+
+    section.appendChild(heading);
+    section.appendChild(grid);
+    directory.appendChild(section);
+  });
+
+  document.getElementById("resultMeta").innerText =
+    toBn(data.filtered.length) +
+    " জন মনীষী দেখা যাচ্ছে • বাংলা বর্ণানুক্রমে সাজানো";
+
+  document.getElementById("visibleThinkers").innerText =
+    toBn(data.filtered.length);
+
+  document.getElementById("letterCount").innerText =
+    toBn(letters.length);
+
+  bindCardButtons();
+}
+
+function bindCardButtons(){
+  document
+    .querySelectorAll(".add-quote-btn")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        openEditor("quote");
+
+        document.getElementById("quoteThinkerName").value =
+          button.dataset.name;
+      });
+    });
+
+  document
+    .querySelectorAll(".correct-thinker-btn")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        openEditor("correction");
+
+        document.getElementById("correctionThinkerName").value =
+          button.dataset.name;
+      });
+    });
+}
+
+document
+  .getElementById("thinkerSearchInput")
+  .addEventListener("input",function(event){
+    thinkerQuery =
+      event.target.value
+        .trim()
+        .toLocaleLowerCase("bn");
+
+    renderThinkers();
+  });
+
+document
+  .getElementById("thinkerCategoryFilter")
+  .addEventListener("change",function(event){
+    categoryFilter = event.target.value;
+    renderThinkers();
+  });
+
+document.getElementById("totalThinkers").innerText =
+  toBn(thinkers.length);
+
+renderAlphabet();
+renderThinkers();
+
 /* DRAWER */
 
-const mobileDrawer = document.getElementById("mobileDrawer");
-const drawerBackdrop = document.getElementById("drawerBackdrop");
+const mobileDrawer =
+  document.getElementById("mobileDrawer");
+
+const drawerBackdrop =
+  document.getElementById("drawerBackdrop");
 
 function closeDrawer(){
   mobileDrawer.classList.remove("open");
@@ -2293,33 +3057,78 @@ document
 
 drawerBackdrop.addEventListener("click",closeDrawer);
 
+/* ACCOUNT */
+
+const accountPanel =
+  document.getElementById("accountPanel");
+
+const accountBackdrop =
+  document.getElementById("accountBackdrop");
+
+function closeAccount(){
+  accountPanel.classList.remove("open");
+  accountBackdrop.classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+document
+  .getElementById("accountBtn")
+  .addEventListener("click",function(){
+    accountPanel.classList.add("open");
+    accountBackdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+  });
+
+document
+  .getElementById("closeAccount")
+  .addEventListener("click",closeAccount);
+
+accountBackdrop.addEventListener("click",closeAccount);
+
 /* THEME */
 
 const headerThemeIcon =
   document.getElementById("headerThemeIcon");
 
-function updateThemeIcon(){
+const accountThemeIcon =
+  document.getElementById("accountThemeIcon");
+
+function updateThemeIcons(){
   const dark =
     htmlRoot.getAttribute("data-theme") === "dark";
 
   headerThemeIcon.innerText =
     dark ? "☀️" : "🌙";
+
+  accountThemeIcon.innerText =
+    dark ? "☀️" : "🌙";
+}
+
+function toggleTheme(){
+  const next =
+    htmlRoot.getAttribute("data-theme") === "dark"
+      ? "light"
+      : "dark";
+
+  htmlRoot.setAttribute("data-theme",next);
+
+  localStorage.setItem(
+    "bhubondangaTheme",
+    next
+  );
+
+  updateThemeIcons();
 }
 
 document
   .getElementById("headerThemeBtn")
-  .addEventListener("click",function(){
-    const next =
-      htmlRoot.getAttribute("data-theme") === "dark"
-        ? "light"
-        : "dark";
+  .addEventListener("click",toggleTheme);
 
-    htmlRoot.setAttribute("data-theme",next);
-    localStorage.setItem("bhubondangaTheme",next);
-    updateThemeIcon();
-  });
+document
+  .getElementById("accountThemeBtn")
+  .addEventListener("click",toggleTheme);
 
-updateThemeIcon();
+updateThemeIcons();
 
 /* SEARCH */
 
@@ -2349,336 +3158,12 @@ headerSearchInput.addEventListener("keydown",function(event){
   }
 });
 
-/* QUOTE DATA */
-
-const quotes = [
-  {
-    id:"quote-1",
-    person:"বেগম রোকেয়া",
-    category:"বাংলাদেশ",
-    group:"bangladesh bangla humanity",
-    text:"শিক্ষা ও আত্মমর্যাদার মাধ্যমে মানুষের মুক্তি ও বিকাশ সম্ভব।",
-    role:"লেখক ও সমাজচিন্তক",
-    source:"যাচাইকৃত মূল উদ্ধৃতি যুক্ত হওয়ার অপেক্ষায়",
-    image:"profile.jpg",
-    priority:1
-  },
-  {
-    id:"quote-2",
-    person:"লালন শাহ",
-    category:"বাংলা অঞ্চল",
-    group:"bangla humanity",
-    text:"মানুষকে জানার মধ্যেই মানুষের গভীরতম সত্যের সন্ধান নিহিত।",
-    role:"সাধক, গীতিকার ও মানবতাবাদী চিন্তক",
-    source:"প্রামাণ্য গীতসংকলন যাচাই প্রয়োজন",
-    image:"profile.jpg",
-    priority:2
-  },
-  {
-    id:"quote-3",
-    person:"ইবনে সিনা",
-    category:"মধ্যযুগীয় ইসলামি জ্ঞানধারা",
-    group:"islamic-medieval science world",
-    text:"জ্ঞান, পর্যবেক্ষণ ও যুক্তির মাধ্যমে মানুষের কল্যাণের পথ প্রসারিত হয়।",
-    role:"চিকিৎসাবিদ, দার্শনিক ও বিজ্ঞানী",
-    source:"মূল রচনা ও বিশ্বস্ত অনুবাদ যাচাই প্রয়োজন",
-    image:"profile.jpg",
-    priority:3
-  },
-  {
-    id:"quote-4",
-    person:"আল-বিরুনি",
-    category:"মধ্যযুগীয় ইসলামি জ্ঞানধারা",
-    group:"islamic-medieval science world",
-    text:"অন্য সংস্কৃতিকে বুঝতে হলে আগে পক্ষপাতের বাইরে গিয়ে জানতে হয়।",
-    role:"বিজ্ঞানী, ইতিহাসবিদ ও গবেষক",
-    source:"প্রামাণ্য রচনা ও অনুবাদ যাচাই প্রয়োজন",
-    image:"profile.jpg",
-    priority:4
-  },
-  {
-    id:"quote-5",
-    person:"রবীন্দ্রনাথ ঠাকুর",
-    category:"বাংলা অঞ্চল",
-    group:"bangla humanity world",
-    text:"মানুষের মুক্ত চিন্তা ও সৌন্দর্যবোধ সাহিত্যকে প্রাণ দেয়।",
-    role:"কবি, সাহিত্যিক ও চিন্তাবিদ",
-    source:"যাচাইকৃত রচনা বা বক্তৃতা যুক্ত হওয়ার অপেক্ষায়",
-    image:"profile.jpg",
-    priority:5
-  },
-  {
-    id:"quote-6",
-    person:"গৌতম বুদ্ধ",
-    category:"বিশ্বমনীষী",
-    group:"world humanity",
-    text:"সহমর্মিতা, সংযম ও সচেতনতা মানুষের অন্তর্জগতকে শান্ত করে।",
-    role:"ধর্মীয় ও দার্শনিক শিক্ষক",
-    source:"প্রামাণ্য ধর্মগ্রন্থ ও অনুবাদ যাচাই প্রয়োজন",
-    image:"profile.jpg",
-    priority:6
-  },
-  {
-    id:"quote-7",
-    person:"সক্রেটিস",
-    category:"বিশ্বমনীষী",
-    group:"world humanity",
-    text:"প্রশ্ন, আত্মজিজ্ঞাসা ও যুক্তিবোধ সত্যের অনুসন্ধানকে গভীর করে।",
-    role:"দার্শনিক",
-    source:"প্রাচীন গ্রিক উৎস ও অনুবাদ যাচাই প্রয়োজন",
-    image:"profile.jpg",
-    priority:7
-  },
-  {
-    id:"quote-8",
-    person:"মারি কুরি",
-    category:"বিজ্ঞান",
-    group:"science world humanity",
-    text:"ভয়কে অতিক্রম করতে হলে অজানাকে বোঝার চেষ্টা করতে হয়।",
-    role:"বিজ্ঞানী",
-    source:"প্রামাণ্য বক্তৃতা বা জীবনী যাচাই প্রয়োজন",
-    image:"profile.jpg",
-    priority:8
-  }
-];
-
-let activeFilter = "all";
-let quoteQuery = "";
-let quoteSort = "priority";
-
-function filteredQuotes(){
-  let result = quotes.filter(function(item){
-    const filterMatch =
-      activeFilter === "all" ||
-      item.group.includes(activeFilter);
-
-    const searchable =
-      (
-        item.person +
-        " " +
-        item.text +
-        " " +
-        item.category +
-        " " +
-        item.role
-      ).toLocaleLowerCase("bn");
-
-    const queryMatch =
-      !quoteQuery ||
-      searchable.includes(quoteQuery);
-
-    return filterMatch && queryMatch;
-  });
-
-  if(quoteSort === "name"){
-    result.sort(function(a,b){
-      return a.person.localeCompare(b.person,"bn");
-    });
-  }else{
-    result.sort(function(a,b){
-      return a.priority - b.priority;
-    });
-  }
-
-  return result;
-}
-
-function renderQuotes(){
-  const grid = document.getElementById("quoteGrid");
-  const result = filteredQuotes();
-
-  grid.innerHTML = "";
-
-  if(result.length === 0){
-    grid.innerHTML = `
-      <section class="card empty-state">
-        <span>📜</span>
-        <h3>কোনো বাণী পাওয়া যায়নি</h3>
-        <p>অন্য নাম, শব্দ বা বিভাগ দিয়ে আবার খুঁজুন।</p>
-      </section>
-    `;
-  }
-
-  result.forEach(function(item){
-    const article = document.createElement("article");
-
-    article.className = "card quote-card";
-
-    article.innerHTML = `
-      <span class="quote-category">
-        ${escapeHtml(item.category)}
-      </span>
-
-      <blockquote class="quote-text">
-        “${escapeHtml(item.text)}”
-      </blockquote>
-
-      <div class="quote-author">
-
-        <img
-          src="${item.image}"
-          alt="${escapeHtml(item.person)}"
-        >
-
-        <div>
-          <strong>${escapeHtml(item.person)}</strong>
-          <small>${escapeHtml(item.role)}</small>
-        </div>
-
-      </div>
-
-      <div class="quote-source">
-        তথ্যসূত্র: ${escapeHtml(item.source)}
-      </div>
-
-      <div class="quote-actions">
-
-        <a
-          class="primary"
-          href="thinker-details.html?person=${encodeURIComponent(
-            item.person
-              .toLocaleLowerCase("en")
-              .replace(/\s+/g,"-")
-          )}"
-        >
-          বিস্তারিত পরিচিতি
-        </a>
-
-        <button
-          class="edit-quote-btn"
-          data-person="${escapeHtml(item.person)}"
-          data-text="${escapeHtml(item.text)}"
-        >
-          ভুল সংশোধন
-        </button>
-
-        <button class="memory-btn">
-          ♡ Memory
-        </button>
-
-        <button
-          class="share-btn"
-          data-person="${escapeHtml(item.person)}"
-          data-text="${escapeHtml(item.text)}"
-        >
-          ↗ শেয়ার
-        </button>
-
-      </div>
-    `;
-
-    grid.appendChild(article);
-  });
-
-  document.getElementById("resultMeta").innerText =
-    toBn(result.length) +
-    "টি বাণী দেখা যাচ্ছে";
-
-  bindQuoteButtons();
-}
-
-function bindQuoteButtons(){
-  document
-    .querySelectorAll(".edit-quote-btn")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        openEditor("correction");
-
-        document.getElementById("correctionPerson").value =
-          button.dataset.person;
-
-        document.getElementById("currentQuoteInfo").value =
-          button.dataset.text;
-      });
-    });
-
-  document
-    .querySelectorAll(".memory-btn")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        button.innerText =
-          button.innerText.includes("♥")
-            ? "♡ Memory"
-            : "♥ Memory";
-
-        showToast(
-          "এই Browser-এর Memory অবস্থাটি পরিবর্তন করা হয়েছে। বাস্তব সংখ্যা Backend যুক্ত হলে দেখা যাবে।"
-        );
-      });
-    });
-
-  document
-    .querySelectorAll(".share-btn")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const text =
-          "“" +
-          button.dataset.text +
-          "” — " +
-          button.dataset.person;
-
-        if(navigator.share){
-          navigator.share({
-            title:"বিখ্যাত মনীষীদের বাণী",
-            text:text,
-            url:window.location.href
-          }).catch(function(){});
-        }else{
-          showToast(
-            "এই Browser-এ সরাসরি Share সুবিধা পাওয়া যাচ্ছে না।"
-          );
-        }
-      });
-    });
-}
-
-document
-  .querySelectorAll(".filter-btn")
-  .forEach(function(button){
-    button.addEventListener("click",function(){
-      document
-        .querySelectorAll(".filter-btn")
-        .forEach(function(item){
-          item.classList.remove("active");
-        });
-
-      button.classList.add("active");
-      activeFilter = button.dataset.filter;
-      renderQuotes();
-    });
-  });
-
-document
-  .getElementById("quoteSearchInput")
-  .addEventListener("input",function(event){
-    quoteQuery =
-      event.target.value
-        .trim()
-        .toLocaleLowerCase("bn");
-
-    renderQuotes();
-  });
-
-document
-  .getElementById("quoteSort")
-  .addEventListener("change",function(event){
-    quoteSort = event.target.value;
-
-    if(quoteSort === "popular"){
-      showToast(
-        "Like, Comment, Share ও Memory Save-এর বাস্তব সংখ্যার ভিত্তিতে জনপ্রিয় ক্রম Backend যুক্ত হওয়ার পর কার্যকর হবে।"
-      );
-
-      quoteSort = "priority";
-    }
-
-    renderQuotes();
-  });
-
 /* EDITOR */
 
-const editorModal = document.getElementById("editorModal");
-let activeEditorTab = "quote";
+const editorModal =
+  document.getElementById("editorModal");
+
+let activeEditorTab = "thinker";
 
 function setEditorTab(tabName){
   activeEditorTab = tabName;
@@ -2703,9 +3188,13 @@ function setEditorTab(tabName){
 }
 
 function openEditor(tabName){
+  closeDrawer();
+  closeAccount();
+
   editorModal.classList.add("show");
   document.body.style.overflow = "hidden";
-  setEditorTab(tabName || "quote");
+
+  setEditorTab(tabName || "thinker");
 }
 
 function closeEditor(){
@@ -2717,7 +3206,7 @@ document
   .querySelectorAll(".open-editor-btn")
   .forEach(function(button){
     button.addEventListener("click",function(){
-      openEditor(button.dataset.tab || "quote");
+      openEditor(button.dataset.tab || "thinker");
     });
   });
 
@@ -2746,40 +3235,55 @@ document
   .addEventListener("click",function(){
     const draft = {
       tab:activeEditorTab,
-      quotePersonName:
-        document.getElementById("quotePersonName").value,
-      quoteCategory:
-        document.getElementById("quoteCategory").value,
+
+      newThinkerName:
+        document.getElementById("newThinkerName").value,
+
+      newThinkerCategory:
+        document.getElementById("newThinkerCategory").value,
+
+      newThinkerBio:
+        document.getElementById("newThinkerBio").value,
+
+      newThinkerSource:
+        document.getElementById("newThinkerSource").value,
+
+      quoteThinkerName:
+        document.getElementById("quoteThinkerName").value,
+
+      quoteLanguage:
+        document.getElementById("quoteLanguage").value,
+
       quoteText:
         document.getElementById("quoteText").value,
-      quoteOriginalLanguage:
-        document.getElementById("quoteOriginalLanguage").value,
+
       quoteTranslator:
         document.getElementById("quoteTranslator").value,
+
+      quoteWork:
+        document.getElementById("quoteWork").value,
+
       quoteSource:
         document.getElementById("quoteSource").value,
-      thinkerName:
-        document.getElementById("thinkerName").value,
-      thinkerGroup:
-        document.getElementById("thinkerGroup").value,
-      thinkerBio:
-        document.getElementById("thinkerBio").value,
-      thinkerSource:
-        document.getElementById("thinkerSource").value,
-      correctionPerson:
-        document.getElementById("correctionPerson").value,
+
+      correctionThinkerName:
+        document.getElementById("correctionThinkerName").value,
+
       correctionType:
         document.getElementById("correctionType").value,
-      currentQuoteInfo:
-        document.getElementById("currentQuoteInfo").value,
-      correctedQuoteInfo:
-        document.getElementById("correctedQuoteInfo").value,
+
+      currentInformation:
+        document.getElementById("currentInformation").value,
+
+      correctedInformation:
+        document.getElementById("correctedInformation").value,
+
       correctionSource:
         document.getElementById("correctionSource").value
     };
 
     localStorage.setItem(
-      "bhubondangaQuoteEditorDraft",
+      "bhubondangaThinkerDirectoryDraft",
       JSON.stringify(draft)
     );
 
@@ -2788,81 +3292,45 @@ document
     );
   });
 
-/* SUBMIT */
+/* SUBMISSION */
 
 document
   .getElementById("editorForm")
   .addEventListener("submit",function(event){
     event.preventDefault();
 
-    const accuracy =
-      document.getElementById("accuracyCheck").checked;
-
-    const respect =
-      document.getElementById("respectCheck").checked;
-
-    const review =
-      document.getElementById("reviewCheck").checked;
-
-    if(!accuracy || !respect || !review){
+    if(
+      !document.getElementById("accuracyCheck").checked ||
+      !document.getElementById("respectCheck").checked ||
+      !document.getElementById("botCheck").checked ||
+      !document.getElementById("reviewCheck").checked
+    ){
       showToast(
-        "সত্যতা, সম্মানজনক উপস্থাপন ও Review-এর সম্মতির ঘর পূরণ করুন।"
+        "সত্যতা, সম্মান, Bot নীতি এবং Pending Review-এর সম্মতির ঘর পূরণ করুন।"
       );
 
       return;
     }
 
     let submission = {
-      id:"quote-submission-" + Date.now(),
+      id:"thinker-directory-" + Date.now(),
       type:activeEditorTab,
       status:"Local Pending Review",
       sentToServer:false,
       submittedAt:new Date().toISOString()
     };
 
-    if(activeEditorTab === "quote"){
-      const person =
-        document.getElementById("quotePersonName").value.trim();
-
-      const text =
-        document.getElementById("quoteText").value.trim();
-
-      const source =
-        document.getElementById("quoteSource").value.trim();
-
-      if(!person || !text || !source){
-        showToast(
-          "মনীষীর নাম, বাণী এবং বিশ্বস্ত তথ্যসূত্র লিখুন।"
-        );
-
-        return;
-      }
-
-      submission = {
-        ...submission,
-        person,
-        category:
-          document.getElementById("quoteCategory").value,
-        quote:text,
-        originalLanguage:
-          document.getElementById("quoteOriginalLanguage").value.trim(),
-        translator:
-          document.getElementById("quoteTranslator").value.trim(),
-        source
-      };
-    }
-
     if(activeEditorTab === "thinker"){
-      const person =
-        document.getElementById("thinkerName").value.trim();
+      const name =
+        document.getElementById("newThinkerName").value.trim();
 
       const bio =
-        document.getElementById("thinkerBio").value.trim();
+        document.getElementById("newThinkerBio").value.trim();
 
       const source =
-        document.getElementById("thinkerSource").value.trim();
+        document.getElementById("newThinkerSource").value.trim();
 
-      if(!person || !bio || !source){
+      if(!name || !bio || !source){
         showToast(
           "মনীষীর নাম, পরিচিতি এবং বিশ্বস্ত তথ্যসূত্র লিখুন।"
         );
@@ -2872,25 +3340,58 @@ document
 
       submission = {
         ...submission,
-        person,
-        group:
-          document.getElementById("thinkerGroup").value,
+        thinkerName:name,
+        category:
+          document.getElementById("newThinkerCategory").value,
         biography:bio,
-        source
+        source:source
+      };
+    }
+
+    if(activeEditorTab === "quote"){
+      const thinkerName =
+        document.getElementById("quoteThinkerName").value.trim();
+
+      const quote =
+        document.getElementById("quoteText").value.trim();
+
+      const source =
+        document.getElementById("quoteSource").value.trim();
+
+      if(!thinkerName || !quote || !source){
+        showToast(
+          "মনীষীর নাম, বাণী এবং বিশ্বস্ত তথ্যসূত্র লিখুন।"
+        );
+
+        return;
+      }
+
+      submission = {
+        ...submission,
+        thinkerName:thinkerName,
+        quote:quote,
+        language:
+          document.getElementById("quoteLanguage").value.trim(),
+        translator:
+          document.getElementById("quoteTranslator").value.trim(),
+        work:
+          document.getElementById("quoteWork").value.trim(),
+        source:source,
+        publishToNewsfeedAfterApproval:true
       };
     }
 
     if(activeEditorTab === "correction"){
-      const person =
-        document.getElementById("correctionPerson").value.trim();
+      const thinkerName =
+        document.getElementById("correctionThinkerName").value.trim();
 
       const corrected =
-        document.getElementById("correctedQuoteInfo").value.trim();
+        document.getElementById("correctedInformation").value.trim();
 
       const source =
         document.getElementById("correctionSource").value.trim();
 
-      if(!person || !corrected || !source){
+      if(!thinkerName || !corrected || !source){
         showToast(
           "মনীষীর নাম, সংশোধিত তথ্য এবং তথ্যসূত্র লিখুন।"
         );
@@ -2900,13 +3401,13 @@ document
 
       submission = {
         ...submission,
-        person,
+        thinkerName:thinkerName,
         correctionType:
           document.getElementById("correctionType").value,
         currentInformation:
-          document.getElementById("currentQuoteInfo").value.trim(),
+          document.getElementById("currentInformation").value.trim(),
         correctedInformation:corrected,
-        source
+        source:source
       };
     }
 
@@ -2930,19 +3431,39 @@ document
     );
 
     localStorage.removeItem(
-      "bhubondangaQuoteEditorDraft"
+      "bhubondangaThinkerDirectoryDraft"
     );
 
     showToast(
-      "প্রস্তাবটি এই Browser-এ Pending Review হিসেবে সংরক্ষিত হয়েছে; এখনো কোনো সার্ভার বা সাহিত্য টিমের কাছে পাঠানো হয়নি।"
+      "প্রস্তাবটি এই Browser-এ Pending Review হিসেবে সংরক্ষিত হয়েছে; এখনো কোনো সার্ভারে পাঠানো হয়নি।"
     );
 
     setTimeout(closeEditor,2200);
   });
 
+/* TOP */
+
+const toTopBtn =
+  document.getElementById("toTopBtn");
+
+window.addEventListener("scroll",function(){
+  toTopBtn.classList.toggle(
+    "show",
+    window.scrollY > 450
+  );
+});
+
+toTopBtn.addEventListener("click",function(){
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+});
+
 document.addEventListener("keydown",function(event){
   if(event.key === "Escape"){
     closeDrawer();
+    closeAccount();
     closeEditor();
   }
 
@@ -2954,8 +3475,6 @@ document.addEventListener("keydown",function(event){
     headerSearchInput.focus();
   }
 });
-
-renderQuotes();
 </script>
 
 </body>
