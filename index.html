@@ -21,6 +21,7 @@ html{
 
 :root{
   --header-h:108px;
+  --date-h:44px;
   --nav-h:52px;
 
   --bg:#eaf3fb;
@@ -238,7 +239,7 @@ html[data-theme="dark"] .brand-copy p{
   border:1px solid rgba(13,67,136,.11);
   outline:none;
   border-radius:999px;
-  padding:0 52px 0 52px;
+  padding:0 52px;
   background:rgba(255,255,255,.94);
   color:#183b68;
   font-size:14px;
@@ -281,10 +282,6 @@ html[data-theme="dark"] .brand-copy p{
   font-weight:600;
   white-space:nowrap;
   box-shadow:0 6px 17px rgba(13,67,136,.06);
-}
-
-.header-date-pill .calendar-icon{
-  font-size:19px;
 }
 
 html[data-theme="dark"] .header-date-pill{
@@ -369,11 +366,60 @@ html[data-theme="dark"] .profile-name{
   color:#edf6ff;
 }
 
+/* THREE DATES */
+
+.global-date-bar{
+  position:sticky;
+  top:var(--header-h);
+  z-index:1175;
+  min-height:var(--date-h);
+  padding:7px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  color:var(--text-soft);
+  background:rgba(234,246,255,.96);
+  border-bottom:1px solid var(--border);
+  font-size:12px;
+  font-weight:600;
+  text-align:center;
+  box-shadow:0 5px 18px rgba(13,67,136,.05);
+}
+
+html[data-theme="dark"] .global-date-bar{
+  color:#c9dcf6;
+  background:
+    radial-gradient(circle at center,rgba(48,151,255,.12),transparent 70%),
+    rgba(3,17,39,.97);
+  border-bottom-color:rgba(64,163,255,.23);
+  text-shadow:
+    0 0 6px rgba(255,255,255,.12),
+    0 0 15px rgba(56,169,255,.16);
+}
+
+.date-part{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  white-space:nowrap;
+}
+
+.date-label{
+  color:var(--accent);
+  font-weight:700;
+}
+
+.date-dot{
+  color:var(--accent);
+  font-weight:800;
+}
+
 /* CATEGORY NAV */
 
 .category-nav{
   position:sticky;
-  top:var(--header-h);
+  top:calc(var(--header-h) + var(--date-h));
   z-index:1150;
   background:var(--nav-bg);
   backdrop-filter:blur(14px);
@@ -412,11 +458,11 @@ html[data-theme="dark"] .profile-name{
   font-weight:650;
 }
 
-/* STICKY HUMANITARIAN NOTICE */
+/* HUMANITARIAN NOTICE */
 
 .notice-strip{
   position:sticky;
-  top:calc(var(--header-h) + var(--nav-h));
+  top:calc(var(--header-h) + var(--date-h) + var(--nav-h));
   z-index:1100;
   max-width:1530px;
   margin:0 auto;
@@ -505,8 +551,8 @@ html[data-theme="dark"] .notice-inner{
 .left-sidebar,
 .right-sidebar{
   position:sticky;
-  top:calc(var(--header-h) + var(--nav-h) + 58px);
-  height:calc(100vh - 246px);
+  top:calc(var(--header-h) + var(--date-h) + var(--nav-h) + 58px);
+  height:calc(100vh - 290px);
   overflow:auto;
   scrollbar-width:none;
 }
@@ -518,7 +564,7 @@ html[data-theme="dark"] .notice-inner{
   display:none;
 }
 
-/* LEFT SIDEBAR */
+/* SIDEBARS */
 
 .left-sidebar{
   padding:0 3px 18px;
@@ -548,9 +594,9 @@ html[data-theme="dark"] .notice-inner{
   background:var(--surface);
   color:var(--text-soft);
   text-align:center;
-  font-size:11px;
+  font-size:10.5px;
   font-weight:500;
-  line-height:1.5;
+  line-height:1.55;
   box-shadow:var(--shadow-soft);
 }
 
@@ -1140,7 +1186,7 @@ html[data-theme="dark"] .notice-inner{
   font-size:10px;
 }
 
-/* BACKDROPS */
+/* DRAWERS */
 
 .backdrop{
   position:fixed;
@@ -1153,8 +1199,6 @@ html[data-theme="dark"] .notice-inner{
 .backdrop.show{
   display:block;
 }
-
-/* MOBILE DRAWER */
 
 .mobile-drawer{
   position:fixed;
@@ -1208,8 +1252,6 @@ html[data-theme="dark"] .notice-inner{
   font-size:32px;
   cursor:pointer;
 }
-
-/* ACCOUNT PANEL */
 
 .account-panel{
   position:fixed;
@@ -1306,7 +1348,8 @@ html[data-theme="dark"] .notice-inner{
   color:var(--accent);
 }
 
-.favorite-author-box{
+.favorite-author-box,
+.memory-box{
   margin-top:12px;
   padding:12px;
   border:1px solid var(--border);
@@ -1314,10 +1357,10 @@ html[data-theme="dark"] .notice-inner{
   background:var(--surface);
 }
 
-.favorite-author-box h3{
+.favorite-author-box h3,
+.memory-box h3{
   font-size:17px;
   font-weight:700;
-  text-shadow:var(--glow);
 }
 
 .favorite-author-box p{
@@ -1401,7 +1444,9 @@ html[data-theme="dark"] .notice-inner{
   margin-top:9px;
 }
 
-.favorite-empty{
+.favorite-empty,
+.memory-empty{
+  margin-top:5px;
   color:var(--muted);
   font-size:11px;
 }
@@ -1412,25 +1457,6 @@ html[data-theme="dark"] .notice-inner{
   color:var(--red);
   cursor:pointer;
   font-size:13px;
-}
-
-.memory-box{
-  margin-top:12px;
-  padding:12px;
-  border:1px solid var(--border);
-  border-radius:13px;
-  background:var(--surface);
-}
-
-.memory-box h3{
-  font-size:17px;
-  font-weight:700;
-}
-
-.memory-empty{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:11px;
 }
 
 .memory-item{
@@ -1537,10 +1563,7 @@ html[data-theme="dark"] .notice-inner{
     font-size:51px;
   }
 
-  .header-date-pill{
-    display:none;
-  }
-
+  .header-date-pill,
   .profile-name{
     display:none;
   }
@@ -1559,6 +1582,7 @@ html[data-theme="dark"] .notice-inner{
 @media(max-width:940px){
   :root{
     --header-h:66px;
+    --date-h:78px;
     --nav-h:48px;
   }
 
@@ -1590,10 +1614,7 @@ html[data-theme="dark"] .notice-inner{
     font-size:21px;
   }
 
-  .brand-copy p{
-    display:none;
-  }
-
+  .brand-copy p,
   .header-search{
     display:none;
   }
@@ -1613,6 +1634,21 @@ html[data-theme="dark"] .notice-inner{
   .avatar-btn img{
     width:39px;
     height:39px;
+  }
+
+  .global-date-bar{
+    min-height:var(--date-h);
+    padding:7px 12px;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:2px;
+    justify-items:center;
+    font-size:10.5px;
+    line-height:1.45;
+  }
+
+  .global-date-bar .date-dot{
+    display:none;
   }
 
   .category-inner{
@@ -1669,12 +1705,23 @@ html[data-theme="dark"] .notice-inner{
 }
 
 @media(max-width:560px){
+  :root{
+    --date-h:84px;
+  }
+
   .brand-copy h1{
     font-size:19px;
   }
 
   .header-actions .header-icon{
     display:none;
+  }
+
+  .global-date-bar{
+    align-items:start;
+    justify-items:start;
+    text-align:left;
+    padding-left:16px;
   }
 
   .notice-text{
@@ -1767,7 +1814,7 @@ html[data-theme="dark"] .notice-inner{
   <div class="header-actions">
 
     <div class="header-date-pill">
-      <span class="calendar-icon">▣</span>
+      <span>📅</span>
       <span id="headerDateText">তারিখ লোড হচ্ছে...</span>
     </div>
 
@@ -1809,6 +1856,30 @@ html[data-theme="dark"] .notice-inner{
   </div>
 
 </header>
+
+<div class="global-date-bar">
+
+  <span class="date-part">
+    <span>📅</span>
+    <span class="date-label">বাংলা:</span>
+    <span id="banglaDateText">তারিখ লোড হচ্ছে...</span>
+  </span>
+
+  <span class="date-dot">•</span>
+
+  <span class="date-part">
+    <span class="date-label">ইংরেজি:</span>
+    <span id="englishDateText">তারিখ লোড হচ্ছে...</span>
+  </span>
+
+  <span class="date-dot">•</span>
+
+  <span class="date-part">
+    <span class="date-label">আরবি:</span>
+    <span id="arabicDateText">তারিখ লোড হচ্ছে...</span>
+  </span>
+
+</div>
 
 <nav class="category-nav">
   <div class="category-inner">
@@ -2558,65 +2629,170 @@ const weekBn = [
   "শনিবার"
 ];
 
-const englishMonths = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
+const englishMonthsBn = [
+  "জানুয়ারি",
+  "ফেব্রুয়ারি",
+  "মার্চ",
+  "এপ্রিল",
+  "মে",
+  "জুন",
+  "জুলাই",
+  "আগস্ট",
+  "সেপ্টেম্বর",
+  "অক্টোবর",
+  "নভেম্বর",
+  "ডিসেম্বর"
 ];
 
-function renderDate(){
-  const today = new Date();
+const banglaMonths = [
+  "বৈশাখ",
+  "জ্যৈষ্ঠ",
+  "আষাঢ়",
+  "শ্রাবণ",
+  "ভাদ্র",
+  "আশ্বিন",
+  "কার্তিক",
+  "অগ্রহায়ণ",
+  "পৌষ",
+  "মাঘ",
+  "ফাল্গুন",
+  "চৈত্র"
+];
 
-  let banglaDate = "";
+const hijriMonthsBn = [
+  "মুহাররম",
+  "সফর",
+  "রবিউল আউয়াল",
+  "রবিউস সানি",
+  "জুমাদাল উলা",
+  "জুমাদাস সানিয়া",
+  "রজব",
+  "শাবান",
+  "রমজান",
+  "শাওয়াল",
+  "জিলকদ",
+  "জিলহজ"
+];
 
+function getBanglaDate(date){
   try{
-    banglaDate = today.toLocaleDateString(
+    const formatter = new Intl.DateTimeFormat(
       "bn-BD-u-ca-beng",
       {
+        weekday:"long",
         day:"numeric",
         month:"long",
         year:"numeric"
       }
     );
+
+    return formatter.format(date);
   }catch(error){
-    banglaDate = today.toLocaleDateString(
+    return date.toLocaleDateString(
       "bn-BD",
       {
+        weekday:"long",
         day:"numeric",
         month:"long",
         year:"numeric"
       }
     );
   }
+}
 
-  const englishDate =
-    toBn(today.getDate()) +
+function getEnglishDate(date){
+  return (
+    weekBn[date.getDay()] +
+    ", " +
+    toBn(date.getDate()) +
     " " +
-    englishMonths[today.getMonth()] +
+    englishMonthsBn[date.getMonth()] +
     " " +
-    toBn(today.getFullYear());
+    toBn(date.getFullYear()) +
+    " খ্রিষ্টাব্দ"
+  );
+}
 
-  const dateText =
-    "আজ " +
-    weekBn[today.getDay()] +
-    " • " +
+function getHijriDate(date){
+  try{
+    const parts = new Intl.DateTimeFormat(
+      "en-US-u-ca-islamic",
+      {
+        day:"numeric",
+        month:"numeric",
+        year:"numeric"
+      }
+    ).formatToParts(date);
+
+    let day = "";
+    let month = "";
+    let year = "";
+
+    parts.forEach(function(part){
+      if(part.type === "day"){
+        day = part.value;
+      }
+
+      if(part.type === "month"){
+        month = part.value;
+      }
+
+      if(part.type === "year"){
+        year = part.value;
+      }
+    });
+
+    const monthIndex = Math.max(
+      0,
+      Math.min(11,Number(month) - 1)
+    );
+
+    return (
+      toBn(day) +
+      " " +
+      hijriMonthsBn[monthIndex] +
+      " " +
+      toBn(year) +
+      " হিজরি"
+    );
+  }catch(error){
+    return "আরবি তারিখ পাওয়া যায়নি";
+  }
+}
+
+function renderDate(){
+  const today = new Date();
+
+  const banglaDate = getBanglaDate(today);
+  const englishDate = getEnglishDate(today);
+  const arabicDate = getHijriDate(today);
+
+  document.getElementById("banglaDateText").innerText =
+    banglaDate;
+
+  document.getElementById("englishDateText").innerText =
+    englishDate;
+
+  document.getElementById("arabicDateText").innerText =
+    arabicDate;
+
+  const fullDateText =
+    "বাংলা: " +
     banglaDate +
-    " • " +
+    " • ইংরেজি: " +
     englishDate +
-    " খ্রিষ্টাব্দ";
+    " • আরবি: " +
+    arabicDate;
 
-  document.getElementById("desktopDate").innerText = dateText;
-  document.getElementById("mobileDate").innerText = dateText;
-  document.getElementById("headerDateText").innerText = dateText;
+  document.getElementById("desktopDate").innerText =
+    fullDateText;
+
+  document.getElementById("mobileDate").innerText =
+    fullDateText;
+
+  document.getElementById("headerDateText").innerText =
+    englishDate;
+
   document.getElementById("footerYear").innerText =
     toBn(today.getFullYear());
 }
@@ -3101,7 +3277,7 @@ function renderFavoriteAuthors(){
       '<a href="' + author.url + '">' +
         author.name +
       '</a>' +
-      '<button data-slug="' + author.slug + '" aria-label="সরান">×</button>';
+      '<button aria-label="সরান">×</button>';
 
     item.querySelector("button").addEventListener(
       "click",
