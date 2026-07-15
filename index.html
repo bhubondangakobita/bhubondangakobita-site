@@ -20,9 +20,8 @@ html{
 }
 
 :root{
-  --header-h:82px;
+  --header-h:108px;
   --nav-h:52px;
-  --notice-h:auto;
 
   --bg:#eaf3fb;
   --bg-soft:#dceaf6;
@@ -49,8 +48,7 @@ html{
   --shadow-soft:0 6px 18px rgba(12,52,103,.06);
   --glow:none;
 
-  --sidebar-bg:rgba(244,249,253,.95);
-  --header-bg:rgba(6,70,145,.98);
+  --sidebar-bg:rgba(244,249,253,.97);
   --nav-bg:rgba(255,255,255,.96);
 }
 
@@ -82,8 +80,7 @@ html[data-theme="dark"]{
     0 0 6px rgba(255,255,255,.15),
     0 0 18px rgba(56,169,255,.20);
 
-  --sidebar-bg:rgba(3,15,34,.96);
-  --header-bg:rgba(2,13,34,.98);
+  --sidebar-bg:rgba(3,15,34,.97);
   --nav-bg:rgba(2,13,34,.96);
 }
 
@@ -144,19 +141,25 @@ html[data-theme="dark"] .site-shell{
   top:0;
   z-index:1200;
   min-height:var(--header-h);
-  padding:10px 24px;
+  padding:14px 34px;
   display:grid;
-  grid-template-columns:285px minmax(240px,1fr) auto;
+  grid-template-columns:420px minmax(320px,520px) minmax(520px,1fr);
   align-items:center;
-  gap:18px;
-  background:var(--header-bg);
-  color:#fff;
-  border-bottom:1px solid rgba(255,255,255,.12);
-  box-shadow:0 7px 24px rgba(0,0,0,.18);
+  gap:22px;
+  background:
+    radial-gradient(circle at 12% 20%,rgba(255,255,255,.96),transparent 32%),
+    linear-gradient(110deg,#f7fcff 0%,#e7f5ff 52%,#dceeff 100%);
+  color:#0b3064;
+  border-bottom:1px solid rgba(13,67,136,.12);
+  box-shadow:0 7px 22px rgba(13,67,136,.08);
 }
 
 html[data-theme="dark"] .topbar{
-  box-shadow:0 0 28px rgba(55,166,255,.13);
+  background:
+    radial-gradient(circle at 12% 20%,rgba(47,154,255,.18),transparent 32%),
+    linear-gradient(110deg,#020a1d 0%,#051a39 55%,#061d40 100%);
+  border-bottom-color:rgba(70,165,255,.22);
+  box-shadow:0 0 28px rgba(53,164,255,.13);
 }
 
 .header-left{
@@ -167,15 +170,14 @@ html[data-theme="dark"] .topbar{
 }
 
 .menu-btn{
+  display:none;
   width:42px;
   height:42px;
-  flex:0 0 42px;
   border:none;
   background:transparent;
-  color:#fff;
-  font-size:30px;
+  color:var(--text);
+  font-size:29px;
   cursor:pointer;
-  display:flex;
   align-items:center;
   justify-content:center;
 }
@@ -183,14 +185,14 @@ html[data-theme="dark"] .topbar{
 .brand{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:13px;
   min-width:0;
 }
 
 .brand-leaf{
-  font-size:39px;
+  font-size:60px;
   line-height:1;
-  filter:drop-shadow(0 0 10px rgba(64,173,255,.32));
+  filter:drop-shadow(0 5px 7px rgba(21,112,83,.17));
 }
 
 .brand-copy{
@@ -198,95 +200,136 @@ html[data-theme="dark"] .topbar{
 }
 
 .brand-copy h1{
-  color:#fff;
-  font-size:29px;
+  color:#0a3169;
+  font-size:33px;
   font-weight:800;
-  line-height:1.05;
+  line-height:1.08;
   letter-spacing:-.8px;
   white-space:nowrap;
-  text-shadow:var(--glow);
 }
 
 .brand-copy p{
-  margin-top:4px;
-  color:rgba(255,255,255,.76);
-  font-size:11.5px;
+  margin-top:6px;
+  color:#5b6f88;
+  font-size:13px;
   font-weight:500;
   white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  max-width:265px;
+}
+
+html[data-theme="dark"] .brand-copy h1{
+  color:#f5f9ff;
+  text-shadow:
+    0 0 6px rgba(255,255,255,.22),
+    0 0 18px rgba(58,169,255,.30);
+}
+
+html[data-theme="dark"] .brand-copy p{
+  color:#afc7e8;
 }
 
 .header-search{
   position:relative;
   width:100%;
-  max-width:610px;
-  justify-self:center;
 }
 
 .header-search input{
   width:100%;
-  height:42px;
-  border:1px solid rgba(255,255,255,.10);
+  height:51px;
+  border:1px solid rgba(13,67,136,.11);
   outline:none;
   border-radius:999px;
-  background:rgba(255,255,255,.97);
-  color:#153560;
-  padding:0 48px 0 16px;
+  padding:0 52px 0 52px;
+  background:rgba(255,255,255,.94);
+  color:#183b68;
   font-size:14px;
+  box-shadow:0 8px 22px rgba(13,67,136,.07);
+}
+
+.header-search::before{
+  content:"⌕";
+  position:absolute;
+  left:18px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#173f75;
+  font-size:25px;
+  z-index:2;
 }
 
 .header-search button{
-  position:absolute;
-  right:7px;
-  top:50%;
-  transform:translateY(-50%);
-  width:31px;
-  height:31px;
-  border:none;
-  border-radius:50%;
-  background:transparent;
-  color:#16477d;
-  cursor:pointer;
-  font-size:18px;
+  display:none;
 }
 
 .header-actions{
+  min-width:0;
   display:flex;
   align-items:center;
   justify-content:flex-end;
-  gap:8px;
+  gap:12px;
+}
+
+.header-date-pill{
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 18px;
+  border-radius:16px;
+  background:rgba(215,238,255,.78);
+  color:#164476;
+  font-size:12px;
+  font-weight:600;
+  white-space:nowrap;
+  box-shadow:0 6px 17px rgba(13,67,136,.06);
+}
+
+.header-date-pill .calendar-icon{
+  font-size:19px;
+}
+
+html[data-theme="dark"] .header-date-pill{
+  background:rgba(38,126,218,.13);
+  color:#c4daf4;
+  border:1px solid rgba(65,160,255,.17);
 }
 
 .header-icon{
   position:relative;
-  width:42px;
-  height:42px;
-  border:1px solid rgba(255,255,255,.10);
+  width:45px;
+  height:45px;
+  border:none;
   border-radius:50%;
-  background:rgba(255,255,255,.03);
-  color:#fff;
+  background:rgba(255,255,255,.58);
+  color:#143d72;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  font-size:18px;
+  font-size:20px;
+  box-shadow:0 6px 16px rgba(13,67,136,.07);
+  transition:transform .2s ease,filter .2s ease;
+}
+
+html[data-theme="dark"] .header-icon{
+  background:rgba(16,49,92,.72);
+  color:#ecf5ff;
+  border:1px solid rgba(66,163,255,.20);
 }
 
 .header-icon:hover{
-  background:rgba(255,255,255,.10);
+  transform:translateY(-2px);
+  filter:brightness(1.08);
 }
 
 .header-badge{
   position:absolute;
-  top:-1px;
-  right:-1px;
-  min-width:17px;
-  height:17px;
+  top:-2px;
+  right:-2px;
+  min-width:18px;
+  height:18px;
   padding:0 4px;
   border-radius:999px;
-  background:#e11d48;
+  background:#1268c4;
   color:#fff;
   font-size:9px;
   font-weight:800;
@@ -303,13 +346,27 @@ html[data-theme="dark"] .topbar{
 }
 
 .avatar-btn img{
-  width:45px;
-  height:45px;
+  width:51px;
+  height:51px;
   display:block;
   border-radius:50%;
   object-fit:cover;
-  border:2px solid rgba(255,255,255,.88);
-  box-shadow:0 0 0 4px rgba(56,169,255,.12);
+  border:3px solid rgba(255,255,255,.94);
+  box-shadow:0 7px 18px rgba(13,67,136,.15);
+}
+
+.profile-name{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:#183961;
+  font-size:14px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .profile-name{
+  color:#edf6ff;
 }
 
 /* CATEGORY NAV */
@@ -355,7 +412,7 @@ html[data-theme="dark"] .topbar{
   font-weight:650;
 }
 
-/* STICKY NOTICE */
+/* STICKY HUMANITARIAN NOTICE */
 
 .notice-strip{
   position:sticky;
@@ -375,7 +432,7 @@ html[data-theme="dark"] .topbar{
   padding:7px 12px;
   border:1px solid var(--border-strong);
   border-radius:11px;
-  background:rgba(255,255,255,.93);
+  background:rgba(255,255,255,.94);
   box-shadow:var(--shadow-soft);
 }
 
@@ -449,7 +506,7 @@ html[data-theme="dark"] .notice-inner{
 .right-sidebar{
   position:sticky;
   top:calc(var(--header-h) + var(--nav-h) + 58px);
-  height:calc(100vh - 220px);
+  height:calc(100vh - 246px);
   overflow:auto;
   scrollbar-width:none;
 }
@@ -626,24 +683,32 @@ html[data-theme="dark"] .notice-inner{
 }
 
 .quick-actions{
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
+  display:flex;
+  align-items:center;
   gap:6px;
+  overflow-x:auto;
+  scrollbar-width:none;
   margin-top:12px;
+  padding-bottom:2px;
+}
+
+.quick-actions::-webkit-scrollbar{
+  display:none;
 }
 
 .quick-action{
   min-height:37px;
+  flex:1 0 auto;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:6px;
-  padding:7px 7px;
+  padding:7px 10px;
   border:1px solid var(--border);
   border-radius:9px;
   background:var(--surface-2);
   color:var(--text-soft);
-  font-size:11px;
+  font-size:10.5px;
   font-weight:600;
   white-space:nowrap;
   transition:.2s ease;
@@ -975,13 +1040,6 @@ html[data-theme="dark"] .notice-inner{
   font-weight:650;
 }
 
-.notice-item small{
-  display:block;
-  margin-top:3px;
-  color:var(--muted);
-  font-size:9.5px;
-}
-
 .board-buttons{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -1309,7 +1367,8 @@ html[data-theme="dark"] .notice-inner{
   display:grid;
 }
 
-.favorite-result{
+.favorite-result,
+.favorite-item{
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -1320,7 +1379,8 @@ html[data-theme="dark"] .notice-inner{
   background:var(--surface-2);
 }
 
-.favorite-result span{
+.favorite-result span,
+.favorite-item a{
   font-size:11.5px;
   font-weight:600;
 }
@@ -1344,23 +1404,6 @@ html[data-theme="dark"] .notice-inner{
 .favorite-empty{
   color:var(--muted);
   font-size:11px;
-}
-
-.favorite-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  padding:8px 9px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:var(--surface-2);
-}
-
-.favorite-item a{
-  color:var(--text);
-  font-size:11.5px;
-  font-weight:600;
 }
 
 .favorite-item button{
@@ -1437,8 +1480,6 @@ html[data-theme="dark"] .notice-inner{
   font-weight:600;
 }
 
-/* FLOATING */
-
 .to-top{
   position:fixed;
   right:18px;
@@ -1482,6 +1523,29 @@ html[data-theme="dark"] .notice-inner{
 
 /* RESPONSIVE */
 
+@media(max-width:1320px){
+  .topbar{
+    grid-template-columns:340px minmax(250px,1fr) auto;
+    padding:13px 20px;
+  }
+
+  .brand-copy h1{
+    font-size:28px;
+  }
+
+  .brand-leaf{
+    font-size:51px;
+  }
+
+  .header-date-pill{
+    display:none;
+  }
+
+  .profile-name{
+    display:none;
+  }
+}
+
 @media(max-width:1260px){
   .page-layout{
     grid-template-columns:225px minmax(0,1fr);
@@ -1489,10 +1553,6 @@ html[data-theme="dark"] .notice-inner{
 
   .right-sidebar{
     display:none;
-  }
-
-  .quick-actions{
-    grid-template-columns:repeat(3,minmax(0,1fr));
   }
 }
 
@@ -1506,6 +1566,7 @@ html[data-theme="dark"] .notice-inner{
     min-height:var(--header-h);
     padding:8px 11px;
     grid-template-columns:minmax(0,1fr) auto;
+    background:rgba(2,13,34,.98);
   }
 
   .header-left{
@@ -1513,9 +1574,10 @@ html[data-theme="dark"] .notice-inner{
   }
 
   .menu-btn{
+    display:flex;
     width:36px;
     height:36px;
-    flex-basis:36px;
+    color:#fff;
     font-size:26px;
   }
 
@@ -1524,25 +1586,28 @@ html[data-theme="dark"] .notice-inner{
   }
 
   .brand-copy h1{
+    color:#fff;
     font-size:21px;
   }
 
   .brand-copy p{
-    max-width:185px;
-    font-size:9.5px;
+    display:none;
   }
 
   .header-search{
     display:none;
   }
 
-  .header-actions .notification-btn{
+  .header-actions .notification-btn,
+  .header-actions .message-btn{
     display:none;
   }
 
   .header-icon{
     width:37px;
     height:37px;
+    background:rgba(255,255,255,.06);
+    color:#fff;
   }
 
   .avatar-btn img{
@@ -1584,10 +1649,6 @@ html[data-theme="dark"] .notice-inner{
     display:none;
   }
 
-  .quick-actions{
-    grid-template-columns:repeat(3,minmax(0,1fr));
-  }
-
   .flow-head{
     display:block;
   }
@@ -1608,15 +1669,11 @@ html[data-theme="dark"] .notice-inner{
 }
 
 @media(max-width:560px){
-  .brand-copy p{
-    display:none;
-  }
-
   .brand-copy h1{
     font-size:19px;
   }
 
-  .header-actions .message-btn{
+  .header-actions .header-icon{
     display:none;
   }
 
@@ -1641,13 +1698,10 @@ html[data-theme="dark"] .notice-inner{
     font-size:11px;
   }
 
-  .quick-actions{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-
   .quick-action{
-    min-height:36px;
-    font-size:10.5px;
+    min-height:35px;
+    font-size:10px;
+    padding:6px 9px;
   }
 
   .post-card{
@@ -1685,7 +1739,10 @@ html[data-theme="dark"] .notice-inner{
 <header class="topbar">
 
   <div class="header-left">
-    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">☰</button>
+
+    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">
+      ☰
+    </button>
 
     <a href="index.html" class="brand">
       <span class="brand-leaf">🌿</span>
@@ -1695,34 +1752,24 @@ html[data-theme="dark"] .notice-inner{
         <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
       </span>
     </a>
+
   </div>
 
   <div class="header-search">
     <input
       id="headerSearchInput"
       type="search"
-      placeholder="লেখা, কবি, মনীষী অথবা বিষয় খুঁজুন..."
+      placeholder="খুঁজুন কবিতা, কবি, বিষয়, হ্যাশট্যাগ..."
     >
     <button id="headerSearchButton" aria-label="সার্চ">⌕</button>
   </div>
 
   <div class="header-actions">
 
-    <button
-      class="header-icon"
-      id="headerThemeBtn"
-      aria-label="থিম পরিবর্তন"
-    >
-      <span id="headerThemeIcon">🌙</span>
-    </button>
-
-    <button
-      class="header-icon message-btn"
-      onclick="showToast('বার্তালাপ সুবিধাটি backend যুক্ত হলে live হবে।')"
-      aria-label="বার্তালাপ"
-    >
-      💬
-    </button>
+    <div class="header-date-pill">
+      <span class="calendar-icon">▣</span>
+      <span id="headerDateText">তারিখ লোড হচ্ছে...</span>
+    </div>
 
     <button
       class="header-icon notification-btn"
@@ -1733,9 +1780,31 @@ html[data-theme="dark"] .notice-inner{
       <span class="header-badge">৩</span>
     </button>
 
+    <button
+      class="header-icon message-btn"
+      onclick="showToast('বার্তালাপ সুবিধাটি backend যুক্ত হলে live হবে।')"
+      aria-label="বার্তালাপ"
+    >
+      💬
+      <span class="header-badge">৬</span>
+    </button>
+
+    <button
+      class="header-icon"
+      id="headerThemeBtn"
+      aria-label="থিম পরিবর্তন"
+    >
+      <span id="headerThemeIcon">🌙</span>
+    </button>
+
     <button class="avatar-btn" id="accountBtn" aria-label="অ্যাকাউন্ট">
       <img src="profile.jpg" alt="আপনার প্রোফাইল">
     </button>
+
+    <span class="profile-name">
+      আপনার প্রোফাইল
+      <span>⌄</span>
+    </span>
 
   </div>
 
@@ -1757,6 +1826,7 @@ html[data-theme="dark"] .notice-inner{
 
 <section class="notice-strip">
   <div class="notice-inner">
+
     <span class="notice-symbol">♡</span>
 
     <div class="notice-text">
@@ -1769,6 +1839,7 @@ html[data-theme="dark"] .notice-inner{
       <a href="humanitarian-notice.html">বিস্তারিত</a>
       <a href="humanitarian-request.html" class="primary">আবেদন করুন</a>
     </div>
+
   </div>
 </section>
 
@@ -2545,6 +2616,7 @@ function renderDate(){
 
   document.getElementById("desktopDate").innerText = dateText;
   document.getElementById("mobileDate").innerText = dateText;
+  document.getElementById("headerDateText").innerText = dateText;
   document.getElementById("footerYear").innerText =
     toBn(today.getFullYear());
 }
