@@ -1,1 +1,3753 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>নোটিফিকেশন | ভুবনডাঙ্গার কবিতা</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+:root{
+  --header-h:92px;
+  --ticker-h:39px;
+  --nav-h:50px;
+
+  --bg:#eaf4fb;
+  --surface:#ffffff;
+  --surface-2:#f5f9fd;
+  --surface-3:#eaf4ff;
+
+  --text:#102f5c;
+  --text-soft:#4b698e;
+  --muted:#7589a5;
+
+  --border:rgba(15,75,145,.15);
+  --border-strong:rgba(15,91,178,.30);
+
+  --accent:#0b5caf;
+  --accent-soft:rgba(37,151,246,.11);
+
+  --green:#198265;
+  --green-soft:rgba(25,130,101,.10);
+
+  --red:#d44756;
+  --red-soft:rgba(212,71,86,.09);
+
+  --gold:#ae7c24;
+  --gold-soft:rgba(174,124,36,.09);
+
+  --shadow:0 12px 32px rgba(11,51,104,.09);
+  --soft-shadow:0 5px 18px rgba(11,51,104,.07);
+
+  --page-bg:
+    radial-gradient(circle at 8% 4%,rgba(128,195,240,.24),transparent 26%),
+    radial-gradient(circle at 92% 8%,rgba(255,255,255,.72),transparent 27%),
+    linear-gradient(150deg,#f8fcff 0%,#eaf4fb 55%,#f7fbff 100%);
+
+  --header-bg:
+    radial-gradient(circle at 9% 18%,rgba(255,255,255,.88),transparent 32%),
+    linear-gradient(110deg,#f8fcff 0%,#edf8ff 52%,#e5f2fb 100%);
+
+  --ticker-bg:
+    linear-gradient(90deg,#eef8ff,#e4f3ff,#eef8ff);
+
+  --nav-bg:rgba(255,255,255,.96);
+  --drawer-bg:rgba(244,250,254,.98);
+}
+
+html[data-theme="dark"]{
+  --bg:#020a1a;
+  --surface:rgba(4,18,41,.96);
+  --surface-2:rgba(8,29,61,.94);
+  --surface-3:rgba(46,158,255,.12);
+
+  --text:#f5f9ff;
+  --text-soft:#c8dcf7;
+  --muted:#8fa8cd;
+
+  --border:rgba(64,164,255,.24);
+  --border-strong:rgba(75,178,255,.43);
+
+  --accent:#3aaaff;
+  --accent-soft:rgba(58,170,255,.13);
+
+  --green:#73e0c0;
+  --green-soft:rgba(115,224,192,.10);
+
+  --red:#ff7d8e;
+  --red-soft:rgba(255,125,142,.10);
+
+  --gold:#ffd06c;
+  --gold-soft:rgba(255,208,108,.10);
+
+  --shadow:0 17px 44px rgba(0,0,0,.44);
+  --soft-shadow:0 0 24px rgba(54,166,255,.11);
+
+  --page-bg:
+    radial-gradient(circle at 9% 4%,rgba(33,132,255,.28),transparent 25%),
+    radial-gradient(circle at 90% 12%,rgba(11,88,181,.22),transparent 28%),
+    linear-gradient(180deg,#010716 0%,#03132d 50%,#02091a 100%);
+
+  --header-bg:
+    radial-gradient(circle at 12% 18%,rgba(35,137,255,.18),transparent 32%),
+    linear-gradient(110deg,#010718 0%,#03152f 53%,#061d42 100%);
+
+  --ticker-bg:
+    radial-gradient(circle at center,rgba(45,153,255,.12),transparent 70%),
+    rgba(3,17,39,.98);
+
+  --nav-bg:rgba(2,13,34,.97);
+  --drawer-bg:rgba(2,14,33,.98);
+}
+
+body{
+  min-height:100vh;
+  font-family:'Noto Serif Bengali',Georgia,serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+  overflow-x:hidden;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+textarea,
+select{
+  font-family:inherit;
+}
+
+input,
+textarea,
+select,
+.allow-copy{
+  user-select:text;
+  -webkit-user-select:text;
+}
+
+button,
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+.site-shell{
+  min-height:100vh;
+  background:var(--page-bg);
+}
+
+/* HEADER */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:1300;
+  min-height:var(--header-h);
+  padding:9px 30px;
+
+  display:grid;
+  grid-template-columns:390px minmax(280px,520px) minmax(460px,1fr);
+  align-items:center;
+  gap:18px;
+
+  background:var(--header-bg);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 7px 22px rgba(13,67,136,.08);
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.menu-btn{
+  display:none;
+  width:39px;
+  height:39px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:28px;
+  cursor:pointer;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.brand-leaf{
+  font-size:49px;
+  line-height:1;
+}
+
+.brand-copy h1{
+  color:#0b3671;
+  font-size:29px;
+  font-weight:800;
+  line-height:1.05;
+  white-space:nowrap;
+}
+
+.brand-copy p{
+  margin-top:3px;
+  color:#59728e;
+  font-size:11.5px;
+  font-weight:500;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .brand-copy h1{
+  color:#fff;
+  text-shadow:
+    0 0 5px rgba(255,255,255,.16),
+    0 0 18px rgba(57,169,255,.23);
+}
+
+html[data-theme="dark"] .brand-copy p{
+  color:#b5cceb;
+}
+
+.header-search{
+  position:relative;
+}
+
+.header-search input{
+  width:100%;
+  height:45px;
+  border:1px solid rgba(15,69,137,.12);
+  outline:none;
+  border-radius:999px;
+  padding:0 48px;
+  background:rgba(255,255,255,.95);
+  color:#183b68;
+  font-size:13px;
+}
+
+.header-search::before{
+  content:"⌕";
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#164477;
+  font-size:23px;
+}
+
+.header-search button{
+  position:absolute;
+  right:6px;
+  top:50%;
+  transform:translateY(-50%);
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  cursor:pointer;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.header-date-pill{
+  min-height:42px;
+  max-width:260px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 13px;
+  border-radius:13px;
+  background:rgba(215,238,255,.70);
+  color:#164476;
+  font-size:10.5px;
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+html[data-theme="dark"] .header-date-pill{
+  background:rgba(39,126,217,.13);
+  color:#c9dcf5;
+  border:1px solid rgba(65,160,255,.18);
+}
+
+.header-icon{
+  position:relative;
+  width:41px;
+  height:41px;
+  border:1px solid rgba(15,69,137,.10);
+  border-radius:50%;
+  background:rgba(255,255,255,.60);
+  color:#163e72;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:17px;
+}
+
+.header-icon.active{
+  color:#fff;
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+html[data-theme="dark"] .header-icon{
+  background:rgba(14,48,91,.73);
+  border-color:rgba(66,163,255,.21);
+  color:#f1f7ff;
+}
+
+html[data-theme="dark"] .header-icon.active{
+  background:var(--accent);
+  color:#fff;
+}
+
+.header-badge{
+  position:absolute;
+  top:-3px;
+  right:-3px;
+  min-width:18px;
+  height:18px;
+  padding:0 4px;
+  border-radius:999px;
+  background:#146dcb;
+  color:#fff;
+  font-size:9px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.avatar-btn{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+}
+
+.avatar-btn img{
+  width:46px;
+  height:46px;
+  display:block;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid rgba(255,255,255,.94);
+}
+
+.profile-name{
+  color:#173b68;
+  font-size:12.5px;
+  font-weight:700;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .profile-name{
+  color:#f1f7ff;
+}
+
+/* DATE TICKER */
+
+.date-ticker{
+  position:sticky;
+  top:var(--header-h);
+  z-index:1250;
+  height:var(--ticker-h);
+  overflow:hidden;
+  background:var(--ticker-bg);
+  border-bottom:1px solid var(--border);
+}
+
+.ticker-track{
+  width:max-content;
+  min-width:200%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  animation:dateTicker 34s linear infinite;
+}
+
+.ticker-group{
+  min-width:100vw;
+  padding:0 44px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:65px;
+  color:var(--text-soft);
+  font-size:11.5px;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+.ticker-item{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.ticker-label,
+.ticker-dot{
+  color:var(--accent);
+  font-weight:800;
+}
+
+@keyframes dateTicker{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-50%);
+  }
+}
+
+/* NAV */
+
+.category-nav{
+  position:sticky;
+  top:calc(var(--header-h) + var(--ticker-h));
+  z-index:1200;
+  background:var(--nav-bg);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+
+.category-inner{
+  max-width:1530px;
+  min-height:var(--nav-h);
+  margin:0 auto;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  gap:27px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.category-inner::-webkit-scrollbar{
+  display:none;
+}
+
+.category-inner a{
+  color:var(--text-soft);
+  font-size:13.5px;
+  font-weight:500;
+  white-space:nowrap;
+  padding:14px 0 10px;
+  border-bottom:3px solid transparent;
+}
+
+.category-inner a:hover,
+.category-inner a.active{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+/* NOTICE */
+
+.notice-strip{
+  position:sticky;
+  top:calc(var(--header-h) + var(--ticker-h) + var(--nav-h));
+  z-index:1150;
+  max-width:1530px;
+  margin:0 auto;
+  padding:7px 20px 0;
+}
+
+.notice-inner{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  padding:7px 12px;
+  border:1px solid var(--border-strong);
+  border-radius:13px;
+  background:var(--surface);
+  box-shadow:var(--soft-shadow);
+}
+
+.notice-symbol{
+  color:var(--red);
+  font-size:19px;
+}
+
+.notice-text{
+  color:var(--text-soft);
+  font-size:11.5px;
+  line-height:1.5;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
+  overflow:hidden;
+}
+
+.notice-text strong{
+  color:var(--text);
+}
+
+.notice-links{
+  display:flex;
+  gap:7px;
+}
+
+.notice-links a{
+  padding:5px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--accent);
+  font-size:10px;
+  font-weight:700;
+}
+
+.notice-links a.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+/* LAYOUT */
+
+.page-layout{
+  max-width:1530px;
+  margin:0 auto;
+  padding:10px 20px 0;
+  display:grid;
+  grid-template-columns:250px minmax(0,1fr) 325px;
+  gap:14px;
+}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+}
+
+.left-sidebar,
+.right-sidebar{
+  position:sticky;
+  top:calc(var(--header-h) + var(--ticker-h) + var(--nav-h) + 58px);
+  height:calc(100vh - 268px);
+  overflow:auto;
+  scrollbar-width:none;
+}
+
+.left-sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar,
+.mobile-drawer::-webkit-scrollbar,
+.account-panel::-webkit-scrollbar{
+  display:none;
+}
+
+/* SIDEBAR */
+
+.side-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:2px 5px 9px;
+}
+
+.side-brand span{
+  font-size:36px;
+}
+
+.side-brand h2{
+  font-size:21px;
+}
+
+.side-menu{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+
+.side-menu a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 9px;
+  border-radius:10px;
+  color:var(--text);
+  font-size:13.2px;
+  font-weight:500;
+}
+
+.side-menu a:hover,
+.side-menu a.active{
+  color:var(--accent);
+  background:var(--accent-soft);
+}
+
+.side-left{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.side-icon{
+  width:21px;
+  text-align:center;
+}
+
+.side-tag{
+  color:var(--accent);
+  font-size:9px;
+  font-weight:650;
+}
+
+.side-title{
+  margin:15px 0 7px;
+  padding:0 9px;
+  font-size:16.5px;
+}
+
+.side-separator{
+  height:1px;
+  margin:11px 8px 4px;
+  background:var(--border);
+}
+
+.auth-area{
+  display:grid;
+  gap:8px;
+  margin-top:15px;
+  padding:0 5px 10px;
+}
+
+.login-side,
+.register-side{
+  padding:9px 11px;
+  border-radius:10px;
+  text-align:center;
+  font-size:13px;
+  font-weight:600;
+}
+
+.login-side{
+  background:var(--accent);
+  color:#fff!important;
+}
+
+.register-side{
+  border:1.5px solid var(--accent);
+  color:var(--accent)!important;
+}
+
+/* MAIN */
+
+.main-content{
+  min-width:0;
+}
+
+.notification-hero{
+  padding:17px;
+  background:
+    radial-gradient(circle at top right,var(--accent-soft),transparent 43%),
+    linear-gradient(135deg,var(--surface),var(--surface-2));
+}
+
+.notification-hero-head{
+  display:flex;
+  align-items:flex-start;
+  gap:11px;
+}
+
+.notification-hero-icon{
+  width:52px;
+  height:52px;
+  flex:0 0 52px;
+  border-radius:15px;
+  background:var(--accent-soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:27px;
+}
+
+.notification-hero h1{
+  font-size:27px;
+  line-height:1.4;
+}
+
+.notification-hero p{
+  margin-top:4px;
+  color:var(--text-soft);
+  font-size:12.5px;
+}
+
+.hero-actions{
+  display:flex;
+  gap:7px;
+  margin-top:13px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.hero-actions::-webkit-scrollbar{
+  display:none;
+}
+
+.hero-actions button,
+.hero-actions a{
+  flex:1 0 auto;
+  min-height:36px;
+  padding:6px 11px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--surface-2);
+  color:var(--text-soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  font-size:10.5px;
+  font-weight:650;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.hero-actions button.primary{
+  color:#fff;
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+/* FILTER */
+
+.filter-card{
+  margin-top:11px;
+  padding:12px 13px;
+}
+
+.filter-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.filter-top h2{
+  font-size:19px;
+}
+
+.filter-top p{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.filter-row{
+  display:flex;
+  gap:6px;
+  margin-top:9px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.filter-row::-webkit-scrollbar{
+  display:none;
+}
+
+.filter-btn{
+  padding:6px 11px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface-2);
+  color:var(--text-soft);
+  font-size:10.3px;
+  font-weight:650;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.filter-btn.active{
+  color:#fff;
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+/* NOTIFICATION LIST */
+
+.notification-list{
+  display:grid;
+  gap:9px;
+  margin-top:11px;
+}
+
+.notification-item{
+  position:relative;
+  padding:13px;
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) auto;
+  align-items:flex-start;
+  gap:10px;
+  transition:transform .2s ease,background .2s ease;
+}
+
+.notification-item:hover{
+  transform:translateY(-1px);
+}
+
+.notification-item.unread{
+  border-color:var(--border-strong);
+  background:
+    linear-gradient(100deg,var(--accent-soft),var(--surface) 45%);
+}
+
+.notification-item.unread::before{
+  content:"";
+  position:absolute;
+  top:15px;
+  right:13px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--accent);
+}
+
+.notification-avatar-wrap{
+  position:relative;
+}
+
+.notification-avatar{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--surface);
+}
+
+.notification-type-icon{
+  position:absolute;
+  right:-2px;
+  bottom:-2px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--accent);
+  color:#fff;
+  border:2px solid var(--surface);
+  font-size:9px;
+}
+
+.notification-type-icon.comment{
+  background:var(--green);
+}
+
+.notification-type-icon.like{
+  background:var(--red);
+}
+
+.notification-type-icon.follow{
+  background:var(--gold);
+}
+
+.notification-type-icon.system{
+  background:var(--accent);
+}
+
+.notification-copy{
+  min-width:0;
+}
+
+.notification-text{
+  color:var(--text-soft);
+  font-size:12.2px;
+  line-height:1.7;
+}
+
+.notification-text strong{
+  color:var(--text);
+  font-weight:700;
+}
+
+.notification-link{
+  color:var(--accent);
+  font-weight:700;
+}
+
+.notification-preview{
+  margin-top:6px;
+  padding:7px 9px;
+  border-left:3px solid var(--accent);
+  border-radius:0 8px 8px 0;
+  background:var(--surface-2);
+  color:var(--muted);
+  font-size:10.5px;
+  line-height:1.65;
+
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+}
+
+.notification-time{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:9.3px;
+}
+
+.notification-actions{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding-right:13px;
+}
+
+.small-action{
+  width:30px;
+  height:30px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  background:var(--surface-2);
+  color:var(--muted);
+  cursor:pointer;
+  font-size:12px;
+}
+
+.small-action:hover{
+  color:var(--accent);
+  border-color:var(--accent);
+}
+
+.empty-state{
+  padding:28px 17px;
+  text-align:center;
+}
+
+.empty-state span{
+  display:block;
+  font-size:48px;
+}
+
+.empty-state h3{
+  margin-top:6px;
+  font-size:20px;
+}
+
+.empty-state p{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.more-wrap{
+  padding:14px 0 3px;
+  text-align:center;
+}
+
+.more-wrap button{
+  padding:8px 21px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--text);
+  cursor:pointer;
+}
+
+/* RIGHT */
+
+.right-sidebar{
+  display:grid;
+  gap:11px;
+  align-content:start;
+}
+
+.right-card{
+  padding:13px;
+}
+
+.right-title{
+  margin-bottom:9px;
+  text-align:center;
+  font-size:17px;
+}
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.summary-item{
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface-2);
+  text-align:center;
+}
+
+.summary-item strong{
+  display:block;
+  color:var(--accent);
+  font-size:20px;
+}
+
+.summary-item span{
+  color:var(--muted);
+  font-size:9.5px;
+}
+
+.setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.setting-row:last-child{
+  border-bottom:none;
+}
+
+.setting-copy h3{
+  font-size:11.5px;
+}
+
+.setting-copy p{
+  margin-top:1px;
+  color:var(--muted);
+  font-size:9px;
+}
+
+.switch{
+  position:relative;
+  width:39px;
+  height:22px;
+  flex:0 0 39px;
+}
+
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  border-radius:999px;
+  background:var(--border-strong);
+  cursor:pointer;
+  transition:.2s;
+}
+
+.slider::before{
+  content:"";
+  position:absolute;
+  width:16px;
+  height:16px;
+  left:3px;
+  top:3px;
+  border-radius:50%;
+  background:#fff;
+  transition:.2s;
+}
+
+.switch input:checked + .slider{
+  background:var(--accent);
+}
+
+.switch input:checked + .slider::before{
+  transform:translateX(17px);
+}
+
+.right-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 0;
+  border-bottom:1px solid var(--border);
+  color:var(--text-soft);
+  font-size:11.3px;
+}
+
+.right-link:last-child{
+  border-bottom:none;
+}
+
+/* DRAWERS */
+
+.backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1400;
+  display:none;
+  background:rgba(0,0,0,.49);
+}
+
+.backdrop.show{
+  display:block;
+}
+
+.mobile-drawer{
+  position:fixed;
+  top:0;
+  left:-335px;
+  z-index:1500;
+  width:315px;
+  max-width:89vw;
+  height:100vh;
+  padding:16px;
+  overflow:auto;
+  background:var(--drawer-bg);
+  border-right:1px solid var(--border);
+  box-shadow:16px 0 42px rgba(0,0,0,.31);
+  transition:left .25s ease;
+}
+
+.mobile-drawer.open{
+  left:0;
+}
+
+.drawer-head,
+.account-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.drawer-brand span,
+.account-logo{
+  font-size:40px;
+}
+
+.drawer-brand h2,
+.account-head h2{
+  font-size:24px;
+}
+
+.close-btn{
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:32px;
+  cursor:pointer;
+}
+
+.account-panel{
+  position:fixed;
+  top:0;
+  right:-415px;
+  z-index:1500;
+  width:395px;
+  max-width:93vw;
+  height:100vh;
+  padding:17px 16px;
+  overflow:auto;
+  background:var(--drawer-bg);
+  border-left:1px solid var(--border);
+  box-shadow:-16px 0 42px rgba(0,0,0,.31);
+  transition:right .25s ease;
+}
+
+.account-panel.open{
+  right:0;
+}
+
+.account-logo{
+  text-align:center;
+}
+
+.account-user{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--surface);
+}
+
+.account-user img{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.account-user h3{
+  font-size:16px;
+}
+
+.account-user p{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.account-menu{
+  display:grid;
+  gap:7px;
+  margin-top:12px;
+}
+
+.account-menu a,
+.account-menu button{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface);
+  color:var(--text);
+  display:flex;
+  justify-content:space-between;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* FOOTER */
+
+.site-footer{
+  max-width:1530px;
+  margin:0 auto;
+  padding:16px 20px;
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  background:var(--accent);
+  color:#fff;
+  font-size:12px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.to-top{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:1300;
+  width:42px;
+  height:42px;
+  display:none;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.to-top.show{
+  display:block;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:72px;
+  z-index:2000;
+  display:none;
+  transform:translateX(-50%);
+  max-width:92%;
+  padding:10px 18px;
+  border-radius:999px;
+  background:var(--accent);
+  color:#fff;
+  text-align:center;
+  font-size:12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1320px){
+  .topbar{
+    grid-template-columns:330px minmax(240px,1fr) auto;
+    padding:9px 20px;
+  }
+
+  .brand-leaf{
+    font-size:44px;
+  }
+
+  .brand-copy h1{
+    font-size:25px;
+  }
+
+  .header-date-pill,
+  .profile-name{
+    display:none;
+  }
+}
+
+@media(max-width:1260px){
+  .page-layout{
+    grid-template-columns:225px minmax(0,1fr);
+  }
+
+  .right-sidebar{
+    display:none;
+  }
+}
+
+@media(max-width:940px){
+  :root{
+    --header-h:101px;
+    --ticker-h:37px;
+    --nav-h:47px;
+  }
+
+  .topbar{
+    min-height:var(--header-h);
+    padding:6px 11px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:52px 37px;
+  }
+
+  .menu-btn{
+    display:block;
+    width:34px;
+    height:34px;
+    color:var(--text);
+    font-size:25px;
+  }
+
+  .brand{
+    gap:7px;
+  }
+
+  .brand-leaf{
+    font-size:29px;
+  }
+
+  .brand-copy h1{
+    font-size:19px;
+  }
+
+  .brand-copy p{
+    max-width:210px;
+    font-size:8.3px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .header-actions{
+    gap:5px;
+  }
+
+  .header-icon{
+    width:33px;
+    height:33px;
+    font-size:14px;
+  }
+
+  .avatar-btn img{
+    width:37px;
+    height:37px;
+  }
+
+  .header-search{
+    grid-column:1 / 3;
+    grid-row:2;
+  }
+
+  .header-search input{
+    height:35px;
+    padding-left:41px;
+    font-size:11px;
+  }
+
+  .header-search::before{
+    left:14px;
+    font-size:19px;
+  }
+
+  .header-search button{
+    width:28px;
+    height:28px;
+  }
+
+  .ticker-group{
+    min-width:100vw;
+    padding:0 24px;
+    gap:43px;
+    font-size:10.3px;
+  }
+
+  .category-inner{
+    padding:0 12px;
+    gap:21px;
+  }
+
+  .category-inner a{
+    font-size:12.2px;
+    padding:12px 0 9px;
+  }
+
+  .notice-strip{
+    padding:6px 11px 0;
+  }
+
+  .notice-inner{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+
+  .notice-links{
+    grid-column:2;
+  }
+
+  .page-layout{
+    display:block;
+    padding:10px 11px 24px;
+  }
+
+  .left-sidebar,
+  .right-sidebar{
+    display:none;
+  }
+
+  .site-footer{
+    display:block;
+    text-align:center;
+  }
+
+  .footer-links{
+    justify-content:center;
+    margin-top:7px;
+  }
+}
+
+@media(max-width:560px){
+  :root{
+    --header-h:98px;
+  }
+
+  .brand-copy h1{
+    font-size:17.5px;
+  }
+
+  .brand-copy p{
+    max-width:175px;
+    font-size:7.7px;
+  }
+
+  .theme-header-btn{
+    display:none;
+  }
+
+  .ticker-group{
+    gap:34px;
+    font-size:9.8px;
+  }
+
+  .notice-text{
+    font-size:10.3px;
+  }
+
+  .notice-links a{
+    padding:4px 7px;
+    font-size:9px;
+  }
+
+  .notification-hero{
+    padding:14px;
+  }
+
+  .notification-hero h1{
+    font-size:22px;
+  }
+
+  .notification-item{
+    grid-template-columns:42px minmax(0,1fr);
+    padding:12px;
+  }
+
+  .notification-avatar{
+    width:42px;
+    height:42px;
+  }
+
+  .notification-actions{
+    grid-column:2;
+    padding-right:0;
+    justify-content:flex-start;
+  }
+
+  .notification-item.unread::before{
+    right:10px;
+    top:10px;
+  }
+
+  .notification-text{
+    font-size:11.7px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="site-shell">
+
+<header class="topbar">
+
+  <div class="header-left">
+
+    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">
+      ☰
+    </button>
+
+    <a href="index.html" class="brand">
+
+      <span class="brand-leaf">🌿</span>
+
+      <span class="brand-copy">
+        <h1>ভুবনডাঙ্গার কবিতা</h1>
+        <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
+      </span>
+
+    </a>
+
+  </div>
+
+  <div class="header-search">
+
+    <input
+      id="headerSearchInput"
+      type="search"
+      placeholder="কবিতা, কবি, বিষয় অথবা নোটিফিকেশন খুঁজুন..."
+    >
+
+    <button id="headerSearchButton" aria-label="সার্চ">
+      ⌕
+    </button>
+
+  </div>
+
+  <div class="header-actions">
+
+    <div class="header-date-pill">
+      <span>📅</span>
+      <span id="headerDateText">তারিখ লোড হচ্ছে...</span>
+    </div>
+
+    <a
+      href="notifications.html"
+      class="header-icon active"
+      aria-label="নোটিফিকেশন"
+    >
+      🔔
+      <span class="header-badge" id="headerNotificationCount">৩</span>
+    </a>
+
+    <a
+      href="messages.html"
+      class="header-icon"
+      aria-label="বার্তাসমূহ"
+    >
+      💬
+      <span class="header-badge">৬</span>
+    </a>
+
+    <button
+      class="header-icon theme-header-btn"
+      id="headerThemeBtn"
+      aria-label="থিম পরিবর্তন"
+    >
+      <span id="headerThemeIcon">🌙</span>
+    </button>
+
+    <button
+      class="avatar-btn"
+      id="accountBtn"
+      aria-label="অ্যাকাউন্ট"
+    >
+      <img src="profile.jpg" alt="আপনার প্রোফাইল">
+    </button>
+
+    <span class="profile-name">
+      আপনার প্রোফাইল⌄
+    </span>
+
+  </div>
+
+</header>
+
+<section class="date-ticker">
+
+  <div class="ticker-track">
+
+    <div class="ticker-group">
+
+      <span class="ticker-item">
+        📅
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span class="ticker-item">
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span class="ticker-item">
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+    </div>
+
+    <div class="ticker-group" aria-hidden="true">
+
+      <span class="ticker-item">
+        📅
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span class="ticker-item">
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span class="ticker-item">
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
+
+<nav class="category-nav">
+
+  <div class="category-inner">
+
+    <a href="index.html">হোম</a>
+    <a href="today-poem.html?filter=popular">জনপ্রিয়</a>
+    <a href="today-poem.html">প্রবাহ</a>
+    <a href="today-poem.html?type=poem">কবিতা</a>
+    <a href="today-poem.html?type=prolap">প্রলাপ</a>
+    <a href="today-poem.html?type=letter">চিঠিপত্র</a>
+    <a href="famous-quotes.html">বাণী</a>
+    <a href="recitation.html">আবৃত্তি</a>
+    <a href="environment-advice.html">পরিবেশ</a>
+    <a href="notifications.html" class="active">নোটিফিকেশন</a>
+
+  </div>
+
+</nav>
+
+<section class="notice-strip">
+
+  <div class="notice-inner">
+
+    <span class="notice-symbol">♡</span>
+
+    <div class="notice-text">
+      <strong>মানবিক আবেদন:</strong>
+      বর্তমানে কোনো যাচাইকৃত জরুরি আবেদন নেই। অনুমোদিত আবেদন এখানে প্রকাশিত হবে।
+    </div>
+
+    <div class="notice-links">
+
+      <a href="humanitarian-notice.html">
+        বিস্তারিত
+      </a>
+
+      <a href="humanitarian-request.html" class="primary">
+        আবেদন করুন
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+<div class="backdrop" id="drawerBackdrop"></div>
+
+<aside class="mobile-drawer" id="mobileDrawer">
+
+  <div class="drawer-head">
+
+    <a href="index.html" class="drawer-brand">
+      <span>🌿</span>
+      <h2>আপন ভুবন</h2>
+    </a>
+
+    <button class="close-btn" id="closeDrawer">
+      ×
+    </button>
+
+  </div>
+
+  <div class="side-menu">
+
+    <a href="profile.html">
+      <span class="side-left">
+        <span class="side-icon">👤</span>
+        আপনার প্রোফাইল
+      </span>
+      <span class="side-tag">Edit</span>
+    </a>
+
+    <a href="favorite-authors.html">
+      <span class="side-left">
+        <span class="side-icon">♡</span>
+        প্রিয় লেখক খুঁজুন
+      </span>
+    </a>
+
+    <a href="notifications.html" class="active">
+      <span class="side-left">
+        <span class="side-icon">🔔</span>
+        নোটিফিকেশন
+      </span>
+      <span class="side-tag" id="drawerNotificationCount">৩</span>
+    </a>
+
+    <a href="messages.html">
+      <span class="side-left">
+        <span class="side-icon">💬</span>
+        বার্তাসমূহ
+      </span>
+      <span class="side-tag">৬</span>
+    </a>
+
+    <a href="today-poem.html?type=poem">
+      <span class="side-left">
+        <span class="side-icon">📝</span>
+        আজকের কবিতা
+      </span>
+    </a>
+
+    <a href="today-poem.html?type=prolap">
+      <span class="side-left">
+        <span class="side-icon">✒</span>
+        আজকের প্রলাপ
+      </span>
+    </a>
+
+    <a href="today-poem.html?type=letter">
+      <span class="side-left">
+        <span class="side-icon">✉</span>
+        আজকের চিঠিপত্র
+      </span>
+    </a>
+
+    <a href="famous-quotes.html">
+      <span class="side-left">
+        <span class="side-icon">📜</span>
+        বিখ্যাত মনীষীদের বাণী
+      </span>
+    </a>
+
+    <a href="environment-advice.html">
+      <span class="side-left">
+        <span class="side-icon">🌱</span>
+        পরিবেশ পরামর্শ
+      </span>
+    </a>
+
+    <a href="recitation.html">
+      <span class="side-left">
+        <span class="side-icon">🎙</span>
+        আবৃত্তি
+      </span>
+    </a>
+
+    <a href="profile.html#anukabya">
+      <span class="side-left">
+        <span class="side-icon">🌸</span>
+        অনুকাব্য
+      </span>
+    </a>
+
+  </div>
+
+  <div class="side-separator"></div>
+
+  <h3 class="side-title">মূল ভুবন</h3>
+
+  <div class="side-menu">
+
+    <a href="index.html">
+      <span class="side-left">
+        <span class="side-icon">🏠</span>
+        হোম
+      </span>
+    </a>
+
+    <a href="famous-poet.html">
+      <span class="side-left">
+        <span class="side-icon">📖</span>
+        খ্যাতিমান কবি
+      </span>
+    </a>
+
+    <a href="madhyorater-prolap.html">
+      <span class="side-left">
+        <span class="side-icon">☾</span>
+        মধ্যরাতের প্রলাপ
+      </span>
+    </a>
+
+    <a href="founder-profile.html">
+      <span class="side-left">
+        <span class="side-icon">✒</span>
+        মাহমুদ সোহেল
+      </span>
+    </a>
+
+    <a href="discussion-post.html">
+      <span class="side-left">
+        <span class="side-icon">💬</span>
+        সাহিত্য আলোচনা
+      </span>
+    </a>
+
+    <a href="humanitarian-notice.html">
+      <span class="side-left">
+        <span class="side-icon">♡</span>
+        মানবিক নোটিস
+      </span>
+    </a>
+
+    <a href="contact.html">
+      <span class="side-left">
+        <span class="side-icon">✉</span>
+        যোগাযোগ
+      </span>
+    </a>
+
+    <a href="policy.html">
+      <span class="side-left">
+        <span class="side-icon">📌</span>
+        নীতিমালা
+      </span>
+    </a>
+
+  </div>
+
+  <div class="auth-area">
+    <a href="login.html" class="login-side">↪ লগইন করুন</a>
+    <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+  </div>
+
+</aside>
+
+<div class="backdrop" id="accountBackdrop"></div>
+
+<aside class="account-panel" id="accountPanel">
+
+  <div class="account-logo">
+    <a href="index.html">🌿</a>
+  </div>
+
+  <div class="account-head">
+
+    <h2>Account</h2>
+
+    <button class="close-btn" id="closeAccount">
+      ×
+    </button>
+
+  </div>
+
+  <div class="account-user">
+
+    <img src="profile.jpg" alt="আপনার প্রোফাইল">
+
+    <div>
+      <h3><a href="profile.html">আপনার প্রোফাইল</a></h3>
+      <p>Writer • Reader • Memories</p>
+    </div>
+
+  </div>
+
+  <div class="account-menu">
+
+    <a href="profile.html">
+      আপনার প্রোফাইল
+      <span>›</span>
+    </a>
+
+    <a href="messages.html">
+      বার্তাসমূহ
+      <span>৬</span>
+    </a>
+
+    <a href="notifications.html">
+      নোটিফিকেশন
+      <span id="accountNotificationCount">৩</span>
+    </a>
+
+    <a href="favorite-authors.html">
+      প্রিয় লেখক খুঁজুন
+      <span>›</span>
+    </a>
+
+    <a href="humanitarian-notice.html">
+      মানবিক নোটিস
+      <span>›</span>
+    </a>
+
+    <button id="accountThemeBtn">
+      Theme বদলান
+      <span id="accountThemeIcon">🌙</span>
+    </button>
+
+    <button id="logoutBtn">
+      Log out
+    </button>
+
+  </div>
+
+</aside>
+
+<main class="page-layout">
+
+  <aside class="left-sidebar">
+
+    <a href="index.html" class="side-brand">
+      <span>🌿</span>
+      <h2>আপন ভুবন</h2>
+    </a>
+
+    <div class="side-menu">
+
+      <a href="profile.html">
+        <span class="side-left">
+          <span class="side-icon">👤</span>
+          আপনার প্রোফাইল
+        </span>
+        <span class="side-tag">Edit</span>
+      </a>
+
+      <a href="favorite-authors.html">
+        <span class="side-left">
+          <span class="side-icon">♡</span>
+          প্রিয় লেখক খুঁজুন
+        </span>
+      </a>
+
+      <a href="notifications.html" class="active">
+        <span class="side-left">
+          <span class="side-icon">🔔</span>
+          নোটিফিকেশন
+        </span>
+        <span class="side-tag" id="sideNotificationCount">৩</span>
+      </a>
+
+      <a href="messages.html">
+        <span class="side-left">
+          <span class="side-icon">💬</span>
+          বার্তাসমূহ
+        </span>
+        <span class="side-tag">৬</span>
+      </a>
+
+      <a href="today-poem.html?type=poem">
+        <span class="side-left">
+          <span class="side-icon">📝</span>
+          আজকের কবিতা
+        </span>
+      </a>
+
+      <a href="today-poem.html?type=prolap">
+        <span class="side-left">
+          <span class="side-icon">✒</span>
+          আজকের প্রলাপ
+        </span>
+      </a>
+
+      <a href="today-poem.html?type=letter">
+        <span class="side-left">
+          <span class="side-icon">✉</span>
+          আজকের চিঠিপত্র
+        </span>
+      </a>
+
+      <a href="famous-quotes.html">
+        <span class="side-left">
+          <span class="side-icon">📜</span>
+          বিখ্যাত মনীষীদের বাণী
+        </span>
+      </a>
+
+      <a href="environment-advice.html">
+        <span class="side-left">
+          <span class="side-icon">🌱</span>
+          পরিবেশ পরামর্শ
+        </span>
+      </a>
+
+      <a href="recitation.html">
+        <span class="side-left">
+          <span class="side-icon">🎙</span>
+          আবৃত্তি
+        </span>
+      </a>
+
+      <a href="profile.html#anukabya">
+        <span class="side-left">
+          <span class="side-icon">🌸</span>
+          অনুকাব্য
+        </span>
+      </a>
+
+    </div>
+
+    <div class="side-separator"></div>
+
+    <h3 class="side-title">মূল ভুবন</h3>
+
+    <div class="side-menu">
+
+      <a href="index.html">
+        <span class="side-left">
+          <span class="side-icon">🏠</span>
+          হোম
+        </span>
+      </a>
+
+      <a href="famous-poet.html">
+        <span class="side-left">
+          <span class="side-icon">📖</span>
+          খ্যাতিমান কবি
+        </span>
+      </a>
+
+      <a href="madhyorater-prolap.html">
+        <span class="side-left">
+          <span class="side-icon">☾</span>
+          মধ্যরাতের প্রলাপ
+        </span>
+      </a>
+
+      <a href="founder-profile.html">
+        <span class="side-left">
+          <span class="side-icon">✒</span>
+          মাহমুদ সোহেল
+        </span>
+      </a>
+
+      <a href="discussion-post.html">
+        <span class="side-left">
+          <span class="side-icon">💬</span>
+          সাহিত্য আলোচনা
+        </span>
+      </a>
+
+      <a href="humanitarian-notice.html">
+        <span class="side-left">
+          <span class="side-icon">♡</span>
+          মানবিক নোটিস
+        </span>
+      </a>
+
+      <a href="contact.html">
+        <span class="side-left">
+          <span class="side-icon">✉</span>
+          যোগাযোগ
+        </span>
+      </a>
+
+      <a href="policy.html">
+        <span class="side-left">
+          <span class="side-icon">📌</span>
+          নীতিমালা
+        </span>
+      </a>
+
+    </div>
+
+    <div class="auth-area">
+      <a href="login.html" class="login-side">↪ লগইন করুন</a>
+      <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+    </div>
+
+  </aside>
+
+  <section class="main-content">
+
+    <section class="card notification-hero">
+
+      <div class="notification-hero-head">
+
+        <div class="notification-hero-icon">
+          🔔
+        </div>
+
+        <div>
+
+          <h1>নোটিফিকেশন</h1>
+
+          <p>
+            আপনার লেখায় প্রতিক্রিয়া, মন্তব্য, নতুন অনুসরণকারী, বার্তা,
+            মানবিক আবেদন এবং অ্যাকাউন্টসংক্রান্ত আপডেট এখানে দেখা যাবে।
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="hero-actions">
+
+        <button class="primary" id="markAllReadBtn">
+          ✓ সব পড়া হয়েছে
+        </button>
+
+        <button id="deleteReadBtn">
+          🗑 পড়া নোটিফিকেশন মুছুন
+        </button>
+
+        <button id="restoreBtn">
+          ↶ নমুনা নোটিফিকেশন ফিরিয়ে আনুন
+        </button>
+
+        <a href="messages.html">
+          💬 বার্তাসমূহ
+        </a>
+
+      </div>
+
+    </section>
+
+    <section class="card filter-card">
+
+      <div class="filter-top">
+
+        <div>
+          <h2>সাম্প্রতিক আপডেট</h2>
+          <p id="notificationMeta">৩টি অপঠিত নোটিফিকেশন</p>
+        </div>
+
+        <p id="resultCount">০টি নোটিফিকেশন</p>
+
+      </div>
+
+      <div class="filter-row">
+
+        <button class="filter-btn active" data-filter="all">
+          সব
+        </button>
+
+        <button class="filter-btn" data-filter="unread">
+          অপঠিত
+        </button>
+
+        <button class="filter-btn" data-filter="comment">
+          মন্তব্য
+        </button>
+
+        <button class="filter-btn" data-filter="like">
+          প্রতিক্রিয়া
+        </button>
+
+        <button class="filter-btn" data-filter="follow">
+          অনুসরণকারী
+        </button>
+
+        <button class="filter-btn" data-filter="system">
+          সিস্টেম
+        </button>
+
+      </div>
+
+    </section>
+
+    <section
+      class="notification-list"
+      id="notificationList"
+    ></section>
+
+    <div class="more-wrap" id="moreWrap">
+      <button id="moreBtn">আরও দেখুন</button>
+    </div>
+
+  </section>
+
+  <aside class="right-sidebar">
+
+    <section class="card right-card">
+
+      <h3 class="right-title">
+        নোটিফিকেশন সারাংশ
+      </h3>
+
+      <div class="summary-grid">
+
+        <div class="summary-item">
+          <strong id="summaryAll">০</strong>
+          <span>সর্বমোট</span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="summaryUnread">০</strong>
+          <span>অপঠিত</span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="summaryComments">০</strong>
+          <span>মন্তব্য</span>
+        </div>
+
+        <div class="summary-item">
+          <strong id="summaryFollowers">০</strong>
+          <span>অনুসরণকারী</span>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card right-card">
+
+      <h3 class="right-title">
+        নোটিফিকেশন সেটিংস
+      </h3>
+
+      <div class="setting-row">
+
+        <div class="setting-copy">
+          <h3>মন্তব্যের নোটিফিকেশন</h3>
+          <p>আপনার লেখায় মন্তব্য এলে দেখাবে।</p>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            class="setting-toggle"
+            data-setting="comment"
+            checked
+          >
+          <span class="slider"></span>
+        </label>
+
+      </div>
+
+      <div class="setting-row">
+
+        <div class="setting-copy">
+          <h3>প্রতিক্রিয়ার নোটিফিকেশন</h3>
+          <p>Like ও অন্যান্য প্রতিক্রিয়া দেখাবে।</p>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            class="setting-toggle"
+            data-setting="like"
+            checked
+          >
+          <span class="slider"></span>
+        </label>
+
+      </div>
+
+      <div class="setting-row">
+
+        <div class="setting-copy">
+          <h3>নতুন অনুসরণকারী</h3>
+          <p>কেউ আপনাকে অনুসরণ করলে জানাবে।</p>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            class="setting-toggle"
+            data-setting="follow"
+            checked
+          >
+          <span class="slider"></span>
+        </label>
+
+      </div>
+
+      <div class="setting-row">
+
+        <div class="setting-copy">
+          <h3>সিস্টেম আপডেট</h3>
+          <p>প্রকাশনা ও অ্যাকাউন্টের আপডেট দেখাবে।</p>
+        </div>
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            class="setting-toggle"
+            data-setting="system"
+            checked
+          >
+          <span class="slider"></span>
+        </label>
+
+      </div>
+
+    </section>
+
+    <section class="card right-card">
+
+      <h3 class="right-title">
+        প্রয়োজনীয় লিংক
+      </h3>
+
+      <a href="messages.html" class="right-link">
+        বার্তাসমূহ
+        <span>›</span>
+      </a>
+
+      <a href="profile.html" class="right-link">
+        আপনার প্রোফাইল
+        <span>›</span>
+      </a>
+
+      <a href="profile-edit.html" class="right-link">
+        প্রোফাইল সেটিংস
+        <span>›</span>
+      </a>
+
+      <a href="humanitarian-notice.html" class="right-link">
+        মানবিক নোটিস
+        <span>›</span>
+      </a>
+
+      <a href="index.html" class="right-link">
+        মূল প্রবাহ
+        <span>›</span>
+      </a>
+
+    </section>
+
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+
+  <div>
+    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a>
+    © <span id="footerYear">২০২৬</span>
+  </div>
+
+  <div class="footer-links">
+    <a href="index.html">হোম</a>
+    <a href="notifications.html">নোটিফিকেশন</a>
+    <a href="messages.html">বার্তাসমূহ</a>
+    <a href="contact.html">যোগাযোগ</a>
+    <a href="policy.html">নীতিমালা</a>
+  </div>
+
+</footer>
+
+</div>
+
+<button class="to-top" id="toTopBtn">↑</button>
+
+<div class="toast" id="toast">
+  এই সুবিধাটি শীঘ্রই যুক্ত হবে।
+</div>
+
+<script>
+const htmlRoot =
+  document.documentElement;
+
+htmlRoot.setAttribute(
+  "data-theme",
+  localStorage.getItem("bhubondangaTheme") || "dark"
+);
+
+const bnDigits = {
+  "0":"\u09E6",
+  "1":"\u09E7",
+  "2":"\u09E8",
+  "3":"\u09E9",
+  "4":"\u09EA",
+  "5":"\u09EB",
+  "6":"\u09EC",
+  "7":"\u09ED",
+  "8":"\u09EE",
+  "9":"\u09EF"
+};
+
+function toBn(value){
+  return String(value).replace(/[0-9]/g,function(digit){
+    return bnDigits[digit];
+  });
+}
+
+/* DATE */
+
+const banglaMonths = [
+  "বৈশাখ",
+  "জ্যৈষ্ঠ",
+  "আষাঢ়",
+  "শ্রাবণ",
+  "ভাদ্র",
+  "আশ্বিন",
+  "কার্তিক",
+  "অগ্রহায়ণ",
+  "পৌষ",
+  "মাঘ",
+  "ফাল্গুন",
+  "চৈত্র"
+];
+
+const englishMonths = [
+  "জানুয়ারি",
+  "ফেব্রুয়ারি",
+  "মার্চ",
+  "এপ্রিল",
+  "মে",
+  "জুন",
+  "জুলাই",
+  "আগস্ট",
+  "সেপ্টেম্বর",
+  "অক্টোবর",
+  "নভেম্বর",
+  "ডিসেম্বর"
+];
+
+const weekDays = [
+  "রবিবার",
+  "সোমবার",
+  "মঙ্গলবার",
+  "বুধবার",
+  "বৃহস্পতিবার",
+  "শুক্রবার",
+  "শনিবার"
+];
+
+const hijriMonths = [
+  "মুহাররম",
+  "সফর",
+  "রবিউল আউয়াল",
+  "রবিউস সানি",
+  "জুমাদাল উলা",
+  "জুমাদাস সানিয়া",
+  "রজব",
+  "শাবান",
+  "রমজান",
+  "শাওয়াল",
+  "জিলকদ",
+  "জিলহজ"
+];
+
+function isLeapYear(year){
+  return (
+    year % 400 === 0 ||
+    (year % 4 === 0 && year % 100 !== 0)
+  );
+}
+
+function getBanglaDate(date){
+
+  const year =
+    date.getFullYear();
+
+  const newYear =
+    new Date(year,3,14);
+
+  let banglaYear;
+  let startDate;
+
+  if(date >= newYear){
+
+    banglaYear =
+      year - 593;
+
+    startDate =
+      newYear;
+
+  }else{
+
+    banglaYear =
+      year - 594;
+
+    startDate =
+      new Date(year - 1,3,14);
+
+  }
+
+  const oneDay =
+    86400000;
+
+  let passedDays =
+    Math.floor(
+      (
+        new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        ) - startDate
+      ) / oneDay
+    );
+
+  const monthLengths = [
+    31,31,31,31,31,
+    30,30,30,30,30,
+    isLeapYear(startDate.getFullYear() + 1)
+      ? 30
+      : 29,
+    30
+  ];
+
+  let monthIndex = 0;
+
+  while(
+    monthIndex < monthLengths.length - 1 &&
+    passedDays >= monthLengths[monthIndex]
+  ){
+
+    passedDays -=
+      monthLengths[monthIndex];
+
+    monthIndex++;
+
+  }
+
+  return (
+    toBn(passedDays + 1) +
+    " " +
+    banglaMonths[monthIndex] +
+    " " +
+    toBn(banglaYear) +
+    " বঙ্গাব্দ"
+  );
+
+}
+
+function getEnglishDate(date){
+
+  return (
+    weekDays[date.getDay()] +
+    ", " +
+    toBn(date.getDate()) +
+    " " +
+    englishMonths[date.getMonth()] +
+    " " +
+    toBn(date.getFullYear()) +
+    " খ্রিষ্টাব্দ"
+  );
+
+}
+
+function getHijriDate(date){
+
+  try{
+
+    const parts =
+      new Intl.DateTimeFormat(
+        "en-US-u-ca-islamic",
+        {
+          day:"numeric",
+          month:"numeric",
+          year:"numeric"
+        }
+      ).formatToParts(date);
+
+    let day = "";
+    let month = "";
+    let year = "";
+
+    parts.forEach(function(part){
+
+      if(part.type === "day"){
+        day = part.value;
+      }
+
+      if(part.type === "month"){
+        month = part.value;
+      }
+
+      if(part.type === "year"){
+        year = part.value;
+      }
+
+    });
+
+    const monthIndex =
+      Math.max(
+        0,
+        Math.min(
+          11,
+          Number(month) - 1
+        )
+      );
+
+    return (
+      toBn(day) +
+      " " +
+      hijriMonths[monthIndex] +
+      " " +
+      toBn(year) +
+      " হিজরি"
+    );
+
+  }catch(error){
+
+    return "আরবি তারিখ পাওয়া যায়নি";
+
+  }
+
+}
+
+function renderDate(){
+
+  const today =
+    new Date();
+
+  const banglaDate =
+    getBanglaDate(today);
+
+  const englishDate =
+    getEnglishDate(today);
+
+  const arabicDate =
+    getHijriDate(today);
+
+  document
+    .querySelectorAll(".banglaDateTicker")
+    .forEach(function(element){
+      element.innerText = banglaDate;
+    });
+
+  document
+    .querySelectorAll(".englishDateTicker")
+    .forEach(function(element){
+      element.innerText = englishDate;
+    });
+
+  document
+    .querySelectorAll(".arabicDateTicker")
+    .forEach(function(element){
+      element.innerText = arabicDate;
+    });
+
+  document
+    .getElementById("headerDateText")
+    .innerText =
+      englishDate;
+
+  document
+    .getElementById("footerYear")
+    .innerText =
+      toBn(today.getFullYear());
+
+}
+
+renderDate();
+
+/* TOAST */
+
+const toast =
+  document.getElementById("toast");
+
+function showToast(message){
+
+  toast.innerText =
+    message;
+
+  toast.style.display =
+    "block";
+
+  clearTimeout(
+    window.toastTimer
+  );
+
+  window.toastTimer =
+    setTimeout(function(){
+
+      toast.style.display =
+        "none";
+
+    },3000);
+
+}
+
+/* DRAWERS */
+
+const mobileDrawer =
+  document.getElementById("mobileDrawer");
+
+const drawerBackdrop =
+  document.getElementById("drawerBackdrop");
+
+function closeDrawer(){
+
+  mobileDrawer.classList.remove("open");
+  drawerBackdrop.classList.remove("show");
+  document.body.style.overflow = "";
+
+}
+
+document
+  .getElementById("menuBtn")
+  .addEventListener("click",function(){
+
+    mobileDrawer.classList.add("open");
+    drawerBackdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+  });
+
+document
+  .getElementById("closeDrawer")
+  .addEventListener("click",closeDrawer);
+
+drawerBackdrop
+  .addEventListener("click",closeDrawer);
+
+const accountPanel =
+  document.getElementById("accountPanel");
+
+const accountBackdrop =
+  document.getElementById("accountBackdrop");
+
+function closeAccount(){
+
+  accountPanel.classList.remove("open");
+  accountBackdrop.classList.remove("show");
+  document.body.style.overflow = "";
+
+}
+
+document
+  .getElementById("accountBtn")
+  .addEventListener("click",function(){
+
+    accountPanel.classList.add("open");
+    accountBackdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+  });
+
+document
+  .getElementById("closeAccount")
+  .addEventListener("click",closeAccount);
+
+accountBackdrop
+  .addEventListener("click",closeAccount);
+
+/* THEME */
+
+const headerThemeIcon =
+  document.getElementById("headerThemeIcon");
+
+const accountThemeIcon =
+  document.getElementById("accountThemeIcon");
+
+function updateThemeIcons(){
+
+  const dark =
+    htmlRoot.getAttribute("data-theme")
+      === "dark";
+
+  headerThemeIcon.innerText =
+    dark ? "☀️" : "🌙";
+
+  accountThemeIcon.innerText =
+    dark ? "☀️" : "🌙";
+
+}
+
+function toggleTheme(){
+
+  const next =
+    htmlRoot.getAttribute("data-theme")
+      === "dark"
+      ? "light"
+      : "dark";
+
+  htmlRoot.setAttribute(
+    "data-theme",
+    next
+  );
+
+  localStorage.setItem(
+    "bhubondangaTheme",
+    next
+  );
+
+  updateThemeIcons();
+
+}
+
+document
+  .getElementById("headerThemeBtn")
+  .addEventListener("click",toggleTheme);
+
+document
+  .getElementById("accountThemeBtn")
+  .addEventListener("click",toggleTheme);
+
+updateThemeIcons();
+
+/* SEARCH */
+
+const headerSearchInput =
+  document.getElementById("headerSearchInput");
+
+function performSearch(){
+
+  const query =
+    headerSearchInput.value.trim();
+
+  if(!query){
+
+    showToast(
+      "কী খুঁজতে চান, লিখুন।"
+    );
+
+    return;
+
+  }
+
+  window.location.href =
+    "search.html?q=" +
+    encodeURIComponent(query);
+
+}
+
+document
+  .getElementById("headerSearchButton")
+  .addEventListener("click",performSearch);
+
+headerSearchInput
+  .addEventListener("keydown",function(event){
+
+    if(event.key === "Enter"){
+      performSearch();
+    }
+
+  });
+
+/* NOTIFICATION DATA */
+
+const defaultNotifications = [
+
+  {
+    id:"notification-1",
+    type:"comment",
+    icon:"💬",
+    name:"সাদিয়া নূর",
+    avatar:"profile.jpg",
+    profile:"profile.html?user=sadia-noor",
+    text:"আপনার কবিতা",
+    target:"বৃষ্টিভেজা জানালায়",
+    action:"-এ মন্তব্য করেছেন।",
+    preview:"অসাধারণ অনুভূতি। শেষের লাইনটি বিশেষভাবে হৃদয় ছুঁয়েছে।",
+    url:"today-poem.html?type=poem#flow-post-2",
+    time:"৮ মিনিট আগে",
+    read:false
+  },
+
+  {
+    id:"notification-2",
+    type:"like",
+    icon:"♥",
+    name:"নাহিদ হাসান",
+    avatar:"profile.jpg",
+    profile:"profile.html?user=nahid-hasan",
+    text:"আপনার লেখা",
+    target:"ফিরে যাওয়ার আগে নদীর কাছে",
+    action:"পছন্দ করেছেন।",
+    preview:"আপনার লেখাটি নতুন একজন পাঠকের হৃদয়ে পৌঁছেছে।",
+    url:"today-poem.html?type=letter",
+    time:"২৫ মিনিট আগে",
+    read:false
+  },
+
+  {
+    id:"notification-3",
+    type:"follow",
+    icon:"＋",
+    name:"রুদ্র দত্ত",
+    avatar:"profile.jpg",
+    profile:"profile.html?user=rudra-dutta",
+    text:"এখন থেকে",
+    target:"আপনাকে অনুসরণ করছেন",
+    action:"।",
+    preview:"আপনার নতুন লেখা প্রকাশ হলে তিনি নোটিফিকেশন পেতে পারেন।",
+    url:"profile.html?user=rudra-dutta",
+    time:"১ ঘণ্টা আগে",
+    read:false
+  },
+
+  {
+    id:"notification-4",
+    type:"system",
+    icon:"✓",
+    name:"ভুবনডাঙ্গার কবিতা",
+    avatar:"profile.jpg",
+    profile:"index.html",
+    text:"আপনার পরিবেশবিষয়ক খসড়া",
+    target:"একটি গাছ, একটি ভবিষ্যৎ",
+    action:"সংরক্ষিত হয়েছে।",
+    preview:"খসড়াটি আপনার এই browser-এর local storage-এ সংরক্ষিত আছে।",
+    url:"submit-environment.html",
+    time:"২ ঘণ্টা আগে",
+    read:true
+  },
+
+  {
+    id:"notification-5",
+    type:"comment",
+    icon:"💬",
+    name:"মাহমুদ সোহেল",
+    avatar:"profile.jpg",
+    profile:"founder-profile.html",
+    text:"আপনার আলোচনায়",
+    target:"কবিতার ভাষা কি সময়ের সঙ্গে বদলায়?",
+    action:"মতামত দিয়েছেন।",
+    preview:"সময় বদলায়, ভাষাও বদলায়; কিন্তু মানুষের গভীর অনুভূতির উৎস একই থেকে যায়।",
+    url:"discussion-post.html",
+    time:"৪ ঘণ্টা আগে",
+    read:true
+  },
+
+  {
+    id:"notification-6",
+    type:"system",
+    icon:"📌",
+    name:"Founder/Admin",
+    avatar:"profile.jpg",
+    profile:"founder-profile.html",
+    text:"আপনার মানবিক আবেদনটি",
+    target:"Founder/Admin review",
+    action:"তালিকায় রাখা হয়েছে।",
+    preview:"যাচাই সম্পন্ন না হওয়া পর্যন্ত আবেদনটি প্রকাশিত হবে না।",
+    url:"humanitarian-notice.html",
+    time:"গতকাল",
+    read:true
+  },
+
+  {
+    id:"notification-7",
+    type:"like",
+    icon:"♥",
+    name:"সবুজ আহমেদ",
+    avatar:"profile.jpg",
+    profile:"profile.html?user=sobuj-ahmed",
+    text:"আপনার পরিবেশ পরামর্শ",
+    target:"প্লাস্টিকের বদলে কাপড়ের ব্যাগ",
+    action:"উপকারী হিসেবে চিহ্নিত করেছেন।",
+    preview:"পরিবেশবিষয়ক ছোট অভ্যাসের লেখা পাঠকদের কাছে পৌঁছাচ্ছে।",
+    url:"environment-advice.html",
+    time:"২ দিন আগে",
+    read:true
+  },
+
+  {
+    id:"notification-8",
+    type:"follow",
+    icon:"＋",
+    name:"রাশেদ বিন সাকিব",
+    avatar:"profile.jpg",
+    profile:"profile.html?user=rashed-bin-sakib",
+    text:"আপনাকে",
+    target:"প্রিয় লেখক",
+    action:"তালিকায় যোগ করেছেন।",
+    preview:"আপনার নতুন লেখা প্রকাশ হলে তিনি সহজে খুঁজে পাবেন।",
+    url:"favorite-authors.html",
+    time:"৩ দিন আগে",
+    read:true
+  }
+
+];
+
+function cloneDefaultNotifications(){
+
+  return defaultNotifications.map(function(item){
+    return {...item};
+  });
+
+}
+
+function getNotifications(){
+
+  try{
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(
+          "bhubondangaNotifications"
+        ) || "null"
+      );
+
+    return Array.isArray(saved)
+      ? saved
+      : cloneDefaultNotifications();
+
+  }catch(error){
+
+    return cloneDefaultNotifications();
+
+  }
+
+}
+
+let notifications =
+  getNotifications();
+
+let activeFilter =
+  "all";
+
+let visibleCount =
+  6;
+
+function saveNotifications(){
+
+  localStorage.setItem(
+    "bhubondangaNotifications",
+    JSON.stringify(notifications)
+  );
+
+}
+
+function unreadCount(){
+
+  return notifications.filter(
+    function(item){
+      return !item.read;
+    }
+  ).length;
+
+}
+
+function filteredNotifications(){
+
+  return notifications.filter(
+    function(item){
+
+      if(activeFilter === "all"){
+        return true;
+      }
+
+      if(activeFilter === "unread"){
+        return !item.read;
+      }
+
+      return item.type === activeFilter;
+
+    }
+  );
+
+}
+
+function typeIconClass(type){
+
+  if(type === "comment"){
+    return "comment";
+  }
+
+  if(type === "like"){
+    return "like";
+  }
+
+  if(type === "follow"){
+    return "follow";
+  }
+
+  return "system";
+
+}
+
+function updateCounts(){
+
+  const unread =
+    unreadCount();
+
+  const all =
+    notifications.length;
+
+  const comments =
+    notifications.filter(
+      function(item){
+        return item.type === "comment";
+      }
+    ).length;
+
+  const followers =
+    notifications.filter(
+      function(item){
+        return item.type === "follow";
+      }
+    ).length;
+
+  document
+    .getElementById("headerNotificationCount")
+    .innerText =
+      toBn(unread);
+
+  document
+    .getElementById("drawerNotificationCount")
+    .innerText =
+      toBn(unread);
+
+  document
+    .getElementById("sideNotificationCount")
+    .innerText =
+      toBn(unread);
+
+  document
+    .getElementById("accountNotificationCount")
+    .innerText =
+      toBn(unread);
+
+  document
+    .getElementById("notificationMeta")
+    .innerText =
+      unread > 0
+        ? toBn(unread) +
+          "টি অপঠিত নোটিফিকেশন"
+        : "সব নোটিফিকেশন পড়া হয়েছে";
+
+  document
+    .getElementById("summaryAll")
+    .innerText =
+      toBn(all);
+
+  document
+    .getElementById("summaryUnread")
+    .innerText =
+      toBn(unread);
+
+  document
+    .getElementById("summaryComments")
+    .innerText =
+      toBn(comments);
+
+  document
+    .getElementById("summaryFollowers")
+    .innerText =
+      toBn(followers);
+
+}
+
+function renderNotifications(){
+
+  const list =
+    document.getElementById(
+      "notificationList"
+    );
+
+  const filtered =
+    filteredNotifications();
+
+  const visible =
+    filtered.slice(
+      0,
+      visibleCount
+    );
+
+  list.innerHTML = "";
+
+  if(visible.length === 0){
+
+    list.innerHTML = `
+      <section class="card empty-state">
+        <span>🔔</span>
+        <h3>কোনো নোটিফিকেশন পাওয়া যায়নি</h3>
+        <p>
+          নতুন মন্তব্য, প্রতিক্রিয়া, অনুসরণকারী অথবা সিস্টেম আপডেট এলে এখানে দেখা যাবে।
+        </p>
+      </section>
+    `;
+
+  }
+
+  visible.forEach(function(item){
+
+    const article =
+      document.createElement("article");
+
+    article.className =
+      "card notification-item" +
+      (
+        item.read
+          ? ""
+          : " unread"
+      );
+
+    article.innerHTML = `
+      <a
+        class="notification-avatar-wrap"
+        href="${item.profile}"
+      >
+        <img
+          class="notification-avatar"
+          src="${item.avatar}"
+          alt="${item.name}"
+        >
+
+        <span class="notification-type-icon ${typeIconClass(item.type)}">
+          ${item.icon}
+        </span>
+      </a>
+
+      <div class="notification-copy">
+
+        <p class="notification-text">
+
+          <a href="${item.profile}">
+            <strong>${item.name}</strong>
+          </a>
+
+          ${item.text}
+
+          <a
+            class="notification-link"
+            href="${item.url}"
+          >
+            ${item.target}
+          </a>
+
+          ${item.action}
+
+        </p>
+
+        <a
+          class="notification-preview"
+          href="${item.url}"
+        >
+          ${item.preview}
+        </a>
+
+        <p class="notification-time">
+          ${item.time}
+        </p>
+
+      </div>
+
+      <div class="notification-actions">
+
+        <button
+          class="small-action read-toggle"
+          data-id="${item.id}"
+          title="${item.read ? "অপঠিত করুন" : "পড়া হয়েছে"}"
+        >
+          ${item.read ? "○" : "✓"}
+        </button>
+
+        <button
+          class="small-action delete-notification"
+          data-id="${item.id}"
+          title="মুছুন"
+        >
+          ×
+        </button>
+
+      </div>
+    `;
+
+    list.appendChild(article);
+
+  });
+
+  document
+    .getElementById("resultCount")
+    .innerText =
+      toBn(filtered.length) +
+      "টি নোটিফিকেশন";
+
+  document
+    .getElementById("moreWrap")
+    .style
+    .display =
+      visibleCount >= filtered.length
+        ? "none"
+        : "block";
+
+  document
+    .querySelectorAll(".read-toggle")
+    .forEach(function(button){
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          const item =
+            notifications.find(
+              function(notification){
+                return (
+                  notification.id ===
+                  button.dataset.id
+                );
+              }
+            );
+
+          if(!item){
+            return;
+          }
+
+          item.read =
+            !item.read;
+
+          saveNotifications();
+          renderNotifications();
+
+        }
+      );
+
+    });
+
+  document
+    .querySelectorAll(".delete-notification")
+    .forEach(function(button){
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          notifications =
+            notifications.filter(
+              function(notification){
+                return (
+                  notification.id !==
+                  button.dataset.id
+                );
+              }
+            );
+
+          saveNotifications();
+          renderNotifications();
+
+          showToast(
+            "নোটিফিকেশনটি মুছে ফেলা হয়েছে।"
+          );
+
+        }
+      );
+
+    });
+
+  updateCounts();
+
+}
+
+document
+  .querySelectorAll(".filter-btn")
+  .forEach(function(button){
+
+    button.addEventListener(
+      "click",
+      function(){
+
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach(function(item){
+            item.classList.remove("active");
+          });
+
+        button.classList.add("active");
+
+        activeFilter =
+          button.dataset.filter;
+
+        visibleCount =
+          6;
+
+        renderNotifications();
+
+      }
+    );
+
+  });
+
+document
+  .getElementById("moreBtn")
+  .addEventListener(
+    "click",
+    function(){
+
+      visibleCount += 6;
+      renderNotifications();
+
+    }
+  );
+
+document
+  .getElementById("markAllReadBtn")
+  .addEventListener(
+    "click",
+    function(){
+
+      notifications =
+        notifications.map(
+          function(item){
+
+            return {
+              ...item,
+              read:true
+            };
+
+          }
+        );
+
+      saveNotifications();
+      renderNotifications();
+
+      showToast(
+        "সব নোটিফিকেশন পড়া হয়েছে হিসেবে চিহ্নিত হয়েছে।"
+      );
+
+    }
+  );
+
+document
+  .getElementById("deleteReadBtn")
+  .addEventListener(
+    "click",
+    function(){
+
+      const readItems =
+        notifications.filter(
+          function(item){
+            return item.read;
+          }
+        );
+
+      if(readItems.length === 0){
+
+        showToast(
+          "মুছে ফেলার মতো পড়া নোটিফিকেশন নেই।"
+        );
+
+        return;
+
+      }
+
+      notifications =
+        notifications.filter(
+          function(item){
+            return !item.read;
+          }
+        );
+
+      saveNotifications();
+      renderNotifications();
+
+      showToast(
+        "পড়া নোটিফিকেশনগুলো মুছে ফেলা হয়েছে।"
+      );
+
+    }
+  );
+
+document
+  .getElementById("restoreBtn")
+  .addEventListener(
+    "click",
+    function(){
+
+      notifications =
+        cloneDefaultNotifications();
+
+      saveNotifications();
+      activeFilter = "all";
+      visibleCount = 6;
+
+      document
+        .querySelectorAll(".filter-btn")
+        .forEach(function(item){
+          item.classList.remove("active");
+        });
+
+      document
+        .querySelector(
+          '.filter-btn[data-filter="all"]'
+        )
+        .classList
+        .add("active");
+
+      renderNotifications();
+
+      showToast(
+        "নমুনা নোটিফিকেশন ফিরিয়ে আনা হয়েছে।"
+      );
+
+    }
+  );
+
+/* SETTINGS */
+
+function getNotificationSettings(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(
+        "bhubondangaNotificationSettings"
+      ) || "{}"
+    );
+
+  }catch(error){
+
+    return {};
+
+  }
+
+}
+
+const notificationSettings =
+  getNotificationSettings();
+
+document
+  .querySelectorAll(".setting-toggle")
+  .forEach(function(toggle){
+
+    const settingName =
+      toggle.dataset.setting;
+
+    if(
+      typeof notificationSettings[settingName]
+      === "boolean"
+    ){
+
+      toggle.checked =
+        notificationSettings[settingName];
+
+    }
+
+    toggle.addEventListener(
+      "change",
+      function(){
+
+        notificationSettings[settingName] =
+          toggle.checked;
+
+        localStorage.setItem(
+          "bhubondangaNotificationSettings",
+          JSON.stringify(notificationSettings)
+        );
+
+        showToast(
+          toggle.checked
+            ? "এই নোটিফিকেশন চালু হয়েছে।"
+            : "এই নোটিফিকেশন বন্ধ হয়েছে।"
+        );
+
+      }
+    );
+
+  });
+
+/* LOGOUT */
+
+document
+  .getElementById("logoutBtn")
+  .addEventListener(
+    "click",
+    function(){
+
+      localStorage.removeItem(
+        "bhubondangaUserName"
+      );
+
+      localStorage.removeItem(
+        "bhubondangaUserRole"
+      );
+
+      showToast(
+        "আপনি সফলভাবে লগ আউট করেছেন।"
+      );
+
+      setTimeout(function(){
+
+        window.location.href =
+          "login.html";
+
+      },1100);
+
+    }
+  );
+
+/* TO TOP */
+
+const toTopBtn =
+  document.getElementById("toTopBtn");
+
+window.addEventListener(
+  "scroll",
+  function(){
+
+    toTopBtn.classList.toggle(
+      "show",
+      window.scrollY > 450
+    );
+
+  }
+);
+
+toTopBtn.addEventListener(
+  "click",
+  function(){
+
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    });
+
+  }
+);
+
+/* KEYBOARD */
+
+document.addEventListener(
+  "keydown",
+  function(event){
+
+    if(
+      (
+        event.ctrlKey ||
+        event.metaKey
+      )
+      &&
+      event.key.toLowerCase()
+        === "k"
+    ){
+
+      event.preventDefault();
+      headerSearchInput.focus();
+
+    }
+
+    if(event.key === "Escape"){
+
+      closeDrawer();
+      closeAccount();
+
+    }
+
+  }
+);
+
+/* COPY PROTECTION */
+
+document.addEventListener(
+  "copy",
+  function(event){
+
+    const tag =
+      event.target.tagName
+        .toLowerCase();
+
+    if(
+      tag === "input" ||
+      tag === "textarea" ||
+      event.target.closest(
+        ".allow-copy"
+      )
+    ){
+      return;
+    }
+
+    event.preventDefault();
+
+    showToast(
+      "লেখা কপি করা নিরুৎসাহিত করা হয়েছে।"
+    );
+
+  }
+);
+
+document.addEventListener(
+  "contextmenu",
+  function(event){
+
+    const tag =
+      event.target.tagName
+        .toLowerCase();
+
+    if(
+      tag === "input" ||
+      tag === "textarea" ||
+      tag === "select"
+    ){
+      return;
+    }
+
+    event.preventDefault();
+
+    showToast(
+      "Right click বন্ধ রাখা হয়েছে।"
+    );
+
+  }
+);
+
+document.addEventListener(
+  "selectstart",
+  function(event){
+
+    const tag =
+      event.target.tagName
+        .toLowerCase();
+
+    if(
+      tag === "input" ||
+      tag === "textarea" ||
+      tag === "select" ||
+      event.target.closest(
+        ".allow-copy"
+      )
+    ){
+      return;
+    }
+
+    event.preventDefault();
+
+  }
+);
+
+renderNotifications();
+</script>
+
+</body>
+</html>
