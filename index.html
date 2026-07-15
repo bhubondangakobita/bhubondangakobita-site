@@ -1,863 +1,2258 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>আপন ভুবন - ড্যাশবোর্ড</title>
-    
-    <!-- Google Fonts: Hind Siliguri for perfect Bengali typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome 6.4.0 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* =========================================================
-           ১. CSS VARIABLES (Light Mode & STRICT Deep Blue Dark Mode)
-           ========================================================= */
-        :root {
-            /* Light Mode Colors (As per your Image) */
-            --bg-main: #f0f2f5;
-            --bg-surface: #ffffff;
-            --text-primary: #1c1e21;
-            --text-secondary: #65676b;
-            --border-color: #ced0d4;
-            --header-blue: #0b3b60; /* The signature blue from the top bar */
-            --btn-blue: #0b3b60;
-            --hover-light: #f2f2f2;
-            --shadow-light: 0 1px 4px rgba(0, 0, 0, 0.1);
-            
-            /* Notice Colors */
-            --notice-red-bg: #fff0f0;
-            --notice-red-border: #ff4d4f;
-            --notice-yellow-bg: #fffbe6;
-            --notice-yellow-border: #faad14;
-            --notice-green-bg: #f6ffed;
-            --notice-green-border: #52c41a;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            /* Transitions */
-            --transition-speed: 0.4s;
-        }
+<title>ভুবনডাঙ্গার কবিতা | বাংলা সাহিত্য ও সৃজনশীলতার মুক্ত ভুবন</title>
 
-        /* 
-           তোমার স্পেশাল রিকোয়েস্ট: ডিপ ব্লু ব্যাকগ্রাউন্ড + সাদা গ্লো 
-           CT Scan Result applied here!
-        */
-        body.dark-mode {
-            --bg-main: #020b14; /* Deep, dark oceanic blue */
-            --bg-surface: #061626; /* Slightly lighter deep blue for panels */
-            --text-primary: #ffffff;
-            --text-secondary: #a3b8cc;
-            --border-color: #113050;
-            --header-blue: #041220; 
-            --hover-light: #0d2847;
-            
-            /* THE WHITE GLOW ON DEEP BLUE (As exactly requested) */
-            --shadow-light: 0 0 15px rgba(255, 255, 255, 0.3), inset 0 0 5px rgba(255, 255, 255, 0.1);
-            
-            /* Notice Colors for Dark Mode (Adjusted for contrast) */
-            --notice-red-bg: rgba(255, 77, 79, 0.1);
-            --notice-yellow-bg: rgba(250, 173, 20, 0.1);
-            --notice-green-bg: rgba(82, 196, 26, 0.1);
-        }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800;900&display=swap');
 
-        /* =========================================================
-           ২. GLOBAL RESET & BASE STYLES
-           ========================================================= */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Hind Siliguri', sans-serif;
-            transition: background-color var(--transition-speed), color var(--transition-speed), box-shadow var(--transition-speed);
-        }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-        }
+html{
+  scroll-behavior:smooth;
+}
 
-        /* Main Grid: 3 Columns like the image (Left, Center, Right) */
-        .app-wrapper {
-            display: grid;
-            grid-template-columns: 260px 1fr 300px;
-            gap: 15px;
-            max-width: 1500px;
-            width: 100%;
-        }
+:root{
+  --bg:#eaf2fa;
+  --bg-soft:#dceaf5;
+  --card:#ffffff;
+  --card-soft:#f5f9fd;
+  --text:#0b224d;
+  --text-soft:#35507b;
+  --muted:#64748b;
+  --border:rgba(11,34,77,.12);
+  --accent:#0f3775;
+  --accent-2:#1e5aab;
+  --green:#19735d;
+  --red:#b42318;
+  --notice:#fff7d6;
+  --shadow:0 10px 26px rgba(11,34,77,.07);
+  --soft-shadow:0 6px 16px rgba(11,34,77,.05);
+  --glow:none;
+}
 
-        .panel {
-            background-color: var(--bg-surface);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-light);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
+html[data-theme="dark"]{
+  --bg:#020816;
+  --bg-soft:#061225;
+  --card:rgba(7,18,38,.82);
+  --card-soft:rgba(11,28,58,.82);
+  --text:#eaf4ff;
+  --text-soft:#b8cdf5;
+  --muted:#8ba3c7;
+  --border:rgba(74,163,255,.20);
+  --accent:#39a6ff;
+  --accent-2:#61b7ff;
+  --green:#5eead4;
+  --red:#ff7b8a;
+  --notice:rgba(10,31,64,.86);
+  --shadow:0 14px 34px rgba(0,0,0,.45);
+  --soft-shadow:0 0 22px rgba(47,136,255,.10);
+  --glow:0 0 18px rgba(57,166,255,.35);
+}
 
-        /* Glow effect specifically for buttons in dark mode */
-        body.dark-mode .glow-btn {
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
+body{
+  font-family:'Noto Serif Bengali', Georgia, serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  user-select:none;
+  -webkit-user-select:none;
+  overflow-x:hidden;
+}
 
-        /* =========================================================
-           ৩. LEFT SIDEBAR (আপন ভুবন)
-           ========================================================= */
-        .left-sidebar {
-            padding: 20px 15px;
-            height: fit-content;
-        }
+a{
+  color:inherit;
+  text-decoration:none;
+}
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--header-blue);
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        body.dark-mode .brand-logo { color: #ffffff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .brand-logo i.fa-leaf { color: #2e7d32; }
+button,
+input,
+textarea{
+  font-family:inherit;
+}
 
-        .date-container {
-            font-size: 13px;
-            color: var(--text-secondary);
-            text-align: center;
-            margin: 15px 0;
-            line-height: 1.6;
-            padding: 10px;
-            background: var(--bg-main);
-            border-radius: 8px;
-        }
+input,
+textarea{
+  user-select:text;
+  -webkit-user-select:text;
+}
 
-        .menu-section {
-            list-style: none;
-            margin-bottom: 20px;
-        }
+.site-shell{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top left,rgba(255,255,255,.84),transparent 32%),
+    radial-gradient(circle at 18% 4%,rgba(132,188,229,.22),transparent 30%),
+    linear-gradient(135deg,#f8fcff 0%,var(--bg) 56%,#f9fdff 100%);
+}
 
-        .menu-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin: 15px 0 10px 10px;
-        }
+html[data-theme="dark"] .site-shell{
+  background:
+    radial-gradient(circle at 15% 4%,rgba(57,166,255,.25),transparent 24%),
+    radial-gradient(circle at 90% 12%,rgba(9,80,160,.25),transparent 25%),
+    linear-gradient(180deg,#020816 0%,#031024 50%,#020816 100%);
+}
 
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-            text-decoration: none;
-            gap: 12px;
-        }
+/* HEADER */
 
-        .menu-item:hover {
-            background-color: var(--hover-light);
-        }
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  min-height:72px;
+  background:rgba(234,242,250,.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:grid;
+  grid-template-columns:auto 290px minmax(250px,1fr) auto;
+  align-items:center;
+  gap:14px;
+  padding:9px 26px;
+}
 
-        .menu-item i {
-            width: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 16px;
-        }
+html[data-theme="dark"] .topbar{
+  background:rgba(2,8,22,.90);
+  box-shadow:0 0 22px rgba(57,166,255,.10);
+}
 
-        .edit-text {
-            margin-left: auto;
-            font-size: 12px;
-            color: #1890ff;
-        }
+.menu-btn{
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:30px;
+  cursor:pointer;
+  display:none;
+}
 
-        .auth-buttons {
-            margin-top: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
 
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            border: none;
-            outline: none;
-        }
+.brand-leaf{
+  font-size:38px;
+  line-height:1;
+  filter:drop-shadow(0 0 8px rgba(57,166,255,.22));
+}
 
-        .btn-fill {
-            background-color: var(--btn-blue);
-            color: white;
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--btn-blue);
-            color: var(--btn-blue);
-        }
-        body.dark-mode .btn-outline {
-            border-color: #ffffff;
-            color: #ffffff;
-            box-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
+.brand-text{
+  min-width:0;
+}
 
-        /* =========================================================
-           ৪. CENTER PANEL (ভুবনডাঙ্গার কবিতা)
-           ========================================================= */
-        .center-main {
-            display: flex;
-            flex-direction: column;
-        }
+.brand-text h1{
+  font-size:29px;
+  font-weight:800;
+  line-height:1.04;
+  letter-spacing:-1px;
+  white-space:nowrap;
+}
 
-        /* Top Blue Header */
-        .center-header {
-            background-color: var(--header-blue);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .center-header h2 {
-            font-size: 22px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+.brand-text p{
+  font-size:12px;
+  color:var(--muted);
+  font-weight:600;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:255px;
+}
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            font-size: 18px;
-        }
-        .header-actions img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
+html[data-theme="dark"] .brand-text h1{
+  text-shadow:var(--glow);
+}
 
-        /* Navigation Tabs */
-        .nav-tabs {
-            display: flex;
-            gap: 25px;
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            background-color: var(--bg-surface);
-            overflow-x: auto;
-        }
+.search-wrap{
+  position:relative;
+}
 
-        .nav-tab {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            position: relative;
-            padding-bottom: 5px;
-        }
+.search-wrap input{
+  width:100%;
+  height:42px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  padding:0 58px 0 44px;
+  outline:none;
+  box-shadow:var(--soft-shadow);
+  font-size:14px;
+}
 
-        .nav-tab.active {
-            color: var(--header-blue);
-        }
-        body.dark-mode .nav-tab.active {
-            color: #ffffff;
-            text-shadow: 0 0 8px rgba(255,255,255,0.8);
-        }
+.search-icon{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--muted);
+  font-size:18px;
+}
 
-        .nav-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--header-blue);
-            border-radius: 3px 3px 0 0;
-        }
-        body.dark-mode .nav-tab.active::after { background-color: #ffffff; box-shadow: 0 0 5px #fff; }
+.search-key{
+  position:absolute;
+  right:9px;
+  top:50%;
+  transform:translateY(-50%);
+  background:var(--card-soft);
+  color:var(--muted);
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-size:12px;
+  font-weight:800;
+  padding:2px 8px;
+}
 
-        /* Feed Area Grid */
-        .feed-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 320px;
-            gap: 20px;
-            padding: 20px;
-            background-color: var(--bg-main);
-            flex-grow: 1;
-        }
+.header-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:9px;
+}
 
-        /* Left Side of Feed (Posts) */
-        .posts-column {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+.icon-btn,
+.theme-btn,
+.notif-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-size:18px;
+  box-shadow:var(--soft-shadow);
+  position:relative;
+}
 
-        /* Welcome Box */
-        .welcome-card {
-            background-color: var(--bg-surface);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-light);
-        }
+.badge{
+  position:absolute;
+  top:-4px;
+  right:-3px;
+  min-width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#e11d48;
+  color:#fff;
+  font-size:10px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 
-        .welcome-card h3 {
-            font-size: 18px;
-            color: var(--text-primary);
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.avatar-btn{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:var(--text);
+}
 
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
+.avatar-btn img{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--card);
+  box-shadow:0 5px 14px rgba(0,0,0,.16);
+}
 
-        .action-box {
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px 10px;
-            text-align: center;
-            cursor: pointer;
-        }
-        .action-box:hover { background-color: var(--hover-light); }
-        .action-box i { font-size: 24px; color: var(--header-blue); margin-bottom: 10px; }
-        body.dark-mode .action-box i { color: #ffffff; text-shadow: 0 0 10px #ffffff; }
+/* LAYOUT */
 
-        /* Single Post Card */
-        .post-card {
-            background-color: var(--bg-surface);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-light);
-        }
+.page-wrap{
+  max-width:1560px;
+  margin:0 auto;
+  padding:14px 24px 0;
+  display:grid;
+  grid-template-columns:270px minmax(0,1fr) 310px;
+  gap:16px;
+}
 
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 15px;
-        }
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
 
-        .post-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background-color: #ddd;
-            background-size: cover;
-            background-position: center;
-        }
+.sidebar,
+.rightbar{
+  position:sticky;
+  top:86px;
+  height:calc(100vh - 100px);
+  overflow:auto;
+}
 
-        .post-meta h4 { font-size: 16px; color: var(--text-primary); }
-        .post-meta span.tag { font-size: 12px; color: #1890ff; margin-left: 5px; }
-        .post-meta p { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+.sidebar::-webkit-scrollbar,
+.rightbar::-webkit-scrollbar,
+.mobile-drawer::-webkit-scrollbar,
+.account-panel::-webkit-scrollbar{
+  display:none;
+}
 
-        .post-content h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
-        .post-content p { font-size: 16px; line-height: 1.6; color: var(--text-secondary); }
+.sidebar,
+.rightbar,
+.mobile-drawer,
+.account-panel{
+  -ms-overflow-style:none;
+  scrollbar-width:none;
+}
 
-        .post-footer {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 500;
-        }
+/* SIDEBAR */
 
-        .post-footer div { cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .post-footer div:hover { color: var(--text-primary); }
-        .heart-icon { color: #ff4d4f; }
-        body.dark-mode .heart-icon { text-shadow: 0 0 10px red; }
+.sidebar{
+  padding:0 4px 18px;
+}
 
-        /* Right Side of Feed (Notice Board) */
-        .notice-column {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+.logo-side{
+  padding:8px 4px 12px;
+}
 
-        .notice-header {
-            font-size: 18px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-primary);
-            padding: 10px 0;
-        }
+.logo-side a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-        .notice-card {
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 5px solid;
-            background-color: var(--bg-surface);
-        }
+.logo-side .leaf{
+  font-size:46px;
+}
 
-        .n-red { background-color: var(--notice-red-bg); border-left-color: var(--notice-red-border); }
-        .n-yellow { background-color: var(--notice-yellow-bg); border-left-color: var(--notice-yellow-border); }
-        .n-green { background-color: var(--notice-green-bg); border-left-color: var(--notice-green-border); }
+.logo-side h2{
+  font-size:29px;
+  font-weight:800;
+  line-height:1.15;
+}
 
-        .notice-card h4 { font-size: 15px; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
-        .n-red h4 { color: var(--notice-red-border); }
-        .n-yellow h4 { color: #d48806; }
-        .n-green h4 { color: var(--notice-green-border); }
+html[data-theme="dark"] .logo-side h2{
+  text-shadow:var(--glow);
+}
 
-        .notice-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
-        .notice-card .time { font-size: 11px; color: var(--text-secondary); display: block; margin-top: 8px; }
+.side-date-badge{
+  background:rgba(255,255,255,.76);
+  border:1px solid var(--border);
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:12.5px;
+  font-weight:700;
+  color:var(--text-soft);
+  text-align:center;
+  margin:0 0 13px;
+  line-height:1.55;
+}
 
-        /* Form / Request Box */
-        .request-form {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: var(--shadow-light);
-        }
+html[data-theme="dark"] .side-date-badge{
+  background:rgba(7,18,38,.75);
+  box-shadow:var(--soft-shadow);
+}
 
-        .request-form h4 { font-size: 15px; margin-bottom: 15px; text-align: center; }
-        
-        .form-group { margin-bottom: 12px; }
-        .form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background-color: transparent;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-        .form-control:focus { outline: none; border-color: var(--header-blue); }
-        body.dark-mode .form-control:focus { border-color: #ffffff; box-shadow: 0 0 8px rgba(255,255,255,0.5); }
+.side-title{
+  font-size:20px;
+  font-weight:800;
+  margin:20px 0 8px;
+  padding:0 8px;
+}
 
-        /* =========================================================
-           ৫. RIGHT SIDEBAR (Account & Settings)
-           ========================================================= */
-        .right-sidebar {
-            padding: 20px;
-            height: fit-content;
-        }
+.side-menu{
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
 
-        .account-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 18px;
-            font-weight: 700;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 20px;
-        }
+.side-menu a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 10px;
+  border-radius:12px;
+  font-size:15px;
+  font-weight:650;
+  letter-spacing:-.2px;
+}
 
-        .profile-summary {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+.side-menu a .left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-        .profile-summary h3 { font-size: 16px; color: var(--text-primary); }
-        .profile-summary p { font-size: 12px; color: var(--text-secondary); }
+.side-menu a .tag{
+  font-size:11px;
+  font-weight:800;
+  color:var(--accent-2);
+  background:var(--card);
+  padding:1px 7px;
+  border-radius:999px;
+}
 
-        .settings-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-        }
+.side-menu a:hover,
+.side-menu a.active{
+  background:rgba(15,55,117,.08);
+  color:var(--accent);
+}
 
-        .settings-list li {
-            padding: 15px 5px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-        }
-        .settings-list li:hover { padding-left: 10px; color: var(--header-blue); }
-        body.dark-mode .settings-list li:hover { color: #ffffff; text-shadow: 0 0 5px #fff; }
+html[data-theme="dark"] .side-menu a:hover,
+html[data-theme="dark"] .side-menu a.active{
+  background:rgba(57,166,255,.10);
+  box-shadow:inset 0 0 0 1px rgba(57,166,255,.12);
+}
 
-        /* THEME TOGGLE (The Magic Button) */
-        .theme-toggle-box {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: var(--bg-main);
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            border: 1px solid var(--border-color);
-        }
-        .theme-toggle-box span { font-weight: 600; font-size: 15px; }
-        
-        .theme-toggle-box i { font-size: 22px; color: #faad14; }
-        body.dark-mode .theme-toggle-box i { color: #ffffff; text-shadow: 0 0 15px #ffffff; }
+.auth-area{
+  margin-top:18px;
+  display:grid;
+  gap:10px;
+  padding:0 6px 20px;
+}
 
-        .logout-btn {
-            width: 100%;
-            padding: 12px;
-            margin-top: 20px;
-            background-color: transparent;
-            border: none;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-        .logout-btn:hover { text-decoration: underline; }
+.login-side,
+.register-side{
+  display:block;
+  text-align:center;
+  padding:12px 14px;
+  border-radius:12px;
+  font-weight:800;
+  font-size:16px;
+}
 
-        .memories-section {
-            margin-top: 30px;
-        }
-        .memories-section h4 { font-size: 16px; margin-bottom: 10px; }
-        .memories-section p { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
-        .memories-section .highlight { color: #1890ff; font-weight: 600; cursor: pointer; }
+.login-side{
+  background:var(--accent);
+  color:#fff!important;
+}
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .app-wrapper { grid-template-columns: 250px 1fr; }
-            .right-sidebar { display: none; }
-        }
-        @media (max-width: 900px) {
-            .feed-wrapper { grid-template-columns: 1fr; }
-        }
-    </style>
+.register-side{
+  background:transparent;
+  border:2px solid var(--accent);
+  color:var(--accent)!important;
+}
+
+html[data-theme="dark"] .login-side{
+  box-shadow:var(--glow);
+}
+
+html[data-theme="dark"] .register-side{
+  border-color:rgba(57,166,255,.65);
+}
+
+/* MAIN */
+
+.main-content{
+  min-width:0;
+}
+
+.notice-strip{
+  position:sticky;
+  top:86px;
+  z-index:90;
+  margin-bottom:14px;
+  background:var(--notice);
+  border:1px solid rgba(183,154,84,.34);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+html[data-theme="dark"] .notice-strip{
+  border-color:rgba(57,166,255,.26);
+  box-shadow:0 0 24px rgba(57,166,255,.12);
+}
+
+.notice-strip a{
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:10px 14px;
+}
+
+.notice-icon{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:rgba(180,35,24,.10);
+  color:var(--red);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+html[data-theme="dark"] .notice-icon{
+  background:rgba(57,166,255,.12);
+  color:var(--accent);
+}
+
+.notice-text strong{
+  display:block;
+  font-size:16px;
+  font-weight:800;
+  line-height:1.35;
+}
+
+.notice-text span{
+  display:-webkit-box;
+  -webkit-line-clamp:6;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  font-size:13.5px;
+  line-height:1.55;
+  color:var(--text-soft);
+  font-weight:600;
+  margin-top:2px;
+  max-height:126px;
+}
+
+.notice-more{
+  color:var(--accent);
+  font-weight:800;
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.composer-card{
+  padding:16px;
+  margin-bottom:14px;
+}
+
+.composer-input{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.composer-avatar{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:var(--card-soft);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:26px;
+  border:1px solid var(--border);
+}
+
+.composer-input input{
+  flex:1;
+  height:52px;
+  border-radius:13px;
+  border:1px solid var(--border);
+  background:var(--card-soft);
+  color:var(--text);
+  padding:0 16px;
+  outline:none;
+  font-size:15px;
+  font-weight:600;
+}
+
+.composer-actions{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:13px;
+}
+
+.composer-actions a,
+.composer-actions button{
+  border:none;
+  background:transparent;
+  color:var(--text-soft);
+  border-radius:12px;
+  padding:9px 8px;
+  font-size:14px;
+  font-weight:750;
+  cursor:pointer;
+  text-align:center;
+}
+
+.composer-actions a:hover,
+.composer-actions button:hover{
+  background:var(--card-soft);
+  color:var(--accent);
+}
+
+.post-submit{
+  background:var(--accent)!important;
+  color:#fff!important;
+}
+
+html[data-theme="dark"] .post-submit{
+  box-shadow:var(--glow);
+}
+
+/* FEED */
+
+.feed-card{
+  padding:16px;
+}
+
+.feed-tabs{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  border-bottom:1px solid var(--border);
+  padding-bottom:12px;
+  overflow:auto;
+}
+
+.feed-tabs-left{
+  display:flex;
+  gap:26px;
+  min-width:max-content;
+}
+
+.feed-tabs button{
+  border:none;
+  background:transparent;
+  font-size:16px;
+  font-weight:800;
+  color:var(--muted);
+  cursor:pointer;
+  padding-bottom:8px;
+}
+
+.feed-tabs button.active{
+  color:var(--text);
+  border-bottom:4px solid var(--accent);
+}
+
+.filter-btn{
+  border:1px solid var(--border)!important;
+  background:var(--card-soft)!important;
+  border-radius:999px!important;
+  padding:8px 13px!important;
+  color:var(--text-soft)!important;
+  white-space:nowrap;
+}
+
+.post{
+  padding:18px 2px;
+  border-bottom:1px solid var(--border);
+}
+
+.post:last-child{
+  border-bottom:none;
+}
+
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.post-head img{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid var(--card);
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+
+.author-line{
+  font-size:14px;
+  color:var(--muted);
+  line-height:1.45;
+}
+
+.author-line a{
+  color:var(--text);
+  font-weight:800;
+}
+
+.post-more{
+  margin-left:auto;
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  font-size:24px;
+  cursor:pointer;
+}
+
+.type-pill{
+  display:inline-flex;
+  align-items:center;
+  padding:1px 8px;
+  border-radius:999px;
+  background:var(--card-soft);
+  color:var(--accent-2);
+  border:1px solid var(--border);
+  font-size:12px;
+  font-weight:800;
+}
+
+.type-pill.environment{
+  color:var(--green);
+}
+
+.post-title{
+  font-size:21px;
+  font-weight:800;
+  margin-top:10px;
+  line-height:1.45;
+}
+
+.post-title a:hover{
+  text-decoration:underline;
+}
+
+.post-text{
+  margin-top:6px;
+  color:var(--text-soft);
+  font-size:16px;
+  line-height:1.85;
+  font-weight:500;
+}
+
+.post-tags{
+  margin-top:8px;
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.post-tags span{
+  color:var(--accent);
+  font-size:14px;
+  font-weight:700;
+}
+
+.post-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:14px;
+  color:var(--muted);
+}
+
+.post-actions-left{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+.action-btn{
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  font-size:14px;
+  font-weight:750;
+  cursor:pointer;
+}
+
+.action-btn:hover,
+.action-btn.saved{
+  color:var(--accent);
+}
+
+.read-more{
+  color:var(--accent);
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.comment-panel{
+  display:none;
+  margin-top:14px;
+  padding:14px;
+  background:var(--card-soft);
+  border:1px solid var(--border);
+  border-radius:14px;
+}
+
+.comment-panel.open{
+  display:block;
+}
+
+.comment-item{
+  font-size:14px;
+  color:var(--text-soft);
+  padding:7px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.comment-item:last-child{
+  border-bottom:none;
+}
+
+.comment-item a{
+  font-weight:800;
+  color:var(--text);
+}
+
+.comment-form{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.comment-form input{
+  flex:1;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  border-radius:999px;
+  padding:10px 13px;
+  outline:none;
+}
+
+.comment-form button{
+  border:none;
+  background:var(--accent);
+  color:#fff;
+  border-radius:999px;
+  padding:9px 14px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.more-feed{
+  text-align:center;
+  padding-top:18px;
+}
+
+.more-feed button{
+  border:1px solid var(--border);
+  background:var(--card-soft);
+  color:var(--text);
+  border-radius:999px;
+  padding:10px 26px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+/* RIGHTBAR */
+
+.rightbar{
+  display:grid;
+  gap:14px;
+  align-content:start;
+}
+
+.human-board{
+  background:var(--notice);
+  border:1px solid rgba(183,154,84,.35);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+html[data-theme="dark"] .human-board{
+  border-color:rgba(57,166,255,.25);
+  box-shadow:0 0 24px rgba(57,166,255,.12);
+}
+
+.board-head{
+  padding:15px 16px 8px;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.board-pin{
+  font-size:26px;
+}
+
+.board-head h2{
+  font-size:20px;
+  font-weight:800;
+  color:var(--red);
+  line-height:1.25;
+}
+
+html[data-theme="dark"] .board-head h2{
+  color:var(--accent);
+}
+
+.board-head p{
+  font-size:13px;
+  color:var(--text-soft);
+  font-weight:600;
+  margin-top:4px;
+}
+
+.notice-list{
+  padding:0 12px 12px;
+  display:grid;
+  gap:10px;
+}
+
+.notice-item{
+  background:rgba(255,255,255,.64);
+  border:1px solid rgba(183,154,84,.24);
+  border-radius:14px;
+  padding:11px;
+}
+
+html[data-theme="dark"] .notice-item{
+  background:rgba(5,16,34,.66);
+  border-color:rgba(57,166,255,.18);
+}
+
+.notice-item h3{
+  font-size:15.5px;
+  font-weight:800;
+  color:var(--text);
+}
+
+.notice-item p{
+  font-size:13px;
+  color:var(--text-soft);
+  font-weight:600;
+  margin-top:5px;
+  line-height:1.65;
+}
+
+.notice-item small{
+  display:block;
+  color:var(--muted);
+  font-size:11.5px;
+  font-weight:750;
+  margin-top:7px;
+}
+
+.board-apply{
+  display:block;
+  margin:0 12px 12px;
+  text-align:center;
+  background:var(--accent);
+  color:#fff!important;
+  border-radius:12px;
+  padding:12px;
+  font-size:15px;
+  font-weight:800;
+}
+
+.process-card{
+  background:var(--notice);
+  border:1px solid rgba(183,154,84,.35);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:var(--soft-shadow);
+}
+
+html[data-theme="dark"] .process-card{
+  border-color:rgba(57,166,255,.25);
+}
+
+.process-card h3{
+  font-size:17px;
+  font-weight:800;
+  text-align:center;
+}
+
+.process-card p{
+  margin-top:8px;
+  color:var(--text-soft);
+  font-size:13px;
+  font-weight:600;
+  line-height:1.8;
+  text-align:center;
+}
+
+/* ACCOUNT / DRAWER */
+
+.account-backdrop,
+.drawer-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.38);
+  display:none;
+  z-index:1200;
+}
+
+.account-backdrop.show,
+.drawer-backdrop.show{
+  display:block;
+}
+
+.account-panel{
+  position:fixed;
+  top:0;
+  right:-390px;
+  width:370px;
+  max-width:92vw;
+  height:100vh;
+  background:var(--bg-soft);
+  z-index:1300;
+  padding:18px;
+  overflow:auto;
+  transition:.25s ease;
+  box-shadow:-14px 0 35px rgba(0,0,0,.16);
+}
+
+.account-panel.open{
+  right:0;
+}
+
+.account-logo{
+  display:flex;
+  justify-content:center;
+  margin-bottom:-8px;
+}
+
+.account-logo a{
+  font-size:58px;
+  line-height:1;
+}
+
+.account-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.account-head h2{
+  font-size:28px;
+  font-weight:800;
+}
+
+.close-account,
+.close-drawer{
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:34px;
+  cursor:pointer;
+}
+
+.account-user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+}
+
+.account-user img{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.account-user h3{
+  font-size:18px;
+  font-weight:800;
+}
+
+.account-user p{
+  font-size:13px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+.account-menu{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+
+.account-menu a,
+.account-menu button{
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  border-radius:13px;
+  padding:12px 14px;
+  font-size:15px;
+  font-weight:750;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+}
+
+.logout-btn{
+  justify-content:center!important;
+}
+
+.memory-box{
+  margin-top:18px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px;
+}
+
+.memory-box h3{
+  font-size:22px;
+  font-weight:800;
+}
+
+.memory-empty{
+  color:var(--muted);
+  font-size:13.5px;
+  margin-top:8px;
+}
+
+.memory-item{
+  display:block;
+  border-bottom:1px solid var(--border);
+  padding:9px 0;
+}
+
+.memory-item:last-child{
+  border-bottom:none;
+}
+
+.memory-item small{
+  font-size:12px;
+  color:var(--accent-2);
+  font-weight:800;
+}
+
+.memory-item p{
+  font-size:14px;
+  font-weight:700;
+}
+
+/* MOBILE DRAWER */
+
+.mobile-drawer{
+  position:fixed;
+  top:0;
+  left:-330px;
+  width:310px;
+  max-width:87vw;
+  height:100vh;
+  background:var(--bg-soft);
+  z-index:1300;
+  padding:18px 16px;
+  overflow:auto;
+  transition:.25s ease;
+  box-shadow:14px 0 35px rgba(0,0,0,.18);
+}
+
+.mobile-drawer.open{
+  left:0;
+}
+
+.drawer-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.drawer-brand{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.drawer-logo{
+  font-size:44px;
+  line-height:1;
+}
+
+.drawer-brand h3{
+  font-size:30px;
+  font-weight:800;
+}
+
+/* FOOTER */
+
+.site-footer{
+  max-width:1560px;
+  margin:0 auto;
+  padding:18px 24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  background:var(--accent);
+  color:#fff;
+  font-size:14px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+}
+
+.site-footer a{
+  font-weight:750;
+}
+
+/* FLOAT */
+
+.to-top{
+  position:fixed;
+  right:18px;
+  bottom:20px;
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:none;
+  background:var(--accent);
+  color:#fff;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  z-index:999;
+  box-shadow:0 8px 22px rgba(0,0,0,.22);
+}
+
+.to-top.show{
+  display:flex;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:76px;
+  transform:translateX(-50%);
+  background:var(--accent);
+  color:#fff;
+  border-radius:999px;
+  padding:12px 20px;
+  font-size:14px;
+  font-weight:750;
+  display:none;
+  z-index:9999;
+  max-width:92%;
+  text-align:center;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1280px){
+  .page-wrap{
+    grid-template-columns:245px minmax(0,1fr);
+  }
+
+  .rightbar{
+    display:none;
+  }
+}
+
+@media(max-width:920px){
+  .topbar{
+    grid-template-columns:auto 1fr auto;
+    padding:9px 14px;
+  }
+
+  .menu-btn{
+    display:block;
+  }
+
+  .brand{
+    min-width:0;
+  }
+
+  .brand-leaf{
+    font-size:32px;
+  }
+
+  .brand-text h1{
+    font-size:24px;
+  }
+
+  .brand-text p{
+    max-width:170px;
+    font-size:11px;
+  }
+
+  .search-wrap{
+    display:none;
+  }
+
+  .notif-btn{
+    display:none;
+  }
+
+  .page-wrap{
+    display:block;
+    padding:12px 14px 24px;
+  }
+
+  .sidebar{
+    display:none;
+  }
+
+  .notice-strip{
+    top:72px;
+  }
+
+  .notice-strip a{
+    grid-template-columns:auto 1fr;
+  }
+
+  .notice-more{
+    grid-column:2 / -1;
+  }
+
+  .composer-actions{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .feed-tabs{
+    overflow:auto;
+  }
+
+  .post-actions{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+
+  .comment-form{
+    flex-direction:column;
+  }
+
+  .comment-form button{
+    width:100%;
+  }
+
+  .site-footer{
+    display:block;
+    text-align:center;
+  }
+
+  .footer-links{
+    justify-content:center;
+    margin-top:8px;
+  }
+}
+
+@media(max-width:520px){
+  .brand-text h1{
+    font-size:22px;
+  }
+
+  .brand-text p{
+    max-width:150px;
+  }
+
+  .theme-btn,
+  .icon-btn{
+    width:36px;
+    height:36px;
+  }
+
+  .avatar-btn img{
+    width:38px;
+    height:38px;
+  }
+
+  .composer-card,
+  .feed-card{
+    padding:13px;
+  }
+
+  .composer-avatar{
+    width:42px;
+    height:42px;
+    font-size:22px;
+  }
+
+  .composer-input input{
+    height:46px;
+    font-size:13px;
+  }
+
+  .post-title{
+    font-size:19px;
+  }
+
+  .post-text{
+    font-size:15px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="app-wrapper">
-        
-        <!-- ==============================================
-             LEFT SIDEBAR (আপন ভুবন)
-             ============================================== -->
-        <aside class="panel left-sidebar">
-            <div class="brand-logo">
-                <div><i class="fa-solid fa-leaf"></i> আপন ভুবন</div>
-                <i class="fa-solid fa-xmark" style="cursor: pointer; color: var(--text-secondary); font-size:18px;"></i>
-            </div>
-            
-            <div class="date-container">
-                আজ শনিবার • ২৯ আষাঢ় ১৪৩৩ বঙ্গাব্দ • 13 July 2026 খ্রিস্টাব্দ • তিথি/পক্ষ: Future Plan
-            </div>
+<div class="site-shell">
 
-            <ul class="menu-section">
-                <a href="#" class="menu-item">
-                    <i class="fa-solid fa-user"></i> আপনার প্রোফাইল 
-                    <span class="edit-text">Edit</span>
-                </a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-pen-nib"></i> আজকের কবিতা</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-cloud"></i> আজকের প্রলাপ</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-envelope-open-text"></i> আজকের চিঠিপত্র</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-scroll"></i> বিখ্যাত মনীষীদের বাণী</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-leaf"></i> পরিবেশ পরামর্শ</a>
-                <a href="#" class="menu-item">
-                    <i class="fa-solid fa-microphone"></i> আবৃত্তি 
-                    <span class="edit-text" style="color:var(--text-secondary);">Future Plan</span>
-                </a>
-                <a href="#" class="menu-item">
-                    <i class="fa-solid fa-film"></i> Reels 
-                    <span class="edit-text" style="color:var(--text-secondary);">Future Plan</span>
-                </a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-clock-rotate-left"></i> সাম্প্রতিক লেখা</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-flower-tulip"></i> অনুবাক্য</a>
-            </ul>
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn">☰</button>
 
-            <div class="menu-section-title">মূল ভুবন</div>
-            <ul class="menu-section">
-                <a href="#" class="menu-item"><i class="fa-solid fa-house"></i> হোম</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-book-open-reader"></i> খ্যাতিমান কবি</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-moon"></i> মধ্যরাতের প্রলাপ</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-pen-clip"></i> মাহমুদ সোহেল</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-comments"></i> সাহিত্য আলোচনা</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-circle-info"></i> আমাদের সম্পর্কে</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-shield-halved"></i> নীতিমালা</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-magnifying-glass"></i> সার্চ</a>
-            </ul>
+  <a href="index.html" class="brand" title="হোম">
+    <span class="brand-leaf">🌿</span>
+    <span class="brand-text">
+      <h1>ভুবনডাঙ্গার কবিতা</h1>
+      <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
+    </span>
+  </a>
 
-            <div class="auth-buttons">
-                <button class="btn btn-fill glow-btn"><i class="fa-solid fa-arrow-right-to-bracket"></i> লগইন করুন</button>
-                <button class="btn btn-outline">রেজিস্টার করুন</button>
-            </div>
-        </aside>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="searchMini" placeholder="লেখা, কবি, বিষয়, ট্যাগ খুঁজুন...">
+    <span class="search-key">Ctrl + K</span>
+  </div>
 
-        <!-- ==============================================
-             CENTER PANEL (ভুবনডাঙ্গার কবিতা)
-             ============================================== -->
-        <main class="panel center-main">
-            <!-- Header -->
-            <header class="center-header">
-                <h2><i class="fa-solid fa-bars"></i> <i class="fa-solid fa-leaf"></i> ভুবনডাঙ্গার কবিতা</h2>
-                <div class="header-actions">
-                    <i class="fa-solid fa-magnifying-glass" style="cursor:pointer;"></i>
-                    <div style="position:relative; cursor:pointer;">
-                        <i class="fa-regular fa-bell"></i>
-                        <span style="position:absolute; top:-5px; right:-5px; background:red; color:white; border-radius:50%; width:15px; height:15px; font-size:10px; display:flex; align-items:center; justify-content:center;">3</span>
-                    </div>
-                    <img src="https://via.placeholder.com/30" alt="User">
-                </div>
-            </header>
+  <div class="header-actions">
+    <button class="theme-btn" id="themeBtn">🌙</button>
+    <button class="notif-btn" onclick="showToast('Notification system Future Plan.')">🔔 <span class="badge">৩</span></button>
+    <button class="notif-btn" onclick="showToast('Message system Future Plan.')">💬 <span class="badge">৮</span></button>
+    <button class="avatar-btn" id="accountBtn">
+      <img src="profile.jpg" alt="আপনার অ্যাকাউন্ট">
+      <span>⌄</span>
+    </button>
+  </div>
+</header>
 
-            <!-- Tabs -->
-            <nav class="nav-tabs">
-                <span class="nav-tab active">হোম</span>
-                <span class="nav-tab">জনপ্রিয়</span>
-                <span class="nav-tab">সাম্প্রতিক</span>
-                <span class="nav-tab">কবিতা</span>
-                <span class="nav-tab">প্রলাপ</span>
-                <span class="nav-tab">চিঠিপত্র</span>
-                <span class="nav-tab">বাণী</span>
-                <span class="nav-tab">আবৃত্তি</span>
-            </nav>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
 
-            <!-- Feed Content -->
-            <div class="feed-wrapper">
-                
-                <!-- Left Feed -->
-                <div class="posts-column">
-                    
-                    <!-- Welcome Block -->
-                    <div class="welcome-card">
-                        <h3><i class="fa-solid fa-leaf" style="color:#2e7d32;"></i> স্বাগতম, আপন ভুবনের পরিবারে</h3>
-                        <p style="color:var(--text-secondary); font-size:14px; margin-top:5px;">কবিতায় থাকছি, কথায় থাকছি, ভালোবাসায় থাকছি একসাথে।</p>
-                        
-                        <div class="quick-actions">
-                            <div class="action-box">
-                                <i class="fa-solid fa-pen"></i><br>লেখা জমা দিন
-                            </div>
-                            <div class="action-box">
-                                <i class="fa-solid fa-cloud"></i><br>প্রলাপ লিখুন
-                            </div>
-                            <div class="action-box">
-                                <i class="fa-solid fa-envelope"></i><br>চিঠি লিখুন
-                            </div>
-                            <div class="action-box">
-                                <i class="fa-solid fa-book-open"></i><br>কবিতা পড়ুন
-                            </div>
-                        </div>
-                    </div>
+<aside class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-head">
+    <a href="index.html" class="drawer-brand" title="হোমে যান">
+      <span class="drawer-logo">🌿</span>
+      <h3>আপন ভুবন</h3>
+    </a>
+    <button class="close-drawer" id="closeDrawer">×</button>
+  </div>
 
-                    <!-- Post 1 -->
-                    <article class="post-card">
-                        <div class="post-header">
-                            <div class="post-avatar" style="background-image: url('https://via.placeholder.com/45');"></div>
-                            <div class="post-meta">
-                                <h4>আপনার প্রোফাইল <span class="tag">কবিতা</span></h4>
-                                <p>২ ঘণ্টা আগে</p>
-                            </div>
-                            <i class="fa-solid fa-ellipsis" style="margin-left:auto; cursor:pointer; color:var(--text-secondary);"></i>
-                        </div>
-                        <div class="post-content">
-                            <h2>বৃষ্টিভেজা জানালায়</h2>
-                            <p>জানালার কাঁচে জমে থাকা জলের ফোঁটায়<br>তুমি কি আমায় দেখো?<br>নাকি স্মৃতিরা এসে ভিজিয়ে যায়<br>এই একলা বিকেলবেলা...</p>
-                        </div>
-                        <div class="post-footer">
-                            <div><i class="fa-solid fa-heart heart-icon"></i> ২৫৬</div>
-                            <div><i class="fa-regular fa-comment"></i> ৩২</div>
-                            <div><i class="fa-regular fa-bookmark"></i> সংরক্ষণ</div>
-                            <div style="margin-left:auto;"><i class="fa-solid fa-share"></i> Share</div>
-                        </div>
-                    </article>
+  <div class="side-date-badge" id="mobileSideDate">তারিখ লোড হচ্ছে...</div>
 
-                    <!-- Post 2 -->
-                    <article class="post-card">
-                        <div class="post-header">
-                            <div class="post-avatar" style="background-image: url('https://via.placeholder.com/45');"></div>
-                            <div class="post-meta">
-                                <h4>মাহমুদ সোহেল <span class="tag">প্রলাপ</span></h4>
-                                <p>৫ ঘণ্টা আগে</p>
-                            </div>
-                            <i class="fa-solid fa-ellipsis" style="margin-left:auto; cursor:pointer; color:var(--text-secondary);"></i>
-                        </div>
-                        <div class="post-content">
-                            <h2>ব্যস্ততা</h2>
-                            <p>সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই ভেবে থাকা কথার কাছেই ফিরে যায়...</p>
-                        </div>
-                        <div class="post-footer">
-                            <div><i class="fa-solid fa-heart heart-icon"></i> ১৪৫</div>
-                            <div><i class="fa-regular fa-comment"></i> ১৮</div>
-                            <div><i class="fa-regular fa-bookmark"></i> সংরক্ষণ</div>
-                            <div style="margin-left:auto;"><i class="fa-solid fa-share"></i> Share</div>
-                        </div>
-                    </article>
-                    
-                    <!-- Post 3 -->
-                    <article class="post-card">
-                        <div class="post-header">
-                            <div class="post-avatar" style="background-image: url('https://via.placeholder.com/45');"></div>
-                            <div class="post-meta">
-                                <h4>সাদিয়া নুর <span class="tag">কবিতা</span></h4>
-                                <p>৩ ঘণ্টা আগে</p>
-                            </div>
-                            <i class="fa-solid fa-ellipsis" style="margin-left:auto; cursor:pointer; color:var(--text-secondary);"></i>
-                        </div>
-                        <div class="post-content">
-                            <h2>আমাদের জানালায়</h2>
-                            <p>আমাদের জানালায় এখনো বাতাস আসে,<br>পুরোনো দিনের গন্ধ মেখে...</p>
-                        </div>
-                        <div class="post-footer">
-                            <div><i class="fa-solid fa-heart heart-icon"></i> ২০২</div>
-                            <div><i class="fa-regular fa-comment"></i> ২২</div>
-                            <div><i class="fa-regular fa-bookmark"></i> সংরক্ষণ</div>
-                            <div style="margin-left:auto;"><i class="fa-solid fa-share"></i> Share</div>
-                        </div>
-                    </article>
+  <div class="side-menu">
+    <a href="profile.html"><span class="left">👤 আপনার প্রোফাইল</span><span class="tag">Edit</span></a>
+    <a href="today-poem.html?type=poem"><span class="left">📝 আজকের কবিতা</span></a>
+    <a href="today-poem.html?type=prolap"><span class="left">✐ আজকের প্রলাপ</span></a>
+    <a href="today-poem.html?type=letter"><span class="left">✉ আজকের চিঠিপত্র</span></a>
+    <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
+    <a href="today-poem.html?type=environment"><span class="left">🌱 পরিবেশ পরামর্শ</span></a>
+    <a href="submit-poem.html"><span class="left">✎ কবিতা লিখুন</span></a>
+    <a href="submit-prolap.html"><span class="left">✐ প্রলাপ লিখুন</span></a>
+    <a href="discussion-post.html"><span class="left">💬 আলোচনা করুন</span></a>
+    <a href="future-plan.html?feature=recitation"><span class="left">🎙 আবৃত্তি</span><span class="tag">Future Plan</span></a>
+    <a href="future-plan.html?feature=reels"><span class="left">🎬 Reels</span><span class="tag">Future Plan</span></a>
+    <a href="today-poem.html"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
+    <a href="profile.html#anukabya"><span class="left">🌸 অনুকাব্য</span></a>
+  </div>
 
-                </div>
+  <div class="side-title">মূল ভুবন</div>
 
-                <!-- Right Notice Board -->
-                <aside class="notice-column">
-                    <div class="notice-header">
-                        <i class="fa-solid fa-thumbtack" style="color:#ff4d4f;"></i> নোটিস বোর্ড
-                        <span style="font-size:10px; font-weight:normal; margin-left:auto; color:var(--text-secondary);">Daily update</span>
-                    </div>
+  <div class="side-menu">
+    <a href="index.html" class="active"><span class="left">🏠 হোম</span></a>
+    <a href="famous-poet.html"><span class="left">📖 খ্যাতিমান কবি</span></a>
+    <a href="madhyorater-prolap.html"><span class="left">☾ মধ্যরাতের প্রলাপ</span></a>
+    <a href="founder-profile.html"><span class="left">✒ মাহমুদ সোহেল</span></a>
+    <a href="discussion-post.html"><span class="left">💬 সাহিত্য আলোচনা</span></a>
+    <a href="contact.html"><span class="left">✉ যোগাযোগ</span></a>
+    <a href="about.html"><span class="left">ℹ আমাদের সম্পর্কে</span></a>
+    <a href="policy.html"><span class="left">📌 নীতিমালা</span></a>
+    <a href="search.html"><span class="left">🔎 সার্চ</span></a>
+  </div>
 
-                    <div class="notice-card n-red">
-                        <h4><i class="fa-solid fa-droplet"></i> রক্তের আবেদন</h4>
-                        <p>জরুরি ভিত্তিতে B+ রক্তের প্রয়োজন। আগামীকাল সকাল ৯টার মধ্যে।</p>
-                        <a href="#" style="font-size:12px; color:#1890ff; text-decoration:none; display:block; margin-top:5px;">— বিস্তারিত পড়ুন</a>
-                        <span class="time">১ ঘণ্টা আগে</span>
-                    </div>
+  <div class="auth-area">
+    <a href="login.html" class="login-side">↪ লগইন করুন</a>
+    <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+  </div>
+</aside>
 
-                    <div class="notice-card n-yellow">
-                        <h4><i class="fa-solid fa-hand-holding-heart"></i> অসহায় পরিবারের জন্য সাহায্য</h4>
-                        <p>একটি পরিবার খাদ্য ও জরুরি সহায়তার অপেক্ষায় আছে। আপনার সহযোগিতা তাদের আশার আলো হতে পারে।</p>
-                        <a href="#" style="font-size:12px; color:#1890ff; text-decoration:none; display:block; margin-top:5px;">— বিস্তারিত পড়ুন</a>
-                        <span class="time">৩ ঘণ্টা আগে</span>
-                    </div>
+<div class="account-backdrop" id="accountBackdrop"></div>
 
-                    <div class="notice-card n-green">
-                        <h4><i class="fa-solid fa-briefcase-medical"></i> জরুরি ওষুধ সহায়তা</h4>
-                        <p>দুর্লভ কিছু ওষুধের প্রয়োজন। কারও কাছে থাকলে যোগাযোগ করুন।</p>
-                        <a href="#" style="font-size:12px; color:#1890ff; text-decoration:none; display:block; margin-top:5px;">— বিস্তারিত পড়ুন</a>
-                        <span class="time">৫ ঘণ্টা আগে</span>
-                    </div>
+<aside class="account-panel" id="accountPanel">
+  <div class="account-logo">
+    <a href="index.html" title="হোম">🌿</a>
+  </div>
 
-                    <!-- Notice Form -->
-                    <div class="request-form">
-                        <h4>নোটিস পাঠান / আবেদন করুন</h4>
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="বিষয় লিখুন">
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control">
-                                <option>বিভাগ নির্বাচন করুন</option>
-                                <option>রক্তের আবেদন</option>
-                                <option>সাহায্য</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="3" placeholder="বিস্তারিত লিখুন..."></textarea>
-                        </div>
-                        <button class="btn btn-fill glow-btn" style="width:100%; padding:10px;">Submit</button>
-                    </div>
-                </aside>
-            </div>
-        </main>
+  <div class="account-head">
+    <h2>Account</h2>
+    <button class="close-account" id="closeAccount">×</button>
+  </div>
 
-        <!-- ==============================================
-             RIGHT SIDEBAR (Account)
-             ============================================== -->
-        <aside class="panel right-sidebar">
-            <div class="account-header">
-                Account
-                <i class="fa-solid fa-xmark" style="cursor:pointer; color:var(--text-secondary);"></i>
-            </div>
-            
-            <div class="profile-summary">
-                <img src="https://via.placeholder.com/50" alt="User" style="border-radius:50%; width:50px; height:50px;">
-                <div>
-                    <h3>আপনার প্রোফাইল</h3>
-                    <p>Writer • Reader • Memories</p>
-                </div>
-            </div>
+  <div class="account-user">
+    <img src="profile.jpg" alt="আপনার প্রোফাইল">
+    <div>
+      <h3><a href="profile.html">আপনার প্রোফাইল</a></h3>
+      <p>Writer • Reader • Memories</p>
+    </div>
+  </div>
 
-            <ul class="settings-list">
-                <li>আপনার প্রোফাইল <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary); font-size:12px;"></i></li>
-                <li>প্রোফাইল এডিট করুন <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary); font-size:12px;"></i></li>
-                <li>লেখা জমা দিন <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary); font-size:12px;"></i></li>
-                <li>পরিবেশ পরামর্শ <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary); font-size:12px;"></i></li>
-                <li>প্রিয় লেখা খুঁজুন <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary); font-size:12px;"></i></li>
-                <li>রিপোর্ট / কপিরাইট <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary); font-size:12px;"></i></li>
-                <li>নীতিমালা <i class="fa-solid fa-chevron-right" style="color:var(--text-secondary); font-size:12px;"></i></li>
-            </ul>
+  <div class="account-menu">
+    <a href="profile.html">আপনার প্রোফাইল <span>›</span></a>
+    <a href="profile-edit.html">প্রোফাইল এডিট করুন <span>›</span></a>
+    <a href="submit-poem.html">লেখা জমা দিন <span>›</span></a>
+    <a href="today-poem.html?type=environment">পরিবেশ পরামর্শ <span>›</span></a>
+    <a href="search.html?q=প্রিয় লেখা">প্রিয় লেখা খুঁজুন <span>›</span></a>
+    <a href="contact.html">রিপোর্ট / কপিরাইট <span>›</span></a>
+    <a href="policy.html">নীতিমালা <span>›</span></a>
+    <button id="accountThemeBtn">Theme বদলান <span>🌙</span></button>
+    <button class="logout-btn" id="logoutBtn">Log out</button>
+  </div>
 
-            <!-- THE MAGIC DARK MODE BUTTON -->
-            <div class="theme-toggle-box" id="themeToggler">
-                <span>Theme বদলান</span>
-                <i class="fa-solid fa-moon" id="toggleIcon"></i>
-            </div>
+  <div class="memory-box">
+    <h3>মেমোরিস</h3>
+    <div id="memoryList">
+      <p class="memory-empty">আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।</p>
+    </div>
+  </div>
+</aside>
 
-            <button class="logout-btn">Log out</button>
+<main class="page-wrap">
 
-            <div class="memories-section">
-                <h4>মেমোরিস</h4>
-                <p><span class="highlight">কবিতা • মাহমুদ সোহেল</span><br>ইচ্ছে</p>
-            </div>
-        </aside>
-
+  <aside class="sidebar">
+    <div class="logo-side">
+      <a href="index.html">
+        <span class="leaf">🌿</span>
+        <h2>আপন ভুবন</h2>
+      </a>
     </div>
 
-    <!-- ==============================================
-         JAVASCRIPT (Brain / Nerve System)
-         ============================================== -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const themeToggler = document.getElementById('themeToggler');
-            const toggleIcon = document.getElementById('toggleIcon');
-            const body = document.body;
+    <div class="side-date-badge" id="desktopSideDate">তারিখ লোড হচ্ছে...</div>
 
-            // Check if user previously selected dark mode
-            if(localStorage.getItem('apon_theme') === 'dark') {
-                enableDarkMode();
-            }
+    <div class="side-menu">
+      <a href="profile.html"><span class="left">👤 আপনার প্রোফাইল</span><span class="tag">Edit</span></a>
+      <a href="today-poem.html?type=poem"><span class="left">📝 আজকের কবিতা</span></a>
+      <a href="today-poem.html?type=prolap"><span class="left">✐ আজকের প্রলাপ</span></a>
+      <a href="today-poem.html?type=letter"><span class="left">✉ আজকের চিঠিপত্র</span></a>
+      <a href="today-poem.html?type=quotes"><span class="left">📜 বিখ্যাত মনীষীদের বাণী</span></a>
+      <a href="today-poem.html?type=environment"><span class="left">🌱 পরিবেশ পরামর্শ</span></a>
+      <a href="submit-poem.html"><span class="left">✎ কবিতা লিখুন</span></a>
+      <a href="submit-prolap.html"><span class="left">✐ প্রলাপ লিখুন</span></a>
+      <a href="discussion-post.html"><span class="left">💬 আলোচনা করুন</span></a>
+      <a href="future-plan.html?feature=recitation"><span class="left">🎙 আবৃত্তি</span><span class="tag">Future Plan</span></a>
+      <a href="future-plan.html?feature=reels"><span class="left">🎬 Reels</span><span class="tag">Future Plan</span></a>
+      <a href="today-poem.html"><span class="left">🕊 সাম্প্রতিক লেখা</span></a>
+      <a href="profile.html#anukabya"><span class="left">🌸 অনুকাব্য</span></a>
+    </div>
 
-            themeToggler.addEventListener('click', () => {
-                if (body.classList.contains('dark-mode')) {
-                    disableDarkMode();
-                } else {
-                    enableDarkMode();
-                }
-            });
+    <div class="side-title">মূল ভুবন</div>
 
-            function enableDarkMode() {
-                body.classList.add('dark-mode');
-                toggleIcon.classList.remove('fa-moon');
-                toggleIcon.classList.add('fa-sun'); // Change icon to Sun
-                localStorage.setItem('apon_theme', 'dark');
-                console.log("CT Scan Complete: Deep Blue with White Neon Glow applied! ⚡");
-            }
+    <div class="side-menu">
+      <a href="index.html" class="active"><span class="left">🏠 হোম</span></a>
+      <a href="famous-poet.html"><span class="left">📖 খ্যাতিমান কবি</span></a>
+      <a href="madhyorater-prolap.html"><span class="left">☾ মধ্যরাতের প্রলাপ</span></a>
+      <a href="founder-profile.html"><span class="left">✒ মাহমুদ সোহেল</span></a>
+      <a href="discussion-post.html"><span class="left">💬 সাহিত্য আলোচনা</span></a>
+      <a href="contact.html"><span class="left">✉ যোগাযোগ</span></a>
+      <a href="about.html"><span class="left">ℹ আমাদের সম্পর্কে</span></a>
+      <a href="policy.html"><span class="left">📌 নীতিমালা</span></a>
+      <a href="search.html"><span class="left">🔎 সার্চ</span></a>
+    </div>
 
-            function disableDarkMode() {
-                body.classList.remove('dark-mode');
-                toggleIcon.classList.remove('fa-sun');
-                toggleIcon.classList.add('fa-moon'); // Change icon back to Moon
-                localStorage.setItem('apon_theme', 'light');
-                console.log("Light Mode active.");
-            }
-        });
-    </script>
+    <div class="auth-area">
+      <a href="login.html" class="login-side">↪ লগইন করুন</a>
+      <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+    </div>
+  </aside>
+
+  <section class="main-content">
+
+    <section class="notice-strip" id="homeNotice">
+      <a href="today-poem.html#humanNotice">
+        <div class="notice-icon">＋</div>
+        <div class="notice-text">
+          <strong id="noticeTitle">ভুবনডাঙ্গার মানবিক নোটিস</strong>
+          <span id="noticePreview">
+            জরুরি রক্ত, চিকিৎসা সহায়তা, হারানো ব্যক্তি/ডকুমেন্ট বা কোনো মানবিক সহায়তার যাচাইকৃত বার্তা এখানে থাকবে। Founder/Admin যাচাই করার পর নোটিস প্রকাশ করা হবে।
+          </span>
+        </div>
+        <div class="notice-more">বিস্তারিত →</div>
+      </a>
+    </section>
+
+    <section class="card composer-card">
+      <div class="composer-input">
+        <div class="composer-avatar">🪶</div>
+        <input placeholder="আপনার মনের কথা লিখুন...">
+      </div>
+
+      <div class="composer-actions">
+        <a href="submit-poem.html">🪶 কবিতা</a>
+        <a href="submit-prolap.html">💬 প্রলাপ</a>
+        <a href="submit-letter.html">📖 চিঠিপত্র</a>
+        <button onclick="showToast('Post submit system Supabase যুক্ত হলে live হবে।')" class="post-submit">পোস্ট করুন</button>
+      </div>
+    </section>
+
+    <section class="card feed-card">
+      <div class="feed-tabs">
+        <div class="feed-tabs-left">
+          <button class="active" data-filter="all">সাম্প্রতিক</button>
+          <button data-filter="popular">জনপ্রিয়</button>
+          <button data-filter="new">অনুসরণ</button>
+          <button data-filter="talked">আমার ফিড</button>
+        </div>
+        <button class="filter-btn" onclick="showToast('Advanced filter Future Plan.')">ফিল্টার ⚙</button>
+      </div>
+
+      <div id="feedList"></div>
+
+      <div class="more-feed" id="moreFeedContainer">
+        <button id="seeMoreBtn">আরও দেখুন ↻</button>
+      </div>
+    </section>
+  </section>
+
+  <aside class="rightbar">
+    <section class="human-board" id="homeHumanBoard">
+      <div class="board-head">
+        <span class="board-pin">📌</span>
+        <div>
+          <h2>মানবিক নোটিস বোর্ড</h2>
+          <p>প্রতিদিন মানুষের পাশে দাঁড়ানোর ছোট একটি প্রয়াস। আপনি চাইলে কাউকে সাহায্য করতে পারেন, বা সহায়তার আবেদন জানাতে পারেন।</p>
+        </div>
+      </div>
+
+      <div class="notice-list" id="noticeList"></div>
+
+      <a href="contact.html" class="board-apply">✎ ফর্ম পূরণ করুন</a>
+    </section>
+
+    <section class="process-card">
+      <h3>কিভাবে কাজটি সম্পন্ন হয়?</h3>
+      <p>
+        ফর্ম জমা → নোটিফিকেশন → অ্যাডমিন/ফাউন্ডার যাচাই → Board-এ প্রকাশ।
+        প্রতিটি আবেদন যাচাই ও অনুমোদনের পরে প্রকাশ করা হবে।
+      </p>
+    </section>
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+  <div>
+    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a> © <span id="footerYear">২০২৬</span>
+  </div>
+
+  <div class="footer-links">
+    <a href="index.html">হোম</a>
+    <a href="login.html">লগইন</a>
+    <a href="register.html">রেজিস্টার</a>
+    <a href="about.html">আমাদের সম্পর্কে</a>
+    <a href="contact.html">যোগাযোগ</a>
+    <a href="review.html">রিভিউ</a>
+    <a href="copyright.html">কপিরাইট</a>
+    <a href="policy.html">নীতিমালা</a>
+    <a href="search.html">সার্চ</a>
+  </div>
+</footer>
+
+</div>
+
+<button class="to-top" id="toTopBtn">↑</button>
+<div class="toast" id="toast">এই সুবিধাটি শীঘ্রই যুক্ত হবে।</div>
+
+<script>
+const htmlRoot = document.documentElement;
+const savedTheme = localStorage.getItem("bhubondangaTheme") || "light";
+htmlRoot.setAttribute("data-theme", savedTheme);
+
+const menuBtn = document.getElementById("menuBtn");
+const mobileDrawer = document.getElementById("mobileDrawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const closeDrawer = document.getElementById("closeDrawer");
+
+const accountBtn = document.getElementById("accountBtn");
+const accountPanel = document.getElementById("accountPanel");
+const accountBackdrop = document.getElementById("accountBackdrop");
+const closeAccount = document.getElementById("closeAccount");
+
+const themeBtn = document.getElementById("themeBtn");
+const accountThemeBtn = document.getElementById("accountThemeBtn");
+const searchMini = document.getElementById("searchMini");
+const toast = document.getElementById("toast");
+const memoryList = document.getElementById("memoryList");
+
+const bnDigits = {
+  "0":"০",
+  "1":"১",
+  "2":"২",
+  "3":"۳".replace("۳","৩"),
+  "4":"۴".replace("۴","۴"),
+  "5":"۵".replace("۵","۵"),
+  "6":"۶".replace("۶","۶"),
+  "7":"۷".replace("۷","۷"),
+  "8":"۸".replace("۸","۸"),
+  "9":"۹".replace("۹","۹")
+};
+
+bnDigits["4"] = "৪";
+bnDigits["5"] = "۵".replace("۵","۵");
+bnDigits["5"] = "۵".replace("۵","۵");
+bnDigits["5"] = "৫";
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","৬");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "۶".replace("۶","৬");
+bnDigits["6"] = "۶".replace("۶","۶");
+bnDigits["6"] = "৬";
+bnDigits["7"] = "۷".replace("۷","۷");
+bnDigits["7"] = "۷".replace("۷","۷");
+bnDigits["7"] = "۷".replace("۷","۷");
+bnDigits["7"] = "৭";
+bnDigits["8"] = "۸".replace("۸","۸");
+bnDigits["8"] = "۸".replace("۸","۸");
+bnDigits["8"] = "۸".replace("۸","۸");
+bnDigits["8"] = "۸";
+bnDigits["9"] = "۹".replace("۹","۹");
+bnDigits["9"] = "۹".replace("۹","۹");
+bnDigits["9"] = "۹".replace("۹","۹");
+bnDigits["9"] = "۹";
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "۰".replace("۰","۰");
+bnDigits["0"] = "০";
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱";
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "۱".replace("۱","۱");
+bnDigits["1"] = "১";
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲";
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "۲".replace("۲","۲");
+bnDigits["2"] = "২";
+bnDigits["3"] = "۳".replace("۳","۳");
+bnDigits["3"] = "۳".replace("۳","۳");
+bnDigits["3"] = "۳".replace("۳","۳");
+bnDigits["3"] = "৩";
+
+function toBn(num){
+  return String(num).replace(/[0-9]/g,function(d){return bnDigits[d];});
+}
+
+const weekBn = ["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"];
+const monthsEn = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const banglaMonths = [
+  {name:"বৈশাখ",days:31},{name:"জ্যৈষ্ঠ",days:31},{name:"আষাঢ়",days:31},
+  {name:"শ্রাবণ",days:31},{name:"ভাদ্র",days:31},{name:"আশ্বিন",days:31},
+  {name:"কার্তিক",days:30},{name:"অগ্রহায়ণ",days:30},{name:"পৌষ",days:30},
+  {name:"মাঘ",days:30},{name:"ফাল্গুন",days:30},{name:"চৈত্র",days:30}
+];
+
+function isLeapYear(y){
+  return (y%4===0 && y%100!==0) || (y%400===0);
+}
+
+function getBanglaDate(date){
+  const gy = date.getFullYear();
+  const start = new Date(gy,3,14);
+  let by, diff;
+
+  if(date >= start){
+    by = gy - 593;
+    diff = Math.floor((date - start) / 86400000);
+  }else{
+    by = gy - 594;
+    diff = Math.floor((date - new Date(gy-1,3,14)) / 86400000);
+  }
+
+  const months = banglaMonths.map(m => ({...m}));
+  if(isLeapYear(gy + 1)) months[10].days = 31;
+
+  let mi = 0;
+  while(diff >= months[mi].days && mi < months.length - 1){
+    diff -= months[mi].days;
+    mi++;
+  }
+
+  return {day:diff+1,month:months[mi].name,year:by};
+}
+
+function renderDates(){
+  const today = new Date();
+  const bd = getBanglaDate(today);
+
+  const banglaDate = toBn(bd.day) + " " + bd.month + " " + toBn(bd.year) + " বঙ্গাব্দ";
+  const gregDate = today.getDate() + " " + monthsEn[today.getMonth()] + " " + today.getFullYear() + " খ্রিষ্টাব্দ";
+  const text = "আজ " + weekBn[today.getDay()] + " • " + banglaDate + " • " + gregDate + " • তিথি/পক্ষ: Future Plan";
+
+  document.getElementById("desktopSideDate").innerText = text;
+  document.getElementById("mobileSideDate").innerText = text;
+  document.getElementById("footerYear").innerText = toBn(today.getFullYear());
+}
+
+renderDates();
+
+function updateThemeButton(){
+  const dark = htmlRoot.getAttribute("data-theme") === "dark";
+  themeBtn.innerHTML = dark ? "☀️" : "🌙";
+  accountThemeBtn.innerHTML = dark ? "Theme বদলান <span>☀️</span>" : "Theme বদলান <span>🌙</span>";
+}
+
+function toggleTheme(){
+  const next = htmlRoot.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  htmlRoot.setAttribute("data-theme",next);
+  localStorage.setItem("bhubondangaTheme",next);
+  updateThemeButton();
+}
+
+updateThemeButton();
+themeBtn.addEventListener("click",toggleTheme);
+accountThemeBtn.addEventListener("click",toggleTheme);
+
+function showToast(text){
+  toast.innerHTML = text;
+  toast.style.display = "block";
+  setTimeout(()=>toast.style.display="none",3200);
+}
+
+menuBtn.addEventListener("click",()=>{
+  mobileDrawer.classList.add("open");
+  drawerBackdrop.classList.add("show");
+});
+
+closeDrawer.addEventListener("click",closeDrawerFn);
+drawerBackdrop.addEventListener("click",closeDrawerFn);
+
+function closeDrawerFn(){
+  mobileDrawer.classList.remove("open");
+  drawerBackdrop.classList.remove("show");
+}
+
+accountBtn.addEventListener("click",()=>{
+  accountPanel.classList.add("open");
+  accountBackdrop.classList.add("show");
+  renderMemories();
+});
+
+closeAccount.addEventListener("click",closeAccountFn);
+accountBackdrop.addEventListener("click",closeAccountFn);
+
+function closeAccountFn(){
+  accountPanel.classList.remove("open");
+  accountBackdrop.classList.remove("show");
+}
+
+searchMini.addEventListener("keydown",function(e){
+  if(e.key === "Enter"){
+    const q = searchMini.value.trim();
+    if(q) window.location.href = "search.html?q=" + encodeURIComponent(q);
+  }
+});
+
+document.addEventListener("keydown",function(e){
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k"){
+    e.preventDefault();
+    searchMini.focus();
+  }
+});
+
+const notices = [
+  {
+    icon:"🩸",
+    title:"রক্তের প্রয়োজন",
+    text:"B+ রক্তের জরুরি প্রয়োজন। রোগী বর্তমানে হাসপাতালে ভর্তি। সাহায্য করতে চাইলে অনুগ্রহ করে যাচাইকৃত যোগাযোগ নম্বরে কথা বলুন।",
+    time:"আপডেট হয়েছে: আজ সকাল " + toBn(9) + ":" + toBn(15)
+  },
+  {
+    icon:"💜",
+    title:"চিকিৎসা সহায়তা প্রয়োজন",
+    text:"একজন অসুস্থ মানুষের চিকিৎসা সহায়তার জন্য মানবিক সহযোগিতা প্রয়োজন। আবেদনটি Founder/Admin যাচাই সাপেক্ষে প্রকাশিত।",
+    time:"আপডেট হয়েছে: আজ দুপুর " + toBn(1) + ":" + toBn(25)
+  },
+  {
+    icon:"🆘",
+    title:"জরুরি সহায়তা প্রয়োজন",
+    text:"অগ্নিকাণ্ডে ক্ষতিগ্রস্ত একটি পরিবারের খাদ্য ও প্রয়োজনীয় সহায়তা দরকার। সহায়তার আগে তথ্য যাচাই করে নিন।",
+    time:"আপডেট হয়েছে: আজ বিকাল " + toBn(4) + ":" + toBn(10)
+  }
+];
+
+function renderNotices(){
+  const list = document.getElementById("noticeList");
+  list.innerHTML = "";
+
+  notices.forEach(n=>{
+    const div = document.createElement("div");
+    div.className = "notice-item";
+    div.innerHTML =
+      "<h3>" + n.icon + " " + n.title + "</h3>" +
+      "<p>" + n.text + "</p>" +
+      "<small>✍ " + n.time + "</small>";
+    list.appendChild(div);
+  });
+}
+
+renderNotices();
+
+const basePosts = [
+  {
+    id:"p1",
+    category:"popular",
+    typeKey:"poem",
+    type:"কবিতা",
+    author:"মাহমুদ সোহেল",
+    profile:"founder-profile.html",
+    avatar:"profile.jpg",
+    title:"বৃষ্টির জীবনরেখা",
+    text:"বৃষ্টি নামলে শহরটা কেমন নরম হয়ে যায়। জানালার কাচে জমে থাকা ফোঁটাগুলো যেন বহুদিনের অপ্রকাশিত চিঠি—যেখানে নাম নেই, অথচ অপেক্ষা আছে।",
+    tags:["#কবিতা","#বৃষ্টি","#অপেক্ষা"],
+    likes:225,
+    comments:32,
+    url:"founder-profile.html"
+  },
+  {
+    id:"p2",
+    category:"talked",
+    typeKey:"prolap",
+    type:"প্রলাপ",
+    author:"সাদিয়া নূর",
+    profile:"profile.html?user=sadia-noor",
+    avatar:"profile.jpg",
+    title:"মধ্যরাতের প্রলাপ: কিছু অজানা কথা",
+    text:"সব কথা বলা যায় না। কিছু কথা নিজের ভেতর জমে থাকে, আর মানুষ সেই জমে থাকা কথার কাছেই নরম হয়ে যায়। রাত যত গভীর হয়, মনে হয় নীরবতাই সবচেয়ে বেশি কথা বলে।",
+    tags:["#প্রলাপ","#নীরবতা"],
+    likes:189,
+    comments:21,
+    url:"today-poem.html?type=prolap"
+  },
+  {
+    id:"p3",
+    category:"new",
+    typeKey:"discussion",
+    type:"আলোচনা",
+    author:"রাশেদ বিন সাকিব",
+    profile:"profile.html?user=rashed",
+    avatar:"profile.jpg",
+    title:"আধুনিক কবিতার ভাষা ও আমাদের সময়",
+    text:"কবিতার ভাষা কি শুধু ছন্দ ও অলংকারের সৌন্দর্য? নাকি সময়ের সঙ্গে বদলে যাওয়া মানুষের অনুভবের নতুন অভিধান? এই প্রশ্ন থেকেই আজকের আলোচনা।",
+    tags:["#আলোচনা","#কবিতা"],
+    likes:147,
+    comments:18,
+    url:"discussion-post.html"
+  },
+  {
+    id:"p4",
+    category:"popular",
+    typeKey:"environment",
+    type:"পরিবেশ",
+    author:"ভুবনডাঙ্গার আহ্বান",
+    profile:"index.html",
+    avatar:"profile.jpg",
+    title:"পরিবেশ রক্ষায় আপনার পরামর্শ",
+    text:"একটি গাছ, একটি পুকুর, একটি নদী—এগুলো শুধু প্রকৃতি নয়, আমাদের স্মৃতি ও বেঁচে থাকার আশ্রয়। আপনার ছোট পরামর্শও বড় পরিবর্তনের শুরু হতে পারে।",
+    tags:["#পরিবেশ","#প্রকৃতি"],
+    likes:132,
+    comments:17,
+    url:"today-poem.html?type=environment"
+  },
+  {
+    id:"p5",
+    category:"all",
+    typeKey:"letter",
+    type:"চিঠিপত্র",
+    author:"নাহিদ হাসান",
+    profile:"profile.html?user=nahid-hasan",
+    avatar:"profile.jpg",
+    title:"একটি অসমাপ্ত চিঠি",
+    text:"তোমাকে লিখতে বসে দেখি, কাগজের ভেতর নদীর শব্দ আছে। কিছু কথা পৌঁছায় না, তবু লেখা হয়ে থাকে—যেন মানুষ হারালেও ভাষা হারায় না।",
+    tags:["#চিঠি","#স্মৃতি"],
+    likes:106,
+    comments:12,
+    url:"today-poem.html?type=letter"
+  },
+  {
+    id:"p6",
+    category:"all",
+    typeKey:"quotes",
+    type:"বাণী",
+    author:"রুদ্র দত্ত",
+    profile:"profile.html?user=rudra-dutta",
+    avatar:"profile.jpg",
+    title:"বিখ্যাত মনীষীদের বাণী",
+    text:"যার বাণী বা লেখা post করা হবে, তার নাম বাধ্যতামূলক। কারণ সম্মান ছাড়া সাহিত্যচর্চা অসম্পূর্ণ।",
+    tags:["#বাণী","#সম্মান"],
+    likes:98,
+    comments:9,
+    url:"today-poem.html?type=quotes"
+  }
+];
+
+const allPosts = [];
+
+for(let i=1;i<=60;i++){
+  const t = basePosts[(i-1)%basePosts.length];
+  allPosts.push({
+    ...t,
+    id:t.id + "_" + i,
+    title:i<=basePosts.length ? t.title : t.title + " — পর্ব " + toBn(i),
+    likes:t.likes + Math.floor(Math.random()*30),
+    comments:t.comments + Math.floor(Math.random()*8),
+    time:i===1 ? toBn(2) + " ঘণ্টা আগে" : toBn(i+1) + " ঘণ্টা আগে"
+  });
+}
+
+let currentFilter = "all";
+let showing = 20;
+
+function getMemories(){
+  return JSON.parse(localStorage.getItem("bhubondangaMemories") || "[]");
+}
+
+function saveMemories(items){
+  localStorage.setItem("bhubondangaMemories",JSON.stringify(items));
+}
+
+function isSaved(id){
+  return getMemories().some(m=>m.id===id);
+}
+
+function renderMemories(){
+  const memories = getMemories();
+
+  if(memories.length === 0){
+    memoryList.innerHTML = '<p class="memory-empty">আপনি যে লেখা save করবেন, সেগুলো এখানে থাকবে।</p>';
+    return;
+  }
+
+  memoryList.innerHTML = "";
+
+  memories.forEach(item=>{
+    const a = document.createElement("a");
+    a.className = "memory-item";
+    a.href = item.url;
+    a.innerHTML = "<small>" + item.type + " · " + item.author + "</small><p>" + item.title + "</p>";
+    memoryList.appendChild(a);
+  });
+}
+
+function toggleMemory(post){
+  let memories = getMemories();
+  const exists = memories.some(m=>m.id===post.id);
+
+  if(exists){
+    memories = memories.filter(m=>m.id!==post.id);
+    showToast("মেমোরিস থেকে সরানো হয়েছে।");
+  }else{
+    memories.unshift({
+      id:post.id,
+      type:post.type,
+      author:post.author,
+      title:post.title,
+      url:post.url
+    });
+    showToast("মেমোরিসে সংরক্ষণ করা হয়েছে।");
+  }
+
+  saveMemories(memories);
+  renderFeed();
+  renderMemories();
+}
+
+function getFilteredPosts(){
+  if(currentFilter === "all") return allPosts;
+  return allPosts.filter(p=>p.category===currentFilter);
+}
+
+function toggleCommentPanel(id){
+  const panel = document.getElementById("comments_" + id);
+  if(panel) panel.classList.toggle("open");
+}
+
+function sharePost(post){
+  const shareUrl = window.location.origin + "/" + post.url;
+
+  if(navigator.share){
+    navigator.share({title:post.title,text:post.author,url:shareUrl}).catch(()=>{});
+  }else{
+    navigator.clipboard.writeText(shareUrl).then(()=>showToast("Share link copy করা হয়েছে।"));
+  }
+}
+
+function renderFeed(){
+  const feedList = document.getElementById("feedList");
+  const filtered = getFilteredPosts();
+  const posts = filtered.slice(0,showing);
+
+  feedList.innerHTML = "";
+
+  posts.forEach(post=>{
+    const saved = isSaved(post.id);
+    const pillClass = post.typeKey === "environment" ? "type-pill environment" : "type-pill";
+    const tags = post.tags.map(tag=>"<span>" + tag + "</span>").join("");
+
+    const article = document.createElement("article");
+    article.className = "post";
+
+    article.innerHTML =
+      '<div class="post-head">' +
+        '<img src="' + post.avatar + '" onerror="this.src=\'profile.jpg\'" alt="' + post.author + '">' +
+        '<div class="author-line">' +
+          '<a href="' + post.profile + '">' + post.author + '</a>' +
+          ' · <span class="' + pillClass + '">' + post.type + '</span>' +
+          ' · ' + post.time +
+        '</div>' +
+        '<button class="post-more" onclick="showToast(\'Post options Future Plan.\')">···</button>' +
+      '</div>' +
+
+      '<h3 class="post-title"><a href="' + post.url + '">' + post.title + '</a></h3>' +
+      '<p class="post-text">' + post.text + '</p>' +
+      '<div class="post-tags">' + tags + '</div>' +
+
+      '<div class="post-actions">' +
+        '<div class="post-actions-left">' +
+          '<button class="action-btn like-btn" data-id="' + post.id + '">♡ ' + toBn(post.likes) + '</button>' +
+          '<button class="action-btn comment-btn" data-id="' + post.id + '">💬 ' + toBn(post.comments) + '</button>' +
+          '<button class="action-btn save-btn ' + (saved ? "saved" : "") + '" data-id="' + post.id + '">' + (saved ? "✓ সেভ" : "🔖 সেভ") + '</button>' +
+          '<button class="action-btn share-btn" data-id="' + post.id + '">↗ শেয়ার</button>' +
+        '</div>' +
+        '<a href="' + post.url + '" class="read-more">আরও পড়ুন →</a>' +
+      '</div>' +
+
+      '<div class="comment-panel" id="comments_' + post.id + '">' +
+        '<div class="comment-item"><a href="profile.html?user=sadia-noor">সাদিয়া নূর</a>: লেখাটি ভালো লাগল।</div>' +
+        '<div class="comment-item"><a href="profile.html?user=nahid-hasan">নাহিদ হাসান</a>: সুন্দর অনুভূতি।</div>' +
+        '<div class="comment-form">' +
+          '<input placeholder="মন্তব্য লিখুন...">' +
+          '<button onclick="showToast(\'Comment system Supabase যুক্ত হলে live হবে।\')">পাঠান</button>' +
+        '</div>' +
+      '</div>';
+
+    feedList.appendChild(article);
+  });
+
+  document.querySelectorAll(".like-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>showToast("Like system Supabase যুক্ত হলে live হবে।"));
+  });
+
+  document.querySelectorAll(".comment-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>toggleCommentPanel(btn.dataset.id));
+  });
+
+  document.querySelectorAll(".save-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const post = allPosts.find(p=>p.id===btn.dataset.id);
+      toggleMemory(post);
+    });
+  });
+
+  document.querySelectorAll(".share-btn").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const post = allPosts.find(p=>p.id===btn.dataset.id);
+      sharePost(post);
+    });
+  });
+
+  document.getElementById("moreFeedContainer").style.display = showing >= filtered.length ? "none" : "block";
+}
+
+renderFeed();
+renderMemories();
+
+document.getElementById("seeMoreBtn").addEventListener("click",()=>{
+  showing += 10;
+  renderFeed();
+});
+
+document.querySelectorAll(".feed-tabs button[data-filter]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".feed-tabs button[data-filter]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter || "all";
+    showing = 20;
+    renderFeed();
+  });
+});
+
+document.getElementById("logoutBtn").addEventListener("click",()=>{
+  localStorage.removeItem("bhubondangaUserRole");
+  localStorage.removeItem("bhubondangaUserName");
+  showToast("আপনি সফলভাবে লগ আউট করেছেন।");
+  setTimeout(()=>window.location.href="login.html",1200);
+});
+
+const toTopBtn = document.getElementById("toTopBtn");
+
+window.addEventListener("scroll",()=>{
+  if(window.scrollY > 450) toTopBtn.classList.add("show");
+  else toTopBtn.classList.remove("show");
+});
+
+toTopBtn.addEventListener("click",()=>{
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+document.addEventListener("copy",function(e){
+  e.preventDefault();
+  showToast("লেখা কপি করা নিরুৎসাহিত করা হয়েছে।");
+});
+
+document.addEventListener("contextmenu",function(e){
+  e.preventDefault();
+  showToast("Right click বন্ধ রাখা হয়েছে।");
+});
+
+document.addEventListener("selectstart",function(e){
+  const tag = e.target.tagName.toLowerCase();
+  if(tag === "input" || tag === "textarea") return;
+  e.preventDefault();
+});
+</script>
+
 </body>
 </html>
