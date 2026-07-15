@@ -20,69 +20,76 @@ html{
 }
 
 :root{
-  --header-h:108px;
-  --date-h:44px;
+  --header-h:104px;
+  --ticker-h:43px;
   --nav-h:52px;
 
   --bg:#eaf3fb;
   --bg-soft:#dceaf6;
   --surface:#ffffff;
   --surface-2:#f4f8fc;
-  --surface-3:#eaf3ff;
+  --surface-3:#e9f3ff;
 
-  --text:#102b52;
-  --text-soft:#456284;
-  --muted:#73839b;
+  --text:#102d59;
+  --text-soft:#49678d;
+  --muted:#7587a2;
 
-  --border:rgba(13,67,136,.15);
-  --border-strong:rgba(13,67,136,.28);
+  --border:rgba(15,69,137,.15);
+  --border-strong:rgba(15,89,174,.30);
 
-  --accent:#0c4c98;
-  --accent-2:#1d83d6;
-  --accent-soft:rgba(29,131,214,.10);
+  --accent:#0a58ad;
+  --accent-2:#31a5ff;
+  --accent-soft:rgba(40,153,255,.11);
 
-  --green:#1e765f;
-  --gold:#b18a3c;
-  --red:#c33e4a;
+  --red:#d44756;
+  --green:#198265;
+  --gold:#ae7c24;
 
-  --shadow:0 12px 30px rgba(12,52,103,.08);
-  --shadow-soft:0 6px 18px rgba(12,52,103,.06);
+  --shadow:0 12px 32px rgba(11,51,104,.09);
+  --soft-shadow:0 5px 18px rgba(11,51,104,.07);
   --glow:none;
 
-  --sidebar-bg:rgba(244,249,253,.97);
-  --nav-bg:rgba(255,255,255,.96);
+  --header-bg:
+    radial-gradient(circle at 8% 20%,rgba(255,255,255,.95),transparent 32%),
+    linear-gradient(110deg,#f8fcff 0%,#e9f6ff 52%,#dfefff 100%);
+
+  --drawer-bg:rgba(242,248,253,.98);
 }
 
 html[data-theme="dark"]{
-  --bg:#02091a;
-  --bg-soft:#06142c;
-  --surface:rgba(4,18,40,.94);
-  --surface-2:rgba(7,28,58,.92);
-  --surface-3:rgba(37,153,255,.11);
+  --bg:#020a1a;
+  --bg-soft:#06152e;
+  --surface:rgba(4,18,41,.95);
+  --surface-2:rgba(8,29,61,.93);
+  --surface-3:rgba(46,158,255,.12);
 
-  --text:#f2f7ff;
-  --text-soft:#c4d8f4;
-  --muted:#8ba5cc;
+  --text:#f5f9ff;
+  --text-soft:#c8dcf7;
+  --muted:#8fa8cd;
 
-  --border:rgba(64,163,255,.24);
-  --border-strong:rgba(75,173,255,.42);
+  --border:rgba(64,164,255,.24);
+  --border-strong:rgba(75,178,255,.43);
 
-  --accent:#38a9ff;
-  --accent-2:#6fc4ff;
-  --accent-soft:rgba(56,169,255,.12);
+  --accent:#3aaaff;
+  --accent-2:#77c8ff;
+  --accent-soft:rgba(58,170,255,.13);
 
-  --green:#72dfbf;
-  --gold:#ffd270;
-  --red:#ff7d8a;
+  --red:#ff7d8e;
+  --green:#73e0c0;
+  --gold:#ffd06c;
 
-  --shadow:0 16px 42px rgba(0,0,0,.44);
-  --shadow-soft:0 0 24px rgba(53,164,255,.11);
+  --shadow:0 17px 44px rgba(0,0,0,.44);
+  --soft-shadow:0 0 24px rgba(54,166,255,.11);
+
   --glow:
-    0 0 6px rgba(255,255,255,.15),
-    0 0 18px rgba(56,169,255,.20);
+    0 0 5px rgba(255,255,255,.16),
+    0 0 18px rgba(57,169,255,.23);
 
-  --sidebar-bg:rgba(3,15,34,.97);
-  --nav-bg:rgba(2,13,34,.96);
+  --header-bg:
+    radial-gradient(circle at 12% 18%,rgba(35,137,255,.18),transparent 32%),
+    linear-gradient(110deg,#010718 0%,#03152f 53%,#061d42 100%);
+
+  --drawer-bg:rgba(2,14,33,.98);
 }
 
 body{
@@ -123,16 +130,16 @@ a{
 .site-shell{
   min-height:100vh;
   background:
-    radial-gradient(circle at 8% 3%,rgba(117,188,237,.26),transparent 25%),
-    radial-gradient(circle at 95% 7%,rgba(255,255,255,.66),transparent 28%),
-    linear-gradient(145deg,#f8fcff 0%,var(--bg) 55%,#f7fbff 100%);
+    radial-gradient(circle at 8% 4%,rgba(120,188,238,.25),transparent 25%),
+    radial-gradient(circle at 92% 8%,rgba(255,255,255,.70),transparent 27%),
+    linear-gradient(150deg,#f8fcff,var(--bg),#f7fbff);
 }
 
 html[data-theme="dark"] .site-shell{
   background:
-    radial-gradient(circle at 8% 4%,rgba(28,128,255,.27),transparent 24%),
-    radial-gradient(circle at 88% 10%,rgba(17,91,185,.21),transparent 28%),
-    linear-gradient(180deg,#010716 0%,#03132e 48%,#02091a 100%);
+    radial-gradient(circle at 9% 4%,rgba(33,132,255,.28),transparent 25%),
+    radial-gradient(circle at 90% 12%,rgba(11,88,181,.22),transparent 28%),
+    linear-gradient(180deg,#010716 0%,#03132d 50%,#02091a 100%);
 }
 
 /* HEADER */
@@ -140,60 +147,52 @@ html[data-theme="dark"] .site-shell{
 .topbar{
   position:sticky;
   top:0;
-  z-index:1200;
+  z-index:1300;
   min-height:var(--header-h);
-  padding:14px 34px;
+  padding:13px 30px;
   display:grid;
-  grid-template-columns:420px minmax(320px,520px) minmax(520px,1fr);
+  grid-template-columns:400px minmax(280px,520px) minmax(460px,1fr);
   align-items:center;
-  gap:22px;
-  background:
-    radial-gradient(circle at 12% 20%,rgba(255,255,255,.96),transparent 32%),
-    linear-gradient(110deg,#f7fcff 0%,#e7f5ff 52%,#dceeff 100%);
-  color:#0b3064;
-  border-bottom:1px solid rgba(13,67,136,.12);
-  box-shadow:0 7px 22px rgba(13,67,136,.08);
+  gap:21px;
+  background:var(--header-bg);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 7px 22px rgba(13,67,136,.09);
 }
 
 html[data-theme="dark"] .topbar{
-  background:
-    radial-gradient(circle at 12% 20%,rgba(47,154,255,.18),transparent 32%),
-    linear-gradient(110deg,#020a1d 0%,#051a39 55%,#061d40 100%);
-  border-bottom-color:rgba(70,165,255,.22);
-  box-shadow:0 0 28px rgba(53,164,255,.13);
+  box-shadow:0 0 30px rgba(55,166,255,.13);
 }
 
 .header-left{
   display:flex;
   align-items:center;
-  gap:13px;
+  gap:12px;
   min-width:0;
 }
 
 .menu-btn{
   display:none;
-  width:42px;
-  height:42px;
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
   border:none;
   background:transparent;
   color:var(--text);
   font-size:29px;
   cursor:pointer;
-  align-items:center;
-  justify-content:center;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:13px;
+  gap:12px;
   min-width:0;
 }
 
 .brand-leaf{
-  font-size:60px;
+  font-size:57px;
   line-height:1;
-  filter:drop-shadow(0 5px 7px rgba(21,112,83,.17));
+  filter:drop-shadow(0 4px 8px rgba(37,132,91,.22));
 }
 
 .brand-copy{
@@ -201,31 +200,30 @@ html[data-theme="dark"] .topbar{
 }
 
 .brand-copy h1{
-  color:#0a3169;
-  font-size:33px;
+  color:#0b3671;
+  font-size:32px;
   font-weight:800;
   line-height:1.08;
-  letter-spacing:-.8px;
+  letter-spacing:-.7px;
   white-space:nowrap;
 }
 
 .brand-copy p{
-  margin-top:6px;
-  color:#5b6f88;
-  font-size:13px;
+  margin-top:5px;
+  color:#59728e;
+  font-size:12.5px;
   font-weight:500;
   white-space:nowrap;
 }
 
 html[data-theme="dark"] .brand-copy h1{
-  color:#f5f9ff;
-  text-shadow:
-    0 0 6px rgba(255,255,255,.22),
-    0 0 18px rgba(58,169,255,.30);
+  color:#fff;
+  text-shadow:var(--glow);
 }
 
 html[data-theme="dark"] .brand-copy p{
-  color:#afc7e8;
+  color:#b5cceb;
+  text-shadow:0 0 12px rgba(55,166,255,.13);
 }
 
 .header-search{
@@ -235,12 +233,12 @@ html[data-theme="dark"] .brand-copy p{
 
 .header-search input{
   width:100%;
-  height:51px;
-  border:1px solid rgba(13,67,136,.11);
+  height:49px;
+  border:1px solid rgba(15,69,137,.12);
   outline:none;
   border-radius:999px;
-  padding:0 52px;
-  background:rgba(255,255,255,.94);
+  padding:0 50px 0 50px;
+  background:rgba(255,255,255,.95);
   color:#183b68;
   font-size:14px;
   box-shadow:0 8px 22px rgba(13,67,136,.07);
@@ -252,13 +250,24 @@ html[data-theme="dark"] .brand-copy p{
   left:18px;
   top:50%;
   transform:translateY(-50%);
-  color:#173f75;
-  font-size:25px;
   z-index:2;
+  color:#164477;
+  font-size:25px;
 }
 
 .header-search button{
-  display:none;
+  position:absolute;
+  right:7px;
+  top:50%;
+  transform:translateY(-50%);
+  width:34px;
+  height:34px;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  cursor:pointer;
+  font-size:16px;
 }
 
 .header-actions{
@@ -266,51 +275,54 @@ html[data-theme="dark"] .brand-copy p{
   display:flex;
   align-items:center;
   justify-content:flex-end;
-  gap:12px;
+  gap:10px;
 }
 
 .header-date-pill{
-  min-height:48px;
+  min-height:46px;
+  max-width:290px;
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:0 18px;
-  border-radius:16px;
+  gap:8px;
+  padding:0 15px;
+  border-radius:15px;
   background:rgba(215,238,255,.78);
   color:#164476;
-  font-size:12px;
+  font-size:11.5px;
   font-weight:600;
   white-space:nowrap;
-  box-shadow:0 6px 17px rgba(13,67,136,.06);
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 html[data-theme="dark"] .header-date-pill{
-  background:rgba(38,126,218,.13);
-  color:#c4daf4;
-  border:1px solid rgba(65,160,255,.17);
+  background:rgba(39,126,217,.13);
+  color:#c9dcf5;
+  border:1px solid rgba(65,160,255,.18);
 }
 
 .header-icon{
   position:relative;
-  width:45px;
-  height:45px;
-  border:none;
+  width:44px;
+  height:44px;
+  flex:0 0 44px;
+  border:1px solid rgba(15,69,137,.10);
   border-radius:50%;
-  background:rgba(255,255,255,.58);
-  color:#143d72;
+  background:rgba(255,255,255,.61);
+  color:#163e72;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  font-size:20px;
+  font-size:18px;
   box-shadow:0 6px 16px rgba(13,67,136,.07);
   transition:transform .2s ease,filter .2s ease;
 }
 
 html[data-theme="dark"] .header-icon{
-  background:rgba(16,49,92,.72);
-  color:#ecf5ff;
-  border:1px solid rgba(66,163,255,.20);
+  background:rgba(14,48,91,.73);
+  border-color:rgba(66,163,255,.21);
+  color:#f1f7ff;
 }
 
 .header-icon:hover{
@@ -320,13 +332,13 @@ html[data-theme="dark"] .header-icon{
 
 .header-badge{
   position:absolute;
-  top:-2px;
-  right:-2px;
+  top:-3px;
+  right:-3px;
   min-width:18px;
   height:18px;
   padding:0 4px;
   border-radius:999px;
-  background:#1268c4;
+  background:#146dcb;
   color:#fff;
   font-size:9px;
   font-weight:800;
@@ -343,87 +355,120 @@ html[data-theme="dark"] .header-icon{
 }
 
 .avatar-btn img{
-  width:51px;
-  height:51px;
+  width:50px;
+  height:50px;
   display:block;
   border-radius:50%;
   object-fit:cover;
   border:3px solid rgba(255,255,255,.94);
-  box-shadow:0 7px 18px rgba(13,67,136,.15);
+  box-shadow:0 7px 18px rgba(13,67,136,.16);
 }
 
 .profile-name{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  color:#183961;
-  font-size:14px;
+  max-width:135px;
+  color:#173b68;
+  font-size:13.5px;
   font-weight:700;
   white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 html[data-theme="dark"] .profile-name{
-  color:#edf6ff;
+  color:#f1f7ff;
 }
 
-/* THREE DATES */
+/* LIVE DATE TICKER */
 
-.global-date-bar{
+.date-ticker{
   position:sticky;
   top:var(--header-h);
-  z-index:1175;
-  min-height:var(--date-h);
-  padding:7px 18px;
+  z-index:1250;
+  height:var(--ticker-h);
+  overflow:hidden;
+  background:rgba(230,244,255,.97);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 4px 16px rgba(13,67,136,.05);
+}
+
+html[data-theme="dark"] .date-ticker{
+  background:
+    radial-gradient(circle at center,rgba(45,153,255,.12),transparent 70%),
+    rgba(3,17,39,.98);
+}
+
+.ticker-track{
+  width:max-content;
+  min-width:200%;
+  height:100%;
   display:flex;
   align-items:center;
-  justify-content:center;
-  gap:10px;
+  animation:dateTicker 30s linear infinite;
+}
+
+.ticker-group{
+  min-width:100vw;
+  padding:0 48px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:70px;
   color:var(--text-soft);
-  background:rgba(234,246,255,.96);
-  border-bottom:1px solid var(--border);
   font-size:12px;
   font-weight:600;
-  text-align:center;
-  box-shadow:0 5px 18px rgba(13,67,136,.05);
-}
-
-html[data-theme="dark"] .global-date-bar{
-  color:#c9dcf6;
-  background:
-    radial-gradient(circle at center,rgba(48,151,255,.12),transparent 70%),
-    rgba(3,17,39,.97);
-  border-bottom-color:rgba(64,163,255,.23);
-  text-shadow:
-    0 0 6px rgba(255,255,255,.12),
-    0 0 15px rgba(56,169,255,.16);
-}
-
-.date-part{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
   white-space:nowrap;
 }
 
-.date-label{
-  color:var(--accent);
-  font-weight:700;
+.ticker-item{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
 }
 
-.date-dot{
+.ticker-label{
   color:var(--accent);
   font-weight:800;
+}
+
+.ticker-dot{
+  color:var(--accent);
+  font-weight:900;
+}
+
+html[data-theme="dark"] .ticker-group{
+  color:#cfe1f8;
+  text-shadow:
+    0 0 6px rgba(255,255,255,.10),
+    0 0 16px rgba(57,169,255,.17);
+}
+
+.date-ticker:hover .ticker-track{
+  animation-play-state:paused;
+}
+
+@keyframes dateTicker{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-50%);
+  }
 }
 
 /* CATEGORY NAV */
 
 .category-nav{
   position:sticky;
-  top:calc(var(--header-h) + var(--date-h));
-  z-index:1150;
-  background:var(--nav-bg);
+  top:calc(var(--header-h) + var(--ticker-h));
+  z-index:1200;
+  background:rgba(255,255,255,.97);
   backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
+}
+
+html[data-theme="dark"] .category-nav{
+  background:rgba(2,13,34,.97);
 }
 
 .category-inner{
@@ -458,47 +503,47 @@ html[data-theme="dark"] .global-date-bar{
   font-weight:650;
 }
 
-/* HUMANITARIAN NOTICE */
+/* NOTICE */
 
 .notice-strip{
   position:sticky;
-  top:calc(var(--header-h) + var(--date-h) + var(--nav-h));
-  z-index:1100;
+  top:calc(var(--header-h) + var(--ticker-h) + var(--nav-h));
+  z-index:1150;
   max-width:1530px;
   margin:0 auto;
   padding:7px 20px 0;
 }
 
 .notice-inner{
+  min-height:45px;
   display:grid;
   grid-template-columns:auto minmax(0,1fr) auto;
   align-items:center;
   gap:10px;
-  min-height:42px;
   padding:7px 12px;
   border:1px solid var(--border-strong);
-  border-radius:11px;
-  background:rgba(255,255,255,.94);
-  box-shadow:var(--shadow-soft);
+  border-radius:13px;
+  background:rgba(255,255,255,.95);
+  box-shadow:var(--soft-shadow);
 }
 
 html[data-theme="dark"] .notice-inner{
-  background:rgba(3,18,42,.96);
+  background:rgba(3,18,42,.97);
 }
 
 .notice-symbol{
   color:var(--red);
-  font-size:16px;
+  font-size:19px;
 }
 
 .notice-text{
   min-width:0;
   color:var(--text-soft);
   font-size:11.5px;
-  line-height:1.45;
+  line-height:1.5;
   display:-webkit-box;
-  -webkit-line-clamp:3;
   -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;
   overflow:hidden;
 }
 
@@ -509,19 +554,18 @@ html[data-theme="dark"] .notice-inner{
 
 .notice-links{
   display:flex;
-  align-items:center;
   gap:7px;
   white-space:nowrap;
 }
 
 .notice-links a{
-  padding:5px 9px;
+  padding:5px 10px;
   border:1px solid var(--border);
   border-radius:999px;
   background:var(--surface);
   color:var(--accent);
   font-size:10px;
-  font-weight:650;
+  font-weight:700;
 }
 
 .notice-links a.primary{
@@ -530,7 +574,7 @@ html[data-theme="dark"] .notice-inner{
   color:#fff;
 }
 
-/* PAGE GRID */
+/* PAGE */
 
 .page-layout{
   max-width:1530px;
@@ -544,15 +588,15 @@ html[data-theme="dark"] .notice-inner{
 .card{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:15px;
+  border-radius:16px;
   box-shadow:var(--shadow);
 }
 
 .left-sidebar,
 .right-sidebar{
   position:sticky;
-  top:calc(var(--header-h) + var(--date-h) + var(--nav-h) + 58px);
-  height:calc(100vh - 290px);
+  top:calc(var(--header-h) + var(--ticker-h) + var(--nav-h) + 59px);
+  height:calc(100vh - 286px);
   overflow:auto;
   scrollbar-width:none;
 }
@@ -564,17 +608,17 @@ html[data-theme="dark"] .notice-inner{
   display:none;
 }
 
-/* SIDEBARS */
+/* SIDEBAR */
 
 .left-sidebar{
-  padding:0 3px 18px;
+  padding:0 3px 20px;
 }
 
 .side-brand{
   display:flex;
   align-items:center;
   gap:8px;
-  padding:1px 5px 10px;
+  padding:2px 5px 10px;
 }
 
 .side-brand span{
@@ -584,20 +628,6 @@ html[data-theme="dark"] .notice-inner{
 .side-brand h2{
   font-size:22px;
   font-weight:700;
-}
-
-.side-date{
-  margin-bottom:10px;
-  padding:9px 10px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  background:var(--surface);
-  color:var(--text-soft);
-  text-align:center;
-  font-size:10.5px;
-  font-weight:500;
-  line-height:1.55;
-  box-shadow:var(--shadow-soft);
 }
 
 .side-menu{
@@ -616,13 +646,12 @@ html[data-theme="dark"] .notice-inner{
   color:var(--text);
   font-size:13.5px;
   font-weight:500;
-  transition:.2s ease;
 }
 
 .side-menu a:hover,
 .side-menu a.active{
-  background:var(--accent-soft);
   color:var(--accent);
+  background:var(--accent-soft);
 }
 
 .side-left{
@@ -642,7 +671,6 @@ html[data-theme="dark"] .notice-inner{
   color:var(--accent);
   font-size:9px;
   font-weight:650;
-  white-space:nowrap;
 }
 
 .side-title{
@@ -667,9 +695,9 @@ html[data-theme="dark"] .notice-inner{
 
 .login-side,
 .register-side{
-  text-align:center;
-  border-radius:10px;
   padding:10px 11px;
+  border-radius:10px;
+  text-align:center;
   font-size:13.5px;
   font-weight:600;
   transition:transform .2s ease,filter .2s ease;
@@ -683,7 +711,6 @@ html[data-theme="dark"] .notice-inner{
 .register-side{
   border:1.5px solid var(--accent);
   color:var(--accent)!important;
-  background:transparent;
 }
 
 .login-side:hover,
@@ -711,14 +738,11 @@ html[data-theme="dark"] .notice-inner{
 
 .welcome-leaf{
   font-size:29px;
-  line-height:1;
-  filter:drop-shadow(0 0 8px rgba(56,169,255,.30));
 }
 
 .welcome-copy h2{
   font-size:20px;
   font-weight:700;
-  line-height:1.4;
   text-shadow:var(--glow);
 }
 
@@ -730,12 +754,10 @@ html[data-theme="dark"] .notice-inner{
 
 .quick-actions{
   display:flex;
-  align-items:center;
   gap:6px;
+  margin-top:12px;
   overflow-x:auto;
   scrollbar-width:none;
-  margin-top:12px;
-  padding-bottom:2px;
 }
 
 .quick-actions::-webkit-scrollbar{
@@ -743,13 +765,13 @@ html[data-theme="dark"] .notice-inner{
 }
 
 .quick-action{
-  min-height:37px;
   flex:1 0 auto;
+  min-height:36px;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:6px;
-  padding:7px 10px;
+  gap:5px;
+  padding:7px 9px;
   border:1px solid var(--border);
   border-radius:9px;
   background:var(--surface-2);
@@ -760,20 +782,15 @@ html[data-theme="dark"] .notice-inner{
   transition:.2s ease;
 }
 
-.quick-action span{
-  font-size:15px;
-}
-
 .quick-action:hover{
   transform:translateY(-2px);
   color:var(--accent);
   background:var(--accent-soft);
-  border-color:var(--border-strong);
 }
 
 .flow-head{
   margin-bottom:10px;
-  padding:11px 14px;
+  padding:12px 14px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -789,12 +806,10 @@ html[data-theme="dark"] .notice-inner{
 .flow-head p{
   color:var(--muted);
   font-size:11px;
-  margin-top:1px;
 }
 
 .flow-filters{
   display:flex;
-  align-items:center;
   gap:5px;
   overflow-x:auto;
   scrollbar-width:none;
@@ -817,9 +832,9 @@ html[data-theme="dark"] .notice-inner{
 }
 
 .flow-filter.active{
+  color:#fff;
   background:var(--accent);
   border-color:var(--accent);
-  color:#fff;
 }
 
 .feed-list{
@@ -843,11 +858,7 @@ html[data-theme="dark"] .notice-inner{
   border-radius:50%;
   object-fit:cover;
   border:2px solid var(--surface);
-  box-shadow:0 4px 12px rgba(0,0,0,.13);
-}
-
-.post-meta{
-  min-width:0;
+  box-shadow:0 4px 12px rgba(0,0,0,.14);
 }
 
 .post-name-row{
@@ -862,15 +873,11 @@ html[data-theme="dark"] .notice-inner{
   font-weight:700;
 }
 
-.post-name:hover{
-  color:var(--accent);
-}
-
 .post-type{
   padding:2px 8px;
   border-radius:999px;
-  background:var(--accent-soft);
   color:var(--accent);
+  background:var(--accent-soft);
   font-size:10px;
   font-weight:650;
 }
@@ -897,10 +904,6 @@ html[data-theme="dark"] .notice-inner{
   text-shadow:var(--glow);
 }
 
-.post-title a:hover{
-  color:var(--accent);
-}
-
 .post-text{
   margin-top:5px;
   color:var(--text-soft);
@@ -925,13 +928,10 @@ html[data-theme="dark"] .notice-inner{
   font-size:11.5px;
   font-weight:600;
   cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:4px;
 }
 
-.action-btn:hover,
-.action-btn.saved{
+.action-btn.saved,
+.action-btn:hover{
   color:var(--accent);
 }
 
@@ -987,7 +987,6 @@ html[data-theme="dark"] .notice-inner{
   padding:8px 13px;
   background:var(--accent);
   color:#fff;
-  font-weight:650;
   cursor:pointer;
 }
 
@@ -1002,12 +1001,10 @@ html[data-theme="dark"] .notice-inner{
   border-radius:999px;
   background:var(--surface);
   color:var(--text);
-  font-size:12px;
-  font-weight:650;
   cursor:pointer;
 }
 
-/* RIGHT SIDEBAR */
+/* RIGHT */
 
 .right-sidebar{
   display:grid;
@@ -1019,23 +1016,13 @@ html[data-theme="dark"] .notice-inner{
   padding:13px;
 }
 
-.right-title{
-  font-size:17px;
-  font-weight:700;
-  text-align:center;
-  margin-bottom:9px;
-  text-shadow:var(--glow);
-}
-
 .notice-board-head{
   text-align:center;
-  padding-bottom:8px;
 }
 
 .notice-board-head h2{
   color:var(--accent);
   font-size:18px;
-  font-weight:700;
 }
 
 .notice-board-head p{
@@ -1052,30 +1039,28 @@ html[data-theme="dark"] .notice-inner{
 }
 
 .notice-item.red{
-  border-color:rgba(255,125,138,.38);
-  background:rgba(255,125,138,.08);
+  border-color:rgba(255,125,142,.36);
+  background:rgba(255,125,142,.08);
 }
 
 .notice-item.gold{
-  border-color:rgba(255,210,112,.38);
-  background:rgba(255,210,112,.07);
+  border-color:rgba(255,208,108,.36);
+  background:rgba(255,208,108,.07);
 }
 
 .notice-item.green{
-  border-color:rgba(114,223,191,.34);
-  background:rgba(114,223,191,.07);
+  border-color:rgba(115,224,192,.34);
+  background:rgba(115,224,192,.07);
 }
 
 .notice-item h3{
   font-size:13px;
-  font-weight:700;
 }
 
 .notice-item p{
   margin-top:4px;
   color:var(--text-soft);
   font-size:11px;
-  line-height:1.6;
 }
 
 .notice-item a{
@@ -1094,12 +1079,12 @@ html[data-theme="dark"] .notice-inner{
 }
 
 .board-buttons a{
-  padding:7px 6px;
+  padding:7px;
   border:1px solid var(--border);
   border-radius:9px;
   text-align:center;
-  background:var(--surface-2);
   color:var(--accent);
+  background:var(--surface-2);
   font-size:10px;
   font-weight:650;
 }
@@ -1108,12 +1093,6 @@ html[data-theme="dark"] .notice-inner{
   background:var(--accent);
   border-color:var(--accent);
   color:#fff;
-}
-
-.founder-card{
-  background:
-    radial-gradient(circle at top right,rgba(56,169,255,.13),transparent 42%),
-    linear-gradient(135deg,var(--surface),var(--surface-2));
 }
 
 .founder-head{
@@ -1131,7 +1110,6 @@ html[data-theme="dark"] .notice-inner{
 
 .founder-head h3{
   font-size:15px;
-  font-weight:700;
 }
 
 .founder-head p{
@@ -1147,7 +1125,6 @@ html[data-theme="dark"] .notice-inner{
 
 .founder-links a{
   display:flex;
-  align-items:center;
   justify-content:space-between;
   padding:7px 9px;
   border:1px solid var(--border);
@@ -1158,34 +1135,6 @@ html[data-theme="dark"] .notice-inner{
   font-weight:600;
 }
 
-.explore-link{
-  display:block;
-  padding:8px 0;
-  border-bottom:1px solid var(--border);
-}
-
-.explore-link:last-child{
-  border-bottom:none;
-}
-
-.explore-link small{
-  color:var(--accent);
-  font-size:9.5px;
-  font-weight:650;
-}
-
-.explore-link h3{
-  margin-top:2px;
-  font-size:13px;
-  font-weight:700;
-}
-
-.explore-link p{
-  margin-top:1px;
-  color:var(--muted);
-  font-size:10px;
-}
-
 /* DRAWERS */
 
 .backdrop{
@@ -1193,7 +1142,7 @@ html[data-theme="dark"] .notice-inner{
   inset:0;
   z-index:1400;
   display:none;
-  background:rgba(0,0,0,.48);
+  background:rgba(0,0,0,.49);
 }
 
 .backdrop.show{
@@ -1210,9 +1159,9 @@ html[data-theme="dark"] .notice-inner{
   height:100vh;
   padding:16px;
   overflow:auto;
-  background:var(--sidebar-bg);
+  background:var(--drawer-bg);
   border-right:1px solid var(--border);
-  box-shadow:16px 0 42px rgba(0,0,0,.30);
+  box-shadow:16px 0 42px rgba(0,0,0,.31);
   transition:left .25s ease;
 }
 
@@ -1220,7 +1169,8 @@ html[data-theme="dark"] .notice-inner{
   left:0;
 }
 
-.drawer-head{
+.drawer-head,
+.account-head{
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
@@ -1228,18 +1178,13 @@ html[data-theme="dark"] .notice-inner{
   margin-bottom:12px;
 }
 
-.drawer-brand{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
+.drawer-brand span,
+.account-logo{
+  font-size:40px;
 }
 
-.drawer-brand span{
-  font-size:38px;
-  line-height:1;
-}
-
-.drawer-brand h2{
+.drawer-brand h2,
+.account-head h2{
   font-size:24px;
   font-weight:700;
   text-shadow:var(--glow);
@@ -1263,9 +1208,9 @@ html[data-theme="dark"] .notice-inner{
   height:100vh;
   padding:17px 16px;
   overflow:auto;
-  background:var(--sidebar-bg);
+  background:var(--drawer-bg);
   border-left:1px solid var(--border);
-  box-shadow:-16px 0 42px rgba(0,0,0,.30);
+  box-shadow:-16px 0 42px rgba(0,0,0,.31);
   transition:right .25s ease;
 }
 
@@ -1275,22 +1220,6 @@ html[data-theme="dark"] .notice-inner{
 
 .account-logo{
   text-align:center;
-  font-size:47px;
-  line-height:1;
-}
-
-.account-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.account-head h2{
-  font-size:24px;
-  font-weight:700;
-  text-shadow:var(--glow);
 }
 
 .account-user{
@@ -1312,7 +1241,6 @@ html[data-theme="dark"] .notice-inner{
 
 .account-user h3{
   font-size:16px;
-  font-weight:700;
 }
 
 .account-user p{
@@ -1335,17 +1263,10 @@ html[data-theme="dark"] .notice-inner{
   background:var(--surface);
   color:var(--text);
   display:flex;
-  align-items:center;
   justify-content:space-between;
   font-size:13px;
   font-weight:600;
   cursor:pointer;
-}
-
-.account-menu a:hover,
-.account-menu button:hover{
-  background:var(--accent-soft);
-  color:var(--accent);
 }
 
 .favorite-author-box,
@@ -1360,13 +1281,14 @@ html[data-theme="dark"] .notice-inner{
 .favorite-author-box h3,
 .memory-box h3{
   font-size:17px;
-  font-weight:700;
 }
 
-.favorite-author-box p{
-  margin-top:3px;
+.favorite-author-box p,
+.memory-empty,
+.favorite-empty{
+  margin-top:4px;
   color:var(--muted);
-  font-size:10.5px;
+  font-size:11px;
 }
 
 .favorite-search{
@@ -1379,31 +1301,32 @@ html[data-theme="dark"] .notice-inner{
   flex:1;
   min-width:0;
   height:38px;
+  padding:0 10px;
   border:1px solid var(--border);
   border-radius:10px;
   background:var(--surface-2);
   color:var(--text);
-  padding:0 10px;
   outline:none;
-  font-size:12px;
 }
 
 .favorite-search button{
-  height:38px;
-  padding:0 11px;
   border:none;
   border-radius:10px;
+  padding:0 11px;
   background:var(--accent);
   color:#fff;
-  font-size:11px;
-  font-weight:650;
   cursor:pointer;
+}
+
+.favorite-results,
+.favorite-list{
+  display:grid;
+  gap:6px;
+  margin-top:8px;
 }
 
 .favorite-results{
   display:none;
-  gap:6px;
-  margin-top:8px;
 }
 
 .favorite-results.show{
@@ -1420,12 +1343,7 @@ html[data-theme="dark"] .notice-inner{
   border:1px solid var(--border);
   border-radius:9px;
   background:var(--surface-2);
-}
-
-.favorite-result span,
-.favorite-item a{
   font-size:11.5px;
-  font-weight:600;
 }
 
 .favorite-result button{
@@ -1434,21 +1352,7 @@ html[data-theme="dark"] .notice-inner{
   padding:5px 9px;
   background:var(--accent);
   color:#fff;
-  font-size:9.5px;
   cursor:pointer;
-}
-
-.favorite-list{
-  display:grid;
-  gap:6px;
-  margin-top:9px;
-}
-
-.favorite-empty,
-.memory-empty{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:11px;
 }
 
 .favorite-item button{
@@ -1456,7 +1360,6 @@ html[data-theme="dark"] .notice-inner{
   background:transparent;
   color:var(--red);
   cursor:pointer;
-  font-size:13px;
 }
 
 .memory-item{
@@ -1465,20 +1368,13 @@ html[data-theme="dark"] .notice-inner{
   border-bottom:1px solid var(--border);
 }
 
-.memory-item:last-child{
-  border-bottom:none;
-}
-
 .memory-item small{
   color:var(--accent);
   font-size:9.5px;
-  font-weight:650;
 }
 
 .memory-item p{
-  margin-top:1px;
   font-size:11.5px;
-  font-weight:600;
 }
 
 /* FOOTER */
@@ -1488,7 +1384,6 @@ html[data-theme="dark"] .notice-inner{
   margin:0 auto;
   padding:16px 20px;
   display:flex;
-  align-items:center;
   justify-content:space-between;
   gap:14px;
   background:var(--accent);
@@ -1502,10 +1397,6 @@ html[data-theme="dark"] .notice-inner{
   gap:12px;
 }
 
-.site-footer a{
-  font-weight:600;
-}
-
 .to-top{
   position:fixed;
   right:18px;
@@ -1514,19 +1405,16 @@ html[data-theme="dark"] .notice-inner{
   width:42px;
   height:42px;
   display:none;
-  align-items:center;
-  justify-content:center;
   border:none;
   border-radius:50%;
   background:var(--accent);
   color:#fff;
   font-size:20px;
   cursor:pointer;
-  box-shadow:0 8px 24px rgba(0,0,0,.25);
 }
 
 .to-top.show{
-  display:flex;
+  display:block;
 }
 
 .toast{
@@ -1543,8 +1431,6 @@ html[data-theme="dark"] .notice-inner{
   color:#fff;
   text-align:center;
   font-size:12px;
-  font-weight:600;
-  box-shadow:0 8px 25px rgba(0,0,0,.28);
 }
 
 /* RESPONSIVE */
@@ -1555,12 +1441,12 @@ html[data-theme="dark"] .notice-inner{
     padding:13px 20px;
   }
 
-  .brand-copy h1{
-    font-size:28px;
+  .brand-leaf{
+    font-size:49px;
   }
 
-  .brand-leaf{
-    font-size:51px;
+  .brand-copy h1{
+    font-size:27px;
   }
 
   .header-date-pill,
@@ -1581,28 +1467,32 @@ html[data-theme="dark"] .notice-inner{
 
 @media(max-width:940px){
   :root{
-    --header-h:66px;
-    --date-h:78px;
+    --header-h:116px;
+    --ticker-h:38px;
     --nav-h:48px;
   }
 
   .topbar{
     min-height:var(--header-h);
     padding:8px 11px;
+    display:grid;
     grid-template-columns:minmax(0,1fr) auto;
-    background:rgba(2,13,34,.98);
+    grid-template-rows:58px 42px;
+    background:rgba(2,13,34,.99);
   }
 
   .header-left{
-    gap:6px;
+    gap:5px;
   }
 
   .menu-btn{
-    display:flex;
-    width:36px;
-    height:36px;
+    display:block;
     color:#fff;
     font-size:26px;
+  }
+
+  .brand{
+    gap:7px;
   }
 
   .brand-leaf{
@@ -1611,48 +1501,70 @@ html[data-theme="dark"] .notice-inner{
 
   .brand-copy h1{
     color:#fff;
-    font-size:21px;
+    font-size:20px;
   }
 
-  .brand-copy p,
-  .header-search{
-    display:none;
+  .brand-copy p{
+    display:block;
+    max-width:215px;
+    color:#adc6e7;
+    font-size:8.8px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .header-actions{
+    gap:5px;
   }
 
   .header-actions .notification-btn,
   .header-actions .message-btn{
-    display:none;
+    display:flex;
   }
 
   .header-icon{
-    width:37px;
-    height:37px;
+    width:34px;
+    height:34px;
+    flex-basis:34px;
     background:rgba(255,255,255,.06);
     color:#fff;
+    font-size:14px;
   }
 
   .avatar-btn img{
-    width:39px;
-    height:39px;
+    width:38px;
+    height:38px;
   }
 
-  .global-date-bar{
-    min-height:var(--date-h);
-    padding:7px 12px;
-    display:grid;
-    grid-template-columns:1fr;
-    gap:2px;
-    justify-items:center;
+  .header-search{
+    grid-column:1 / 3;
+    grid-row:2;
+  }
+
+  .header-search input{
+    height:38px;
+    padding-left:43px;
+    font-size:11.5px;
+  }
+
+  .header-search::before{
+    left:15px;
+    font-size:20px;
+  }
+
+  .header-search button{
+    width:30px;
+    height:30px;
+  }
+
+  .ticker-group{
+    min-width:100vw;
+    padding:0 25px;
+    gap:45px;
     font-size:10.5px;
-    line-height:1.45;
-  }
-
-  .global-date-bar .date-dot{
-    display:none;
   }
 
   .category-inner{
-    min-height:var(--nav-h);
     padding:0 12px;
     gap:22px;
   }
@@ -1668,7 +1580,6 @@ html[data-theme="dark"] .notice-inner{
 
   .notice-inner{
     grid-template-columns:auto minmax(0,1fr);
-    padding:7px 9px;
   }
 
   .notice-links{
@@ -1706,22 +1617,25 @@ html[data-theme="dark"] .notice-inner{
 
 @media(max-width:560px){
   :root{
-    --date-h:84px;
+    --header-h:112px;
   }
 
   .brand-copy h1{
-    font-size:19px;
+    font-size:18px;
   }
 
-  .header-actions .header-icon{
+  .brand-copy p{
+    max-width:180px;
+    font-size:8px;
+  }
+
+  .header-actions .theme-header-btn{
     display:none;
   }
 
-  .global-date-bar{
-    align-items:start;
-    justify-items:start;
-    text-align:left;
-    padding-left:16px;
+  .ticker-group{
+    gap:35px;
+    font-size:10px;
   }
 
   .notice-text{
@@ -1731,10 +1645,6 @@ html[data-theme="dark"] .notice-inner{
   .notice-links a{
     padding:4px 7px;
     font-size:9px;
-  }
-
-  .welcome-card{
-    padding:12px;
   }
 
   .welcome-copy h2{
@@ -1748,11 +1658,6 @@ html[data-theme="dark"] .notice-inner{
   .quick-action{
     min-height:35px;
     font-size:10px;
-    padding:6px 9px;
-  }
-
-  .post-card{
-    padding:12px;
   }
 
   .post-title{
@@ -1761,10 +1666,6 @@ html[data-theme="dark"] .notice-inner{
 
   .post-text{
     font-size:13.5px;
-  }
-
-  .post-actions{
-    gap:12px;
   }
 
   .comment-form{
@@ -1787,9 +1688,7 @@ html[data-theme="dark"] .notice-inner{
 
   <div class="header-left">
 
-    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">
-      ☰
-    </button>
+    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">☰</button>
 
     <a href="index.html" class="brand">
       <span class="brand-leaf">🌿</span>
@@ -1806,7 +1705,7 @@ html[data-theme="dark"] .notice-inner{
     <input
       id="headerSearchInput"
       type="search"
-      placeholder="খুঁজুন কবিতা, কবি, বিষয়, হ্যাশট্যাগ..."
+      placeholder="কবিতা, কবি, বিষয় অথবা হ্যাশট্যাগ খুঁজুন..."
     >
     <button id="headerSearchButton" aria-label="সার্চ">⌕</button>
   </div>
@@ -1818,26 +1717,28 @@ html[data-theme="dark"] .notice-inner{
       <span id="headerDateText">তারিখ লোড হচ্ছে...</span>
     </div>
 
-    <button
+    <a
+      href="notifications.html"
       class="header-icon notification-btn"
-      onclick="showToast('নোটিফিকেশন সুবিধাটি backend যুক্ত হলে live হবে।')"
       aria-label="নোটিফিকেশন"
+      title="নোটিফিকেশন"
     >
       🔔
       <span class="header-badge">৩</span>
-    </button>
+    </a>
 
-    <button
+    <a
+      href="messages.html"
       class="header-icon message-btn"
-      onclick="showToast('বার্তালাপ সুবিধাটি backend যুক্ত হলে live হবে।')"
-      aria-label="বার্তালাপ"
+      aria-label="বার্তা"
+      title="বার্তা"
     >
       💬
       <span class="header-badge">৬</span>
-    </button>
+    </a>
 
     <button
-      class="header-icon"
+      class="header-icon theme-header-btn"
       id="headerThemeBtn"
       aria-label="থিম পরিবর্তন"
     >
@@ -1848,38 +1749,67 @@ html[data-theme="dark"] .notice-inner{
       <img src="profile.jpg" alt="আপনার প্রোফাইল">
     </button>
 
-    <span class="profile-name">
-      আপনার প্রোফাইল
-      <span>⌄</span>
-    </span>
+    <span class="profile-name">আপনার প্রোফাইল⌄</span>
 
   </div>
 
 </header>
 
-<div class="global-date-bar">
+<section class="date-ticker" aria-label="আজকের তারিখ">
 
-  <span class="date-part">
-    <span>📅</span>
-    <span class="date-label">বাংলা:</span>
-    <span id="banglaDateText">তারিখ লোড হচ্ছে...</span>
-  </span>
+  <div class="ticker-track">
 
-  <span class="date-dot">•</span>
+    <div class="ticker-group">
 
-  <span class="date-part">
-    <span class="date-label">ইংরেজি:</span>
-    <span id="englishDateText">তারিখ লোড হচ্ছে...</span>
-  </span>
+      <span class="ticker-item">
+        📅
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
 
-  <span class="date-dot">•</span>
+      <span class="ticker-dot">✦</span>
 
-  <span class="date-part">
-    <span class="date-label">আরবি:</span>
-    <span id="arabicDateText">তারিখ লোড হচ্ছে...</span>
-  </span>
+      <span class="ticker-item">
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
 
-</div>
+      <span class="ticker-dot">✦</span>
+
+      <span class="ticker-item">
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+    </div>
+
+    <div class="ticker-group" aria-hidden="true">
+
+      <span class="ticker-item">
+        📅
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span class="ticker-item">
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span class="ticker-item">
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker">তারিখ লোড হচ্ছে...</span>
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
 
 <nav class="category-nav">
   <div class="category-inner">
@@ -1927,8 +1857,6 @@ html[data-theme="dark"] .notice-inner{
     <button class="close-btn" id="closeDrawer">×</button>
   </div>
 
-  <div class="side-date" id="mobileDate">তারিখ লোড হচ্ছে...</div>
-
   <div class="side-menu">
 
     <a href="profile.html">
@@ -1951,6 +1879,22 @@ html[data-theme="dark"] .notice-inner{
         <span class="side-icon">＋</span>
         প্রিয় লেখক যোগ করুন
       </span>
+    </a>
+
+    <a href="notifications.html">
+      <span class="side-left">
+        <span class="side-icon">🔔</span>
+        নোটিফিকেশন
+      </span>
+      <span class="side-tag">৩</span>
+    </a>
+
+    <a href="messages.html">
+      <span class="side-left">
+        <span class="side-icon">💬</span>
+        বার্তাসমূহ
+      </span>
+      <span class="side-tag">৬</span>
     </a>
 
     <a href="today-poem.html?type=poem">
@@ -1981,13 +1925,6 @@ html[data-theme="dark"] .notice-inner{
       </span>
     </a>
 
-    <a href="today-poem.html?type=environment">
-      <span class="side-left">
-        <span class="side-icon">🌿</span>
-        পরিবেশ পরামর্শ
-      </span>
-    </a>
-
     <a href="recitation.html">
       <span class="side-left">
         <span class="side-icon">🎙</span>
@@ -1999,13 +1936,6 @@ html[data-theme="dark"] .notice-inner{
       <span class="side-left">
         <span class="side-icon">🎤</span>
         আবৃত্তি জমা দিন
-      </span>
-    </a>
-
-    <a href="today-poem.html">
-      <span class="side-left">
-        <span class="side-icon">🕊</span>
-        সাম্প্রতিক লেখা
       </span>
     </a>
 
@@ -2124,6 +2054,16 @@ html[data-theme="dark"] .notice-inner{
       <span>›</span>
     </a>
 
+    <a href="messages.html">
+      বার্তাসমূহ
+      <span>৬</span>
+    </a>
+
+    <a href="notifications.html">
+      নোটিফিকেশন
+      <span>৩</span>
+    </a>
+
     <a href="favorite-authors.html">
       প্রিয় লেখক খুঁজুন
       <span>›</span>
@@ -2149,23 +2089,8 @@ html[data-theme="dark"] .notice-inner{
       <span>›</span>
     </a>
 
-    <a href="famous-poet.html">
-      খ্যাতিমান কবি
-      <span>›</span>
-    </a>
-
-    <a href="famous-quotes.html">
-      বিখ্যাত মনীষীদের বাণী
-      <span>›</span>
-    </a>
-
     <a href="humanitarian-request.html">
       মানবিক আবেদন করুন
-      <span>›</span>
-    </a>
-
-    <a href="policy.html">
-      নীতিমালা
       <span>›</span>
     </a>
 
@@ -2174,16 +2099,14 @@ html[data-theme="dark"] .notice-inner{
       <span id="accountThemeIcon">🌙</span>
     </button>
 
-    <button class="logout-btn" id="logoutBtn">
-      Log out
-    </button>
+    <button id="logoutBtn">Log out</button>
 
   </div>
 
   <section class="favorite-author-box" id="favoriteAuthorBox">
 
     <h3>প্রিয় লেখক</h3>
-    <p>লেখকের নাম খুঁজে আপনার পছন্দের তালিকায় যোগ করুন।</p>
+    <p>লেখকের নাম খুঁজে আপনার তালিকায় যোগ করুন।</p>
 
     <div class="favorite-search">
       <input
@@ -2202,15 +2125,12 @@ html[data-theme="dark"] .notice-inner{
 
   </section>
 
-  <div class="memory-box">
+  <section class="memory-box">
     <h3>মেমোরিস</h3>
-
     <div id="memoryList">
-      <p class="memory-empty">
-        আপনি যে লেখা সংরক্ষণ করবেন, সেগুলো এখানে থাকবে।
-      </p>
+      <p class="memory-empty">সংরক্ষিত লেখাগুলো এখানে থাকবে।</p>
     </div>
-  </div>
+  </section>
 
 </aside>
 
@@ -2222,10 +2142,6 @@ html[data-theme="dark"] .notice-inner{
       <span>🌿</span>
       <h2>আপন ভুবন</h2>
     </a>
-
-    <div class="side-date" id="desktopDate">
-      তারিখ লোড হচ্ছে...
-    </div>
 
     <div class="side-menu">
 
@@ -2249,6 +2165,22 @@ html[data-theme="dark"] .notice-inner{
           <span class="side-icon">＋</span>
           প্রিয় লেখক যোগ করুন
         </span>
+      </a>
+
+      <a href="notifications.html">
+        <span class="side-left">
+          <span class="side-icon">🔔</span>
+          নোটিফিকেশন
+        </span>
+        <span class="side-tag">৩</span>
+      </a>
+
+      <a href="messages.html">
+        <span class="side-left">
+          <span class="side-icon">💬</span>
+          বার্তাসমূহ
+        </span>
+        <span class="side-tag">৬</span>
       </a>
 
       <a href="today-poem.html?type=poem">
@@ -2279,13 +2211,6 @@ html[data-theme="dark"] .notice-inner{
         </span>
       </a>
 
-      <a href="today-poem.html?type=environment">
-        <span class="side-left">
-          <span class="side-icon">🌿</span>
-          পরিবেশ পরামর্শ
-        </span>
-      </a>
-
       <a href="recitation.html">
         <span class="side-left">
           <span class="side-icon">🎙</span>
@@ -2297,13 +2222,6 @@ html[data-theme="dark"] .notice-inner{
         <span class="side-left">
           <span class="side-icon">🎤</span>
           আবৃত্তি জমা দিন
-        </span>
-      </a>
-
-      <a href="today-poem.html">
-        <span class="side-left">
-          <span class="side-icon">🕊</span>
-          সাম্প্রতিক লেখা
         </span>
       </a>
 
@@ -2409,38 +2327,31 @@ html[data-theme="dark"] .notice-inner{
       <div class="quick-actions">
 
         <a href="submit-poem.html" class="quick-action">
-          <span>✎</span>
-          কবিতা লিখুন
+          ✎ কবিতা লিখুন
         </a>
 
         <a href="submit-poem.html" class="quick-action">
-          <span>➤</span>
-          কবিতা জমা দিন
+          ➤ কবিতা জমা দিন
         </a>
 
         <a href="submit-prolap.html" class="quick-action">
-          <span>💬</span>
-          প্রলাপ লিখুন
+          💬 প্রলাপ লিখুন
         </a>
 
         <a href="submit-letter.html" class="quick-action">
-          <span>✉</span>
-          চিঠি লিখুন
+          ✉ চিঠি লিখুন
         </a>
 
         <a href="today-poem.html?type=poem" class="quick-action">
-          <span>📖</span>
-          কবিতা পড়ুন
+          📖 কবিতা পড়ুন
         </a>
 
         <a href="recitation.html" class="quick-action">
-          <span>🎙</span>
-          আবৃত্তি শুনুন
+          🎙 আবৃত্তি শুনুন
         </a>
 
         <a href="submit-recitation.html" class="quick-action">
-          <span>⇧</span>
-          আবৃত্তি জমা দিন
+          ⇧ আবৃত্তি জমা দিন
         </a>
 
       </div>
@@ -2479,25 +2390,25 @@ html[data-theme="dark"] .notice-inner{
 
       <div class="notice-board-head">
         <h2>📌 নোটিস বোর্ড</h2>
-        <p>Daily update by founder/admin</p>
+        <p>Founder/Admin কর্তৃক যাচাইকৃত আবেদন</p>
       </div>
 
       <article class="notice-item red">
         <h3>🩸 রক্তের আবেদন</h3>
         <p>বর্তমানে কোনো যাচাইকৃত সক্রিয় রক্তের আবেদন নেই।</p>
-        <a href="humanitarian-notice.html">— বিস্তারিত দেখুন</a>
+        <a href="humanitarian-notice.html">বিস্তারিত দেখুন</a>
       </article>
 
       <article class="notice-item gold">
         <h3>🤝 মানবিক সহায়তা</h3>
-        <p>যাচাইকৃত আবেদন Founder/Admin অনুমোদনের পর প্রকাশিত হবে।</p>
-        <a href="humanitarian-request.html">— আবেদন করুন</a>
+        <p>অনুমোদিত আবেদন এখানে প্রকাশিত হবে।</p>
+        <a href="humanitarian-request.html">আবেদন করুন</a>
       </article>
 
       <article class="notice-item green">
         <h3>🩺 চিকিৎসা সহায়তা</h3>
-        <p>চিকিৎসাসংক্রান্ত আবেদন তথ্য যাচাইয়ের পর বোর্ডে প্রকাশ করা হবে।</p>
-        <a href="humanitarian-notice.html">— বিস্তারিত দেখুন</a>
+        <p>চিকিৎসাসংক্রান্ত আবেদন যাচাইয়ের পর প্রকাশ করা হবে।</p>
+        <a href="humanitarian-notice.html">বিস্তারিত দেখুন</a>
       </article>
 
       <div class="board-buttons">
@@ -2507,7 +2418,7 @@ html[data-theme="dark"] .notice-inner{
 
     </section>
 
-    <section class="card right-card founder-card">
+    <section class="card right-card">
 
       <div class="founder-head">
         <img src="profile.jpg" alt="মাহমুদ সোহেল">
@@ -2519,47 +2430,10 @@ html[data-theme="dark"] .notice-inner{
       </div>
 
       <div class="founder-links">
-
-        <a href="founder-profile.html">
-          ফাউন্ডার প্রোফাইল
-          <span>›</span>
-        </a>
-
-        <a href="madhyorater-prolap.html">
-          মধ্যরাতের প্রলাপ
-          <span>›</span>
-        </a>
-
-        <a href="founder-profile.html#posts">
-          ফাউন্ডারের লেখা
-          <span>›</span>
-        </a>
-
+        <a href="founder-profile.html">ফাউন্ডার প্রোফাইল <span>›</span></a>
+        <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ <span>›</span></a>
+        <a href="founder-profile.html#posts">ফাউন্ডারের লেখা <span>›</span></a>
       </div>
-
-    </section>
-
-    <section class="card right-card">
-
-      <h3 class="right-title">অন্বেষণ করুন</h3>
-
-      <a href="famous-poet.html" class="explore-link">
-        <small>নির্বাচিত কবি</small>
-        <h3>খ্যাতিমান কবিদের প্রোফাইল</h3>
-        <p>জীবনী, দেশ, সময়কাল ও উল্লেখযোগ্য রচনা।</p>
-      </a>
-
-      <a href="famous-quotes.html" class="explore-link">
-        <small>বিশ্ববিখ্যাত মনীষী</small>
-        <h3>বিখ্যাত মনীষীদের বাণী</h3>
-        <p>দার্শনিক, বিজ্ঞানী, সুফি ও বাংলা মনীষী।</p>
-      </a>
-
-      <a href="recitation.html" class="explore-link">
-        <small>কণ্ঠে সাহিত্য</small>
-        <h3>আবৃত্তি শুনুন</h3>
-        <p>কবিতা ও সৃজনশীল লেখার নির্বাচিত আবৃত্তি।</p>
-      </a>
 
     </section>
 
@@ -2578,7 +2452,7 @@ html[data-theme="dark"] .notice-inner{
     <a href="index.html">হোম</a>
     <a href="famous-poet.html">খ্যাতিমান কবি</a>
     <a href="famous-quotes.html">মনীষীদের বাণী</a>
-    <a href="about.html">আমাদের সম্পর্কে</a>
+    <a href="messages.html">বার্তা</a>
     <a href="contact.html">যোগাযোগ</a>
     <a href="policy.html">নীতিমালা</a>
   </div>
@@ -2593,10 +2467,10 @@ html[data-theme="dark"] .notice-inner{
 <script>
 const htmlRoot = document.documentElement;
 
-const savedTheme =
-  localStorage.getItem("bhubondangaTheme") || "dark";
-
-htmlRoot.setAttribute("data-theme",savedTheme);
+htmlRoot.setAttribute(
+  "data-theme",
+  localStorage.getItem("bhubondangaTheme") || "dark"
+);
 
 const bnDigits = {
   "0":"\u09E6",
@@ -2619,31 +2493,6 @@ function toBn(value){
 
 /* DATE */
 
-const weekBn = [
-  "রবিবার",
-  "সোমবার",
-  "মঙ্গলবার",
-  "বুধবার",
-  "বৃহস্পতিবার",
-  "শুক্রবার",
-  "শনিবার"
-];
-
-const englishMonthsBn = [
-  "জানুয়ারি",
-  "ফেব্রুয়ারি",
-  "মার্চ",
-  "এপ্রিল",
-  "মে",
-  "জুন",
-  "জুলাই",
-  "আগস্ট",
-  "সেপ্টেম্বর",
-  "অক্টোবর",
-  "নভেম্বর",
-  "ডিসেম্বর"
-];
-
 const banglaMonths = [
   "বৈশাখ",
   "জ্যৈষ্ঠ",
@@ -2659,7 +2508,32 @@ const banglaMonths = [
   "চৈত্র"
 ];
 
-const hijriMonthsBn = [
+const englishMonths = [
+  "জানুয়ারি",
+  "ফেব্রুয়ারি",
+  "মার্চ",
+  "এপ্রিল",
+  "মে",
+  "জুন",
+  "জুলাই",
+  "আগস্ট",
+  "সেপ্টেম্বর",
+  "অক্টোবর",
+  "নভেম্বর",
+  "ডিসেম্বর"
+];
+
+const weekDays = [
+  "রবিবার",
+  "সোমবার",
+  "মঙ্গলবার",
+  "বুধবার",
+  "বৃহস্পতিবার",
+  "শুক্রবার",
+  "শনিবার"
+];
+
+const hijriMonths = [
   "মুহাররম",
   "সফর",
   "রবিউল আউয়াল",
@@ -2674,39 +2548,86 @@ const hijriMonthsBn = [
   "জিলহজ"
 ];
 
-function getBanglaDate(date){
-  try{
-    const formatter = new Intl.DateTimeFormat(
-      "bn-BD-u-ca-beng",
-      {
-        weekday:"long",
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    );
+function isGregorianLeapYear(year){
+  return (
+    year % 400 === 0 ||
+    (year % 4 === 0 && year % 100 !== 0)
+  );
+}
 
-    return formatter.format(date);
-  }catch(error){
-    return date.toLocaleDateString(
-      "bn-BD",
-      {
-        weekday:"long",
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    );
+function getBanglaDate(date){
+  const year = date.getFullYear();
+
+  const pohelaBoishakh =
+    new Date(year,3,14,0,0,0,0);
+
+  let banglaYear;
+  let startDate;
+
+  if(date >= pohelaBoishakh){
+    banglaYear = year - 593;
+    startDate = pohelaBoishakh;
+  }else{
+    banglaYear = year - 594;
+    startDate = new Date(year - 1,3,14,0,0,0,0);
   }
+
+  const oneDay = 24 * 60 * 60 * 1000;
+
+  let passedDays = Math.floor(
+    (
+      new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      ) - startDate
+    ) / oneDay
+  );
+
+  const banglaMonthLengths = [
+    31,
+    31,
+    31,
+    31,
+    31,
+    30,
+    30,
+    30,
+    30,
+    30,
+    isGregorianLeapYear(startDate.getFullYear() + 1)
+      ? 30
+      : 29,
+    30
+  ];
+
+  let monthIndex = 0;
+
+  while(
+    monthIndex < banglaMonthLengths.length - 1 &&
+    passedDays >= banglaMonthLengths[monthIndex]
+  ){
+    passedDays -= banglaMonthLengths[monthIndex];
+    monthIndex++;
+  }
+
+  return (
+    toBn(passedDays + 1) +
+    " " +
+    banglaMonths[monthIndex] +
+    " " +
+    toBn(banglaYear) +
+    " বঙ্গাব্দ"
+  );
 }
 
 function getEnglishDate(date){
   return (
-    weekBn[date.getDay()] +
+    weekDays[date.getDay()] +
     ", " +
     toBn(date.getDate()) +
     " " +
-    englishMonthsBn[date.getMonth()] +
+    englishMonths[date.getMonth()] +
     " " +
     toBn(date.getFullYear()) +
     " খ্রিষ্টাব্দ"
@@ -2715,14 +2636,15 @@ function getEnglishDate(date){
 
 function getHijriDate(date){
   try{
-    const parts = new Intl.DateTimeFormat(
-      "en-US-u-ca-islamic",
-      {
-        day:"numeric",
-        month:"numeric",
-        year:"numeric"
-      }
-    ).formatToParts(date);
+    const parts =
+      new Intl.DateTimeFormat(
+        "en-US-u-ca-islamic",
+        {
+          day:"numeric",
+          month:"numeric",
+          year:"numeric"
+        }
+      ).formatToParts(date);
 
     let day = "";
     let month = "";
@@ -2742,15 +2664,16 @@ function getHijriDate(date){
       }
     });
 
-    const monthIndex = Math.max(
-      0,
-      Math.min(11,Number(month) - 1)
-    );
+    const monthIndex =
+      Math.max(
+        0,
+        Math.min(11,Number(month) - 1)
+      );
 
     return (
       toBn(day) +
       " " +
-      hijriMonthsBn[monthIndex] +
+      hijriMonths[monthIndex] +
       " " +
       toBn(year) +
       " হিজরি"
@@ -2767,31 +2690,30 @@ function renderDate(){
   const englishDate = getEnglishDate(today);
   const arabicDate = getHijriDate(today);
 
-  document.getElementById("banglaDateText").innerText =
-    banglaDate;
+  document
+    .querySelectorAll(".banglaDateTicker")
+    .forEach(function(element){
+      element.innerText = banglaDate;
+    });
 
-  document.getElementById("englishDateText").innerText =
-    englishDate;
+  document
+    .querySelectorAll(".englishDateTicker")
+    .forEach(function(element){
+      element.innerText = englishDate;
+    });
 
-  document.getElementById("arabicDateText").innerText =
-    arabicDate;
+  document
+    .querySelectorAll(".arabicDateTicker")
+    .forEach(function(element){
+      element.innerText = arabicDate;
+    });
 
-  const fullDateText =
-    "বাংলা: " +
-    banglaDate +
-    " • ইংরেজি: " +
-    englishDate +
-    " • আরবি: " +
-    arabicDate;
+  const headerDateText =
+    document.getElementById("headerDateText");
 
-  document.getElementById("desktopDate").innerText =
-    fullDateText;
-
-  document.getElementById("mobileDate").innerText =
-    fullDateText;
-
-  document.getElementById("headerDateText").innerText =
-    englishDate;
+  if(headerDateText){
+    headerDateText.innerText = englishDate;
+  }
 
   document.getElementById("footerYear").innerText =
     toBn(today.getFullYear());
@@ -2814,61 +2736,70 @@ function showToast(message){
   },3000);
 }
 
-/* DRAWER */
+/* DRAWERS */
 
-const menuBtn = document.getElementById("menuBtn");
-const mobileDrawer = document.getElementById("mobileDrawer");
-const drawerBackdrop = document.getElementById("drawerBackdrop");
-const closeDrawer = document.getElementById("closeDrawer");
+const mobileDrawer =
+  document.getElementById("mobileDrawer");
 
-function openDrawer(){
-  mobileDrawer.classList.add("open");
-  drawerBackdrop.classList.add("show");
-  document.body.style.overflow = "hidden";
-}
+const drawerBackdrop =
+  document.getElementById("drawerBackdrop");
 
-function closeDrawerPanel(){
+function closeDrawer(){
   mobileDrawer.classList.remove("open");
   drawerBackdrop.classList.remove("show");
   document.body.style.overflow = "";
 }
 
-menuBtn.addEventListener("click",openDrawer);
-closeDrawer.addEventListener("click",closeDrawerPanel);
-drawerBackdrop.addEventListener("click",closeDrawerPanel);
+document
+  .getElementById("menuBtn")
+  .addEventListener("click",function(){
+    mobileDrawer.classList.add("open");
+    drawerBackdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+  });
 
-/* ACCOUNT */
+document
+  .getElementById("closeDrawer")
+  .addEventListener("click",closeDrawer);
 
-const accountBtn = document.getElementById("accountBtn");
-const accountPanel = document.getElementById("accountPanel");
-const accountBackdrop = document.getElementById("accountBackdrop");
-const closeAccount = document.getElementById("closeAccount");
+drawerBackdrop.addEventListener("click",closeDrawer);
 
-function openAccount(){
-  accountPanel.classList.add("open");
-  accountBackdrop.classList.add("show");
-  document.body.style.overflow = "hidden";
+const accountPanel =
+  document.getElementById("accountPanel");
 
-  renderMemories();
-  renderFavoriteAuthors();
-}
+const accountBackdrop =
+  document.getElementById("accountBackdrop");
 
-function closeAccountPanel(){
+function closeAccount(){
   accountPanel.classList.remove("open");
   accountBackdrop.classList.remove("show");
   document.body.style.overflow = "";
 }
 
-accountBtn.addEventListener("click",openAccount);
-closeAccount.addEventListener("click",closeAccountPanel);
-accountBackdrop.addEventListener("click",closeAccountPanel);
+document
+  .getElementById("accountBtn")
+  .addEventListener("click",function(){
+    accountPanel.classList.add("open");
+    accountBackdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+
+    renderMemories();
+    renderFavoriteAuthors();
+  });
+
+document
+  .getElementById("closeAccount")
+  .addEventListener("click",closeAccount);
+
+accountBackdrop.addEventListener("click",closeAccount);
 
 /* THEME */
 
-const headerThemeBtn = document.getElementById("headerThemeBtn");
-const accountThemeBtn = document.getElementById("accountThemeBtn");
-const headerThemeIcon = document.getElementById("headerThemeIcon");
-const accountThemeIcon = document.getElementById("accountThemeIcon");
+const headerThemeIcon =
+  document.getElementById("headerThemeIcon");
+
+const accountThemeIcon =
+  document.getElementById("accountThemeIcon");
 
 function updateThemeIcons(){
   const dark =
@@ -2879,30 +2810,30 @@ function updateThemeIcons(){
 }
 
 function toggleTheme(){
-  const current =
-    htmlRoot.getAttribute("data-theme");
-
   const next =
-    current === "dark" ? "light" : "dark";
+    htmlRoot.getAttribute("data-theme") === "dark"
+      ? "light"
+      : "dark";
 
   htmlRoot.setAttribute("data-theme",next);
   localStorage.setItem("bhubondangaTheme",next);
-
   updateThemeIcons();
 }
 
-updateThemeIcons();
+document
+  .getElementById("headerThemeBtn")
+  .addEventListener("click",toggleTheme);
 
-headerThemeBtn.addEventListener("click",toggleTheme);
-accountThemeBtn.addEventListener("click",toggleTheme);
+document
+  .getElementById("accountThemeBtn")
+  .addEventListener("click",toggleTheme);
+
+updateThemeIcons();
 
 /* SEARCH */
 
 const headerSearchInput =
   document.getElementById("headerSearchInput");
-
-const headerSearchButton =
-  document.getElementById("headerSearchButton");
 
 function performSearch(){
   const query = headerSearchInput.value.trim();
@@ -2917,7 +2848,9 @@ function performSearch(){
     encodeURIComponent(query);
 }
 
-headerSearchButton.addEventListener("click",performSearch);
+document
+  .getElementById("headerSearchButton")
+  .addEventListener("click",performSearch);
 
 headerSearchInput.addEventListener("keydown",function(event){
   if(event.key === "Enter"){
@@ -2925,27 +2858,7 @@ headerSearchInput.addEventListener("keydown",function(event){
   }
 });
 
-document.addEventListener("keydown",function(event){
-  if(
-    (event.ctrlKey || event.metaKey) &&
-    event.key.toLowerCase() === "k"
-  ){
-    event.preventDefault();
-
-    if(window.innerWidth <= 940){
-      window.location.href = "search.html";
-    }else{
-      headerSearchInput.focus();
-    }
-  }
-
-  if(event.key === "Escape"){
-    closeDrawerPanel();
-    closeAccountPanel();
-  }
-});
-
-/* FEED DATA */
+/* FEED */
 
 const postTemplates = [
   {
@@ -2997,18 +2910,6 @@ const postTemplates = [
     comments:27
   },
   {
-    author:"মাহমুদ সোহেল",
-    profile:"founder-profile.html",
-    avatar:"profile.jpg",
-    type:"কবিতা",
-    category:"poem",
-    title:"যে পাখি ঘরে ফেরেনি",
-    text:"সন্ধ্যার পরে উঠোনে ছায়া নামে, শুধু একটি পাখির জন্য জানালাটা খোলা থাকে। কেউ জানে না সে পথ হারিয়েছে, নাকি আকাশকেই ঘর ভেবেছে।",
-    url:"founder-profile.html#posts",
-    likes:231,
-    comments:36
-  },
-  {
     author:"রুদ্র দত্ত",
     profile:"profile.html?user=rudra-dutta",
     avatar:"profile.jpg",
@@ -3024,7 +2925,7 @@ const postTemplates = [
 
 const allPosts = [];
 
-for(let index = 0; index < 48; index++){
+for(let index = 0; index < 45; index++){
   const template =
     postTemplates[index % postTemplates.length];
 
@@ -3043,8 +2944,8 @@ for(let index = 0; index < 48; index++){
           toBn(index + 1),
     text:template.text,
     url:template.url,
-    likes:template.likes + (index % 23),
-    comments:template.comments + (index % 8),
+    likes:template.likes + (index % 17),
+    comments:template.comments + (index % 7),
     time:
       index === 0
         ? "১ ঘণ্টা আগে"
@@ -3077,34 +2978,30 @@ function getMemories(){
   }
 }
 
-function saveMemories(memories){
+function saveMemories(items){
   localStorage.setItem(
     "bhubondangaMemories",
-    JSON.stringify(memories)
+    JSON.stringify(items)
   );
 }
 
-function isSaved(postId){
+function isSaved(id){
   return getMemories().some(function(item){
-    return item.id === postId;
+    return item.id === id;
   });
 }
 
 function toggleMemory(post){
-  let memories = getMemories();
+  let items = getMemories();
 
-  const exists = memories.some(function(item){
-    return item.id === post.id;
-  });
-
-  if(exists){
-    memories = memories.filter(function(item){
+  if(isSaved(post.id)){
+    items = items.filter(function(item){
       return item.id !== post.id;
     });
 
     showToast("মেমোরিস থেকে সরানো হয়েছে।");
   }else{
-    memories.unshift({
+    items.unshift({
       id:post.id,
       title:post.title,
       type:post.type,
@@ -3115,26 +3012,24 @@ function toggleMemory(post){
     showToast("মেমোরিসে সংরক্ষণ করা হয়েছে।");
   }
 
-  saveMemories(memories);
+  saveMemories(items);
   renderFeed();
   renderMemories();
 }
 
 function renderMemories(){
-  const memoryList =
-    document.getElementById("memoryList");
+  const list = document.getElementById("memoryList");
+  const items = getMemories();
 
-  const memories = getMemories();
-
-  if(memories.length === 0){
-    memoryList.innerHTML =
-      '<p class="memory-empty">আপনি যে লেখা সংরক্ষণ করবেন, সেগুলো এখানে থাকবে।</p>';
+  if(items.length === 0){
+    list.innerHTML =
+      '<p class="memory-empty">সংরক্ষিত লেখাগুলো এখানে থাকবে।</p>';
     return;
   }
 
-  memoryList.innerHTML = "";
+  list.innerHTML = "";
 
-  memories.slice(0,12).forEach(function(item){
+  items.slice(0,12).forEach(function(item){
     const link = document.createElement("a");
 
     link.className = "memory-item";
@@ -3150,7 +3045,7 @@ function renderMemories(){
       item.title +
       "</p>";
 
-    memoryList.appendChild(link);
+    list.appendChild(link);
   });
 }
 
@@ -3191,21 +3086,6 @@ const authorDirectory = [
     name:"সুফিয়া কামাল",
     slug:"sufia-kamal",
     url:"poet-details.html?poet=sufia-kamal"
-  },
-  {
-    name:"আল মাহমুদ",
-    slug:"al-mahmud",
-    url:"poet-details.html?poet=al-mahmud"
-  },
-  {
-    name:"জালালউদ্দিন রুমি",
-    slug:"jalaluddin-rumi",
-    url:"poet-details.html?poet=jalaluddin-rumi"
-  },
-  {
-    name:"মির্জা গালিব",
-    slug:"mirza-ghalib",
-    url:"poet-details.html?poet=mirza-ghalib"
   }
 ];
 
@@ -3226,42 +3106,13 @@ function saveFavoriteAuthors(items){
   );
 }
 
-function addFavoriteAuthor(author){
-  const current = getFavoriteAuthors();
-
-  const exists = current.some(function(item){
-    return item.slug === author.slug;
-  });
-
-  if(exists){
-    showToast("এই লেখক আগে থেকেই প্রিয় তালিকায় আছেন।");
-    return;
-  }
-
-  current.unshift(author);
-  saveFavoriteAuthors(current);
-  renderFavoriteAuthors();
-  renderFavoriteSearchResults([]);
-  showToast("প্রিয় লেখক তালিকায় যোগ করা হয়েছে।");
-}
-
-function removeFavoriteAuthor(slug){
-  const next = getFavoriteAuthors().filter(function(item){
-    return item.slug !== slug;
-  });
-
-  saveFavoriteAuthors(next);
-  renderFavoriteAuthors();
-  showToast("প্রিয় লেখক তালিকা থেকে সরানো হয়েছে।");
-}
-
 function renderFavoriteAuthors(){
   const list =
     document.getElementById("favoriteAuthorList");
 
-  const favorites = getFavoriteAuthors();
+  const items = getFavoriteAuthors();
 
-  if(favorites.length === 0){
+  if(items.length === 0){
     list.innerHTML =
       '<p class="favorite-empty">এখনো কোনো প্রিয় লেখক যোগ করা হয়নি।</p>';
     return;
@@ -3269,84 +3120,105 @@ function renderFavoriteAuthors(){
 
   list.innerHTML = "";
 
-  favorites.forEach(function(author){
+  items.forEach(function(author){
     const item = document.createElement("div");
     item.className = "favorite-item";
 
     item.innerHTML =
-      '<a href="' + author.url + '">' +
-        author.name +
-      '</a>' +
-      '<button aria-label="সরান">×</button>';
+      '<a href="' +
+      author.url +
+      '">' +
+      author.name +
+      '</a><button aria-label="সরান">×</button>';
 
-    item.querySelector("button").addEventListener(
-      "click",
-      function(){
-        removeFavoriteAuthor(author.slug);
-      }
-    );
+    item
+      .querySelector("button")
+      .addEventListener("click",function(){
+        saveFavoriteAuthors(
+          getFavoriteAuthors().filter(function(saved){
+            return saved.slug !== author.slug;
+          })
+        );
+
+        renderFavoriteAuthors();
+        showToast("প্রিয় লেখক তালিকা থেকে সরানো হয়েছে।");
+      });
 
     list.appendChild(item);
   });
 }
 
-function renderFavoriteSearchResults(results){
-  const container =
+function renderFavoriteResults(items){
+  const results =
     document.getElementById("favoriteResults");
 
-  container.innerHTML = "";
+  results.innerHTML = "";
 
-  if(results.length === 0){
-    container.classList.remove("show");
+  if(items.length === 0){
+    results.classList.remove("show");
     return;
   }
 
-  container.classList.add("show");
+  results.classList.add("show");
 
-  results.forEach(function(author){
+  items.forEach(function(author){
     const item = document.createElement("div");
     item.className = "favorite-result";
 
     item.innerHTML =
-      '<span>' + author.name + '</span>' +
-      '<button>যোগ করুন</button>';
+      "<span>" +
+      author.name +
+      "</span><button>যোগ করুন</button>";
 
-    item.querySelector("button").addEventListener(
-      "click",
-      function(){
-        addFavoriteAuthor(author);
-      }
-    );
+    item
+      .querySelector("button")
+      .addEventListener("click",function(){
+        const saved = getFavoriteAuthors();
 
-    container.appendChild(item);
+        if(
+          saved.some(function(current){
+            return current.slug === author.slug;
+          })
+        ){
+          showToast("এই লেখক আগে থেকেই তালিকায় আছেন।");
+          return;
+        }
+
+        saved.unshift(author);
+        saveFavoriteAuthors(saved);
+        renderFavoriteAuthors();
+        renderFavoriteResults([]);
+        showToast("প্রিয় লেখক তালিকায় যোগ করা হয়েছে।");
+      });
+
+    results.appendChild(item);
   });
 }
 
 function searchFavoriteAuthors(){
-  const input =
-    document.getElementById("favoriteAuthorInput");
-
-  const query = input.value.trim().toLocaleLowerCase("bn");
+  const query =
+    document
+      .getElementById("favoriteAuthorInput")
+      .value
+      .trim()
+      .toLocaleLowerCase("bn");
 
   if(!query){
     showToast("লেখকের নাম লিখুন।");
-    renderFavoriteSearchResults([]);
     return;
   }
 
-  const results = authorDirectory.filter(function(author){
+  const items = authorDirectory.filter(function(author){
     return author.name
       .toLocaleLowerCase("bn")
       .includes(query);
   });
 
-  if(results.length === 0){
+  if(items.length === 0){
     showToast("এই নামে কোনো লেখক পাওয়া যায়নি।");
-    renderFavoriteSearchResults([]);
-    return;
   }
 
-  renderFavoriteSearchResults(results);
+  renderFavoriteResults(items);
 }
 
 document
@@ -3354,45 +3226,33 @@ document
   .addEventListener("click",searchFavoriteAuthors);
 
 document
-  .getElementById("favoriteAuthorInput")
-  .addEventListener("keydown",function(event){
-    if(event.key === "Enter"){
-      searchFavoriteAuthors();
-    }
-  });
-
-document
   .getElementById("openFavoriteSearchBtn")
   .addEventListener("click",function(){
-    document
-      .getElementById("favoriteAuthorInput")
-      .focus();
-
     document
       .getElementById("favoriteAuthorBox")
       .scrollIntoView({
         behavior:"smooth",
         block:"center"
       });
+
+    document
+      .getElementById("favoriteAuthorInput")
+      .focus();
   });
 
-renderFavoriteAuthors();
+/* RENDER FEED */
 
-/* COMMENTS */
-
-function toggleComments(postId){
+function toggleComments(id){
   const panel =
-    document.getElementById("comments-" + postId);
+    document.getElementById("comments-" + id);
 
   if(panel){
     panel.classList.toggle("open");
   }
 }
 
-/* SHARE */
-
 function sharePost(post){
-  const shareUrl =
+  const url =
     window.location.origin +
     window.location.pathname +
     "#" +
@@ -3402,47 +3262,30 @@ function sharePost(post){
     navigator.share({
       title:post.title,
       text:post.author + " — " + post.title,
-      url:shareUrl
+      url:url
     }).catch(function(){});
-  }else if(navigator.clipboard){
-    navigator.clipboard
-      .writeText(shareUrl)
-      .then(function(){
-        showToast("শেয়ার লিংক কপি করা হয়েছে।");
-      })
-      .catch(function(){
-        showToast("লিংক কপি করা যায়নি।");
-      });
   }else{
-    showToast("এই browser-এ share সুবিধাটি পাওয়া যাচ্ছে না।");
+    showToast("Share সুবিধাটি এই browser-এ পাওয়া যাচ্ছে না।");
   }
 }
-
-/* FEED */
 
 function renderFeed(){
   const feedList =
     document.getElementById("feedList");
 
-  const filteredPosts = getFilteredPosts();
-
-  const visiblePosts =
-    filteredPosts.slice(0,visiblePostCount);
+  const filtered = getFilteredPosts();
+  const visible = filtered.slice(0,visiblePostCount);
 
   feedList.innerHTML = "";
 
-  visiblePosts.forEach(function(post){
-    const saved = isSaved(post.id);
-
-    const article =
-      document.createElement("article");
+  visible.forEach(function(post){
+    const article = document.createElement("article");
 
     article.className = "card post-card";
     article.id = post.id;
 
     article.innerHTML =
       '<div class="post-head">' +
-
         '<a href="' + post.profile + '">' +
           '<img class="post-avatar" src="' +
           post.avatar +
@@ -3451,33 +3294,30 @@ function renderFeed(){
           '">' +
         '</a>' +
 
-        '<div class="post-meta">' +
-          '<div class="post-name-row">' +
+        '<div class="post-name-row">' +
+          '<a class="post-name" href="' +
+          post.profile +
+          '">' +
+            post.author +
+          '</a>' +
 
-            '<a class="post-name" href="' +
-            post.profile +
-            '">' +
-              post.author +
-            '</a>' +
+          '<span class="post-type">' +
+            post.type +
+          '</span>' +
 
-            '<span class="post-type">' +
-              post.type +
-            '</span>' +
-
-            '<span class="post-time">• ' +
-              post.time +
-            '</span>' +
-
-          '</div>' +
+          '<span class="post-time">• ' +
+            post.time +
+          '</span>' +
         '</div>' +
 
-        '<button class="post-more" onclick="showToast(\'Post options backend যুক্ত হলে live হবে।\')">•••</button>' +
-
+        '<button class="post-more">•••</button>' +
       '</div>' +
 
       '<h2 class="post-title">' +
-        '<a href="' + post.url + '">' +
-          post.title +
+        '<a href="' +
+        post.url +
+        '">' +
+        post.title +
         '</a>' +
       '</h2>' +
 
@@ -3486,39 +3326,34 @@ function renderFeed(){
       '</p>' +
 
       '<div class="post-actions">' +
-
-        '<button class="action-btn like-btn">' +
-          '❤️ ' +
+        '<button class="action-btn like-btn">❤️ ' +
           toBn(post.likes) +
         '</button>' +
 
         '<button class="action-btn comment-btn" data-id="' +
           post.id +
-        '">' +
-          '💬 ' +
+        '">💬 ' +
           toBn(post.comments) +
         '</button>' +
 
         '<button class="action-btn save-btn ' +
-          (saved ? "saved" : "") +
+          (isSaved(post.id) ? "saved" : "") +
           '" data-id="' +
           post.id +
         '">' +
-          (saved ? "✓ সংরক্ষিত" : "🔖 সংরক্ষণ") +
+          (isSaved(post.id)
+            ? "✓ সংরক্ষিত"
+            : "🔖 সংরক্ষণ") +
         '</button>' +
 
         '<button class="action-btn share-btn" data-id="' +
           post.id +
-        '">' +
-          '↗ শেয়ার' +
-        '</button>' +
-
+        '">↗ শেয়ার</button>' +
       '</div>' +
 
       '<div class="comment-panel" id="comments-' +
         post.id +
       '">' +
-
         '<div class="comment-item">' +
           '<a href="profile.html?user=sadia-noor">সাদিয়া নূর</a>: লেখাটি হৃদয় ছুঁয়ে গেল।' +
         '</div>' +
@@ -3529,9 +3364,8 @@ function renderFeed(){
 
         '<div class="comment-form">' +
           '<input type="text" placeholder="মন্তব্য লিখুন...">' +
-          '<button onclick="showToast(\'মন্তব্য সুবিধাটি backend যুক্ত হলে live হবে।\')">পাঠান</button>' +
+          '<button>পাঠান</button>' +
         '</div>' +
-
       '</div>';
 
     feedList.appendChild(article);
@@ -3557,10 +3391,9 @@ function renderFeed(){
     .querySelectorAll(".save-btn")
     .forEach(function(button){
       button.addEventListener("click",function(){
-        const post =
-          allPosts.find(function(item){
-            return item.id === button.dataset.id;
-          });
+        const post = allPosts.find(function(item){
+          return item.id === button.dataset.id;
+        });
 
         if(post){
           toggleMemory(post);
@@ -3572,10 +3405,9 @@ function renderFeed(){
     .querySelectorAll(".share-btn")
     .forEach(function(button){
       button.addEventListener("click",function(){
-        const post =
-          allPosts.find(function(item){
-            return item.id === button.dataset.id;
-          });
+        const post = allPosts.find(function(item){
+          return item.id === button.dataset.id;
+        });
 
         if(post){
           sharePost(post);
@@ -3584,21 +3416,21 @@ function renderFeed(){
     });
 
   document.getElementById("moreFeed").style.display =
-    visiblePostCount >= filteredPosts.length
+    visiblePostCount >= filtered.length
       ? "none"
       : "block";
 }
 
 renderFeed();
 renderMemories();
+renderFavoriteAuthors();
 
-/* FILTERS */
+/* FILTER */
 
 document
   .querySelectorAll(".flow-filter")
   .forEach(function(button){
     button.addEventListener("click",function(){
-
       document
         .querySelectorAll(".flow-filter")
         .forEach(function(item){
@@ -3606,10 +3438,7 @@ document
         });
 
       button.classList.add("active");
-
-      activeFeedFilter =
-        button.dataset.filter;
-
+      activeFeedFilter = button.dataset.filter;
       visiblePostCount = 10;
       renderFeed();
     });
@@ -3627,7 +3456,6 @@ document
 document
   .getElementById("logoutBtn")
   .addEventListener("click",function(){
-
     localStorage.removeItem("bhubondangaUserName");
     localStorage.removeItem("bhubondangaUserRole");
 
@@ -3638,17 +3466,16 @@ document
     },1100);
   });
 
-/* TO TOP */
+/* TOP */
 
 const toTopBtn =
   document.getElementById("toTopBtn");
 
 window.addEventListener("scroll",function(){
-  if(window.scrollY > 450){
-    toTopBtn.classList.add("show");
-  }else{
-    toTopBtn.classList.remove("show");
-  }
+  toTopBtn.classList.toggle(
+    "show",
+    window.scrollY > 450
+  );
 });
 
 toTopBtn.addEventListener("click",function(){
@@ -3658,26 +3485,63 @@ toTopBtn.addEventListener("click",function(){
   });
 });
 
-/* COPY PROTECTION */
+/* KEYBOARD */
+
+document.addEventListener("keydown",function(event){
+  if(
+    (event.ctrlKey || event.metaKey) &&
+    event.key.toLowerCase() === "k"
+  ){
+    event.preventDefault();
+    headerSearchInput.focus();
+  }
+
+  if(event.key === "Escape"){
+    closeDrawer();
+    closeAccount();
+  }
+});
+
+/* COPY AND RIGHT CLICK PROTECTION */
 
 document.addEventListener("copy",function(event){
+  const tag = event.target.tagName.toLowerCase();
+
+  if(
+    tag === "input" ||
+    tag === "textarea" ||
+    event.target.closest(".allow-copy")
+  ){
+    return;
+  }
+
   event.preventDefault();
   showToast("লেখা কপি করা নিরুৎসাহিত করা হয়েছে।");
 });
 
 document.addEventListener("contextmenu",function(event){
-  event.preventDefault();
-  showToast("Right click বন্ধ রাখা হয়েছে।");
-});
-
-document.addEventListener("selectstart",function(event){
-  const tag =
-    event.target.tagName.toLowerCase();
+  const tag = event.target.tagName.toLowerCase();
 
   if(
     tag === "input" ||
     tag === "textarea" ||
     tag === "select"
+  ){
+    return;
+  }
+
+  event.preventDefault();
+  showToast("Right click বন্ধ রাখা হয়েছে।");
+});
+
+document.addEventListener("selectstart",function(event){
+  const tag = event.target.tagName.toLowerCase();
+
+  if(
+    tag === "input" ||
+    tag === "textarea" ||
+    tag === "select" ||
+    event.target.closest(".allow-copy")
   ){
     return;
   }
