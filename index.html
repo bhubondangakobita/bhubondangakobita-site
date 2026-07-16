@@ -8,7 +8,7 @@
 
 <meta
   name="description"
-  content="কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, সাহিত্য আলোচনা, বাণী, পরিবেশের কথা ও মানবিক সংযোগের একটি মুক্ত বাংলা সাহিত্যভুবন।"
+  content="কবিতা, প্রলাপ, মধ্যরাতের প্রলাপ, চিঠিপত্র, আবৃত্তি, সাহিত্য আলোচনা, বাণী ও পরিবেশের কথার বাংলা সাহিত্যিক নিউজফিড।"
 >
 
 <style>
@@ -26,8 +26,7 @@ html{
 
 :root{
   --header-h:90px;
-  --ticker-h:38px;
-  --nav-h:48px;
+  --nav-h:49px;
 
   --bg:#eaf4fb;
   --surface:#ffffff;
@@ -39,14 +38,13 @@ html{
   --muted:#7b8da5;
 
   --border:rgba(15,75,145,.15);
-  --border-strong:rgba(15,91,178,.29);
+  --border-strong:rgba(15,91,178,.30);
 
   --accent:#0b5caf;
   --accent-2:#174c93;
   --accent-soft:rgba(37,151,246,.10);
 
   --green:#247d64;
-  --green-2:#17634f;
   --green-soft:rgba(36,125,100,.10);
 
   --gold:#9b7228;
@@ -70,9 +68,8 @@ html{
     radial-gradient(circle at 9% 16%,rgba(255,255,255,.88),transparent 32%),
     linear-gradient(110deg,#f8fcff 0%,#edf8ff 52%,#e5f2fb 100%);
 
-  --ticker-bg:linear-gradient(90deg,#eef8ff,#e4f3ff,#eef8ff);
-  --nav-bg:rgba(255,255,255,.96);
-  --drawer-bg:rgba(244,250,254,.98);
+  --nav-bg:rgba(255,255,255,.97);
+  --drawer-bg:rgba(244,250,254,.99);
 }
 
 html[data-theme="dark"]{
@@ -93,7 +90,6 @@ html[data-theme="dark"]{
   --accent-soft:rgba(69,171,255,.12);
 
   --green:#76dfc0;
-  --green-2:#a1f3da;
   --green-soft:rgba(118,223,192,.10);
 
   --gold:#ffd47c;
@@ -117,12 +113,8 @@ html[data-theme="dark"]{
     radial-gradient(circle at 12% 18%,rgba(60,120,220,.14),transparent 32%),
     linear-gradient(110deg,#01050d 0%,#07142c 52%,#131532 100%);
 
-  --ticker-bg:
-    radial-gradient(circle at center,rgba(81,116,210,.10),transparent 70%),
-    rgba(4,12,29,.98);
-
-  --nav-bg:rgba(2,10,24,.97);
-  --drawer-bg:rgba(2,11,26,.98);
+  --nav-bg:rgba(2,10,24,.98);
+  --drawer-bg:rgba(2,11,26,.99);
 }
 
 body{
@@ -141,7 +133,8 @@ a{
 
 button,
 input,
-select{
+select,
+textarea{
   font-family:inherit;
 }
 
@@ -168,7 +161,7 @@ button{
   min-height:var(--header-h);
   padding:8px 30px;
   display:grid;
-  grid-template-columns:390px minmax(280px,520px) minmax(420px,1fr);
+  grid-template-columns:390px minmax(280px,520px) minmax(320px,1fr);
   align-items:center;
   gap:18px;
   background:var(--header-bg);
@@ -238,10 +231,15 @@ html[data-theme="dark"] .brand-copy p{
   border:1px solid var(--border);
   outline:none;
   border-radius:999px;
-  padding:0 48px;
+  padding:0 49px;
   background:rgba(255,255,255,.95);
   color:#183b68;
   font-size:12.5px;
+}
+
+.header-search input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
 }
 
 .header-search::before{
@@ -274,34 +272,6 @@ html[data-theme="dark"] .brand-copy p{
   gap:8px;
 }
 
-.header-date-pill{
-  min-height:40px;
-  max-width:240px;
-  display:flex;
-  align-items:center;
-  gap:7px;
-  padding:0 13px;
-  border-radius:12px;
-  background:rgba(215,238,255,.70);
-  color:#164476;
-  font-size:10px;
-  white-space:nowrap;
-  overflow:hidden;
-}
-
-html[data-theme="dark"] .header-date-pill{
-  background:rgba(39,126,217,.12);
-  color:#c9dcf5;
-  border:1px solid rgba(65,160,255,.17);
-}
-
-.header-icon,
-.avatar-btn{
-  transition:
-    transform .16s ease,
-    box-shadow .16s ease;
-}
-
 .header-icon{
   width:40px;
   height:40px;
@@ -313,11 +283,23 @@ html[data-theme="dark"] .header-date-pill{
   align-items:center;
   justify-content:center;
   font-size:16px;
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease;
 }
 
 html[data-theme="dark"] .header-icon{
   background:rgba(14,42,82,.72);
   color:#f1f7ff;
+}
+
+.header-icon:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--soft-shadow);
+}
+
+.header-icon:active{
+  transform:translateY(1px) scale(.97);
 }
 
 .avatar-btn{
@@ -334,70 +316,16 @@ html[data-theme="dark"] .header-icon{
   font-weight:700;
 }
 
-.header-icon:hover,
-.avatar-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:var(--soft-shadow);
-}
-
-.header-icon:active,
-.avatar-btn:active{
-  transform:translateY(1px) scale(.97);
-}
-
-/* DATE */
-
-.date-ticker{
-  position:sticky;
-  top:var(--header-h);
-  z-index:1250;
-  height:var(--ticker-h);
-  overflow:hidden;
-  background:var(--ticker-bg);
-  border-bottom:1px solid var(--border);
-}
-
-.ticker-track{
-  width:max-content;
-  min-width:200%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  animation:dateTicker 34s linear infinite;
-}
-
-.ticker-group{
-  min-width:100vw;
-  padding:0 44px;
-  display:flex;
-  align-items:center;
-  justify-content:space-around;
-  gap:65px;
-  color:var(--text-soft);
-  font-size:11px;
-  white-space:nowrap;
-}
-
-.ticker-label,
-.ticker-dot{
-  color:var(--accent);
-  font-weight:700;
-}
-
-@keyframes dateTicker{
-  from{transform:translateX(0);}
-  to{transform:translateX(-50%);}
-}
-
-/* NAV */
+/* NAVIGATION */
 
 .category-nav{
   position:sticky;
-  top:calc(var(--header-h) + var(--ticker-h));
-  z-index:1200;
+  top:var(--header-h);
+  z-index:1250;
   background:var(--nav-bg);
-  backdrop-filter:blur(14px);
+  backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
+  box-shadow:0 4px 13px rgba(10,52,105,.05);
 }
 
 .category-inner{
@@ -417,11 +345,15 @@ html[data-theme="dark"] .header-icon{
 }
 
 .category-inner a{
+  flex:0 0 auto;
   color:var(--text-soft);
   font-size:13px;
   white-space:nowrap;
   padding:13px 0 10px;
-  border-bottom:2px solid transparent;
+  border-bottom:3px solid transparent;
+  transition:
+    color .16s ease,
+    border-color .16s ease;
 }
 
 .category-inner a:hover,
@@ -430,109 +362,13 @@ html[data-theme="dark"] .header-icon{
   border-bottom-color:var(--accent);
 }
 
-/* HUMANITARIAN */
-
-.humanitarian-strip{
-  max-width:1530px;
-  margin:0 auto;
-  padding:8px 20px 0;
-}
-
-.humanitarian-box{
-  position:relative;
-  overflow:hidden;
-  display:grid;
-  grid-template-columns:45px minmax(0,1fr) auto;
-  align-items:center;
-  gap:12px;
-  padding:10px 13px;
-  border:1px solid rgba(73,180,145,.32);
-  border-radius:14px;
-  background:
-    radial-gradient(circle at left,var(--green-soft),transparent 44%),
-    var(--surface);
-  box-shadow:var(--soft-shadow);
-}
-
-.humanitarian-box::after{
-  content:"";
-  position:absolute;
-  right:-16px;
-  bottom:-22px;
-  width:90px;
-  height:90px;
-  border:15px solid var(--green-soft);
-  border-radius:50%;
-  opacity:.55;
-}
-
-.first-aid-icon{
-  position:relative;
-  z-index:2;
-  width:45px;
-  height:45px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--green-soft);
-  color:var(--green);
-  font-size:24px;
-  box-shadow:inset 0 0 0 1px rgba(118,223,192,.18);
-}
-
-.humanitarian-copy{
-  position:relative;
-  z-index:2;
-  min-width:0;
-}
-
-.humanitarian-copy h2{
-  color:var(--green);
-  font-size:12px;
+.category-inner a.midnight-nav{
+  color:var(--violet);
   font-weight:700;
 }
 
-.humanitarian-copy p{
-  margin-top:2px;
-  color:var(--text-soft);
-  font-size:9.5px;
-  line-height:1.7;
-  display:-webkit-box;
-  -webkit-line-clamp:3;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-
-.humanitarian-actions{
-  position:relative;
-  z-index:2;
-  display:flex;
-  gap:7px;
-}
-
-.humanitarian-actions a{
-  padding:7px 10px;
-  border:1px solid rgba(73,180,145,.28);
-  border-radius:9px;
-  color:var(--green);
-  background:var(--surface-2);
-  font-size:8.5px;
-  transition:transform .16s ease;
-}
-
-.humanitarian-actions a.primary{
-  background:var(--green);
-  color:#fff;
-  border-color:var(--green);
-}
-
-.humanitarian-actions a:hover{
-  transform:translateY(-2px);
-}
-
-.humanitarian-actions a:active{
-  transform:translateY(1px);
+.category-inner a.midnight-nav:hover{
+  border-bottom-color:var(--violet);
 }
 
 /* LAYOUT */
@@ -540,7 +376,7 @@ html[data-theme="dark"] .header-icon{
 .page-layout{
   max-width:1530px;
   margin:0 auto;
-  padding:10px 20px 30px;
+  padding:14px 20px 30px;
   display:grid;
   grid-template-columns:250px minmax(0,1fr) 325px;
   gap:14px;
@@ -556,8 +392,8 @@ html[data-theme="dark"] .header-icon{
 .left-sidebar,
 .right-sidebar{
   position:sticky;
-  top:calc(var(--header-h) + var(--ticker-h) + var(--nav-h) + 18px);
-  height:calc(100vh - 230px);
+  top:calc(var(--header-h) + var(--nav-h) + 16px);
+  height:calc(100vh - 180px);
   overflow:auto;
   scrollbar-width:none;
 }
@@ -574,7 +410,7 @@ html[data-theme="dark"] .header-icon{
   display:flex;
   align-items:center;
   gap:8px;
-  padding:2px 5px 9px;
+  padding:3px 5px 10px;
 }
 
 .side-brand span{
@@ -586,18 +422,18 @@ html[data-theme="dark"] .header-icon{
   font-weight:600;
 }
 
-.side-title{
-  margin:15px 0 7px;
-  padding:0 9px;
-  font-size:15px;
-  font-weight:600;
-}
-
 .side-subtitle{
   margin:-3px 0 8px;
   padding:0 9px;
   color:var(--muted);
   font-size:8.5px;
+}
+
+.side-title{
+  margin:15px 0 7px;
+  padding:0 9px;
+  font-size:15px;
+  font-weight:600;
 }
 
 .side-separator{
@@ -649,58 +485,16 @@ html[data-theme="dark"] .header-icon{
   text-align:center;
 }
 
-.side-tag{
-  padding:2px 6px;
-  border-radius:999px;
-  background:var(--violet-soft);
-  color:var(--violet);
-  font-size:7px;
+.midnight-side{
+  color:var(--violet)!important;
+  background:var(--violet-soft)!important;
+  border:1px solid rgba(196,175,255,.16);
 }
 
 .humanitarian-side{
-  border:1px solid rgba(73,180,145,.20);
-  background:var(--green-soft)!important;
   color:var(--green)!important;
-}
-
-.auth-area{
-  display:grid;
-  gap:8px;
-  margin-top:15px;
-  padding:0 5px 10px;
-}
-
-.login-side,
-.register-side{
-  padding:9px 11px;
-  border-radius:10px;
-  text-align:center;
-  font-size:12px;
-  font-weight:500;
-  transition:
-    transform .16s ease,
-    box-shadow .16s ease;
-}
-
-.login-side{
-  background:var(--accent);
-  color:#fff!important;
-}
-
-.register-side{
-  border:1px solid var(--accent);
-  color:var(--accent)!important;
-}
-
-.login-side:hover,
-.register-side:hover{
-  transform:translateY(-2px);
-  box-shadow:var(--soft-shadow);
-}
-
-.login-side:active,
-.register-side:active{
-  transform:translateY(1px);
+  background:var(--green-soft)!important;
+  border:1px solid rgba(118,223,192,.16);
 }
 
 /* MAIN */
@@ -709,250 +503,131 @@ html[data-theme="dark"] .header-icon{
   min-width:0;
 }
 
-/* HERO */
+/* COMPOSER */
 
-.home-hero{
-  position:relative;
-  min-height:355px;
-  padding:29px;
-  overflow:hidden;
-  display:flex;
-  align-items:flex-end;
-  color:#fff;
-  background:
-    linear-gradient(180deg,rgba(3,8,20,.02),rgba(3,8,20,.82)),
-    radial-gradient(circle at 79% 18%,rgba(255,255,255,.45),transparent 4%),
-    radial-gradient(circle at 79% 18%,rgba(190,225,255,.22),transparent 15%),
-    linear-gradient(135deg,#7da5bc 0%,#4d7c91 44%,#21465d 100%);
+.composer-card{
+  padding:15px;
 }
 
-.home-hero::before{
-  content:"";
-  position:absolute;
-  inset:auto 0 0;
-  height:48%;
-  background:
-    radial-gradient(ellipse at 10% 115%,rgba(15,76,68,.92),transparent 44%),
-    radial-gradient(ellipse at 48% 115%,rgba(20,86,71,.79),transparent 47%),
-    radial-gradient(ellipse at 88% 114%,rgba(12,62,58,.91),transparent 45%);
-}
-
-.home-hero::after{
-  content:"🌿";
-  position:absolute;
-  right:-12px;
-  bottom:-42px;
-  font-size:245px;
-  line-height:1;
-  opacity:.10;
-  filter:grayscale(1);
-}
-
-.hero-content{
-  position:relative;
-  z-index:2;
-  max-width:850px;
-}
-
-.hero-label{
-  display:inline-flex;
+.composer-top{
+  display:grid;
+  grid-template-columns:45px minmax(0,1fr);
+  gap:10px;
   align-items:center;
-  gap:7px;
-  padding:6px 11px;
-  border:1px solid rgba(255,255,255,.31);
-  border-radius:999px;
-  background:rgba(3,14,35,.24);
-  font-size:9px;
 }
 
-.hero-content h1{
-  margin-top:13px;
-  font-size:36px;
-  font-weight:700;
-  line-height:1.55;
-}
-
-.hero-content p{
-  max-width:760px;
-  margin-top:8px;
-  color:#e2edf6;
-  font-size:11.5px;
-  line-height:2;
-}
-
-.hero-actions{
+.composer-avatar{
+  width:45px;
+  height:45px;
+  border-radius:50%;
   display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-top:15px;
-}
-
-.hero-actions a{
-  min-height:40px;
-  display:inline-flex;
   align-items:center;
   justify-content:center;
-  padding:8px 13px;
-  border:1px solid rgba(255,255,255,.30);
-  border-radius:10px;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  font-size:9px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  border:1px solid var(--border);
+  font-size:14px;
+  font-weight:700;
+}
+
+.composer-trigger{
+  width:100%;
+  min-height:45px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface-2);
+  color:var(--muted);
+  text-align:left;
+  font-size:9.5px;
   transition:
     transform .16s ease,
+    border-color .16s ease;
+}
+
+.composer-trigger:hover{
+  transform:translateY(-2px);
+  border-color:var(--border-strong);
+}
+
+.composer-actions{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  margin-top:12px;
+  padding-top:11px;
+  border-top:1px solid var(--border);
+}
+
+.composer-actions a{
+  min-height:38px;
+  padding:7px 8px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  color:var(--text-soft);
+  background:var(--surface-2);
+  font-size:8px;
+  transition:
+    transform .16s ease,
+    color .16s ease,
     background .16s ease;
 }
 
-.hero-actions a.primary{
-  background:#fff;
-  color:#19384c;
-}
-
-.hero-actions a:hover{
+.composer-actions a:hover{
   transform:translateY(-2px);
-  background:rgba(255,255,255,.14);
+  color:var(--accent);
+  background:var(--accent-soft);
 }
 
-.hero-actions a:active{
-  transform:translateY(1px);
-}
-
-/* MIDNIGHT BAR */
-
-.midnight-bar{
-  position:relative;
-  margin-top:12px;
-  padding:21px;
-  overflow:hidden;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:18px;
-  align-items:center;
-  border-color:rgba(196,175,255,.26);
-  color:#fff;
-  background:
-    radial-gradient(circle at 92% 12%,rgba(174,149,255,.16),transparent 30%),
-    linear-gradient(135deg,#080b21 0%,#171538 52%,#241b48 100%);
-}
-
-.midnight-bar::after{
-  content:"☾";
-  position:absolute;
-  right:22px;
-  bottom:-40px;
-  color:rgba(255,255,255,.07);
-  font-size:150px;
-  line-height:1;
-}
-
-.midnight-copy{
-  position:relative;
-  z-index:2;
-}
-
-.midnight-label{
-  display:inline-block;
-  padding:4px 8px;
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:999px;
-  color:#d9d1ff;
-  font-size:7.5px;
-}
-
-.midnight-copy h2{
-  margin-top:8px;
-  font-size:19px;
-  font-weight:600;
-}
-
-.midnight-copy p{
-  max-width:720px;
-  margin-top:5px;
-  color:#c9c8e3;
-  font-size:9px;
-  line-height:1.85;
-}
-
-.midnight-action{
-  position:relative;
-  z-index:2;
-}
-
-.midnight-action a{
-  min-height:42px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:8px 14px;
-  border:1px solid rgba(255,255,255,.24);
-  border-radius:10px;
-  background:rgba(255,255,255,.08);
-  color:#fff;
-  font-size:8.5px;
-  transition:transform .16s ease;
-}
-
-.midnight-action a:hover{
-  transform:translateY(-2px);
-}
-
-.midnight-action a:active{
-  transform:translateY(1px);
-}
-
-/* FEED HEADER */
+/* FEED CONTROL */
 
 .feed-control{
   margin-top:12px;
-  padding:16px;
+  padding:14px 16px;
 }
 
-.feed-head{
+.feed-control-inner{
   display:flex;
-  align-items:flex-start;
+  align-items:center;
   justify-content:space-between;
   gap:12px;
 }
 
-.feed-head h2{
+.feed-title h1{
   font-size:18px;
   font-weight:600;
 }
 
-.feed-head p{
+.feed-title p{
   margin-top:2px;
   color:var(--muted);
-  font-size:8.5px;
+  font-size:8px;
 }
 
-.feed-actions{
+.feed-tools{
   display:flex;
   gap:7px;
 }
 
-.feed-actions a,
-.feed-actions select{
+.feed-tools select{
   min-height:37px;
   padding:0 10px;
   border:1px solid var(--border);
   border-radius:9px;
+  outline:none;
   background:var(--surface-2);
   color:var(--text-soft);
   font-size:8px;
 }
 
-.feed-actions a{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--accent);
-}
-
-/* POST */
+/* FEED POSTS */
 
 .feed-list{
   display:grid;
-  gap:11px;
+  gap:12px;
   margin-top:12px;
 }
 
@@ -977,8 +652,8 @@ html[data-theme="dark"] .header-icon{
 
 .author-avatar{
   flex:0 0 auto;
-  width:45px;
-  height:45px;
+  width:46px;
+  height:46px;
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -990,8 +665,12 @@ html[data-theme="dark"] .header-icon{
   font-weight:700;
 }
 
+.author-copy{
+  min-width:0;
+}
+
 .author-copy h3{
-  font-size:10.8px;
+  font-size:11px;
   font-weight:600;
 }
 
@@ -1000,38 +679,52 @@ html[data-theme="dark"] .header-icon{
   font-size:7.8px;
 }
 
+.post-menu{
+  width:34px;
+  height:34px;
+  border:none;
+  border-radius:50%;
+  background:transparent;
+  color:var(--muted);
+  font-size:18px;
+}
+
 .post-type{
-  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  margin:0 16px 10px;
   padding:5px 9px;
   border-radius:999px;
   background:var(--accent-soft);
   color:var(--accent);
   font-size:7.5px;
+  font-weight:600;
 }
 
 .post-type.prolap{
-  background:var(--violet-soft);
   color:var(--violet);
+  background:var(--violet-soft);
+}
+
+.post-type.midnight{
+  color:#d7c8ff;
+  background:rgba(196,175,255,.13);
 }
 
 .post-type.letter{
-  background:var(--gold-soft);
   color:var(--gold);
+  background:var(--gold-soft);
 }
 
 .post-type.recitation{
-  background:var(--red-soft);
   color:var(--red);
+  background:var(--red-soft);
 }
 
 .post-type.environment{
-  background:var(--green-soft);
   color:var(--green);
-}
-
-.post-type.discussion{
-  background:var(--violet-soft);
-  color:var(--violet);
+  background:var(--green-soft);
 }
 
 .post-body{
@@ -1039,54 +732,161 @@ html[data-theme="dark"] .header-icon{
 }
 
 .post-body h2{
-  font-size:16px;
+  font-size:17px;
   font-weight:600;
-  line-height:1.55;
+  line-height:1.6;
 }
 
-.post-excerpt{
-  margin-top:7px;
+.post-text{
+  margin-top:8px;
   color:var(--text-soft);
-  font-size:9.5px;
-  line-height:1.95;
+  font-size:9.8px;
+  line-height:2;
   white-space:pre-line;
+}
+
+.poem-text{
+  margin-top:12px;
+  padding:14px 15px;
+  border-left:3px solid var(--accent);
+  border-radius:0 11px 11px 0;
+  background:var(--surface-2);
+  color:var(--text-soft);
+  font-size:10px;
+  line-height:2.1;
+  white-space:pre-line;
+}
+
+.midnight-post{
+  color:#fff;
+  border-color:rgba(196,175,255,.26);
+  background:
+    radial-gradient(circle at 90% 10%,rgba(151,116,255,.18),transparent 32%),
+    linear-gradient(135deg,#080b21 0%,#171538 52%,#241b48 100%);
+}
+
+.midnight-post .author-copy p,
+.midnight-post .post-text{
+  color:#cac8e5;
+}
+
+.midnight-post .author-avatar{
+  color:#d7c9ff;
+  background:rgba(196,175,255,.12);
+  border-color:rgba(196,175,255,.22);
+}
+
+.midnight-post .post-actions{
+  border-top-color:rgba(255,255,255,.10);
+}
+
+.midnight-post .post-action{
+  color:#d2cee9;
+  border-color:rgba(255,255,255,.13);
+  background:rgba(255,255,255,.06);
 }
 
 .media-preview{
   position:relative;
-  min-height:215px;
-  margin-top:12px;
+  min-height:290px;
+  margin-top:13px;
   overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
   border:1px solid var(--border);
-  border-radius:13px;
+  border-radius:14px;
   background:
-    linear-gradient(180deg,rgba(2,8,20,.03),rgba(2,8,20,.70)),
-    linear-gradient(135deg,#73859e,#42586f,#222c43);
+    linear-gradient(180deg,rgba(2,8,20,.02),rgba(2,8,20,.74)),
+    radial-gradient(circle at 72% 20%,rgba(255,255,255,.20),transparent 7%),
+    linear-gradient(135deg,#77899f,#435a71,#202b41);
 }
 
-.media-preview::after{
-  content:"▶";
-  width:58px;
-  height:58px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid rgba(255,255,255,.45);
+.media-preview::before{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:42%;
+  background:
+    radial-gradient(ellipse at 15% 110%,rgba(15,59,55,.84),transparent 45%),
+    radial-gradient(ellipse at 58% 112%,rgba(16,52,59,.73),transparent 46%),
+    radial-gradient(ellipse at 91% 110%,rgba(8,37,54,.86),transparent 46%);
+}
+
+.media-play{
+  position:relative;
+  z-index:2;
+  width:67px;
+  height:67px;
+  border:1px solid rgba(255,255,255,.42);
   border-radius:50%;
-  background:rgba(255,255,255,.14);
+  background:rgba(255,255,255,.15);
   color:#fff;
-  font-size:19px;
-  backdrop-filter:blur(8px);
+  font-size:23px;
+  backdrop-filter:blur(10px);
+}
+
+.audio-preview{
+  margin-top:13px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:
+    radial-gradient(circle at top left,var(--violet-soft),transparent 48%),
+    var(--surface-2);
+}
+
+.audio-top{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) auto;
+  gap:11px;
+  align-items:center;
+}
+
+.audio-play{
+  width:46px;
+  height:46px;
+  border:none;
+  border-radius:50%;
+  background:var(--violet);
+  color:#fff;
+  font-size:16px;
+}
+
+.audio-info h3{
+  font-size:10.5px;
+}
+
+.audio-info p{
+  color:var(--muted);
+  font-size:7.8px;
+}
+
+.audio-time{
+  color:var(--muted);
+  font-size:8px;
+}
+
+.audio-progress{
+  height:5px;
+  margin-top:11px;
+  overflow:hidden;
+  border-radius:999px;
+  background:var(--border);
+}
+
+.audio-progress span{
+  display:block;
+  width:34%;
+  height:100%;
+  background:linear-gradient(90deg,var(--violet),var(--accent));
 }
 
 .post-tags{
   display:flex;
   flex-wrap:wrap;
   gap:6px;
-  margin-top:10px;
+  margin-top:11px;
 }
 
 .post-tag{
@@ -1095,6 +895,17 @@ html[data-theme="dark"] .header-icon{
   background:var(--surface-3);
   color:var(--accent);
   font-size:7.2px;
+}
+
+.post-stats{
+  padding:9px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--muted);
+  font-size:7.7px;
+  border-top:1px solid var(--border);
 }
 
 .post-actions{
@@ -1106,7 +917,7 @@ html[data-theme="dark"] .header-icon{
 }
 
 .post-action{
-  min-height:36px;
+  min-height:37px;
   border:1px solid var(--border);
   border-radius:9px;
   background:var(--surface-2);
@@ -1129,100 +940,79 @@ html[data-theme="dark"] .header-icon{
 }
 
 .post-action.active{
-  background:var(--red-soft);
   color:var(--red);
+  background:var(--red-soft);
 }
 
 .post-action.saved{
-  background:var(--gold-soft);
   color:var(--gold);
+  background:var(--gold-soft);
 }
 
-/* CATEGORY CARDS */
+/* COMMENTS */
 
-.category-section{
-  margin-top:12px;
-  padding:18px;
+.comment-panel{
+  display:none;
+  padding:13px 16px 16px;
+  border-top:1px solid var(--border);
+  background:var(--surface-2);
 }
 
-.section-heading{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
+.comment-panel.open{
+  display:block;
 }
 
-.section-heading h2{
-  font-size:17px;
-  font-weight:600;
-}
-
-.section-heading p{
-  margin-top:2px;
-  color:var(--muted);
-  font-size:8.5px;
-}
-
-.section-heading a{
-  color:var(--accent);
-  font-size:8.5px;
-}
-
-.category-grid{
+.comment-form{
   display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:9px;
-  margin-top:12px;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:8px;
 }
 
-.category-card{
-  min-height:135px;
-  padding:13px;
+.comment-input{
+  width:100%;
+  height:40px;
+  padding:0 12px;
   border:1px solid var(--border);
-  border-radius:11px;
-  background:
-    radial-gradient(circle at top right,var(--accent-soft),transparent 50%),
-    var(--surface-2);
-  transition:
-    transform .17s ease,
-    border-color .17s ease;
+  border-radius:10px;
+  outline:none;
+  background:var(--surface);
+  color:var(--text);
+  font-size:8.5px;
 }
 
-.category-card:hover{
-  transform:translateY(-3px);
-  border-color:var(--border-strong);
-}
-
-.category-card:active{
-  transform:translateY(1px);
-}
-
-.category-icon{
-  font-size:22px;
-}
-
-.category-card h3{
-  margin-top:7px;
-  font-size:11px;
-  font-weight:600;
-}
-
-.category-card p{
-  margin-top:4px;
-  color:var(--muted);
-  font-size:8.2px;
-  line-height:1.7;
-}
-
-.category-card a{
-  display:inline-block;
-  margin-top:8px;
-  color:var(--accent);
+.comment-button{
+  padding:0 12px;
+  border:none;
+  border-radius:10px;
+  background:var(--accent);
+  color:#fff;
   font-size:8px;
-  font-weight:600;
 }
 
-/* RIGHT SIDEBAR */
+.comment-list{
+  display:grid;
+  gap:7px;
+  margin-top:9px;
+}
+
+.comment-item{
+  padding:9px 10px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--surface);
+}
+
+.comment-item strong{
+  font-size:8.5px;
+}
+
+.comment-item p{
+  margin-top:2px;
+  color:var(--text-soft);
+  font-size:8px;
+}
+
+/* RIGHT */
 
 .right-sidebar{
   display:grid;
@@ -1263,7 +1053,6 @@ html[data-theme="dark"] .header-icon{
 .profile-summary h3{
   margin-top:7px;
   font-size:12px;
-  font-weight:600;
 }
 
 .profile-summary p{
@@ -1285,54 +1074,77 @@ html[data-theme="dark"] .header-icon{
   background:var(--surface-2);
   color:var(--text-soft);
   font-size:8.5px;
-  transition:transform .16s ease;
 }
 
-.profile-links a:hover{
-  transform:translateY(-2px);
-}
-
-.profile-links a:active{
-  transform:translateY(1px);
-}
-
-.profile-links a.humanitarian-account{
-  border-color:rgba(73,180,145,.25);
-  background:var(--green-soft);
+.profile-links a.humanitarian{
   color:var(--green);
+  background:var(--green-soft);
+  border-color:rgba(118,223,192,.20);
 }
 
-.right-rule{
-  padding:10px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--surface-2);
-}
-
-.right-rule + .right-rule{
-  margin-top:7px;
-}
-
-.right-rule h3{
-  font-size:10.5px;
-  font-weight:500;
-}
-
-.right-rule p{
-  margin-top:3px;
-  color:var(--muted);
-  font-size:8.5px;
-  line-height:1.7;
-}
-
-.right-link{
+.quick-link{
   display:flex;
+  align-items:center;
   justify-content:space-between;
   gap:8px;
-  padding:8px 0;
+  padding:9px 0;
   border-bottom:1px solid var(--border);
   color:var(--text-soft);
   font-size:10.5px;
+}
+
+.notice-card{
+  border-color:rgba(118,223,192,.23);
+  background:
+    radial-gradient(circle at top right,var(--green-soft),transparent 48%),
+    var(--surface);
+}
+
+.notice-icon{
+  width:48px;
+  height:48px;
+  margin:0 auto 8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:13px;
+  background:var(--green-soft);
+  color:var(--green);
+  font-size:25px;
+}
+
+.notice-card h3{
+  text-align:center;
+  color:var(--green);
+  font-size:14px;
+}
+
+.notice-card p{
+  margin-top:6px;
+  color:var(--text-soft);
+  font-size:8.5px;
+  line-height:1.75;
+}
+
+.notice-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+  margin-top:10px;
+}
+
+.notice-actions a{
+  padding:8px;
+  border:1px solid rgba(118,223,192,.22);
+  border-radius:9px;
+  text-align:center;
+  color:var(--green);
+  font-size:8px;
+}
+
+.notice-actions a.primary{
+  color:#fff;
+  background:var(--green);
 }
 
 /* DRAWER */
@@ -1371,6 +1183,7 @@ html[data-theme="dark"] .header-icon{
 
 .drawer-head{
   display:flex;
+  align-items:center;
   justify-content:space-between;
   gap:10px;
   margin-bottom:12px;
@@ -1460,10 +1273,6 @@ html[data-theme="dark"] .header-icon{
     grid-template-columns:330px minmax(240px,1fr) auto;
     padding:8px 20px;
   }
-
-  .header-date-pill{
-    display:none;
-  }
 }
 
 @media(max-width:1260px){
@@ -1478,48 +1287,38 @@ html[data-theme="dark"] .header-icon{
 
 @media(max-width:940px){
   :root{
-    --header-h:99px;
-    --ticker-h:36px;
-    --nav-h:46px;
+    --header-h:145px;
+    --nav-h:49px;
   }
 
   .topbar{
     min-height:var(--header-h);
-    padding:6px 11px;
+    padding:7px 12px 9px;
     grid-template-columns:minmax(0,1fr) auto;
-    grid-template-rows:51px 36px;
+    grid-template-rows:54px 42px 38px;
+    gap:5px 8px;
   }
 
   .menu-btn{
     display:block;
     width:34px;
     height:34px;
-    font-size:25px;
+    font-size:26px;
   }
 
   .brand-leaf{
-    font-size:29px;
+    font-size:36px;
   }
 
   .brand-copy h1{
-    font-size:18.5px;
+    font-size:20px;
   }
 
   .brand-copy p{
-    max-width:220px;
+    max-width:230px;
     overflow:hidden;
     text-overflow:ellipsis;
-    font-size:8.2px;
-  }
-
-  .header-icon{
-    width:33px;
-    height:33px;
-  }
-
-  .avatar-btn{
-    width:36px;
-    height:36px;
+    font-size:8.3px;
   }
 
   .header-search{
@@ -1527,18 +1326,27 @@ html[data-theme="dark"] .header-icon{
   }
 
   .header-search input{
-    height:34px;
+    height:40px;
   }
 
-  .ticker-group{
-    padding:0 24px;
-    gap:40px;
-    font-size:9.5px;
+  .header-actions{
+    grid-column:1 / 3;
+    justify-content:flex-end;
+  }
+
+  .header-icon{
+    width:36px;
+    height:36px;
+  }
+
+  .avatar-btn{
+    width:38px;
+    height:38px;
   }
 
   .category-inner{
     padding:0 12px;
-    gap:21px;
+    gap:24px;
   }
 
   .category-inner a{
@@ -1547,7 +1355,7 @@ html[data-theme="dark"] .header-icon{
 
   .page-layout{
     display:block;
-    padding:10px 11px 24px;
+    padding:12px 11px 24px;
   }
 
   .left-sidebar,
@@ -1567,60 +1375,28 @@ html[data-theme="dark"] .header-icon{
 }
 
 @media(max-width:700px){
-  .humanitarian-box{
-    grid-template-columns:40px minmax(0,1fr);
+  .composer-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
-  .first-aid-icon{
-    width:40px;
-    height:40px;
-  }
-
-  .humanitarian-actions{
-    grid-column:2;
-  }
-
-  .home-hero{
-    min-height:315px;
-    padding:21px 16px;
-  }
-
-  .home-hero::after{
-    right:-30px;
-    font-size:170px;
-  }
-
-  .hero-content h1{
-    font-size:24px;
-  }
-
-  .hero-content p{
-    font-size:9.7px;
-  }
-
-  .midnight-bar{
-    grid-template-columns:1fr;
-    padding:17px;
-  }
-
-  .feed-head{
+  .feed-control-inner{
     display:block;
   }
 
-  .feed-actions{
-    margin-top:10px;
+  .feed-tools{
+    margin-top:9px;
+  }
+
+  .post-body h2{
+    font-size:16px;
   }
 
   .post-actions{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
-  .category-grid{
-    grid-template-columns:1fr;
-  }
-
   .media-preview{
-    min-height:185px;
+    min-height:220px;
   }
 }
 </style>
@@ -1659,18 +1435,13 @@ html[data-theme="dark"] .header-icon{
       placeholder="কবিতা, লেখক, আবৃত্তি অথবা বিষয় খুঁজুন..."
     >
 
-    <button id="headerSearchButton" aria-label="সার্চ">
+    <button id="headerSearchButton" type="button" aria-label="সার্চ">
       ⌕
     </button>
 
   </div>
 
   <div class="header-actions">
-
-    <div class="header-date-pill">
-      📅
-      <span id="headerDateText">তারিখ লোড হচ্ছে...</span>
-    </div>
 
     <a href="notifications.html" class="header-icon" aria-label="নোটিফিকেশন">
       🔔
@@ -1680,11 +1451,11 @@ html[data-theme="dark"] .header-icon{
       💬
     </a>
 
-    <button class="header-icon" id="headerThemeBtn" aria-label="থিম পরিবর্তন">
-      <span id="headerThemeIcon">🌙</span>
+    <button class="header-icon" id="themeButton" type="button" aria-label="থিম পরিবর্তন">
+      <span id="themeIcon">🌙</span>
     </button>
 
-    <a href="login.html" class="avatar-btn" aria-label="অ্যাকাউন্ট">
+    <a href="profile.html" class="avatar-btn" aria-label="আপনার প্রোফাইল">
       আ
     </a>
 
@@ -1692,105 +1463,35 @@ html[data-theme="dark"] .header-icon{
 
 </header>
 
-<section class="date-ticker">
-
-  <div class="ticker-track">
-
-    <div class="ticker-group">
-
-      <span>
-        <span class="ticker-label">বাংলা:</span>
-        <span class="banglaDateTicker"></span>
-      </span>
-
-      <span class="ticker-dot">✦</span>
-
-      <span>
-        <span class="ticker-label">ইংরেজি:</span>
-        <span class="englishDateTicker"></span>
-      </span>
-
-      <span class="ticker-dot">✦</span>
-
-      <span>
-        <span class="ticker-label">হিজরি:</span>
-        <span class="hijriDateTicker"></span>
-      </span>
-
-    </div>
-
-    <div class="ticker-group" aria-hidden="true">
-
-      <span>
-        <span class="ticker-label">বাংলা:</span>
-        <span class="banglaDateTicker"></span>
-      </span>
-
-      <span class="ticker-dot">✦</span>
-
-      <span>
-        <span class="ticker-label">ইংরেজি:</span>
-        <span class="englishDateTicker"></span>
-      </span>
-
-      <span class="ticker-dot">✦</span>
-
-      <span>
-        <span class="ticker-label">হিজরি:</span>
-        <span class="hijriDateTicker"></span>
-      </span>
-
-    </div>
-
-  </div>
-
-</section>
-
 <nav class="category-nav">
 
   <div class="category-inner">
+
     <a href="index.html" class="active">হোম</a>
+
     <a href="today-poem.html?sort=popular">জনপ্রিয়</a>
+
     <a href="today-poem.html">প্রবাহ</a>
+
     <a href="today-poem.html?type=poem">কবিতা</a>
+
     <a href="today-prolap.html">প্রলাপ</a>
+
+    <a href="madhyorater-prolap.html" class="midnight-nav">
+      মধ্যরাতের প্রলাপ
+    </a>
+
     <a href="today-letter.html">চিঠিপত্র</a>
+
     <a href="famous-quotes.html">বাণী</a>
+
     <a href="recitation.html">আবৃত্তি</a>
+
     <a href="famous-poet.html">খ্যাতিমান কবি</a>
+
   </div>
 
 </nav>
-
-<section class="humanitarian-strip">
-
-  <div class="humanitarian-box">
-
-    <div class="first-aid-icon">
-      ✚
-    </div>
-
-    <div class="humanitarian-copy">
-
-      <h2>মানবিক সহায়তা</h2>
-
-      <p>
-        বর্তমানে কোনো যাচাইকৃত সক্রিয় জরুরি আবেদন নেই। ব্যবহারকারী নিজের
-        Account থেকে মানবিক আবেদন পাঠাতে পারবেন। আবেদনটি Admin Panel-এ
-        যাচাই হওয়ার পর প্রয়োজন সক্রিয় থাকলে ভুবনডাঙ্গা Team সেটি সাময়িকভাবে
-        Homepage-এর উপরের অংশে Pin করবে।
-      </p>
-
-    </div>
-
-    <div class="humanitarian-actions">
-      <a href="humanitarian-notice.html">বর্তমান অবস্থা</a>
-      <a href="humanitarian-request.html" class="primary">আবেদন করুন</a>
-    </div>
-
-  </div>
-
-</section>
 
 <div class="backdrop" id="drawerBackdrop"></div>
 
@@ -1803,7 +1504,7 @@ html[data-theme="dark"] .header-icon{
       <h2>আপন ভুবন</h2>
     </a>
 
-    <button class="close-btn" id="closeDrawer" aria-label="মেনু বন্ধ করুন">
+    <button class="close-btn" id="closeDrawer" type="button" aria-label="মেনু বন্ধ করুন">
       ×
     </button>
 
@@ -1825,24 +1526,24 @@ html[data-theme="dark"] .header-icon{
       </span>
     </a>
 
-    <a href="today-poem.html?type=poem">
+    <a href="submit-poem.html">
       <span class="side-left">
         <span class="side-icon">✍</span>
-        আজকের কবিতা
+        কবিতা লিখুন
       </span>
     </a>
 
-    <a href="today-prolap.html">
+    <a href="submit-prolap.html">
       <span class="side-left">
         <span class="side-icon">☾</span>
-        আজকের প্রলাপ
+        প্রলাপ লিখুন
       </span>
     </a>
 
-    <a href="today-letter.html">
+    <a href="submit-letter.html">
       <span class="side-left">
         <span class="side-icon">✉</span>
-        আজকের চিঠিপত্র
+        চিঠিপত্র লিখুন
       </span>
     </a>
 
@@ -1850,6 +1551,13 @@ html[data-theme="dark"] .header-icon{
       <span class="side-left">
         <span class="side-icon">🎙</span>
         আবৃত্তি
+      </span>
+    </a>
+
+    <a href="madhyorater-prolap.html" class="midnight-side">
+      <span class="side-left">
+        <span class="side-icon">🌙</span>
+        মধ্যরাতের প্রলাপ
       </span>
     </a>
 
@@ -1871,23 +1579,9 @@ html[data-theme="dark"] .header-icon{
 
   <div class="side-separator"></div>
 
-  <h3 class="side-title">বিশেষ ভুবন</h3>
+  <h3 class="side-title">আরও</h3>
 
   <div class="side-menu">
-
-    <a href="madhyorater-prolap.html">
-      <span class="side-left">
-        <span class="side-icon">🌙</span>
-        মধ্যরাতের প্রলাপ
-      </span>
-    </a>
-
-    <a href="founder-profile.html">
-      <span class="side-left">
-        <span class="side-icon">✒</span>
-        মাহমুদ সোহেল
-      </span>
-    </a>
 
     <a href="humanitarian-request.html" class="humanitarian-side">
       <span class="side-left">
@@ -1910,13 +1604,6 @@ html[data-theme="dark"] .header-icon{
       </span>
     </a>
 
-    <a href="search.html">
-      <span class="side-left">
-        <span class="side-icon">🔎</span>
-        সার্চ
-      </span>
-    </a>
-
     <a href="policy.html">
       <span class="side-left">
         <span class="side-icon">📌</span>
@@ -1924,11 +1611,6 @@ html[data-theme="dark"] .header-icon{
       </span>
     </a>
 
-  </div>
-
-  <div class="auth-area">
-    <a href="login.html" class="login-side">লগইন করুন</a>
-    <a href="register.html" class="register-side">রেজিস্টার করুন</a>
   </div>
 
 </aside>
@@ -1962,24 +1644,24 @@ html[data-theme="dark"] .header-icon{
         </span>
       </a>
 
-      <a href="today-poem.html?type=poem">
+      <a href="submit-poem.html">
         <span class="side-left">
           <span class="side-icon">✍</span>
-          আজকের কবিতা
+          কবিতা লিখুন
         </span>
       </a>
 
-      <a href="today-prolap.html">
+      <a href="submit-prolap.html">
         <span class="side-left">
           <span class="side-icon">☾</span>
-          আজকের প্রলাপ
+          প্রলাপ লিখুন
         </span>
       </a>
 
-      <a href="today-letter.html">
+      <a href="submit-letter.html">
         <span class="side-left">
           <span class="side-icon">✉</span>
-          আজকের চিঠিপত্র
+          চিঠিপত্র লিখুন
         </span>
       </a>
 
@@ -1987,6 +1669,13 @@ html[data-theme="dark"] .header-icon{
         <span class="side-left">
           <span class="side-icon">🎙</span>
           আবৃত্তি
+        </span>
+      </a>
+
+      <a href="madhyorater-prolap.html" class="midnight-side">
+        <span class="side-left">
+          <span class="side-icon">🌙</span>
+          মধ্যরাতের প্রলাপ
         </span>
       </a>
 
@@ -2008,23 +1697,9 @@ html[data-theme="dark"] .header-icon{
 
     <div class="side-separator"></div>
 
-    <h3 class="side-title">বিশেষ ভুবন</h3>
+    <h3 class="side-title">আরও</h3>
 
     <div class="side-menu">
-
-      <a href="madhyorater-prolap.html">
-        <span class="side-left">
-          <span class="side-icon">🌙</span>
-          মধ্যরাতের প্রলাপ
-        </span>
-      </a>
-
-      <a href="founder-profile.html">
-        <span class="side-left">
-          <span class="side-icon">✒</span>
-          মাহমুদ সোহেল
-        </span>
-      </a>
 
       <a href="humanitarian-request.html" class="humanitarian-side">
         <span class="side-left">
@@ -2063,87 +1738,77 @@ html[data-theme="dark"] .header-icon{
 
     </div>
 
-    <div class="auth-area">
-      <a href="login.html" class="login-side">লগইন করুন</a>
-      <a href="register.html" class="register-side">রেজিস্টার করুন</a>
-    </div>
-
   </aside>
 
   <section class="main-content">
 
-    <section class="card home-hero">
+    <section class="card composer-card">
 
-      <div class="hero-content">
+      <div class="composer-top">
 
-        <span class="hero-label">
-          🌿 ভুবনডাঙ্গায় স্বাগতম
-        </span>
-
-        <h1>
-          শব্দের ভেতর দিয়ে মানুষ মানুষের কাছে ফিরে আসুক।
-        </h1>
-
-        <p>
-          কবিতা, প্রলাপ, চিঠি, আবৃত্তি, সাহিত্য আলোচনা, মনীষীদের বাণী,
-          পরিবেশের কথা এবং মানুষের প্রতি মানুষের দায়িত্ব—সবকিছুকে নিয়ে
-          বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন।
-        </p>
-
-        <div class="hero-actions">
-          <a href="today-poem.html" class="primary">সাম্প্রতিক প্রবাহ</a>
-          <a href="register.html">নিজের ভুবন তৈরি করুন</a>
-          <a href="about.html">আমাদের সম্পর্কে</a>
+        <div class="composer-avatar">
+          আ
         </div>
 
-      </div>
-
-    </section>
-
-    <section class="card midnight-bar">
-
-      <div class="midnight-copy">
-
-        <span class="midnight-label">
-          মাহমুদ সোহেলের স্বতন্ত্র সাহিত্যিক পরিচয়
-        </span>
-
-        <h2>মধ্যরাতের প্রলাপ</h2>
-
-        <p>
-          “আজকের প্রলাপ” সবার সম্মিলিত Feed। আর “মধ্যরাতের প্রলাপ”
-          মাহমুদ সোহেলের নিজস্ব গদ্য, আত্মকথন, অন্ধকার, মুক্তি ও
-          মানুষের অন্তর্গত নীরবতা নিয়ে আলাদা একটি সাহিত্যিক দরজা।
-        </p>
+        <button class="composer-trigger" id="composerTrigger" type="button">
+          আজ আপনার ভেতরে কী কথা জমে আছে?
+        </button>
 
       </div>
 
-      <div class="midnight-action">
-        <a href="madhyorater-prolap.html">
-          মধ্যরাতের দরজা খুলুন →
+      <div class="composer-actions">
+
+        <a href="submit-poem.html">
+          <span>✍</span>
+          কবিতা
         </a>
+
+        <a href="submit-prolap.html">
+          <span>☾</span>
+          প্রলাপ
+        </a>
+
+        <a href="submit-letter.html">
+          <span>✉</span>
+          চিঠিপত্র
+        </a>
+
+        <a href="submit-recitation.html">
+          <span>🎙</span>
+          আবৃত্তি
+        </a>
+
       </div>
 
     </section>
 
     <section class="card feed-control">
 
-      <div class="feed-head">
+      <div class="feed-control-inner">
 
-        <div>
-          <h2>ভুবনডাঙ্গার সাম্প্রতিক প্রবাহ</h2>
-          <p>
-            কবিতা, প্রলাপ, চিঠি, আবৃত্তি, আলোচনা ও পরিবেশের নির্বাচিত লেখা।
-          </p>
+        <div class="feed-title">
+          <h1>ভুবনডাঙ্গার প্রবাহ</h1>
+          <p>মানুষের লেখা, কণ্ঠ, অনুভূতি ও সাহিত্যিক কথোপকথন।</p>
         </div>
 
-        <div class="feed-actions">
+        <div class="feed-tools">
+
+          <select id="feedFilter">
+            <option value="all">সব পোস্ট</option>
+            <option value="poem">কবিতা</option>
+            <option value="prolap">প্রলাপ</option>
+            <option value="midnight">মধ্যরাতের প্রলাপ</option>
+            <option value="letter">চিঠিপত্র</option>
+            <option value="recitation">আবৃত্তি</option>
+            <option value="discussion">আলোচনা</option>
+            <option value="environment">পরিবেশ</option>
+          </select>
+
           <select id="feedSort">
             <option value="recent">সাম্প্রতিক আগে</option>
             <option value="oldest">পুরোনো আগে</option>
           </select>
 
-          <a href="today-poem.html">সব দেখুন</a>
         </div>
 
       </div>
@@ -2151,69 +1816,6 @@ html[data-theme="dark"] .header-icon{
     </section>
 
     <section class="feed-list" id="feedList"></section>
-
-    <section class="card category-section">
-
-      <div class="section-heading">
-
-        <div>
-          <h2>ভুবনডাঙ্গার সাহিত্যিক বিভাগ</h2>
-          <p>
-            একই বিভাগের দ্বিতীয় Navigation Line নয়—প্রতিটি বিভাগের সংক্ষিপ্ত পরিচয়।
-          </p>
-        </div>
-
-        <a href="today-poem.html">সম্পূর্ণ প্রবাহ →</a>
-
-      </div>
-
-      <div class="category-grid">
-
-        <article class="category-card">
-          <div class="category-icon">✍</div>
-          <h3>কবিতা</h3>
-          <p>মৌলিক কবিতা, অনুভূতি ও কাব্যিক ভাষার সম্মিলিত প্রবাহ।</p>
-          <a href="today-poem.html?type=poem">কবিতা পড়ুন →</a>
-        </article>
-
-        <article class="category-card">
-          <div class="category-icon">☾</div>
-          <h3>আজকের প্রলাপ</h3>
-          <p>সবার ব্যক্তিগত আত্মকথন, রাতের ভাবনা ও না-বলা অনুভূতি।</p>
-          <a href="today-prolap.html">প্রলাপ পড়ুন →</a>
-        </article>
-
-        <article class="category-card">
-          <div class="category-icon">✉</div>
-          <h3>চিঠিপত্র</h3>
-          <p>নিজেকে, মানুষকে, স্মৃতিকে এবং ভবিষ্যৎকে লেখা চিঠি।</p>
-          <a href="today-letter.html">চিঠিপত্র পড়ুন →</a>
-        </article>
-
-        <article class="category-card">
-          <div class="category-icon">🎙</div>
-          <h3>আবৃত্তি</h3>
-          <p>Audio এবং Video—দুই ধরনের কবিতা আবৃত্তির বিভাগ।</p>
-          <a href="recitation.html">শুনুন ও দেখুন →</a>
-        </article>
-
-        <article class="category-card">
-          <div class="category-icon">💬</div>
-          <h3>সাহিত্য আলোচনা</h3>
-          <p>কবিতা, বই, ভাষা ও সাহিত্য নিয়ে সম্মানজনক মতবিনিময়।</p>
-          <a href="today-discussion.html">আলোচনায় যান →</a>
-        </article>
-
-        <article class="category-card">
-          <div class="category-icon">🌱</div>
-          <h3>পরিবেশের কথা</h3>
-          <p>মানুষের বাস্তব অভিজ্ঞতা থেকে প্রকৃতি ও দৈনন্দিন দায়িত্বের কথা।</p>
-          <a href="today-environment.html">পরিবেশের লেখা পড়ুন →</a>
-        </article>
-
-      </div>
-
-    </section>
 
   </section>
 
@@ -2232,7 +1834,7 @@ html[data-theme="dark"] .header-icon{
         <h3>আপনার সাহিত্যিক ভুবন</h3>
 
         <p>
-          Login করলে Profile, লেখা, স্মৃতি, Favourite এবং মানবিক আবেদনের অবস্থা দেখা যাবে।
+          আপনার লেখা, স্মৃতি, প্রিয় লেখক ও মানবিক আবেদনের অবস্থা।
         </p>
 
       </div>
@@ -2240,48 +1842,52 @@ html[data-theme="dark"] .header-icon{
       <div class="profile-links">
 
         <a href="profile.html">
-          👤 আপনার Profile
+          👤 আপনার প্রোফাইল
+        </a>
+
+        <a href="profile.html?tab=writings">
+          ✍ আপনার লেখা
+        </a>
+
+        <a href="profile.html?tab=memories">
+          🔖 স্মৃতিতে রাখা
         </a>
 
         <a href="favorite-authors.html">
-          ★ প্রিয় লেখক ও কবি
+          ★ প্রিয় লেখক
         </a>
 
-        <a href="notifications.html">
-          🔔 Notification
-        </a>
-
-        <a href="humanitarian-request.html" class="humanitarian-account">
-          ✚ মানবিক আবেদন ও Pin Request
+        <a href="humanitarian-request.html" class="humanitarian">
+          ✚ মানবিক আবেদন
         </a>
 
       </div>
 
     </section>
 
-    <section class="card right-card">
+    <section class="card right-card notice-card">
 
-      <h3 class="right-title">মানবিক Pin কীভাবে কাজ করবে</h3>
-
-      <div class="right-rule">
-        <h3>ব্যবহারকারীর Request</h3>
-        <p>
-          নিজের Account থেকে আবেদনকারী Homepage-এ Pin করার Request পাঠাতে পারবেন।
-        </p>
+      <div class="notice-icon">
+        ✚
       </div>
 
-      <div class="right-rule">
-        <h3>তাৎক্ষণিকভাবে Public Pin নয়</h3>
-        <p>
-          Request করার পর আবেদনকারী Pending অবস্থাটি দেখবেন; কিন্তু সেটি সঙ্গে সঙ্গে সবার Homepage-এ Pin হবে না।
-        </p>
-      </div>
+      <h3>মানবিক সহায়তা</h3>
 
-      <div class="right-rule">
-        <h3>Admin Review ও Notification</h3>
-        <p>
-          Backend যুক্ত হলে ভুবনডাঙ্গা Team-এর Admin Panel-এ Notification যাবে। যাচাই ও অনুমোদনের পর সক্রিয় আবেদন সাময়িকভাবে Pin হবে।
-        </p>
+      <p>
+        জরুরি মানবিক আবেদন আলাদা Form থেকে পাঠানো যাবে। যাচাই ছাড়া কোনো
+        আবেদন Homepage-এ Public Pin হবে না।
+      </p>
+
+      <div class="notice-actions">
+
+        <a href="humanitarian-notice.html">
+          বর্তমান অবস্থা
+        </a>
+
+        <a href="humanitarian-request.html" class="primary">
+          আবেদন করুন
+        </a>
+
       </div>
 
     </section>
@@ -2290,28 +1896,28 @@ html[data-theme="dark"] .header-icon{
 
       <h3 class="right-title">দ্রুত যান</h3>
 
-      <a href="famous-poet.html" class="right-link">
+      <a href="madhyorater-prolap.html" class="quick-link">
+        মধ্যরাতের প্রলাপ
+        <span>›</span>
+      </a>
+
+      <a href="famous-poet.html" class="quick-link">
         খ্যাতিমান কবি
         <span>›</span>
       </a>
 
-      <a href="famous-quotes.html" class="right-link">
+      <a href="famous-quotes.html" class="quick-link">
         মনীষীদের বাণী
         <span>›</span>
       </a>
 
-      <a href="search.html" class="right-link">
-        লেখা খুঁজুন
+      <a href="today-environment.html" class="quick-link">
+        পরিবেশের কথা
         <span>›</span>
       </a>
 
-      <a href="policy.html" class="right-link">
-        নীতিমালা
-        <span>›</span>
-      </a>
-
-      <a href="contact.html" class="right-link">
-        যোগাযোগ
+      <a href="about.html" class="quick-link">
+        আমাদের সম্পর্কে
         <span>›</span>
       </a>
 
@@ -2342,14 +1948,15 @@ html[data-theme="dark"] .header-icon{
 
 </div>
 
-<button class="to-top" id="toTopBtn" aria-label="উপরে যান">
+<button class="to-top" id="toTopButton" type="button" aria-label="উপরে যান">
   ↑
 </button>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const htmlRoot = document.documentElement;
+const htmlRoot =
+  document.documentElement;
 
 htmlRoot.setAttribute(
   "data-theme",
@@ -2395,83 +2002,22 @@ function getStorageArray(key){
 }
 
 function showToast(message){
-  const toast = document.getElementById("toast");
+  const toast =
+    document.getElementById("toast");
 
-  toast.innerText = message;
-  toast.style.display = "block";
+  toast.innerText =
+    message;
+
+  toast.style.display =
+    "block";
 
   clearTimeout(window.toastTimer);
 
-  window.toastTimer = setTimeout(function(){
-    toast.style.display = "none";
-  },3000);
+  window.toastTimer =
+    setTimeout(function(){
+      toast.style.display = "none";
+    },3000);
 }
-
-/* DATE */
-
-function renderDate(){
-  const today = new Date();
-
-  let banglaDate = "বাংলা তারিখ পাওয়া যায়নি";
-  let hijriDate = "হিজরি তারিখ পাওয়া যায়নি";
-
-  try{
-    banglaDate = new Intl.DateTimeFormat(
-      "bn-BD-u-ca-beng",
-      {
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    ).format(today);
-  }catch(error){}
-
-  try{
-    hijriDate = new Intl.DateTimeFormat(
-      "bn-BD-u-ca-islamic",
-      {
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    ).format(today);
-  }catch(error){}
-
-  const englishDate = new Intl.DateTimeFormat(
-    "en-GB",
-    {
-      day:"numeric",
-      month:"long",
-      year:"numeric"
-    }
-  ).format(today);
-
-  document
-    .querySelectorAll(".banglaDateTicker")
-    .forEach(function(element){
-      element.innerText = banglaDate;
-    });
-
-  document
-    .querySelectorAll(".englishDateTicker")
-    .forEach(function(element){
-      element.innerText = englishDate;
-    });
-
-  document
-    .querySelectorAll(".hijriDateTicker")
-    .forEach(function(element){
-      element.innerText = hijriDate;
-    });
-
-  document.getElementById("headerDateText").innerText =
-    englishDate;
-
-  document.getElementById("footerYear").innerText =
-    toBn(today.getFullYear());
-}
-
-renderDate();
 
 /* FEED DATA */
 
@@ -2484,95 +2030,206 @@ const feedPosts = [
     author:"মাহমুদ সোহেল",
     initials:"মস",
     time:"আজ • ১০:২৫",
-    order:6,
-    excerpt:`বৃষ্টি থেমে গেলে শহরটা খুব ধীরে কথা বলে।
+    order:8,
+    text:`বৃষ্টি থেমে গেলে শহরটা খুব ধীরে কথা বলে।
 জানালার কাঁচে থেকে যাওয়া শেষ ফোঁটার মতো
 কিছু স্মৃতি তখনও নেমে যেতে পারে না।`,
+    description:"কিছু শহর ভিজে গেলে আরও পরিচিত হয়ে ওঠে। রাস্তার আলো, জানালার কাঁচ আর মানুষের অপেক্ষা তখন একই গল্পের ভেতর এসে দাঁড়ায়।",
     tags:["বৃষ্টি","শহর","স্মৃতি"],
+    likes:128,
+    comments:24,
     url:"today-poem.html?type=poem"
   },
   {
     id:2,
     type:"prolap",
-    typeLabel:"প্রলাপ",
+    typeLabel:"আজকের প্রলাপ",
     title:"রাত যত গভীর হয়",
     author:"শুভাশিস",
     initials:"শু",
-    time:"আজ • ১২:১০",
-    order:5,
-    excerpt:`রাত যত গভীর হয়, তত মনে হয় দিনের ব্যস্ততার নিচে চাপা পড়ে থাকা
-কথাগুলো একটু একটু করে নিঃশ্বাস নিতে শুরু করে।`,
-    tags:["রাত","আত্মকথন","নীরবতা"],
+    time:"আজ • ৯:৪০",
+    order:7,
+    description:`রাত যত গভীর হয়, তত মনে হয় দিনের ব্যস্ততার নিচে চাপা পড়ে থাকা কথাগুলো একটু একটু করে নিঃশ্বাস নিতে শুরু করে।
+
+সব কথা কাউকে বলা যায় না। কিছু কথা শুধু নিজের পাশে বসে থাকতে চায়।`,
+    tags:["রাত","নীরবতা","আত্মকথন"],
+    likes:95,
+    comments:17,
     url:"today-prolap.html"
   },
   {
     id:3,
+    type:"midnight",
+    typeLabel:"মধ্যরাতের প্রলাপ",
+    title:"অন্ধকারেরও একটি শান্ত ভাষা আছে",
+    author:"মাহমুদ সোহেল",
+    initials:"মস",
+    time:"গতরাত • ১২:৪৩",
+    order:6,
+    description:`কখনো কখনো অন্ধকার মানেই হারিয়ে যাওয়া নয়। অন্ধকারের ভেতরে দাঁড়িয়েই মানুষ নিজের সবচেয়ে সত্য মুখটি দেখতে পায়।
+
+দিনের আলো আমাদের চারপাশ দেখায়। আর কিছু কিছু রাত আমাদের ভেতরটা দেখায়।`,
+    tags:["মধ্যরাত","অন্ধকার","মুক্তি"],
+    likes:203,
+    comments:36,
+    url:"madhyorater-prolap.html"
+  },
+  {
+    id:4,
     type:"letter",
     typeLabel:"চিঠিপত্র",
     title:"ভবিষ্যতের আমাকে লেখা একটি চিঠি",
     author:"নীরা রহমান",
     initials:"নর",
     time:"গতকাল • ৮:৪০",
-    order:4,
-    excerpt:`তুমি যখন এই চিঠিটি পড়বে, আশা করি তখন নিজের ওপর রাগ একটু কমেছে।
-সবকিছু ঠিক না হলেও নিজেকে ক্ষমা করতে শিখেছ।`,
+    order:5,
+    description:`প্রিয় ভবিষ্যতের আমি,
+
+তুমি যখন এই চিঠিটি পড়বে, আশা করি তখন নিজের ওপর রাগ একটু কমেছে। সবকিছু ঠিক না হলেও নিজেকে ক্ষমা করতে শিখেছ।`,
     tags:["নিজেকে লেখা","ভবিষ্যৎ","ক্ষমা"],
+    likes:84,
+    comments:13,
     url:"today-letter.html"
   },
   {
-    id:4,
+    id:5,
     type:"recitation",
     typeLabel:"ভিডিও আবৃত্তি",
     title:"আবার আসিব ফিরে",
     author:"মাহমুদ সোহেল",
     initials:"মস",
     time:"২ দিন আগে",
-    order:3,
-    excerpt:`জীবনানন্দ দাশের কবিতা। বাংলার মাঠ, নদী এবং ফিরে আসার
-আকাঙ্ক্ষাকে ধীর কণ্ঠ ও নরম দৃশ্যের একটি ভিডিওতে ধারণ করার চেষ্টা।`,
+    order:4,
+    description:"জীবনানন্দ দাশের কবিতা। বাংলার মাঠ, নদী এবং ফিরে আসার আকাঙ্ক্ষাকে ধীর কণ্ঠ ও নরম দৃশ্যের একটি ভিডিওতে ধারণ করার চেষ্টা।",
     tags:["ভিডিও","জীবনানন্দ","বাংলা"],
+    likes:147,
+    comments:29,
     url:"recitation.html?type=video",
-    media:true
+    media:"video"
   },
   {
-    id:5,
+    id:6,
+    type:"recitation",
+    typeLabel:"অডিও আবৃত্তি",
+    title:"কেউ কথা রাখেনি",
+    author:"সাদিয়া ইসলাম",
+    initials:"সই",
+    time:"৩ দিন আগে",
+    order:3,
+    description:"প্রতিশ্রুতি ভেঙে যাওয়ার পরও মানুষের ভেতরে যে অপেক্ষা থেকে যায়, সেই নীরব জায়গাটিকে সামনে রেখে আবৃত্তি।",
+    tags:["অডিও","অপেক্ষা","সুনীল"],
+    likes:112,
+    comments:21,
+    url:"recitation.html?type=audio",
+    media:"audio"
+  },
+  {
+    id:7,
     type:"environment",
     typeLabel:"পরিবেশের কথা",
     title:"বাজারের কাপড়ের ব্যাগটি এখন দরজার পাশেই থাকে",
     author:"শুভাশিস",
     initials:"শু",
-    time:"৩ দিন আগে",
+    time:"৪ দিন আগে",
     order:2,
-    excerpt:`বাজারে পৌঁছানোর পর প্রায়ই মনে পড়ত কাপড়ের ব্যাগটি বাসায়।
-এখন দরজার পাশে ঝুলিয়ে রাখি। চোখে পড়লে নতুন প্লাস্টিকের ব্যাগ নেওয়ার
-প্রয়োজন অনেকটাই কমে যায়।`,
+    description:`প্লাস্টিকের ব্যাগ কম ব্যবহার করব—এই সিদ্ধান্ত অনেকবার নিয়েছি। কিন্তু বাজারে পৌঁছানোর পর মনে পড়ত, কাপড়ের ব্যাগটি বাসায় রেখে এসেছি।
+
+শেষ পর্যন্ত ব্যাগটি দরজার পাশের একটি হুকে ঝুলিয়ে দিলাম। এখন বাইরে বের হওয়ার সময় চোখে পড়ে।`,
     tags:["প্লাস্টিক","কাপড়ের ব্যাগ","ছোট অভ্যাস"],
+    likes:76,
+    comments:12,
     url:"today-environment.html"
   },
   {
-    id:6,
+    id:8,
     type:"discussion",
     typeLabel:"সাহিত্য আলোচনা",
     title:"কঠিন শব্দ কি কবিতা থেকে পাঠককে দূরে সরিয়ে দেয়?",
     author:"আরিফ হোসেন",
     initials:"আহ",
-    time:"৪ দিন আগে",
+    time:"৫ দিন আগে",
     order:1,
-    excerpt:`কঠিন শব্দ কবিতার সৌন্দর্য বাড়াতে পারে। কিন্তু শুধু জটিলতা তৈরি
-করলে পাঠকের সঙ্গে লেখার দূরত্বও বেড়ে যেতে পারে।`,
+    description:"কঠিন শব্দ কবিতার সৌন্দর্য বাড়াতে পারে। কিন্তু শুধু জটিলতা তৈরি করলে পাঠকের সঙ্গে লেখার দূরত্বও বেড়ে যেতে পারে। আপনার কী মনে হয়?",
     tags:["কবিতা","ভাষা","পাঠক"],
+    likes:68,
+    comments:41,
     url:"today-discussion.html"
   }
 ];
 
-/* FEED RENDER */
+let activeFilter =
+  "all";
+
+/* MEDIA */
+
+function createMedia(post){
+  if(post.media === "video"){
+    return `
+      <div class="media-preview">
+        <button
+          class="media-play"
+          type="button"
+          data-media="${post.id}"
+          aria-label="ভিডিও চালান"
+        >
+          ▶
+        </button>
+      </div>
+    `;
+  }
+
+  if(post.media === "audio"){
+    return `
+      <div class="audio-preview">
+
+        <div class="audio-top">
+
+          <button
+            class="audio-play"
+            type="button"
+            data-media="${post.id}"
+            aria-label="অডিও চালান"
+          >
+            ▶
+          </button>
+
+          <div class="audio-info">
+            <h3>${escapeHtml(post.title)}</h3>
+            <p>${escapeHtml(post.author)}-এর কণ্ঠে</p>
+          </div>
+
+          <span class="audio-time">
+            ৪:০৫
+          </span>
+
+        </div>
+
+        <div class="audio-progress">
+          <span></span>
+        </div>
+
+      </div>
+    `;
+  }
+
+  return "";
+}
+
+/* CARD */
 
 function createPostCard(post){
   const article =
     document.createElement("article");
 
   article.className =
-    "card post-card";
+    post.type === "midnight"
+      ? "card post-card midnight-post"
+      : "card post-card";
+
+  const poemContent =
+    post.text
+      ? `<div class="poem-text">${escapeHtml(post.text)}</div>`
+      : "";
 
   article.innerHTML = `
     <div class="post-head">
@@ -2585,16 +2242,20 @@ function createPostCard(post){
 
         <div class="author-copy">
           <h3>${escapeHtml(post.author)}</h3>
-          <p>${escapeHtml(post.time)}</p>
+          <p>${escapeHtml(post.time)} • ${escapeHtml(post.typeLabel)}</p>
         </div>
 
       </div>
 
-      <span class="post-type ${escapeHtml(post.type)}">
-        ${escapeHtml(post.typeLabel)}
-      </span>
+      <button class="post-menu" type="button" aria-label="আরও">
+        ⋯
+      </button>
 
     </div>
+
+    <span class="post-type ${escapeHtml(post.type)}">
+      ${escapeHtml(post.typeLabel)}
+    </span>
 
     <div class="post-body">
 
@@ -2604,11 +2265,13 @@ function createPostCard(post){
         </a>
       </h2>
 
-      <p class="post-excerpt">
-        ${escapeHtml(post.excerpt)}
+      ${poemContent}
+
+      <p class="post-text">
+        ${escapeHtml(post.description)}
       </p>
 
-      ${post.media ? '<div class="media-preview"></div>' : ""}
+      ${createMedia(post)}
 
       <div class="post-tags">
         ${post.tags.map(function(tag){
@@ -2616,6 +2279,11 @@ function createPostCard(post){
         }).join("")}
       </div>
 
+    </div>
+
+    <div class="post-stats">
+      <span>♥ ${toBn(post.likes)} জনের ভালো লেগেছে</span>
+      <span>${toBn(post.comments)}টি মন্তব্য</span>
     </div>
 
     <div class="post-actions">
@@ -2629,20 +2297,20 @@ function createPostCard(post){
       </button>
 
       <button
+        class="post-action comment-toggle"
+        type="button"
+        data-id="${post.id}"
+      >
+        💬 মন্তব্য
+      </button>
+
+      <button
         class="post-action save-button"
         type="button"
         data-id="${post.id}"
       >
         🔖 স্মৃতিতে রাখুন
       </button>
-
-      <a
-        class="post-action"
-        href="${escapeHtml(post.url)}"
-        style="display:flex;align-items:center;justify-content:center;"
-      >
-        সম্পূর্ণ পড়ুন
-      </a>
 
       <button
         class="post-action share-button"
@@ -2653,38 +2321,118 @@ function createPostCard(post){
       </button>
 
     </div>
+
+    <div class="comment-panel" id="commentPanel-${post.id}">
+
+      <form class="comment-form" data-id="${post.id}">
+
+        <input
+          class="comment-input"
+          type="text"
+          maxlength="260"
+          placeholder="সম্মানজনক মন্তব্য লিখুন..."
+        >
+
+        <button class="comment-button" type="submit">
+          যোগ করুন
+        </button>
+
+      </form>
+
+      <div class="comment-list" id="commentList-${post.id}"></div>
+
+    </div>
   `;
 
   return article;
 }
 
+/* RENDER */
+
 function renderFeed(){
   const feedList =
     document.getElementById("feedList");
 
-  const sort =
+  const sortValue =
     document.getElementById("feedSort").value;
 
-  const sorted =
-    [...feedPosts].sort(function(a,b){
-      return sort === "oldest"
-        ? a.order - b.order
-        : b.order - a.order;
+  let posts =
+    feedPosts.filter(function(post){
+      return activeFilter === "all" ||
+        post.type === activeFilter;
     });
+
+  posts.sort(function(a,b){
+    return sortValue === "oldest"
+      ? a.order - b.order
+      : b.order - a.order;
+  });
 
   feedList.innerHTML = "";
 
-  sorted.forEach(function(post){
+  posts.forEach(function(post){
     feedList.appendChild(
       createPostCard(post)
     );
   });
 
-  restorePostStates();
+  restoreStates();
   bindPostEvents();
 }
 
-function restorePostStates(){
+document
+  .getElementById("feedFilter")
+  .addEventListener("change",function(event){
+    activeFilter =
+      event.target.value;
+
+    renderFeed();
+  });
+
+document
+  .getElementById("feedSort")
+  .addEventListener("change",renderFeed);
+
+/* LOCAL STATES */
+
+function getComments(id){
+  return getStorageArray(
+    "bhubondangaHomeComments-" + id
+  );
+}
+
+function renderComments(id){
+  const list =
+    document.getElementById(
+      "commentList-" + id
+    );
+
+  if(!list){
+    return;
+  }
+
+  const comments =
+    getComments(id);
+
+  list.innerHTML = "";
+
+  comments.forEach(function(comment){
+    const item =
+      document.createElement("div");
+
+    item.className =
+      "comment-item";
+
+    item.innerHTML = `
+      <strong>আপনি</strong>
+      <p>${escapeHtml(comment)}</p>
+    `;
+
+    list.appendChild(item);
+  });
+}
+
+function restoreStates(){
   const loved =
     getStorageArray("bhubondangaHomeLoves");
 
@@ -2738,7 +2486,13 @@ function restorePostStates(){
           ? "✓ স্মৃতিতে আছে"
           : "🔖 স্মৃতিতে রাখুন";
     });
+
+  feedPosts.forEach(function(post){
+    renderComments(post.id);
+  });
 }
+
+/* POST EVENTS */
 
 function bindPostEvents(){
   document
@@ -2749,9 +2503,7 @@ function bindPostEvents(){
           Number(button.dataset.id);
 
         let loved =
-          getStorageArray(
-            "bhubondangaHomeLoves"
-          );
+          getStorageArray("bhubondangaHomeLoves");
 
         if(loved.includes(id)){
           loved =
@@ -2767,7 +2519,7 @@ function bindPostEvents(){
           JSON.stringify(loved)
         );
 
-        restorePostStates();
+        restoreStates();
       });
     });
 
@@ -2788,21 +2540,16 @@ function bindPostEvents(){
         }
 
         let memories =
-          getStorageArray(
-            "bhubondangaMemories"
-          );
+          getStorageArray("bhubondangaMemories");
 
-        const existingIndex =
+        const index =
           memories.findIndex(function(memory){
             return memory.title === post.title;
           });
 
-        if(existingIndex >= 0){
-          memories.splice(existingIndex,1);
-
-          showToast(
-            "লেখাটি স্মৃতি থেকে সরানো হয়েছে।"
-          );
+        if(index >= 0){
+          memories.splice(index,1);
+          showToast("লেখাটি স্মৃতি থেকে সরানো হয়েছে।");
         }else{
           memories.unshift({
             type:post.typeLabel,
@@ -2811,19 +2558,65 @@ function bindPostEvents(){
             url:post.url
           });
 
-          showToast(
-            "লেখাটি এই Browser-এর স্মৃতিতে রাখা হয়েছে।"
-          );
+          showToast("লেখাটি এই Browser-এর স্মৃতিতে রাখা হয়েছে।");
         }
 
         localStorage.setItem(
           "bhubondangaMemories",
-          JSON.stringify(
-            memories.slice(0,50)
-          )
+          JSON.stringify(memories.slice(0,50))
         );
 
-        restorePostStates();
+        restoreStates();
+      });
+    });
+
+  document
+    .querySelectorAll(".comment-toggle")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        const panel =
+          document.getElementById(
+            "commentPanel-" + button.dataset.id
+          );
+
+        panel.classList.toggle("open");
+      });
+    });
+
+  document
+    .querySelectorAll(".comment-form")
+    .forEach(function(form){
+      form.addEventListener("submit",function(event){
+        event.preventDefault();
+
+        const id =
+          form.dataset.id;
+
+        const input =
+          form.querySelector(".comment-input");
+
+        const comment =
+          input.value.trim();
+
+        if(!comment){
+          showToast("মন্তব্য লিখে তারপর যোগ করুন।");
+          return;
+        }
+
+        const comments =
+          getComments(id);
+
+        comments.unshift(comment);
+
+        localStorage.setItem(
+          "bhubondangaHomeComments-" + id,
+          JSON.stringify(comments.slice(0,30))
+        );
+
+        input.value = "";
+        renderComments(id);
+
+        showToast("মন্তব্যটি এই Browser-এ রাখা হয়েছে।");
       });
     });
 
@@ -2843,7 +2636,7 @@ function bindPostEvents(){
           return;
         }
 
-        const shareUrl =
+        const url =
           new URL(
             post.url,
             window.location.href
@@ -2854,29 +2647,41 @@ function bindPostEvents(){
             await navigator.share({
               title:post.title,
               text:post.author + " • " + post.typeLabel,
-              url:shareUrl
+              url:url
             });
 
             return;
           }
 
-          await navigator.clipboard.writeText(
-            shareUrl
-          );
-
+          await navigator.clipboard.writeText(url);
           showToast("Link কপি হয়েছে।");
         }catch(error){
           showToast("Share সম্পন্ন হয়নি।");
         }
       });
     });
+
+  document
+    .querySelectorAll("[data-media]")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        showToast(
+          "প্রকৃত Audio বা Video চালাতে Media File ও Backend যুক্ত করতে হবে।"
+        );
+      });
+    });
 }
 
-document
-  .getElementById("feedSort")
-  .addEventListener("change",renderFeed);
-
 renderFeed();
+
+/* COMPOSER */
+
+document
+  .getElementById("composerTrigger")
+  .addEventListener("click",function(){
+    window.location.href =
+      "submit-poem.html";
+  });
 
 /* SEARCH */
 
@@ -2940,33 +2745,33 @@ drawerBackdrop.addEventListener("click",closeDrawer);
 
 /* THEME */
 
-const headerThemeIcon =
-  document.getElementById("headerThemeIcon");
+const themeIcon =
+  document.getElementById("themeIcon");
 
 function updateThemeIcon(){
   const dark =
     htmlRoot.getAttribute("data-theme") === "dark";
 
-  headerThemeIcon.innerText =
+  themeIcon.innerText =
     dark ? "☀️" : "🌙";
 }
 
 document
-  .getElementById("headerThemeBtn")
+  .getElementById("themeButton")
   .addEventListener("click",function(){
-    const next =
+    const nextTheme =
       htmlRoot.getAttribute("data-theme") === "dark"
         ? "light"
         : "dark";
 
     htmlRoot.setAttribute(
       "data-theme",
-      next
+      nextTheme
     );
 
     localStorage.setItem(
       "bhubondangaTheme",
-      next
+      nextTheme
     );
 
     updateThemeIcon();
@@ -2974,19 +2779,24 @@ document
 
 updateThemeIcon();
 
+/* FOOTER */
+
+document.getElementById("footerYear").innerText =
+  toBn(new Date().getFullYear());
+
 /* TO TOP */
 
-const toTopBtn =
-  document.getElementById("toTopBtn");
+const toTopButton =
+  document.getElementById("toTopButton");
 
 window.addEventListener("scroll",function(){
-  toTopBtn.classList.toggle(
+  toTopButton.classList.toggle(
     "show",
     window.scrollY > 450
   );
 });
 
-toTopBtn.addEventListener("click",function(){
+toTopButton.addEventListener("click",function(){
   window.scrollTo({
     top:0,
     behavior:"smooth"
