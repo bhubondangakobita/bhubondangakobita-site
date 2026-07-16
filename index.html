@@ -26,6 +26,7 @@ html{
 
 :root{
   --header-h:90px;
+  --ticker-h:38px;
   --nav-h:49px;
 
   --bg:#eaf4fb;
@@ -67,6 +68,9 @@ html{
   --header-bg:
     radial-gradient(circle at 9% 16%,rgba(255,255,255,.88),transparent 32%),
     linear-gradient(110deg,#f8fcff 0%,#edf8ff 52%,#e5f2fb 100%);
+
+  --ticker-bg:
+    linear-gradient(90deg,#edf8ff,#e3f2ff,#edf8ff);
 
   --nav-bg:rgba(255,255,255,.97);
   --drawer-bg:rgba(244,250,254,.99);
@@ -112,6 +116,10 @@ html[data-theme="dark"]{
   --header-bg:
     radial-gradient(circle at 12% 18%,rgba(60,120,220,.14),transparent 32%),
     linear-gradient(110deg,#01050d 0%,#07142c 52%,#131532 100%);
+
+  --ticker-bg:
+    radial-gradient(circle at center,rgba(81,116,210,.10),transparent 70%),
+    rgba(4,12,29,.98);
 
   --nav-bg:rgba(2,10,24,.98);
   --drawer-bg:rgba(2,11,26,.99);
@@ -316,11 +324,62 @@ html[data-theme="dark"] .header-icon{
   font-weight:700;
 }
 
+/* DATE TICKER */
+
+.date-ticker{
+  position:sticky;
+  top:var(--header-h);
+  z-index:1275;
+  height:var(--ticker-h);
+  overflow:hidden;
+  background:var(--ticker-bg);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(16px);
+}
+
+.ticker-track{
+  width:max-content;
+  min-width:200%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  will-change:transform;
+  animation:dateTicker 34s linear infinite;
+}
+
+.ticker-group{
+  min-width:100vw;
+  padding:0 44px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:65px;
+  color:var(--text-soft);
+  font-size:11px;
+  white-space:nowrap;
+}
+
+.ticker-label,
+.ticker-dot{
+  color:var(--accent);
+  font-weight:700;
+}
+
+@keyframes dateTicker{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-50%);
+  }
+}
+
 /* NAVIGATION */
 
 .category-nav{
   position:sticky;
-  top:var(--header-h);
+  top:calc(var(--header-h) + var(--ticker-h));
   z-index:1250;
   background:var(--nav-bg);
   backdrop-filter:blur(16px);
@@ -392,8 +451,8 @@ html[data-theme="dark"] .header-icon{
 .left-sidebar,
 .right-sidebar{
   position:sticky;
-  top:calc(var(--header-h) + var(--nav-h) + 16px);
-  height:calc(100vh - 180px);
+  top:calc(var(--header-h) + var(--ticker-h) + var(--nav-h) + 16px);
+  height:calc(100vh - 218px);
   overflow:auto;
   scrollbar-width:none;
 }
@@ -1288,6 +1347,7 @@ html[data-theme="dark"] .header-icon{
 @media(max-width:940px){
   :root{
     --header-h:145px;
+    --ticker-h:36px;
     --nav-h:49px;
   }
 
@@ -1342,6 +1402,12 @@ html[data-theme="dark"] .header-icon{
   .avatar-btn{
     width:38px;
     height:38px;
+  }
+
+  .ticker-group{
+    padding:0 24px;
+    gap:42px;
+    font-size:9.5px;
   }
 
   .category-inner{
@@ -1462,6 +1528,60 @@ html[data-theme="dark"] .header-icon{
   </div>
 
 </header>
+
+<section class="date-ticker" aria-label="আজকের তারিখ">
+
+  <div class="ticker-track">
+
+    <div class="ticker-group">
+
+      <span>
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker"></span>
+      </span>
+
+    </div>
+
+    <div class="ticker-group" aria-hidden="true">
+
+      <span>
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">আরবি:</span>
+        <span class="arabicDateTicker"></span>
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
 
 <nav class="category-nav">
 
@@ -2018,6 +2138,84 @@ function showToast(message){
       toast.style.display = "none";
     },3000);
 }
+
+/* বাংলা, ইংরেজি ও আরবি তারিখ */
+
+function renderAllDates(){
+  const today = new Date();
+
+  let banglaDate = "";
+  let arabicDate = "";
+
+  try{
+    banglaDate = new Intl.DateTimeFormat(
+      "bn-BD-u-ca-beng",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(today);
+  }catch(error){
+    banglaDate = new Intl.DateTimeFormat(
+      "bn-BD",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(today);
+  }
+
+  const englishDate = new Intl.DateTimeFormat(
+    "en-GB",
+    {
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    }
+  ).format(today);
+
+  try{
+    arabicDate = new Intl.DateTimeFormat(
+      "bn-BD-u-ca-islamic",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(today);
+  }catch(error){
+    arabicDate = new Intl.DateTimeFormat(
+      "ar-SA-u-ca-islamic",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(today);
+  }
+
+  document
+    .querySelectorAll(".banglaDateTicker")
+    .forEach(function(element){
+      element.innerText = banglaDate;
+    });
+
+  document
+    .querySelectorAll(".englishDateTicker")
+    .forEach(function(element){
+      element.innerText = englishDate;
+    });
+
+  document
+    .querySelectorAll(".arabicDateTicker")
+    .forEach(function(element){
+      element.innerText = arabicDate;
+    });
+}
+
+renderAllDates();
 
 /* FEED DATA */
 
