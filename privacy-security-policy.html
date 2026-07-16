@@ -1,1 +1,2833 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>গোপনীয়তা ও তথ্যের নিরাপত্তা | ভুবনডাঙ্গার কবিতা</title>
+
+<meta
+  name="description"
+  content="ভুবনডাঙ্গার কবিতার ব্যবহারকারী গোপনীয়তা, ব্যক্তিগত তথ্য, বার্তা, Private Draft, Profile Visibility, নিরাপত্তা ও প্রশাসনিক প্রবেশাধিকার সম্পর্কিত নীতিমালা।"
+>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+:root{
+  --header-h:90px;
+  --ticker-h:38px;
+  --nav-h:48px;
+
+  --bg:#eaf4fb;
+  --surface:#ffffff;
+  --surface-2:#f4f9fd;
+  --surface-3:#edf6fc;
+
+  --text:#102f5c;
+  --text-soft:#4d698d;
+  --muted:#7b8da5;
+
+  --border:rgba(15,75,145,.15);
+  --border-strong:rgba(15,91,178,.28);
+
+  --accent:#0b5caf;
+  --accent-soft:rgba(37,151,246,.10);
+
+  --privacy:#6159a3;
+  --privacy-soft:rgba(97,89,163,.10);
+
+  --green:#247d64;
+  --green-soft:rgba(36,125,100,.10);
+
+  --red:#c94c5e;
+  --red-soft:rgba(201,76,94,.09);
+
+  --gold:#9b7228;
+  --gold-soft:rgba(155,114,40,.10);
+
+  --shadow:0 11px 28px rgba(11,51,104,.08);
+  --soft-shadow:0 4px 15px rgba(11,51,104,.06);
+
+  --page-bg:
+    radial-gradient(circle at 8% 4%,rgba(128,195,240,.20),transparent 26%),
+    radial-gradient(circle at 93% 8%,rgba(255,255,255,.74),transparent 28%),
+    linear-gradient(150deg,#f9fcff 0%,#eaf4fb 58%,#f7fbff 100%);
+
+  --header-bg:
+    radial-gradient(circle at 9% 16%,rgba(255,255,255,.88),transparent 32%),
+    linear-gradient(110deg,#f8fcff 0%,#edf8ff 52%,#e5f2fb 100%);
+
+  --ticker-bg:linear-gradient(90deg,#eef8ff,#e4f3ff,#eef8ff);
+  --nav-bg:rgba(255,255,255,.96);
+  --drawer-bg:rgba(244,250,254,.98);
+}
+
+html[data-theme="dark"]{
+  --bg:#020916;
+  --surface:rgba(4,17,39,.97);
+  --surface-2:rgba(8,28,58,.95);
+  --surface-3:rgba(11,35,69,.92);
+
+  --text:#f5f9ff;
+  --text-soft:#c8daf2;
+  --muted:#90a7c8;
+
+  --border:rgba(73,164,247,.23);
+  --border-strong:rgba(84,174,255,.40);
+
+  --accent:#45abff;
+  --accent-soft:rgba(69,171,255,.12);
+
+  --privacy:#c4afff;
+  --privacy-soft:rgba(196,175,255,.12);
+
+  --green:#76dfc0;
+  --green-soft:rgba(118,223,192,.09);
+
+  --red:#ff8394;
+  --red-soft:rgba(255,131,148,.09);
+
+  --gold:#ffd47c;
+  --gold-soft:rgba(255,212,124,.09);
+
+  --shadow:0 17px 44px rgba(0,0,0,.43);
+  --soft-shadow:0 0 23px rgba(69,171,255,.09);
+
+  --page-bg:
+    radial-gradient(circle at 11% 5%,rgba(53,117,223,.22),transparent 25%),
+    radial-gradient(circle at 89% 12%,rgba(97,67,170,.19),transparent 29%),
+    linear-gradient(180deg,#01050d 0%,#07152f 52%,#020712 100%);
+
+  --header-bg:
+    radial-gradient(circle at 12% 18%,rgba(60,120,220,.14),transparent 32%),
+    linear-gradient(110deg,#01050d 0%,#07142c 52%,#131532 100%);
+
+  --ticker-bg:
+    radial-gradient(circle at center,rgba(81,116,210,.10),transparent 70%),
+    rgba(4,12,29,.98);
+
+  --nav-bg:rgba(2,10,24,.97);
+  --drawer-bg:rgba(2,11,26,.98);
+}
+
+body{
+  min-height:100vh;
+  font-family:'Noto Serif Bengali',Georgia,serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.75;
+  overflow-x:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input{
+  font-family:inherit;
+}
+
+button,
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+button{
+  cursor:pointer;
+}
+
+.site-shell{
+  min-height:100vh;
+  background:var(--page-bg);
+}
+
+/* HEADER */
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:1300;
+  min-height:var(--header-h);
+  padding:8px 30px;
+  display:grid;
+  grid-template-columns:390px minmax(280px,520px) minmax(420px,1fr);
+  align-items:center;
+  gap:18px;
+  background:var(--header-bg);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 7px 22px rgba(13,67,136,.08);
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.menu-btn{
+  display:none;
+  width:39px;
+  height:39px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:28px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+}
+
+.brand-leaf{
+  font-size:47px;
+  line-height:1;
+}
+
+.brand-copy h1{
+  color:#0b3671;
+  font-size:28px;
+  font-weight:700;
+  line-height:1.08;
+  white-space:nowrap;
+}
+
+.brand-copy p{
+  margin-top:2px;
+  color:#59728e;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .brand-copy h1{
+  color:#fff;
+}
+
+html[data-theme="dark"] .brand-copy p{
+  color:#b5cbea;
+}
+
+.header-search{
+  position:relative;
+}
+
+.header-search input{
+  width:100%;
+  height:44px;
+  border:1px solid var(--border);
+  outline:none;
+  border-radius:999px;
+  padding:0 48px;
+  background:rgba(255,255,255,.95);
+  color:#183b68;
+  font-size:12.5px;
+}
+
+.header-search::before{
+  content:"⌕";
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#164477;
+  font-size:22px;
+}
+
+.header-search button{
+  position:absolute;
+  right:6px;
+  top:50%;
+  transform:translateY(-50%);
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.header-date-pill{
+  min-height:40px;
+  max-width:240px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 13px;
+  border-radius:12px;
+  background:rgba(215,238,255,.70);
+  color:#164476;
+  font-size:10px;
+  white-space:nowrap;
+  overflow:hidden;
+}
+
+html[data-theme="dark"] .header-date-pill{
+  background:rgba(39,126,217,.12);
+  color:#c9dcf5;
+  border:1px solid rgba(65,160,255,.17);
+}
+
+.header-icon{
+  width:40px;
+  height:40px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  background:rgba(255,255,255,.60);
+  color:#163e72;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+
+html[data-theme="dark"] .header-icon{
+  background:rgba(14,42,82,.72);
+  color:#f1f7ff;
+}
+
+.avatar-btn{
+  width:44px;
+  height:44px;
+  border:2px solid rgba(255,255,255,.94);
+  border-radius:50%;
+  background:var(--accent-soft);
+  color:var(--accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  font-weight:600;
+}
+
+/* DATE TICKER */
+
+.date-ticker{
+  position:sticky;
+  top:var(--header-h);
+  z-index:1250;
+  height:var(--ticker-h);
+  overflow:hidden;
+  background:var(--ticker-bg);
+  border-bottom:1px solid var(--border);
+}
+
+.ticker-track{
+  width:max-content;
+  min-width:200%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  animation:dateTicker 34s linear infinite;
+}
+
+.ticker-group{
+  min-width:100vw;
+  padding:0 44px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:65px;
+  color:var(--text-soft);
+  font-size:11px;
+  white-space:nowrap;
+}
+
+.ticker-label,
+.ticker-dot{
+  color:var(--accent);
+  font-weight:600;
+}
+
+@keyframes dateTicker{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+
+/* NAVIGATION */
+
+.category-nav{
+  position:sticky;
+  top:calc(var(--header-h) + var(--ticker-h));
+  z-index:1200;
+  background:var(--nav-bg);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+
+.category-inner{
+  max-width:1530px;
+  min-height:var(--nav-h);
+  margin:0 auto;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  gap:27px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.category-inner::-webkit-scrollbar{
+  display:none;
+}
+
+.category-inner a{
+  color:var(--text-soft);
+  font-size:13px;
+  white-space:nowrap;
+  padding:13px 0 10px;
+  border-bottom:2px solid transparent;
+}
+
+.category-inner a:hover{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+/* NOTICE */
+
+.notice-strip{
+  max-width:1530px;
+  margin:0 auto;
+  padding:7px 20px 0;
+}
+
+.notice-inner{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  padding:7px 12px;
+  border:1px solid var(--border-strong);
+  border-radius:13px;
+  background:var(--surface);
+  box-shadow:var(--soft-shadow);
+}
+
+.notice-symbol{
+  color:var(--red);
+  font-size:18px;
+}
+
+.notice-text{
+  color:var(--text-soft);
+  font-size:11px;
+}
+
+.notice-links{
+  display:flex;
+  gap:7px;
+}
+
+.notice-links a{
+  padding:5px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--accent);
+  font-size:9.5px;
+}
+
+.notice-links a.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+/* LAYOUT */
+
+.page-layout{
+  max-width:1530px;
+  margin:0 auto;
+  padding:10px 20px 28px;
+  display:grid;
+  grid-template-columns:250px minmax(0,1fr) 325px;
+  gap:14px;
+}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:15px;
+  box-shadow:var(--shadow);
+}
+
+.left-sidebar,
+.right-sidebar{
+  position:sticky;
+  top:calc(var(--header-h) + var(--ticker-h) + var(--nav-h) + 18px);
+  height:calc(100vh - 230px);
+  overflow:auto;
+  scrollbar-width:none;
+}
+
+.left-sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar,
+.mobile-drawer::-webkit-scrollbar{
+  display:none;
+}
+
+/* SIDEBAR */
+
+.side-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:2px 5px 9px;
+}
+
+.side-brand span{
+  font-size:35px;
+}
+
+.side-brand h2{
+  font-size:20px;
+  font-weight:600;
+}
+
+.side-title{
+  margin:15px 0 7px;
+  padding:0 9px;
+  font-size:15px;
+  font-weight:600;
+}
+
+.side-separator{
+  height:1px;
+  margin:11px 8px 4px;
+  background:var(--border);
+}
+
+.side-menu{
+  display:flex;
+  flex-direction:column;
+  gap:1px;
+}
+
+.side-menu a{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 9px;
+  border-radius:10px;
+  color:var(--text);
+  font-size:12.5px;
+}
+
+.side-menu a:hover,
+.side-menu a.active{
+  color:var(--accent);
+  background:var(--accent-soft);
+}
+
+.side-left{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.side-icon{
+  width:20px;
+  text-align:center;
+}
+
+.auth-area{
+  display:grid;
+  gap:8px;
+  margin-top:15px;
+  padding:0 5px 10px;
+}
+
+.login-side,
+.register-side{
+  padding:9px 11px;
+  border-radius:10px;
+  text-align:center;
+  font-size:12px;
+  font-weight:500;
+}
+
+.login-side{
+  background:var(--accent);
+  color:#fff!important;
+}
+
+.register-side{
+  border:1px solid var(--accent);
+  color:var(--accent)!important;
+}
+
+/* MAIN */
+
+.main-content{
+  min-width:0;
+}
+
+/* HERO */
+
+.policy-hero{
+  position:relative;
+  min-height:245px;
+  padding:24px;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-end;
+  color:#fff;
+  background:
+    linear-gradient(180deg,rgba(3,7,20,.03),rgba(3,7,20,.80)),
+    radial-gradient(circle at 80% 18%,rgba(255,255,255,.40),transparent 4%),
+    radial-gradient(circle at 80% 18%,rgba(205,190,255,.23),transparent 14%),
+    linear-gradient(135deg,#7589b6 0%,#4f5791 44%,#232a58 100%);
+}
+
+.policy-hero::before{
+  content:"🔐";
+  position:absolute;
+  right:7%;
+  bottom:-15px;
+  color:rgba(255,255,255,.13);
+  font-size:150px;
+  line-height:1;
+  filter:grayscale(1);
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:780px;
+}
+
+.hero-label{
+  display:inline-block;
+  padding:5px 10px;
+  border:1px solid rgba(255,255,255,.34);
+  border-radius:999px;
+  background:rgba(5,11,27,.24);
+  font-size:8.5px;
+  backdrop-filter:blur(8px);
+}
+
+.hero-content h1{
+  margin-top:10px;
+  font-size:29px;
+  font-weight:600;
+  line-height:1.5;
+}
+
+.hero-content p{
+  max-width:690px;
+  margin-top:7px;
+  color:#e2e8f7;
+  font-size:11px;
+  line-height:1.9;
+}
+
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:13px;
+}
+
+.hero-actions a{
+  min-height:37px;
+  padding:7px 12px;
+  border:1px solid rgba(255,255,255,.30);
+  border-radius:9px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font-size:9.5px;
+}
+
+.hero-actions a.primary{
+  background:#fff;
+  color:#1a244b;
+}
+
+/* SUMMARY */
+
+.summary-card{
+  margin-top:12px;
+  padding:18px;
+  text-align:center;
+  border-color:rgba(196,175,255,.27);
+  background:
+    radial-gradient(circle at top,var(--privacy-soft),transparent 50%),
+    var(--surface);
+}
+
+.summary-card span{
+  display:block;
+  font-size:33px;
+}
+
+.summary-card h2{
+  margin-top:5px;
+  color:var(--privacy);
+  font-size:20px;
+  font-weight:600;
+}
+
+.summary-card p{
+  max-width:760px;
+  margin:8px auto 0;
+  color:var(--text-soft);
+  font-size:10px;
+  line-height:1.9;
+}
+
+/* TABLE OF CONTENTS */
+
+.toc-card{
+  margin-top:12px;
+  padding:17px;
+}
+
+.section-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:11px;
+}
+
+.section-head h2{
+  font-size:18px;
+  font-weight:600;
+}
+
+.section-head p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:8.8px;
+}
+
+.toc-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+
+.toc-link{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:10px 11px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface-2);
+  color:var(--text-soft);
+  font-size:9.5px;
+}
+
+.toc-link:hover{
+  color:var(--accent);
+  border-color:var(--border-strong);
+}
+
+/* POLICY SECTIONS */
+
+.policy-section{
+  margin-top:12px;
+  padding:19px;
+  scroll-margin-top:210px;
+}
+
+.policy-title-row{
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  gap:11px;
+  align-items:start;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--border);
+}
+
+.policy-icon{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--privacy-soft);
+  color:var(--privacy);
+  font-size:18px;
+}
+
+.policy-title h2{
+  font-size:17px;
+  font-weight:600;
+}
+
+.policy-title p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:8.8px;
+}
+
+.policy-content{
+  margin-top:13px;
+  color:var(--text-soft);
+  font-size:10.5px;
+  line-height:2;
+}
+
+.policy-content p + p{
+  margin-top:11px;
+}
+
+.policy-list{
+  display:grid;
+  gap:8px;
+  margin-top:11px;
+}
+
+.policy-item{
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface-2);
+}
+
+.policy-item h3{
+  color:var(--text);
+  font-size:10.5px;
+  font-weight:500;
+}
+
+.policy-item p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:8.8px;
+  line-height:1.75;
+}
+
+.warning-box{
+  margin-top:12px;
+  padding:12px 13px;
+  border-left:3px solid var(--gold);
+  border-radius:0 10px 10px 0;
+  background:var(--gold-soft);
+  color:var(--text-soft);
+  font-size:9.2px;
+  line-height:1.8;
+}
+
+.privacy-box{
+  margin-top:12px;
+  padding:12px 13px;
+  border-left:3px solid var(--privacy);
+  border-radius:0 10px 10px 0;
+  background:var(--privacy-soft);
+  color:var(--text-soft);
+  font-size:9.2px;
+  line-height:1.8;
+}
+
+.security-box{
+  margin-top:12px;
+  padding:12px 13px;
+  border-left:3px solid var(--green);
+  border-radius:0 10px 10px 0;
+  background:var(--green-soft);
+  color:var(--text-soft);
+  font-size:9.2px;
+  line-height:1.8;
+}
+
+/* RIGHTS */
+
+.rights-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  margin-top:12px;
+}
+
+.rights-item{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:var(--surface-2);
+}
+
+.rights-item span{
+  display:block;
+  font-size:20px;
+}
+
+.rights-item h3{
+  margin-top:5px;
+  font-size:11px;
+  font-weight:500;
+}
+
+.rights-item p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:8.5px;
+  line-height:1.7;
+}
+
+/* UPDATE */
+
+.update-card{
+  margin-top:12px;
+  padding:17px;
+  display:grid;
+  grid-template-columns:42px minmax(0,1fr);
+  gap:11px;
+  align-items:start;
+  border-color:rgba(105,224,184,.23);
+  background:
+    radial-gradient(circle at right,var(--green-soft),transparent 42%),
+    var(--surface);
+}
+
+.update-icon{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--green-soft);
+  color:var(--green);
+  font-size:18px;
+}
+
+.update-copy h2{
+  font-size:12px;
+  font-weight:500;
+}
+
+.update-copy p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:8.8px;
+  line-height:1.75;
+}
+
+/* RIGHT SIDEBAR */
+
+.right-sidebar{
+  display:grid;
+  gap:11px;
+  align-content:start;
+}
+
+.right-card{
+  padding:13px;
+}
+
+.right-title{
+  margin-bottom:9px;
+  text-align:center;
+  font-size:15px;
+  font-weight:600;
+}
+
+.right-rule{
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--surface-2);
+}
+
+.right-rule + .right-rule{
+  margin-top:7px;
+}
+
+.right-rule h3{
+  font-size:10.5px;
+  font-weight:500;
+}
+
+.right-rule p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:8.7px;
+  line-height:1.65;
+}
+
+.right-link{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 0;
+  border-bottom:1px solid var(--border);
+  color:var(--text-soft);
+  font-size:10.5px;
+}
+
+/* DRAWER */
+
+.backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1400;
+  display:none;
+  background:rgba(0,0,0,.49);
+}
+
+.backdrop.show{
+  display:block;
+}
+
+.mobile-drawer{
+  position:fixed;
+  top:0;
+  left:-335px;
+  z-index:1500;
+  width:315px;
+  max-width:89vw;
+  height:100vh;
+  padding:16px;
+  overflow:auto;
+  background:var(--drawer-bg);
+  border-right:1px solid var(--border);
+  box-shadow:16px 0 42px rgba(0,0,0,.31);
+  transition:left .25s ease;
+}
+
+.mobile-drawer.open{
+  left:0;
+}
+
+.drawer-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.drawer-brand span{
+  font-size:39px;
+}
+
+.drawer-brand h2{
+  font-size:23px;
+  font-weight:600;
+}
+
+.close-btn{
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:32px;
+}
+
+/* FOOTER */
+
+.site-footer{
+  max-width:1530px;
+  margin:0 auto;
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  background:var(--accent);
+  color:#fff;
+  font-size:11px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.to-top{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:1300;
+  width:41px;
+  height:41px;
+  display:none;
+  border:none;
+  border-radius:50%;
+  background:var(--accent);
+  color:#fff;
+  font-size:19px;
+}
+
+.to-top.show{
+  display:block;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:72px;
+  z-index:2200;
+  display:none;
+  transform:translateX(-50%);
+  max-width:92%;
+  padding:10px 18px;
+  border-radius:999px;
+  background:var(--accent);
+  color:#fff;
+  text-align:center;
+  font-size:11px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1320px){
+  .topbar{
+    grid-template-columns:330px minmax(240px,1fr) auto;
+    padding:8px 20px;
+  }
+
+  .header-date-pill{
+    display:none;
+  }
+}
+
+@media(max-width:1260px){
+  .page-layout{
+    grid-template-columns:225px minmax(0,1fr);
+  }
+
+  .right-sidebar{
+    display:none;
+  }
+}
+
+@media(max-width:940px){
+  :root{
+    --header-h:99px;
+    --ticker-h:36px;
+    --nav-h:46px;
+  }
+
+  .topbar{
+    min-height:var(--header-h);
+    padding:6px 11px;
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-rows:51px 36px;
+  }
+
+  .menu-btn{
+    display:block;
+    width:34px;
+    height:34px;
+    font-size:25px;
+  }
+
+  .brand-leaf{
+    font-size:29px;
+  }
+
+  .brand-copy h1{
+    font-size:18.5px;
+  }
+
+  .brand-copy p{
+    max-width:220px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:8.2px;
+  }
+
+  .header-icon{
+    width:33px;
+    height:33px;
+  }
+
+  .avatar-btn{
+    width:36px;
+    height:36px;
+  }
+
+  .header-search{
+    grid-column:1 / 3;
+  }
+
+  .header-search input{
+    height:34px;
+  }
+
+  .ticker-group{
+    padding:0 24px;
+    gap:40px;
+    font-size:9.5px;
+  }
+
+  .category-inner{
+    padding:0 12px;
+    gap:21px;
+  }
+
+  .category-inner a{
+    font-size:11.5px;
+  }
+
+  .page-layout{
+    display:block;
+    padding:10px 11px 24px;
+  }
+
+  .left-sidebar,
+  .right-sidebar{
+    display:none;
+  }
+
+  .site-footer{
+    display:block;
+    text-align:center;
+  }
+
+  .footer-links{
+    justify-content:center;
+    margin-top:7px;
+  }
+}
+
+@media(max-width:650px){
+  .notice-inner{
+    grid-template-columns:auto minmax(0,1fr);
+  }
+
+  .notice-links{
+    grid-column:2;
+  }
+
+  .policy-hero{
+    min-height:225px;
+    padding:19px 15px;
+  }
+
+  .policy-hero::before{
+    right:1%;
+    font-size:105px;
+  }
+
+  .hero-content h1{
+    font-size:22px;
+  }
+
+  .hero-content p{
+    font-size:9.8px;
+  }
+
+  .summary-card,
+  .toc-card,
+  .policy-section{
+    padding:14px;
+  }
+
+  .toc-grid,
+  .rights-grid{
+    grid-template-columns:1fr;
+  }
+
+  .policy-title-row{
+    grid-template-columns:37px minmax(0,1fr);
+  }
+
+  .policy-icon{
+    width:37px;
+    height:37px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="site-shell">
+
+<header class="topbar">
+
+  <div class="header-left">
+
+    <button class="menu-btn" id="menuBtn" aria-label="মেনু খুলুন">
+      ☰
+    </button>
+
+    <a href="index.html" class="brand">
+
+      <span class="brand-leaf">🌿</span>
+
+      <span class="brand-copy">
+        <h1>ভুবনডাঙ্গার কবিতা</h1>
+        <p>বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন</p>
+      </span>
+
+    </a>
+
+  </div>
+
+  <div class="header-search">
+
+    <input
+      id="headerSearchInput"
+      type="search"
+      placeholder="গোপনীয়তা, নিরাপত্তা, বার্তা অথবা তথ্য খুঁজুন..."
+    >
+
+    <button id="headerSearchButton" aria-label="সার্চ">
+      ⌕
+    </button>
+
+  </div>
+
+  <div class="header-actions">
+
+    <div class="header-date-pill">
+      📅
+      <span id="headerDateText">তারিখ লোড হচ্ছে...</span>
+    </div>
+
+    <a href="notifications.html" class="header-icon" aria-label="নোটিফিকেশন">
+      🔔
+    </a>
+
+    <a href="messages.html" class="header-icon" aria-label="বার্তা">
+      💬
+    </a>
+
+    <button class="header-icon" id="headerThemeBtn" aria-label="থিম পরিবর্তন">
+      <span id="headerThemeIcon">🌙</span>
+    </button>
+
+    <a href="login.html" class="avatar-btn" aria-label="অ্যাকাউন্ট">
+      আ
+    </a>
+
+  </div>
+
+</header>
+
+<section class="date-ticker">
+
+  <div class="ticker-track">
+
+    <div class="ticker-group">
+
+      <span>
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">হিজরি:</span>
+        <span class="hijriDateTicker"></span>
+      </span>
+
+    </div>
+
+    <div class="ticker-group" aria-hidden="true">
+
+      <span>
+        <span class="ticker-label">বাংলা:</span>
+        <span class="banglaDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">ইংরেজি:</span>
+        <span class="englishDateTicker"></span>
+      </span>
+
+      <span class="ticker-dot">✦</span>
+
+      <span>
+        <span class="ticker-label">হিজরি:</span>
+        <span class="hijriDateTicker"></span>
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
+
+<nav class="category-nav">
+
+  <div class="category-inner">
+    <a href="index.html">হোম</a>
+    <a href="today-poem.html?sort=popular">জনপ্রিয়</a>
+    <a href="today-poem.html">প্রবাহ</a>
+    <a href="today-poem.html?type=poem">কবিতা</a>
+    <a href="today-prolap.html">প্রলাপ</a>
+    <a href="today-letter.html">চিঠিপত্র</a>
+    <a href="famous-quotes.html">বাণী</a>
+    <a href="recitation.html">আবৃত্তি</a>
+    <a href="famous-poet.html">খ্যাতিমান কবি</a>
+  </div>
+
+</nav>
+
+<section class="notice-strip">
+
+  <div class="notice-inner">
+
+    <span class="notice-symbol">♡</span>
+
+    <div class="notice-text">
+      <strong>মানবিক আবেদন:</strong>
+      বর্তমানে কোনো যাচাইকৃত জরুরি আবেদন নেই। অনুমোদিত আবেদন প্রকাশিত হলে এখানে দেখা যাবে।
+    </div>
+
+    <div class="notice-links">
+      <a href="humanitarian-notice.html">বিস্তারিত</a>
+      <a href="humanitarian-request.html" class="primary">আবেদন করুন</a>
+    </div>
+
+  </div>
+
+</section>
+
+<div class="backdrop" id="drawerBackdrop"></div>
+
+<aside class="mobile-drawer" id="mobileDrawer">
+
+  <div class="drawer-head">
+
+    <a href="index.html" class="drawer-brand">
+      <span>🌿</span>
+      <h2>আপন ভুবন</h2>
+    </a>
+
+    <button class="close-btn" id="closeDrawer">
+      ×
+    </button>
+
+  </div>
+
+  <div class="side-menu">
+
+    <a href="index.html">
+      <span class="side-left">
+        <span class="side-icon">🏠</span>
+        হোম
+      </span>
+    </a>
+
+    <a href="profile.html">
+      <span class="side-left">
+        <span class="side-icon">👤</span>
+        আপনার প্রোফাইল
+      </span>
+    </a>
+
+    <a href="profile-edit.html#privacy">
+      <span class="side-left">
+        <span class="side-icon">⚙</span>
+        Privacy Settings
+      </span>
+    </a>
+
+    <a href="privacy-security-policy.html" class="active">
+      <span class="side-left">
+        <span class="side-icon">🔐</span>
+        গোপনীয়তা ও নিরাপত্তা
+      </span>
+    </a>
+
+    <a href="creative-work-protection.html">
+      <span class="side-left">
+        <span class="side-icon">©</span>
+        সৃজনশীল কাজের সুরক্ষা
+      </span>
+    </a>
+
+    <a href="policy.html">
+      <span class="side-left">
+        <span class="side-icon">📌</span>
+        সাধারণ নীতিমালা
+      </span>
+    </a>
+
+    <a href="contact.html">
+      <span class="side-left">
+        <span class="side-icon">✉</span>
+        যোগাযোগ
+      </span>
+    </a>
+
+  </div>
+
+  <div class="auth-area">
+    <a href="login.html" class="login-side">লগইন করুন</a>
+    <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+  </div>
+
+</aside>
+
+<main class="page-layout">
+
+  <aside class="left-sidebar">
+
+    <a href="index.html" class="side-brand">
+      <span>🌿</span>
+      <h2>আপন ভুবন</h2>
+    </a>
+
+    <div class="side-menu">
+
+      <a href="profile.html">
+        <span class="side-left">
+          <span class="side-icon">👤</span>
+          আপনার প্রোফাইল
+        </span>
+      </a>
+
+      <a href="profile-edit.html#privacy">
+        <span class="side-left">
+          <span class="side-icon">⚙</span>
+          Privacy Settings
+        </span>
+      </a>
+
+      <a href="messages.html">
+        <span class="side-left">
+          <span class="side-icon">💬</span>
+          ব্যক্তিগত বার্তা
+        </span>
+      </a>
+
+      <a href="notifications.html">
+        <span class="side-left">
+          <span class="side-icon">🔔</span>
+          নোটিফিকেশন
+        </span>
+      </a>
+
+      <a href="privacy-security-policy.html" class="active">
+        <span class="side-left">
+          <span class="side-icon">🔐</span>
+          গোপনীয়তা ও নিরাপত্তা
+        </span>
+      </a>
+
+      <a href="creative-work-protection.html">
+        <span class="side-left">
+          <span class="side-icon">©</span>
+          সৃজনশীল কাজের সুরক্ষা
+        </span>
+      </a>
+
+      <a href="policy.html">
+        <span class="side-left">
+          <span class="side-icon">📌</span>
+          সাধারণ নীতিমালা
+        </span>
+      </a>
+
+    </div>
+
+    <div class="side-separator"></div>
+
+    <h3 class="side-title">এই নীতিমালার অংশ</h3>
+
+    <div class="side-menu">
+
+      <a href="#data-collection">
+        <span class="side-left">
+          <span class="side-icon">◉</span>
+          তথ্য সংগ্রহ
+        </span>
+      </a>
+
+      <a href="#profile-privacy">
+        <span class="side-left">
+          <span class="side-icon">👁</span>
+          Profile Privacy
+        </span>
+      </a>
+
+      <a href="#messages">
+        <span class="side-left">
+          <span class="side-icon">💬</span>
+          ব্যক্তিগত বার্তা
+        </span>
+      </a>
+
+      <a href="#drafts">
+        <span class="side-left">
+          <span class="side-icon">📝</span>
+          Private Draft
+        </span>
+      </a>
+
+      <a href="#admin-access">
+        <span class="side-left">
+          <span class="side-icon">⚖</span>
+          Admin Access
+        </span>
+      </a>
+
+      <a href="#security">
+        <span class="side-left">
+          <span class="side-icon">🛡</span>
+          নিরাপত্তা
+        </span>
+      </a>
+
+    </div>
+
+    <div class="auth-area">
+      <a href="login.html" class="login-side">লগইন করুন</a>
+      <a href="register.html" class="register-side">রেজিস্টার করুন</a>
+    </div>
+
+  </aside>
+
+  <section class="main-content">
+
+    <section class="card policy-hero">
+
+      <div class="hero-content">
+
+        <span class="hero-label">
+          🔐 গোপনীয়তা ও তথ্যের নিরাপত্তা
+        </span>
+
+        <h1>
+          আপনার ব্যক্তিগত ভুবন আপনার নিয়ন্ত্রণে।
+        </h1>
+
+        <p>
+          আপনি কোন তথ্য প্রকাশ করবেন, কার সঙ্গে ভাগ করবেন এবং কোন লেখা
+          ব্যক্তিগত রাখবেন—এই সিদ্ধান্তের অধিকার আপনার। ভুবনডাঙ্গার কবিতা
+          অপ্রয়োজনীয় নজরদারি, গোপন বার্তায় অবাধ প্রবেশ এবং প্রমাণহীন
+          প্রশাসনিক হস্তক্ষেপ সমর্থন করে না।
+        </p>
+
+        <div class="hero-actions">
+          <a href="#policyContents" class="primary">নীতিমালা পড়ুন</a>
+          <a href="profile-edit.html#privacy">Privacy Settings</a>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card summary-card">
+
+      <span>🛡</span>
+
+      <h2>গোপনীয়তা কোনো বিশেষ সুবিধা নয়—এটি ব্যবহারকারীর অধিকার</h2>
+
+      <p>
+        Public Profile বা প্রকাশিত লেখা সবার জন্য দৃশ্যমান হতে পারে।
+        কিন্তু ব্যক্তিগত বার্তা, Private Draft, Password, Security Code,
+        গোপন Profile তথ্য এবং ব্যক্তিগত পছন্দ সাধারণ Founder, Admin,
+        Moderator অথবা অন্য ব্যবহারকারীর জন্য অবাধভাবে উন্মুক্ত থাকবে না।
+      </p>
+
+    </section>
+
+    <section class="card toc-card" id="policyContents">
+
+      <div class="section-head">
+
+        <div>
+          <h2>নীতিমালার বিষয়সমূহ</h2>
+          <p>যে অংশটি পড়তে চান, সরাসরি সেখানে যান।</p>
+        </div>
+
+      </div>
+
+      <div class="toc-grid">
+
+        <a href="#scope" class="toc-link">
+          নীতিমালার পরিধি
+          <span>›</span>
+        </a>
+
+        <a href="#data-collection" class="toc-link">
+          কী তথ্য সংগ্রহ হতে পারে
+          <span>›</span>
+        </a>
+
+        <a href="#data-use" class="toc-link">
+          তথ্য ব্যবহারের উদ্দেশ্য
+          <span>›</span>
+        </a>
+
+        <a href="#profile-privacy" class="toc-link">
+          Profile Visibility
+          <span>›</span>
+        </a>
+
+        <a href="#messages" class="toc-link">
+          ব্যক্তিগত বার্তার গোপনীয়তা
+          <span>›</span>
+        </a>
+
+        <a href="#drafts" class="toc-link">
+          Private Draft
+          <span>›</span>
+        </a>
+
+        <a href="#admin-access" class="toc-link">
+          Founder ও Admin-এর সীমা
+          <span>›</span>
+        </a>
+
+        <a href="#reports" class="toc-link">
+          Report ও তদন্ত
+          <span>›</span>
+        </a>
+
+        <a href="#security" class="toc-link">
+          Account Security
+          <span>›</span>
+        </a>
+
+        <a href="#user-rights" class="toc-link">
+          ব্যবহারকারীর অধিকার
+          <span>›</span>
+        </a>
+
+        <a href="#local-storage" class="toc-link">
+          Static ও Local Storage
+          <span>›</span>
+        </a>
+
+        <a href="#contact-policy" class="toc-link">
+          অভিযোগ ও যোগাযোগ
+          <span>›</span>
+        </a>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="scope">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">01</div>
+
+        <div class="policy-title">
+          <h2>নীতিমালার পরিধি</h2>
+          <p>Website, Account, Profile, লেখা, বার্তা ও ব্যবহারকারীর কার্যক্রম</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          এই নীতিমালা ভুবনডাঙ্গার কবিতা Website-এর Account, Profile,
+          প্রকাশিত সাহিত্যকর্ম, ব্যক্তিগত Draft, বার্তা, মন্তব্য, প্রতিক্রিয়া,
+          Favourite, Memory, Privacy Settings, Report এবং প্রশাসনিক
+          ব্যবস্থাপনার ক্ষেত্রে প্রযোজ্য।
+        </p>
+
+        <p>
+          Website-এর বর্তমান Static সংস্করণে অনেক সুবিধা শুধু Browser-এর
+          Local Storage-এ কাজ করে। ভবিষ্যতে Backend ও Database যুক্ত হলে
+          এই নীতিমালার মূল নীতিগুলো অনুসরণ করে তথ্য পরিচালনা করা হবে।
+        </p>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="data-collection">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">02</div>
+
+        <div class="policy-title">
+          <h2>কী ধরনের তথ্য সংগ্রহ হতে পারে</h2>
+          <p>শুধু প্রয়োজনীয় তথ্য সংগ্রহের নীতি</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          Account পরিচালনা, নিরাপত্তা, প্রকাশনা ও যোগাযোগের জন্য প্রয়োজনীয়
+          সীমিত তথ্য সংগ্রহ করা হতে পারে। প্রয়োজনের অতিরিক্ত ব্যক্তিগত তথ্য
+          সংগ্রহ করা এই Platform-এর উদ্দেশ্য নয়।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>Account Information</h3>
+            <p>
+              নাম, Username, Email Address, Password-এর নিরাপদ Hash,
+              Profile Photo এবং Account তৈরির সময়।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Profile Information</h3>
+            <p>
+              পরিচিতি, অবস্থান, পছন্দের সাহিত্যধারা, প্রিয় লেখক,
+              সাহিত্যিক অবদান এবং ব্যবহারকারী নিজে প্রকাশ করতে চাওয়া তথ্য।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Content Information</h3>
+            <p>
+              কবিতা, প্রলাপ, চিঠি, আলোচনা, আবৃত্তি, পরিবেশবিষয়ক লেখা,
+              মন্তব্য এবং প্রকাশনার সময়।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Security Information</h3>
+            <p>
+              Login সময়, সন্দেহজনক Login Attempt, Device Session,
+              Password পরিবর্তনের সময় এবং নিরাপত্তা-সম্পর্কিত কার্যক্রম।
+            </p>
+          </article>
+
+        </div>
+
+        <div class="privacy-box">
+          Password কখনো সাধারণ Text হিসেবে সংরক্ষণ করা উচিত নয়।
+          ভবিষ্যৎ Backend-এ নিরাপদ Password Hashing ও Session Management ব্যবহার করতে হবে।
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="data-use">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">03</div>
+
+        <div class="policy-title">
+          <h2>তথ্য ব্যবহারের উদ্দেশ্য</h2>
+          <p>সেবা প্রদান, নিরাপত্তা ও ব্যবহারকারীর অভিজ্ঞতা উন্নয়ন</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          সংগৃহীত তথ্য শুধু Account পরিচালনা, ব্যবহারকারীকে প্রয়োজনীয়
+          সেবা প্রদান, নিরাপত্তা রক্ষা, প্রকাশনা দেখানো এবং অভিযোগ
+          পর্যালোচনার জন্য ব্যবহার করা হবে।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>Account পরিচালনা</h3>
+            <p>
+              Login, Registration, Password Recovery এবং Account Settings পরিচালনা।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>নির্ধারিত দর্শকের কাছে Content দেখানো</h3>
+            <p>
+              Public, Followers Only অথবা Private—ব্যবহারকারীর নির্বাচিত
+              Visibility অনুযায়ী লেখা ও Profile তথ্য দেখানো।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>নিরাপত্তা ও অপব্যবহার প্রতিরোধ</h3>
+            <p>
+              Spam, Fake Account, হুমকি, হয়রানি এবং অননুমোদিত প্রবেশ শনাক্ত করা।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Report পর্যালোচনা</h3>
+            <p>
+              Report করা নির্দিষ্ট Content, Message অংশ এবং প্রয়োজনীয় Context
+              যাচাই করে ন্যায়সঙ্গত সিদ্ধান্ত নেওয়া।
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="profile-privacy">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">04</div>
+
+        <div class="policy-title">
+          <h2>Profile Visibility ও ব্যক্তিগত পছন্দ</h2>
+          <p>আপনি ঠিক করবেন অন্যরা কী দেখতে পারবে</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          Profile-এর বিভিন্ন অংশ আলাদাভাবে Public, Followers Only অথবা
+          Private রাখা যাবে। পুরো Profile এক নিয়মে আটকে না রেখে তথ্যের
+          ধরন অনুযায়ী আলাদা নিয়ন্ত্রণ থাকা উচিত।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>পরিচিতি ও ব্যক্তিগত তথ্য</h3>
+            <p>
+              Bio, অবস্থান, যোগাযোগের তথ্য এবং ব্যক্তিগত পরিচয় আলাদাভাবে
+              লুকানো বা সীমিত করা যাবে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>প্রিয় কবি ও লেখক</h3>
+            <p>
+              Favourite Authors তালিকা Public, Followers Only অথবা Private রাখা যাবে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>সাহিত্যিক অবদান ও কার্যক্রম</h3>
+            <p>
+              নতুন কবিতা, প্রলাপ, চিঠি, সংশোধন, তথ্য সংযোজন এবং সাহিত্যিক
+              অবদান Profile-এ দেখাবেন কি না ব্যবহারকারী ঠিক করবেন।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>অনুসারী ও অনুসরণ তালিকা</h3>
+            <p>
+              Followers এবং Following তালিকা লুকানো বা সীমিত করার সুযোগ থাকবে।
+            </p>
+          </article>
+
+        </div>
+
+        <div class="privacy-box">
+          Profile Privacy পরিবর্তনের পর নতুন Setting ভবিষ্যৎ Backend-এ
+          Account-এর সঙ্গে Sync হবে। বর্তমান Static সংস্করণে এটি শুধু একই Browser-এ থাকতে পারে।
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="messages">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">05</div>
+
+        <div class="policy-title">
+          <h2>ব্যক্তিগত বার্তার গোপনীয়তা</h2>
+          <p>Private Message সাধারণ প্রশাসনিক নজরদারির বিষয় নয়</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          ব্যক্তিগত বার্তা দুই বা ততোধিক নির্ধারিত ব্যবহারকারীর মধ্যে
+          ব্যক্তিগত যোগাযোগ। Founder, Admin বা Moderator সাধারণভাবে
+          ব্যবহারকারীর Inbox খুলে সব বার্তা পড়তে পারবেন না।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>অবাধ প্রবেশ নিষিদ্ধ</h3>
+            <p>
+              কৌতূহল, ব্যক্তিগত সম্পর্ক, মতভেদ অথবা সাধারণ প্রশাসনিক
+              সুবিধার জন্য কারও Private Message পড়া যাবে না।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Report করা নির্দিষ্ট বার্তা</h3>
+            <p>
+              কোনো ব্যবহারকারী Message Report করলে শুধু Report করা অংশ এবং
+              বিচার করার জন্য প্রয়োজনীয় সীমিত Context পর্যালোচনা করা যেতে পারে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>প্রমাণ সংরক্ষণ</h3>
+            <p>
+              হুমকি, হয়রানি, প্রতারণা বা গুরুতর নিয়মভঙ্গের Report হলে
+              সংশ্লিষ্ট প্রমাণ সীমিত সময়ের জন্য সংরক্ষণ করা যেতে পারে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>ব্যক্তিগত বার্তা প্রকাশ নয়</h3>
+            <p>
+              অনুমতি, নিরাপত্তাজনিত প্রয়োজন অথবা আইনগত বাধ্যবাধকতা ছাড়া
+              ব্যক্তিগত বার্তা Public করা যাবে না।
+            </p>
+          </article>
+
+        </div>
+
+        <div class="warning-box">
+          ব্যক্তিগত বার্তায় Password, ব্যাংক তথ্য, OTP, পরিচয়পত্রের ছবি
+          অথবা অত্যন্ত সংবেদনশীল তথ্য পাঠানো নিরাপদ নয়।
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="drafts">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">06</div>
+
+        <div class="policy-title">
+          <h2>Private Draft ও অপ্রকাশিত লেখা</h2>
+          <p>প্রকাশের আগে লেখা সম্পূর্ণভাবে লেখকের নিয়ন্ত্রণে</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          Private Draft, অসমাপ্ত কবিতা, ব্যক্তিগত চিঠি, অপ্রকাশিত প্রলাপ
+          অথবা ভবিষ্যৎ প্রকাশনার খসড়া সাধারণভাবে শুধু লেখকের জন্য দৃশ্যমান থাকবে।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>Admin-এর সাধারণ প্রবেশাধিকার নেই</h3>
+            <p>
+              সাধারণ Moderation অথবা Content Review-এর নামে Private Draft
+              খুলে পড়া যাবে না।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>লেখক নিজে Review চাইলে</h3>
+            <p>
+              ব্যবহারকারী স্বেচ্ছায় Draft Review-এর জন্য পাঠালে শুধু সেই
+              নির্দিষ্ট Draft অনুমোদিত Reviewer দেখতে পারবেন।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Draft Public নয়</h3>
+            <p>
+              Save করা মানেই প্রকাশ নয়। ব্যবহারকারী প্রকাশের নির্দেশ না দেওয়া
+              পর্যন্ত Draft Feed বা Profile-এ দেখা যাবে না।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>মুছে ফেলার অধিকার</h3>
+            <p>
+              ব্যবহারকারী নিজের Draft স্থায়ীভাবে মুছে দেওয়ার অনুরোধ বা ব্যবস্থা ব্যবহার করতে পারবেন।
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="admin-access">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">07</div>
+
+        <div class="policy-title">
+          <h2>Founder, Admin ও Moderator-এর সীমিত প্রবেশাধিকার</h2>
+          <p>ক্ষমতার সঙ্গে জবাবদিহি ও প্রমাণ প্রয়োজন</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          Platform পরিচালনার দায়িত্ব কাউকে ব্যবহারকারীর ব্যক্তিগত ভুবনে
+          সীমাহীন প্রবেশের অধিকার দেয় না। প্রতিটি প্রশাসনিক পদক্ষেপের
+          নির্দিষ্ট উদ্দেশ্য, প্রয়োজনীয়তা এবং জবাবদিহি থাকতে হবে।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>Public Content Moderation</h3>
+            <p>
+              প্রকাশিত লেখা, মন্তব্য ও Public Profile তথ্য নিয়মভঙ্গের ক্ষেত্রে পর্যালোচনা করা যাবে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Private Content সীমিত</h3>
+            <p>
+              Private Message, Draft, Password, Security Code ও গোপন Profile
+              তথ্য সাধারণ Admin Panel-এ উন্মুক্ত থাকবে না।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Role-based Access</h3>
+            <p>
+              ভবিষ্যৎ Backend-এ প্রত্যেক Admin শুধু দায়িত্ব অনুযায়ী প্রয়োজনীয়
+              অংশে প্রবেশ করতে পারবেন।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Audit Log</h3>
+            <p>
+              গুরুত্বপূর্ণ প্রশাসনিক পদক্ষেপ, Content Removal, Restriction এবং
+              নিরাপত্তা-সম্পর্কিত Access Audit Log-এ নথিভুক্ত থাকা উচিত।
+            </p>
+          </article>
+
+        </div>
+
+        <div class="privacy-box">
+          Founder পরিচয় Platform-এর বিশেষ মর্যাদা বহন করতে পারে, কিন্তু
+          ব্যক্তিগত বার্তা বা গোপন তথ্য পড়ার স্বয়ংক্রিয় অধিকার দেয় না।
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="reports">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">08</div>
+
+        <div class="policy-title">
+          <h2>Report, অভিযোগ ও তদন্ত</h2>
+          <p>প্রমাণ, Context ও ন্যায়সঙ্গত Review</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          কোনো Report পাওয়া মানেই অভিযুক্ত ব্যবহারকারী দোষী নয়।
+          সিদ্ধান্তের আগে Report-এর বিষয়, প্রমাণ, Context এবং সম্ভাব্য
+          ভুল বোঝাবুঝি যাচাই করতে হবে।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>নির্দিষ্ট Content নির্বাচন</h3>
+            <p>
+              Report করার সময় কোন লেখা, মন্তব্য বা Message অংশ নিয়মভঙ্গ করেছে তা উল্লেখ করতে হবে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Context Review</h3>
+            <p>
+              শুধু একটি বাক্য নয়; অর্থ বোঝার জন্য প্রয়োজনীয় সীমিত পূর্ববর্তী
+              ও পরবর্তী Context দেখা যেতে পারে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>প্রমাণ ছাড়া শাস্তি নয়</h3>
+            <p>
+              ব্যক্তিগত শত্রুতা, অনুমান বা একতরফা অভিযোগের ভিত্তিতে Restriction
+              বা Ban দেওয়া উচিত নয়।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>শুনানির সুযোগ</h3>
+            <p>
+              গুরুতর ব্যবস্থা নেওয়ার আগে সম্ভব হলে অভিযুক্ত ব্যবহারকারীকে
+              ব্যাখ্যা বা Appeal-এর সুযোগ দেওয়া হবে।
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="security">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">09</div>
+
+        <div class="policy-title">
+          <h2>Account ও তথ্যের নিরাপত্তা</h2>
+          <p>প্রযুক্তিগত ও ব্যবহারকারী-ভিত্তিক সুরক্ষা</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          কোনো Website শতভাগ নিরাপত্তার নিশ্চয়তা দিতে পারে না। তবে
+          যুক্তিসঙ্গত প্রযুক্তিগত, প্রশাসনিক ও ব্যবহারকারী-ভিত্তিক ব্যবস্থা
+          ব্যবহার করে ঝুঁকি কমানো হবে।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>নিরাপদ Password</h3>
+            <p>
+              দীর্ঘ, আলাদা এবং অনুমান করা কঠিন Password ব্যবহার করুন।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Session Control</h3>
+            <p>
+              ভবিষ্যৎ Backend-এ Active Session দেখা এবং সন্দেহজনক Device Logout করার সুবিধা থাকবে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Login Alert</h3>
+            <p>
+              নতুন বা অস্বাভাবিক Device থেকে Login হলে ব্যবহারকারীকে সতর্ক করা যেতে পারে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Data Access সীমিত রাখা</h3>
+            <p>
+              Database, Backup এবং Admin Tool শুধু অনুমোদিত দায়িত্বশীল ব্যক্তিদের জন্য সীমিত থাকবে।
+            </p>
+          </article>
+
+        </div>
+
+        <div class="security-box">
+          সন্দেহজনক Login, Account দখল বা তথ্য ফাঁসের আশঙ্কা হলে দ্রুত
+          Password পরিবর্তন করুন এবং Support-এ যোগাযোগ করুন।
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="user-rights">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">10</div>
+
+        <div class="policy-title">
+          <h2>ব্যবহারকারীর অধিকার</h2>
+          <p>তথ্য দেখা, পরিবর্তন, সীমিত ও মুছে দেওয়ার ক্ষমতা</p>
+        </div>
+
+      </div>
+
+      <div class="rights-grid">
+
+        <article class="rights-item">
+          <span>👁</span>
+          <h3>নিজের তথ্য দেখার অধিকার</h3>
+          <p>
+            Account ও Profile-এ কোন তথ্য সংরক্ষিত আছে তা দেখার সুযোগ।
+          </p>
+        </article>
+
+        <article class="rights-item">
+          <span>✎</span>
+          <h3>তথ্য সংশোধনের অধিকার</h3>
+          <p>
+            ভুল বা পুরোনো Profile তথ্য পরিবর্তনের সুযোগ।
+          </p>
+        </article>
+
+        <article class="rights-item">
+          <span>🔐</span>
+          <h3>Visibility নিয়ন্ত্রণ</h3>
+          <p>
+            Profile, Favourite, Activity ও Content-এর দর্শক নির্ধারণ।
+          </p>
+        </article>
+
+        <article class="rights-item">
+          <span>🗑</span>
+          <h3>তথ্য মুছে দেওয়ার অনুরোধ</h3>
+          <p>
+            প্রযোজ্য ক্ষেত্রে নিজের Content, Draft বা Account মুছে দেওয়ার অনুরোধ।
+          </p>
+        </article>
+
+        <article class="rights-item">
+          <span>⬇</span>
+          <h3>Data Export</h3>
+          <p>
+            ভবিষ্যৎ Backend-এ নিজের প্রকাশনা ও Account তথ্য Download-এর সুযোগ।
+          </p>
+        </article>
+
+        <article class="rights-item">
+          <span>⚖</span>
+          <h3>Appeal-এর অধিকার</h3>
+          <p>
+            Restriction, Content Removal বা Moderation সিদ্ধান্তের বিরুদ্ধে Appeal করা।
+          </p>
+        </article>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="local-storage">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">11</div>
+
+        <div class="policy-title">
+          <h2>Static Website ও Local Storage</h2>
+          <p>বর্তমান সংস্করণে তথ্য কোথায় থাকে</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          Website-এর বর্তমান Static সংস্করণে Favourite, Memory, Local Comment,
+          Draft, Theme এবং কিছু Submission একই Browser-এর Local Storage-এ
+          সংরক্ষিত হতে পারে।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>Server-এ পাঠানো হয় না</h3>
+            <p>
+              স্পষ্টভাবে বলা না থাকলে Local Storage-এর তথ্য Website Team,
+              Founder বা Admin-এর কাছে যায় না।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>Device পরিবর্তনে পাওয়া যাবে না</h3>
+            <p>
+              অন্য Browser, অন্য Device বা Browser Data Clear করলে Local তথ্য হারিয়ে যেতে পারে।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>এটি প্রকৃত Account Sync নয়</h3>
+            <p>
+              Backend যুক্ত না হওয়া পর্যন্ত Local Draft ও Favourite Account-এর সঙ্গে Sync হবে না।
+            </p>
+          </article>
+
+        </div>
+
+        <div class="warning-box">
+          গুরুত্বপূর্ণ লেখা শুধু Local Storage-এ রেখে দেবেন না।
+          নিজের Device-এ আলাদা Copy বা Backup রাখুন।
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card policy-section" id="contact-policy">
+
+      <div class="policy-title-row">
+
+        <div class="policy-icon">12</div>
+
+        <div class="policy-title">
+          <h2>অভিযোগ, প্রশ্ন ও যোগাযোগ</h2>
+          <p>গোপনীয়তা-সম্পর্কিত সহায়তা পাওয়ার পথ</p>
+        </div>
+
+      </div>
+
+      <div class="policy-content">
+
+        <p>
+          গোপনীয়তা লঙ্ঘন, Account Security, অননুমোদিত Access, ভুল তথ্য,
+          Message Report অথবা Data Removal সম্পর্কিত প্রশ্ন থাকলে
+          যোগাযোগ পেজ ব্যবহার করুন।
+        </p>
+
+        <div class="policy-list">
+
+          <article class="policy-item">
+            <h3>প্রয়োজনীয় তথ্য দিন</h3>
+            <p>
+              সমস্যার ধরন, সংশ্লিষ্ট Page, সময় এবং প্রয়োজনীয় Screenshot
+              বা প্রমাণ দিন; কিন্তু Password বা OTP পাঠাবেন না।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>গোপনীয়ভাবে Review</h3>
+            <p>
+              Privacy Complaint শুধু দায়িত্বপ্রাপ্ত সীমিত ব্যক্তিরা পর্যালোচনা করবেন।
+            </p>
+          </article>
+
+          <article class="policy-item">
+            <h3>মিথ্যা Report নয়</h3>
+            <p>
+              কাউকে হয়রানি বা ক্ষতিগ্রস্ত করার উদ্দেশ্যে ইচ্ছাকৃত মিথ্যা অভিযোগ করা যাবে না।
+            </p>
+          </article>
+
+        </div>
+
+        <div class="form-actions" style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+          <a
+            href="contact.html"
+            style="padding:8px 12px;border-radius:9px;background:var(--accent);color:#fff;font-size:9px;"
+          >
+            যোগাযোগ করুন
+          </a>
+
+          <a
+            href="review.html?type=privacy"
+            style="padding:8px 12px;border:1px solid var(--border);border-radius:9px;background:var(--surface-2);color:var(--accent);font-size:9px;"
+          >
+            Privacy Report
+          </a>
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card update-card">
+
+      <div class="update-icon">
+        ↻
+      </div>
+
+      <div class="update-copy">
+
+        <h2>নীতিমালা ভবিষ্যতে হালনাগাদ হতে পারে</h2>
+
+        <p>
+          Backend, Database, নতুন নিরাপত্তা ব্যবস্থা অথবা আইনগত প্রয়োজন
+          যুক্ত হলে এই নীতিমালা সংশোধিত হতে পারে। গুরুত্বপূর্ণ পরিবর্তন হলে
+          Website Notice বা Notification-এর মাধ্যমে জানানো হবে।
+        </p>
+
+      </div>
+
+    </section>
+
+  </section>
+
+  <aside class="right-sidebar">
+
+    <section class="card right-card">
+
+      <h3 class="right-title">আপনার গোপনীয়তার মূল অধিকার</h3>
+
+      <div class="right-rule">
+        <h3>আপনি দর্শক ঠিক করবেন</h3>
+        <p>
+          Profile, Favourite, Activity এবং প্রকাশনার Visibility আপনার নিয়ন্ত্রণে থাকবে।
+        </p>
+      </div>
+
+      <div class="right-rule">
+        <h3>Private Message ব্যক্তিগত</h3>
+        <p>
+          সাধারণ Founder বা Admin আপনার সব ব্যক্তিগত বার্তা পড়তে পারবেন না।
+        </p>
+      </div>
+
+      <div class="right-rule">
+        <h3>Private Draft অপ্রকাশিত</h3>
+        <p>
+          আপনি প্রকাশ না করা পর্যন্ত Draft Public Feed-এ দেখা যাবে না।
+        </p>
+      </div>
+
+    </section>
+
+    <section class="card right-card">
+
+      <h3 class="right-title">নিরাপত্তা সতর্কতা</h3>
+
+      <div class="right-rule">
+        <h3>Password শেয়ার করবেন না</h3>
+        <p>
+          Founder, Admin বা Support কখনো আপনার Password বা OTP চাইবে না।
+        </p>
+      </div>
+
+      <div class="right-rule">
+        <h3>সন্দেহজনক Link এড়িয়ে চলুন</h3>
+        <p>
+          অচেনা Login Page বা ব্যক্তিগত তথ্য চাওয়া Link খুলবেন না।
+        </p>
+      </div>
+
+      <div class="right-rule">
+        <h3>প্রমাণ সংরক্ষণ করুন</h3>
+        <p>
+          হুমকি বা হয়রানি হলে প্রাসঙ্গিক Screenshot ও সময় সংরক্ষণ করুন।
+        </p>
+      </div>
+
+    </section>
+
+    <section class="card right-card">
+
+      <a href="profile-edit.html#privacy" class="right-link">
+        Privacy Settings
+        <span>›</span>
+      </a>
+
+      <a href="creative-work-protection.html" class="right-link">
+        সৃজনশীল কাজের সুরক্ষা
+        <span>›</span>
+      </a>
+
+      <a href="policy.html" class="right-link">
+        সাধারণ নীতিমালা
+        <span>›</span>
+      </a>
+
+      <a href="copyright.html" class="right-link">
+        কপিরাইট
+        <span>›</span>
+      </a>
+
+      <a href="contact.html" class="right-link">
+        যোগাযোগ
+        <span>›</span>
+      </a>
+
+    </section>
+
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+
+  <div>
+    <a href="index.html">🌿 ভুবনডাঙ্গার কবিতা</a>
+    © <span id="footerYear"></span>
+  </div>
+
+  <div class="footer-links">
+    <a href="index.html">হোম</a>
+    <a href="policy.html">নীতিমালা</a>
+    <a href="privacy-security-policy.html">গোপনীয়তা</a>
+    <a href="creative-work-protection.html">লেখার সুরক্ষা</a>
+    <a href="contact.html">যোগাযোগ</a>
+  </div>
+
+</footer>
+
+</div>
+
+<button class="to-top" id="toTopBtn">
+  ↑
+</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const htmlRoot = document.documentElement;
+
+htmlRoot.setAttribute(
+  "data-theme",
+  localStorage.getItem("bhubondangaTheme") || "dark"
+);
+
+const bnDigits = {
+  "0":"০",
+  "1":"১",
+  "2":"২",
+  "3":"৩",
+  "4":"৪",
+  "5":"৫",
+  "6":"৬",
+  "7":"৭",
+  "8":"৮",
+  "9":"৯"
+};
+
+function toBn(value){
+  return String(value).replace(/[0-9]/g,function(digit){
+    return bnDigits[digit];
+  });
+}
+
+function showToast(message){
+  const toast = document.getElementById("toast");
+
+  toast.innerText = message;
+  toast.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer = setTimeout(function(){
+    toast.style.display = "none";
+  },3000);
+}
+
+/* DATE */
+
+function renderDate(){
+  const today = new Date();
+
+  let banglaDate = "বাংলা তারিখ পাওয়া যায়নি";
+  let hijriDate = "হিজরি তারিখ পাওয়া যায়নি";
+
+  try{
+    banglaDate = new Intl.DateTimeFormat(
+      "bn-BD-u-ca-beng",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(today);
+  }catch(error){}
+
+  try{
+    hijriDate = new Intl.DateTimeFormat(
+      "bn-BD-u-ca-islamic",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(today);
+  }catch(error){}
+
+  const englishDate = new Intl.DateTimeFormat(
+    "en-GB",
+    {
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    }
+  ).format(today);
+
+  document
+    .querySelectorAll(".banglaDateTicker")
+    .forEach(function(element){
+      element.innerText = banglaDate;
+    });
+
+  document
+    .querySelectorAll(".englishDateTicker")
+    .forEach(function(element){
+      element.innerText = englishDate;
+    });
+
+  document
+    .querySelectorAll(".hijriDateTicker")
+    .forEach(function(element){
+      element.innerText = hijriDate;
+    });
+
+  document.getElementById("headerDateText").innerText =
+    englishDate;
+
+  document.getElementById("footerYear").innerText =
+    toBn(today.getFullYear());
+}
+
+renderDate();
+
+/* SEARCH */
+
+const headerSearchInput =
+  document.getElementById("headerSearchInput");
+
+function performSearch(){
+  const query =
+    headerSearchInput.value.trim();
+
+  if(!query){
+    showToast("কী খুঁজতে চান, লিখুন।");
+    return;
+  }
+
+  window.location.href =
+    "search.html?q=" +
+    encodeURIComponent(query);
+}
+
+document
+  .getElementById("headerSearchButton")
+  .addEventListener("click",performSearch);
+
+headerSearchInput.addEventListener(
+  "keydown",
+  function(event){
+    if(event.key === "Enter"){
+      performSearch();
+    }
+  }
+);
+
+/* DRAWER */
+
+const mobileDrawer =
+  document.getElementById("mobileDrawer");
+
+const drawerBackdrop =
+  document.getElementById("drawerBackdrop");
+
+function closeDrawer(){
+  mobileDrawer.classList.remove("open");
+  drawerBackdrop.classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+document
+  .getElementById("menuBtn")
+  .addEventListener("click",function(){
+    mobileDrawer.classList.add("open");
+    drawerBackdrop.classList.add("show");
+    document.body.style.overflow = "hidden";
+  });
+
+document
+  .getElementById("closeDrawer")
+  .addEventListener("click",closeDrawer);
+
+drawerBackdrop.addEventListener("click",closeDrawer);
+
+/* THEME */
+
+const headerThemeIcon =
+  document.getElementById("headerThemeIcon");
+
+function updateThemeIcon(){
+  const dark =
+    htmlRoot.getAttribute("data-theme") === "dark";
+
+  headerThemeIcon.innerText =
+    dark ? "☀️" : "🌙";
+}
+
+document
+  .getElementById("headerThemeBtn")
+  .addEventListener("click",function(){
+    const next =
+      htmlRoot.getAttribute("data-theme") === "dark"
+        ? "light"
+        : "dark";
+
+    htmlRoot.setAttribute(
+      "data-theme",
+      next
+    );
+
+    localStorage.setItem(
+      "bhubondangaTheme",
+      next
+    );
+
+    updateThemeIcon();
+  });
+
+updateThemeIcon();
+
+/* TO TOP */
+
+const toTopBtn =
+  document.getElementById("toTopBtn");
+
+window.addEventListener("scroll",function(){
+  toTopBtn.classList.toggle(
+    "show",
+    window.scrollY > 450
+  );
+});
+
+toTopBtn.addEventListener("click",function(){
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+});
+
+/* KEYBOARD */
+
+document.addEventListener("keydown",function(event){
+  if(event.key === "Escape"){
+    closeDrawer();
+  }
+
+  if(
+    (event.ctrlKey || event.metaKey) &&
+    event.key.toLowerCase() === "k"
+  ){
+    event.preventDefault();
+    headerSearchInput.focus();
+  }
+});
+</script>
+
+</body>
+</html>
