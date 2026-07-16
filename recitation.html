@@ -8,11 +8,11 @@
 
 <meta
   name="description"
-  content="কবিতাকে কণ্ঠ দিন—বাংলা কবিতার আবৃত্তি, কণ্ঠশিল্পী, কবি ও শ্রুতিসাহিত্যের সম্মিলিত প্রবাহ।"
+  content="ভুবনডাঙ্গার কবিতার অডিও ও ভিডিও আবৃত্তি শুনুন, দেখুন এবং নিজের কণ্ঠে ধারণ করা আবৃত্তি প্রকাশের প্রস্তুতি নিন।"
 >
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800;900&display=swap');
 
 *{
   margin:0;
@@ -39,16 +39,14 @@ html{
   --muted:#7b8da5;
 
   --border:rgba(15,75,145,.15);
-  --border-strong:rgba(15,91,178,.28);
+  --border-strong:rgba(15,91,178,.30);
 
   --accent:#0b5caf;
+  --accent-2:#174c93;
   --accent-soft:rgba(37,151,246,.10);
 
-  --voice:#8b5575;
-  --voice-soft:rgba(139,85,117,.10);
-
   --gold:#9b7228;
-  --gold-soft:rgba(168,117,31,.10);
+  --gold-soft:rgba(155,114,40,.10);
 
   --green:#247d64;
   --green-soft:rgba(36,125,100,.10);
@@ -56,12 +54,15 @@ html{
   --red:#c94c5e;
   --red-soft:rgba(201,76,94,.09);
 
-  --shadow:0 11px 28px rgba(11,51,104,.08);
-  --soft-shadow:0 4px 15px rgba(11,51,104,.06);
+  --violet:#745ca9;
+  --violet-soft:rgba(116,92,169,.10);
+
+  --shadow:0 12px 32px rgba(11,51,104,.09);
+  --soft-shadow:0 5px 18px rgba(11,51,104,.06);
 
   --page-bg:
-    radial-gradient(circle at 8% 4%,rgba(128,195,240,.20),transparent 26%),
-    radial-gradient(circle at 93% 8%,rgba(255,255,255,.74),transparent 28%),
+    radial-gradient(circle at 8% 4%,rgba(128,195,240,.22),transparent 26%),
+    radial-gradient(circle at 93% 8%,rgba(255,255,255,.78),transparent 28%),
     linear-gradient(150deg,#f9fcff 0%,#eaf4fb 58%,#f7fbff 100%);
 
   --header-bg:
@@ -74,23 +75,21 @@ html{
 }
 
 html[data-theme="dark"]{
-  --bg:#020913;
-  --surface:rgba(4,18,39,.97);
-  --surface-2:rgba(8,29,58,.95);
-  --surface-3:rgba(11,36,70,.92);
+  --bg:#020916;
+  --surface:rgba(4,17,39,.97);
+  --surface-2:rgba(8,28,58,.95);
+  --surface-3:rgba(11,35,69,.92);
 
   --text:#f5f9ff;
   --text-soft:#c8daf2;
-  --muted:#91a8c9;
+  --muted:#90a7c8;
 
   --border:rgba(73,164,247,.23);
   --border-strong:rgba(84,174,255,.40);
 
   --accent:#45abff;
+  --accent-2:#8dcfff;
   --accent-soft:rgba(69,171,255,.12);
-
-  --voice:#f0a8d2;
-  --voice-soft:rgba(240,168,210,.11);
 
   --gold:#ffd47c;
   --gold-soft:rgba(255,212,124,.09);
@@ -101,12 +100,15 @@ html[data-theme="dark"]{
   --red:#ff8394;
   --red-soft:rgba(255,131,148,.09);
 
-  --shadow:0 17px 44px rgba(0,0,0,.43);
-  --soft-shadow:0 0 23px rgba(69,171,255,.09);
+  --violet:#c4afff;
+  --violet-soft:rgba(196,175,255,.12);
+
+  --shadow:0 18px 46px rgba(0,0,0,.44);
+  --soft-shadow:0 0 24px rgba(69,171,255,.09);
 
   --page-bg:
-    radial-gradient(circle at 11% 5%,rgba(53,117,223,.22),transparent 25%),
-    radial-gradient(circle at 89% 12%,rgba(128,64,124,.19),transparent 29%),
+    radial-gradient(circle at 10% 5%,rgba(53,117,223,.25),transparent 26%),
+    radial-gradient(circle at 90% 12%,rgba(97,67,170,.19),transparent 29%),
     linear-gradient(180deg,#01050d 0%,#07152f 52%,#020712 100%);
 
   --header-bg:
@@ -126,7 +128,7 @@ body{
   font-family:'Noto Serif Bengali',Georgia,serif;
   background:var(--bg);
   color:var(--text);
-  line-height:1.75;
+  line-height:1.8;
   overflow-x:hidden;
 }
 
@@ -302,6 +304,18 @@ html[data-theme="dark"] .header-date-pill{
   align-items:center;
   justify-content:center;
   font-size:16px;
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease;
+}
+
+.header-icon:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--soft-shadow);
+}
+
+.header-icon:active{
+  transform:translateY(1px) scale(.97);
 }
 
 html[data-theme="dark"] .header-icon{
@@ -323,7 +337,7 @@ html[data-theme="dark"] .header-icon{
   font-weight:600;
 }
 
-/* DATE TICKER */
+/* DATE */
 
 .date-ticker{
   position:sticky;
@@ -436,6 +450,10 @@ html[data-theme="dark"] .header-icon{
 .notice-text{
   color:var(--text-soft);
   font-size:11px;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
 }
 
 .notice-links{
@@ -462,7 +480,7 @@ html[data-theme="dark"] .header-icon{
 .page-layout{
   max-width:1530px;
   margin:0 auto;
-  padding:10px 20px 28px;
+  padding:10px 20px 30px;
   display:grid;
   grid-template-columns:250px minmax(0,1fr) 325px;
   gap:14px;
@@ -513,6 +531,13 @@ html[data-theme="dark"] .header-icon{
   padding:0 9px;
   font-size:15px;
   font-weight:600;
+}
+
+.side-subtitle{
+  margin:-3px 0 8px;
+  padding:0 9px;
+  color:var(--muted);
+  font-size:8.5px;
 }
 
 .side-separator{
@@ -569,6 +594,9 @@ html[data-theme="dark"] .header-icon{
   text-align:center;
   font-size:12px;
   font-weight:500;
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease;
 }
 
 .login-side{
@@ -581,6 +609,17 @@ html[data-theme="dark"] .header-icon{
   color:var(--accent)!important;
 }
 
+.login-side:hover,
+.register-side:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--soft-shadow);
+}
+
+.login-side:active,
+.register-side:active{
+  transform:translateY(1px);
+}
+
 /* MAIN */
 
 .main-content{
@@ -591,557 +630,686 @@ html[data-theme="dark"] .header-icon{
 
 .recitation-hero{
   position:relative;
-  min-height:235px;
-  padding:23px;
+  min-height:285px;
+  padding:27px;
   overflow:hidden;
   display:flex;
   align-items:flex-end;
   color:#fff;
   background:
-    linear-gradient(180deg,rgba(5,9,22,.03),rgba(4,8,22,.78)),
-    radial-gradient(circle at 79% 17%,rgba(255,230,244,.42),transparent 4%),
-    radial-gradient(circle at 79% 17%,rgba(239,176,214,.24),transparent 14%),
-    linear-gradient(135deg,#8e9fc0 0%,#5c668d 40%,#2b304d 100%);
-}
-
-.recitation-hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  opacity:.55;
-  background-image:
-    linear-gradient(
-      90deg,
-      transparent 0 8%,
-      rgba(255,255,255,.12) 8% 8.4%,
-      transparent 8.4% 14%,
-      rgba(255,255,255,.18) 14% 14.4%,
-      transparent 14.4% 20%,
-      rgba(255,255,255,.10) 20% 20.4%,
-      transparent 20.4% 28%,
-      rgba(255,255,255,.16) 28% 28.4%,
-      transparent 28.4% 36%,
-      rgba(255,255,255,.10) 36% 36.4%,
-      transparent 36.4% 44%,
-      rgba(255,255,255,.15) 44% 44.4%,
-      transparent 44.4% 52%,
-      rgba(255,255,255,.09) 52% 52.4%,
-      transparent 52.4% 61%,
-      rgba(255,255,255,.18) 61% 61.4%,
-      transparent 61.4% 70%,
-      rgba(255,255,255,.12) 70% 70.4%,
-      transparent 70.4% 80%,
-      rgba(255,255,255,.16) 80% 80.4%,
-      transparent 80.4% 100%
-    );
+    linear-gradient(180deg,rgba(3,8,20,.02),rgba(3,8,20,.81)),
+    radial-gradient(circle at 80% 18%,rgba(255,255,255,.44),transparent 4%),
+    radial-gradient(circle at 80% 18%,rgba(198,225,255,.23),transparent 15%),
+    linear-gradient(135deg,#795d9d 0%,#4e467f 42%,#202746 100%);
 }
 
 .recitation-hero::after{
-  content:"";
+  content:"🎙";
   position:absolute;
-  left:-5%;
-  right:-5%;
-  bottom:-48px;
-  height:120px;
-  background:
-    radial-gradient(ellipse at 12% 100%,rgba(8,20,34,.92),transparent 50%),
-    radial-gradient(ellipse at 43% 100%,rgba(10,25,42,.88),transparent 49%),
-    radial-gradient(ellipse at 76% 100%,rgba(8,19,35,.92),transparent 50%),
-    radial-gradient(ellipse at 98% 100%,rgba(4,12,25,.96),transparent 45%);
+  right:4%;
+  bottom:-25px;
+  font-size:170px;
+  line-height:1;
+  opacity:.10;
+  filter:grayscale(1);
 }
 
 .hero-content{
   position:relative;
   z-index:2;
-  max-width:760px;
+  max-width:800px;
 }
 
 .hero-label{
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
   padding:5px 10px;
-  border:1px solid rgba(255,255,255,.34);
+  border:1px solid rgba(255,255,255,.32);
   border-radius:999px;
-  background:rgba(7,14,28,.24);
+  background:rgba(3,13,31,.24);
   font-size:8.5px;
-  backdrop-filter:blur(8px);
 }
 
 .hero-content h1{
   margin-top:10px;
-  font-size:29px;
-  font-weight:600;
+  font-size:31px;
+  font-weight:700;
   line-height:1.5;
 }
 
 .hero-content p{
-  max-width:660px;
-  margin-top:7px;
-  color:#e3e9f4;
-  font-size:11px;
-  line-height:1.9;
+  max-width:720px;
+  margin-top:8px;
+  color:#e5e6f7;
+  font-size:10.7px;
+  line-height:1.95;
 }
 
 .hero-actions{
   display:flex;
   flex-wrap:wrap;
-  gap:7px;
-  margin-top:13px;
+  gap:8px;
+  margin-top:14px;
 }
 
 .hero-actions a{
-  min-height:37px;
-  padding:7px 12px;
+  padding:8px 13px;
   border:1px solid rgba(255,255,255,.30);
-  border-radius:9px;
+  border-radius:10px;
   background:rgba(255,255,255,.08);
   color:#fff;
-  font-size:9.5px;
-  backdrop-filter:blur(8px);
+  font-size:9px;
+  transition:transform .16s ease;
 }
 
 .hero-actions a.primary{
   background:#fff;
-  color:#30243a;
+  color:#29244b;
 }
 
-/* MESSAGE */
+.hero-actions a:hover{
+  transform:translateY(-2px);
+}
 
-.voice-message{
+.hero-actions a:active{
+  transform:translateY(1px);
+}
+
+/* INTRO */
+
+.intro-card{
   margin-top:12px;
-  padding:20px;
-  text-align:center;
-  border-color:rgba(139,85,117,.26);
+  padding:18px;
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr);
+  gap:13px;
+  align-items:center;
   background:
-    radial-gradient(circle at top,var(--voice-soft),transparent 48%),
+    radial-gradient(circle at left,var(--violet-soft),transparent 48%),
     var(--surface);
 }
 
-.voice-message span{
-  display:block;
-  font-size:33px;
+.intro-icon{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--violet-soft);
+  color:var(--violet);
+  font-size:23px;
 }
 
-.voice-message h2{
-  margin-top:5px;
-  color:var(--voice);
-  font-size:20px;
+.intro-copy h2{
+  font-size:17px;
   font-weight:600;
 }
 
-.voice-message blockquote{
-  margin-top:10px;
-  color:var(--text);
-  font-size:16px;
-  line-height:2;
-}
-
-.voice-message p{
-  max-width:680px;
-  margin:8px auto 0;
+.intro-copy p{
+  margin-top:4px;
   color:var(--text-soft);
-  font-size:10px;
+  font-size:9.5px;
   line-height:1.9;
 }
 
-/* FILTER */
+/* CONTROLS */
 
-.flow-card{
+.control-card{
   margin-top:12px;
-  padding:17px;
+  padding:16px;
 }
 
-.flow-head{
+.control-top{
   display:flex;
-  justify-content:space-between;
   align-items:flex-start;
-  gap:10px;
+  justify-content:space-between;
+  gap:12px;
 }
 
-.flow-head h2{
-  font-size:21px;
+.control-title h2{
+  font-size:17px;
   font-weight:600;
 }
 
-.flow-head p{
+.control-title p{
   margin-top:2px;
   color:var(--muted);
-  font-size:9px;
+  font-size:8.4px;
 }
 
-.sort-select{
-  height:35px;
+.result-number{
+  min-width:43px;
+  height:43px;
   padding:0 9px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  outline:none;
-  background:var(--surface-2);
-  color:var(--text-soft);
-  font-size:9px;
-}
-
-.recitation-filters{
+  border-radius:50%;
   display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--violet-soft);
+  color:var(--violet);
+  font-size:11px;
+  font-weight:700;
+}
+
+.control-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 160px;
+  gap:9px;
+  margin-top:13px;
+}
+
+.filter-buttons{
+  display:flex;
+  flex-wrap:wrap;
   gap:7px;
-  margin-top:12px;
-  overflow-x:auto;
-  scrollbar-width:none;
 }
 
-.recitation-filters::-webkit-scrollbar{
-  display:none;
-}
-
-.filter-btn{
-  flex:0 0 auto;
+.filter-button{
   padding:7px 12px;
   border:1px solid var(--border);
   border-radius:999px;
   background:var(--surface-2);
   color:var(--text-soft);
-  font-size:9px;
+  font-size:8.5px;
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    color .16s ease;
 }
 
-.filter-btn.active,
-.filter-btn:hover{
-  background:var(--accent);
-  border-color:var(--accent);
-  color:#fff;
+.filter-button:hover,
+.filter-button.active{
+  transform:translateY(-2px);
+  border-color:var(--violet);
+  background:var(--violet-soft);
+  color:var(--violet);
 }
 
-.feed-status{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:10px;
-  color:var(--muted);
+.filter-button:active{
+  transform:translateY(1px);
+}
+
+.sort-select{
+  height:39px;
+  padding:0 10px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+  background:var(--surface-2);
+  color:var(--text);
   font-size:8.5px;
 }
 
-/* RECITATION CARD */
+/* FEED */
 
-.feed-list{
+.recitation-feed{
   display:grid;
-  gap:12px;
+  gap:11px;
   margin-top:12px;
 }
 
 .recitation-card{
-  padding:17px;
+  overflow:hidden;
 }
 
-.post-header{
-  display:grid;
-  grid-template-columns:48px minmax(0,1fr) auto;
+.post-head{
+  padding:15px 16px 11px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:11px;
+}
+
+.author-area{
+  display:flex;
+  align-items:center;
   gap:10px;
-  align-items:start;
+  min-width:0;
 }
 
-.artist-avatar{
-  width:48px;
-  height:48px;
-  border:2px solid var(--border);
+.author-avatar{
+  flex:0 0 auto;
+  width:44px;
+  height:44px;
   border-radius:50%;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:linear-gradient(135deg,var(--accent-soft),var(--voice-soft));
+  border:1px solid var(--border);
+  background:var(--accent-soft);
   color:var(--accent);
-  font-size:17px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.author-copy{
+  min-width:0;
+}
+
+.author-copy h3{
+  font-size:10.8px;
   font-weight:600;
 }
 
-.artist-line{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:6px;
+.author-copy p{
+  color:var(--muted);
+  font-size:7.8px;
 }
 
-.artist-line a{
-  font-size:13px;
-  font-weight:600;
-}
-
-.type-pill{
-  padding:3px 7px;
+.media-badge{
+  flex:0 0 auto;
+  padding:5px 9px;
   border-radius:999px;
-  background:var(--voice-soft);
-  color:var(--voice);
   font-size:7.5px;
+  font-weight:600;
 }
 
-.post-time{
-  margin-top:2px;
+.media-badge.audio{
+  background:var(--violet-soft);
+  color:var(--violet);
+}
+
+.media-badge.video{
+  background:var(--red-soft);
+  color:var(--red);
+}
+
+.post-body{
+  padding:0 16px 15px;
+}
+
+.post-body h2{
+  font-size:16px;
+  font-weight:600;
+  line-height:1.55;
+}
+
+.poem-credit{
+  margin-top:4px;
   color:var(--muted);
   font-size:8.5px;
 }
 
-.post-menu{
-  width:34px;
-  height:34px;
-  border:none;
-  border-radius:50%;
-  background:transparent;
-  color:var(--muted);
-  font-size:20px;
+.poem-credit strong{
+  color:var(--text-soft);
 }
 
-.recitation-title{
-  margin-top:14px;
-  font-size:19px;
-  font-weight:600;
-  line-height:1.6;
-}
-
-.poet-credit{
-  margin-top:5px;
-  color:var(--voice);
-  font-size:9px;
-}
+/* AUDIO PLAYER */
 
 .audio-player{
-  margin-top:12px;
-  padding:13px;
+  margin-top:13px;
+  padding:14px;
   border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--surface-2);
+  border-radius:13px;
+  background:
+    radial-gradient(circle at top left,var(--violet-soft),transparent 48%),
+    var(--surface-2);
 }
 
-.player-row{
+.audio-top{
   display:grid;
-  grid-template-columns:42px minmax(0,1fr) auto;
-  gap:10px;
+  grid-template-columns:46px minmax(0,1fr) auto;
+  gap:11px;
   align-items:center;
 }
 
-.play-btn{
-  width:42px;
-  height:42px;
+.play-button{
+  width:46px;
+  height:46px;
   border:none;
   border-radius:50%;
-  background:var(--accent);
+  background:var(--violet);
   color:#fff;
-  font-size:16px;
+  font-size:17px;
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease;
 }
 
-.wave-track{
-  position:relative;
-  height:34px;
-  display:flex;
-  align-items:center;
-  gap:3px;
-  overflow:hidden;
+.play-button:hover{
+  transform:scale(1.05);
+  box-shadow:0 8px 20px var(--violet-soft);
 }
 
-.wave-bar{
-  width:3px;
-  border-radius:999px;
-  background:var(--border-strong);
-  transition:.2s ease;
+.play-button:active{
+  transform:scale(.96);
 }
 
-.audio-player.playing .wave-bar{
-  background:var(--accent);
-  animation:wavePulse .75s ease-in-out infinite alternate;
+.audio-info h3{
+  font-size:10.5px;
+  font-weight:600;
 }
 
-.audio-player.playing .wave-bar:nth-child(2n){
-  animation-delay:.15s;
-}
-
-.audio-player.playing .wave-bar:nth-child(3n){
-  animation-delay:.3s;
-}
-
-@keyframes wavePulse{
-  from{transform:scaleY(.65);}
-  to{transform:scaleY(1.18);}
+.audio-info p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:7.8px;
 }
 
 .audio-time{
   color:var(--muted);
-  font-size:8.5px;
-  white-space:nowrap;
-}
-
-.recitation-description{
-  margin-top:10px;
-  color:var(--text-soft);
-  font-size:10.5px;
-  line-height:1.9;
-}
-
-.post-credit{
-  margin-top:12px;
-  padding-top:9px;
-  border-top:1px solid var(--border);
-  color:var(--muted);
   font-size:8px;
 }
 
-.post-stats{
+.progress-track{
+  position:relative;
+  height:5px;
+  margin-top:12px;
+  overflow:hidden;
+  border-radius:999px;
+  background:var(--border);
+}
+
+.progress-fill{
+  width:0%;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--violet),var(--accent));
+  transition:width .25s linear;
+}
+
+/* VIDEO PLAYER */
+
+.video-player{
+  position:relative;
+  min-height:290px;
+  margin-top:13px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:14px;
   display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    linear-gradient(180deg,rgba(2,8,20,.05),rgba(2,8,20,.76)),
+    radial-gradient(circle at 73% 20%,rgba(255,255,255,.22),transparent 6%),
+    linear-gradient(135deg,#7384a0,#46536f,#242b43);
+}
+
+.video-player::before{
+  content:"";
+  position:absolute;
+  inset:auto 0 0;
+  height:42%;
+  background:
+    radial-gradient(ellipse at 15% 110%,rgba(13,41,50,.85),transparent 45%),
+    radial-gradient(ellipse at 58% 112%,rgba(13,35,50,.74),transparent 46%),
+    radial-gradient(ellipse at 91% 110%,rgba(8,29,49,.86),transparent 46%);
+}
+
+.video-play{
+  position:relative;
+  z-index:2;
+  width:68px;
+  height:68px;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:50%;
+  background:rgba(255,255,255,.16);
+  color:#fff;
+  font-size:24px;
+  backdrop-filter:blur(10px);
+  transition:
+    transform .16s ease,
+    background .16s ease;
+}
+
+.video-play:hover{
+  transform:scale(1.07);
+  background:rgba(255,255,255,.24);
+}
+
+.video-play:active{
+  transform:scale(.96);
+}
+
+.video-overlay{
+  position:absolute;
+  left:14px;
+  right:14px;
+  bottom:12px;
+  z-index:2;
+  display:flex;
+  align-items:flex-end;
   justify-content:space-between;
   gap:10px;
-  margin-top:9px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--border);
-  color:var(--muted);
-  font-size:8.5px;
+  color:#fff;
+}
+
+.video-overlay h3{
+  font-size:10.5px;
+  font-weight:600;
+}
+
+.video-overlay p{
+  margin-top:2px;
+  color:#dbe4ef;
+  font-size:7.7px;
+}
+
+.video-duration{
+  padding:4px 7px;
+  border-radius:7px;
+  background:rgba(0,0,0,.42);
+  font-size:7.5px;
+}
+
+/* DESCRIPTION */
+
+.recitation-note{
+  margin-top:11px;
+  color:var(--text-soft);
+  font-size:9.4px;
+  line-height:1.9;
+}
+
+.post-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.post-tag{
+  padding:4px 8px;
+  border-radius:999px;
+  background:var(--accent-soft);
+  color:var(--accent);
+  font-size:7.2px;
 }
 
 .post-actions{
   display:grid;
   grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:5px;
-  margin-top:7px;
+  gap:7px;
+  padding:11px 16px 15px;
+  border-top:1px solid var(--border);
 }
 
 .post-action{
-  min-height:35px;
-  border:none;
+  min-height:36px;
+  border:1px solid var(--border);
   border-radius:9px;
-  background:transparent;
+  background:var(--surface-2);
   color:var(--text-soft);
-  font-size:9px;
+  font-size:8px;
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    color .16s ease;
 }
 
-.post-action:hover,
-.post-action.active{
+.post-action:hover{
+  transform:translateY(-2px);
   background:var(--accent-soft);
   color:var(--accent);
 }
 
-.post-action.loved{
-  background:var(--red-soft);
+.post-action:active{
+  transform:translateY(1px);
+}
+
+.post-action.active{
   color:var(--red);
+  border-color:rgba(255,131,148,.25);
+  background:var(--red-soft);
 }
 
-.comment-area{
+.post-action.saved{
+  color:var(--gold);
+  border-color:rgba(255,212,124,.25);
+  background:var(--gold-soft);
+}
+
+/* COMMENT */
+
+.comment-panel{
   display:none;
-  margin-top:11px;
-  padding-top:11px;
+  padding:13px 16px 16px;
   border-top:1px solid var(--border);
+  background:var(--surface-2);
 }
 
-.comment-area.open{
+.comment-panel.open{
   display:block;
 }
 
-.comment-box{
+.comment-form{
   display:grid;
   grid-template-columns:minmax(0,1fr) auto;
-  gap:7px;
+  gap:8px;
 }
 
-.comment-box input{
+.comment-input{
   width:100%;
-  height:38px;
-  padding:0 13px;
+  height:40px;
+  padding:0 12px;
   border:1px solid var(--border);
-  border-radius:999px;
+  border-radius:10px;
   outline:none;
-  background:var(--surface-2);
+  background:var(--surface);
   color:var(--text);
-  font-size:9.5px;
+  font-size:8.5px;
 }
 
-.comment-box button{
-  min-width:70px;
+.comment-button{
+  padding:0 12px;
   border:none;
-  border-radius:999px;
+  border-radius:10px;
   background:var(--accent);
   color:#fff;
-  font-size:9px;
+  font-size:8px;
 }
 
-.comment-note{
-  margin-top:6px;
-  color:var(--muted);
-  font-size:7.8px;
+.comment-list{
+  display:grid;
+  gap:7px;
+  margin-top:9px;
 }
 
-.empty-state{
-  padding:32px 18px;
-  text-align:center;
-  border:1px dashed var(--border-strong);
-  border-radius:15px;
+.comment-item{
+  padding:9px 10px;
+  border:1px solid var(--border);
+  border-radius:9px;
   background:var(--surface);
 }
 
-.empty-state span{
+.comment-item strong{
+  font-size:8.5px;
+}
+
+.comment-item p{
+  margin-top:2px;
+  color:var(--text-soft);
+  font-size:8px;
+}
+
+/* EMPTY */
+
+.empty-state{
+  display:none;
+  margin-top:12px;
+  padding:32px 18px;
+  text-align:center;
+}
+
+.empty-state.show{
   display:block;
+}
+
+.empty-state span{
   font-size:42px;
 }
 
-.empty-state h3{
+.empty-state h2{
   margin-top:7px;
-  font-size:15px;
-  font-weight:500;
+  font-size:17px;
+  font-weight:600;
 }
 
 .empty-state p{
-  max-width:520px;
-  margin:5px auto 0;
+  margin-top:5px;
   color:var(--muted);
-  font-size:9px;
-  line-height:1.75;
+  font-size:8.8px;
 }
 
 /* GUIDE */
 
 .guide-card{
   margin-top:12px;
-  padding:17px;
+  padding:18px;
 }
 
-.section-head{
-  margin-bottom:11px;
-}
-
-.section-head h2{
+.guide-card h2{
   font-size:17px;
   font-weight:600;
 }
 
-.section-head p{
-  margin-top:2px;
+.guide-card > p{
+  margin-top:4px;
   color:var(--muted);
-  font-size:8.8px;
+  font-size:8.6px;
 }
 
 .guide-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:9px;
+  gap:8px;
+  margin-top:12px;
 }
 
 .guide-item{
   padding:12px;
   border:1px solid var(--border);
-  border-radius:11px;
+  border-radius:10px;
   background:var(--surface-2);
 }
 
-.guide-item span{
-  display:block;
-  font-size:20px;
-}
-
 .guide-item h3{
-  margin-top:6px;
-  font-size:11px;
-  font-weight:500;
+  font-size:10px;
+  font-weight:600;
 }
 
 .guide-item p{
   margin-top:3px;
   color:var(--muted);
-  font-size:8.5px;
+  font-size:8.2px;
   line-height:1.7;
 }
 
-/* RIGHT SIDEBAR */
+.copyright-note{
+  margin-top:12px;
+  padding:12px 13px;
+  border-left:3px solid var(--gold);
+  border-radius:0 10px 10px 0;
+  background:var(--gold-soft);
+  color:var(--text-soft);
+  font-size:8.6px;
+  line-height:1.8;
+}
+
+/* RIGHT */
 
 .right-sidebar{
   display:grid;
@@ -1232,6 +1400,12 @@ html[data-theme="dark"] .header-icon{
   justify-content:space-between;
   gap:10px;
   margin-bottom:12px;
+}
+
+.drawer-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
 .drawer-brand span{
@@ -1418,7 +1592,7 @@ html[data-theme="dark"] .header-icon{
   }
 }
 
-@media(max-width:650px){
+@media(max-width:700px){
   .notice-inner{
     grid-template-columns:auto minmax(0,1fr);
   }
@@ -1428,69 +1602,51 @@ html[data-theme="dark"] .header-icon{
   }
 
   .recitation-hero{
-    min-height:215px;
-    padding:19px 15px;
+    min-height:240px;
+    padding:20px 15px;
+  }
+
+  .recitation-hero::after{
+    font-size:115px;
   }
 
   .hero-content h1{
-    font-size:22px;
+    font-size:23px;
   }
 
   .hero-content p{
-    font-size:9.8px;
+    font-size:9.6px;
   }
 
-  .voice-message,
-  .flow-card,
-  .recitation-card,
-  .guide-card{
+  .intro-card{
+    grid-template-columns:42px minmax(0,1fr);
     padding:14px;
   }
 
-  .voice-message h2{
-    font-size:17px;
-  }
-
-  .voice-message blockquote{
-    font-size:13px;
-  }
-
-  .flow-head{
-    display:block;
-  }
-
-  .sort-select{
-    margin-top:9px;
-  }
-
-  .post-header{
-    grid-template-columns:42px minmax(0,1fr) auto;
-  }
-
-  .artist-avatar{
+  .intro-icon{
     width:42px;
     height:42px;
   }
 
-  .recitation-title{
-    font-size:16px;
+  .control-card,
+  .guide-card{
+    padding:14px;
   }
 
-  .post-actions{
-    grid-template-columns:repeat(4,minmax(72px,1fr));
-    overflow-x:auto;
-  }
-
-  .comment-box{
+  .control-row{
     grid-template-columns:1fr;
   }
 
-  .comment-box button{
-    height:36px;
+  .post-actions{
+    grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
   .guide-grid{
     grid-template-columns:1fr;
+  }
+
+  .video-player{
+    min-height:220px;
   }
 }
 </style>
@@ -1526,7 +1682,7 @@ html[data-theme="dark"] .header-icon{
     <input
       id="headerSearchInput"
       type="search"
-      placeholder="কবিতা, কবি, আবৃত্তিকার অথবা বিষয় খুঁজুন..."
+      placeholder="কবিতা, আবৃত্তিকার অথবা আবৃত্তির নাম খুঁজুন..."
     >
 
     <button id="headerSearchButton" aria-label="সার্চ">
@@ -1640,7 +1796,7 @@ html[data-theme="dark"] .header-icon{
 
     <div class="notice-text">
       <strong>মানবিক আবেদন:</strong>
-      বর্তমানে কোনো যাচাইকৃত জরুরি আবেদন নেই। অনুমোদিত আবেদন প্রকাশিত হলে এখানে দেখা যাবে।
+      বর্তমানে কোনো যাচাইকৃত সক্রিয় জরুরি আবেদন নেই। অনুমোদিত জরুরি আবেদন প্রকাশিত হলে সাময়িকভাবে উপরে Flag করা হবে।
     </div>
 
     <div class="notice-links">
@@ -1663,20 +1819,13 @@ html[data-theme="dark"] .header-icon{
       <h2>আপন ভুবন</h2>
     </a>
 
-    <button class="close-btn" id="closeDrawer">
+    <button class="close-btn" id="closeDrawer" aria-label="মেনু বন্ধ করুন">
       ×
     </button>
 
   </div>
 
   <div class="side-menu">
-
-    <a href="index.html">
-      <span class="side-left">
-        <span class="side-icon">🏠</span>
-        হোম
-      </span>
-    </a>
 
     <a href="profile.html">
       <span class="side-left">
@@ -1723,21 +1872,64 @@ html[data-theme="dark"] .header-icon{
     <a href="submit-recitation.html">
       <span class="side-left">
         <span class="side-icon">＋</span>
-        আবৃত্তি যুক্ত করুন
+        আবৃত্তি জমা দিন
       </span>
     </a>
 
-    <a href="messages.html">
+    <a href="famous-quotes.html">
+      <span class="side-left">
+        <span class="side-icon">📜</span>
+        মনীষীদের বাণী
+      </span>
+    </a>
+
+  </div>
+
+  <div class="side-separator"></div>
+
+  <h3 class="side-title">মূল ভুবন</h3>
+
+  <div class="side-menu">
+
+    <a href="madhyorater-prolap.html">
+      <span class="side-left">
+        <span class="side-icon">🌙</span>
+        মধ্যরাতের প্রলাপ
+      </span>
+    </a>
+
+    <a href="founder-profile.html">
+      <span class="side-left">
+        <span class="side-icon">✒</span>
+        মাহমুদ সোহেল
+      </span>
+    </a>
+
+    <a href="today-discussion.html">
       <span class="side-left">
         <span class="side-icon">💬</span>
-        বার্তাসমূহ
+        সাহিত্য আলোচনা
       </span>
     </a>
 
-    <a href="notifications.html">
+    <a href="today-environment.html">
       <span class="side-left">
-        <span class="side-icon">🔔</span>
-        নোটিফিকেশন
+        <span class="side-icon">🌱</span>
+        পরিবেশের কথা
+      </span>
+    </a>
+
+    <a href="about.html">
+      <span class="side-left">
+        <span class="side-icon">ℹ</span>
+        আমাদের সম্পর্কে
+      </span>
+    </a>
+
+    <a href="policy.html">
+      <span class="side-left">
+        <span class="side-icon">📌</span>
+        নীতিমালা
       </span>
     </a>
 
@@ -1758,6 +1950,10 @@ html[data-theme="dark"] .header-icon{
       <span>🌿</span>
       <h2>আপন ভুবন</h2>
     </a>
+
+    <p class="side-subtitle">
+      আপনার প্রোফাইল, লেখা ও স্মৃতির ঘর
+    </p>
 
     <div class="side-menu">
 
@@ -1796,24 +1992,24 @@ html[data-theme="dark"] .header-icon{
         </span>
       </a>
 
-      <a href="today-poem.html?type=discussion">
-        <span class="side-left">
-          <span class="side-icon">💬</span>
-          সাম্প্রতিক আলোচনা
-        </span>
-      </a>
-
-      <a href="today-poem.html?type=environment">
-        <span class="side-left">
-          <span class="side-icon">🌱</span>
-          পরিবেশের কথা
-        </span>
-      </a>
-
       <a href="recitation.html" class="active">
         <span class="side-left">
           <span class="side-icon">🎙</span>
-          সাম্প্রতিক আবৃত্তি
+          আবৃত্তি
+        </span>
+      </a>
+
+      <a href="submit-recitation.html">
+        <span class="side-left">
+          <span class="side-icon">＋</span>
+          আবৃত্তি জমা দিন
+        </span>
+      </a>
+
+      <a href="famous-quotes.html">
+        <span class="side-left">
+          <span class="side-icon">📜</span>
+          বিখ্যাত মনীষীদের বাণী
         </span>
       </a>
 
@@ -1821,35 +2017,42 @@ html[data-theme="dark"] .header-icon{
 
     <div class="side-separator"></div>
 
-    <h3 class="side-title">আবৃত্তির ভুবন</h3>
+    <h3 class="side-title">মূল ভুবন</h3>
 
     <div class="side-menu">
 
-      <a href="submit-recitation.html">
+      <a href="madhyorater-prolap.html">
         <span class="side-left">
-          <span class="side-icon">＋</span>
-          আবৃত্তি যুক্ত করুন
+          <span class="side-icon">🌙</span>
+          মধ্যরাতের প্রলাপ
         </span>
       </a>
 
-      <a href="recitation.html?type=self">
+      <a href="founder-profile.html">
         <span class="side-left">
-          <span class="side-icon">🎤</span>
-          স্বরচিত কবিতা
+          <span class="side-icon">✒</span>
+          মাহমুদ সোহেল
         </span>
       </a>
 
-      <a href="recitation.html?type=classic">
+      <a href="today-discussion.html">
         <span class="side-left">
-          <span class="side-icon">📖</span>
-          ধ্রুপদি কবিতা
+          <span class="side-icon">💬</span>
+          সাহিত্য আলোচনা
         </span>
       </a>
 
-      <a href="favorite-authors.html">
+      <a href="today-environment.html">
         <span class="side-left">
-          <span class="side-icon">♡</span>
-          প্রিয় কবি ও আবৃত্তিকার
+          <span class="side-icon">🌱</span>
+          পরিবেশের কথা
+        </span>
+      </a>
+
+      <a href="about.html">
+        <span class="side-left">
+          <span class="side-icon">ℹ</span>
+          আমাদের সম্পর্কে
         </span>
       </a>
 
@@ -1857,6 +2060,13 @@ html[data-theme="dark"] .header-icon{
         <span class="side-left">
           <span class="side-icon">📌</span>
           নীতিমালা
+        </span>
+      </a>
+
+      <a href="search.html">
+        <span class="side-left">
+          <span class="side-icon">🔎</span>
+          সার্চ
         </span>
       </a>
 
@@ -1876,154 +2086,145 @@ html[data-theme="dark"] .header-icon{
       <div class="hero-content">
 
         <span class="hero-label">
-          🎙 আবৃত্তির ভুবন
+          🎙 অডিও ও ভিডিও আবৃত্তি
         </span>
 
         <h1>
-          কবিতাকে কণ্ঠ দিন।
+          কবিতাকে কণ্ঠ দিন, অনুভূতিকে দৃশ্য দিন।
         </h1>
 
         <p>
-          কবির শব্দ, আবৃত্তিকারের কণ্ঠ এবং শ্রোতার অনুভূতি—এই তিনের
-          সম্মিলনে কবিতা নতুন জীবন পায়। নিজের অথবা প্রিয় কবির কবিতা
-          দায়িত্বশীলভাবে আবৃত্তি করে সাহিত্যভুবনের সঙ্গে ভাগ করুন।
+          এখানে শুধু কণ্ঠের Audio নয়—নিজের কণ্ঠে ধারণ করা Audio এবং
+          Video, দুই ধরনের আবৃত্তিই প্রকাশ করা যাবে। কবিতার নাম,
+          কবির নাম, আবৃত্তিকারের পরিচয় ও ব্যবহৃত Media-এর সঠিক Credit
+          বজায় রেখে আবৃত্তির সুন্দর একটি ভুবন গড়ে উঠবে।
         </p>
 
         <div class="hero-actions">
-          <a href="submit-recitation.html" class="primary">আবৃত্তি যুক্ত করুন</a>
-          <a href="#recitationFeed">সাম্প্রতিক আবৃত্তি শুনুন</a>
+          <a href="#recitationFeed" class="primary">আবৃত্তি দেখুন</a>
+          <a href="submit-recitation.html">আবৃত্তি জমা দিন</a>
         </div>
 
       </div>
 
     </section>
 
-    <section class="card voice-message">
+    <section class="card intro-card">
 
-      <span>🎙</span>
+      <div class="intro-icon">♫</div>
 
-      <h2>কণ্ঠেও কবিতা বেঁচে থাকে</h2>
-
-      <blockquote>
-        “শব্দ পড়া যায়, কিন্তু অনুভূতি শোনা যায়।”
-      </blockquote>
-
-      <p>
-        একটি সঠিক বিরতি, একটি কোমল উচ্চারণ অথবা একটি গভীর কণ্ঠ
-        পরিচিত কবিতাকেও নতুনভাবে অনুভব করতে শেখায়। আবৃত্তি শুধু পাঠ নয়;
-        এটি কবিতার ভাব, ছন্দ ও নীরবতার দায়িত্বশীল প্রকাশ।
-      </p>
+      <div class="intro-copy">
+        <h2>শোনা এবং দেখা—দুই অভিজ্ঞতাই থাকবে</h2>
+        <p>
+          অডিও আবৃত্তিতে কণ্ঠ, উচ্চারণ ও বিরতির সৌন্দর্য অনুভব করা যাবে।
+          ভিডিও আবৃত্তিতে কণ্ঠের পাশাপাশি আবৃত্তিকারের অভিব্যক্তি,
+          পরিবেশ ও উপস্থাপনাও দেখা যাবে।
+        </p>
+      </div>
 
     </section>
 
-    <section class="card flow-card" id="recitationFeed">
+    <section class="card control-card">
 
-      <div class="flow-head">
+      <div class="control-top">
 
-        <div>
-          <h2>সাম্প্রতিক আবৃত্তি</h2>
-          <p>
-            সদস্যদের প্রকাশিত কবিতা, স্বরচিত রচনা ও ধ্রুপদি আবৃত্তির প্রবাহ
-          </p>
+        <div class="control-title">
+          <h2>আবৃত্তির প্রবাহ</h2>
+          <p>সব, শুধু Audio অথবা শুধু Video নির্বাচন করুন।</p>
+        </div>
+
+        <div class="result-number" id="resultNumber">
+          ৬
+        </div>
+
+      </div>
+
+      <div class="control-row">
+
+        <div class="filter-buttons">
+
+          <button class="filter-button active" type="button" data-filter="all">
+            সব আবৃত্তি
+          </button>
+
+          <button class="filter-button" type="button" data-filter="audio">
+            🎧 Audio
+          </button>
+
+          <button class="filter-button" type="button" data-filter="video">
+            🎬 Video
+          </button>
+
         </div>
 
         <select class="sort-select" id="sortSelect">
-          <option value="recent">সাম্প্রতিক</option>
+          <option value="recent">সাম্প্রতিক আগে</option>
           <option value="oldest">পুরোনো আগে</option>
-          <option value="popular">জনপ্রিয়</option>
+          <option value="title">শিরোনাম অনুযায়ী</option>
         </select>
 
       </div>
 
-      <div class="recitation-filters">
+    </section>
 
-        <button class="filter-btn active" data-filter="all">
-          সব
-        </button>
+    <section class="recitation-feed" id="recitationFeed"></section>
 
-        <button class="filter-btn" data-filter="self">
-          স্বরচিত
-        </button>
+    <section class="card empty-state" id="emptyState">
 
-        <button class="filter-btn" data-filter="classic">
-          ধ্রুপদি
-        </button>
+      <span>🎙</span>
 
-        <button class="filter-btn" data-filter="love">
-          প্রেম
-        </button>
+      <h2>এই ধরনের কোনো আবৃত্তি পাওয়া যায়নি</h2>
 
-        <button class="filter-btn" data-filter="nature">
-          প্রকৃতি
-        </button>
-
-        <button class="filter-btn" data-filter="life">
-          জীবনবোধ
-        </button>
-
-      </div>
-
-      <div class="feed-status">
-
-        <span>
-          নির্বাচিত বিভাগ:
-          <strong id="activeFilterText">সব</strong>
-        </span>
-
-        <span id="resultCount">০টি আবৃত্তি</span>
-
-      </div>
+      <p>
+        অন্য Filter নির্বাচন করুন অথবা পরে আবার দেখুন।
+      </p>
 
     </section>
 
-    <section class="feed-list" id="feedList"></section>
-
     <section class="card guide-card">
 
-      <div class="section-head">
+      <h2>আবৃত্তি প্রকাশের আগে মনে রাখুন</h2>
 
-        <h2>আবৃত্তি প্রকাশের নিয়ম</h2>
-
-        <p>
-          কবি, আবৃত্তিকার, উৎস ও ব্যবহারের অনুমতি সম্পর্কে নির্ভুল তথ্য দিন।
-        </p>
-
-      </div>
+      <p>
+        কবিতা, কবি, কণ্ঠ এবং Media-এর অধিকারকে সম্মান করুন।
+      </p>
 
       <div class="guide-grid">
 
         <article class="guide-item">
-          <span>🎤</span>
-          <h3>পরিষ্কার কণ্ঠ ও উচ্চারণ</h3>
+          <h3>কবির নাম লিখুন</h3>
           <p>
-            কণ্ঠ পরিষ্কার রাখুন এবং কবিতার শব্দ ও অর্থ বিকৃত করবেন না।
+            আবৃত্তির সঙ্গে মূল কবির নাম এবং কবিতার সঠিক শিরোনাম দিন।
           </p>
         </article>
 
         <article class="guide-item">
-          <span>✍</span>
-          <h3>কবির নাম উল্লেখ করুন</h3>
+          <h3>নিজের Recording ব্যবহার করুন</h3>
           <p>
-            নিজের কবিতা না হলে মূল কবির নাম ও কবিতার শিরোনাম অবশ্যই লিখুন।
+            নিজের কণ্ঠে ধারণ করা অথবা বৈধ অনুমতি থাকা Audio ও Video ব্যবহার করুন।
           </p>
         </article>
 
         <article class="guide-item">
-          <span>©</span>
-          <h3>কপিরাইট সম্মান করুন</h3>
+          <h3>অন্যের আবৃত্তি নিজের নামে নয়</h3>
           <p>
-            অনুমতিহীন Commercial Audio, Music বা অন্যের Recording ব্যবহার করবেন না।
+            অন্য আবৃত্তিকারের Recording Download করে নিজের নামে প্রকাশ করবেন না।
           </p>
         </article>
 
         <article class="guide-item">
-          <span>🔐</span>
-          <h3>ব্যক্তিগত তথ্য প্রকাশ নয়</h3>
+          <h3>Background Music-এর অধিকার</h3>
           <p>
-            Audio Description-এ ফোন, ঠিকানা বা সংবেদনশীল ব্যক্তিগত তথ্য দেবেন না।
+            অনুমতিহীন গান বা Instrumental ব্যবহার করলে কপিরাইট অভিযোগ হতে পারে।
           </p>
         </article>
 
+      </div>
+
+      <div class="copyright-note">
+        বর্তমান Static সংস্করণে Play Button শুধু Demo Interaction।
+        প্রকৃত Audio/Video Upload, Streaming ও Server Publishing চালু করতে
+        Backend এবং Media Storage যুক্ত করতে হবে।
       </div>
 
     </section>
@@ -2034,26 +2235,19 @@ html[data-theme="dark"] .header-icon{
 
     <section class="card right-card">
 
-      <h3 class="right-title">আবৃত্তির সৌন্দর্য</h3>
+      <h3 class="right-title">আবৃত্তির ধরন</h3>
 
       <div class="right-rule">
-        <h3>শব্দের শুদ্ধতা</h3>
+        <h3>🎧 Audio আবৃত্তি</h3>
         <p>
-          কবিতার শব্দ, উচ্চারণ এবং অর্থের প্রতি সতর্ক ও শ্রদ্ধাশীল থাকুন।
+          শুধু কণ্ঠ, উচ্চারণ, বিরতি ও অনুভূতির মাধ্যমে কবিতার উপস্থাপন।
         </p>
       </div>
 
       <div class="right-rule">
-        <h3>বিরতির ব্যবহার</h3>
+        <h3>🎬 Video আবৃত্তি</h3>
         <p>
-          দ্রুত পাঠের পরিবর্তে কবিতার ভাব অনুযায়ী বিরতি ও গতি নির্বাচন করুন।
-        </p>
-      </div>
-
-      <div class="right-rule">
-        <h3>অভিনয় নয়, অনুভব</h3>
-        <p>
-          অতিরিক্ত নাটকীয়তার চেয়ে কবিতার স্বাভাবিক অনুভূতিকে গুরুত্ব দিন।
+          কণ্ঠের সঙ্গে মুখের অভিব্যক্তি, দৃশ্য ও উপস্থাপনার সম্মিলিত রূপ।
         </p>
       </div>
 
@@ -2061,40 +2255,15 @@ html[data-theme="dark"] .header-icon{
 
     <section class="card right-card">
 
-      <h3 class="right-title">প্রকাশনার সততা</h3>
-
-      <div class="right-rule">
-        <h3>মূল কবির Credit</h3>
-        <p>
-          কবির নাম, কবিতার নাম এবং প্রয়োজন হলে বই বা উৎস উল্লেখ করুন।
-        </p>
-      </div>
-
-      <div class="right-rule">
-        <h3>নিজস্ব Recording</h3>
-        <p>
-          নিজের কণ্ঠে রেকর্ড করা Audio প্রকাশ করুন অথবা বৈধ অনুমতি নিশ্চিত করুন।
-        </p>
-      </div>
-
-      <div class="right-rule">
-        <h3>Static Preview</h3>
-        <p>
-          বর্তমান Play Button নমুনা Player; প্রকৃত Audio Streaming-এর জন্য Backend বা Audio File প্রয়োজন।
-        </p>
-      </div>
-
-    </section>
-
-    <section class="card right-card">
+      <h3 class="right-title">দ্রুত যান</h3>
 
       <a href="submit-recitation.html" class="right-link">
-        আবৃত্তি যুক্ত করুন
+        আবৃত্তি জমা দিন
         <span>›</span>
       </a>
 
-      <a href="recitation.html?type=self" class="right-link">
-        স্বরচিত আবৃত্তি
+      <a href="today-poem.html?type=poem" class="right-link">
+        কবিতা পড়ুন
         <span>›</span>
       </a>
 
@@ -2103,15 +2272,29 @@ html[data-theme="dark"] .header-icon{
         <span>›</span>
       </a>
 
-      <a href="today-poem.html" class="right-link">
-        সম্পূর্ণ প্রবাহ
+      <a href="creative-work-protection.html" class="right-link">
+        সৃজনশীল কাজের সুরক্ষা
         <span>›</span>
       </a>
 
-      <a href="copyright.html" class="right-link">
-        কপিরাইট
+      <a href="policy.html#recitation" class="right-link">
+        আবৃত্তির নীতিমালা
         <span>›</span>
       </a>
+
+    </section>
+
+    <section class="card right-card">
+
+      <h3 class="right-title">সততার নোট</h3>
+
+      <div class="right-rule">
+        <h3>বর্তমানে Static Preview</h3>
+        <p>
+          এখানে দেখানো আবৃত্তি Sample Content। Local প্রতিক্রিয়া
+          কোনো Server বা Admin Panel-এ পাঠানো হয় না।
+        </p>
+      </div>
 
     </section>
 
@@ -2128,18 +2311,19 @@ html[data-theme="dark"] .header-icon{
 
   <div class="footer-links">
     <a href="index.html">হোম</a>
-    <a href="today-poem.html">প্রবাহ</a>
-    <a href="recitation.html">আবৃত্তি</a>
-    <a href="submit-recitation.html">আবৃত্তি যুক্ত করুন</a>
-    <a href="policy.html">নীতিমালা</a>
+    <a href="about.html">আমাদের সম্পর্কে</a>
+    <a href="contact.html">যোগাযোগ</a>
+    <a href="review.html">রিভিউ</a>
     <a href="copyright.html">কপিরাইট</a>
+    <a href="privacy-security-policy.html">গোপনীয়তা</a>
+    <a href="policy.html">নীতিমালা</a>
   </div>
 
 </footer>
 
 </div>
 
-<button class="to-top" id="toTopBtn">
+<button class="to-top" id="toTopBtn" aria-label="উপরে যান">
   ↑
 </button>
 
@@ -2170,15 +2354,6 @@ function toBn(value){
   return String(value).replace(/[0-9]/g,function(digit){
     return bnDigits[digit];
   });
-}
-
-function escapeHtml(value){
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
 }
 
 function showToast(message){
@@ -2262,384 +2437,296 @@ renderDate();
 
 /* DATA */
 
-const recitationPosts = [
+const recitations = [
   {
-    id:"recitation-001",
-    artist:"নীলাঞ্জনা",
-    profileLink:"profile.html?user=nilanjona",
-    initial:"ন",
+    id:1,
+    type:"audio",
     title:"বনলতা সেন",
-    poet:"কবি: জীবনানন্দ দাশ",
-    type:"classic",
-    description:
-      "নির্জনতা, পথচলা এবং বাংলার প্রকৃতির গভীর অনুভূতি নিয়ে একটি শান্ত স্বরের আবৃত্তি।",
-    duration:"০২:১৮",
-    publishedAt:"2026-07-16T19:20:00",
-    popularity:5
+    poet:"জীবনানন্দ দাশ",
+    reciter:"মেহজাবিন নওরীন",
+    initials:"মন",
+    time:"আজ • ৯:৪০",
+    duration:"৩:১৮",
+    order:6,
+    description:"অনেকদিনের পথচলার ক্লান্তি আর হঠাৎ পাওয়া আশ্রয়ের অনুভূতি নিয়ে শান্ত কণ্ঠে ধারণ করা একটি আবৃত্তি।",
+    tags:["জীবনানন্দ দাশ","অডিও","নির্জনতা"]
   },
   {
-    id:"recitation-002",
-    artist:"অচেনা পথিক",
-    profileLink:"profile.html?user=ochena-pothik",
-    initial:"অ",
-    title:"নিজের কাছে ফিরে আসা",
-    poet:"স্বরচিত কবিতা",
-    type:"self",
-    description:
-      "ব্যস্ততার ভিড়ে হারিয়ে যাওয়া মানুষটির নিজের কাছে ফিরে আসার অনুভূতি।",
-    duration:"০১:৪৬",
-    publishedAt:"2026-07-16T17:15:00",
-    popularity:4
+    id:2,
+    type:"video",
+    title:"দুই বিঘা জমি",
+    poet:"রবীন্দ্রনাথ ঠাকুর",
+    reciter:"সাদিয়া ইসলাম",
+    initials:"সই",
+    time:"আজ • ৮:১৫",
+    duration:"৪:৩৬",
+    order:5,
+    description:"মাটি, স্মৃতি আর মানুষের অসহায় অধিকারবোধকে সামনে রেখে সরল দৃশ্য ও আবেগময় উপস্থাপনায় ভিডিও আবৃত্তি।",
+    tags:["রবীন্দ্রনাথ","ভিডিও","মাটি"]
   },
   {
-    id:"recitation-003",
-    artist:"মেঘবালিকা",
-    profileLink:"profile.html?user=meghbalika",
-    initial:"ম",
-    title:"তোমাকে পাওয়ার জন্য, হে স্বাধীনতা",
-    poet:"কবি: শামসুর রাহমান",
-    type:"life",
-    description:
-      "স্বাধীনতার আকাঙ্ক্ষা, ত্যাগ এবং মানুষের সংগ্রামের শক্তিশালী কণ্ঠভাষ্য।",
-    duration:"০৩:০৪",
-    publishedAt:"2026-07-16T14:40:00",
-    popularity:3
+    id:3,
+    type:"audio",
+    title:"বিদ্রোহী",
+    poet:"কাজী নজরুল ইসলাম",
+    reciter:"শুভাশিস",
+    initials:"শু",
+    time:"গতকাল • ১০:৩০",
+    duration:"৫:১২",
+    order:4,
+    description:"কণ্ঠে শক্তি রাখার চেষ্টা করেছি, কিন্তু শুধু উচ্চস্বরে নয়—কবিতার ভেতরের আত্মমর্যাদা ও মুক্তির আকাঙ্ক্ষাটাও ধরে রাখতে চেয়েছি।",
+    tags:["নজরুল","অডিও","বিদ্রোহ"]
   },
   {
-    id:"recitation-004",
-    artist:"স্মৃতির মানুষ",
-    profileLink:"profile.html?user=smritir-manush",
-    initial:"স",
+    id:4,
+    type:"video",
     title:"আবার আসিব ফিরে",
-    poet:"কবি: জীবনানন্দ দাশ",
-    type:"nature",
-    description:
-      "বাংলার মাঠ, নদী, পাখি ও প্রকৃতির প্রতি ফিরে আসার আকুলতা।",
-    duration:"০২:৩৬",
-    publishedAt:"2026-07-16T12:10:00",
-    popularity:2
+    poet:"জীবনানন্দ দাশ",
+    reciter:"মাহমুদ সোহেল",
+    initials:"মস",
+    time:"২ দিন আগে",
+    duration:"৩:৪৯",
+    order:3,
+    description:"বাংলার মাঠ, নদী আর ফিরে আসার অদ্ভুত আকাঙ্ক্ষাকে নরম আলো ও ধীর কণ্ঠের একটি ভিডিওতে ধারণ করার চেষ্টা।",
+    tags:["জীবনানন্দ","ভিডিও","বাংলা"]
   },
   {
-    id:"recitation-005",
-    artist:"নির্জন পাঠক",
-    profileLink:"profile.html?user=nirjon-pathok",
-    initial:"ন",
-    title:"প্রিয়তমার উদ্দেশে",
-    poet:"স্বরচিত কবিতা",
-    type:"love",
-    description:
-      "ভালোবাসা, অপেক্ষা এবং নীরব সম্পর্কের অনুভূতিনির্ভর একটি স্বরচিত আবৃত্তি।",
-    duration:"০১:৫৮",
-    publishedAt:"2026-07-16T09:35:00",
-    popularity:1
+    id:5,
+    type:"audio",
+    title:"কেউ কথা রাখেনি",
+    poet:"সুনীল গঙ্গোপাধ্যায়",
+    reciter:"নীরা রহমান",
+    initials:"নর",
+    time:"৩ দিন আগে",
+    duration:"৪:০৫",
+    order:2,
+    description:"প্রতিশ্রুতি ভেঙে যাওয়ার পরও মানুষের ভেতরে যে অপেক্ষা থেকে যায়, সেই নীরব জায়গাটিকে সামনে রেখে আবৃত্তি।",
+    tags:["সুনীল","অডিও","অপেক্ষা"]
+  },
+  {
+    id:6,
+    type:"video",
+    title:"আমি কিংবদন্তির কথা বলছি",
+    poet:"আবু জাফর ওবায়দুল্লাহ",
+    reciter:"আরিফ হোসেন",
+    initials:"আহ",
+    time:"৪ দিন আগে",
+    duration:"৫:৪৪",
+    order:1,
+    description:"ইতিহাস, মানুষের সংগ্রাম এবং উত্তরাধিকারের শক্তিকে দৃশ্য ও কণ্ঠে একসঙ্গে উপস্থাপন করার একটি চেষ্টা।",
+    tags:["ভিডিও","ইতিহাস","সংগ্রাম"]
   }
 ];
 
-const filterLabels = {
-  all:"সব",
-  self:"স্বরচিত",
-  classic:"ধ্রুপদি",
-  love:"প্রেম",
-  nature:"প্রকৃতি",
-  life:"জীবনবোধ"
-};
+let activeFilter = "all";
 
-const urlParams = new URLSearchParams(window.location.search);
+/* HELPERS */
 
-let activeFilter = urlParams.get("type") || "all";
-let activeSort = "recent";
-let activePlayerId = null;
-let playerTimers = {};
-
-if(!filterLabels[activeFilter]){
-  activeFilter = "all";
+function escapeHtml(value){
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
-function getLocalArray(key){
+function getStorageArray(key){
   try{
-    const data = JSON.parse(
+    return JSON.parse(
       localStorage.getItem(key) || "[]"
     );
-
-    return Array.isArray(data) ? data : [];
   }catch(error){
     return [];
   }
 }
 
-function saveLocalArray(key,value){
-  localStorage.setItem(
-    key,
-    JSON.stringify(value)
-  );
-}
+/* MEDIA */
 
-function isInList(key,id){
-  return getLocalArray(key).includes(id);
-}
+function createAudioPlayer(item){
+  return `
+    <div class="audio-player">
 
-function toggleList(key,id){
-  let list = getLocalArray(key);
-
-  if(list.includes(id)){
-    list = list.filter(function(item){
-      return item !== id;
-    });
-  }else{
-    list.unshift(id);
-  }
-
-  saveLocalArray(key,list);
-
-  return list.includes(id);
-}
-
-function formatRelativeTime(value){
-  const date = new Date(value);
-  const now = new Date();
-  const difference = Math.max(0,now - date);
-
-  const minutes = Math.floor(difference / 60000);
-  const hours = Math.floor(difference / 3600000);
-  const days = Math.floor(difference / 86400000);
-
-  if(minutes < 1){
-    return "এইমাত্র";
-  }
-
-  if(minutes < 60){
-    return toBn(minutes) + " মিনিট আগে";
-  }
-
-  if(hours < 24){
-    return toBn(hours) + " ঘণ্টা আগে";
-  }
-
-  if(days < 7){
-    return toBn(days) + " দিন আগে";
-  }
-
-  return new Intl.DateTimeFormat(
-    "bn-BD",
-    {
-      day:"numeric",
-      month:"long",
-      year:"numeric"
-    }
-  ).format(date);
-}
-
-function getFilteredPosts(){
-  let posts = recitationPosts.filter(function(post){
-    return (
-      activeFilter === "all" ||
-      post.type === activeFilter
-    );
-  });
-
-  posts.sort(function(a,b){
-    if(activeSort === "oldest"){
-      return new Date(a.publishedAt) - new Date(b.publishedAt);
-    }
-
-    if(activeSort === "popular"){
-      return b.popularity - a.popularity;
-    }
-
-    return new Date(b.publishedAt) - new Date(a.publishedAt);
-  });
-
-  return posts;
-}
-
-function findPost(postId){
-  return recitationPosts.find(function(post){
-    return post.id === postId;
-  });
-}
-
-function createWaveBars(){
-  const heights = [
-    12,18,28,20,31,17,25,33,19,27,14,24,32,21,29,
-    16,23,30,18,26,13,22,34,20,28,15,25,31,18,27,
-    14,24,30,19,26,16,23,32,20,29,15,25,33,18,27
-  ];
-
-  return heights.map(function(height){
-    return '<span class="wave-bar" style="height:' + height + 'px"></span>';
-  }).join("");
-}
-
-function createCard(post){
-  const loved = isInList(
-    "bhubondangaLovedPosts",
-    post.id
-  );
-
-  const saved = isInList(
-    "bhubondangaMemoryPosts",
-    post.id
-  );
-
-  const article = document.createElement("article");
-
-  article.className = "card recitation-card";
-  article.dataset.postId = post.id;
-
-  article.innerHTML = `
-    <header class="post-header">
-
-      <a
-        href="${escapeHtml(post.profileLink)}"
-        class="artist-avatar"
-      >
-        ${escapeHtml(post.initial)}
-      </a>
-
-      <div>
-
-        <div class="artist-line">
-
-          <a href="${escapeHtml(post.profileLink)}">
-            ${escapeHtml(post.artist)}
-          </a>
-
-          <span class="type-pill">
-            আবৃত্তি
-          </span>
-
-        </div>
-
-        <div class="post-time">
-          ${escapeHtml(formatRelativeTime(post.publishedAt))}
-        </div>
-
-      </div>
-
-      <button
-        class="post-menu"
-        data-report-post="${escapeHtml(post.id)}"
-        aria-label="আবৃত্তির অপশন"
-      >
-        •••
-      </button>
-
-    </header>
-
-    <h2 class="recitation-title">
-      ${escapeHtml(post.title)}
-    </h2>
-
-    <div class="poet-credit">
-      ${escapeHtml(post.poet)}
-    </div>
-
-    <div
-      class="audio-player"
-      data-player="${escapeHtml(post.id)}"
-    >
-
-      <div class="player-row">
+      <div class="audio-top">
 
         <button
-          class="play-btn"
-          data-play-post="${escapeHtml(post.id)}"
-          aria-label="আবৃত্তি চালু করুন"
+          class="play-button audio-play-button"
+          type="button"
+          data-id="${item.id}"
+          aria-label="Audio চালান"
         >
           ▶
         </button>
 
-        <div class="wave-track">
-          ${createWaveBars()}
+        <div class="audio-info">
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.reciter)}-এর কণ্ঠে Audio আবৃত্তি</p>
         </div>
 
-        <span class="audio-time">
-          নমুনা • ${escapeHtml(post.duration)}
+        <div class="audio-time">
+          <span class="current-time">০:০০</span>
+          /
+          ${escapeHtml(item.duration)}
+        </div>
+
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" data-progress="${item.id}"></div>
+      </div>
+
+    </div>
+  `;
+}
+
+function createVideoPlayer(item){
+  return `
+    <div class="video-player">
+
+      <button
+        class="video-play"
+        type="button"
+        data-video-id="${item.id}"
+        aria-label="Video চালান"
+      >
+        ▶
+      </button>
+
+      <div class="video-overlay">
+
+        <div>
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.reciter)}-এর কণ্ঠ ও ভিডিও পরিবেশনা</p>
+        </div>
+
+        <span class="video-duration">
+          ${escapeHtml(item.duration)}
         </span>
 
       </div>
 
     </div>
+  `;
+}
 
-    <p class="recitation-description">
-      ${escapeHtml(post.description)}
-    </p>
+/* CARD */
 
-    <div class="post-credit">
-      আবৃত্তিকার: ${escapeHtml(post.artist)}
-      • ${escapeHtml(post.poet)}
-      • বর্তমান Player একটি Static Preview
+function createRecitationCard(item){
+  const article =
+    document.createElement("article");
+
+  article.className =
+    "card recitation-card";
+
+  article.dataset.type =
+    item.type;
+
+  const media =
+    item.type === "audio"
+      ? createAudioPlayer(item)
+      : createVideoPlayer(item);
+
+  article.innerHTML = `
+    <div class="post-head">
+
+      <div class="author-area">
+
+        <div class="author-avatar">
+          ${escapeHtml(item.initials)}
+        </div>
+
+        <div class="author-copy">
+          <h3>${escapeHtml(item.reciter)}</h3>
+          <p>${escapeHtml(item.time)} • আবৃত্তি</p>
+        </div>
+
+      </div>
+
+      <span class="media-badge ${item.type}">
+        ${item.type === "audio" ? "🎧 Audio" : "🎬 Video"}
+      </span>
+
     </div>
 
-    <div class="post-stats">
+    <div class="post-body">
 
-      <span>
-        ${loved ? "আপনি ভালোবাসা দিয়েছেন" : "এখনো কোনো প্রতিক্রিয়া নেই"}
-      </span>
+      <h2>${escapeHtml(item.title)}</h2>
 
-      <span>
-        ${saved ? "Memory-তে সংরক্ষিত" : ""}
-      </span>
+      <p class="poem-credit">
+        কবি:
+        <strong>${escapeHtml(item.poet)}</strong>
+        • আবৃত্তি:
+        <strong>${escapeHtml(item.reciter)}</strong>
+      </p>
+
+      ${media}
+
+      <p class="recitation-note">
+        ${escapeHtml(item.description)}
+      </p>
+
+      <div class="post-tags">
+        ${item.tags.map(function(tag){
+          return `<span class="post-tag">#${escapeHtml(tag)}</span>`;
+        }).join("")}
+      </div>
 
     </div>
 
     <div class="post-actions">
 
       <button
-        class="post-action ${loved ? "loved" : ""}"
-        data-love-post="${escapeHtml(post.id)}"
+        class="post-action love-button"
+        type="button"
+        data-id="${item.id}"
       >
-        ${loved ? "♥ ভালোবাসা" : "♡ ভালোবাসা"}
+        ♡ ভালো লেগেছে
       </button>
 
       <button
-        class="post-action"
-        data-comment-post="${escapeHtml(post.id)}"
+        class="post-action memory-button"
+        type="button"
+        data-id="${item.id}"
+      >
+        🔖 স্মৃতিতে রাখুন
+      </button>
+
+      <button
+        class="post-action comment-toggle"
+        type="button"
+        data-id="${item.id}"
       >
         💬 মন্তব্য
       </button>
 
       <button
-        class="post-action ${saved ? "active" : ""}"
-        data-memory-post="${escapeHtml(post.id)}"
-      >
-        ${saved ? "🔖 সংরক্ষিত" : "🔖 Memory"}
-      </button>
-
-      <button
-        class="post-action"
-        data-share-post="${escapeHtml(post.id)}"
+        class="post-action share-button"
+        type="button"
+        data-id="${item.id}"
       >
         ↗ শেয়ার
       </button>
 
     </div>
 
-    <div
-      class="comment-area"
-      data-comment-area="${escapeHtml(post.id)}"
-    >
+    <div class="comment-panel" id="commentPanel-${item.id}">
 
-      <div class="comment-box">
+      <form class="comment-form" data-id="${item.id}">
 
         <input
+          class="comment-input"
           type="text"
-          maxlength="500"
-          placeholder="মার্জিত মন্তব্য লিখুন..."
+          maxlength="260"
+          placeholder="আবৃত্তি সম্পর্কে সম্মানজনক মন্তব্য লিখুন..."
         >
 
-        <button
-          type="button"
-          data-submit-comment="${escapeHtml(post.id)}"
-        >
-          পাঠান
+        <button class="comment-button" type="submit">
+          যোগ করুন
         </button>
 
-      </div>
+      </form>
 
-      <div class="comment-note">
-        বর্তমান Static সংস্করণে মন্তব্য শুধু এই Browser-এ সংরক্ষিত হবে।
-      </div>
+      <div class="comment-list" id="commentList-${item.id}"></div>
 
     </div>
   `;
@@ -2647,321 +2734,519 @@ function createCard(post){
   return article;
 }
 
-function stopAllPlayers(exceptId){
-  Object.keys(playerTimers).forEach(function(id){
-    if(id !== exceptId){
-      clearInterval(playerTimers[id]);
-      delete playerTimers[id];
+/* RENDER */
+
+function renderRecitations(){
+  const feed =
+    document.getElementById("recitationFeed");
+
+  const sortValue =
+    document.getElementById("sortSelect").value;
+
+  let filtered =
+    recitations.filter(function(item){
+      return activeFilter === "all" ||
+        item.type === activeFilter;
+    });
+
+  filtered.sort(function(a,b){
+    if(sortValue === "oldest"){
+      return a.order - b.order;
     }
+
+    if(sortValue === "title"){
+      return a.title.localeCompare(
+        b.title,
+        "bn"
+      );
+    }
+
+    return b.order - a.order;
+  });
+
+  feed.innerHTML = "";
+
+  filtered.forEach(function(item){
+    feed.appendChild(
+      createRecitationCard(item)
+    );
+  });
+
+  document.getElementById("resultNumber").innerText =
+    toBn(filtered.length);
+
+  document.getElementById("emptyState")
+    .classList.toggle(
+      "show",
+      filtered.length === 0
+    );
+
+  restoreLocalStates();
+  bindCardEvents();
+}
+
+/* FILTER */
+
+document
+  .querySelectorAll(".filter-button")
+  .forEach(function(button){
+    button.addEventListener("click",function(){
+      activeFilter =
+        button.dataset.filter;
+
+      document
+        .querySelectorAll(".filter-button")
+        .forEach(function(item){
+          item.classList.toggle(
+            "active",
+            item === button
+          );
+        });
+
+      const url =
+        new URL(window.location.href);
+
+      if(activeFilter === "all"){
+        url.searchParams.delete("type");
+      }else{
+        url.searchParams.set(
+          "type",
+          activeFilter
+        );
+      }
+
+      window.history.replaceState(
+        {},
+        "",
+        url
+      );
+
+      renderRecitations();
+    });
+  });
+
+document
+  .getElementById("sortSelect")
+  .addEventListener("change",renderRecitations);
+
+/* LOCAL STATES */
+
+function restoreLocalStates(){
+  const loved =
+    getStorageArray("bhubondangaRecitationLoves");
+
+  const memories =
+    getStorageArray("bhubondangaMemories");
+
+  document
+    .querySelectorAll(".love-button")
+    .forEach(function(button){
+      const id =
+        Number(button.dataset.id);
+
+      const active =
+        loved.includes(id);
+
+      button.classList.toggle(
+        "active",
+        active
+      );
+
+      button.innerText =
+        active
+          ? "♥ ভালো লেগেছে"
+          : "♡ ভালো লেগেছে";
+    });
+
+  document
+    .querySelectorAll(".memory-button")
+    .forEach(function(button){
+      const id =
+        Number(button.dataset.id);
+
+      const item =
+        recitations.find(function(recitation){
+          return recitation.id === id;
+        });
+
+      const saved =
+        item &&
+        memories.some(function(memory){
+          return memory.title === item.title &&
+            memory.type === "আবৃত্তি";
+        });
+
+      button.classList.toggle(
+        "saved",
+        saved
+      );
+
+      button.innerText =
+        saved
+          ? "✓ স্মৃতিতে আছে"
+          : "🔖 স্মৃতিতে রাখুন";
+    });
+
+  recitations.forEach(function(item){
+    renderComments(item.id);
+  });
+}
+
+/* COMMENTS */
+
+function getComments(id){
+  return getStorageArray(
+    "bhubondangaRecitationComments-" + id
+  );
+}
+
+function renderComments(id){
+  const list =
+    document.getElementById(
+      "commentList-" + id
+    );
+
+  if(!list){
+    return;
+  }
+
+  const comments =
+    getComments(id);
+
+  list.innerHTML = "";
+
+  comments.forEach(function(comment){
+    const div =
+      document.createElement("div");
+
+    div.className =
+      "comment-item";
+
+    div.innerHTML = `
+      <strong>আপনি</strong>
+      <p>${escapeHtml(comment)}</p>
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+/* PLAY */
+
+const audioTimers = {};
+
+function toggleAudio(button,id){
+  const progress =
+    document.querySelector(
+      '[data-progress="' + id + '"]'
+    );
+
+  const currentTime =
+    button.closest(".audio-player")
+      .querySelector(".current-time");
+
+  const playing =
+    button.dataset.playing === "true";
+
+  Object.keys(audioTimers).forEach(function(key){
+    clearInterval(audioTimers[key]);
+    delete audioTimers[key];
   });
 
   document
-    .querySelectorAll(".audio-player")
-    .forEach(function(player){
-      if(player.dataset.player !== exceptId){
-        player.classList.remove("playing");
-      }
+    .querySelectorAll(".audio-play-button")
+    .forEach(function(item){
+      item.dataset.playing = "false";
+      item.innerText = "▶";
     });
 
-  document
-    .querySelectorAll("[data-play-post]")
-    .forEach(function(button){
-      if(button.dataset.playPost !== exceptId){
-        button.innerText = "▶";
-      }
-    });
-}
-
-function toggleStaticPlayer(postId){
-  const player = document.querySelector(
-    '[data-player="' + postId + '"]'
-  );
-
-  const button = document.querySelector(
-    '[data-play-post="' + postId + '"]'
-  );
-
-  if(!player || !button){
-    return;
-  }
-
-  const currentlyPlaying =
-    player.classList.contains("playing");
-
-  stopAllPlayers(currentlyPlaying ? null : postId);
-
-  if(currentlyPlaying){
-    player.classList.remove("playing");
+  if(playing){
+    button.dataset.playing = "false";
     button.innerText = "▶";
-
-    if(playerTimers[postId]){
-      clearInterval(playerTimers[postId]);
-      delete playerTimers[postId];
-    }
-
-    activePlayerId = null;
-
-    showToast("নমুনা Player বন্ধ করা হয়েছে।");
     return;
   }
 
-  player.classList.add("playing");
+  button.dataset.playing = "true";
   button.innerText = "❚❚";
-  activePlayerId = postId;
 
-  playerTimers[postId] = setInterval(function(){},1000);
+  let seconds = 0;
+  const demoLength = 30;
 
-  showToast(
-    "এটি Static Audio Preview। প্রকৃত Audio যুক্ত হলে এখানে বাজবে।"
-  );
+  audioTimers[id] = setInterval(function(){
+    seconds++;
+
+    const percent =
+      Math.min(
+        (seconds / demoLength) * 100,
+        100
+      );
+
+    progress.style.width =
+      percent + "%";
+
+    currentTime.innerText =
+      "০:" +
+      String(toBn(seconds)).padStart(2,"০");
+
+    if(seconds >= demoLength){
+      clearInterval(audioTimers[id]);
+      delete audioTimers[id];
+
+      button.dataset.playing = "false";
+      button.innerText = "▶";
+
+      progress.style.width = "0%";
+      currentTime.innerText = "০:০০";
+
+      showToast(
+        "এটি Demo Player। প্রকৃত Audio চালাতে Media File যুক্ত করতে হবে।"
+      );
+    }
+  },1000);
 }
 
-function updateUrl(){
-  const url = new URL(window.location.href);
+/* CARD EVENTS */
 
-  if(activeFilter === "all"){
-    url.searchParams.delete("type");
-  }else{
-    url.searchParams.set("type",activeFilter);
-  }
-
-  window.history.replaceState(
-    {},
-    "",
-    url.pathname + url.search
-  );
-}
-
-function renderFeed(){
-  const container =
-    document.getElementById("feedList");
-
-  const posts = getFilteredPosts();
-
-  stopAllPlayers(null);
-  activePlayerId = null;
-  container.innerHTML = "";
-
-  document.getElementById("activeFilterText").innerText =
-    filterLabels[activeFilter];
-
-  document.getElementById("resultCount").innerText =
-    toBn(posts.length) + "টি আবৃত্তি";
+function bindCardEvents(){
+  document
+    .querySelectorAll(".audio-play-button")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        toggleAudio(
+          button,
+          Number(button.dataset.id)
+        );
+      });
+    });
 
   document
-    .querySelectorAll(".filter-btn")
+    .querySelectorAll(".video-play")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        showToast(
+          "এটি Video Preview। প্রকৃত Video চালাতে Media File বা Streaming Link যুক্ত করতে হবে।"
+        );
+      });
+    });
+
+  document
+    .querySelectorAll(".love-button")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        const id =
+          Number(button.dataset.id);
+
+        let loved =
+          getStorageArray(
+            "bhubondangaRecitationLoves"
+          );
+
+        if(loved.includes(id)){
+          loved =
+            loved.filter(function(item){
+              return item !== id;
+            });
+        }else{
+          loved.push(id);
+        }
+
+        localStorage.setItem(
+          "bhubondangaRecitationLoves",
+          JSON.stringify(loved)
+        );
+
+        restoreLocalStates();
+      });
+    });
+
+  document
+    .querySelectorAll(".memory-button")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        const id =
+          Number(button.dataset.id);
+
+        const item =
+          recitations.find(function(recitation){
+            return recitation.id === id;
+          });
+
+        if(!item){
+          return;
+        }
+
+        let memories =
+          getStorageArray(
+            "bhubondangaMemories"
+          );
+
+        const existingIndex =
+          memories.findIndex(function(memory){
+            return memory.title === item.title &&
+              memory.type === "আবৃত্তি";
+          });
+
+        if(existingIndex >= 0){
+          memories.splice(
+            existingIndex,
+            1
+          );
+
+          showToast(
+            "আবৃত্তিটি স্মৃতি থেকে সরানো হয়েছে।"
+          );
+        }else{
+          memories.unshift({
+            type:"আবৃত্তি",
+            author:item.reciter,
+            title:item.title,
+            url:"recitation.html?post=" + item.id
+          });
+
+          showToast(
+            "আবৃত্তিটি এই Browser-এর স্মৃতিতে রাখা হয়েছে।"
+          );
+        }
+
+        localStorage.setItem(
+          "bhubondangaMemories",
+          JSON.stringify(
+            memories.slice(0,50)
+          )
+        );
+
+        restoreLocalStates();
+      });
+    });
+
+  document
+    .querySelectorAll(".comment-toggle")
+    .forEach(function(button){
+      button.addEventListener("click",function(){
+        const id =
+          button.dataset.id;
+
+        document
+          .getElementById(
+            "commentPanel-" + id
+          )
+          .classList.toggle("open");
+      });
+    });
+
+  document
+    .querySelectorAll(".comment-form")
+    .forEach(function(form){
+      form.addEventListener("submit",function(event){
+        event.preventDefault();
+
+        const id =
+          form.dataset.id;
+
+        const input =
+          form.querySelector(".comment-input");
+
+        const comment =
+          input.value.trim();
+
+        if(!comment){
+          showToast(
+            "মন্তব্য লিখে তারপর যোগ করুন।"
+          );
+
+          return;
+        }
+
+        const comments =
+          getComments(id);
+
+        comments.unshift(comment);
+
+        localStorage.setItem(
+          "bhubondangaRecitationComments-" + id,
+          JSON.stringify(
+            comments.slice(0,30)
+          )
+        );
+
+        input.value = "";
+        renderComments(id);
+
+        showToast(
+          "মন্তব্যটি শুধু এই Browser-এ রাখা হয়েছে।"
+        );
+      });
+    });
+
+  document
+    .querySelectorAll(".share-button")
+    .forEach(function(button){
+      button.addEventListener("click",async function(){
+        const id =
+          Number(button.dataset.id);
+
+        const item =
+          recitations.find(function(recitation){
+            return recitation.id === id;
+          });
+
+        if(!item){
+          return;
+        }
+
+        const url =
+          new URL(
+            "recitation.html?post=" + item.id,
+            window.location.href
+          ).href;
+
+        try{
+          if(navigator.share){
+            await navigator.share({
+              title:item.title,
+              text:item.poet + " • " + item.reciter,
+              url:url
+            });
+
+            return;
+          }
+
+          await navigator.clipboard.writeText(url);
+          showToast("Link কপি হয়েছে।");
+        }catch(error){
+          showToast("Share সম্পন্ন হয়নি।");
+        }
+      });
+    });
+}
+
+/* URL */
+
+function loadUrlFilter(){
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const type =
+    params.get("type");
+
+  if(type === "audio" || type === "video"){
+    activeFilter = type;
+  }
+
+  document
+    .querySelectorAll(".filter-button")
     .forEach(function(button){
       button.classList.toggle(
         "active",
         button.dataset.filter === activeFilter
       );
     });
-
-  if(posts.length === 0){
-    container.innerHTML = `
-      <div class="empty-state">
-
-        <span>🎙</span>
-
-        <h3>এই বিভাগে এখনো কোনো আবৃত্তি নেই</h3>
-
-        <p>
-          নতুন আবৃত্তি প্রকাশিত হলে সাম্প্রতিক সময় অনুযায়ী এখানে দেখা যাবে।
-        </p>
-
-      </div>
-    `;
-
-    return;
-  }
-
-  posts.forEach(function(post){
-    container.appendChild(createCard(post));
-  });
-
-  bindActions();
 }
 
-function bindActions(){
-  document
-    .querySelectorAll("[data-play-post]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        toggleStaticPlayer(button.dataset.playPost);
-      });
-    });
-
-  document
-    .querySelectorAll("[data-love-post]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const loved = toggleList(
-          "bhubondangaLovedPosts",
-          button.dataset.lovePost
-        );
-
-        renderFeed();
-
-        showToast(
-          loved
-            ? "ভালোবাসা এই Browser-এ সংরক্ষণ করা হয়েছে।"
-            : "ভালোবাসা সরানো হয়েছে।"
-        );
-      });
-    });
-
-  document
-    .querySelectorAll("[data-memory-post]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const saved = toggleList(
-          "bhubondangaMemoryPosts",
-          button.dataset.memoryPost
-        );
-
-        renderFeed();
-
-        showToast(
-          saved
-            ? "আবৃত্তিটি এই Browser-এর Memory-তে রাখা হয়েছে।"
-            : "Memory থেকে সরানো হয়েছে।"
-        );
-      });
-    });
-
-  document
-    .querySelectorAll("[data-comment-post]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const area = document.querySelector(
-          '[data-comment-area="' +
-          button.dataset.commentPost +
-          '"]'
-        );
-
-        area.classList.toggle("open");
-
-        if(area.classList.contains("open")){
-          area.querySelector("input").focus();
-        }
-      });
-    });
-
-  document
-    .querySelectorAll("[data-submit-comment]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const area = document.querySelector(
-          '[data-comment-area="' +
-          button.dataset.submitComment +
-          '"]'
-        );
-
-        const input = area.querySelector("input");
-        const value = input.value.trim();
-
-        if(!value){
-          showToast("মন্তব্য লিখুন।");
-          return;
-        }
-
-        const comments = getLocalArray(
-          "bhubondangaLocalComments"
-        );
-
-        comments.unshift({
-          id:"comment-" + Date.now(),
-          postId:button.dataset.submitComment,
-          text:value,
-          createdAt:new Date().toISOString(),
-          sentToServer:false
-        });
-
-        saveLocalArray(
-          "bhubondangaLocalComments",
-          comments
-        );
-
-        input.value = "";
-
-        showToast(
-          "মন্তব্যটি শুধু এই Browser-এ সংরক্ষিত হয়েছে; Server-এ পাঠানো হয়নি।"
-        );
-      });
-    });
-
-  document
-    .querySelectorAll("[data-share-post]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const post = findPost(button.dataset.sharePost);
-
-        if(!post){
-          return;
-        }
-
-        const shareData = {
-          title:post.title,
-          text:
-            post.title +
-            " — আবৃত্তি: " +
-            post.artist,
-          url:window.location.href
-        };
-
-        if(navigator.share){
-          navigator.share(shareData).catch(function(){});
-          return;
-        }
-
-        if(navigator.clipboard){
-          navigator.clipboard
-            .writeText(window.location.href)
-            .then(function(){
-              showToast("পেজের Link কপি করা হয়েছে।");
-            })
-            .catch(function(){
-              showToast("Link কপি করা যায়নি।");
-            });
-
-          return;
-        }
-
-        showToast(
-          "এই Browser-এ সরাসরি Share সুবিধা পাওয়া যাচ্ছে না।"
-        );
-      });
-    });
-
-  document
-    .querySelectorAll("[data-report-post]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        window.location.href =
-          "review.html?type=report&post=" +
-          encodeURIComponent(button.dataset.reportPost);
-      });
-    });
-}
-
-document
-  .querySelectorAll(".filter-btn")
-  .forEach(function(button){
-    button.addEventListener("click",function(){
-      activeFilter = button.dataset.filter;
-      updateUrl();
-      renderFeed();
-    });
-  });
-
-document
-  .getElementById("sortSelect")
-  .addEventListener("change",function(event){
-    activeSort = event.target.value;
-    renderFeed();
-  });
-
-renderFeed();
+loadUrlFilter();
+renderRecitations();
 
 /* SEARCH */
 
@@ -2979,7 +3264,8 @@ function performSearch(){
 
   window.location.href =
     "search.html?q=" +
-    encodeURIComponent(query);
+    encodeURIComponent(query) +
+    "&type=recitation";
 }
 
 document
@@ -3083,7 +3369,6 @@ toTopBtn.addEventListener("click",function(){
 document.addEventListener("keydown",function(event){
   if(event.key === "Escape"){
     closeDrawer();
-    stopAllPlayers(null);
   }
 
   if(
