@@ -1,536 +1,2235 @@
 <!DOCTYPE html>
-<html lang="bn">
-
+<html lang="bn" data-theme="light">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>কবি প্রোফাইল - ভুবনডাঙ্গার কবিতা</title>
+<title>কবির প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
 
+<meta
+  name="description"
+  content="ভুবনডাঙ্গার কবিতায় কবির পরিচিতি, কবিতা, আবৃত্তি, প্রলাপ, চিঠিপত্র ও সাহিত্যিক কার্যক্রম।"
+>
 
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
+html{
+  scroll-behavior:smooth;
+}
+
+:root{
+  --header-height:72px;
+  --ticker-height:34px;
+
+  --background:#edf5fb;
+  --surface:#ffffff;
+  --surface-soft:#f5f9fc;
+
+  --text:#102f5a;
+  --text-soft:#526c88;
+  --muted:#8193a8;
+
+  --border:rgba(20,77,135,.15);
+
+  --blue:#0a62ad;
+  --blue-soft:rgba(44,139,209,.10);
+
+  --green:#34785d;
+  --green-dark:#245d47;
+  --green-soft:rgba(52,120,93,.10);
+
+  --gold:#9c7429;
+  --gold-soft:rgba(156,116,41,.11);
+
+  --red:#c64f64;
+  --red-soft:rgba(198,79,100,.10);
+
+  --shadow:0 12px 30px rgba(15,57,104,.10);
+  --soft-shadow:0 5px 16px rgba(15,57,104,.07);
+
+  --page-background:
+    radial-gradient(circle at 8% 5%,rgba(142,204,242,.22),transparent 25%),
+    radial-gradient(circle at 94% 9%,rgba(255,255,255,.88),transparent 30%),
+    linear-gradient(145deg,#fbfdff,#eaf4fb 60%,#f9fcff);
+
+  --header-background:rgba(255,255,255,.96);
+  --ticker-background:linear-gradient(90deg,#edf8ff,#e4f1fb,#edf8ff);
+}
+
+html[data-theme="dark"]{
+  --background:#020814;
+  --surface:#06162e;
+  --surface-soft:#0a2142;
+
+  --text:#f4f8ff;
+  --text-soft:#c8d8eb;
+  --muted:#91a6c0;
+
+  --border:rgba(83,167,239,.22);
+
+  --blue:#55b4ff;
+  --blue-soft:rgba(85,180,255,.12);
+
+  --green:#78dfbd;
+  --green-dark:#4eb895;
+  --green-soft:rgba(120,223,189,.11);
+
+  --gold:#ffd17b;
+  --gold-soft:rgba(255,209,123,.10);
+
+  --red:#ff8799;
+  --red-soft:rgba(255,135,153,.10);
+
+  --shadow:0 18px 38px rgba(0,0,0,.42);
+  --soft-shadow:0 0 18px rgba(85,180,255,.08);
+
+  --page-background:
+    radial-gradient(circle at 8% 4%,rgba(43,101,183,.24),transparent 26%),
+    linear-gradient(180deg,#01050d,#07152e 55%,#020711);
+
+  --header-background:rgba(2,10,24,.97);
+  --ticker-background:rgba(4,14,31,.98);
+}
 
 body{
-
-font-family:'Noto Serif Bengali',serif;
-background:#f7f4ec;
-color:#142d5c;
-
+  min-height:100vh;
+  overflow-x:hidden;
+  font-family:'Noto Serif Bengali',Georgia,serif;
+  color:var(--text);
+  background:var(--background);
+  line-height:1.8;
 }
 
-
-
-/* Header */
-
-
-header{
-
-background:white;
-padding:20px 5%;
-text-align:center;
-box-shadow:0 3px 15px rgba(0,0,0,.08);
-
+body.no-scroll{
+  overflow:hidden;
 }
 
-
-.logo{
-
-font-size:45px;
-
+a{
+  color:inherit;
+  text-decoration:none;
 }
 
-
-header h1{
-
-color:#123b78;
-font-size:34px;
-
+button{
+  font-family:inherit;
+  cursor:pointer;
 }
 
-
-.tagline{
-
-color:#666;
-margin-top:8px;
-
+.site{
+  min-height:100vh;
+  background:var(--page-background);
 }
 
+/* HEADER */
 
-
-nav{
-
-margin-top:20px;
-
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:1200;
+  height:var(--header-height);
+  padding:8px 22px;
+  display:grid;
+  grid-template-columns:290px minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+  background:var(--header-background);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(18px);
 }
 
-
-nav a{
-
-text-decoration:none;
-color:#123b78;
-margin:10px;
-
+.brand-area{
+  display:flex;
+  align-items:center;
+  gap:9px;
 }
 
-
-
-/* Main */
-
-
-.container{
-
-width:90%;
-max-width:1000px;
-margin:auto;
-
+.menu-button{
+  display:none;
+  width:36px;
+  height:36px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:27px;
 }
 
-
-
-
-.profile-card{
-
-background:white;
-margin-top:45px;
-padding:40px;
-border-radius:30px;
-
-border:1px solid #dccca5;
-
-box-shadow:0 8px 25px rgba(0,0,0,.08);
-
-text-align:center;
-
+.brand{
+  display:flex;
+  align-items:center;
+  gap:9px;
 }
 
-
-
-.poet-photo{
-
-width:160px;
-height:160px;
-
-border-radius:50%;
-
-background:#e8e2d2;
-
-display:flex;
-
-align-items:center;
-justify-content:center;
-
-font-size:60px;
-
-margin:auto;
-
-border:6px solid white;
-
-box-shadow:0 5px 20px rgba(0,0,0,.15);
-
+.brand-leaf{
+  font-size:37px;
+  line-height:1;
 }
 
-
-
-.profile-card h2{
-
-font-size:36px;
-color:#123b78;
-
-margin:25px 0 10px;
-
+.brand-copy h1{
+  color:#123d76;
+  font-size:23px;
+  line-height:1.1;
+  white-space:nowrap;
 }
 
-
-
-.role{
-
-color:#666;
-font-size:18px;
-
+.brand-copy p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:10px;
+  white-space:nowrap;
 }
 
-
-
-.info{
-
-margin-top:20px;
-line-height:1.8;
-color:#555;
-
+html[data-theme="dark"] .brand-copy h1{
+  color:#ffffff;
 }
 
-
-
-
-.section-title{
-
-margin:45px 0 20px;
-
-color:#123b78;
-
-font-size:30px;
-
+.desktop-menu{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:25px;
+  overflow-x:auto;
+  scrollbar-width:none;
 }
 
-
-
-
-
-.poem-list{
-
-background:white;
-
-border-radius:25px;
-
-border:1px solid #dccca5;
-
-overflow:hidden;
-
+.desktop-menu::-webkit-scrollbar{
+  display:none;
 }
 
-
-
-.poem-item{
-
-padding:20px 25px;
-
-border-bottom:1px solid #eee;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
+.desktop-menu a{
+  flex:0 0 auto;
+  color:var(--text-soft);
+  font-size:13px;
+  font-weight:600;
+  white-space:nowrap;
 }
 
-
-
-.poem-item h3{
-
-color:#123b78;
-
+.desktop-menu a:hover{
+  color:var(--green);
 }
 
-
-
-
-.button{
-
-background:#123b78;
-
-color:white;
-
-padding:10px 22px;
-
-border-radius:25px;
-
-text-decoration:none;
-
-font-size:14px;
-
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
-
-
-
-
-footer{
-
-margin-top:60px;
-
-background:white;
-
-padding:35px;
-
-text-align:center;
-
+.header-action{
+  width:39px;
+  height:39px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  color:var(--text);
+  font-size:17px;
 }
 
-
-
-footer h2{
-
-color:#123b78;
-
+.header-avatar{
+  overflow:hidden;
+  padding:0;
 }
 
-
-
-
-
-@media(max-width:700px){
-
-
-.poem-item{
-
-display:block;
-
+.header-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
+/* DATE TICKER */
 
-.button{
-
-display:inline-block;
-
-margin-top:15px;
-
+.date-ticker{
+  position:sticky;
+  top:var(--header-height);
+  z-index:1150;
+  height:var(--ticker-height);
+  overflow:hidden;
+  background:var(--ticker-background);
+  border-bottom:1px solid var(--border);
 }
 
-
-
-.profile-card{
-
-padding:25px;
-
+.date-track{
+  width:max-content;
+  min-width:200%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  animation:dateMove 36s linear infinite;
 }
 
-
-
+.date-group{
+  min-width:100vw;
+  padding:0 45px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:65px;
+  color:var(--text-soft);
+  font-size:11px;
+  white-space:nowrap;
 }
 
+.date-separator{
+  color:var(--green);
+}
 
+@keyframes dateMove{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
 
+/* PROFILE */
+
+.page{
+  max-width:1280px;
+  margin:0 auto;
+  padding:14px 16px 34px;
+}
+
+.profile-shell{
+  overflow:hidden;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+
+.cover{
+  position:relative;
+  height:278px;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg,rgba(240,249,255,.72),rgba(239,248,252,.05)),
+    url('poet-cover.jpg') center/cover no-repeat,
+    linear-gradient(135deg,#d9edf7,#f3e4d6);
+}
+
+.cover::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(245,251,255,.50),transparent 65%),
+    linear-gradient(180deg,transparent 55%,rgba(18,62,71,.10));
+}
+
+.cover-quote{
+  position:absolute;
+  left:6%;
+  top:50%;
+  z-index:2;
+  max-width:430px;
+  transform:translateY(-50%);
+}
+
+.quote-mark{
+  color:var(--green);
+  font-size:56px;
+  line-height:.7;
+}
+
+.cover-quote blockquote{
+  color:#173857;
+  font-size:22px;
+  font-weight:600;
+  line-height:1.85;
+}
+
+.cover-quote cite{
+  display:block;
+  margin-top:9px;
+  color:var(--green-dark);
+  font-size:14px;
+  font-style:normal;
+  font-weight:700;
+}
+
+.profile-information{
+  position:relative;
+  padding:0 30px 22px;
+}
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr) 190px;
+  gap:25px;
+  align-items:center;
+}
+
+.profile-image-wrap{
+  margin-top:-63px;
+}
+
+.profile-image{
+  width:275px;
+  height:275px;
+  padding:8px;
+  border-radius:50%;
+  background:var(--surface);
+  box-shadow:0 15px 34px rgba(16,56,100,.18);
+}
+
+.profile-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 25%;
+  border-radius:50%;
+}
+
+.profile-main{
+  padding-top:25px;
+}
+
+.profile-name{
+  color:#10396f;
+  font-size:34px;
+  line-height:1.3;
+}
+
+html[data-theme="dark"] .profile-name{
+  color:#ffffff;
+}
+
+.profile-role{
+  margin-top:3px;
+  color:var(--green);
+  font-size:16px;
+  font-weight:700;
+}
+
+.profile-location{
+  margin-top:8px;
+  color:var(--text-soft);
+  font-size:14px;
+}
+
+.profile-bio{
+  max-width:690px;
+  margin-top:10px;
+  color:var(--text-soft);
+  font-size:14px;
+  line-height:1.95;
+}
+
+.profile-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:14px;
+}
+
+.profile-button{
+  min-height:44px;
+  padding:8px 19px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  background:var(--surface-soft);
+  color:var(--text);
+  font-size:14px;
+  font-weight:700;
+}
+
+.profile-button.follow{
+  border-color:var(--green);
+  background:var(--green);
+  color:#ffffff;
+}
+
+.stats-card{
+  margin-top:24px;
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:var(--surface);
+  box-shadow:var(--soft-shadow);
+}
+
+.stats-title{
+  color:var(--text-soft);
+  font-size:12px;
+}
+
+.stats-title strong{
+  display:block;
+  margin-top:3px;
+  color:var(--green);
+  font-size:15px;
+}
+
+.stat-divider{
+  height:1px;
+  margin:14px 0;
+  background:var(--border);
+}
+
+.stat-item span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.stat-item strong{
+  display:block;
+  color:var(--green);
+  font-size:18px;
+}
+
+.profile-meta{
+  margin-top:18px;
+  padding-top:15px;
+  border-top:1px solid var(--border);
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:18px 30px;
+  color:var(--text-soft);
+  font-size:13px;
+}
+
+/* PROFILE NAV */
+
+.profile-nav{
+  margin-top:14px;
+  display:flex;
+  align-items:center;
+  overflow-x:auto;
+  scrollbar-width:none;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:15px;
+  box-shadow:var(--soft-shadow);
+}
+
+.profile-nav::-webkit-scrollbar{
+  display:none;
+}
+
+.profile-tab{
+  flex:1 0 auto;
+  min-width:128px;
+  padding:15px 18px 12px;
+  border:none;
+  border-bottom:4px solid transparent;
+  background:transparent;
+  color:var(--text-soft);
+  font-size:14px;
+  font-weight:700;
+}
+
+.profile-tab.active{
+  color:var(--green);
+  border-bottom-color:var(--green);
+  background:var(--green-soft);
+}
+
+/* CONTENT */
+
+.tab-panel{
+  display:none;
+  margin-top:14px;
+}
+
+.tab-panel.active{
+  display:block;
+}
+
+.section-card{
+  padding:20px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+}
+
+.section-heading{
+  margin-bottom:14px;
+}
+
+.section-heading h2{
+  font-size:23px;
+}
+
+.section-heading p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.post-list{
+  display:grid;
+  gap:12px;
+}
+
+.post-card{
+  padding:17px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--surface);
+  box-shadow:var(--soft-shadow);
+}
+
+.post-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.post-type{
+  display:inline-flex;
+  padding:5px 9px;
+  border-radius:999px;
+  background:var(--green-soft);
+  color:var(--green);
+  font-size:11px;
+  font-weight:700;
+}
+
+.post-time{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.post-card h3{
+  margin-top:9px;
+  font-size:18px;
+}
+
+.post-card p{
+  margin-top:6px;
+  color:var(--text-soft);
+  font-size:14px;
+  line-height:1.95;
+  white-space:pre-line;
+}
+
+.post-actions{
+  margin-top:12px;
+  padding-top:10px;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.post-stats{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.action-buttons{
+  display:flex;
+  gap:6px;
+}
+
+.action-buttons button{
+  width:36px;
+  height:34px;
+  border:none;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface-soft);
+  color:var(--text-soft);
+  font-size:16px;
+}
+
+.action-buttons button.loved{
+  color:var(--red);
+  background:var(--red-soft);
+}
+
+.load-more-wrap{
+  margin-top:15px;
+  text-align:center;
+}
+
+.load-more{
+  min-width:180px;
+  min-height:43px;
+  padding:8px 18px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--green);
+  font-size:14px;
+  font-weight:800;
+  box-shadow:var(--soft-shadow);
+}
+
+.load-more:hover{
+  background:var(--green);
+  color:#ffffff;
+}
+
+.load-more[hidden]{
+  display:none;
+}
+
+.about-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);
+  gap:14px;
+}
+
+.about-copy p{
+  margin-top:11px;
+  color:var(--text-soft);
+  font-size:14px;
+  line-height:2.05;
+}
+
+.info-list{
+  display:grid;
+  gap:9px;
+  margin-top:12px;
+}
+
+.info-item{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:var(--surface-soft);
+}
+
+.info-item strong{
+  font-size:13px;
+}
+
+.info-item p{
+  margin-top:2px;
+  color:var(--text-soft);
+  font-size:12px;
+}
+
+/* DRAWER */
+
+.drawer-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1400;
+  display:none;
+  background:rgba(0,0,0,.48);
+}
+
+.drawer-overlay.show{
+  display:block;
+}
+
+.drawer{
+  position:fixed;
+  top:0;
+  left:-340px;
+  z-index:1500;
+  width:320px;
+  max-width:91vw;
+  height:100vh;
+  padding:14px;
+  overflow:auto;
+  background:var(--surface-soft);
+  border-right:1px solid var(--border);
+  transition:left .25s ease;
+}
+
+.drawer.open{
+  left:0;
+}
+
+.drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.drawer-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.drawer-title span{
+  font-size:32px;
+}
+
+.drawer-title h2{
+  font-size:19px;
+}
+
+.drawer-close{
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:30px;
+}
+
+.drawer-menu{
+  display:grid;
+  gap:7px;
+  margin-top:13px;
+}
+
+.drawer-menu a{
+  min-height:43px;
+  padding:9px 11px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:var(--surface);
+  color:var(--text-soft);
+  font-size:13px;
+}
+
+/* FOOTER */
+
+.footer{
+  max-width:1280px;
+  margin:0 auto;
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  background:#0a3b6d;
+  color:#ffffff;
+  font-size:12px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:11px;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:65px;
+  z-index:2500;
+  display:none;
+  transform:translateX(-50%);
+  max-width:92%;
+  padding:9px 17px;
+  border-radius:999px;
+  background:var(--green);
+  color:#ffffff;
+  text-align:center;
+  font-size:12px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+  .profile-grid{
+    grid-template-columns:220px minmax(0,1fr);
+  }
+
+  .profile-image{
+    width:215px;
+    height:215px;
+  }
+
+  .profile-image-wrap{
+    margin-top:-45px;
+  }
+
+  .stats-card{
+    grid-column:1 / -1;
+    margin-top:0;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+  }
+
+  .stat-divider{
+    display:none;
+  }
+}
+
+@media(max-width:900px){
+  :root{
+    --header-height:66px;
+    --ticker-height:32px;
+  }
+
+  .topbar{
+    height:var(--header-height);
+    padding:8px 11px;
+    grid-template-columns:minmax(0,1fr) auto;
+  }
+
+  .menu-button{
+    display:block;
+  }
+
+  .brand-leaf{
+    font-size:31px;
+  }
+
+  .brand-copy h1{
+    font-size:19px;
+  }
+
+  .brand-copy p{
+    font-size:9px;
+  }
+
+  .desktop-menu{
+    display:none;
+  }
+
+  .date-group{
+    min-width:max-content;
+    padding:0 22px;
+    gap:38px;
+    font-size:11px;
+  }
+
+  .cover{
+    height:220px;
+  }
+
+  .cover-quote blockquote{
+    font-size:17px;
+  }
+
+  .profile-information{
+    padding:0 15px 18px;
+  }
+
+  .profile-grid{
+    grid-template-columns:165px minmax(0,1fr);
+    gap:16px;
+  }
+
+  .profile-image{
+    width:160px;
+    height:160px;
+  }
+
+  .profile-image-wrap{
+    margin-top:-48px;
+  }
+
+  .profile-name{
+    font-size:26px;
+  }
+
+  .about-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+  .page{
+    padding:9px 8px 24px;
+  }
+
+  .brand-copy p{
+    display:none;
+  }
+
+  .header-actions .header-action:first-child{
+    display:none;
+  }
+
+  .cover{
+    height:180px;
+  }
+
+  .cover-quote{
+    left:20px;
+    right:20px;
+    max-width:none;
+  }
+
+  .cover-quote blockquote{
+    font-size:15px;
+    line-height:1.75;
+  }
+
+  .cover-quote cite{
+    font-size:11px;
+  }
+
+  .profile-grid{
+    display:block;
+    text-align:center;
+  }
+
+  .profile-image-wrap{
+    width:130px;
+    margin:-55px 0 0 14px;
+  }
+
+  .profile-image{
+    width:130px;
+    height:130px;
+    padding:5px;
+  }
+
+  .profile-main{
+    padding-top:9px;
+    text-align:left;
+  }
+
+  .profile-name{
+    font-size:25px;
+  }
+
+  .profile-bio{
+    font-size:13px;
+  }
+
+  .profile-buttons{
+    justify-content:flex-start;
+  }
+
+  .profile-meta{
+    justify-content:flex-start;
+  }
+
+  .stats-card{
+    margin-top:15px;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .stats-title,
+  .stat-item{
+    text-align:center;
+  }
+
+  .section-card{
+    padding:15px;
+  }
+
+  .footer{
+    display:block;
+    text-align:center;
+  }
+
+  .footer-links{
+    justify-content:center;
+    margin-top:6px;
+  }
+}
 </style>
-
-
 </head>
-
 
 <body>
 
+<div class="site">
 
-<header>
+<header class="topbar">
 
+  <div class="brand-area">
 
-<div class="logo">
-🌿
-</div>
+    <button
+      class="menu-button"
+      id="menuButton"
+      type="button"
+      aria-label="মেনু খুলুন"
+    >
+      ☰
+    </button>
 
+    <a href="index.html" class="brand">
 
-<h1>
-ভুবনডাঙ্গার কবিতা
-</h1>
+      <span class="brand-leaf">🌿</span>
 
+      <span class="brand-copy">
+        <h1>ভুবনডাঙ্গার কবিতা</h1>
+        <p>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</p>
+      </span>
 
-<p class="tagline">
-বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন
-</p>
+    </a>
 
+  </div>
 
+  <nav class="desktop-menu">
+    <a href="index.html">হোম</a>
+    <a href="today-poem.html">কবিতা</a>
+    <a href="today-prolap.html">প্রলাপ</a>
+    <a href="madhyorater-prolap.html">মধ্যরাতের প্রলাপ</a>
+    <a href="today-letter.html">চিঠিপত্র</a>
+    <a href="famous-poet.html">খ্যাতিমান কবি</a>
+    <a href="famous-quotes.html">বিখ্যাত মনীষীদের বাণী</a>
+    <a href="recitation.html">আবৃত্তি</a>
+    <a href="today-environment.html">পরিবেশ</a>
+  </nav>
 
-<nav>
+  <div class="header-actions">
 
-<a href="index.html">
-হোম
-</a>
+    <a href="search.html" class="header-action" aria-label="খুঁজুন">
+      ⌕
+    </a>
 
+    <button
+      class="header-action"
+      id="themeButton"
+      type="button"
+      aria-label="থিম পরিবর্তন"
+    >
+      <span id="themeIcon">🌙</span>
+    </button>
 
-<a href="famous-poet.html">
-খ্যাতিমান কবি
-</a>
+    <a href="profile.html" class="header-action header-avatar">
+      <img src="poet-profile.jpg" alt="প্রোফাইল">
+    </a>
 
-
-<a href="today-poem.html">
-আজকের কবিতা
-</a>
-
-
-</nav>
-
-
+  </div>
 
 </header>
 
+<section class="date-ticker">
 
+  <div class="date-track">
 
+    <div class="date-group">
+      <span class="bangla-date"></span>
+      <span class="date-separator">✦</span>
+      <span class="gregorian-date"></span>
+      <span class="date-separator">✦</span>
+      <span class="hijri-date"></span>
+    </div>
 
+    <div class="date-group" aria-hidden="true">
+      <span class="bangla-date"></span>
+      <span class="date-separator">✦</span>
+      <span class="gregorian-date"></span>
+      <span class="date-separator">✦</span>
+      <span class="hijri-date"></span>
+    </div>
 
+  </div>
 
+</section>
 
-<div class="container">
+<div class="drawer-overlay" id="drawerOverlay"></div>
 
+<aside class="drawer" id="drawer">
 
+  <div class="drawer-head">
 
-<div class="profile-card">
+    <div class="drawer-title">
+      <span>🌿</span>
+      <h2>ভুবনডাঙ্গার কবিতা</h2>
+    </div>
 
+    <button class="drawer-close" id="drawerClose" type="button">
+      ×
+    </button>
 
-<div class="poet-photo">
-📖
-</div>
+  </div>
 
+  <nav class="drawer-menu">
+    <a href="index.html"><span>হোম</span><span>›</span></a>
+    <a href="today-poem.html"><span>কবিতা</span><span>›</span></a>
+    <a href="today-prolap.html"><span>প্রলাপ</span><span>›</span></a>
+    <a href="madhyorater-prolap.html"><span>মধ্যরাতের প্রলাপ</span><span>›</span></a>
+    <a href="today-letter.html"><span>চিঠিপত্র</span><span>›</span></a>
+    <a href="recitation.html"><span>আবৃত্তি</span><span>›</span></a>
+    <a href="today-environment.html"><span>পরিবেশের কথা</span><span>›</span></a>
+    <a href="humanitarian-request.html"><span>মানবিক আবেদন</span><span>›</span></a>
+    <a href="contact.html"><span>যোগাযোগ</span><span>›</span></a>
+  </nav>
 
+</aside>
 
-<h2>
-জসীমউদ্দীন
-</h2>
+<main class="page">
 
+  <section class="profile-shell">
 
+    <div class="cover">
 
-<p class="role">
-পল্লীকবি
-</p>
+      <div class="cover-quote">
 
+        <div class="quote-mark">“</div>
 
+        <blockquote id="coverQuote">
+          শব্দেরা যখন নীরবতার হাত ধরে,<br>
+          তখনই জন্ম নেয় কবিতা।<br>
+          এই বিশ্বাস নিয়েই পথচলা।
+        </blockquote>
 
-<p class="info">
+        <cite id="coverAuthor">— কবির নাম</cite>
 
-জন্ম:
-১ জানুয়ারি ১৯০৩
+      </div>
 
-<br>
+    </div>
 
-মৃত্যু:
-১৩ মার্চ ১৯৭৬
+    <div class="profile-information">
 
-<br><br>
+      <div class="profile-grid">
 
+        <div class="profile-image-wrap">
 
-বাংলা সাহিত্যের অন্যতম শ্রেষ্ঠ কবি।
-গ্রামবাংলার জীবন, প্রকৃতি ও মানুষের সুখ-দুঃখ
-তার কবিতার প্রধান বিষয়।
+          <div class="profile-image">
+            <img
+              src="poet-profile.jpg"
+              alt="কবির প্রোফাইল ছবি"
+              id="poetImage"
+            >
+          </div>
 
-</p>
+        </div>
 
+        <div class="profile-main">
 
+          <h2 class="profile-name" id="poetName">
+            কবির নাম
+          </h2>
 
-</div>
+          <p class="profile-role" id="poetRole">
+            কবি, লেখক ও সাহিত্যিক
+          </p>
 
+          <p class="profile-location" id="poetLocation">
+            📍 বাংলাদেশ
+          </p>
 
+          <p class="profile-bio" id="poetBio">
+            কবিতা, মানুষের অনুভূতি, প্রকৃতি, নীরবতা ও জীবনের অপ্রকাশিত
+            কথাগুলো নিয়ে লিখতে ভালোবাসেন। ভুবনডাঙ্গার কবিতায় তাঁর কবিতা,
+            প্রলাপ, চিঠিপত্র ও আবৃত্তি প্রকাশিত হয়।
+          </p>
 
+          <div class="profile-buttons">
 
+            <button
+              class="profile-button follow"
+              id="followButton"
+              type="button"
+            >
+              ＋ ফলো করুন
+            </button>
 
+            <a href="contact.html" class="profile-button">
+              💬 বার্তা পাঠান
+            </a>
 
+            <button
+              class="profile-button"
+              id="shareProfileButton"
+              type="button"
+            >
+              ↗ শেয়ার
+            </button>
 
+          </div>
 
-<h2 class="section-title">
+        </div>
 
-📚 বিখ্যাত কবিতা
+        <aside class="stats-card">
 
-</h2>
+          <div class="stats-title">
+            🌿 যোগদান করেছেন
+            <strong id="joinedTime">১ বছর ২৮ দিন</strong>
+          </div>
 
+          <div class="stat-divider"></div>
 
+          <div class="stat-item">
+            <span>মোট লেখা</span>
+            <strong id="totalWriting">১২৮+</strong>
+          </div>
 
+          <div class="stat-divider"></div>
 
+          <div class="stat-item">
+            <span>মোট পাঠক</span>
+            <strong id="totalReaders">২৫,০০০+</strong>
+          </div>
 
-<div class="poem-list">
+        </aside>
 
+      </div>
 
+      <div class="profile-meta">
 
-<div class="poem-item">
+        <span>✍ কবি ও লেখক</span>
+        <span>🎙 আবৃত্তির সহযাত্রী</span>
+        <span>☾ অনুভূতি ও জীবনবোধের কথক</span>
+        <span>🌿 প্রকৃতি ও মানুষের গল্পকার</span>
 
-<h3>
-নকশী কাঁথার মাঠ
-</h3>
+      </div>
 
+    </div>
 
-<a href="single-poem.html" class="button">
-পড়ুন
-</a>
+  </section>
 
+  <nav class="profile-nav">
 
-</div>
+    <button class="profile-tab active" type="button" data-tab="poetry">
+      ✎ কবিতা
+    </button>
 
+    <button class="profile-tab" type="button" data-tab="recitation">
+      🎙 আবৃত্তি
+    </button>
 
+    <button class="profile-tab" type="button" data-tab="prolap">
+      💬 প্রলাপ
+    </button>
 
+    <button class="profile-tab" type="button" data-tab="letters">
+      ✉ চিঠিপত্র
+    </button>
 
+    <button class="profile-tab" type="button" data-tab="midnight">
+      ☾ মধ্যরাতের প্রলাপ
+    </button>
 
-<div class="poem-item">
+    <button class="profile-tab" type="button" data-tab="environment">
+      🌿 পরিবেশ
+    </button>
 
-<h3>
-সোজন বাদিয়ার ঘাট
-</h3>
+    <button class="profile-tab" type="button" data-tab="about">
+      পরিচিতি
+    </button>
 
+  </nav>
 
-<a href="single-poem.html" class="button">
-পড়ুন
-</a>
+  <section class="tab-panel active" id="poetryPanel">
 
+    <section class="section-card">
 
-</div>
+      <div class="section-heading">
+        <h2>কবির কবিতা</h2>
+        <p>সাম্প্রতিক ও নির্বাচিত প্রকাশিত কবিতা</p>
+      </div>
 
+      <div class="post-list" id="poetryList"></div>
 
+      <div class="load-more-wrap">
+        <button
+          class="load-more"
+          type="button"
+          data-list="poetry"
+        >
+          আরও দেখুন
+        </button>
+      </div>
 
+    </section>
 
+  </section>
 
-<div class="poem-item">
+  <section class="tab-panel" id="recitationPanel">
 
-<h3>
-কবর
-</h3>
+    <section class="section-card">
 
+      <div class="section-heading">
+        <h2>আবৃত্তি</h2>
+        <p>কবির কণ্ঠে অথবা কবির লেখা নিয়ে আবৃত্তি</p>
+      </div>
 
-<a href="single-poem.html" class="button">
-পড়ুন
-</a>
+      <div class="post-list" id="recitationList"></div>
 
+      <div class="load-more-wrap">
+        <button
+          class="load-more"
+          type="button"
+          data-list="recitation"
+        >
+          আরও দেখুন
+        </button>
+      </div>
 
-</div>
+    </section>
 
+  </section>
 
+  <section class="tab-panel" id="prolapPanel">
 
+    <section class="section-card">
 
+      <div class="section-heading">
+        <h2>প্রলাপ</h2>
+        <p>ব্যক্তিগত ভাবনা ও অনুভূতির গদ্য</p>
+      </div>
 
-<div class="poem-item">
+      <div class="post-list" id="prolapList"></div>
 
-<h3>
-রাখালী
-</h3>
+      <div class="load-more-wrap">
+        <button
+          class="load-more"
+          type="button"
+          data-list="prolap"
+        >
+          আরও দেখুন
+        </button>
+      </div>
 
+    </section>
 
-<a href="single-poem.html" class="button">
-পড়ুন
-</a>
+  </section>
 
+  <section class="tab-panel" id="lettersPanel">
 
-</div>
+    <section class="section-card">
 
+      <div class="section-heading">
+        <h2>চিঠিপত্র</h2>
+        <p>মানুষ, সময় ও স্মৃতিকে লেখা চিঠি</p>
+      </div>
 
+      <div class="post-list" id="lettersList"></div>
 
-</div>
+      <div class="load-more-wrap">
+        <button
+          class="load-more"
+          type="button"
+          data-list="letters"
+        >
+          আরও দেখুন
+        </button>
+      </div>
 
+    </section>
 
+  </section>
 
+  <section class="tab-panel" id="midnightPanel">
 
+    <section class="section-card">
 
+      <div class="section-heading">
+        <h2>মধ্যরাতের প্রলাপ</h2>
+        <p>রাতের নীরবতায় লেখা ব্যক্তিগত গদ্য</p>
+      </div>
 
+      <div class="post-list" id="midnightList"></div>
 
-</div>
+      <div class="load-more-wrap">
+        <button
+          class="load-more"
+          type="button"
+          data-list="midnight"
+        >
+          আরও দেখুন
+        </button>
+      </div>
 
+    </section>
 
+  </section>
 
+  <section class="tab-panel" id="environmentPanel">
 
+    <section class="section-card">
 
+      <div class="section-heading">
+        <h2>পরিবেশের কথা</h2>
+        <p>মানুষ ও প্রকৃতির প্রতি দায়িত্বের কথা</p>
+      </div>
 
+      <div class="post-list" id="environmentList"></div>
 
-<footer>
+      <div class="load-more-wrap">
+        <button
+          class="load-more"
+          type="button"
+          data-list="environment"
+        >
+          আরও দেখুন
+        </button>
+      </div>
 
+    </section>
 
-<h2>
-🌿 ভুবনডাঙ্গার কবিতা
-</h2>
+  </section>
 
+  <section class="tab-panel" id="aboutPanel">
 
-<p>
-বাংলা সাহিত্য ও সৃজনশীলতার একটি মুক্ত ভুবন
-</p>
+    <div class="about-grid">
 
+      <article class="section-card about-copy">
+
+        <div class="section-heading">
+          <h2>কবির পরিচিতি</h2>
+          <p>সাহিত্যিক জীবন, আগ্রহ ও ভাবনার কথা</p>
+        </div>
+
+        <p id="aboutParagraphOne">
+          এই অংশে কবি নিজের পরিচিতি যত বড় করে লিখবেন, সম্পূর্ণ পরিচিতি
+          ততটাই দেখানো হবে। কোনো নির্দিষ্ট সীমায় পরিচিতি কেটে দেওয়া হবে না।
+        </p>
+
+        <p id="aboutParagraphTwo">
+          কবির সাহিত্যিক আগ্রহ, লেখালেখির শুরু, প্রিয় বিষয়, প্রকাশিত বই,
+          পুরস্কার ও ভবিষ্যৎ ভাবনা এখানে বিস্তারিতভাবে দেখানো যাবে।
+        </p>
+
+      </article>
+
+      <aside class="section-card">
+
+        <div class="section-heading">
+          <h2>সংক্ষিপ্ত তথ্য</h2>
+        </div>
+
+        <div class="info-list">
+
+          <div class="info-item">
+            <strong>সাহিত্যিক পরিচয়</strong>
+            <p id="infoIdentity">কবি ও লেখক</p>
+          </div>
+
+          <div class="info-item">
+            <strong>অবস্থান</strong>
+            <p id="infoLocation">বাংলাদেশ</p>
+          </div>
+
+          <div class="info-item">
+            <strong>লেখার প্রধান বিষয়</strong>
+            <p id="infoTopics">মানুষ, প্রকৃতি, অনুভূতি ও জীবনবোধ</p>
+          </div>
+
+          <div class="info-item">
+            <strong>যোগাযোগ</strong>
+            <p><a href="contact.html">বার্তা পাঠান</a></p>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </section>
+
+</main>
+
+<footer class="footer">
+
+  <div>
+    🌿 ভুবনডাঙ্গার কবিতা © <span id="footerYear"></span>
+  </div>
+
+  <div class="footer-links">
+    <a href="index.html">হোম</a>
+    <a href="about.html">আমাদের সম্পর্কে</a>
+    <a href="contact.html">যোগাযোগ</a>
+    <a href="policy.html">নীতিমালা</a>
+  </div>
 
 </footer>
 
+</div>
 
+<div class="toast" id="toast"></div>
+
+<script>
+const root = document.documentElement;
+
+root.setAttribute(
+  "data-theme",
+  localStorage.getItem("bhubondangaTheme") || "light"
+);
+
+const digitMap = {
+  "0":"০",
+  "1":"১",
+  "2":"২",
+  "3":"৩",
+  "4":"৪",
+  "5":"৫",
+  "6":"৬",
+  "7":"৭",
+  "8":"৮",
+  "9":"৯"
+};
+
+function toBanglaNumber(value){
+  return String(value).replace(/[0-9]/g,function(digit){
+    return digitMap[digit];
+  });
+}
+
+function escapeHtml(value){
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function showToast(message){
+  const toast = document.getElementById("toast");
+
+  toast.textContent = message;
+  toast.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer = setTimeout(function(){
+    toast.style.display = "none";
+  },2800);
+}
+
+/* CALENDAR */
+
+function isLeapYear(year){
+  return year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
+}
+
+function getBanglaDate(date){
+  const year = date.getFullYear();
+  const newYear = new Date(year,3,14);
+  const startYear = date >= newYear ? year : year - 1;
+  const banglaYear = date >= newYear ? year - 593 : year - 594;
+  const start = new Date(startYear,3,14);
+
+  let days = Math.floor(
+    (
+      new Date(date.getFullYear(),date.getMonth(),date.getDate()) -
+      start
+    ) / 86400000
+  );
+
+  const months = [
+    "বৈশাখ","জ্যৈষ্ঠ","আষাঢ়","শ্রাবণ","ভাদ্র","আশ্বিন",
+    "কার্তিক","অগ্রহায়ণ","পৌষ","মাঘ","ফাল্গুন","চৈত্র"
+  ];
+
+  const lengths = [
+    31,31,31,31,31,31,
+    30,30,30,30,
+    isLeapYear(startYear + 1) ? 30 : 29,
+    30
+  ];
+
+  let monthIndex = 0;
+
+  while(monthIndex < 11 && days >= lengths[monthIndex]){
+    days -= lengths[monthIndex];
+    monthIndex++;
+  }
+
+  return (
+    toBanglaNumber(days + 1) + " " +
+    months[monthIndex] + " " +
+    toBanglaNumber(banglaYear) +
+    " বঙ্গাব্দ"
+  );
+}
+
+function getGregorianDate(date){
+  return new Intl.DateTimeFormat(
+    "bn-BD",
+    {
+      day:"numeric",
+      month:"long",
+      year:"numeric"
+    }
+  ).format(date) + " খ্রিস্টাব্দ";
+}
+
+function translateHijriMonth(month){
+  const months = {
+    "Muharram":"মহররম",
+    "Safar":"সফর",
+    "Rabiʻ I":"রবিউল আউয়াল",
+    "Rabiʻ II":"রবিউস সানি",
+    "Jumada I":"জমাদিউল আউয়াল",
+    "Jumada II":"জমাদিউস সানি",
+    "Rajab":"রজব",
+    "Shaʻban":"শাবান",
+    "Ramadan":"রমজান",
+    "Shawwal":"শাওয়াল",
+    "Dhuʻl-Qiʻdah":"জিলকদ",
+    "Dhuʻl-Hijjah":"জিলহজ",
+    "Dhu al-Qiʻdah":"জিলকদ",
+    "Dhu al-Hijjah":"জিলহজ"
+  };
+
+  return months[month] || month;
+}
+
+function getHijriDate(date){
+  try{
+    const parts = new Intl.DateTimeFormat(
+      "en-u-ca-islamic-umalqura",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).formatToParts(date);
+
+    let day = "";
+    let month = "";
+    let year = "";
+
+    parts.forEach(function(part){
+      if(part.type === "day"){
+        day = part.value;
+      }
+
+      if(part.type === "month"){
+        month = part.value;
+      }
+
+      if(part.type === "year"){
+        year = part.value;
+      }
+    });
+
+    return (
+      toBanglaNumber(day) + " " +
+      translateHijriMonth(month) + " " +
+      toBanglaNumber(year) +
+      " হিজরি"
+    );
+  }catch(error){
+    return "হিজরি তারিখ পাওয়া যায়নি";
+  }
+}
+
+function renderDates(){
+  const today = new Date();
+
+  document.querySelectorAll(".bangla-date").forEach(function(element){
+    element.textContent = getBanglaDate(today);
+  });
+
+  document.querySelectorAll(".gregorian-date").forEach(function(element){
+    element.textContent = getGregorianDate(today);
+  });
+
+  document.querySelectorAll(".hijri-date").forEach(function(element){
+    element.textContent = getHijriDate(today);
+  });
+}
+
+renderDates();
+
+/* PROFILE DATA */
+
+const savedProfile = JSON.parse(
+  localStorage.getItem("bhubondangaViewedPoet") || "{}"
+);
+
+if(savedProfile.name){
+  document.getElementById("poetName").textContent = savedProfile.name;
+  document.getElementById("coverAuthor").textContent = "— " + savedProfile.name;
+}
+
+if(savedProfile.role){
+  document.getElementById("poetRole").textContent = savedProfile.role;
+}
+
+if(savedProfile.location){
+  document.getElementById("poetLocation").textContent =
+    "📍 " + savedProfile.location;
+
+  document.getElementById("infoLocation").textContent =
+    savedProfile.location;
+}
+
+if(savedProfile.bio){
+  document.getElementById("poetBio").textContent = savedProfile.bio;
+}
+
+if(savedProfile.quote){
+  document.getElementById("coverQuote").textContent = savedProfile.quote;
+}
+
+if(savedProfile.image){
+  document.getElementById("poetImage").src = savedProfile.image;
+}
+
+/* TABS */
+
+const tabs = document.querySelectorAll(".profile-tab");
+const panels = document.querySelectorAll(".tab-panel");
+
+tabs.forEach(function(tab){
+  tab.addEventListener("click",function(){
+    const tabName = tab.dataset.tab;
+
+    tabs.forEach(function(item){
+      item.classList.toggle("active",item === tab);
+    });
+
+    panels.forEach(function(panel){
+      panel.classList.toggle(
+        "active",
+        panel.id === tabName + "Panel"
+      );
+    });
+  });
+});
+
+/* CONTENT DATA */
+
+const contentData = {
+  poetry:[
+    {
+      type:"কবিতা",
+      title:"বৃষ্টির পরের শহর",
+      text:"বৃষ্টি থেমে গেলে শহরটা খুব ধীরে কথা বলে।\nজানালার কাঁচে থেকে যাওয়া শেষ ফোঁটার মতো\nকিছু স্মৃতি তখনও নেমে যেতে পারে না।",
+      time:"আজ • ১০:২০",
+      loves:84
+    },
+    {
+      type:"কবিতা",
+      title:"নদীর কাছে ফিরে",
+      text:"নদীর কাছে ফিরে গেলে মানুষ নিজের ভেতরের প্রবাহকে নতুন করে চিনতে শেখে।",
+      time:"গতকাল",
+      loves:61
+    },
+    {
+      type:"কবিতা",
+      title:"নীরব দুপুর",
+      text:"একটি শান্ত দুপুর জানালার পাশে বসে\nপুরোনো দিনের নাম ধরে ডাকে।",
+      time:"২ দিন আগে",
+      loves:93
+    },
+    {
+      type:"কবিতা",
+      title:"ফুলের কাছে শিক্ষা",
+      text:"ফুল কারও প্রশংসার অপেক্ষায় ফোটে না।\nনিজের সৌন্দর্যের দায়িত্ব সে নিজেই নেয়।",
+      time:"৩ দিন আগে",
+      loves:75
+    },
+    {
+      type:"কবিতা",
+      title:"চাঁদের নিচে",
+      text:"চাঁদ পূর্ণ না হলেও আলো দেয়।\nমানুষও অসম্পূর্ণ হয়েই কারও পথ দেখাতে পারে।",
+      time:"৪ দিন আগে",
+      loves:105
+    },
+    {
+      type:"কবিতা",
+      title:"একটি ভোর",
+      text:"অন্ধকারের শেষ প্রান্তে ভোর দাঁড়িয়ে থাকে,\nশুধু দরজাটি খোলার অপেক্ষায়।",
+      time:"৫ দিন আগে",
+      loves:88
+    },
+    {
+      type:"কবিতা",
+      title:"মাটির গন্ধ",
+      text:"বৃষ্টির পরে মাটির গন্ধ মনে করিয়ে দেয়—\nফিরে আসার জন্য শিকড় থাকা প্রয়োজন।",
+      time:"১ সপ্তাহ আগে",
+      loves:111
+    },
+    {
+      type:"কবিতা",
+      title:"ছোট সুখ",
+      text:"এক কাপ চা আর পরিচিত কণ্ঠের ভেতরেও\nজীবনের বড় আনন্দ লুকিয়ে থাকে।",
+      time:"১ সপ্তাহ আগে",
+      loves:126
+    }
+  ],
+
+  recitation:[
+    {
+      type:"আবৃত্তি",
+      title:"আবার আসিব ফিরে",
+      text:"বাংলার মাঠ, নদী ও ফিরে আসার আকাঙ্ক্ষাকে কণ্ঠে ধারণ করার একটি প্রয়াস।",
+      time:"আজ",
+      loves:54
+    },
+    {
+      type:"আবৃত্তি",
+      title:"নীরবতার কবিতা",
+      text:"শব্দের ফাঁকে থাকা নীরব অনুভূতিকে নিয়ে একটি আবৃত্তি।",
+      time:"২ দিন আগে",
+      loves:47
+    },
+    {
+      type:"আবৃত্তি",
+      title:"বাংলার মুখ",
+      text:"বাংলার প্রকৃতি ও মানুষের প্রতি ভালোবাসার কণ্ঠরূপ।",
+      time:"৪ দিন আগে",
+      loves:72
+    },
+    {
+      type:"আবৃত্তি",
+      title:"একটি চিঠি",
+      text:"হারিয়ে যাওয়া সময়কে লেখা একটি চিঠির আবৃত্তি।",
+      time:"১ সপ্তাহ আগে",
+      loves:39
+    }
+  ],
+
+  prolap:[
+    {
+      type:"প্রলাপ",
+      title:"সব কথা কাউকে বলা যায় না",
+      text:"কিছু কথা মানুষের পাশে বসে থাকে। মুখে উচ্চারণ করা হয় না, তবু তারা চলে যায় না।",
+      time:"আজ",
+      loves:69
+    },
+    {
+      type:"প্রলাপ",
+      title:"একটি নিরিবিলি বিকেল",
+      text:"কখনো নিজের কাছে ফিরে আসার জন্য একটি নিরিবিলি বিকেলই যথেষ্ট।",
+      time:"গতকাল",
+      loves:43
+    },
+    {
+      type:"প্রলাপ",
+      title:"অভিমান",
+      text:"সব অভিমান দূরত্ব তৈরি করে না। কিছু অভিমান আরও যত্নের প্রয়োজন জানায়।",
+      time:"৩ দিন আগে",
+      loves:82
+    },
+    {
+      type:"প্রলাপ",
+      title:"নিজের সঙ্গে দেখা",
+      text:"মানুষ অনেকের সঙ্গে দেখা করে, অথচ নিজের সঙ্গে দেখা হওয়াটা সবচেয়ে কঠিন।",
+      time:"৫ দিন আগে",
+      loves:91
+    }
+  ],
+
+  letters:[
+    {
+      type:"চিঠিপত্র",
+      title:"ভবিষ্যতের আমাকে লেখা চিঠি",
+      text:"প্রিয় ভবিষ্যতের আমি, সবকিছু ঠিক না হলেও নিজেকে ক্ষমা করতে শিখো।",
+      time:"আজ",
+      loves:73
+    },
+    {
+      type:"চিঠিপত্র",
+      title:"মায়ের কাছে",
+      text:"তোমাকে অনেক কথা বলা হয়নি। অথচ আমার সব নীরবতার ভেতর তোমার নাম ছিল।",
+      time:"২ দিন আগে",
+      loves:104
+    },
+    {
+      type:"চিঠিপত্র",
+      title:"শৈশবের বাড়িকে",
+      text:"তোমার উঠোনটি এখনো কি বিকেলের আলোয় আগের মতোই শান্ত হয়ে থাকে?",
+      time:"১ সপ্তাহ আগে",
+      loves:67
+    },
+    {
+      type:"চিঠিপত্র",
+      title:"হারিয়ে যাওয়া বন্ধুকে",
+      text:"দূরত্ব সব সম্পর্ক মুছে দেয় না। কিছু মানুষ স্মৃতির ভেতর আরও কাছে থাকে।",
+      time:"২ সপ্তাহ আগে",
+      loves:88
+    }
+  ],
+
+  midnight:[
+    {
+      type:"মধ্যরাতের প্রলাপ",
+      title:"রাতেরও একটি গোপন জানালা আছে",
+      text:"দিনের ভিড়ে চাপা পড়ে থাকা প্রশ্নগুলো রাত ধীরে ধীরে সামনে এনে বসায়।",
+      time:"গতরাত",
+      loves:95
+    },
+    {
+      type:"মধ্যরাতের প্রলাপ",
+      title:"ঘুম না আসা শহর",
+      text:"শহরটি ঘুমায়, অথচ কিছু জানালায় মানুষের অপেক্ষা জেগে থাকে।",
+      time:"২ রাত আগে",
+      loves:58
+    },
+    {
+      type:"মধ্যরাতের প্রলাপ",
+      title:"নিজের কাছে সত্য",
+      text:"রাত সব উত্তর দেয় না। শুধু নিজের কাছে মিথ্যা বলার জায়গাটি ছোট করে দেয়।",
+      time:"৪ রাত আগে",
+      loves:119
+    },
+    {
+      type:"মধ্যরাতের প্রলাপ",
+      title:"নীরবতার শব্দ",
+      text:"নীরবতারও শব্দ আছে। কেবল শোনার জন্য মনকে একটু ধীর করতে হয়।",
+      time:"১ সপ্তাহ আগে",
+      loves:77
+    }
+  ],
+
+  environment:[
+    {
+      type:"পরিবেশ",
+      title:"কলটি বন্ধ রাখার ছোট অভ্যাস",
+      text:"দাঁত ব্রাশ করার সময় কল বন্ধ রাখা ছোট কাজ হলেও প্রতিদিন অনেক পানি বাঁচাতে পারে।",
+      time:"আজ",
+      loves:66
+    },
+    {
+      type:"পরিবেশ",
+      title:"পাটের ব্যাগটি দরজার পাশে",
+      text:"বাজারে যাওয়ার আগে যাতে ভুল না হয়, পাট বা কাপড়ের ব্যাগটি দরজার পাশে রাখা যেতে পারে।",
+      time:"গতকাল",
+      loves:74
+    },
+    {
+      type:"পরিবেশ",
+      title:"গাছ লাগানোর পর",
+      text:"গাছ লাগিয়ে ছবি তোলাই শেষ নয়। নিয়মিত পানি ও যত্ন দেওয়াই গাছ লাগানোর আসল দায়িত্ব।",
+      time:"৩ দিন আগে",
+      loves:108
+    },
+    {
+      type:"পরিবেশ",
+      title:"নদীকে আবর্জনার জায়গা ভাবি না",
+      text:"নদীতে ফেলা একটি প্লাস্টিকও দীর্ঘদিন প্রকৃতি ও প্রাণীর ক্ষতি করতে পারে।",
+      time:"১ সপ্তাহ আগে",
+      loves:83
+    }
+  ]
+};
+
+const visibleCounts = {
+  poetry:4,
+  recitation:4,
+  prolap:4,
+  letters:4,
+  midnight:4,
+  environment:4
+};
+
+function renderList(listName){
+  const list = document.getElementById(listName + "List");
+  const data = contentData[listName] || [];
+  const visibleData = data.slice(0,visibleCounts[listName]);
+
+  list.innerHTML = visibleData.map(function(item,index){
+    return `
+      <article class="post-card">
+
+        <div class="post-top">
+          <span class="post-type">${escapeHtml(item.type)}</span>
+          <span class="post-time">${escapeHtml(item.time)}</span>
+        </div>
+
+        <h3>${escapeHtml(item.title)}</h3>
+
+        <p>${escapeHtml(item.text)}</p>
+
+        <div class="post-actions">
+
+          <span class="post-stats">
+            ♥ ${toBanglaNumber(item.loves)}
+          </span>
+
+          <div class="action-buttons">
+
+            <button
+              type="button"
+              class="love-button"
+              aria-label="ভালো লেগেছে"
+            >
+              ♡
+            </button>
+
+            <button
+              type="button"
+              class="share-button"
+              data-list="${listName}"
+              data-index="${index}"
+              aria-label="শেয়ার"
+            >
+              ↗
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+    `;
+  }).join("");
+
+  const button = document.querySelector(
+    '[data-list="' + listName + '"].load-more'
+  );
+
+  if(button){
+    button.hidden = visibleCounts[listName] >= data.length;
+  }
+
+  bindPostButtons();
+}
+
+function bindPostButtons(){
+  document.querySelectorAll(".love-button").forEach(function(button){
+    button.onclick = function(){
+      button.classList.toggle("loved");
+      button.textContent =
+        button.classList.contains("loved")
+          ? "♥"
+          : "♡";
+    };
+  });
+
+  document.querySelectorAll(".share-button").forEach(function(button){
+    button.onclick = async function(){
+      const listName = button.dataset.list;
+      const index = Number(button.dataset.index);
+      const item = contentData[listName][index];
+
+      if(!item){
+        return;
+      }
+
+      const text =
+        item.title +
+        "\n\n" +
+        item.text +
+        "\n— " +
+        document.getElementById("poetName").textContent;
+
+      try{
+        if(navigator.share){
+          await navigator.share({
+            title:item.title,
+            text:text,
+            url:window.location.href
+          });
+
+          return;
+        }
+
+        await navigator.clipboard.writeText(text);
+        showToast("লেখাটি কপি হয়েছে।");
+      }catch(error){}
+    };
+  });
+}
+
+Object.keys(contentData).forEach(renderList);
+
+document.querySelectorAll(".load-more").forEach(function(button){
+  button.addEventListener("click",function(){
+    const listName = button.dataset.list;
+
+    visibleCounts[listName] += 4;
+    renderList(listName);
+
+    showToast("আরও লেখা দেখানো হয়েছে।");
+  });
+});
+
+/* FOLLOW */
+
+const followButton = document.getElementById("followButton");
+
+followButton.addEventListener("click",function(){
+  const isFollowing = followButton.classList.toggle("following");
+
+  followButton.textContent =
+    isFollowing
+      ? "✓ অনুসরণ করছেন"
+      : "＋ ফলো করুন";
+
+  showToast(
+    isFollowing
+      ? "কবিকে অনুসরণ করছেন।"
+      : "অনুসরণ বন্ধ করা হয়েছে।"
+  );
+});
+
+/* SHARE PROFILE */
+
+document
+  .getElementById("shareProfileButton")
+  .addEventListener("click",async function(){
+    const poetName =
+      document.getElementById("poetName").textContent;
+
+    try{
+      if(navigator.share){
+        await navigator.share({
+          title:poetName + " | ভুবনডাঙ্গার কবিতা",
+          text:poetName + "-এর সাহিত্যিক প্রোফাইল",
+          url:window.location.href
+        });
+
+        return;
+      }
+
+      await navigator.clipboard.writeText(window.location.href);
+      showToast("প্রোফাইল লিংক কপি হয়েছে।");
+    }catch(error){}
+  });
+
+/* THEME */
+
+const themeIcon = document.getElementById("themeIcon");
+
+function updateThemeIcon(){
+  themeIcon.textContent =
+    root.getAttribute("data-theme") === "dark"
+      ? "☀️"
+      : "🌙";
+}
+
+document
+  .getElementById("themeButton")
+  .addEventListener("click",function(){
+    const nextTheme =
+      root.getAttribute("data-theme") === "dark"
+        ? "light"
+        : "dark";
+
+    root.setAttribute("data-theme",nextTheme);
+    localStorage.setItem("bhubondangaTheme",nextTheme);
+
+    updateThemeIcon();
+  });
+
+updateThemeIcon();
+
+/* DRAWER */
+
+const drawer = document.getElementById("drawer");
+const drawerOverlay = document.getElementById("drawerOverlay");
+
+function openDrawer(){
+  drawer.classList.add("open");
+  drawerOverlay.classList.add("show");
+  document.body.classList.add("no-scroll");
+}
+
+function closeDrawer(){
+  drawer.classList.remove("open");
+  drawerOverlay.classList.remove("show");
+  document.body.classList.remove("no-scroll");
+}
+
+document
+  .getElementById("menuButton")
+  .addEventListener("click",openDrawer);
+
+document
+  .getElementById("drawerClose")
+  .addEventListener("click",closeDrawer);
+
+drawerOverlay.addEventListener("click",closeDrawer);
+
+document.addEventListener("keydown",function(event){
+  if(event.key === "Escape"){
+    closeDrawer();
+  }
+});
+
+document.getElementById("footerYear").textContent =
+  toBanglaNumber(new Date().getFullYear());
+</script>
 
 </body>
-
 </html>
