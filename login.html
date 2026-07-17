@@ -1957,69 +1957,184 @@ function showToast(message){
 
 /* DATE */
 
-function renderDate(){
-  const today = new Date();
+function isLeapYear(year){
+  return (
+    year % 400 === 0 ||
+    (
+      year % 4 === 0 &&
+      year % 100 !== 0
+    )
+  );
+}
 
-  let banglaDate = "বাংলা তারিখ পাওয়া যায়নি";
-  let hijriDate = "হিজরি তারিখ পাওয়া যায়নি";
+function getBanglaDate(date){
+  const currentYear = date.getFullYear();
+  const newYearDate = new Date(currentYear,3,14,0,0,0,0);
 
-  try{
-    banglaDate = new Intl.DateTimeFormat(
-      "bn-BD-u-ca-beng",
-      {
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    ).format(today).replace(/,/g, '') + " বঙ্গাব্দ";
-  }catch(error){}
+  let startingYear;
+  let banglaYear;
 
-  try{
-    hijriDate = new Intl.DateTimeFormat(
-      "bn-BD-u-ca-islamic",
-      {
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    ).format(today).replace(/,/g, '').replace(/ AH/g, '') + " হিজরি";
-  }catch(error){}
+  if(date >= newYearDate){
+    startingYear = currentYear;
+    banglaYear = currentYear - 593;
+  }else{
+    startingYear = currentYear - 1;
+    banglaYear = currentYear - 594;
+  }
 
-  const englishDate = new Intl.DateTimeFormat(
+  const banglaYearStart = new Date(startingYear,3,14,0,0,0,0);
+
+  const currentDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+  );
+
+  let passedDays = Math.floor(
+    (currentDate - banglaYearStart) / 86400000
+  );
+
+  const months = [
+    "বৈশাখ",
+    "জ্যৈষ্ঠ",
+    "আষাঢ়",
+    "শ্রাবণ",
+    "ভাদ্র",
+    "আশ্বিন",
+    "কার্তিক",
+    "অগ্রহায়ণ",
+    "পৌষ",
+    "মাঘ",
+    "ফাল্গুন",
+    "চৈত্র"
+  ];
+
+  const falgunLength = isLeapYear(startingYear + 1) ? 30 : 29;
+
+  const monthLengths = [
+    31,31,31,31,31,31,
+    30,30,30,30,
+    falgunLength,
+    30
+  ];
+
+  let monthIndex = 0;
+
+  while(
+    monthIndex < monthLengths.length - 1 &&
+    passedDays >= monthLengths[monthIndex]
+  ){
+    passedDays -= monthLengths[monthIndex];
+    monthIndex++;
+  }
+
+  return (
+    toBanglaNumber(passedDays + 1) +
+    " " +
+    months[monthIndex] +
+    " " +
+    toBanglaNumber(banglaYear) +
+    " বঙ্গাব্দ"
+  );
+}
+
+function getGregorianDate(date){
+  return new Intl.DateTimeFormat(
     "bn-BD",
     {
       day:"numeric",
       month:"long",
       year:"numeric"
     }
-  ).format(today).replace(/,/g, '');
-
-  document
-    .querySelectorAll(".bangla-calender")
-    .forEach(function(element){
-      element.innerText = banglaDate;
-    });
-
-  document
-    .querySelectorAll(".englishDateTicker")
-    .forEach(function(element){
-      element.innerText = englishDate;
-    });
-
-  document
-    .querySelectorAll(".hijriDateTicker")
-    .forEach(function(element){
-      element.innerText = hijriDate;
-    });
-
-  document.getElementById("headerDateText").innerText =
-    englishDate;
-
-  document.getElementById("footerYear").innerText =
-    toBn(today.getFullYear());
+  ).format(date) + " খ্রিস্টাব্দ";
 }
 
-renderDate();
+function translateHijriMonth(month){
+  const monthMap = {
+    "Muharram":"মহররম",
+    "Safar":"সফর",
+    "Rabiʻ I":"রবিউল আউয়াল",
+    "Rabiʻ II":"রবিউস সানি",
+    "Jumada I":"জমাদিউল আউয়াল",
+    "Jumada II":"জমাদিউস সানি",
+    "Rajab":"রজব",
+    "Shaʻban":"শাবান",
+    "Ramadan":"রমজান",
+    "Shawwal":"শাওয়াল",
+    "Dhuʻl-Qiʻdah":"জিলকদ",
+    "Dhuʻl-Hijjah":"জিলহজ",
+    "Dhu al-Qiʻdah":"জিলকদ",
+    "Dhu al-Hijjah":"জিলহজ"
+  };
+
+  return monthMap[month] || month;
+}
+
+function getHijriDate(date){
+  try{
+    const formatter = new Intl.DateTimeFormat(
+      "en-u-ca-islamic-umalqura",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    );
+
+    const parts = formatter.formatToParts(date);
+
+    let day = "";
+    let month = "";
+    let year = "";
+
+    parts.forEach(function(part){
+      if(part.type === "day"){
+        day = part.value;
+      }
+
+      if(part.type === "month"){
+        month = part.value;
+      }
+
+      if(part.type === "year"){
+        year = part.value;
+      }
+    });
+
+    return (
+      toBanglaNumber(day) +
+      " " +
+      translateHijriMonth(month) +
+      " " +
+      toBanglaNumber(year) +
+      " হিজরি"
+    );
+  }catch(error){
+    return "হিজরি তারিখ পাওয়া যায়নি";
+  }
+}
+
+function renderDates(){
+  const today = new Date();
+
+  const banglaDate = getBanglaDate(today);
+  const gregorianDate = getGregorianDate(today);
+  const hijriDate = getHijriDate(today);
+
+  document.querySelectorAll(".bangla-date").forEach(function(element){
+    element.textContent = banglaDate;
+  });
+
+  document.querySelectorAll(".gregorian-date").forEach(function(element){
+    element.textContent = gregorianDate;
+  });
+
+  document.querySelectorAll(".hijri-date").forEach(function(element){
+    element.textContent = hijriDate;
+  });
+}
+
+renderDates();
 
 /* SEARCH */
 
