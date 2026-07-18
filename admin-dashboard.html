@@ -1,1 +1,4829 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>কবিতা যাচাই প্যানেল | ভুবনডাঙ্গার কবিতা</title>
+
+<meta
+  name="description"
+  content="ভুবনডাঙ্গার কবিতার প্রতিষ্ঠাতা ও অ্যাডমিনদের জন্য কবিতা এবং সম্পাদনার প্রস্তাব যাচাই, অনুমোদন, ফেরত ও বাতিল করার প্যানেল।"
+>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+:root{
+  --header-height:86px;
+  --date-height:40px;
+  --nav-height:57px;
+
+  --page:#f2f7fb;
+  --surface:#ffffff;
+  --surface-soft:#f8f9fc;
+  --surface-blue:#edf4fb;
+
+  --text:#17395f;
+  --text-soft:#5e748e;
+  --muted:#8999ad;
+
+  --border:rgba(42,80,129,.14);
+  --border-strong:rgba(57,99,153,.24);
+
+  --blue:#477caf;
+  --blue-dark:#2a5681;
+  --blue-soft:#edf4fb;
+
+  --purple:#8178aa;
+  --purple-dark:#62598e;
+  --purple-soft:#f3f1fa;
+
+  --green:#418572;
+  --green-dark:#276b57;
+  --green-soft:#edf8f4;
+  --green-border:rgba(65,133,114,.25);
+
+  --gold:#a47b44;
+  --gold-soft:#faf5ec;
+
+  --orange:#b97738;
+  --orange-dark:#8c5625;
+  --orange-soft:#fbf2e9;
+
+  --red:#c55c75;
+  --red-dark:#9d3f56;
+  --red-soft:#fdf0f3;
+
+  --header-bg:rgba(253,254,255,.97);
+
+  --nav-bg:
+    linear-gradient(
+      90deg,
+      rgba(250,248,241,.98),
+      rgba(248,245,250,.98),
+      rgba(242,247,252,.98)
+    );
+
+  --page-bg:
+    radial-gradient(circle at 5% 3%,rgba(174,216,241,.21),transparent 28%),
+    radial-gradient(circle at 95% 7%,rgba(211,200,232,.18),transparent 30%),
+    linear-gradient(150deg,#fbfdff 0%,#f0f7fb 48%,#f8f6fb 100%);
+
+  --shadow:0 12px 34px rgba(29,65,108,.075);
+  --shadow-soft:0 5px 17px rgba(29,65,108,.065);
+}
+
+html[data-theme="dark"]{
+  --page:#07111f;
+  --surface:#0d1b2e;
+  --surface-soft:#12243b;
+  --surface-blue:#142a44;
+
+  --text:#f3f7fd;
+  --text-soft:#c7d4e4;
+  --muted:#91a4bc;
+
+  --border:rgba(123,164,215,.20);
+  --border-strong:rgba(130,174,225,.32);
+
+  --blue:#82b5e5;
+  --blue-dark:#a7cff2;
+  --blue-soft:rgba(91,151,211,.14);
+
+  --purple:#c0b6e9;
+  --purple-dark:#d5cef3;
+  --purple-soft:rgba(153,137,207,.14);
+
+  --green:#84d2b9;
+  --green-dark:#a4e2cf;
+  --green-soft:rgba(67,157,132,.14);
+  --green-border:rgba(132,210,185,.25);
+
+  --gold:#e1c08a;
+  --gold-soft:rgba(181,139,79,.13);
+
+  --orange:#efb478;
+  --orange-dark:#ffd0a0;
+  --orange-soft:rgba(184,118,56,.14);
+
+  --red:#ff91a8;
+  --red-dark:#ffb6c5;
+  --red-soft:rgba(214,95,122,.13);
+
+  --header-bg:rgba(6,16,30,.97);
+
+  --nav-bg:
+    linear-gradient(
+      90deg,
+      rgba(36,31,24,.98),
+      rgba(31,27,43,.98),
+      rgba(20,31,47,.98)
+    );
+
+  --page-bg:
+    radial-gradient(circle at 5% 3%,rgba(50,108,172,.20),transparent 28%),
+    radial-gradient(circle at 95% 7%,rgba(108,79,157,.17),transparent 30%),
+    linear-gradient(180deg,#050b14 0%,#0a1729 56%,#060d18 100%);
+
+  --shadow:0 18px 46px rgba(0,0,0,.38);
+  --shadow-soft:0 0 21px rgba(111,174,235,.08);
+}
+
+body{
+  min-height:100vh;
+  overflow-x:hidden;
+  color:var(--text);
+  background:var(--page);
+  font-family:'Noto Serif Bengali',Georgia,serif;
+  font-size:15px;
+  line-height:1.75;
+}
+
+body.locked{
+  overflow:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button,
+a{
+  -webkit-tap-highlight-color:transparent;
+}
+
+button{
+  cursor:pointer;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+[hidden]{
+  display:none!important;
+}
+
+.site-shell{
+  min-height:100vh;
+  background:var(--page-bg);
+}
+
+/* HEADER */
+
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:1700;
+  min-height:var(--header-height);
+  border-bottom:1px solid var(--border);
+  background:var(--header-bg);
+  box-shadow:0 4px 15px rgba(28,61,102,.05);
+  backdrop-filter:blur(18px);
+}
+
+.header-inner{
+  width:min(1560px,100%);
+  min-height:var(--header-height);
+  margin:0 auto;
+  padding:0 22px;
+  display:grid;
+  grid-template-columns:390px minmax(280px,1fr) auto;
+  align-items:center;
+  gap:20px;
+}
+
+.header-left{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.menu-button{
+  display:none;
+  width:40px;
+  height:40px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:28px;
+}
+
+.brand{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.brand-leaf{
+  font-size:45px;
+  line-height:1;
+}
+
+.brand-copy{
+  min-width:0;
+}
+
+.brand-copy h1{
+  color:#163f6e;
+  font-size:27px;
+  font-weight:700;
+  line-height:1.15;
+  white-space:nowrap;
+}
+
+.brand-copy p{
+  margin-top:4px;
+  color:var(--green);
+  font-size:13.5px;
+  font-weight:500;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .brand-copy h1{
+  color:#fff;
+}
+
+.header-search{
+  position:relative;
+}
+
+.header-search input{
+  width:100%;
+  height:46px;
+  padding:0 54px 0 47px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  outline:none;
+  background:var(--surface);
+  color:var(--text);
+  font-size:14px;
+}
+
+.header-search input:focus{
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px var(--purple-soft);
+}
+
+.header-search::before{
+  content:"⌕";
+  position:absolute;
+  left:17px;
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--text-soft);
+  font-size:23px;
+}
+
+.search-button{
+  position:absolute;
+  top:50%;
+  right:7px;
+  width:34px;
+  height:34px;
+  transform:translateY(-50%);
+  border:none;
+  border-radius:50%;
+  background:var(--blue);
+  color:#fff;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.header-action{
+  width:42px;
+  height:42px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  color:var(--text);
+  font-size:17px;
+}
+
+.header-action:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-soft);
+}
+
+.header-avatar{
+  width:45px;
+  height:45px;
+  border:2px solid rgba(255,255,255,.92);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:16px;
+  font-weight:700;
+}
+
+/* DATE */
+
+.date-ticker{
+  position:sticky;
+  top:var(--header-height);
+  z-index:1650;
+  height:var(--date-height);
+  overflow:hidden;
+  border-bottom:1px solid var(--border);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(239,247,252,.99),
+      rgba(242,244,251,.99),
+      rgba(247,245,251,.99)
+    );
+}
+
+html[data-theme="dark"] .date-ticker{
+  background:rgba(9,24,41,.98);
+}
+
+.ticker-track{
+  width:max-content;
+  min-width:200%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  animation:dateScroll 36s linear infinite;
+}
+
+.ticker-group{
+  min-width:100vw;
+  padding:0 46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:68px;
+  color:var(--text-soft);
+  font-size:13px;
+  white-space:nowrap;
+}
+
+.ticker-separator{
+  color:var(--purple);
+}
+
+@keyframes dateScroll{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-50%);
+  }
+}
+
+/* NAV */
+
+.category-bar{
+  position:sticky;
+  top:calc(var(--header-height) + var(--date-height));
+  z-index:1600;
+  min-height:var(--nav-height);
+  border-bottom:1px solid rgba(126,103,148,.14);
+  background:var(--nav-bg);
+  box-shadow:0 4px 13px rgba(71,55,95,.04);
+  backdrop-filter:blur(16px);
+}
+
+.category-track{
+  width:min(1560px,100%);
+  min-height:var(--nav-height);
+  margin:0 auto;
+  padding:0 22px;
+  display:flex;
+  align-items:center;
+  gap:31px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.category-track::-webkit-scrollbar{
+  display:none;
+}
+
+.category-link{
+  flex:0 0 auto;
+  min-height:var(--nav-height);
+  padding:0 3px;
+  border-bottom:3px solid transparent;
+  display:flex;
+  align-items:center;
+  color:#66617a;
+  font-size:15px;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .category-link{
+  color:var(--text-soft);
+}
+
+.category-link:hover,
+.category-link.active{
+  color:var(--blue);
+  border-bottom-color:var(--blue);
+}
+
+/* ACCESS DENIED */
+
+.access-denied{
+  width:min(760px,calc(100% - 24px));
+  margin:40px auto;
+  padding:35px 25px;
+  border:1px solid rgba(197,92,117,.24);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 92% 4%,var(--red-soft),transparent 38%),
+    var(--surface);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+
+.access-denied-icon{
+  width:82px;
+  height:82px;
+  margin:0 auto;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--red-soft);
+  color:var(--red);
+  font-size:37px;
+}
+
+.access-denied h1{
+  margin-top:17px;
+  font-size:27px;
+}
+
+.access-denied p{
+  max-width:600px;
+  margin:9px auto 0;
+  color:var(--text-soft);
+  font-size:13px;
+  line-height:1.9;
+}
+
+.access-denied-actions{
+  margin-top:19px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:9px;
+}
+
+.access-denied-actions a{
+  min-height:42px;
+  padding:8px 16px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface-soft);
+  color:var(--text-soft);
+  font-size:12px;
+  font-weight:700;
+}
+
+.access-denied-actions a.primary{
+  border-color:var(--blue);
+  background:var(--blue);
+  color:#fff;
+}
+
+/* PAGE */
+
+.admin-layout{
+  width:min(1560px,100%);
+  margin:0 auto;
+  padding:16px 20px 36px;
+  display:grid;
+  grid-template-columns:270px minmax(0,1fr);
+  gap:16px;
+}
+
+.card{
+  border:1px solid var(--border);
+  border-radius:19px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+}
+
+.admin-sidebar{
+  position:sticky;
+  top:calc(
+    var(--header-height) +
+    var(--date-height) +
+    var(--nav-height) +
+    16px
+  );
+  height:calc(100vh - 225px);
+  overflow-y:auto;
+  scrollbar-width:none;
+}
+
+.admin-sidebar::-webkit-scrollbar,
+.mobile-drawer::-webkit-scrollbar{
+  display:none;
+}
+
+.sidebar-shell{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 12% 0,var(--blue-soft),transparent 35%),
+    var(--surface);
+  box-shadow:var(--shadow);
+}
+
+.admin-account{
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:16px;
+  background:
+    radial-gradient(circle at top right,var(--purple-soft),transparent 50%),
+    var(--surface-soft);
+}
+
+.admin-account-top{
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  align-items:center;
+  gap:10px;
+}
+
+.admin-avatar{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+}
+
+.admin-account h2{
+  font-size:14px;
+}
+
+.admin-account p{
+  color:var(--muted);
+  font-size:9.5px;
+}
+
+.admin-role{
+  margin-top:10px;
+  padding:6px 10px;
+  border-radius:999px;
+  display:inline-flex;
+  background:var(--purple-soft);
+  color:var(--purple-dark);
+  font-size:10px;
+  font-weight:700;
+}
+
+.sidebar-section{
+  margin-top:14px;
+}
+
+.sidebar-title{
+  padding:0 7px 7px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:700;
+}
+
+.sidebar-menu{
+  display:grid;
+  gap:4px;
+}
+
+.sidebar-menu a{
+  min-height:49px;
+  padding:8px 9px;
+  border:1px solid transparent;
+  border-radius:12px;
+  display:grid;
+  grid-template-columns:35px minmax(0,1fr) auto;
+  align-items:center;
+  gap:9px;
+  color:var(--text-soft);
+  transition:.16s ease;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active{
+  transform:translateX(2px);
+  border-color:var(--border);
+  background:var(--purple-soft);
+  color:var(--purple-dark);
+}
+
+.sidebar-icon{
+  width:35px;
+  height:35px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--blue-soft);
+  color:var(--blue);
+  font-size:16px;
+}
+
+.sidebar-copy strong{
+  display:block;
+  font-size:12.5px;
+  font-weight:600;
+  line-height:1.4;
+}
+
+.sidebar-copy small{
+  display:block;
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.4;
+}
+
+.sidebar-count{
+  min-width:24px;
+  height:24px;
+  padding:0 6px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--orange-soft);
+  color:var(--orange);
+  font-size:9px;
+  font-weight:700;
+}
+
+.sidebar-divider{
+  height:1px;
+  margin:13px 4px;
+  background:var(--border);
+}
+
+.security-note{
+  margin-top:14px;
+  padding:11px;
+  border-left:3px solid var(--green);
+  border-radius:0 10px 10px 0;
+  background:var(--green-soft);
+  color:var(--text-soft);
+  font-size:10px;
+  line-height:1.7;
+}
+
+/* MAIN */
+
+.admin-main{
+  min-width:0;
+}
+
+.admin-heading{
+  padding:20px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  background:
+    radial-gradient(circle at 94% 5%,var(--purple-soft),transparent 38%),
+    var(--surface);
+}
+
+.admin-heading h1{
+  font-size:26px;
+  line-height:1.5;
+}
+
+.admin-heading p{
+  margin-top:5px;
+  color:var(--text-soft);
+  font-size:12.5px;
+  line-height:1.85;
+}
+
+.heading-actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.heading-button{
+  min-height:40px;
+  padding:7px 13px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface-soft);
+  color:var(--text-soft);
+  font-size:11px;
+  font-weight:700;
+}
+
+.heading-button:hover{
+  background:var(--purple-soft);
+  color:var(--purple-dark);
+}
+
+.stat-grid{
+  margin-top:13px;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+
+.stat-card{
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:var(--surface);
+  box-shadow:var(--shadow-soft);
+}
+
+.stat-card span{
+  color:var(--muted);
+  font-size:10.5px;
+}
+
+.stat-card strong{
+  display:block;
+  margin-top:4px;
+  font-size:24px;
+}
+
+.stat-card.pending strong{
+  color:var(--orange);
+}
+
+.stat-card.approved strong{
+  color:var(--green);
+}
+
+.stat-card.returned strong{
+  color:var(--blue);
+}
+
+.stat-card.rejected strong{
+  color:var(--red);
+}
+
+/* FILTER */
+
+.filter-card{
+  margin-top:13px;
+  padding:15px;
+}
+
+.filter-grid{
+  display:grid;
+  grid-template-columns:minmax(230px,1fr) repeat(3,minmax(135px,.34fr)) auto;
+  gap:9px;
+}
+
+.filter-control{
+  width:100%;
+  height:42px;
+  padding:0 11px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  outline:none;
+  background:var(--surface-soft);
+  color:var(--text);
+  font-size:11.5px;
+}
+
+.filter-control:focus{
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px var(--purple-soft);
+}
+
+.reset-filter{
+  min-height:42px;
+  padding:7px 13px;
+  border:1px solid var(--border-strong);
+  border-radius:9px;
+  background:var(--surface);
+  color:var(--purple-dark);
+  font-size:11px;
+  font-weight:700;
+}
+
+/* REVIEW LAYOUT */
+
+.review-workspace{
+  margin-top:13px;
+  display:grid;
+  grid-template-columns:360px minmax(0,1fr);
+  gap:13px;
+  align-items:start;
+}
+
+.submission-list-card{
+  min-width:0;
+  overflow:hidden;
+}
+
+.list-heading{
+  padding:14px 15px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  background:var(--surface-soft);
+}
+
+.list-heading h2{
+  font-size:16px;
+}
+
+.list-heading span{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.submission-list{
+  max-height:820px;
+  overflow-y:auto;
+  scrollbar-width:thin;
+}
+
+.submission-item{
+  width:100%;
+  padding:13px 14px;
+  border:none;
+  border-bottom:1px solid var(--border);
+  display:block;
+  background:transparent;
+  color:var(--text);
+  text-align:left;
+  transition:.15s ease;
+}
+
+.submission-item:last-child{
+  border-bottom:none;
+}
+
+.submission-item:hover,
+.submission-item.active{
+  background:var(--purple-soft);
+}
+
+.submission-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:9px;
+}
+
+.submission-title{
+  min-width:0;
+}
+
+.submission-title h3{
+  overflow:hidden;
+  font-size:13px;
+  line-height:1.6;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.submission-title p{
+  overflow:hidden;
+  margin-top:2px;
+  color:var(--text-soft);
+  font-size:10.5px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.status-badge{
+  flex:0 0 auto;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:8.8px;
+  font-weight:700;
+}
+
+.status-badge.pending{
+  background:var(--orange-soft);
+  color:var(--orange);
+}
+
+.status-badge.approved{
+  background:var(--green-soft);
+  color:var(--green);
+}
+
+.status-badge.returned{
+  background:var(--blue-soft);
+  color:var(--blue);
+}
+
+.status-badge.rejected{
+  background:var(--red-soft);
+  color:var(--red);
+}
+
+.submission-meta{
+  margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+
+.meta-chip{
+  padding:3px 7px;
+  border-radius:999px;
+  background:var(--surface-blue);
+  color:var(--muted);
+  font-size:8.7px;
+}
+
+.submission-preview{
+  margin-top:8px;
+  color:var(--text-soft);
+  font-size:10px;
+  line-height:1.7;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.empty-list{
+  padding:38px 17px;
+  color:var(--muted);
+  text-align:center;
+}
+
+.empty-list span{
+  display:block;
+  font-size:37px;
+}
+
+.empty-list h3{
+  margin-top:8px;
+  color:var(--text);
+  font-size:15px;
+}
+
+.empty-list p{
+  margin-top:4px;
+  font-size:10.5px;
+}
+
+.load-more-list{
+  padding:12px;
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+
+.load-more-button{
+  min-width:150px;
+  min-height:38px;
+  padding:6px 14px;
+  border:1px solid var(--border-strong);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--purple-dark);
+  font-size:10.5px;
+  font-weight:700;
+}
+
+/* DETAIL */
+
+.review-detail{
+  min-width:0;
+  overflow:hidden;
+}
+
+.detail-placeholder{
+  min-height:530px;
+  padding:40px 20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted);
+  text-align:center;
+}
+
+.detail-placeholder span{
+  font-size:52px;
+}
+
+.detail-placeholder h2{
+  margin-top:10px;
+  color:var(--text);
+  font-size:20px;
+}
+
+.detail-placeholder p{
+  max-width:430px;
+  margin-top:5px;
+  font-size:11.5px;
+  line-height:1.8;
+}
+
+.detail-content{
+  display:none;
+}
+
+.detail-content.show{
+  display:block;
+}
+
+.detail-head{
+  padding:17px 18px;
+  border-bottom:1px solid var(--border);
+  background:
+    radial-gradient(circle at 95% 3%,var(--purple-soft),transparent 40%),
+    var(--surface-soft);
+}
+
+.detail-head-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.detail-head h2{
+  font-size:21px;
+  line-height:1.5;
+}
+
+.detail-head p{
+  margin-top:3px;
+  color:var(--text-soft);
+  font-size:11px;
+}
+
+.detail-meta{
+  margin-top:10px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.detail-chip{
+  padding:4px 8px;
+  border-radius:999px;
+  background:var(--surface-blue);
+  color:var(--text-soft);
+  font-size:9.5px;
+}
+
+.detail-body{
+  padding:18px;
+}
+
+.contributor-card{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  display:grid;
+  grid-template-columns:43px minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  background:var(--surface-soft);
+}
+
+.contributor-avatar{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+}
+
+.contributor-copy h3{
+  font-size:12.5px;
+}
+
+.contributor-copy p{
+  color:var(--muted);
+  font-size:9.5px;
+}
+
+.contributor-role{
+  padding:4px 8px;
+  border-radius:999px;
+  background:var(--purple-soft);
+  color:var(--purple-dark);
+  font-size:9px;
+  font-weight:700;
+}
+
+.compare-heading{
+  margin-top:17px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.compare-heading h3{
+  font-size:15px;
+}
+
+.compare-heading p{
+  color:var(--muted);
+  font-size:9.5px;
+}
+
+.compare-grid{
+  margin-top:9px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.compare-panel{
+  min-width:0;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--surface-soft);
+}
+
+.compare-panel-head{
+  min-height:44px;
+  padding:9px 11px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.compare-panel-head h4{
+  font-size:12px;
+}
+
+.compare-panel-head span{
+  color:var(--muted);
+  font-size:8.5px;
+}
+
+.current-panel .compare-panel-head{
+  background:var(--blue-soft);
+}
+
+.proposed-panel .compare-panel-head{
+  background:var(--green-soft);
+}
+
+.compare-text{
+  min-height:380px;
+  max-height:570px;
+  padding:14px;
+  overflow-y:auto;
+  color:var(--text-soft);
+  font-size:12.5px;
+  line-height:2;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.compare-text.empty{
+  color:var(--muted);
+  font-style:italic;
+}
+
+.review-editor{
+  width:100%;
+  min-height:380px;
+  max-height:570px;
+  padding:14px;
+  border:none;
+  outline:none;
+  resize:vertical;
+  background:transparent;
+  color:var(--text);
+  font-size:12.5px;
+  line-height:2;
+}
+
+.details-grid{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+
+.detail-field label{
+  display:block;
+  margin-bottom:5px;
+  color:var(--text);
+  font-size:10.5px;
+  font-weight:700;
+}
+
+.detail-input{
+  width:100%;
+  min-height:42px;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  outline:none;
+  background:var(--surface-soft);
+  color:var(--text);
+  font-size:11px;
+}
+
+.detail-input:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px var(--green-soft);
+}
+
+.contributor-note{
+  margin-top:12px;
+  padding:11px 12px;
+  border-left:3px solid var(--gold);
+  border-radius:0 9px 9px 0;
+  background:var(--gold-soft);
+  color:var(--text-soft);
+  font-size:10.5px;
+  line-height:1.75;
+  white-space:pre-line;
+}
+
+.review-warning{
+  margin-top:13px;
+  padding:11px 12px;
+  border-left:3px solid var(--orange);
+  border-radius:0 9px 9px 0;
+  background:var(--orange-soft);
+  color:var(--text-soft);
+  font-size:10.5px;
+  line-height:1.75;
+}
+
+.detail-actions{
+  margin-top:15px;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.review-action{
+  min-height:42px;
+  padding:7px 14px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--surface-soft);
+  color:var(--text-soft);
+  font-size:11px;
+  font-weight:700;
+}
+
+.review-action.preview{
+  margin-right:auto;
+}
+
+.review-action.approve{
+  border-color:var(--green-border);
+  background:var(--green);
+  color:#fff;
+}
+
+.review-action.return{
+  border-color:var(--border-strong);
+  background:var(--blue-soft);
+  color:var(--blue);
+}
+
+.review-action.reject{
+  border-color:rgba(197,92,117,.25);
+  background:var(--red-soft);
+  color:var(--red);
+}
+
+.review-action:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+/* HISTORY */
+
+.history-card{
+  margin-top:13px;
+  padding:17px;
+}
+
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.section-head h2{
+  font-size:18px;
+}
+
+.section-head button{
+  border:none;
+  background:transparent;
+  color:var(--purple-dark);
+  font-size:10.5px;
+  font-weight:700;
+}
+
+.history-list{
+  margin-top:11px;
+  display:grid;
+  gap:8px;
+}
+
+.history-item{
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+  background:var(--surface-soft);
+}
+
+.history-item h3{
+  font-size:11.5px;
+}
+
+.history-item p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:9.5px;
+}
+
+.history-action{
+  align-self:start;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:8.7px;
+  font-weight:700;
+}
+
+.history-action.approved{
+  background:var(--green-soft);
+  color:var(--green);
+}
+
+.history-action.returned{
+  background:var(--blue-soft);
+  color:var(--blue);
+}
+
+.history-action.rejected{
+  background:var(--red-soft);
+  color:var(--red);
+}
+
+/* NOTE MODAL */
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:2600;
+  display:none;
+  padding:18px;
+  background:rgba(0,0,0,.64);
+  backdrop-filter:blur(7px);
+}
+
+.modal-backdrop.show{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.action-modal{
+  width:min(530px,100%);
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:19px;
+  background:var(--surface);
+  box-shadow:0 30px 85px rgba(0,0,0,.35);
+}
+
+.modal-head{
+  padding:15px 17px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:var(--surface-soft);
+}
+
+.modal-head h2{
+  font-size:17px;
+}
+
+.modal-head p{
+  color:var(--muted);
+  font-size:9.5px;
+}
+
+.modal-close{
+  width:37px;
+  height:37px;
+  border:none;
+  border-radius:50%;
+  background:var(--surface);
+  color:var(--text);
+  font-size:22px;
+}
+
+.action-form{
+  padding:17px;
+}
+
+.action-form label{
+  display:block;
+  margin-bottom:6px;
+  font-size:11px;
+  font-weight:700;
+}
+
+.action-textarea{
+  width:100%;
+  min-height:145px;
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+  resize:vertical;
+  background:var(--surface-soft);
+  color:var(--text);
+  font-size:11.5px;
+  line-height:1.8;
+}
+
+.action-textarea:focus{
+  border-color:var(--purple);
+  box-shadow:0 0 0 3px var(--purple-soft);
+}
+
+.modal-actions{
+  margin-top:12px;
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.modal-button{
+  min-height:39px;
+  padding:7px 13px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--surface-soft);
+  color:var(--text-soft);
+  font-size:10.5px;
+  font-weight:700;
+}
+
+.modal-button.primary{
+  border-color:var(--blue);
+  background:var(--blue);
+  color:#fff;
+}
+
+.modal-button.danger{
+  border-color:var(--red);
+  background:var(--red);
+  color:#fff;
+}
+
+/* PREVIEW MODAL */
+
+.preview-modal{
+  width:min(760px,100%);
+  max-height:92vh;
+  overflow-y:auto;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:var(--surface);
+  box-shadow:0 30px 85px rgba(0,0,0,.35);
+}
+
+.preview-content{
+  padding:21px;
+}
+
+.preview-content span{
+  display:inline-flex;
+  padding:5px 9px;
+  border-radius:999px;
+  background:var(--purple-soft);
+  color:var(--purple-dark);
+  font-size:10px;
+  font-weight:700;
+}
+
+.preview-content h1{
+  margin-top:10px;
+  font-size:26px;
+}
+
+.preview-content h2{
+  margin-top:2px;
+  color:var(--green);
+  font-size:13px;
+}
+
+.preview-poem{
+  margin-top:16px;
+  padding:17px;
+  border-left:4px solid var(--purple);
+  border-radius:0 11px 11px 0;
+  background:var(--surface-soft);
+  color:var(--text);
+  font-size:15px;
+  line-height:2.2;
+  white-space:pre-wrap;
+}
+
+/* DRAWER */
+
+.drawer-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1900;
+  display:none;
+  background:rgba(0,0,0,.52);
+}
+
+.drawer-backdrop.show{
+  display:block;
+}
+
+.mobile-drawer{
+  position:fixed;
+  top:0;
+  left:-370px;
+  z-index:2000;
+  width:345px;
+  max-width:92vw;
+  height:100vh;
+  padding:15px;
+  overflow-y:auto;
+  border-right:1px solid var(--border);
+  background:var(--surface);
+  box-shadow:18px 0 48px rgba(0,0,0,.28);
+  transition:left .25s ease;
+}
+
+.mobile-drawer.open{
+  left:0;
+}
+
+.drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.drawer-brand{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.drawer-brand span{
+  font-size:37px;
+}
+
+.drawer-brand h2{
+  font-size:20px;
+}
+
+.drawer-close{
+  width:40px;
+  height:40px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:31px;
+}
+
+.drawer-content{
+  margin-top:13px;
+}
+
+/* FOOTER */
+
+.site-footer{
+  width:min(1560px,100%);
+  margin:0 auto;
+  padding:17px 21px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  background:#173e67;
+  color:#fff;
+  font-size:11.5px;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:13px;
+}
+
+.to-top{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:1750;
+  width:44px;
+  height:44px;
+  display:none;
+  border:none;
+  border-radius:50%;
+  background:var(--purple);
+  color:#fff;
+  font-size:19px;
+}
+
+.to-top.show{
+  display:block;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:73px;
+  z-index:2900;
+  display:none;
+  transform:translateX(-50%);
+  max-width:92%;
+  padding:10px 17px;
+  border-radius:999px;
+  background:var(--purple-dark);
+  color:#fff;
+  text-align:center;
+  font-size:11.5px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1180px){
+  .review-workspace{
+    grid-template-columns:320px minmax(0,1fr);
+  }
+
+  .filter-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .filter-grid .search-field{
+    grid-column:1 / -1;
+  }
+
+  .reset-filter{
+    grid-column:1 / -1;
+  }
+}
+
+@media(max-width:960px){
+  :root{
+    --header-height:90px;
+    --date-height:40px;
+    --nav-height:57px;
+  }
+
+  .header-inner{
+    min-height:var(--header-height);
+    padding:8px 13px;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:8px;
+  }
+
+  .menu-button{
+    display:block;
+  }
+
+  .header-search{
+    display:none;
+  }
+
+  .header-action.notification-action,
+  .header-action.message-action{
+    display:none;
+  }
+
+  .brand-leaf{
+    font-size:41px;
+  }
+
+  .brand-copy h1{
+    font-size:24px;
+  }
+
+  .brand-copy p{
+    font-size:12px;
+  }
+
+  .ticker-group{
+    min-width:max-content;
+    padding:0 26px;
+    gap:45px;
+    font-size:12px;
+  }
+
+  .category-track{
+    padding:0 15px;
+    gap:27px;
+  }
+
+  .admin-layout{
+    display:block;
+    padding:13px 10px 28px;
+  }
+
+  .admin-sidebar{
+    display:none;
+  }
+
+  .review-workspace{
+    grid-template-columns:1fr;
+  }
+
+  .submission-list{
+    max-height:480px;
+  }
+}
+
+@media(max-width:700px){
+  :root{
+    --header-height:87px;
+    --date-height:39px;
+    --nav-height:56px;
+  }
+
+  body{
+    font-size:14px;
+  }
+
+  .header-inner{
+    padding:7px 11px;
+  }
+
+  .menu-button{
+    width:37px;
+    height:37px;
+    font-size:26px;
+  }
+
+  .brand{
+    gap:8px;
+  }
+
+  .brand-leaf{
+    font-size:38px;
+  }
+
+  .brand-copy h1{
+    font-size:21px;
+  }
+
+  .brand-copy p{
+    max-width:222px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:11px;
+  }
+
+  .header-action{
+    width:39px;
+    height:39px;
+  }
+
+  .header-avatar{
+    width:42px;
+    height:42px;
+  }
+
+  .ticker-group{
+    padding:0 23px;
+    gap:40px;
+    font-size:11.5px;
+  }
+
+  .category-track{
+    gap:24px;
+  }
+
+  .category-link{
+    font-size:14px;
+  }
+
+  .admin-heading{
+    display:block;
+    padding:17px 15px;
+  }
+
+  .admin-heading h1{
+    font-size:22px;
+  }
+
+  .heading-actions{
+    margin-top:11px;
+    justify-content:flex-start;
+  }
+
+  .stat-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .filter-grid{
+    grid-template-columns:1fr;
+  }
+
+  .filter-grid .search-field,
+  .reset-filter{
+    grid-column:auto;
+  }
+
+  .review-workspace{
+    margin-top:11px;
+  }
+
+  .compare-grid{
+    grid-template-columns:1fr;
+  }
+
+  .compare-text,
+  .review-editor{
+    min-height:280px;
+  }
+
+  .details-grid{
+    grid-template-columns:1fr;
+  }
+
+  .detail-actions{
+    justify-content:stretch;
+  }
+
+  .review-action{
+    flex:1 1 calc(50% - 8px);
+  }
+
+  .review-action.preview{
+    margin-right:0;
+  }
+
+  .history-item{
+    grid-template-columns:1fr;
+  }
+
+  .site-footer{
+    display:block;
+    text-align:center;
+  }
+
+  .footer-links{
+    margin-top:8px;
+    justify-content:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="site-shell">
+
+<header class="site-header">
+
+  <div class="header-inner">
+
+    <div class="header-left">
+
+      <button
+        class="menu-button"
+        id="openDrawerButton"
+        type="button"
+        aria-label="মেনু খুলুন"
+      >
+        ☰
+      </button>
+
+      <a href="index.html" class="brand">
+
+        <span class="brand-leaf">🌿</span>
+
+        <span class="brand-copy">
+          <h1>ভুবনডাঙ্গার কবিতা</h1>
+          <p>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</p>
+        </span>
+
+      </a>
+
+    </div>
+
+    <div class="header-search">
+
+      <input
+        id="siteSearchInput"
+        type="search"
+        placeholder="কবিতা, কবি, অবদানকারী অথবা জমা খুঁজুন..."
+      >
+
+      <button
+        class="search-button"
+        id="siteSearchButton"
+        type="button"
+        aria-label="সার্চ করুন"
+      >
+        ⌕
+      </button>
+
+    </div>
+
+    <div class="header-actions">
+
+      <a
+        href="notifications.html"
+        class="header-action notification-action"
+        aria-label="নোটিফিকেশন"
+      >
+        🔔
+      </a>
+
+      <a
+        href="messages.html"
+        class="header-action message-action"
+        aria-label="বার্তা"
+      >
+        💬
+      </a>
+
+      <button
+        class="header-action"
+        id="themeButton"
+        type="button"
+        aria-label="থিম পরিবর্তন"
+      >
+        <span id="themeIcon">🌙</span>
+      </button>
+
+      <a
+        href="profile.html?user=your-profile"
+        class="header-avatar"
+        id="headerAvatar"
+        aria-label="আপনার প্রোফাইল"
+      >
+        আ
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+<section class="date-ticker">
+
+  <div class="ticker-track">
+
+    <div class="ticker-group">
+
+      <span class="bangla-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="hijri-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="gregorian-date"></span>
+
+    </div>
+
+    <div class="ticker-group" aria-hidden="true">
+
+      <span class="bangla-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="hijri-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="gregorian-date"></span>
+
+    </div>
+
+  </div>
+
+</section>
+
+<nav class="category-bar">
+
+  <div class="category-track">
+
+    <a href="index.html" class="category-link">হোম</a>
+    <a href="today-poem.html" class="category-link">কবিতা</a>
+    <a href="today-prolap.html" class="category-link">প্রলাপ</a>
+    <a href="madhyorater-prolap.html" class="category-link">মধ্যরাতের প্রলাপ</a>
+    <a href="today-letter.html" class="category-link">চিঠিপত্র</a>
+    <a href="famous-quotes.html" class="category-link">বিখ্যাত মনীষীদের বাণী</a>
+    <a href="recitation.html" class="category-link">আবৃত্তি</a>
+    <a href="famous-poet.html" class="category-link">খ্যাতিমান কবি</a>
+    <a href="admin-poem-review.html" class="category-link active">অ্যাডমিন যাচাই</a>
+
+  </div>
+
+</nav>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<aside class="mobile-drawer" id="mobileDrawer">
+
+  <div class="drawer-head">
+
+    <a href="admin-dashboard.html" class="drawer-brand">
+      <span>🌿</span>
+      <h2>অ্যাডমিন ভুবন</h2>
+    </a>
+
+    <button
+      class="drawer-close"
+      id="closeDrawerButton"
+      type="button"
+      aria-label="মেনু বন্ধ করুন"
+    >
+      ×
+    </button>
+
+  </div>
+
+  <div class="drawer-content" id="drawerSidebar"></div>
+
+</aside>
+
+<section class="access-denied" id="accessDenied" hidden>
+
+  <div class="access-denied-icon">
+    🔒
+  </div>
+
+  <h1>এই প্যানেলে প্রবেশের অনুমতি নেই</h1>
+
+  <p>
+    কবিতা ও সম্পাদনার প্রস্তাব অনুমোদন, ফেরত অথবা বাতিল করার ক্ষমতা
+    কেবল ভুবনডাঙ্গার প্রতিষ্ঠাতা এবং অনুমোদিত অ্যাডমিনদের জন্য সংরক্ষিত।
+  </p>
+
+  <div class="access-denied-actions">
+
+    <a href="index.html">
+      হোমে ফিরে যান
+    </a>
+
+    <a href="login.html" class="primary">
+      অনুমোদিত অ্যাকাউন্টে লগ ইন
+    </a>
+
+  </div>
+
+</section>
+
+<main class="admin-layout" id="adminApplication" hidden>
+
+  <aside class="admin-sidebar">
+
+    <div class="sidebar-shell" id="desktopSidebar">
+
+      <section class="admin-account">
+
+        <div class="admin-account-top">
+
+          <div class="admin-avatar" id="sidebarAdminAvatar">
+            আ
+          </div>
+
+          <div>
+            <h2 id="sidebarAdminName">অ্যাডমিন</h2>
+            <p>ভুবনডাঙ্গার ব্যবস্থাপনা টিম</p>
+          </div>
+
+        </div>
+
+        <span class="admin-role" id="sidebarAdminRole">
+          অ্যাডমিন
+        </span>
+
+      </section>
+
+      <section class="sidebar-section">
+
+        <div class="sidebar-title">
+          <span>ব্যবস্থাপনা</span>
+          <span>●</span>
+        </div>
+
+        <div class="sidebar-menu">
+
+          <a href="admin-dashboard.html">
+            <span class="sidebar-icon">▦</span>
+            <span class="sidebar-copy">
+              <strong>অ্যাডমিন ড্যাশবোর্ড</strong>
+              <small>সার্বিক অবস্থা ও নিয়ন্ত্রণ</small>
+            </span>
+            <span>›</span>
+          </a>
+
+          <a href="admin-poem-review.html" class="active">
+            <span class="sidebar-icon">✍</span>
+            <span class="sidebar-copy">
+              <strong>কবিতা যাচাই</strong>
+              <small>পাঠ ও সম্পাদনার প্রস্তাব</small>
+            </span>
+            <span class="sidebar-count" id="sidebarPendingCount">০</span>
+          </a>
+
+          <a href="admin-humanitarian-review.html">
+            <span class="sidebar-icon">✚</span>
+            <span class="sidebar-copy">
+              <strong>মানবিক আবেদন</strong>
+              <small>যাচাই ও Pin ব্যবস্থাপনা</small>
+            </span>
+            <span>›</span>
+          </a>
+
+          <a href="admin-content-review.html">
+            <span class="sidebar-icon">☰</span>
+            <span class="sidebar-copy">
+              <strong>অন্যান্য লেখা</strong>
+              <small>কবিতা, প্রলাপ ও চিঠিপত্র</small>
+            </span>
+            <span>›</span>
+          </a>
+
+          <a href="admin-users.html">
+            <span class="sidebar-icon">👥</span>
+            <span class="sidebar-copy">
+              <strong>সদস্য ব্যবস্থাপনা</strong>
+              <small>ভূমিকা ও অ্যাকাউন্ট নিয়ন্ত্রণ</small>
+            </span>
+            <span>›</span>
+          </a>
+
+        </div>
+
+      </section>
+
+      <div class="sidebar-divider"></div>
+
+      <div class="sidebar-menu">
+
+        <a href="famous-poet.html">
+          <span class="sidebar-icon">🖋</span>
+          <span class="sidebar-copy">
+            <strong>খ্যাতিমান কবি</strong>
+            <small>কবি ও কবিতার তালিকা</small>
+          </span>
+          <span>›</span>
+        </a>
+
+        <a href="notifications.html">
+          <span class="sidebar-icon">🔔</span>
+          <span class="sidebar-copy">
+            <strong>নোটিফিকেশন</strong>
+            <small>নতুন জমা ও গুরুত্বপূর্ণ সংবাদ</small>
+          </span>
+          <span>›</span>
+        </a>
+
+        <a href="index.html">
+          <span class="sidebar-icon">⌂</span>
+          <span class="sidebar-copy">
+            <strong>মূল ওয়েবসাইট</strong>
+            <small>ভুবনডাঙ্গার নিউজফিড</small>
+          </span>
+          <span>›</span>
+        </a>
+
+      </div>
+
+      <div class="security-note">
+        প্রতিটি অনুমোদন, ফেরত ও বাতিলের সিদ্ধান্ত ইতিহাসে সংরক্ষিত হবে।
+        অনুমোদনের আগে কবির নাম, কবিতার শিরোনাম ও পাঠ যাচাই করুন।
+      </div>
+
+    </div>
+
+  </aside>
+
+  <section class="admin-main">
+
+    <section class="card admin-heading">
+
+      <div>
+
+        <h1>কবিতা ও সম্পাদনা যাচাই</h1>
+
+        <p>
+          সদস্যদের জমা দেওয়া কবিতার পাঠ ও সম্পাদনার প্রস্তাব যাচাই করুন।
+          প্রয়োজন হলে অনুমোদনের আগে পাঠ সম্পাদনা করা যাবে।
+        </p>
+
+      </div>
+
+      <div class="heading-actions">
+
+        <button
+          class="heading-button"
+          id="refreshButton"
+          type="button"
+        >
+          ↻ হালনাগাদ
+        </button>
+
+        <a
+          href="poet-poem.html"
+          class="heading-button"
+        >
+          কবিতার পাঠপাতা
+        </a>
+
+      </div>
+
+    </section>
+
+    <section class="stat-grid">
+
+      <article class="stat-card pending">
+        <span>অপেক্ষমাণ</span>
+        <strong id="pendingStat">০</strong>
+      </article>
+
+      <article class="stat-card approved">
+        <span>অনুমোদিত</span>
+        <strong id="approvedStat">০</strong>
+      </article>
+
+      <article class="stat-card returned">
+        <span>সংশোধনের জন্য ফেরত</span>
+        <strong id="returnedStat">০</strong>
+      </article>
+
+      <article class="stat-card rejected">
+        <span>বাতিল</span>
+        <strong id="rejectedStat">০</strong>
+      </article>
+
+    </section>
+
+    <section class="card filter-card">
+
+      <div class="filter-grid">
+
+        <input
+          class="filter-control search-field"
+          id="reviewSearchInput"
+          type="search"
+          placeholder="কবি, কবিতা অথবা অবদানকারীর নাম খুঁজুন..."
+        >
+
+        <select class="filter-control" id="statusFilter">
+
+          <option value="pending">অপেক্ষমাণ</option>
+          <option value="all">সব অবস্থা</option>
+          <option value="approved">অনুমোদিত</option>
+          <option value="returned">ফেরত দেওয়া</option>
+          <option value="rejected">বাতিল</option>
+
+        </select>
+
+        <select class="filter-control" id="typeFilter">
+
+          <option value="all">সব ধরনের জমা</option>
+          <option value="add">নতুন কবিতার পাঠ</option>
+          <option value="edit">সম্পাদনার প্রস্তাব</option>
+
+        </select>
+
+        <select class="filter-control" id="sortFilter">
+
+          <option value="newest">নতুন আগে</option>
+          <option value="oldest">পুরোনো আগে</option>
+
+        </select>
+
+        <button
+          class="reset-filter"
+          id="resetFilterButton"
+          type="button"
+        >
+          ফিল্টার মুছুন
+        </button>
+
+      </div>
+
+    </section>
+
+    <section class="review-workspace">
+
+      <section class="card submission-list-card">
+
+        <header class="list-heading">
+
+          <h2>জমার তালিকা</h2>
+
+          <span id="resultCount">
+            ০টি জমা
+          </span>
+
+        </header>
+
+        <div class="submission-list" id="submissionList"></div>
+
+        <div class="load-more-list">
+
+          <button
+            class="load-more-button"
+            id="loadMoreButton"
+            type="button"
+          >
+            আরও দেখুন
+          </button>
+
+        </div>
+
+      </section>
+
+      <section class="card review-detail">
+
+        <div class="detail-placeholder" id="detailPlaceholder">
+
+          <span>📑</span>
+
+          <h2>যাচাইয়ের জন্য একটি জমা নির্বাচন করুন</h2>
+
+          <p>
+            বাম পাশের তালিকা থেকে কোনো কবিতা বা সম্পাদনার প্রস্তাব
+            নির্বাচন করলে বর্তমান ও প্রস্তাবিত পাঠ পাশাপাশি দেখা যাবে।
+          </p>
+
+        </div>
+
+        <div class="detail-content" id="detailContent">
+
+          <header class="detail-head">
+
+            <div class="detail-head-top">
+
+              <div>
+                <h2 id="detailTitle">কবিতার নাম</h2>
+                <p id="detailPoet">কবির নাম</p>
+              </div>
+
+              <span
+                class="status-badge pending"
+                id="detailStatus"
+              >
+                অপেক্ষমাণ
+              </span>
+
+            </div>
+
+            <div class="detail-meta">
+
+              <span class="detail-chip" id="detailSubmissionType"></span>
+              <span class="detail-chip" id="detailCreatedAt"></span>
+              <span class="detail-chip" id="detailSubmissionId"></span>
+
+            </div>
+
+          </header>
+
+          <div class="detail-body">
+
+            <section class="contributor-card">
+
+              <div class="contributor-avatar" id="contributorAvatar">
+                অ
+              </div>
+
+              <div class="contributor-copy">
+
+                <h3 id="contributorName">
+                  অবদানকারীর নাম
+                </h3>
+
+                <p id="contributorMeta"></p>
+
+              </div>
+
+              <span class="contributor-role" id="contributorRole">
+                সদস্য
+              </span>
+
+            </section>
+
+            <div class="compare-heading">
+
+              <h3>বর্তমান ও প্রস্তাবিত পাঠ</h3>
+
+              <p>
+                ডান পাশের পাঠ অনুমোদনের আগে সম্পাদনা করা যাবে
+              </p>
+
+            </div>
+
+            <section class="compare-grid">
+
+              <article class="compare-panel current-panel">
+
+                <header class="compare-panel-head">
+
+                  <h4>বর্তমান অনুমোদিত পাঠ</h4>
+
+                  <span id="currentVersionLabel">
+                    কোনো পাঠ নেই
+                  </span>
+
+                </header>
+
+                <div
+                  class="compare-text empty"
+                  id="currentApprovedText"
+                >
+                  এই কবিতার কোনো অনুমোদিত পাঠ এখনো নেই।
+                </div>
+
+              </article>
+
+              <article class="compare-panel proposed-panel">
+
+                <header class="compare-panel-head">
+
+                  <h4>প্রস্তাবিত পাঠ</h4>
+
+                  <span>সম্পাদনাযোগ্য</span>
+
+                </header>
+
+                <textarea
+                  class="review-editor"
+                  id="proposedTextEditor"
+                  aria-label="প্রস্তাবিত কবিতার পাঠ"
+                ></textarea>
+
+              </article>
+
+            </section>
+
+            <section class="details-grid">
+
+              <div class="detail-field">
+
+                <label for="reviewBookName">
+                  কাব্যগ্রন্থ
+                </label>
+
+                <input
+                  class="detail-input"
+                  id="reviewBookName"
+                  type="text"
+                  placeholder="কাব্যগ্রন্থের নাম"
+                >
+
+              </div>
+
+              <div class="detail-field">
+
+                <label for="reviewPublicationYear">
+                  প্রকাশকাল
+                </label>
+
+                <input
+                  class="detail-input"
+                  id="reviewPublicationYear"
+                  type="text"
+                  placeholder="প্রকাশকাল"
+                >
+
+              </div>
+
+            </section>
+
+            <div
+              class="contributor-note"
+              id="contributorNote"
+            ></div>
+
+            <div class="review-warning">
+              অনুমোদন করলে সম্পাদিত পাঠটি কবিতার মূল পাতায় প্রকাশিত
+              হবে। পূর্বের অনুমোদিত পাঠ থাকলে সেটির জায়গায় নতুন
+              অনুমোদিত সংস্করণ কার্যকর হবে।
+            </div>
+
+            <div class="detail-actions">
+
+              <button
+                class="review-action preview"
+                id="previewButton"
+                type="button"
+              >
+                👁 পাঠের পূর্বরূপ
+              </button>
+
+              <button
+                class="review-action return"
+                id="returnButton"
+                type="button"
+              >
+                ↩ সংশোধনের জন্য ফেরত
+              </button>
+
+              <button
+                class="review-action reject"
+                id="rejectButton"
+                type="button"
+              >
+                × বাতিল
+              </button>
+
+              <button
+                class="review-action approve"
+                id="approveButton"
+                type="button"
+              >
+                ✓ অনুমোদন ও প্রকাশ
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </section>
+
+    <section class="card history-card">
+
+      <div class="section-head">
+
+        <h2>সাম্প্রতিক যাচাই ইতিহাস</h2>
+
+        <button
+          id="clearHistoryViewButton"
+          type="button"
+        >
+          তালিকা সংকুচিত করুন
+        </button>
+
+      </div>
+
+      <div class="history-list" id="historyList"></div>
+
+    </section>
+
+  </section>
+
+</main>
+
+<footer class="site-footer">
+
+  <div>
+    🌿 ভুবনডাঙ্গার কবিতা © <span id="footerYear"></span>
+  </div>
+
+  <div class="footer-links">
+    <a href="admin-dashboard.html">অ্যাডমিন ড্যাশবোর্ড</a>
+    <a href="index.html">মূল ওয়েবসাইট</a>
+    <a href="famous-poet.html">খ্যাতিমান কবি</a>
+    <a href="policy.html">নীতিমালা</a>
+  </div>
+
+</footer>
+
+</div>
+
+<div class="modal-backdrop" id="actionModalBackdrop">
+
+  <section class="action-modal">
+
+    <header class="modal-head">
+
+      <div>
+        <h2 id="actionModalTitle">সিদ্ধান্তের কারণ</h2>
+        <p id="actionModalSubtitle"></p>
+      </div>
+
+      <button
+        class="modal-close"
+        id="actionModalClose"
+        type="button"
+      >
+        ×
+      </button>
+
+    </header>
+
+    <form class="action-form" id="actionForm">
+
+      <label for="actionReason">
+        বার্তা অথবা কারণ
+      </label>
+
+      <textarea
+        class="action-textarea"
+        id="actionReason"
+        placeholder="অবদানকারীকে প্রয়োজনীয় নির্দেশনা লিখুন..."
+        required
+      ></textarea>
+
+      <div class="modal-actions">
+
+        <button
+          class="modal-button"
+          id="actionCancelButton"
+          type="button"
+        >
+          বাতিল
+        </button>
+
+        <button
+          class="modal-button primary"
+          id="actionConfirmButton"
+          type="submit"
+        >
+          নিশ্চিত করুন
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>
+
+<div class="modal-backdrop" id="previewModalBackdrop">
+
+  <section class="preview-modal">
+
+    <header class="modal-head">
+
+      <div>
+        <h2>কবিতার পূর্বরূপ</h2>
+        <p>অনুমোদনের পর পাঠটি যেভাবে দেখা যাবে</p>
+      </div>
+
+      <button
+        class="modal-close"
+        id="previewModalClose"
+        type="button"
+      >
+        ×
+      </button>
+
+    </header>
+
+    <div class="preview-content">
+
+      <span>✍ কবিতা</span>
+
+      <h1 id="previewPoemTitle"></h1>
+
+      <h2 id="previewPoetName"></h2>
+
+      <div class="preview-poem" id="previewPoemText"></div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<button
+  class="to-top"
+  id="toTopButton"
+  type="button"
+  aria-label="উপরে যান"
+>
+  ↑
+</button>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const root =
+  document.documentElement;
+
+root.setAttribute(
+  "data-theme",
+  localStorage.getItem("bhubondangaTheme") || "light"
+);
+
+const bnDigits = {
+  "0":"০",
+  "1":"১",
+  "2":"২",
+  "3":"৩",
+  "4":"৪",
+  "5":"৫",
+  "6":"৬",
+  "7":"৭",
+  "8":"৮",
+  "9":"৯"
+};
+
+function toBn(value){
+  return String(value).replace(/[0-9]/g,function(digit){
+    return bnDigits[digit];
+  });
+}
+
+function escapeHtml(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function getInitials(name){
+  return String(name || "")
+    .replace(/\s+/g,"")
+    .slice(0,2);
+}
+
+function getStorageArray(key){
+  try{
+    return JSON.parse(
+      localStorage.getItem(key) || "[]"
+    );
+  }catch(error){
+    return [];
+  }
+}
+
+function getStorageObject(key){
+  try{
+    return JSON.parse(
+      localStorage.getItem(key) || "{}"
+    );
+  }catch(error){
+    return {};
+  }
+}
+
+function saveStorageArray(key,value){
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
+}
+
+function showToast(message){
+  const toast =
+    document.getElementById("toast");
+
+  toast.innerText =
+    message;
+
+  toast.style.display =
+    "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(function(){
+      toast.style.display =
+        "none";
+    },3200);
+}
+
+function formatDateTime(value){
+  if(!value){
+    return "সময় অজানা";
+  }
+
+  const date =
+    new Date(value);
+
+  if(Number.isNaN(date.getTime())){
+    return "সময় অজানা";
+  }
+
+  return date.toLocaleString(
+    "bn-BD",
+    {
+      day:"numeric",
+      month:"short",
+      year:"numeric",
+      hour:"numeric",
+      minute:"2-digit"
+    }
+  );
+}
+
+function roleLabel(role){
+  const labels = {
+    member:"সদস্য",
+    writer:"লেখক",
+    moderator:"মডারেটর",
+    admin:"অ্যাডমিন",
+    founder:"প্রতিষ্ঠাতা"
+  };
+
+  return labels[role] || "সদস্য";
+}
+
+function statusLabel(status){
+  const labels = {
+    pending:"অপেক্ষমাণ",
+    approved:"অনুমোদিত",
+    returned:"সংশোধনের জন্য ফেরত",
+    rejected:"বাতিল"
+  };
+
+  return labels[status] || "অপেক্ষমাণ";
+}
+
+function typeLabel(type){
+  return type === "edit"
+    ? "সম্পাদনার প্রস্তাব"
+    : "নতুন কবিতার পাঠ";
+}
+
+/* AUTHORIZATION */
+
+const currentUser =
+  getStorageObject(
+    "bhubondangaCurrentUser"
+  );
+
+const allowedRoles = [
+  "founder",
+  "admin"
+];
+
+const hasAccess =
+  currentUser.loggedIn === true &&
+  allowedRoles.includes(
+    currentUser.role
+  );
+
+const accessDenied =
+  document.getElementById(
+    "accessDenied"
+  );
+
+const adminApplication =
+  document.getElementById(
+    "adminApplication"
+  );
+
+if(hasAccess){
+  adminApplication.hidden =
+    false;
+
+  accessDenied.hidden =
+    true;
+}else{
+  adminApplication.hidden =
+    true;
+
+  accessDenied.hidden =
+    false;
+}
+
+/* STORAGE KEYS */
+
+const submissionsKey =
+  "bhubondangaPoemSubmissions";
+
+const approvedPoemsKey =
+  "bhubondangaApprovedPoems";
+
+const reviewHistoryKey =
+  "bhubondangaPoemReviewHistory";
+
+const userNotificationsKey =
+  "bhubondangaUserNotifications";
+
+const adminNotificationsKey =
+  "bhubondangaAdminNotifications";
+
+/* STATE */
+
+let selectedSubmissionId =
+  null;
+
+let visibleCount =
+  20;
+
+let searchQuery =
+  "";
+
+let statusFilter =
+  "pending";
+
+let typeFilter =
+  "all";
+
+let sortFilter =
+  "newest";
+
+let pendingDecision =
+  "";
+
+let historyExpanded =
+  true;
+
+/* ADMIN PROFILE */
+
+function renderAdminProfile(){
+  const name =
+    currentUser.name ||
+    (
+      currentUser.role === "founder"
+        ? "প্রতিষ্ঠাতা"
+        : "অ্যাডমিন"
+    );
+
+  const initials =
+    currentUser.initials ||
+    getInitials(name);
+
+  document
+    .getElementById("sidebarAdminAvatar")
+    .innerText =
+      initials;
+
+  document
+    .getElementById("sidebarAdminName")
+    .innerText =
+      name;
+
+  document
+    .getElementById("sidebarAdminRole")
+    .innerText =
+      roleLabel(currentUser.role);
+
+  document
+    .getElementById("headerAvatar")
+    .innerText =
+      initials;
+}
+
+/* DATA */
+
+function getSubmissions(){
+  return getStorageArray(
+    submissionsKey
+  ).map(function(item){
+    return {
+      ...item,
+      status:
+        item.status ||
+        "pending"
+    };
+  });
+}
+
+function getApprovedPoems(){
+  return getStorageArray(
+    approvedPoemsKey
+  );
+}
+
+function getReviewHistory(){
+  return getStorageArray(
+    reviewHistoryKey
+  );
+}
+
+function findApprovedPoem(poet,title){
+  return getApprovedPoems().find(function(item){
+    return (
+      item.poet === poet &&
+      item.title === title &&
+      item.status === "approved"
+    );
+  });
+}
+
+function getSelectedSubmission(){
+  return getSubmissions().find(function(item){
+    return (
+      String(item.id) ===
+      String(selectedSubmissionId)
+    );
+  });
+}
+
+/* STATS */
+
+function renderStatistics(){
+  const submissions =
+    getSubmissions();
+
+  const pending =
+    submissions.filter(function(item){
+      return item.status === "pending";
+    }).length;
+
+  const approved =
+    submissions.filter(function(item){
+      return item.status === "approved";
+    }).length;
+
+  const returned =
+    submissions.filter(function(item){
+      return item.status === "returned";
+    }).length;
+
+  const rejected =
+    submissions.filter(function(item){
+      return item.status === "rejected";
+    }).length;
+
+  document
+    .getElementById("pendingStat")
+    .innerText =
+      toBn(pending);
+
+  document
+    .getElementById("approvedStat")
+    .innerText =
+      toBn(approved);
+
+  document
+    .getElementById("returnedStat")
+    .innerText =
+      toBn(returned);
+
+  document
+    .getElementById("rejectedStat")
+    .innerText =
+      toBn(rejected);
+
+  document
+    .getElementById("sidebarPendingCount")
+    .innerText =
+      toBn(pending);
+}
+
+/* FILTERING */
+
+function filteredSubmissions(){
+  let list =
+    getSubmissions().filter(function(item){
+      const statusMatches =
+        statusFilter === "all" ||
+        item.status === statusFilter;
+
+      const typeMatches =
+        typeFilter === "all" ||
+        item.submissionType === typeFilter;
+
+      const searchableText =
+        [
+          item.poet,
+          item.title,
+          item.contributorName,
+          item.content,
+          item.note
+        ]
+          .join(" ")
+          .toLocaleLowerCase("bn-BD");
+
+      const searchMatches =
+        !searchQuery ||
+        searchableText.includes(
+          searchQuery.toLocaleLowerCase("bn-BD")
+        );
+
+      return (
+        statusMatches &&
+        typeMatches &&
+        searchMatches
+      );
+    });
+
+  list.sort(function(a,b){
+    const aTime =
+      new Date(a.createdAt || 0).getTime();
+
+    const bTime =
+      new Date(b.createdAt || 0).getTime();
+
+    return sortFilter === "oldest"
+      ? aTime - bTime
+      : bTime - aTime;
+  });
+
+  return list;
+}
+
+/* LIST */
+
+function renderSubmissionList(){
+  const container =
+    document.getElementById(
+      "submissionList"
+    );
+
+  const loadMoreButton =
+    document.getElementById(
+      "loadMoreButton"
+    );
+
+  const list =
+    filteredSubmissions();
+
+  const visible =
+    list.slice(0,visibleCount);
+
+  container.innerHTML =
+    "";
+
+  document
+    .getElementById("resultCount")
+    .innerText =
+      toBn(list.length) +
+      "টি জমা";
+
+  if(!visible.length){
+    container.innerHTML = `
+      <div class="empty-list">
+
+        <span>✓</span>
+
+        <h3>এই ফিল্টারে কোনো জমা নেই</h3>
+
+        <p>
+          অন্য অবস্থা নির্বাচন করুন অথবা নতুন জমা আসা পর্যন্ত অপেক্ষা করুন।
+        </p>
+
+      </div>
+    `;
+
+    loadMoreButton.hidden =
+      true;
+
+    selectedSubmissionId =
+      null;
+
+    renderSelectedSubmission();
+
+    return;
+  }
+
+  visible.forEach(function(item){
+    const button =
+      document.createElement("button");
+
+    button.type =
+      "button";
+
+    button.className =
+      "submission-item";
+
+    if(
+      String(item.id) ===
+      String(selectedSubmissionId)
+    ){
+      button.classList.add(
+        "active"
+      );
+    }
+
+    button.innerHTML = `
+      <div class="submission-top">
+
+        <div class="submission-title">
+
+          <h3>
+            ${escapeHtml(item.title)}
+          </h3>
+
+          <p>
+            ${escapeHtml(item.poet)}
+          </p>
+
+        </div>
+
+        <span
+          class="status-badge ${escapeHtml(item.status)}"
+        >
+          ${escapeHtml(statusLabel(item.status))}
+        </span>
+
+      </div>
+
+      <div class="submission-meta">
+
+        <span class="meta-chip">
+          ${escapeHtml(typeLabel(item.submissionType))}
+        </span>
+
+        <span class="meta-chip">
+          ${escapeHtml(item.contributorName || "অজানা")}
+        </span>
+
+        <span class="meta-chip">
+          ${escapeHtml(formatDateTime(item.createdAt))}
+        </span>
+
+      </div>
+
+      <div class="submission-preview">
+        ${escapeHtml(item.content || "কোনো পাঠ পাওয়া যায়নি")}
+      </div>
+    `;
+
+    button.addEventListener(
+      "click",
+      function(){
+        selectedSubmissionId =
+          item.id;
+
+        renderSubmissionList();
+        renderSelectedSubmission();
+      }
+    );
+
+    container.appendChild(
+      button
+    );
+  });
+
+  loadMoreButton.hidden =
+    visibleCount >= list.length;
+
+  const selectedStillExists =
+    list.some(function(item){
+      return (
+        String(item.id) ===
+        String(selectedSubmissionId)
+      );
+    });
+
+  if(
+    !selectedStillExists &&
+    list.length
+  ){
+    selectedSubmissionId =
+      list[0].id;
+
+    renderSubmissionList();
+    renderSelectedSubmission();
+  }
+}
+
+/* DETAIL */
+
+function renderSelectedSubmission(){
+  const placeholder =
+    document.getElementById(
+      "detailPlaceholder"
+    );
+
+  const detailContent =
+    document.getElementById(
+      "detailContent"
+    );
+
+  const submission =
+    getSelectedSubmission();
+
+  if(!submission){
+    placeholder.hidden =
+      false;
+
+    detailContent.classList.remove(
+      "show"
+    );
+
+    return;
+  }
+
+  placeholder.hidden =
+    true;
+
+  detailContent.classList.add(
+    "show"
+  );
+
+  const approved =
+    findApprovedPoem(
+      submission.poet,
+      submission.title
+    );
+
+  document
+    .getElementById("detailTitle")
+    .innerText =
+      submission.title;
+
+  document
+    .getElementById("detailPoet")
+    .innerText =
+      submission.poet;
+
+  const detailStatus =
+    document.getElementById(
+      "detailStatus"
+    );
+
+  detailStatus.className =
+    "status-badge " +
+    submission.status;
+
+  detailStatus.innerText =
+    statusLabel(
+      submission.status
+    );
+
+  document
+    .getElementById("detailSubmissionType")
+    .innerText =
+      typeLabel(
+        submission.submissionType
+      );
+
+  document
+    .getElementById("detailCreatedAt")
+    .innerText =
+      formatDateTime(
+        submission.createdAt
+      );
+
+  document
+    .getElementById("detailSubmissionId")
+    .innerText =
+      "জমা #" +
+      toBn(submission.id);
+
+  document
+    .getElementById("contributorAvatar")
+    .innerText =
+      getInitials(
+        submission.contributorName ||
+        "অবদানকারী"
+      );
+
+  document
+    .getElementById("contributorName")
+    .innerText =
+      submission.contributorName ||
+      "অজানা অবদানকারী";
+
+  document
+    .getElementById("contributorMeta")
+    .innerText =
+      "জমা দিয়েছেন " +
+      formatDateTime(
+        submission.createdAt
+      );
+
+  document
+    .getElementById("contributorRole")
+    .innerText =
+      roleLabel(
+        submission.contributorRole
+      );
+
+  const currentApprovedText =
+    document.getElementById(
+      "currentApprovedText"
+    );
+
+  if(
+    approved &&
+    approved.content
+  ){
+    currentApprovedText.classList.remove(
+      "empty"
+    );
+
+    currentApprovedText.innerText =
+      approved.content;
+
+    document
+      .getElementById("currentVersionLabel")
+      .innerText =
+        approved.versionLabel ||
+        "অনুমোদিত পাঠ";
+  }else{
+    currentApprovedText.classList.add(
+      "empty"
+    );
+
+    currentApprovedText.innerText =
+      "এই কবিতার কোনো অনুমোদিত পাঠ এখনো নেই।";
+
+    document
+      .getElementById("currentVersionLabel")
+      .innerText =
+        "কোনো পাঠ নেই";
+  }
+
+  document
+    .getElementById("proposedTextEditor")
+    .value =
+      submission.content ||
+      "";
+
+  document
+    .getElementById("reviewBookName")
+    .value =
+      submission.book ||
+      (
+        approved
+          ? approved.book || ""
+          : ""
+      );
+
+  document
+    .getElementById("reviewPublicationYear")
+    .value =
+      submission.publicationYear ||
+      (
+        approved
+          ? approved.publicationYear || ""
+          : ""
+      );
+
+  const contributorNote =
+    document.getElementById(
+      "contributorNote"
+    );
+
+  contributorNote.innerText =
+    submission.note
+      ? (
+        "অবদানকারীর ব্যাখ্যা:\n" +
+        submission.note
+      )
+      : "অবদানকারী কোনো অতিরিক্ত ব্যাখ্যা দেননি।";
+
+  const isPending =
+    submission.status === "pending";
+
+  document
+    .getElementById("approveButton")
+    .disabled =
+      !isPending;
+
+  document
+    .getElementById("returnButton")
+    .disabled =
+      !isPending;
+
+  document
+    .getElementById("rejectButton")
+    .disabled =
+      !isPending;
+
+  document
+    .getElementById("proposedTextEditor")
+    .readOnly =
+      !isPending;
+
+  document
+    .getElementById("reviewBookName")
+    .readOnly =
+      !isPending;
+
+  document
+    .getElementById("reviewPublicationYear")
+    .readOnly =
+      !isPending;
+}
+
+/* HISTORY */
+
+function renderHistory(){
+  const container =
+    document.getElementById(
+      "historyList"
+    );
+
+  const history =
+    getReviewHistory()
+      .slice()
+      .sort(function(a,b){
+        return (
+          new Date(b.createdAt || 0) -
+          new Date(a.createdAt || 0)
+        );
+      });
+
+  container.innerHTML =
+    "";
+
+  const visible =
+    historyExpanded
+      ? history.slice(0,20)
+      : history.slice(0,5);
+
+  if(!visible.length){
+    container.innerHTML = `
+      <div class="empty-list">
+        <span>◷</span>
+        <h3>এখনো কোনো যাচাই ইতিহাস নেই</h3>
+        <p>অনুমোদন, ফেরত বা বাতিলের পর সিদ্ধান্ত এখানে দেখা যাবে।</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  visible.forEach(function(item){
+    const article =
+      document.createElement("article");
+
+    article.className =
+      "history-item";
+
+    article.innerHTML = `
+      <div>
+
+        <h3>
+          ${escapeHtml(item.poet)}
+          —
+          ${escapeHtml(item.title)}
+        </h3>
+
+        <p>
+          ${escapeHtml(item.reviewerName)}
+          •
+          ${escapeHtml(formatDateTime(item.createdAt))}
+          ${
+            item.reason
+              ? " • " + escapeHtml(item.reason)
+              : ""
+          }
+        </p>
+
+      </div>
+
+      <span
+        class="history-action ${escapeHtml(item.action)}"
+      >
+        ${escapeHtml(statusLabel(item.action))}
+      </span>
+    `;
+
+    container.appendChild(
+      article
+    );
+  });
+}
+
+/* REVIEW ACTIONS */
+
+function addReviewHistory(
+  submission,
+  action,
+  reason
+){
+  const history =
+    getReviewHistory();
+
+  history.unshift({
+    id:
+      Date.now(),
+
+    submissionId:
+      submission.id,
+
+    poet:
+      submission.poet,
+
+    title:
+      submission.title,
+
+    contributorName:
+      submission.contributorName,
+
+    reviewerName:
+      currentUser.name ||
+      roleLabel(currentUser.role),
+
+    reviewerRole:
+      currentUser.role,
+
+    action:
+      action,
+
+    reason:
+      reason || "",
+
+    createdAt:
+      new Date().toISOString()
+  });
+
+  saveStorageArray(
+    reviewHistoryKey,
+    history.slice(0,1000)
+  );
+}
+
+function notifyContributor(
+  submission,
+  status,
+  message
+){
+  const notifications =
+    getStorageArray(
+      userNotificationsKey
+    );
+
+  notifications.unshift({
+    id:
+      Date.now(),
+
+    recipientName:
+      submission.contributorName,
+
+    recipientId:
+      submission.contributorId || "",
+
+    type:
+      "poem-review-result",
+
+    title:
+      submission.poet +
+      " — " +
+      submission.title,
+
+    message:
+      message,
+
+    status:
+      "unread",
+
+    reviewStatus:
+      status,
+
+    createdAt:
+      new Date().toISOString()
+  });
+
+  saveStorageArray(
+    userNotificationsKey,
+    notifications.slice(0,1000)
+  );
+}
+
+function updateSubmissionStatus(
+  id,
+  status,
+  reason
+){
+  const submissions =
+    getSubmissions();
+
+  const submission =
+    submissions.find(function(item){
+      return (
+        String(item.id) ===
+        String(id)
+      );
+    });
+
+  if(!submission){
+    return null;
+  }
+
+  submission.status =
+    status;
+
+  submission.reviewReason =
+    reason || "";
+
+  submission.reviewedBy =
+    currentUser.name ||
+    roleLabel(currentUser.role);
+
+  submission.reviewedRole =
+    currentUser.role;
+
+  submission.reviewedAt =
+    new Date().toISOString();
+
+  saveStorageArray(
+    submissionsKey,
+    submissions
+  );
+
+  return submission;
+}
+
+function approveSelectedSubmission(){
+  const submission =
+    getSelectedSubmission();
+
+  if(
+    !submission ||
+    submission.status !== "pending"
+  ){
+    return;
+  }
+
+  const editedContent =
+    document
+      .getElementById("proposedTextEditor")
+      .value
+      .trim();
+
+  if(!editedContent){
+    showToast(
+      "অনুমোদনের আগে কবিতার পাঠ লিখুন।"
+    );
+
+    return;
+  }
+
+  const book =
+    document
+      .getElementById("reviewBookName")
+      .value
+      .trim();
+
+  const publicationYear =
+    document
+      .getElementById("reviewPublicationYear")
+      .value
+      .trim();
+
+  const approvedPoems =
+    getApprovedPoems()
+      .filter(function(item){
+        return !(
+          item.poet === submission.poet &&
+          item.title === submission.title
+        );
+      });
+
+  const approvedAt =
+    new Date().toISOString();
+
+  approvedPoems.unshift({
+    id:
+      submission.id,
+
+    poet:
+      submission.poet,
+
+    title:
+      submission.title,
+
+    content:
+      editedContent,
+
+    book:
+      book,
+
+    publicationYear:
+      publicationYear,
+
+    note:
+      submission.note || "",
+
+    contributorName:
+      submission.contributorName,
+
+    approvedBy:
+      currentUser.name ||
+      roleLabel(currentUser.role),
+
+    approvedRole:
+      currentUser.role,
+
+    approvedAt:
+      approvedAt,
+
+    versionLabel:
+      submission.submissionType === "edit"
+        ? "অনুমোদিত সংশোধিত পাঠ"
+        : "অনুমোদিত পাঠ",
+
+    status:
+      "approved"
+  });
+
+  saveStorageArray(
+    approvedPoemsKey,
+    approvedPoems.slice(0,2000)
+  );
+
+  const updated =
+    updateSubmissionStatus(
+      submission.id,
+      "approved",
+      "প্রতিষ্ঠাতা অথবা অ্যাডমিন কর্তৃক অনুমোদিত।"
+    );
+
+  addReviewHistory(
+    updated,
+    "approved",
+    "অনুমোদন করে প্রকাশ করা হয়েছে।"
+  );
+
+  notifyContributor(
+    updated,
+    "approved",
+    "আপনার জমা দেওয়া কবিতার পাঠ যাচাই করে অনুমোদন ও প্রকাশ করা হয়েছে।"
+  );
+
+  removeAdminNotification(
+    submission.id
+  );
+
+  showToast(
+    "কবিতার পাঠ অনুমোদন করে প্রকাশ করা হয়েছে।"
+  );
+
+  refreshApplication();
+}
+
+function removeAdminNotification(
+  submissionId
+){
+  const notifications =
+    getStorageArray(
+      adminNotificationsKey
+    );
+
+  const updated =
+    notifications.map(function(item){
+      if(
+        String(item.id) ===
+        String(submissionId)
+      ){
+        return {
+          ...item,
+          status:"read"
+        };
+      }
+
+      return item;
+    });
+
+  saveStorageArray(
+    adminNotificationsKey,
+    updated
+  );
+}
+
+function processReturn(reason){
+  const submission =
+    getSelectedSubmission();
+
+  if(!submission){
+    return;
+  }
+
+  const updated =
+    updateSubmissionStatus(
+      submission.id,
+      "returned",
+      reason
+    );
+
+  addReviewHistory(
+    updated,
+    "returned",
+    reason
+  );
+
+  notifyContributor(
+    updated,
+    "returned",
+    "আপনার জমা সংশোধনের জন্য ফেরত দেওয়া হয়েছে। নির্দেশনা: " +
+    reason
+  );
+
+  removeAdminNotification(
+    submission.id
+  );
+
+  showToast(
+    "জমাটি সংশোধনের জন্য ফেরত দেওয়া হয়েছে।"
+  );
+
+  refreshApplication();
+}
+
+function processReject(reason){
+  const submission =
+    getSelectedSubmission();
+
+  if(!submission){
+    return;
+  }
+
+  const updated =
+    updateSubmissionStatus(
+      submission.id,
+      "rejected",
+      reason
+    );
+
+  addReviewHistory(
+    updated,
+    "rejected",
+    reason
+  );
+
+  notifyContributor(
+    updated,
+    "rejected",
+    "আপনার জমা যাচাই শেষে বাতিল করা হয়েছে। কারণ: " +
+    reason
+  );
+
+  removeAdminNotification(
+    submission.id
+  );
+
+  showToast(
+    "জমাটি বাতিল করা হয়েছে।"
+  );
+
+  refreshApplication();
+}
+
+/* ACTION MODAL */
+
+const actionModalBackdrop =
+  document.getElementById(
+    "actionModalBackdrop"
+  );
+
+function openActionModal(type){
+  const submission =
+    getSelectedSubmission();
+
+  if(
+    !submission ||
+    submission.status !== "pending"
+  ){
+    return;
+  }
+
+  pendingDecision =
+    type;
+
+  const isReturn =
+    type === "returned";
+
+  document
+    .getElementById("actionModalTitle")
+    .innerText =
+      isReturn
+        ? "সংশোধনের জন্য ফেরত দিন"
+        : "জমাটি বাতিল করুন";
+
+  document
+    .getElementById("actionModalSubtitle")
+    .innerText =
+      isReturn
+        ? "অবদানকারীকে কী সংশোধন করতে হবে তা লিখুন"
+        : "বাতিল করার স্পষ্ট কারণ লিখুন";
+
+  document
+    .getElementById("actionReason")
+    .value =
+      "";
+
+  const confirmButton =
+    document.getElementById(
+      "actionConfirmButton"
+    );
+
+  confirmButton.className =
+    isReturn
+      ? "modal-button primary"
+      : "modal-button danger";
+
+  confirmButton.innerText =
+    isReturn
+      ? "ফেরত দিন"
+      : "বাতিল করুন";
+
+  actionModalBackdrop.classList.add(
+    "show"
+  );
+
+  document.body.classList.add(
+    "locked"
+  );
+
+  setTimeout(function(){
+    document
+      .getElementById("actionReason")
+      .focus();
+  },120);
+}
+
+function closeActionModal(){
+  actionModalBackdrop.classList.remove(
+    "show"
+  );
+
+  document.body.classList.remove(
+    "locked"
+  );
+
+  pendingDecision =
+    "";
+}
+
+document
+  .getElementById("actionForm")
+  .addEventListener("submit",function(event){
+    event.preventDefault();
+
+    const reason =
+      document
+        .getElementById("actionReason")
+        .value
+        .trim();
+
+    if(!reason){
+      showToast(
+        "সিদ্ধান্তের কারণ অথবা নির্দেশনা লিখুন।"
+      );
+
+      return;
+    }
+
+    closeActionModal();
+
+    if(pendingDecision === "returned"){
+      processReturn(reason);
+    }else{
+      processReject(reason);
+    }
+  });
+
+document
+  .getElementById("actionModalClose")
+  .addEventListener(
+    "click",
+    closeActionModal
+  );
+
+document
+  .getElementById("actionCancelButton")
+  .addEventListener(
+    "click",
+    closeActionModal
+  );
+
+actionModalBackdrop.addEventListener(
+  "click",
+  function(event){
+    if(event.target === actionModalBackdrop){
+      closeActionModal();
+    }
+  }
+);
+
+/* PREVIEW */
+
+const previewModalBackdrop =
+  document.getElementById(
+    "previewModalBackdrop"
+  );
+
+function openPreview(){
+  const submission =
+    getSelectedSubmission();
+
+  if(!submission){
+    return;
+  }
+
+  const content =
+    document
+      .getElementById("proposedTextEditor")
+      .value
+      .trim();
+
+  if(!content){
+    showToast(
+      "পূর্বরূপ দেখার জন্য কবিতার পাঠ প্রয়োজন।"
+    );
+
+    return;
+  }
+
+  document
+    .getElementById("previewPoemTitle")
+    .innerText =
+      submission.title;
+
+  document
+    .getElementById("previewPoetName")
+    .innerText =
+      submission.poet;
+
+  document
+    .getElementById("previewPoemText")
+    .innerText =
+      content;
+
+  previewModalBackdrop.classList.add(
+    "show"
+  );
+
+  document.body.classList.add(
+    "locked"
+  );
+}
+
+function closePreview(){
+  previewModalBackdrop.classList.remove(
+    "show"
+  );
+
+  document.body.classList.remove(
+    "locked"
+  );
+}
+
+document
+  .getElementById("previewModalClose")
+  .addEventListener(
+    "click",
+    closePreview
+  );
+
+previewModalBackdrop.addEventListener(
+  "click",
+  function(event){
+    if(event.target === previewModalBackdrop){
+      closePreview();
+    }
+  }
+);
+
+/* REFRESH */
+
+function refreshApplication(){
+  renderStatistics();
+  renderSubmissionList();
+  renderSelectedSubmission();
+  renderHistory();
+}
+
+document
+  .getElementById("approveButton")
+  .addEventListener(
+    "click",
+    approveSelectedSubmission
+  );
+
+document
+  .getElementById("returnButton")
+  .addEventListener("click",function(){
+    openActionModal(
+      "returned"
+    );
+  });
+
+document
+  .getElementById("rejectButton")
+  .addEventListener("click",function(){
+    openActionModal(
+      "rejected"
+    );
+  });
+
+document
+  .getElementById("previewButton")
+  .addEventListener(
+    "click",
+    openPreview
+  );
+
+document
+  .getElementById("refreshButton")
+  .addEventListener("click",function(){
+    refreshApplication();
+
+    showToast(
+      "যাচাই তালিকা হালনাগাদ হয়েছে।"
+    );
+  });
+
+document
+  .getElementById("loadMoreButton")
+  .addEventListener("click",function(){
+    visibleCount +=
+      20;
+
+    renderSubmissionList();
+  });
+
+/* FILTER EVENTS */
+
+document
+  .getElementById("reviewSearchInput")
+  .addEventListener("input",function(event){
+    searchQuery =
+      event.target.value.trim();
+
+    visibleCount =
+      20;
+
+    renderSubmissionList();
+  });
+
+document
+  .getElementById("statusFilter")
+  .addEventListener("change",function(event){
+    statusFilter =
+      event.target.value;
+
+    visibleCount =
+      20;
+
+    selectedSubmissionId =
+      null;
+
+    renderSubmissionList();
+  });
+
+document
+  .getElementById("typeFilter")
+  .addEventListener("change",function(event){
+    typeFilter =
+      event.target.value;
+
+    visibleCount =
+      20;
+
+    selectedSubmissionId =
+      null;
+
+    renderSubmissionList();
+  });
+
+document
+  .getElementById("sortFilter")
+  .addEventListener("change",function(event){
+    sortFilter =
+      event.target.value;
+
+    visibleCount =
+      20;
+
+    renderSubmissionList();
+  });
+
+document
+  .getElementById("resetFilterButton")
+  .addEventListener("click",function(){
+    searchQuery =
+      "";
+
+    statusFilter =
+      "pending";
+
+    typeFilter =
+      "all";
+
+    sortFilter =
+      "newest";
+
+    visibleCount =
+      20;
+
+    selectedSubmissionId =
+      null;
+
+    document
+      .getElementById("reviewSearchInput")
+      .value =
+        "";
+
+    document
+      .getElementById("statusFilter")
+      .value =
+        "pending";
+
+    document
+      .getElementById("typeFilter")
+      .value =
+        "all";
+
+    document
+      .getElementById("sortFilter")
+      .value =
+        "newest";
+
+    renderSubmissionList();
+  });
+
+document
+  .getElementById("clearHistoryViewButton")
+  .addEventListener("click",function(){
+    historyExpanded =
+      !historyExpanded;
+
+    document
+      .getElementById("clearHistoryViewButton")
+      .innerText =
+        historyExpanded
+          ? "তালিকা সংকুচিত করুন"
+          : "সম্পূর্ণ ইতিহাস দেখুন";
+
+    renderHistory();
+  });
+
+/* SITE SEARCH */
+
+const siteSearchInput =
+  document.getElementById(
+    "siteSearchInput"
+  );
+
+function performSearch(){
+  const query =
+    siteSearchInput.value.trim();
+
+  if(!query){
+    showToast(
+      "কী খুঁজতে চান, লিখুন।"
+    );
+
+    return;
+  }
+
+  document
+    .getElementById("reviewSearchInput")
+    .value =
+      query;
+
+  searchQuery =
+    query;
+
+  visibleCount =
+    20;
+
+  renderSubmissionList();
+
+  document
+    .getElementById("reviewSearchInput")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+}
+
+document
+  .getElementById("siteSearchButton")
+  .addEventListener(
+    "click",
+    performSearch
+  );
+
+siteSearchInput.addEventListener(
+  "keydown",
+  function(event){
+    if(event.key === "Enter"){
+      performSearch();
+    }
+  }
+);
+
+/* DATE */
+
+function isLeapYear(year){
+  return (
+    year % 400 === 0 ||
+    (
+      year % 4 === 0 &&
+      year % 100 !== 0
+    )
+  );
+}
+
+function getBanglaDate(date){
+  const year =
+    date.getFullYear();
+
+  const currentStart =
+    new Date(year,3,14);
+
+  let startYear;
+  let banglaYear;
+
+  if(date >= currentStart){
+    startYear =
+      year;
+
+    banglaYear =
+      year - 593;
+  }else{
+    startYear =
+      year - 1;
+
+    banglaYear =
+      year - 594;
+  }
+
+  const start =
+    new Date(startYear,3,14);
+
+  const current =
+    new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+
+  let elapsed =
+    Math.floor(
+      (current - start) / 86400000
+    );
+
+  const months = [
+    "বৈশাখ",
+    "জ্যৈষ্ঠ",
+    "আষাঢ়",
+    "শ্রাবণ",
+    "ভাদ্র",
+    "আশ্বিন",
+    "কার্তিক",
+    "অগ্রহায়ণ",
+    "পৌষ",
+    "মাঘ",
+    "ফাল্গুন",
+    "চৈত্র"
+  ];
+
+  const lengths = [
+    31,31,31,31,31,31,
+    30,30,30,30,
+    isLeapYear(startYear + 1) ? 30 : 29,
+    30
+  ];
+
+  let monthIndex =
+    0;
+
+  while(
+    monthIndex < 11 &&
+    elapsed >= lengths[monthIndex]
+  ){
+    elapsed -=
+      lengths[monthIndex];
+
+    monthIndex++;
+  }
+
+  return (
+    toBn(elapsed + 1) +
+    " " +
+    months[monthIndex] +
+    " " +
+    toBn(banglaYear) +
+    " বঙ্গাব্দ"
+  );
+}
+
+function getGregorianDate(date){
+  return (
+    new Intl.DateTimeFormat(
+      "bn-BD",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(date) +
+    " খ্রিস্টাব্দ"
+  );
+}
+
+function getHijriDate(date){
+  const locales = [
+    "bn-BD-u-ca-islamic-umalqura-nu-beng",
+    "bn-BD-u-ca-islamic-nu-beng",
+    "ar-SA-u-ca-islamic-umalqura"
+  ];
+
+  let formatted =
+    "";
+
+  for(let index = 0; index < locales.length; index++){
+    try{
+      formatted =
+        new Intl.DateTimeFormat(
+          locales[index],
+          {
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+          }
+        ).format(date);
+
+      if(formatted){
+        break;
+      }
+    }catch(error){}
+  }
+
+  formatted =
+    String(formatted)
+      .replace(/AH/gi,"")
+      .replace(/هـ/gi,"")
+      .replace(/হিজরি/gi,"")
+      .replace(/হিজরী/gi,"")
+      .replace(/،/g," ")
+      .replace(/,/g," ")
+      .replace(/\s+/g," ")
+      .trim();
+
+  return formatted
+    ? formatted + " হিজরি"
+    : "হিজরি তারিখ পাওয়া যায়নি";
+}
+
+function renderDates(){
+  const today =
+    new Date();
+
+  const bangla =
+    getBanglaDate(today);
+
+  const hijri =
+    getHijriDate(today);
+
+  const gregorian =
+    getGregorianDate(today);
+
+  document
+    .querySelectorAll(".bangla-date")
+    .forEach(function(element){
+      element.innerText =
+        bangla;
+    });
+
+  document
+    .querySelectorAll(".hijri-date")
+    .forEach(function(element){
+      element.innerText =
+        hijri;
+    });
+
+  document
+    .querySelectorAll(".gregorian-date")
+    .forEach(function(element){
+      element.innerText =
+        gregorian;
+    });
+}
+
+/* DRAWER */
+
+const mobileDrawer =
+  document.getElementById(
+    "mobileDrawer"
+  );
+
+const drawerBackdrop =
+  document.getElementById(
+    "drawerBackdrop"
+  );
+
+if(hasAccess){
+  document
+    .getElementById("drawerSidebar")
+    .innerHTML =
+      document
+        .getElementById("desktopSidebar")
+        .innerHTML;
+}
+
+function openDrawer(){
+  mobileDrawer.classList.add(
+    "open"
+  );
+
+  drawerBackdrop.classList.add(
+    "show"
+  );
+
+  document.body.classList.add(
+    "locked"
+  );
+}
+
+function closeDrawer(){
+  mobileDrawer.classList.remove(
+    "open"
+  );
+
+  drawerBackdrop.classList.remove(
+    "show"
+  );
+
+  document.body.classList.remove(
+    "locked"
+  );
+}
+
+document
+  .getElementById("openDrawerButton")
+  .addEventListener(
+    "click",
+    openDrawer
+  );
+
+document
+  .getElementById("closeDrawerButton")
+  .addEventListener(
+    "click",
+    closeDrawer
+  );
+
+drawerBackdrop.addEventListener(
+  "click",
+  closeDrawer
+);
+
+/* THEME */
+
+const themeIcon =
+  document.getElementById(
+    "themeIcon"
+  );
+
+function updateThemeIcon(){
+  themeIcon.innerText =
+    root.getAttribute("data-theme") === "dark"
+      ? "☀️"
+      : "🌙";
+}
+
+document
+  .getElementById("themeButton")
+  .addEventListener("click",function(){
+    const nextTheme =
+      root.getAttribute("data-theme") === "dark"
+        ? "light"
+        : "dark";
+
+    root.setAttribute(
+      "data-theme",
+      nextTheme
+    );
+
+    localStorage.setItem(
+      "bhubondangaTheme",
+      nextTheme
+    );
+
+    updateThemeIcon();
+  });
+
+/* TOP */
+
+const toTopButton =
+  document.getElementById(
+    "toTopButton"
+  );
+
+window.addEventListener("scroll",function(){
+  toTopButton.classList.toggle(
+    "show",
+    window.scrollY > 450
+  );
+});
+
+toTopButton.addEventListener("click",function(){
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+});
+
+/* INITIAL */
+
+renderDates();
+updateThemeIcon();
+
+document
+  .getElementById("footerYear")
+  .innerText =
+    toBn(
+      new Date().getFullYear()
+    );
+
+if(hasAccess){
+  renderAdminProfile();
+  renderStatistics();
+
+  const firstPending =
+    filteredSubmissions()[0];
+
+  if(firstPending){
+    selectedSubmissionId =
+      firstPending.id;
+  }
+
+  renderSubmissionList();
+  renderSelectedSubmission();
+  renderHistory();
+}
+
+document.addEventListener("keydown",function(event){
+  if(event.key === "Escape"){
+    closeDrawer();
+    closeActionModal();
+    closePreview();
+  }
+
+  if(
+    hasAccess &&
+    (
+      event.ctrlKey ||
+      event.metaKey
+    ) &&
+    event.key.toLowerCase() === "k"
+  ){
+    event.preventDefault();
+
+    document
+      .getElementById("reviewSearchInput")
+      .focus();
+  }
+});
+</script>
+
+</body>
+</html>
