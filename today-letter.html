@@ -8,50 +8,17 @@
 
 <meta
   name="description"
-  content="অন্তত নিজেকে একটি চিঠি লিখুন, মনের মাঝে জমে থাকা ব্যথা গুলোকে চিঠির মাধ্যমে প্রকাশ করুন, যে কথাটি কাউকে বলা হয়নি, যে ক্ষমাটি নিজের কাছে চাওয়া হয়নি, যে স্বপ্নটি সময়ের ভিড়ে হারিয়ে গেছে, তার উদ্দেশে আজ নিজেকে একটি চিঠি লিখুন। এবং অন্যদের চিঠি পড়ুন।"
+  content="অন্তত নিজেকে একটি চিঠি লিখুন। যে কথাটি বলা হয়নি, যে ক্ষমাটি নিজের কাছে চাওয়া হয়নি এবং যে অনুভূতিটি নীরবে জমে আছে—সেগুলো লিখে ফেলুন অনুভূতির ঠিকানায়।"
 >
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
-
-/*
-  লাইসেন্স অনুযায়ী অনুমোদিত ফন্ট ফাইলগুলো fonts ফোল্ডারে রাখুন।
-
-  fonts/Kobiguru.ttf
-  fonts/Lipighor-Classic.ttf
-  fonts/Lipighor-Vintage.ttf
-  fonts/FontBD-Manuscript.ttf
-*/
+@import url('https://fonts.googleapis.com/css2?family=Atma:wght@400;500;600&family=Galada&family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 
 @font-face{
   font-family:'Kobiguru';
   src:
     local('Kobiguru'),
     url('fonts/Kobiguru.ttf') format('truetype');
-  font-display:swap;
-}
-
-@font-face{
-  font-family:'Lipighor Classic';
-  src:
-    local('Lipighor Classic'),
-    url('fonts/Lipighor-Classic.ttf') format('truetype');
-  font-display:swap;
-}
-
-@font-face{
-  font-family:'Lipighor Vintage';
-  src:
-    local('Lipighor Vintage'),
-    url('fonts/Lipighor-Vintage.ttf') format('truetype');
-  font-display:swap;
-}
-
-@font-face{
-  font-family:'FontBD Manuscript';
-  src:
-    local('FontBD Manuscript'),
-    url('fonts/FontBD-Manuscript.ttf') format('truetype');
   font-display:swap;
 }
 
@@ -98,6 +65,10 @@ html{
 
   --red:#c65e76;
   --red-soft:#fdf0f3;
+
+  --letter-blue:#edf4fc;
+  --letter-purple:#f2effa;
+  --letter-border:rgba(108,105,164,.22);
 
   --header-bg:rgba(253,254,255,.97);
 
@@ -147,6 +118,10 @@ html[data-theme="dark"]{
 
   --red:#ff91a8;
   --red-soft:rgba(214,95,122,.13);
+
+  --letter-blue:rgba(77,112,166,.18);
+  --letter-purple:rgba(117,94,163,.18);
+  --letter-border:rgba(171,162,224,.25);
 
   --header-bg:rgba(6,16,30,.97);
 
@@ -351,6 +326,9 @@ html[data-theme="dark"] .brand-copy h1{
   background:var(--surface);
   color:var(--text);
   font-size:16px;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
 }
 
 .header-action:hover{
@@ -702,131 +680,159 @@ html[data-theme="dark"] .founder-contact{
   line-height:1.7;
 }
 
-/* COMPOSER */
+/* MAIN */
 
 .main-content{
   min-width:0;
 }
 
-.composer{
-  padding:16px;
-}
+/* LETTER INTRODUCTION */
 
-.letter-inspiration{
+.letter-introduction{
   position:relative;
   overflow:hidden;
-  margin-bottom:16px;
-  padding:24px 24px 22px;
-  border:1px solid rgba(121,120,176,.20);
-  border-radius:22px;
+  padding:13px;
   background:
-    radial-gradient(circle at top left,rgba(140,170,224,.22),transparent 38%),
-    radial-gradient(circle at bottom right,rgba(173,154,214,.20),transparent 40%),
-    linear-gradient(135deg,#f8fbff 0%,#f5f2fb 48%,#f2f7ff 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.55),
-    0 16px 36px rgba(69,88,128,.08);
+    radial-gradient(
+      circle at 92% 10%,
+      rgba(255,255,255,.85),
+      transparent 33%
+    ),
+    linear-gradient(
+      135deg,
+      var(--letter-blue),
+      var(--letter-purple)
+    );
 }
 
-html[data-theme="dark"] .letter-inspiration{
-  background:
-    radial-gradient(circle at top left,rgba(89,136,201,.24),transparent 36%),
-    radial-gradient(circle at bottom right,rgba(151,123,200,.18),transparent 38%),
-    linear-gradient(135deg,#132338 0%,#1a2238 48%,#17273d 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.04),
-    0 18px 38px rgba(0,0,0,.24);
-}
-
-.letter-inspiration::before{
+.letter-introduction::before{
   content:"✉";
   position:absolute;
-  right:26px;
-  top:18px;
-  color:rgba(112,118,172,.12);
-  font-size:108px;
+  right:25px;
+  top:17px;
+  color:rgba(97,106,160,.09);
+  font-size:112px;
   line-height:1;
-  transform:rotate(-8deg);
+  transform:rotate(-7deg);
   pointer-events:none;
 }
 
-html[data-theme="dark"] .letter-inspiration::before{
-  color:rgba(199,197,241,.10);
-}
-
-.letter-inspiration::after{
-  content:"";
-  position:absolute;
-  right:34px;
-  top:22px;
-  width:62px;
-  height:74px;
-  border:2px dashed rgba(129,120,168,.16);
-  border-radius:8px;
-  transform:rotate(6deg);
-  pointer-events:none;
-}
-
-.inspiration-chip{
+.letter-paper{
   position:relative;
   z-index:1;
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  min-height:34px;
-  padding:6px 13px;
-  border:1px solid rgba(125,130,190,.18);
-  border-radius:999px;
-  background:rgba(255,255,255,.52);
-  color:var(--purple-dark);
-  font-size:10.5px;
-  font-weight:700;
-  backdrop-filter:blur(10px);
-}
-
-html[data-theme="dark"] .inspiration-chip{
-  background:rgba(255,255,255,.06);
-  color:#e3dbfb;
-}
-
-.inspiration-copy{
-  position:relative;
-  z-index:1;
-  max-width:720px;
-  margin-top:12px;
+  min-height:225px;
+  padding:17px 20px 15px;
+  border:1px solid var(--letter-border);
+  border-radius:14px;
   display:flex;
   flex-direction:column;
-  gap:9px;
-  color:#4f567c;
-  font-family:
-    'Kobiguru',
-    'Segoe Print',
-    'Comic Sans MS',
-    cursive;
-  font-size:clamp(19px,2.15vw,31px);
-  line-height:1.58;
-  letter-spacing:.01em;
+  justify-content:space-between;
+  background:
+    radial-gradient(
+      circle at 94% 12%,
+      rgba(131,120,170,.06),
+      transparent 27%
+    ),
+    rgba(255,255,255,.82);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    0 8px 22px rgba(66,79,127,.06);
 }
 
-html[data-theme="dark"] .inspiration-copy{
-  color:#dfe6f8;
+html[data-theme="dark"] .letter-paper{
+  background:
+    radial-gradient(
+      circle at 94% 12%,
+      rgba(192,182,233,.08),
+      transparent 27%
+    ),
+    rgba(13,27,45,.90);
 }
 
-.inspiration-greeting{
-  color:#4b5b8f;
-  font-size:clamp(20px,2.25vw,33px);
+.letter-paper::after{
+  content:"";
+  position:absolute;
+  right:24px;
+  top:24px;
+  width:75px;
+  height:52px;
+  border:1px solid rgba(108,105,164,.16);
+  border-radius:5px;
+  opacity:.62;
+  background:
+    linear-gradient(
+      145deg,
+      transparent 48%,
+      rgba(108,105,164,.13) 49%,
+      rgba(108,105,164,.13) 51%,
+      transparent 52%
+    ),
+    linear-gradient(
+      215deg,
+      transparent 48%,
+      rgba(108,105,164,.13) 49%,
+      rgba(108,105,164,.13) 51%,
+      transparent 52%
+    ),
+    rgba(255,255,255,.30);
+  transform:rotate(5deg);
+  pointer-events:none;
 }
 
-html[data-theme="dark"] .inspiration-greeting{
-  color:#d8d6f8;
+.letter-salutation{
+  position:relative;
+  z-index:2;
+  color:var(--purple-dark);
+  font-family:'Kobiguru','Galada','Noto Serif Bengali',serif;
+  font-size:20px;
+  font-weight:400;
+  line-height:1.4;
 }
 
-.inspiration-emphasis{
-  color:#2f4770;
+.letter-message{
+  position:relative;
+  z-index:2;
+  max-width:680px;
+  margin-top:8px;
+  padding-right:84px;
+  color:var(--text-soft);
+  font-family:'Kobiguru','Galada','Noto Serif Bengali',serif;
+  font-size:17px;
+  font-weight:400;
+  line-height:1.85;
+  letter-spacing:.05px;
 }
 
-html[data-theme="dark"] .inspiration-emphasis{
-  color:#f2f5fb;
+.letter-message strong{
+  color:var(--text);
+  font-weight:500;
+}
+
+.letter-signoff{
+  position:relative;
+  z-index:2;
+  margin-top:13px;
+  align-self:flex-end;
+  color:var(--text-soft);
+  font-family:'Kobiguru','Galada','Noto Serif Bengali',serif;
+  font-size:14px;
+  font-weight:400;
+  line-height:1.45;
+  text-align:right;
+}
+
+.letter-signoff strong{
+  display:block;
+  color:var(--purple-dark);
+  font-size:15px;
+  font-weight:500;
+}
+
+/* COMPOSER */
+
+.composer{
+  margin-top:12px;
+  padding:16px;
 }
 
 .composer-heading{
@@ -853,16 +859,114 @@ html[data-theme="dark"] .inspiration-emphasis{
 }
 
 .simple-writing-box{
+  position:relative;
   margin-top:12px;
   padding:12px;
+  overflow:hidden;
   border:1px solid var(--border);
   border-radius:13px;
   background:var(--surface-soft);
+  transition:
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.simple-writing-box::after{
+  content:"✉";
+  position:absolute;
+  right:17px;
+  bottom:11px;
+  color:rgba(107,111,163,.045);
+  font-size:96px;
+  line-height:1;
+  pointer-events:none;
+}
+
+.simple-writing-box.envelope-plain{
+  background:var(--surface-soft);
+}
+
+.simple-writing-box.envelope-ivory{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(252,247,235,.86),
+      rgba(255,252,246,.94)
+    );
+}
+
+.simple-writing-box.envelope-airmail{
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(92,132,177,.055) 0 8px,
+      rgba(255,255,255,.38) 8px 16px,
+      rgba(185,88,104,.045) 16px 24px
+    ),
+    var(--surface-soft);
+}
+
+.simple-writing-box.envelope-lavender{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(242,239,251,.93),
+      rgba(249,247,253,.96)
+    );
+}
+
+.simple-writing-box.envelope-mint{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(237,248,243,.93),
+      rgba(248,252,250,.96)
+    );
+}
+
+html[data-theme="dark"] .simple-writing-box.envelope-ivory{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(55,45,31,.65),
+      rgba(31,31,40,.92)
+    );
+}
+
+html[data-theme="dark"] .simple-writing-box.envelope-airmail{
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(90,139,191,.09) 0 8px,
+      rgba(19,35,54,.50) 8px 16px,
+      rgba(187,89,108,.07) 16px 24px
+    ),
+    var(--surface-soft);
+}
+
+html[data-theme="dark"] .simple-writing-box.envelope-lavender{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(58,48,79,.72),
+      rgba(24,31,49,.96)
+    );
+}
+
+html[data-theme="dark"] .simple-writing-box.envelope-mint{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(30,64,57,.68),
+      rgba(22,38,51,.95)
+    );
 }
 
 .composer-top{
+  position:relative;
+  z-index:2;
   display:grid;
-  grid-template-columns:170px minmax(0,1fr);
+  grid-template-columns:160px minmax(0,1fr);
   gap:8px;
 }
 
@@ -883,108 +987,87 @@ html[data-theme="dark"] .inspiration-emphasis{
   box-shadow:0 0 0 3px var(--purple-soft);
 }
 
-textarea.form-control{
-  min-height:200px;
-  resize:vertical;
-  line-height:2;
-}
-
 .recipient-field{
-  display:grid;
-  gap:5px;
-}
-
-.recipient-label{
-  color:var(--text-soft);
-  font-size:9.7px;
-  font-weight:700;
-}
-
-.recipient-builder{
+  min-height:41px;
+  border:1px solid var(--border);
+  border-radius:9px;
   display:grid;
   grid-template-columns:auto minmax(0,1fr);
   align-items:center;
-  gap:0;
-  min-height:41px;
-  border:1px solid var(--border);
-  border-radius:11px;
   overflow:hidden;
   background:var(--surface);
 }
 
-.recipient-builder:focus-within{
+.recipient-field:focus-within{
   border-color:var(--purple);
   box-shadow:0 0 0 3px var(--purple-soft);
 }
 
 .recipient-prefix{
-  min-height:41px;
-  padding:0 13px;
+  height:100%;
+  padding:0 10px;
   display:flex;
   align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,var(--blue-soft),var(--purple-soft));
+  border-right:1px solid var(--border);
+  background:var(--purple-soft);
   color:var(--purple-dark);
-  font-size:11.5px;
-  font-weight:700;
+  font-family:'Kobiguru','Galada','Noto Serif Bengali',serif;
+  font-size:14px;
+  font-weight:500;
   white-space:nowrap;
 }
 
 .recipient-input{
-  min-height:41px;
-  padding:8px 11px;
+  width:100%;
+  min-height:39px;
+  padding:8px 10px;
   border:none;
-  border-radius:0;
-  box-shadow:none!important;
+  outline:none;
   background:transparent;
-}
-
-.recipient-preview{
-  color:var(--muted);
-  font-size:8.9px;
-  line-height:1.6;
-}
-
-.recipient-preview strong{
-  color:var(--purple-dark);
-  font-weight:700;
+  color:var(--text);
+  font-size:11.5px;
 }
 
 .letter-style-panel{
-  margin-top:10px;
+  position:relative;
+  z-index:2;
+  margin-top:9px;
   padding:11px;
   border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--surface);
+  border-radius:11px;
+  background:rgba(255,255,255,.72);
 }
 
-.letter-style-title{
+html[data-theme="dark"] .letter-style-panel{
+  background:rgba(11,27,45,.72);
+}
+
+.style-panel-heading{
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   justify-content:space-between;
   gap:10px;
 }
 
-.letter-style-title strong{
+.style-panel-heading strong{
   color:var(--text);
-  font-size:11.5px;
+  font-size:11px;
   font-weight:600;
 }
 
-.letter-style-title span{
+.style-panel-heading span{
   color:var(--muted);
   font-size:8.5px;
 }
 
-.letter-style-grid{
+.style-grid{
   margin-top:9px;
   display:grid;
-  grid-template-columns:185px minmax(0,1fr);
-  gap:10px;
-  align-items:start;
+  grid-template-columns:210px minmax(0,1fr);
+  gap:12px;
 }
 
-.style-control-label{
+.style-label{
   display:block;
   margin-bottom:5px;
   color:var(--text-soft);
@@ -994,14 +1077,14 @@ textarea.form-control{
 
 .font-select{
   width:100%;
-  height:40px;
-  padding:5px 9px;
+  min-height:39px;
+  padding:7px 9px;
   border:1px solid var(--border);
   border-radius:9px;
   outline:none;
-  background:var(--surface-soft);
+  background:var(--surface);
   color:var(--text);
-  font-size:10.5px;
+  font-size:10px;
 }
 
 .font-select:focus{
@@ -1011,9 +1094,10 @@ textarea.form-control{
 
 .envelope-options{
   display:flex;
+  align-items:center;
   gap:7px;
   overflow-x:auto;
-  padding-bottom:3px;
+  padding-bottom:2px;
   scrollbar-width:none;
 }
 
@@ -1022,303 +1106,112 @@ textarea.form-control{
 }
 
 .envelope-option{
-  position:relative;
-  flex:0 0 88px;
-}
-
-.envelope-option input{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-
-.envelope-choice-card{
-  min-height:74px;
-  padding:6px;
+  flex:0 0 auto;
+  width:79px;
+  min-height:63px;
+  padding:5px;
   border:1px solid var(--border);
-  border-radius:10px;
-  display:block;
-  background:var(--surface-soft);
+  border-radius:9px;
+  background:var(--surface);
   color:var(--text-soft);
+  font-size:7.5px;
   text-align:center;
-  cursor:pointer;
-  transition:.18s ease;
 }
 
-.envelope-option input:checked + .envelope-choice-card{
+.envelope-option.active{
   border-color:var(--purple);
-  background:var(--purple-soft);
+  box-shadow:0 0 0 3px var(--purple-soft);
   color:var(--purple-dark);
-  box-shadow:0 0 0 3px rgba(129,120,168,.09);
 }
 
-.envelope-swatch{
+.envelope-preview{
   position:relative;
-  height:37px;
+  height:36px;
+  margin-bottom:3px;
   overflow:hidden;
-  border:1px solid rgba(75,64,54,.13);
+  border:1px solid rgba(55,86,126,.13);
   border-radius:6px;
-  display:block;
 }
 
-.envelope-swatch::before,
-.envelope-swatch::after{
+.envelope-preview::before,
+.envelope-preview::after{
   content:"";
   position:absolute;
-  left:50%;
-  width:54px;
-  height:54px;
-  border:1px solid rgba(70,58,50,.14);
-  background:rgba(255,255,255,.24);
-  transform:translateX(-50%) rotate(45deg);
+  top:7px;
+  width:36px;
+  height:24px;
+  border-top:1px solid rgba(68,80,110,.14);
 }
 
-.envelope-swatch::before{
-  top:-41px;
+.envelope-preview::before{
+  left:-3px;
+  transform:rotate(29deg);
 }
 
-.envelope-swatch::after{
-  bottom:-42px;
+.envelope-preview::after{
+  right:-3px;
+  transform:rotate(-29deg);
 }
 
-.envelope-swatch.classic{
+.preview-plain{
+  background:#e9eef7;
+}
+
+.preview-ivory{
+  background:#f2dfbc;
+}
+
+.preview-airmail{
   background:
-    linear-gradient(135deg,#f4e7d0,#e1c69c);
-}
-
-.envelope-swatch.airmail{
-  border:3px solid transparent;
-  background:
-    linear-gradient(#f7fafc,#f7fafc) padding-box,
     repeating-linear-gradient(
       135deg,
-      #4b80ad 0 6px,
-      #ffffff 6px 12px,
-      #c96d77 12px 18px,
-      #ffffff 18px 24px
-    ) border-box;
+      #f7f8fa 0 7px,
+      #dbe5ef 7px 13px,
+      #f7f8fa 13px 20px,
+      #efd8dc 20px 26px
+    );
 }
 
-.envelope-swatch.lilac{
-  background:
-    linear-gradient(135deg,#f0ecfa,#ccc4e8);
+.preview-lavender{
+  background:#ddd4ed;
 }
 
-.envelope-swatch.floral{
-  background:
-    radial-gradient(circle at 15% 20%,rgba(105,161,129,.34) 0 3px,transparent 4px),
-    radial-gradient(circle at 84% 76%,rgba(178,114,139,.28) 0 4px,transparent 5px),
-    linear-gradient(135deg,#f4f8ef,#e3eedf);
+.preview-mint{
+  background:#dceadf;
 }
 
-.envelope-swatch.plain{
-  background:
-    linear-gradient(135deg,#fdfdff,#eef2f7);
-}
-
-.envelope-choice-card small{
-  display:block;
-  margin-top:4px;
-  overflow:hidden;
-  font-size:7.8px;
-  font-weight:600;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.letter-writing-stage{
-  position:relative;
-  margin-top:10px;
-  overflow:hidden;
-  border:1px solid rgba(108,88,65,.20);
-  border-radius:14px;
-  box-shadow:
-    inset 0 0 40px rgba(93,70,45,.07),
-    0 8px 18px rgba(73,55,39,.06);
-  transition:.2s ease;
-}
-
-.letter-writing-stage::before{
-  content:"✉";
-  position:absolute;
-  right:24px;
-  top:18px;
-  z-index:1;
-  color:rgba(92,69,50,.06);
-  font-size:118px;
-  line-height:1;
-  transform:rotate(-7deg);
-  pointer-events:none;
-}
-
-.letter-writing-stage::after{
-  content:"";
-  position:absolute;
-  right:32px;
-  top:22px;
-  z-index:1;
-  width:56px;
-  height:64px;
-  border:2px dashed rgba(108,88,143,.12);
-  border-radius:7px;
-  transform:rotate(6deg);
-  pointer-events:none;
-}
-
-.letter-writing-stage textarea.form-control{
+textarea.form-control{
   position:relative;
   z-index:2;
-  min-height:210px;
-  margin:0;
-  padding:23px 24px;
-  border:none;
-  border-radius:0;
-  background:transparent;
-  color:#413941;
-  box-shadow:none;
+  min-height:170px;
+  margin-top:9px;
+  resize:vertical;
+  line-height:2;
+}
+
+textarea.font-kobiguru{
+  font-family:'Kobiguru','Galada','Noto Serif Bengali',serif;
   font-size:15px;
-  line-height:2.02;
 }
 
-html[data-theme="dark"] .letter-writing-stage textarea.form-control{
-  color:#eef2fa;
+textarea.font-galada{
+  font-family:'Galada','Noto Serif Bengali',serif;
+  font-size:14px;
 }
 
-.letter-writing-stage textarea.form-control::placeholder{
-  color:rgba(89,75,64,.48);
+textarea.font-atma{
+  font-family:'Atma','Noto Serif Bengali',serif;
+  font-size:14px;
 }
 
-html[data-theme="dark"] .letter-writing-stage textarea.form-control::placeholder{
-  color:rgba(230,237,246,.38);
-}
-
-.letter-writing-stage textarea.form-control:focus{
-  border:none;
-  box-shadow:none;
-}
-
-.letter-writing-stage.envelope-classic{
-  background:
-    linear-gradient(135deg,#fffdf9,#f4e9d8);
-}
-
-.letter-writing-stage.envelope-airmail{
-  border:5px solid transparent;
-  background:
-    linear-gradient(#f9fbfd,#f9fbfd) padding-box,
-    repeating-linear-gradient(
-      135deg,
-      #477faa 0 9px,
-      #ffffff 9px 18px,
-      #c76371 18px 27px,
-      #ffffff 27px 36px
-    ) border-box;
-}
-
-.letter-writing-stage.envelope-lilac{
-  background:
-    linear-gradient(135deg,#faf9ff,#ece9f9);
-}
-
-.letter-writing-stage.envelope-floral{
-  background:
-    radial-gradient(circle at 7% 12%,rgba(98,154,122,.16) 0 5px,transparent 6px),
-    radial-gradient(circle at 11% 17%,rgba(190,116,141,.13) 0 4px,transparent 5px),
-    radial-gradient(circle at 92% 88%,rgba(98,154,122,.14) 0 6px,transparent 7px),
-    linear-gradient(135deg,#fcfff9,#edf5e9);
-}
-
-.letter-writing-stage.envelope-plain{
-  background:
-    linear-gradient(135deg,#ffffff,#f4f7fb);
-}
-
-html[data-theme="dark"] .letter-writing-stage.envelope-classic{
-  background:
-    linear-gradient(135deg,#242334,#322a2c);
-}
-
-html[data-theme="dark"] .letter-writing-stage.envelope-airmail{
-  background:
-    linear-gradient(#182638,#182638) padding-box,
-    repeating-linear-gradient(
-      135deg,
-      #5e95c2 0 9px,
-      #d7e0e8 9px 18px,
-      #d47782 18px 27px,
-      #d7e0e8 27px 36px
-    ) border-box;
-}
-
-html[data-theme="dark"] .letter-writing-stage.envelope-lilac{
-  background:
-    linear-gradient(135deg,#242238,#302943);
-}
-
-html[data-theme="dark"] .letter-writing-stage.envelope-floral{
-  background:
-    radial-gradient(circle at 7% 12%,rgba(132,210,185,.12) 0 5px,transparent 6px),
-    radial-gradient(circle at 11% 17%,rgba(255,145,168,.10) 0 4px,transparent 5px),
-    linear-gradient(135deg,#1e2b2b,#26342e);
-}
-
-html[data-theme="dark"] .letter-writing-stage.envelope-plain{
-  background:
-    linear-gradient(135deg,#182536,#1e2c3e);
-}
-
-.font-kobiguru,
-.font-kobiguru textarea{
-  font-family:
-    'Kobiguru',
-    'Segoe Print',
-    'Comic Sans MS',
-    cursive!important;
-  font-weight:400;
-}
-
-.font-lipighor-classic,
-.font-lipighor-classic textarea{
-  font-family:
-    'Lipighor Classic',
-    'Noto Serif Bengali',
-    Georgia,
-    serif!important;
-  font-weight:400;
-}
-
-.font-lipighor-vintage,
-.font-lipighor-vintage textarea{
-  font-family:
-    'Lipighor Vintage',
-    'Noto Serif Bengali',
-    Georgia,
-    serif!important;
-  font-weight:400;
-  letter-spacing:.015em;
-}
-
-.font-fontbd-manuscript,
-.font-fontbd-manuscript textarea{
-  font-family:
-    'FontBD Manuscript',
-    'Bangla Sangam MN',
-    'Noto Serif Bengali',
-    serif!important;
-  font-weight:400;
-  letter-spacing:.01em;
-}
-
-.font-noto,
-.font-noto textarea{
-  font-family:
-    'Noto Serif Bengali',
-    Georgia,
-    serif!important;
-  font-weight:400;
+textarea.font-classic{
+  font-family:'Noto Serif Bengali',Georgia,serif;
+  font-size:12px;
 }
 
 .ownership-row{
+  position:relative;
+  z-index:2;
   margin-top:9px;
   display:flex;
   align-items:center;
@@ -1346,6 +1239,8 @@ html[data-theme="dark"] .letter-writing-stage.envelope-plain{
 }
 
 .original-author-area{
+  position:relative;
+  z-index:4;
   margin-top:9px;
   padding:10px;
   border:1px dashed var(--border-strong);
@@ -1418,6 +1313,8 @@ html[data-theme="dark"] .letter-writing-stage.envelope-plain{
 }
 
 .optional-row{
+  position:relative;
+  z-index:2;
   margin-top:9px;
   display:grid;
   grid-template-columns:minmax(0,1fr) auto;
@@ -1447,6 +1344,8 @@ html[data-theme="dark"] .letter-writing-stage.envelope-plain{
 }
 
 .soft-policy-note{
+  position:relative;
+  z-index:2;
   margin-top:9px;
   color:var(--muted);
   font-size:8.8px;
@@ -1511,10 +1410,104 @@ html[data-theme="dark"] .letter-writing-stage.envelope-plain{
 }
 
 .letter-card{
+  position:relative;
   overflow:hidden;
 }
 
+.letter-card::after{
+  content:"✉";
+  position:absolute;
+  right:22px;
+  bottom:58px;
+  color:rgba(95,104,155,.045);
+  font-size:105px;
+  line-height:1;
+  pointer-events:none;
+}
+
+.letter-card.envelope-plain{
+  background:var(--surface);
+}
+
+.letter-card.envelope-ivory{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,252,245,.97),
+      rgba(250,243,229,.97)
+    );
+}
+
+.letter-card.envelope-airmail{
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(91,127,170,.035) 0 8px,
+      rgba(255,255,255,.80) 8px 16px,
+      rgba(186,91,110,.03) 16px 24px
+    ),
+    var(--surface);
+}
+
+.letter-card.envelope-lavender{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(249,247,253,.98),
+      rgba(239,235,248,.96)
+    );
+}
+
+.letter-card.envelope-mint{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(248,252,250,.98),
+      rgba(235,247,240,.96)
+    );
+}
+
+html[data-theme="dark"] .letter-card.envelope-ivory{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(52,44,31,.93),
+      rgba(22,31,44,.97)
+    );
+}
+
+html[data-theme="dark"] .letter-card.envelope-airmail{
+  background:
+    repeating-linear-gradient(
+      135deg,
+      rgba(90,139,191,.065) 0 8px,
+      rgba(13,27,45,.84) 8px 16px,
+      rgba(187,89,108,.05) 16px 24px
+    ),
+    var(--surface);
+}
+
+html[data-theme="dark"] .letter-card.envelope-lavender{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(52,43,72,.92),
+      rgba(13,27,45,.97)
+    );
+}
+
+html[data-theme="dark"] .letter-card.envelope-mint{
+  background:
+    linear-gradient(
+      145deg,
+      rgba(27,58,51,.91),
+      rgba(13,27,45,.97)
+    );
+}
+
 .letter-head{
+  position:relative;
+  z-index:2;
   padding:13px 15px 9px;
   display:flex;
   align-items:flex-start;
@@ -1567,6 +1560,8 @@ html[data-theme="dark"] .letter-writing-stage.envelope-plain{
 }
 
 .letter-body{
+  position:relative;
+  z-index:2;
   padding:0 15px 14px;
 }
 
@@ -1584,6 +1579,7 @@ html[data-theme="dark"] .letter-writing-stage.envelope-plain{
   margin-top:7px;
   font-size:18px;
   line-height:1.55;
+  font-weight:600;
 }
 
 .letter-title a:hover{
@@ -1592,121 +1588,35 @@ html[data-theme="dark"] .letter-writing-stage.envelope-plain{
   text-underline-offset:4px;
 }
 
-.letter-paper{
-  position:relative;
-  margin-top:9px;
-  padding:18px 20px;
-  overflow:hidden;
-  border:1px solid rgba(112,91,69,.16);
-  border-radius:12px;
-  box-shadow:
-    inset 0 0 35px rgba(86,65,45,.05),
-    0 5px 13px rgba(67,50,35,.04);
-}
-
-.letter-paper::before{
-  content:"✉";
-  position:absolute;
-  right:18px;
-  top:16px;
-  color:rgba(89,68,50,.05);
-  font-size:92px;
-  line-height:1;
-  transform:rotate(-8deg);
-  pointer-events:none;
-}
-
-.letter-paper::after{
-  content:"";
-  position:absolute;
-  right:25px;
-  top:20px;
-  width:46px;
-  height:52px;
-  border:2px dashed rgba(129,120,168,.10);
-  border-radius:6px;
-  transform:rotate(6deg);
-  pointer-events:none;
-}
-
-.letter-paper.envelope-classic{
-  background:
-    linear-gradient(135deg,#fffdf9,#f5ead8);
-}
-
-.letter-paper.envelope-airmail{
-  border:4px solid transparent;
-  background:
-    linear-gradient(#fbfcfe,#fbfcfe) padding-box,
-    repeating-linear-gradient(
-      135deg,
-      #477faa 0 8px,
-      #ffffff 8px 16px,
-      #c76371 16px 24px,
-      #ffffff 24px 32px
-    ) border-box;
-}
-
-.letter-paper.envelope-lilac{
-  background:
-    linear-gradient(135deg,#fbfaff,#eeebf8);
-}
-
-.letter-paper.envelope-floral{
-  background:
-    radial-gradient(circle at 6% 12%,rgba(92,151,117,.14) 0 5px,transparent 6px),
-    radial-gradient(circle at 10% 17%,rgba(190,116,141,.12) 0 4px,transparent 5px),
-    linear-gradient(135deg,#fcfff9,#edf5e9);
-}
-
-.letter-paper.envelope-plain{
-  background:
-    linear-gradient(135deg,#ffffff,#f4f7fb);
-}
-
-html[data-theme="dark"] .letter-paper.envelope-classic{
-  background:
-    linear-gradient(135deg,#242334,#322a2c);
-}
-
-html[data-theme="dark"] .letter-paper.envelope-airmail{
-  background:
-    linear-gradient(#182638,#182638) padding-box,
-    repeating-linear-gradient(
-      135deg,
-      #5e95c2 0 8px,
-      #d7e0e8 8px 16px,
-      #d47782 16px 24px,
-      #d7e0e8 24px 32px
-    ) border-box;
-}
-
-html[data-theme="dark"] .letter-paper.envelope-lilac{
-  background:
-    linear-gradient(135deg,#242238,#302943);
-}
-
-html[data-theme="dark"] .letter-paper.envelope-floral{
-  background:
-    linear-gradient(135deg,#1e2b2b,#26342e);
-}
-
-html[data-theme="dark"] .letter-paper.envelope-plain{
-  background:
-    linear-gradient(135deg,#182536,#1e2c3e);
-}
-
 .letter-text{
-  position:relative;
-  z-index:1;
-  color:#413941;
-  font-size:14px;
+  margin-top:8px;
+  color:var(--text-soft);
+  font-size:12.5px;
   line-height:2;
   white-space:pre-line;
 }
 
-html[data-theme="dark"] .letter-text{
-  color:#eef2fa;
+.letter-text.font-kobiguru{
+  font-family:'Kobiguru','Galada','Noto Serif Bengali',serif;
+  font-size:16px;
+  line-height:1.95;
+}
+
+.letter-text.font-galada{
+  font-family:'Galada','Noto Serif Bengali',serif;
+  font-size:15px;
+  line-height:1.9;
+}
+
+.letter-text.font-atma{
+  font-family:'Atma','Noto Serif Bengali',serif;
+  font-size:14.5px;
+  line-height:1.95;
+}
+
+.letter-text.font-classic{
+  font-family:'Noto Serif Bengali',Georgia,serif;
+  font-size:12.5px;
 }
 
 .letter-text.collapsed{
@@ -1717,8 +1627,6 @@ html[data-theme="dark"] .letter-text{
 }
 
 .read-more{
-  position:relative;
-  z-index:1;
   margin-top:6px;
   border:none;
   background:transparent;
@@ -1750,6 +1658,8 @@ html[data-theme="dark"] .letter-text{
 }
 
 .letter-meta{
+  position:relative;
+  z-index:2;
   padding:7px 15px;
   border-top:1px solid var(--border);
   display:flex;
@@ -1760,6 +1670,8 @@ html[data-theme="dark"] .letter-text{
 }
 
 .letter-actions{
+  position:relative;
+  z-index:2;
   padding:7px 15px 10px;
   border-top:1px solid var(--border);
   display:flex;
@@ -2315,44 +2227,50 @@ html[data-theme="dark"] .letter-text{
     font-size:13px;
   }
 
+  .letter-introduction{
+    padding:9px;
+  }
+
+  .letter-introduction::before{
+    right:8px;
+    top:16px;
+    font-size:82px;
+  }
+
+  .letter-paper{
+    min-height:210px;
+    padding:14px 15px 13px;
+  }
+
+  .letter-paper::after{
+    right:13px;
+    top:17px;
+    width:60px;
+    height:42px;
+  }
+
+  .letter-salutation{
+    font-size:17px;
+  }
+
+  .letter-message{
+    margin-top:6px;
+    padding-right:50px;
+    font-size:14.5px;
+    line-height:1.8;
+  }
+
+  .letter-signoff{
+    margin-top:10px;
+    font-size:12px;
+  }
+
+  .letter-signoff strong{
+    font-size:13px;
+  }
+
   .composer{
     padding:13px;
-  }
-
-  .letter-inspiration{
-    padding:20px 18px 18px;
-    border-radius:18px;
-  }
-
-  .letter-inspiration::before{
-    right:10px;
-    top:12px;
-    font-size:84px;
-  }
-
-  .letter-inspiration::after{
-    right:20px;
-    top:16px;
-    width:46px;
-    height:54px;
-  }
-
-  .inspiration-chip{
-    min-height:30px;
-    padding:5px 11px;
-    font-size:10px;
-  }
-
-  .inspiration-copy{
-    max-width:92%;
-    margin-top:10px;
-    gap:7px;
-    font-size:clamp(18px,5.6vw,24px);
-    line-height:1.54;
-  }
-
-  .inspiration-greeting{
-    font-size:clamp(19px,6vw,25px);
   }
 
   .composer-heading h2{
@@ -2363,31 +2281,21 @@ html[data-theme="dark"] .letter-text{
     grid-template-columns:1fr;
   }
 
-  .letter-style-grid{
+  .style-panel-heading{
+    display:block;
+  }
+
+  .style-panel-heading span{
+    display:block;
+    margin-top:2px;
+  }
+
+  .style-grid{
     grid-template-columns:1fr;
   }
 
-  .envelope-option{
-    flex-basis:84px;
-  }
-
-  .letter-writing-stage::before{
-    right:11px;
-    top:14px;
-    font-size:94px;
-  }
-
-  .letter-writing-stage::after{
-    right:18px;
-    top:18px;
-    width:42px;
-    height:48px;
-  }
-
-  .letter-writing-stage textarea.form-control{
-    min-height:190px;
-    padding:20px 17px;
-    font-size:14px;
+  textarea.form-control{
+    min-height:150px;
   }
 
   .optional-row{
@@ -2427,25 +2335,20 @@ html[data-theme="dark"] .letter-text{
     font-size:17px;
   }
 
-  .letter-paper{
-    padding:15px 14px;
-  }
-
-  .letter-paper::before{
-    right:8px;
-    top:12px;
-    font-size:76px;
-  }
-
-  .letter-paper::after{
-    right:14px;
-    top:16px;
-    width:37px;
-    height:43px;
-  }
-
   .letter-text{
-    font-size:13px;
+    font-size:12px;
+  }
+
+  .letter-text.font-kobiguru{
+    font-size:15px;
+  }
+
+  .letter-text.font-galada{
+    font-size:14px;
+  }
+
+  .letter-text.font-atma{
+    font-size:13.5px;
   }
 
   .letter-meta{
@@ -2795,24 +2698,43 @@ html[data-theme="dark"] .letter-text{
 
   <section class="main-content">
 
+    <section class="card letter-introduction">
+
+      <div class="letter-paper">
+
+        <div class="letter-salutation">
+          প্রিয় পাঠক,
+        </div>
+
+        <div class="letter-message">
+
+          <strong>অন্তত নিজেকে একটি চিঠি লিখুন।</strong><br>
+
+          কাগজে-কলমে নয়, ডাকবাক্সের ঠিকানায় নয়—<br>
+
+          যে কথাটি হয়নি বলা,<br>
+
+          যে ক্ষমাটি হয়নি চাওয়া নিজের কাছে,<br>
+
+          যে ক্ষতটি আজও নীরবে বয়ে চলেছেন—<br>
+
+          সেগুলো লিখে ফেলুন অনুভূতির ঠিকানায়।
+
+        </div>
+
+        <div class="letter-signoff">
+
+          <span>শুভেচ্ছান্তে</span>
+
+          <strong>ভুবনডাঙ্গার কবিতা</strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
     <section class="card composer">
-
-      <section class="letter-inspiration">
-
-        <div class="inspiration-chip">
-          ✉ প্রিয় পাঠক
-        </div>
-
-        <div class="inspiration-copy">
-          <div class="inspiration-greeting">অন্তত নিজেকে একটি চিঠি লিখুন।</div>
-          <div class="inspiration-emphasis">কাগজে কলমে নয়, ডাকবাক্সের ঠিকানায় নয়—</div>
-          <div>যে কথাটি হয়নি বলা,</div>
-          <div>যে ক্ষমাটি হয়নি চাওয়া নিজের কাছে,</div>
-          <div>যে ক্ষতটি আজও নীরবে বয়ে চলেছেন—</div>
-          <div>সেগুলো লিখে ফেলুন অনুভূতির ঠিকানায়।</div>
-        </div>
-
-      </section>
 
       <div class="composer-heading">
 
@@ -2834,7 +2756,10 @@ html[data-theme="dark"] .letter-text{
 
       <form id="letterForm">
 
-        <div class="simple-writing-box">
+        <div
+          class="simple-writing-box envelope-plain"
+          id="simpleWritingBox"
+        >
 
           <div class="composer-top">
 
@@ -2848,38 +2773,17 @@ html[data-theme="dark"] .letter-text{
 
             <div class="recipient-field">
 
-              <label
-                class="recipient-label"
-                for="letterRecipientInput"
-              >
-                চিঠির নাম (প্রিয় বাধ্যতামূলক)
-              </label>
-
-              <div class="recipient-builder">
-
-                <span class="recipient-prefix">
-                  প্রিয়
-                </span>
-
-                <input
-                  class="form-control recipient-input"
-                  id="letterRecipientInput"
-                  type="text"
-                  placeholder="নিজেকে / মা / বন্ধু / প্রিয় মানুষ"
-                  aria-label="কাকে চিঠি লিখছেন"
-                  required
-                >
-
-              </div>
-
-              <p class="recipient-preview">
-                চিঠির তালিকায় দেখা যাবে:
-                <strong id="letterTitlePreview">প্রিয় ...</strong>
-              </p>
+              <span class="recipient-prefix">
+                প্রিয়
+              </span>
 
               <input
+                class="recipient-input"
                 id="letterTitleInput"
-                type="hidden"
+                type="text"
+                placeholder="পাঠক, বন্ধু, নিজের নাম অথবা প্রাপকের নাম"
+                aria-label="চিঠির প্রাপক"
+                required
               >
 
             </div>
@@ -2888,20 +2792,24 @@ html[data-theme="dark"] .letter-text{
 
           <section class="letter-style-panel">
 
-            <div class="letter-style-title">
+            <div class="style-panel-heading">
 
-              <strong>চিঠির অক্ষর ও খামের আবহ</strong>
+              <strong>
+                চিঠির অক্ষর ও খামের আবহ
+              </strong>
 
-              <span>পছন্দ অনুযায়ী নির্বাচন করুন</span>
+              <span>
+                পছন্দ অনুযায়ী নির্বাচন করুন
+              </span>
 
             </div>
 
-            <div class="letter-style-grid">
+            <div class="style-grid">
 
               <div>
 
                 <label
-                  class="style-control-label"
+                  class="style-label"
                   for="letterFontSelect"
                 >
                   চিঠির ফন্ট
@@ -2912,23 +2820,19 @@ html[data-theme="dark"] .letter-text{
                   id="letterFontSelect"
                 >
                   <option value="kobiguru">
-                    কবিগুরু — হাতের লেখা
+                    কবিগুরু — হাতের লেখার আবহ
                   </option>
 
-                  <option value="lipighor-classic">
-                    লিপিঘর — ক্লাসিক
+                  <option value="galada">
+                    গালাদা — নরম হাতের লেখা
                   </option>
 
-                  <option value="lipighor-vintage">
-                    লিপিঘর — ভিনটেজ
+                  <option value="atma">
+                    আত্মা — পুরনো কাব্যিক আবহ
                   </option>
 
-                  <option value="fontbd-manuscript">
-                    FontBD — পাণ্ডুলিপি
-                  </option>
-
-                  <option value="noto">
-                    নোটো সেরিফ বাংলা
+                  <option value="classic">
+                    ক্লাসিক — নোটো সেরিফ বাংলা
                   </option>
                 </select>
 
@@ -2936,102 +2840,71 @@ html[data-theme="dark"] .letter-text{
 
               <div>
 
-                <span class="style-control-label">
+                <span class="style-label">
                   খামের ধরন
                 </span>
 
                 <div class="envelope-options">
 
-                  <label class="envelope-option">
+                  <button
+                    class="envelope-option active"
+                    type="button"
+                    data-envelope-style="plain"
+                  >
 
-                    <input
-                      type="radio"
-                      name="envelopeStyle"
-                      value="lilac"
-                      checked
-                    >
+                    <span class="envelope-preview preview-plain"></span>
 
-                    <span class="envelope-choice-card">
+                    প্লেইন
 
-                      <span class="envelope-swatch lilac"></span>
+                  </button>
 
-                      <small>ব্লু-পার্পল</small>
+                  <button
+                    class="envelope-option"
+                    type="button"
+                    data-envelope-style="ivory"
+                  >
 
-                    </span>
+                    <span class="envelope-preview preview-ivory"></span>
 
-                  </label>
+                    পুরনো কাগজ
 
-                  <label class="envelope-option">
+                  </button>
 
-                    <input
-                      type="radio"
-                      name="envelopeStyle"
-                      value="plain"
-                    >
+                  <button
+                    class="envelope-option"
+                    type="button"
+                    data-envelope-style="airmail"
+                  >
 
-                    <span class="envelope-choice-card">
+                    <span class="envelope-preview preview-airmail"></span>
 
-                      <span class="envelope-swatch plain"></span>
+                    ডাক খাম
 
-                      <small>প্লেইন</small>
+                  </button>
 
-                    </span>
+                  <button
+                    class="envelope-option"
+                    type="button"
+                    data-envelope-style="lavender"
+                  >
 
-                  </label>
+                    <span class="envelope-preview preview-lavender"></span>
 
-                  <label class="envelope-option">
+                    ল্যাভেন্ডার
 
-                    <input
-                      type="radio"
-                      name="envelopeStyle"
-                      value="classic"
-                    >
+                  </button>
 
-                    <span class="envelope-choice-card">
+                  <button
+                    class="envelope-option"
+                    type="button"
+                    data-envelope-style="mint"
+                  >
 
-                      <span class="envelope-swatch classic"></span>
+                    <span class="envelope-preview preview-mint"></span>
 
-                      <small>সেপিয়া</small>
+                    সবুজাভ
 
-                    </span>
-
-                  </label>
-
-                  <label class="envelope-option">
-
-                    <input
-                      type="radio"
-                      name="envelopeStyle"
-                      value="airmail"
-                    >
-
-                    <span class="envelope-choice-card">
-
-                      <span class="envelope-swatch airmail"></span>
-
-                      <small>এয়ারমেইল</small>
-
-                    </span>
-
-                  </label>
-
-                  <label class="envelope-option">
-
-                    <input
-                      type="radio"
-                      name="envelopeStyle"
-                      value="floral"
-                    >
-
-                    <span class="envelope-choice-card">
-
-                      <span class="envelope-swatch floral"></span>
-
-                      <small>পুষ্পপত্র</small>
-
-                    </span>
-
-                  </label>
+                  </button>
 
                 </div>
 
@@ -3041,19 +2914,12 @@ html[data-theme="dark"] .letter-text{
 
           </section>
 
-          <div
-            class="letter-writing-stage envelope-lilac font-kobiguru"
-            id="letterWritingStage"
-          >
-
-            <textarea
-              class="form-control"
-              id="letterBodyInput"
-              placeholder="এখানে চিঠিটি লিখুন..."
-              required
-            ></textarea>
-
-          </div>
+          <textarea
+            class="form-control font-kobiguru"
+            id="letterBodyInput"
+            placeholder="এখানে চিঠিটি লিখুন..."
+            required
+          ></textarea>
 
           <div class="ownership-row">
 
@@ -3137,8 +3003,9 @@ html[data-theme="dark"] .letter-text{
           </div>
 
           <p class="soft-policy-note">
-            এই পেজে প্রকাশিত চিঠি সংরক্ষিত হবে চিঠিপত্র ফিডে, হোম/ইনডেক্স
-            নিউজফিডে ব্যবহারের জন্য এবং লেখকের প্রোফাইলের চিঠির তালিকাতেও।
+            প্রকাশের মাধ্যমে আপনি লেখাটির দায়িত্ব গ্রহণ করছেন।
+            নীতিমালা লেখাকে আটকানোর জন্য নয়; সুন্দর, নিরাপদ ও দায়িত্বশীল
+            সাহিত্যিক পরিবেশ তৈরির জন্য।
             <a href="policy.html">বিস্তারিত নীতিমালা পড়ুন</a>
           </p>
 
@@ -3373,22 +3240,6 @@ const bnDigits = {
   "9":"৯"
 };
 
-const allowedLetterFonts = [
-  "kobiguru",
-  "lipighor-classic",
-  "lipighor-vintage",
-  "fontbd-manuscript",
-  "noto"
-];
-
-const allowedEnvelopeStyles = [
-  "lilac",
-  "plain",
-  "classic",
-  "airmail",
-  "floral"
-];
-
 function toBn(value){
   return String(value).replace(/[0-9]/g,function(digit){
     return bnDigits[digit];
@@ -3425,9 +3276,18 @@ function getStorageArray(key){
         localStorage.getItem(key) || "[]"
       );
 
-    return Array.isArray(parsed)
-      ? parsed
-      : [];
+    if(Array.isArray(parsed)){
+      return parsed;
+    }
+
+    if(
+      parsed &&
+      typeof parsed === "object"
+    ){
+      return Object.values(parsed);
+    }
+
+    return [];
   }catch(error){
     return [];
   }
@@ -3440,13 +3300,15 @@ function getStorageObject(key){
         localStorage.getItem(key) || "{}"
       );
 
-    return (
+    if(
       parsed &&
       typeof parsed === "object" &&
       !Array.isArray(parsed)
-    )
-      ? parsed
-      : {};
+    ){
+      return parsed;
+    }
+
+    return {};
   }catch(error){
     return {};
   }
@@ -3464,31 +3326,6 @@ function saveStorageObject(key,value){
     key,
     JSON.stringify(value)
   );
-}
-
-function normalizeLetterFont(value){
-  return allowedLetterFonts.includes(
-    String(value || "")
-  )
-    ? String(value)
-    : "kobiguru";
-}
-
-function normalizeEnvelopeStyle(value){
-  const current =
-    String(value || "");
-
-  if(current === "purple"){
-    return "lilac";
-  }
-
-  if(current === "minimal"){
-    return "plain";
-  }
-
-  return allowedEnvelopeStyles.includes(current)
-    ? current
-    : "lilac";
 }
 
 function showToast(message){
@@ -3537,22 +3374,35 @@ const storedUser =
     "bhubondangaCurrentUser"
   );
 
+const hasUserIdentity =
+  Boolean(
+    storedUser.name ||
+    storedUser.username ||
+    storedUser.email ||
+    storedUser.role
+  );
+
 const currentUser = {
   loggedIn:
-    storedUser.loggedIn === true,
+    storedUser.loggedIn !== false &&
+    hasUserIdentity,
 
   name:
     storedUser.name ||
+    storedUser.fullName ||
     "অতিথি পাঠক",
 
   username:
     storedUser.username ||
+    storedUser.slug ||
+    storedUser.email ||
     "guest",
 
   initials:
     storedUser.initials ||
     getInitials(
       storedUser.name ||
+      storedUser.fullName ||
       "আ"
     ),
 
@@ -3595,36 +3445,25 @@ const memoryStorageKey =
 const commentStorageKey =
   "bhubondangaLetterComments";
 
-const indexFeedStorageKeys = [
-  "bhubondangaIndexFeedPosts",
-  "bhubondangaNewsfeedPosts",
-  "bhubondangaHomeFeedPosts"
-];
+const newsFeedStorageKey =
+  "bhubondangaNewsFeedPosts";
+
+const publishedPostsStorageKey =
+  "bhubondangaPublishedPosts";
 
 const profileLettersStorageKey =
   "bhubondangaProfileLetters";
 
-const lettersByUserStorageKey =
-  "bhubondangaLettersByUser";
+/* STYLE */
 
-const profilePostsStorageKey =
-  "bhubondangaProfilePosts";
-
-/* LETTER TITLE AND STYLE */
-
-const letterRecipientInput =
+const simpleWritingBox =
   document.getElementById(
-    "letterRecipientInput"
+    "simpleWritingBox"
   );
 
-const letterTitleInput =
+const letterBodyInput =
   document.getElementById(
-    "letterTitleInput"
-  );
-
-const letterTitlePreview =
-  document.getElementById(
-    "letterTitlePreview"
+    "letterBodyInput"
   );
 
 const letterFontSelect =
@@ -3632,131 +3471,127 @@ const letterFontSelect =
     "letterFontSelect"
   );
 
-const letterWritingStage =
-  document.getElementById(
-    "letterWritingStage"
-  );
+let selectedEnvelopeStyle =
+  "plain";
 
-function normalizeRecipientName(value){
-  return String(value || "")
-    .trim()
-    .replace(/^(প্রিয়|প্রিয়)\s*/i,"")
-    .replace(/\s+/g," ");
+function sanitizeFontStyle(value){
+  const allowed = [
+    "kobiguru",
+    "galada",
+    "atma",
+    "classic"
+  ];
+
+  return allowed.includes(value)
+    ? value
+    : "kobiguru";
 }
 
-function buildMandatoryLetterTitle(value){
-  const cleaned =
-    normalizeRecipientName(value);
+function sanitizeEnvelopeStyle(value){
+  const allowed = [
+    "plain",
+    "ivory",
+    "airmail",
+    "lavender",
+    "mint"
+  ];
 
-  return cleaned
-    ? "প্রিয় " + cleaned
-    : "";
+  return allowed.includes(value)
+    ? value
+    : "plain";
 }
 
-function updateLetterTitlePreview(){
-  const title =
-    buildMandatoryLetterTitle(
-      letterRecipientInput.value
+function applyComposerStyle(){
+  const fontStyle =
+    sanitizeFontStyle(
+      letterFontSelect.value
     );
 
-  letterTitleInput.value =
-    title;
-
-  letterTitlePreview.innerText =
-    title || "প্রিয় ...";
-}
-
-letterRecipientInput.addEventListener(
-  "input",
-  updateLetterTitlePreview
-);
-
-letterRecipientInput.addEventListener(
-  "blur",
-  function(){
-    letterRecipientInput.value =
-      normalizeRecipientName(
-        letterRecipientInput.value
-      );
-
-    updateLetterTitlePreview();
-  }
-);
-
-function selectedLetterFont(){
-  return normalizeLetterFont(
-    letterFontSelect.value
-  );
-}
-
-function selectedEnvelopeStyle(){
-  const selected =
-    document.querySelector(
-      'input[name="envelopeStyle"]:checked'
+  selectedEnvelopeStyle =
+    sanitizeEnvelopeStyle(
+      selectedEnvelopeStyle
     );
 
-  return normalizeEnvelopeStyle(
-    selected
-      ? selected.value
-      : "lilac"
-  );
-}
-
-function updateLetterStylePreview(){
-  allowedLetterFonts.forEach(function(font){
-    letterWritingStage.classList.remove(
-      "font-" + font
-    );
-  });
-
-  allowedEnvelopeStyles.forEach(function(style){
-    letterWritingStage.classList.remove(
-      "envelope-" + style
-    );
-  });
-
-  letterWritingStage.classList.add(
-    "font-" +
-    selectedLetterFont()
+  simpleWritingBox.classList.remove(
+    "envelope-plain",
+    "envelope-ivory",
+    "envelope-airmail",
+    "envelope-lavender",
+    "envelope-mint"
   );
 
-  letterWritingStage.classList.add(
+  simpleWritingBox.classList.add(
     "envelope-" +
-    selectedEnvelopeStyle()
+    selectedEnvelopeStyle
+  );
+
+  letterBodyInput.classList.remove(
+    "font-kobiguru",
+    "font-galada",
+    "font-atma",
+    "font-classic"
+  );
+
+  letterBodyInput.classList.add(
+    "font-" +
+    fontStyle
   );
 }
 
 letterFontSelect.addEventListener(
   "change",
-  updateLetterStylePreview
+  applyComposerStyle
 );
 
 document
   .querySelectorAll(
-    'input[name="envelopeStyle"]'
+    "[data-envelope-style]"
   )
-  .forEach(function(input){
-    input.addEventListener(
-      "change",
-      updateLetterStylePreview
+  .forEach(function(button){
+    button.addEventListener(
+      "click",
+      function(){
+        selectedEnvelopeStyle =
+          sanitizeEnvelopeStyle(
+            button.dataset.envelopeStyle
+          );
+
+        document
+          .querySelectorAll(
+            "[data-envelope-style]"
+          )
+          .forEach(function(item){
+            item.classList.toggle(
+              "active",
+              item === button
+            );
+          });
+
+        applyComposerStyle();
+      }
     );
   });
 
 function resetLetterStyle(){
+  selectedEnvelopeStyle =
+    "plain";
+
   letterFontSelect.value =
     "kobiguru";
 
-  const defaultEnvelope =
-    document.querySelector(
-      'input[name="envelopeStyle"][value="lilac"]'
-    );
+  document
+    .querySelectorAll(
+      "[data-envelope-style]"
+    )
+    .forEach(function(button){
+      button.classList.toggle(
+        "active",
+        button.dataset.envelopeStyle ===
+          "plain"
+      );
+    });
 
-  if(defaultEnvelope){
-    defaultEnvelope.checked =
-      true;
-  }
-
-  updateLetterStylePreview();
+  applyComposerStyle();
 }
 
 /* AUTHOR SEARCH */
@@ -3911,191 +3746,118 @@ document.addEventListener(
   }
 );
 
-/* GLOBAL SYNC */
+/* SHARED FEED SYNC */
 
-function createGlobalLetterEntry(post){
-  return {
-    id:
-      post.id,
+function upsertStoragePost(key,post){
+  let items =
+    getStorageArray(key);
 
-    postId:
-      post.id,
-
-    type:
-      "letter",
-
-    postType:
-      "letter",
-
-    category:
-      "চিঠিপত্র",
-
-    title:
-      post.title,
-
-    body:
-      post.body,
-
-    excerpt:
-      String(post.body || "").slice(0,220),
-
-    postedByName:
-      post.postedByName,
-
-    postedByUsername:
-      post.postedByUsername,
-
-    displayAuthorName:
-      post.displayAuthorName,
-
-    authorName:
-      post.displayAuthorName,
-
-    username:
-      post.postedByUsername,
-
-    ownWriting:
-      post.ownWriting,
-
-    originalAuthor:
-      post.originalAuthor,
-
-    hashtags:
-      post.hashtags,
-
-    likes:
-      post.likes,
-
-    comments:
-      post.comments,
-
-    letterFont:
-      normalizeLetterFont(
-        post.letterFont
-      ),
-
-    envelopeStyle:
-      normalizeEnvelopeStyle(
-        post.envelopeStyle
-      ),
-
-    createdAt:
-      post.createdAt,
-
-    status:
-      post.status,
-
-    url:
-      "letter.html?id=" +
-      encodeURIComponent(post.id)
-  };
-}
-
-function syncLetterToIndexFeeds(post){
-  const entry =
-    createGlobalLetterEntry(post);
-
-  indexFeedStorageKeys.forEach(function(key){
-    const feed =
-      getStorageArray(key)
-        .filter(function(item){
-          return !(
-            String(item.postId || item.id) ===
-            String(post.id) &&
-            String(item.type || item.postType) ===
-            "letter"
-          );
-        });
-
-    feed.unshift(entry);
-
-    saveStorageArray(
-      key,
-      feed.slice(0,3000)
-    );
-  });
-}
-
-function syncLetterToAuthorProfile(post){
-  const entry =
-    createGlobalLetterEntry(post);
-
-  const flatLetters =
-    getStorageArray(
-      profileLettersStorageKey
-    ).filter(function(item){
+  items =
+    items.filter(function(item){
       return !(
-        String(item.postId || item.id) ===
-        String(post.id) &&
-        String(item.type || item.postType) ===
-        "letter"
-      );
-    });
-
-  flatLetters.unshift(entry);
-
-  saveStorageArray(
-    profileLettersStorageKey,
-    flatLetters.slice(0,3000)
-  );
-
-  const profilePosts =
-    getStorageArray(
-      profilePostsStorageKey
-    ).filter(function(item){
-      return !(
-        String(item.postId || item.id) ===
-        String(post.id) &&
-        String(item.type || item.postType) ===
-        "letter"
-      );
-    });
-
-  profilePosts.unshift(entry);
-
-  saveStorageArray(
-    profilePostsStorageKey,
-    profilePosts.slice(0,3000)
-  );
-
-  const map =
-    getStorageObject(
-      lettersByUserStorageKey
-    );
-
-  const usernameKey =
-    post.postedByUsername ||
-    slugify(
-      post.postedByName ||
-      "guest"
-    );
-
-  const existing =
-    Array.isArray(map[usernameKey])
-      ? map[usernameKey]
-      : [];
-
-  map[usernameKey] =
-    [entry].concat(
-      existing.filter(function(item){
-        return !(
-          String(item.postId || item.id) ===
+        String(item.id) ===
           String(post.id) &&
-          String(item.type || item.postType) ===
-          "letter"
-        );
-      })
-    ).slice(0,1000);
+        (
+          item.type === "letter" ||
+          item.category === "letter" ||
+          item.postType === "letter"
+        )
+      );
+    });
 
-  saveStorageObject(
-    lettersByUserStorageKey,
-    map
+  items.unshift(post);
+
+  saveStorageArray(
+    key,
+    items.slice(0,3000)
   );
 }
 
 function syncLetterEverywhere(post){
-  syncLetterToIndexFeeds(post);
-  syncLetterToAuthorProfile(post);
+  const sharedPost = {
+    id:post.id,
+    type:"letter",
+    postType:"letter",
+    category:"letter",
+    categoryName:"চিঠিপত্র",
+    title:post.title,
+    recipientName:post.recipientName,
+    body:post.body,
+    excerpt:String(post.body || "").slice(0,350),
+    authorName:post.displayAuthorName,
+    publisherName:post.postedByName,
+    authorUsername:post.postedByUsername,
+    postedByName:post.postedByName,
+    postedByUsername:post.postedByUsername,
+    ownWriting:post.ownWriting,
+    originalAuthor:post.originalAuthor,
+    hashtags:post.hashtags,
+    fontStyle:post.fontStyle,
+    envelopeStyle:post.envelopeStyle,
+    createdAt:post.createdAt,
+    status:"published",
+    url:
+      "letter.html?id=" +
+      encodeURIComponent(post.id),
+    profileUrl:
+      "profile.html?user=" +
+      encodeURIComponent(
+        post.postedByUsername
+      )
+  };
+
+  upsertStoragePost(
+    newsFeedStorageKey,
+    sharedPost
+  );
+
+  upsertStoragePost(
+    publishedPostsStorageKey,
+    sharedPost
+  );
+
+  const profileLetters =
+    getStorageObject(
+      profileLettersStorageKey
+    );
+
+  const username =
+    String(
+      post.postedByUsername ||
+      "guest"
+    );
+
+  const existing =
+    Array.isArray(
+      profileLetters[username]
+    )
+      ? profileLetters[username]
+      : [];
+
+  profileLetters[username] =
+    [
+      sharedPost,
+      ...existing.filter(function(item){
+        return String(item.id) !==
+          String(post.id);
+      })
+    ].slice(0,1000);
+
+  saveStorageObject(
+    profileLettersStorageKey,
+    profileLetters
+  );
+
+  try{
+    window.dispatchEvent(
+      new CustomEvent(
+        "bhubondanga:letter-published",
+        {
+          detail:sharedPost
+        }
+      )
+    );
+  }catch(error){}
 }
 
 /* COMPOSER */
@@ -4110,6 +3872,14 @@ function parseHashtags(value){
     })
     .filter(Boolean)
     .slice(0,8);
+}
+
+function normalizeRecipient(value){
+  return String(value || "")
+    .trim()
+    .replace(/^প্রিয়\s*/,"")
+    .replace(/^প্রিয়\s*/,"")
+    .trim();
 }
 
 document
@@ -4128,15 +3898,10 @@ document
         .trim();
 
     const recipientName =
-      normalizeRecipientName(
+      normalizeRecipient(
         document
-          .getElementById("letterRecipientInput")
+          .getElementById("letterTitleInput")
           .value
-      );
-
-    const title =
-      buildMandatoryLetterTitle(
-        recipientName
       );
 
     const body =
@@ -4158,24 +3923,26 @@ document
           .value
       );
 
-    const letterFont =
-      selectedLetterFont();
+    const fontStyle =
+      sanitizeFontStyle(
+        letterFontSelect.value
+      );
 
     const envelopeStyle =
-      selectedEnvelopeStyle();
+      sanitizeEnvelopeStyle(
+        selectedEnvelopeStyle
+      );
 
     if(!recipientName){
       showToast(
-        "প্রিয়-এর পরে কাকে লিখছেন, তা লিখুন।"
+        "প্রিয় কার উদ্দেশে চিঠিটি লিখছেন, নামটি লিখুন।"
       );
 
-      return;
-    }
-
-    if(!title){
-      showToast(
-        "চিঠির নাম পূরণ করুন।"
-      );
+      document
+        .getElementById(
+          "letterTitleInput"
+        )
+        .focus();
 
       return;
     }
@@ -4184,6 +3951,8 @@ document
       showToast(
         "চিঠিটি লিখুন।"
       );
+
+      letterBodyInput.focus();
 
       return;
     }
@@ -4198,7 +3967,8 @@ document
         Date.now(),
 
       title:
-        title,
+        "প্রিয় " +
+        recipientName,
 
       recipientName:
         recipientName,
@@ -4214,7 +3984,12 @@ document
 
       displayAuthorName:
         displayAuthorName ||
-        currentUser.name,
+        (
+          ownWriting
+            ? currentUser.name
+            : originalAuthor ||
+              "লেখক উল্লেখ করা হয়নি"
+        ),
 
       ownWriting:
         ownWriting,
@@ -4227,8 +4002,8 @@ document
       hashtags:
         hashtags,
 
-      letterFont:
-        letterFont,
+      fontStyle:
+        fontStyle,
 
       envelopeStyle:
         envelopeStyle,
@@ -4243,7 +4018,11 @@ document
         0,
 
       status:
-        "published"
+        "published",
+
+      url:
+        "letter.html?id=" +
+        Date.now()
     };
 
     letters.unshift(
@@ -4264,7 +4043,6 @@ document
 
     updateOwnershipArea();
     resetLetterStyle();
-    updateLetterTitlePreview();
 
     if(currentUser.loggedIn){
       document
@@ -4320,6 +4098,7 @@ function filteredLetters(){
         const text =
           [
             item.title,
+            item.recipientName,
             item.body,
             item.displayAuthorName,
             item.postedByName,
@@ -4361,8 +4140,19 @@ function createLetterCard(post){
   const article =
     document.createElement("article");
 
+  const envelopeStyle =
+    sanitizeEnvelopeStyle(
+      post.envelopeStyle
+    );
+
+  const fontStyle =
+    sanitizeFontStyle(
+      post.fontStyle
+    );
+
   article.className =
-    "card letter-card";
+    "card letter-card envelope-" +
+    envelopeStyle;
 
   article.dataset.id =
     post.id;
@@ -4381,16 +4171,6 @@ function createLetterCard(post){
 
   const hasLongText =
     String(post.body || "").length > 500;
-
-  const letterFont =
-    normalizeLetterFont(
-      post.letterFont
-    );
-
-  const envelopeStyle =
-    normalizeEnvelopeStyle(
-      post.envelopeStyle
-    );
 
   article.innerHTML = `
     <header class="letter-head">
@@ -4439,42 +4219,40 @@ function createLetterCard(post){
         ✉ চিঠিপত্র
       </span>
 
-      <h2 class="letter-title font-${escapeHtml(letterFont)}">
+      <h2 class="letter-title">
 
         <a
           href="letter.html?id=${encodeURIComponent(post.id)}"
         >
-          ${escapeHtml(post.title)}
+          ${escapeHtml(
+            String(post.title || "").startsWith("প্রিয়")
+              ? post.title
+              : "প্রিয় " + (post.title || "পাঠক")
+          )}
         </a>
 
       </h2>
 
       <div
-        class="letter-paper envelope-${escapeHtml(envelopeStyle)}"
+        class="letter-text font-${escapeHtml(fontStyle)} ${hasLongText ? "collapsed" : ""}"
+        id="letter-text-${escapeHtml(post.id)}"
       >
-
-        <div
-          class="letter-text font-${escapeHtml(letterFont)} ${hasLongText ? "collapsed" : ""}"
-          id="letter-text-${escapeHtml(post.id)}"
-        >
-          ${escapeHtml(post.body)}
-        </div>
-
-        ${
-          hasLongText
-            ? `
-              <button
-                class="read-more"
-                type="button"
-                data-read-more="${escapeHtml(post.id)}"
-              >
-                আরও পড়ুন
-              </button>
-            `
-            : ""
-        }
-
+        ${escapeHtml(post.body)}
       </div>
+
+      ${
+        hasLongText
+          ? `
+            <button
+              class="read-more"
+              type="button"
+              data-read-more="${escapeHtml(post.id)}"
+            >
+              আরও পড়ুন
+            </button>
+          `
+          : ""
+      }
 
       ${
         post.ownWriting === false
@@ -4746,8 +4524,6 @@ function updatePostLikes(id,increase){
     letterStorageKey,
     letters
   );
-
-  syncLetterEverywhere(post);
 }
 
 function bindPostEvents(){
@@ -5158,8 +4934,6 @@ document
         letterStorageKey,
         letters
       );
-
-      syncLetterEverywhere(post);
     }
 
     input.value =
@@ -5216,11 +4990,24 @@ function renderUser(){
       .getElementById("displayAuthorName")
       .value =
         currentUser.name;
+
+    document
+      .getElementById("headerAvatar")
+      .href =
+        "profile.html?user=" +
+        encodeURIComponent(
+          currentUser.username
+        );
   }else{
     document
       .getElementById("rightUserText")
       .innerText =
         "নিজের চিঠি প্রকাশ করতে লগইন করুন";
+
+    document
+      .getElementById("headerAvatar")
+      .href =
+        "login.html";
   }
 }
 
@@ -5625,8 +5412,7 @@ toTopButton.addEventListener(
 /* INITIAL */
 
 updateOwnershipArea();
-updateLetterTitlePreview();
-updateLetterStylePreview();
+resetLetterStyle();
 renderUser();
 renderDates();
 renderFeed();
@@ -5650,6 +5436,22 @@ document.addEventListener(
     if(event.key === "Escape"){
       closeDrawer();
       closeComments();
+    }
+  }
+);
+
+window.addEventListener(
+  "storage",
+  function(event){
+    if(
+      [
+        letterStorageKey,
+        lovedStorageKey,
+        memoryStorageKey,
+        commentStorageKey
+      ].includes(event.key)
+    ){
+      renderFeed();
     }
   }
 );
