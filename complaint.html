@@ -1,0 +1,4455 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>অভিযোগ করুন | ভুবনডাঙ্গার কবিতা</title>
+
+<meta
+  name="description"
+  content="ভুবনডাঙ্গার কবিতায় অনুপযুক্ত আচরণ, লেখা চুরি, ভুয়া পরিচয়, গোপনীয়তা লঙ্ঘন, প্রযুক্তিগত সমস্যা অথবা অন্য কোনো বিষয়ে অভিযোগ জানান।"
+>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+:root{
+  --search-height:40px;
+  --header-height:70px;
+  --date-height:38px;
+  --nav-height:56px;
+
+  --page:#edf5fa;
+  --surface:#ffffff;
+  --surface-soft:#f6f9fc;
+  --surface-blue:#edf6fc;
+
+  --text:#12375f;
+  --text-soft:#58718d;
+  --muted:#8999ad;
+
+  --border:rgba(24,77,130,.14);
+  --border-strong:rgba(27,91,157,.25);
+
+  --blue:#1565a9;
+  --blue-dark:#104a80;
+  --blue-soft:rgba(40,125,196,.09);
+
+  --green:#2f8168;
+  --green-dark:#22664f;
+  --green-soft:#edf8f4;
+  --green-border:rgba(47,129,104,.24);
+
+  --purple:#75649c;
+  --purple-soft:rgba(117,100,156,.10);
+
+  --gold:#a9854c;
+  --gold-soft:rgba(169,133,76,.11);
+
+  --red:#c9576d;
+  --red-dark:#9f3e53;
+  --red-soft:rgba(201,87,109,.10);
+  --red-border:rgba(201,87,109,.25);
+
+  --header-bg:rgba(252,254,255,.97);
+
+  --category-bg:
+    linear-gradient(
+      90deg,
+      rgba(250,247,238,.98) 0%,
+      rgba(248,243,244,.98) 40%,
+      rgba(244,241,249,.98) 72%,
+      rgba(250,246,237,.98) 100%
+    );
+
+  --page-bg:
+    radial-gradient(circle at 4% 2%,rgba(164,216,244,.22),transparent 27%),
+    radial-gradient(circle at 96% 5%,rgba(221,237,247,.39),transparent 31%),
+    linear-gradient(155deg,#fbfdff 0%,#edf6fb 52%,#f9fcfe 100%);
+
+  --shadow:0 13px 34px rgba(17,55,98,.08);
+  --shadow-soft:0 5px 17px rgba(17,55,98,.07);
+  --shadow-deep:0 24px 70px rgba(17,55,98,.16);
+}
+
+html[data-theme="dark"]{
+  --page:#030914;
+  --surface:#07162c;
+  --surface-soft:#0b203d;
+  --surface-blue:#0f2949;
+
+  --text:#f4f8ff;
+  --text-soft:#cad8e9;
+  --muted:#91a6c0;
+
+  --border:rgba(89,167,235,.20);
+  --border-strong:rgba(100,181,248,.34);
+
+  --blue:#5ab0ef;
+  --blue-dark:#8ecdf8;
+  --blue-soft:rgba(90,176,239,.12);
+
+  --green:#7bd8b3;
+  --green-dark:#a2ead0;
+  --green-soft:rgba(77,174,131,.12);
+  --green-border:rgba(123,216,179,.24);
+
+  --purple:#c2b3ec;
+  --purple-soft:rgba(194,179,236,.12);
+
+  --gold:#e5c38a;
+  --gold-soft:rgba(229,195,138,.11);
+
+  --red:#ff8aa0;
+  --red-dark:#ffb1bf;
+  --red-soft:rgba(255,138,160,.11);
+  --red-border:rgba(255,138,160,.24);
+
+  --header-bg:rgba(3,12,27,.97);
+
+  --category-bg:
+    linear-gradient(
+      90deg,
+      rgba(34,29,24,.98),
+      rgba(30,24,37,.98),
+      rgba(20,24,42,.98),
+      rgba(35,29,23,.98)
+    );
+
+  --page-bg:
+    radial-gradient(circle at 8% 3%,rgba(53,117,211,.21),transparent 28%),
+    radial-gradient(circle at 94% 8%,rgba(106,76,172,.17),transparent 30%),
+    linear-gradient(180deg,#01050c 0%,#07152d 55%,#020711 100%);
+
+  --shadow:0 20px 50px rgba(0,0,0,.42);
+  --shadow-soft:0 0 22px rgba(90,176,239,.09);
+  --shadow-deep:0 28px 80px rgba(0,0,0,.50);
+}
+
+body{
+  min-height:100vh;
+  overflow-x:hidden;
+  font-family:'Noto Serif Bengali',Georgia,serif;
+  color:var(--text);
+  background:var(--page-bg);
+  font-size:14px;
+  line-height:1.75;
+}
+
+body.locked{
+  overflow:hidden;
+}
+
+a{
+  color:inherit;
+  text-decoration:none;
+}
+
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+button,
+a,
+label{
+  -webkit-tap-highlight-color:transparent;
+}
+
+img{
+  display:block;
+  max-width:100%;
+}
+
+[hidden]{
+  display:none!important;
+}
+
+.card{
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+}
+
+/* TOP SEARCH */
+
+.top-search-bar{
+  position:sticky;
+  top:0;
+  z-index:1700;
+  height:var(--search-height);
+  border-bottom:1px solid var(--border);
+  background:var(--header-bg);
+  backdrop-filter:blur(18px);
+}
+
+.top-search-inner{
+  width:min(1540px,100%);
+  height:100%;
+  margin:0 auto;
+  padding:4px 22px;
+}
+
+.header-search{
+  position:relative;
+  width:min(760px,100%);
+  height:100%;
+  margin:0 auto;
+}
+
+.header-search input{
+  width:100%;
+  height:32px;
+  padding:0 45px 0 40px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  outline:none;
+  background:var(--surface);
+  color:var(--text);
+  font-size:11px;
+}
+
+.header-search input:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px var(--blue-soft);
+}
+
+.header-search::before{
+  content:"⌕";
+  position:absolute;
+  top:50%;
+  left:14px;
+  transform:translateY(-50%);
+  color:var(--text-soft);
+  font-size:18px;
+}
+
+.search-submit{
+  position:absolute;
+  top:50%;
+  right:5px;
+  width:25px;
+  height:25px;
+  transform:translateY(-50%);
+  border:none;
+  border-radius:50%;
+  background:var(--blue);
+  color:#fff;
+  font-size:11px;
+}
+
+/* HEADER */
+
+.site-header{
+  position:sticky;
+  top:var(--search-height);
+  z-index:1600;
+  min-height:var(--header-height);
+  border-bottom:1px solid var(--border);
+  background:var(--header-bg);
+  box-shadow:0 4px 16px rgba(20,64,111,.05);
+  backdrop-filter:blur(18px);
+}
+
+.header-inner{
+  width:min(1540px,100%);
+  min-height:var(--header-height);
+  margin:0 auto;
+  padding:0 22px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+}
+
+.header-left{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.menu-button{
+  display:none;
+  width:38px;
+  height:38px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:26px;
+}
+
+.brand{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.brand-leaf{
+  font-size:39px;
+  line-height:1;
+}
+
+.brand-copy{
+  min-width:0;
+}
+
+.brand-copy h1{
+  color:#123f70;
+  font-size:23px;
+  font-weight:700;
+  line-height:1.15;
+  white-space:nowrap;
+}
+
+.brand-copy p{
+  margin-top:2px;
+  color:var(--green);
+  font-size:11px;
+  font-weight:500;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .brand-copy h1{
+  color:#fff;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:7px;
+}
+
+.header-action{
+  width:38px;
+  height:38px;
+  border:1px solid var(--border);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  color:var(--text);
+  font-size:14px;
+  transition:.16s ease;
+}
+
+.header-action:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-soft);
+}
+
+.auth-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.auth-link{
+  min-height:35px;
+  padding:6px 11px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  color:var(--text-soft);
+  font-size:8px;
+  font-weight:700;
+}
+
+.auth-link.primary{
+  border-color:var(--blue);
+  background:var(--blue);
+  color:#fff;
+}
+
+.header-avatar{
+  width:41px;
+  height:41px;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,.92);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+}
+
+.header-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* DATE */
+
+.date-ticker{
+  position:sticky;
+  top:calc(var(--search-height) + var(--header-height));
+  z-index:1550;
+  height:var(--date-height);
+  overflow:hidden;
+  border-bottom:1px solid var(--border);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(235,247,251,.99),
+      rgba(231,243,251,.99),
+      rgba(239,247,252,.99)
+    );
+  backdrop-filter:blur(15px);
+}
+
+html[data-theme="dark"] .date-ticker{
+  background:rgba(5,18,36,.98);
+}
+
+.ticker-track{
+  width:max-content;
+  min-width:200%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  animation:dateScroll 36s linear infinite;
+  will-change:transform;
+}
+
+.ticker-group{
+  min-width:100vw;
+  padding:0 46px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  gap:68px;
+  color:var(--text-soft);
+  font-size:11px;
+  white-space:nowrap;
+}
+
+.ticker-separator{
+  color:var(--blue);
+  font-size:13px;
+}
+
+@keyframes dateScroll{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(-50%);
+  }
+}
+
+/* CATEGORY */
+
+.category-bar{
+  position:sticky;
+  top:calc(
+    var(--search-height) +
+    var(--header-height) +
+    var(--date-height)
+  );
+  z-index:1500;
+  min-height:var(--nav-height);
+  border-bottom:1px solid rgba(139,108,85,.16);
+  background:var(--category-bg);
+  box-shadow:0 4px 13px rgba(75,51,90,.045);
+  backdrop-filter:blur(17px);
+}
+
+.category-track{
+  width:min(1540px,100%);
+  min-height:var(--nav-height);
+  margin:0 auto;
+  padding:0 22px;
+  display:flex;
+  align-items:center;
+  gap:30px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.category-track::-webkit-scrollbar{
+  display:none;
+}
+
+.category-link{
+  flex:0 0 auto;
+  min-height:var(--nav-height);
+  padding:0 3px;
+  border-bottom:3px solid transparent;
+  display:flex;
+  align-items:center;
+  color:#625c76;
+  font-size:13px;
+  font-weight:600;
+  white-space:nowrap;
+}
+
+html[data-theme="dark"] .category-link{
+  color:var(--text-soft);
+}
+
+.category-link:hover{
+  color:var(--blue);
+  border-bottom-color:var(--blue);
+}
+
+/* PAGE */
+
+.page-grid{
+  width:min(1440px,100%);
+  margin:0 auto;
+  padding:22px 18px 44px;
+  display:grid;
+  grid-template-columns:245px minmax(0,1fr) 285px;
+  align-items:start;
+  gap:16px;
+}
+
+.left-sidebar,
+.right-sidebar{
+  position:sticky;
+  top:calc(
+    var(--search-height) +
+    var(--header-height) +
+    var(--date-height) +
+    var(--nav-height) +
+    16px
+  );
+  max-height:calc(
+    100vh -
+    var(--search-height) -
+    var(--header-height) -
+    var(--date-height) -
+    var(--nav-height) -
+    30px
+  );
+  overflow-y:auto;
+  scrollbar-width:none;
+}
+
+.left-sidebar::-webkit-scrollbar,
+.right-sidebar::-webkit-scrollbar,
+.mobile-drawer::-webkit-scrollbar{
+  display:none;
+}
+
+/* LEFT SIDEBAR */
+
+.sidebar-card{
+  padding:12px;
+}
+
+.account-box{
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:
+    radial-gradient(circle at top right,var(--purple-soft),transparent 49%),
+    var(--surface-soft);
+}
+
+.account-top{
+  display:grid;
+  grid-template-columns:45px minmax(0,1fr);
+  align-items:center;
+  gap:9px;
+}
+
+.account-avatar{
+  width:45px;
+  height:45px;
+  overflow:hidden;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;
+  font-size:11px;
+  font-weight:700;
+}
+
+.account-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.account-copy strong{
+  display:block;
+  font-size:10px;
+}
+
+.account-copy span{
+  display:block;
+  color:var(--muted);
+  font-size:7px;
+}
+
+.account-quote{
+  margin-top:9px;
+  padding:8px 9px;
+  border-left:3px solid var(--blue);
+  border-radius:0 8px 8px 0;
+  background:var(--blue-soft);
+  color:var(--text-soft);
+  font-size:7.5px;
+}
+
+.account-buttons{
+  margin-top:9px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+
+.account-button{
+  min-height:32px;
+  padding:5px 7px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  color:var(--text-soft);
+  font-size:7px;
+  font-weight:700;
+}
+
+.account-button.primary{
+  border-color:var(--blue);
+  background:var(--blue);
+  color:#fff;
+}
+
+.sidebar-heading{
+  margin:13px 5px 5px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:7.5px;
+  font-weight:700;
+}
+
+.sidebar-menu{
+  display:grid;
+  gap:3px;
+}
+
+.sidebar-link{
+  min-height:42px;
+  padding:6px 7px;
+  border:1px solid transparent;
+  border-radius:10px;
+  display:grid;
+  grid-template-columns:30px minmax(0,1fr) auto;
+  align-items:center;
+  gap:7px;
+  color:var(--text-soft);
+}
+
+.sidebar-link:hover,
+.sidebar-link.active{
+  border-color:var(--border);
+  background:var(--blue-soft);
+  color:var(--blue);
+}
+
+.sidebar-icon{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface-blue);
+  font-size:12px;
+}
+
+.sidebar-copy strong{
+  display:block;
+  font-size:8px;
+}
+
+.sidebar-copy small{
+  display:block;
+  overflow:hidden;
+  color:var(--muted);
+  font-size:5.9px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.sidebar-arrow{
+  color:var(--muted);
+}
+
+.founder-box{
+  margin-top:13px;
+  padding:10px;
+  border:1px solid rgba(169,133,76,.22);
+  border-radius:12px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(250,247,239,.97),
+      rgba(247,244,249,.97)
+    );
+}
+
+html[data-theme="dark"] .founder-box{
+  background:
+    linear-gradient(
+      135deg,
+      rgba(44,35,24,.82),
+      rgba(31,27,43,.86)
+    );
+}
+
+.founder-top{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr);
+  align-items:center;
+  gap:7px;
+}
+
+.founder-avatar{
+  width:38px;
+  height:38px;
+  overflow:hidden;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#987548,#756186);
+  color:#fff;
+  font-size:8px;
+  font-weight:700;
+}
+
+.founder-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.founder-name{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  font-size:8px;
+  font-weight:700;
+}
+
+.founder-badge{
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:#1679dc;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  font-size:7px;
+}
+
+.founder-role{
+  display:block;
+  color:var(--muted);
+  font-size:5.8px;
+}
+
+.founder-message{
+  margin-top:8px;
+  padding:7px;
+  border-left:3px solid var(--green);
+  border-radius:0 7px 7px 0;
+  background:var(--green-soft);
+  color:var(--text-soft);
+  font-size:6.5px;
+}
+
+/* MAIN */
+
+.main-content{
+  min-width:0;
+}
+
+.complaint-hero{
+  position:relative;
+  overflow:hidden;
+  padding:27px;
+  border-color:var(--red-border);
+  background:
+    radial-gradient(circle at 92% 10%,rgba(201,87,109,.12),transparent 35%),
+    radial-gradient(circle at 5% 90%,rgba(40,125,196,.10),transparent 38%),
+    var(--surface);
+}
+
+.complaint-hero::after{
+  content:"⚑";
+  position:absolute;
+  right:24px;
+  bottom:-40px;
+  color:var(--red-soft);
+  font-size:170px;
+  line-height:1;
+  pointer-events:none;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:720px;
+}
+
+.hero-label{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:5px 10px;
+  border:1px solid var(--red-border);
+  border-radius:999px;
+  background:var(--red-soft);
+  color:var(--red-dark);
+  font-size:8px;
+  font-weight:700;
+}
+
+.hero-title{
+  margin-top:12px;
+  font-size:29px;
+  line-height:1.45;
+}
+
+.hero-description{
+  margin-top:7px;
+  color:var(--text-soft);
+  font-size:11px;
+  line-height:1.95;
+}
+
+.hero-points{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.hero-point{
+  min-height:75px;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:var(--surface-soft);
+}
+
+.hero-point span{
+  display:block;
+  font-size:18px;
+}
+
+.hero-point strong{
+  display:block;
+  margin-top:4px;
+  font-size:8px;
+}
+
+.hero-point small{
+  display:block;
+  margin-top:1px;
+  color:var(--muted);
+  font-size:6px;
+  line-height:1.6;
+}
+
+/* FORM */
+
+.complaint-form-card{
+  margin-top:14px;
+  overflow:hidden;
+}
+
+.form-card-head{
+  padding:17px 19px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--surface-soft),
+      var(--red-soft)
+    );
+}
+
+.form-card-head h2{
+  font-size:17px;
+}
+
+.form-card-head p{
+  color:var(--muted);
+  font-size:7.5px;
+}
+
+.step-indicator{
+  min-width:92px;
+  padding:5px 9px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--text-soft);
+  font-size:7px;
+  text-align:center;
+}
+
+.complaint-form{
+  padding:19px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 12px;
+}
+
+.form-group{
+  margin-top:13px;
+}
+
+.form-group:first-child,
+.form-group:nth-child(2){
+  margin-top:0;
+}
+
+.form-group.full{
+  grid-column:1/-1;
+}
+
+.form-label-row{
+  margin-bottom:5px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.form-label{
+  color:var(--text-soft);
+  font-size:8px;
+  font-weight:700;
+}
+
+.field-note{
+  color:var(--muted);
+  font-size:6.3px;
+}
+
+.form-control{
+  width:100%;
+  min-height:44px;
+  padding:9px 11px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+  background:var(--surface-soft);
+  color:var(--text);
+  font-size:8px;
+  transition:.18s ease;
+}
+
+textarea.form-control{
+  min-height:150px;
+  resize:vertical;
+  line-height:1.9;
+}
+
+.form-control::placeholder{
+  color:var(--muted);
+}
+
+.form-control:focus{
+  border-color:var(--blue);
+  background:var(--surface);
+  box-shadow:0 0 0 3px var(--blue-soft);
+}
+
+.form-control.invalid{
+  border-color:var(--red);
+  box-shadow:0 0 0 3px var(--red-soft);
+}
+
+.field-error{
+  min-height:15px;
+  margin-top:3px;
+  color:var(--red-dark);
+  font-size:6.5px;
+}
+
+/* COMPLAINT TYPES */
+
+.type-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.type-option{
+  position:relative;
+  cursor:pointer;
+}
+
+.type-option input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+.type-box{
+  min-height:92px;
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  display:block;
+  background:var(--surface-soft);
+  transition:.18s ease;
+}
+
+.type-icon{
+  display:block;
+  font-size:20px;
+}
+
+.type-name{
+  display:block;
+  margin-top:5px;
+  font-size:8px;
+  font-weight:700;
+}
+
+.type-description{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:5.8px;
+  line-height:1.55;
+}
+
+.type-option input:checked + .type-box{
+  border-color:var(--red);
+  background:var(--red-soft);
+  box-shadow:0 0 0 3px rgba(201,87,109,.06);
+}
+
+.type-option input:focus-visible + .type-box{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+}
+
+/* ATTACHMENT */
+
+.attachment-box{
+  padding:13px;
+  border:1px dashed var(--border-strong);
+  border-radius:11px;
+  display:grid;
+  grid-template-columns:55px minmax(0,1fr);
+  align-items:center;
+  gap:11px;
+  background:var(--surface-soft);
+}
+
+.attachment-preview{
+  width:55px;
+  height:55px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  color:var(--blue);
+  font-size:21px;
+}
+
+.attachment-preview img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.attachment-copy strong{
+  display:block;
+  font-size:8px;
+}
+
+.attachment-copy p{
+  margin-top:2px;
+  color:var(--muted);
+  font-size:6px;
+}
+
+.attachment-actions{
+  margin-top:6px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+}
+
+.small-button{
+  min-height:30px;
+  padding:5px 9px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--surface);
+  color:var(--text-soft);
+  font-size:6.5px;
+  font-weight:700;
+}
+
+.small-button.danger{
+  border-color:var(--red-border);
+  background:var(--red-soft);
+  color:var(--red-dark);
+}
+
+/* PRIVACY */
+
+.privacy-box{
+  margin-top:15px;
+  padding:12px;
+  border:1px solid var(--green-border);
+  border-radius:11px;
+  background:var(--green-soft);
+}
+
+.privacy-box h3{
+  color:var(--green-dark);
+  font-size:9px;
+}
+
+.privacy-box p{
+  margin-top:3px;
+  color:var(--text-soft);
+  font-size:6.8px;
+}
+
+.check-list{
+  margin-top:12px;
+  display:grid;
+  gap:8px;
+}
+
+.check-row{
+  display:grid;
+  grid-template-columns:18px minmax(0,1fr);
+  align-items:start;
+  gap:7px;
+  color:var(--text-soft);
+  font-size:7px;
+  line-height:1.8;
+  cursor:pointer;
+}
+
+.check-row input{
+  width:16px;
+  height:16px;
+  margin-top:2px;
+  accent-color:var(--blue);
+}
+
+.check-row a{
+  color:var(--blue-dark);
+  font-weight:700;
+}
+
+.form-alert{
+  margin-top:13px;
+  padding:10px 11px;
+  border:1px solid transparent;
+  border-radius:10px;
+  display:none;
+  font-size:7.5px;
+  line-height:1.8;
+}
+
+.form-alert.show{
+  display:block;
+}
+
+.form-alert.error{
+  border-color:var(--red-border);
+  background:var(--red-soft);
+  color:var(--red-dark);
+}
+
+.form-alert.success{
+  border-color:var(--green-border);
+  background:var(--green-soft);
+  color:var(--green-dark);
+}
+
+.form-actions{
+  margin-top:16px;
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+}
+
+.secondary-button,
+.primary-button{
+  min-height:42px;
+  padding:7px 15px;
+  border-radius:9px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  font-size:8px;
+  font-weight:700;
+}
+
+.secondary-button{
+  border:1px solid var(--border);
+  background:var(--surface-soft);
+  color:var(--text-soft);
+}
+
+.primary-button{
+  border:1px solid var(--red);
+  background:linear-gradient(135deg,var(--red-dark),var(--red));
+  color:#fff;
+  box-shadow:0 9px 24px rgba(201,87,109,.20);
+}
+
+.primary-button:disabled{
+  cursor:not-allowed;
+  opacity:.62;
+}
+
+.button-spinner{
+  width:15px;
+  height:15px;
+  border:2px solid rgba(255,255,255,.35);
+  border-top-color:#fff;
+  border-radius:50%;
+  display:none;
+  animation:spin .75s linear infinite;
+}
+
+.primary-button.loading .button-spinner{
+  display:block;
+}
+
+@keyframes spin{
+  to{
+    transform:rotate(360deg);
+  }
+}
+
+/* SUCCESS */
+
+.success-panel{
+  display:none;
+  padding:36px 20px;
+  text-align:center;
+}
+
+.success-panel.show{
+  display:block;
+}
+
+.success-icon{
+  width:82px;
+  height:82px;
+  margin:0 auto;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--green-soft);
+  color:var(--green);
+  font-size:37px;
+}
+
+.success-panel h2{
+  margin-top:13px;
+  font-size:21px;
+}
+
+.success-panel p{
+  max-width:530px;
+  margin:6px auto 0;
+  color:var(--text-soft);
+  font-size:8.5px;
+}
+
+.reference-box{
+  width:min(440px,100%);
+  margin:15px auto 0;
+  padding:12px;
+  border:1px dashed var(--border-strong);
+  border-radius:11px;
+  background:var(--surface-soft);
+}
+
+.reference-box span{
+  display:block;
+  color:var(--muted);
+  font-size:6.5px;
+}
+
+.reference-box strong{
+  display:block;
+  margin-top:4px;
+  color:var(--blue-dark);
+  font-family:Arial,sans-serif;
+  font-size:18px;
+  letter-spacing:1px;
+}
+
+.success-actions{
+  margin-top:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+/* TRACK */
+
+.track-card{
+  margin-top:14px;
+  padding:18px;
+}
+
+.track-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.track-head h2{
+  font-size:16px;
+}
+
+.track-head p{
+  color:var(--muted);
+  font-size:7px;
+}
+
+.track-form{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+  gap:7px;
+}
+
+.track-button{
+  min-height:42px;
+  padding:7px 13px;
+  border:1px solid var(--blue);
+  border-radius:9px;
+  background:var(--blue);
+  color:#fff;
+  font-size:7.5px;
+  font-weight:700;
+}
+
+.track-result{
+  margin-top:11px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:none;
+  background:var(--surface-soft);
+}
+
+.track-result.show{
+  display:block;
+}
+
+.track-result-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:9px;
+}
+
+.track-result h3{
+  font-size:9px;
+}
+
+.status-badge{
+  padding:3px 8px;
+  border-radius:999px;
+  background:var(--gold-soft);
+  color:var(--gold);
+  font-size:6.5px;
+  font-weight:700;
+}
+
+.track-result p{
+  margin-top:4px;
+  color:var(--text-soft);
+  font-size:7px;
+}
+
+/* RIGHT SIDEBAR */
+
+.right-sidebar{
+  display:grid;
+  gap:12px;
+  align-content:start;
+}
+
+.right-card{
+  padding:14px;
+}
+
+.right-title{
+  margin-bottom:9px;
+  font-size:13px;
+}
+
+.guide-list{
+  display:grid;
+  gap:7px;
+}
+
+.guide-item{
+  padding:9px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  display:grid;
+  grid-template-columns:31px minmax(0,1fr);
+  align-items:start;
+  gap:7px;
+  background:var(--surface-soft);
+}
+
+.guide-icon{
+  width:31px;
+  height:31px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface-blue);
+  font-size:12px;
+}
+
+.guide-copy strong{
+  display:block;
+  font-size:7.5px;
+}
+
+.guide-copy span{
+  display:block;
+  margin-top:1px;
+  color:var(--muted);
+  font-size:5.8px;
+  line-height:1.55;
+}
+
+.warning-card{
+  border-color:var(--red-border);
+  background:
+    radial-gradient(circle at 94% 8%,var(--red-soft),transparent 44%),
+    var(--surface);
+}
+
+.warning-card p{
+  color:var(--text-soft);
+  font-size:7px;
+}
+
+.emergency-card{
+  border-color:var(--green-border);
+  background:var(--green-soft);
+}
+
+.emergency-card p{
+  color:var(--text-soft);
+  font-size:7px;
+}
+
+.emergency-link{
+  width:100%;
+  min-height:34px;
+  margin-top:9px;
+  border:1px solid var(--green-border);
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--surface);
+  color:var(--green-dark);
+  font-size:7px;
+  font-weight:700;
+}
+
+/* DRAWER */
+
+.drawer-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1900;
+  display:none;
+  background:rgba(0,0,0,.53);
+}
+
+.drawer-backdrop.show{
+  display:block;
+}
+
+.mobile-drawer{
+  position:fixed;
+  top:0;
+  left:-370px;
+  z-index:2000;
+  width:345px;
+  max-width:92vw;
+  height:100vh;
+  padding:14px;
+  overflow-y:auto;
+  border-right:1px solid var(--border);
+  background:var(--surface);
+  box-shadow:18px 0 48px rgba(0,0,0,.30);
+  transition:left .25s ease;
+}
+
+.mobile-drawer.open{
+  left:0;
+}
+
+.drawer-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.drawer-brand{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.drawer-brand span{
+  font-size:34px;
+}
+
+.drawer-brand h2{
+  font-size:19px;
+}
+
+.drawer-close{
+  width:38px;
+  height:38px;
+  border:none;
+  background:transparent;
+  color:var(--text);
+  font-size:30px;
+}
+
+.drawer-menu{
+  margin-top:12px;
+  display:grid;
+  gap:5px;
+}
+
+.drawer-link{
+  min-height:42px;
+  padding:7px 9px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:var(--surface-soft);
+  color:var(--text-soft);
+  font-size:8px;
+}
+
+.drawer-link.active{
+  border-color:var(--red-border);
+  background:var(--red-soft);
+  color:var(--red-dark);
+}
+
+/* FOOTER */
+
+.site-footer{
+  width:min(1440px,100%);
+  margin:0 auto;
+  padding:16px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:13px;
+  background:#123d68;
+  color:#fff;
+  font-size:8px;
+}
+
+.footer-links{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:11px;
+}
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:70px;
+  z-index:2800;
+  display:none;
+  transform:translateX(-50%);
+  max-width:92%;
+  padding:9px 15px;
+  border-radius:999px;
+  background:var(--blue-dark);
+  color:#fff;
+  text-align:center;
+  font-size:8px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1180px){
+  .page-grid{
+    grid-template-columns:220px minmax(0,1fr) 245px;
+    gap:11px;
+    padding-left:10px;
+    padding-right:10px;
+  }
+}
+
+@media(max-width:960px){
+  :root{
+    --search-height:42px;
+    --header-height:70px;
+    --date-height:38px;
+    --nav-height:54px;
+  }
+
+  .top-search-inner{
+    padding:4px 9px;
+  }
+
+  .header-search{
+    width:100%;
+  }
+
+  .header-search input{
+    height:34px;
+    font-size:10px;
+  }
+
+  .header-inner{
+    padding:5px 11px;
+  }
+
+  .menu-button{
+    display:block;
+  }
+
+  .brand-leaf{
+    font-size:35px;
+  }
+
+  .brand-copy h1{
+    font-size:20px;
+  }
+
+  .brand-copy p{
+    max-width:220px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:9px;
+  }
+
+  .messages-action,
+  .notifications-action{
+    display:none;
+  }
+
+  .ticker-group{
+    min-width:max-content;
+    padding:0 23px;
+    gap:40px;
+    font-size:10px;
+  }
+
+  .category-track{
+    padding:0 12px;
+    gap:23px;
+  }
+
+  .category-link{
+    font-size:11px;
+  }
+
+  .page-grid{
+    display:block;
+    padding:13px 9px 34px;
+  }
+
+  .left-sidebar,
+  .right-sidebar{
+    display:none;
+  }
+}
+
+@media(max-width:700px){
+  .auth-link:not(.primary){
+    display:none;
+  }
+
+  .header-action{
+    width:36px;
+    height:36px;
+  }
+
+  .header-avatar{
+    width:38px;
+    height:38px;
+  }
+
+  .complaint-hero{
+    padding:21px 17px;
+  }
+
+  .hero-title{
+    font-size:23px;
+  }
+
+  .hero-description{
+    font-size:9px;
+  }
+
+  .hero-points{
+    grid-template-columns:1fr;
+  }
+
+  .form-card-head{
+    display:block;
+    padding:15px;
+  }
+
+  .step-indicator{
+    width:max-content;
+    margin-top:7px;
+  }
+
+  .complaint-form{
+    padding:15px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-group,
+  .form-group:first-child,
+  .form-group:nth-child(2){
+    margin-top:12px;
+  }
+
+  .form-group:first-child{
+    margin-top:0;
+  }
+
+  .form-group.full{
+    grid-column:auto;
+  }
+
+  .type-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .track-form{
+    grid-template-columns:1fr;
+  }
+
+  .form-actions{
+    display:grid;
+    grid-template-columns:1fr;
+  }
+
+  .secondary-button,
+  .primary-button{
+    width:100%;
+  }
+
+  .site-footer{
+    display:block;
+    text-align:center;
+  }
+
+  .footer-links{
+    margin-top:7px;
+    justify-content:center;
+  }
+}
+
+@media(max-width:430px){
+  .brand-copy h1{
+    font-size:18px;
+  }
+
+  .brand-copy p{
+    max-width:175px;
+    font-size:8px;
+  }
+
+  .theme-action{
+    display:none;
+  }
+
+  .type-grid{
+    grid-template-columns:1fr;
+  }
+
+  .attachment-box{
+    grid-template-columns:48px minmax(0,1fr);
+  }
+
+  .attachment-preview{
+    width:48px;
+    height:48px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-search-bar">
+
+  <div class="top-search-inner">
+
+    <form class="header-search" id="searchForm">
+
+      <input
+        id="searchInput"
+        type="search"
+        placeholder="কবিতা, লেখক, আবৃত্তি অথবা বিষয় খুঁজুন..."
+      >
+
+      <button
+        class="search-submit"
+        type="submit"
+        aria-label="সার্চ করুন"
+      >
+        ⌕
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+<header class="site-header">
+
+  <div class="header-inner">
+
+    <div class="header-left">
+
+      <button
+        class="menu-button"
+        id="openDrawerButton"
+        type="button"
+        aria-label="মেনু খুলুন"
+      >
+        ☰
+      </button>
+
+      <a href="index.html" class="brand">
+
+        <span class="brand-leaf">🌿</span>
+
+        <span class="brand-copy">
+          <h1 id="siteTitle">ভুবনডাঙ্গার কবিতা</h1>
+          <p id="siteSubtitle">বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</p>
+        </span>
+
+      </a>
+
+    </div>
+
+    <div class="header-actions">
+
+      <a
+        href="notifications.html"
+        class="header-action notifications-action"
+        aria-label="নোটিফিকেশন"
+      >
+        🔔
+      </a>
+
+      <a
+        href="messages.html"
+        class="header-action messages-action"
+        aria-label="বার্তা"
+      >
+        💬
+      </a>
+
+      <button
+        class="header-action theme-action"
+        id="themeButton"
+        type="button"
+        aria-label="থিম পরিবর্তন"
+      >
+        <span id="themeIcon">🌙</span>
+      </button>
+
+      <div class="auth-actions" id="anonymousActions">
+
+        <a href="login.html" class="auth-link">
+          লগইন
+        </a>
+
+        <a href="register.html" class="auth-link primary">
+          নিবন্ধন
+        </a>
+
+      </div>
+
+      <a
+        href="profile.html?user=your-profile"
+        class="header-avatar"
+        id="headerAvatar"
+        aria-label="আপনার প্রোফাইল"
+        hidden
+      >
+        আ
+      </a>
+
+    </div>
+
+  </div>
+
+</header>
+
+<section class="date-ticker">
+
+  <div class="ticker-track">
+
+    <div class="ticker-group">
+
+      <span class="bangla-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="hijri-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="gregorian-date"></span>
+
+    </div>
+
+    <div class="ticker-group" aria-hidden="true">
+
+      <span class="bangla-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="hijri-date"></span>
+      <span class="ticker-separator">✦</span>
+      <span class="gregorian-date"></span>
+
+    </div>
+
+  </div>
+
+</section>
+
+<nav class="category-bar">
+
+  <div class="category-track">
+
+    <a href="index.html" class="category-link">হোম</a>
+    <a href="today-poem.html" class="category-link">কবিতা</a>
+    <a href="today-prolap.html" class="category-link">প্রলাপ</a>
+    <a href="madhyorater-prolap.html" class="category-link">মধ্যরাতের প্রলাপ</a>
+    <a href="today-letter.html" class="category-link">চিঠিপত্র</a>
+    <a href="famous-quotes.html" class="category-link">বিখ্যাত মনীষীদের বাণী</a>
+    <a href="recitation.html" class="category-link">আবৃত্তি</a>
+    <a href="famous-poet.html" class="category-link">খ্যাতিমান কবি</a>
+    <a href="today-discussion.html" class="category-link">সাহিত্য আলোচনা</a>
+    <a href="today-environment.html" class="category-link">পরিবেশের কথা</a>
+
+  </div>
+
+</nav>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<aside class="mobile-drawer" id="mobileDrawer">
+
+  <div class="drawer-head">
+
+    <a href="index.html" class="drawer-brand">
+      <span>🌿</span>
+      <h2>আপন ভুবন</h2>
+    </a>
+
+    <button
+      class="drawer-close"
+      id="closeDrawerButton"
+      type="button"
+      aria-label="মেনু বন্ধ করুন"
+    >
+      ×
+    </button>
+
+  </div>
+
+  <nav class="drawer-menu">
+
+    <a href="index.html" class="drawer-link">
+      <span>হোম</span>
+      <span>›</span>
+    </a>
+
+    <a href="profile.html?user=your-profile" class="drawer-link" id="drawerProfileLink">
+      <span>আপনার প্রোফাইল</span>
+      <span>›</span>
+    </a>
+
+    <a href="messages.html" class="drawer-link">
+      <span>মেসেঞ্জার</span>
+      <span>›</span>
+    </a>
+
+    <a href="notifications.html" class="drawer-link">
+      <span>নোটিফিকেশন</span>
+      <span>›</span>
+    </a>
+
+    <a href="complaint.html" class="drawer-link active">
+      <span>অভিযোগ করুন</span>
+      <span>›</span>
+    </a>
+
+    <a href="policy.html" class="drawer-link">
+      <span>নীতিমালা</span>
+      <span>›</span>
+    </a>
+
+    <a href="founder-profile.html" class="drawer-link">
+      <span>প্রতিষ্ঠাতা</span>
+      <span>›</span>
+    </a>
+
+  </nav>
+
+</aside>
+
+<main class="page-grid">
+
+  <aside class="left-sidebar">
+
+    <section class="card sidebar-card">
+
+      <div class="account-box">
+
+        <div class="account-top">
+
+          <a
+            href="profile.html?user=your-profile"
+            class="account-avatar"
+            id="sidebarAvatar"
+          >
+            আ
+          </a>
+
+          <div class="account-copy">
+
+            <strong id="sidebarName">
+              আপনার সাহিত্যিক ভুবন
+            </strong>
+
+            <span id="sidebarRole">
+              পাঠক • লেখক • ভুবনডাঙ্গার সদস্য
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="account-quote">
+          “আপনার ক্ষতগুলিকে জ্ঞানে পরিণত করুন।”
+        </div>
+
+        <div class="account-buttons" id="sidebarAuth">
+
+          <a href="login.html" class="account-button">
+            লগইন
+          </a>
+
+          <a href="register.html" class="account-button primary">
+            নিবন্ধন
+          </a>
+
+        </div>
+
+      </div>
+
+      <div class="sidebar-heading">
+        <span>আপন ভুবন</span>
+        <span>✦</span>
+      </div>
+
+      <nav class="sidebar-menu">
+
+        <a
+          href="profile.html?user=your-profile"
+          class="sidebar-link"
+          id="sidebarProfileLink"
+        >
+
+          <span class="sidebar-icon">👤</span>
+
+          <span class="sidebar-copy">
+            <strong>আপনার প্রোফাইল</strong>
+            <small>পরিচিতি, লেখা ও সাহিত্যিক তথ্য</small>
+          </span>
+
+          <span class="sidebar-arrow">›</span>
+
+        </a>
+
+        <a href="messages.html" class="sidebar-link">
+
+          <span class="sidebar-icon">💬</span>
+
+          <span class="sidebar-copy">
+            <strong>মেসেঞ্জার</strong>
+            <small>ব্যক্তিগত বার্তা ও কথোপকথন</small>
+          </span>
+
+          <span class="sidebar-arrow">›</span>
+
+        </a>
+
+        <a href="notifications.html" class="sidebar-link">
+
+          <span class="sidebar-icon">🔔</span>
+
+          <span class="sidebar-copy">
+            <strong>নোটিফিকেশন</strong>
+            <small>সাম্প্রতিক কার্যক্রম দেখুন</small>
+          </span>
+
+          <span class="sidebar-arrow">›</span>
+
+        </a>
+
+        <a href="saved.html" class="sidebar-link">
+
+          <span class="sidebar-icon">🔖</span>
+
+          <span class="sidebar-copy">
+            <strong>স্মৃতিতে রাখা</strong>
+            <small>সংরক্ষিত লেখা ও আবৃত্তি</small>
+          </span>
+
+          <span class="sidebar-arrow">›</span>
+
+        </a>
+
+        <a href="complaint.html" class="sidebar-link active">
+
+          <span class="sidebar-icon">⚑</span>
+
+          <span class="sidebar-copy">
+            <strong>অভিযোগ করুন</strong>
+            <small>অনিয়ম অথবা সমস্যার কথা জানান</small>
+          </span>
+
+          <span class="sidebar-arrow">›</span>
+
+        </a>
+
+        <a href="policy.html" class="sidebar-link">
+
+          <span class="sidebar-icon">📌</span>
+
+          <span class="sidebar-copy">
+            <strong>নীতিমালা</strong>
+            <small>নিরাপদ ও দায়িত্বশীল ব্যবহারের নিয়ম</small>
+          </span>
+
+          <span class="sidebar-arrow">›</span>
+
+        </a>
+
+      </nav>
+
+      <div class="founder-box">
+
+        <div class="founder-top">
+
+          <a href="founder-profile.html" class="founder-avatar">
+
+            <img
+              src="images/mahmud-sohel.jpg"
+              alt="মাহমুদ সোহেল"
+              onerror="this.remove();this.parentElement.textContent='মস';"
+            >
+
+          </a>
+
+          <div>
+
+            <a href="founder-profile.html" class="founder-name">
+              মাহমুদ সোহেল
+              <span class="founder-badge">✓</span>
+            </a>
+
+            <span class="founder-role">
+              কবি, লেখক, প্রলাপকার ও প্রতিষ্ঠাতা
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="founder-message">
+          জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন।
+        </div>
+
+      </div>
+
+    </section>
+
+  </aside>
+
+  <section class="main-content">
+
+    <section class="card complaint-hero">
+
+      <div class="hero-content">
+
+        <span class="hero-label">
+          ⚑ নিরাপদ ও সম্মানজনক ভুবনের জন্য
+        </span>
+
+        <h1 class="hero-title">
+          অভিযোগ করুন
+        </h1>
+
+        <p class="hero-description">
+          অনুপযুক্ত আচরণ, অন্যের লেখা নিজের নামে প্রকাশ, ভুয়া পরিচয়,
+          অন্যের ছবি ব্যবহার, গোপনীয়তা লঙ্ঘন, হুমকি, হয়রানি অথবা
+          প্রযুক্তিগত সমস্যার বিষয়ে বিস্তারিত অভিযোগ জানান।
+        </p>
+
+        <div class="hero-points">
+
+          <div class="hero-point">
+            <span>🔒</span>
+            <strong>অভিযোগকারীর নিরাপত্তা</strong>
+            <small>অভিযোগকারীর পরিচয় প্রকাশ্যে প্রদর্শিত হবে না।</small>
+          </div>
+
+          <div class="hero-point">
+            <span>🔎</span>
+            <strong>তথ্য যাচাই</strong>
+            <small>প্রয়োজনীয় তথ্য ও প্রমাণ যাচাই করে সিদ্ধান্ত নেওয়া হবে।</small>
+          </div>
+
+          <div class="hero-point">
+            <span>⚖</span>
+            <strong>ন্যায্য পর্যালোচনা</strong>
+            <small>অভিযোগ ও সংশ্লিষ্ট পক্ষের তথ্য বিবেচনা করা হবে।</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card complaint-form-card">
+
+      <header class="form-card-head">
+
+        <div>
+          <h2>অভিযোগের বিস্তারিত লিখুন</h2>
+          <p>সঠিক তথ্য দিলে অভিযোগটি দ্রুত পর্যালোচনা করা সম্ভব হবে।</p>
+        </div>
+
+        <span class="step-indicator">
+          অভিযোগ ফরম
+        </span>
+
+      </header>
+
+      <form
+        class="complaint-form"
+        id="complaintForm"
+        novalidate
+      >
+
+        <div class="form-group full">
+
+          <div class="form-label-row">
+            <span class="form-label">অভিযোগের ধরন</span>
+            <span class="field-note">একটি নির্বাচন করুন</span>
+          </div>
+
+          <div class="type-grid">
+
+            <label class="type-option">
+
+              <input
+                type="radio"
+                name="complaintType"
+                value="হয়রানি অথবা অসদাচরণ"
+              >
+
+              <span class="type-box">
+                <span class="type-icon">🛑</span>
+                <span class="type-name">হয়রানি অথবা অসদাচরণ</span>
+                <span class="type-description">
+                  অপমান, হুমকি, অশালীন মন্তব্য অথবা বিরক্ত করা
+                </span>
+              </span>
+
+            </label>
+
+            <label class="type-option">
+
+              <input
+                type="radio"
+                name="complaintType"
+                value="লেখা চুরি"
+              >
+
+              <span class="type-box">
+                <span class="type-icon">✍</span>
+                <span class="type-name">লেখা চুরি</span>
+                <span class="type-description">
+                  অন্যের লেখা নিজের নামে প্রকাশ অথবা উৎস গোপন করা
+                </span>
+              </span>
+
+            </label>
+
+            <label class="type-option">
+
+              <input
+                type="radio"
+                name="complaintType"
+                value="ভুয়া পরিচয় অথবা ছবি"
+              >
+
+              <span class="type-box">
+                <span class="type-icon">👤</span>
+                <span class="type-name">ভুয়া পরিচয় অথবা ছবি</span>
+                <span class="type-description">
+                  অন্যের পরিচয়, ছবি অথবা বিখ্যাত ব্যক্তির ছবি ব্যবহার
+                </span>
+              </span>
+
+            </label>
+
+            <label class="type-option">
+
+              <input
+                type="radio"
+                name="complaintType"
+                value="অনুপযুক্ত প্রকাশনা"
+              >
+
+              <span class="type-box">
+                <span class="type-icon">⚠</span>
+                <span class="type-name">অনুপযুক্ত প্রকাশনা</span>
+                <span class="type-description">
+                  ক্ষতিকর, বিদ্বেষমূলক অথবা নীতিমালা-বিরোধী প্রকাশনা
+                </span>
+              </span>
+
+            </label>
+
+            <label class="type-option">
+
+              <input
+                type="radio"
+                name="complaintType"
+                value="গোপনীয়তা লঙ্ঘন"
+              >
+
+              <span class="type-box">
+                <span class="type-icon">🔐</span>
+                <span class="type-name">গোপনীয়তা লঙ্ঘন</span>
+                <span class="type-description">
+                  অনুমতি ছাড়া ব্যক্তিগত তথ্য অথবা ছবি প্রকাশ
+                </span>
+              </span>
+
+            </label>
+
+            <label class="type-option">
+
+              <input
+                type="radio"
+                name="complaintType"
+                value="প্রযুক্তিগত অথবা অন্যান্য"
+              >
+
+              <span class="type-box">
+                <span class="type-icon">⚙</span>
+                <span class="type-name">প্রযুক্তিগত অথবা অন্যান্য</span>
+                <span class="type-description">
+                  ওয়েবসাইটের সমস্যা অথবা তালিকার বাইরে অন্য অভিযোগ
+                </span>
+              </span>
+
+            </label>
+
+          </div>
+
+          <div class="field-error" id="complaintTypeError"></div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <div class="form-label-row">
+
+              <label class="form-label" for="complainantName">
+                আপনার নাম
+              </label>
+
+              <span class="field-note">
+                অবশ্যই লিখুন
+              </span>
+
+            </div>
+
+            <input
+              class="form-control"
+              id="complainantName"
+              type="text"
+              placeholder="আপনার পূর্ণ নাম"
+              maxlength="100"
+              autocomplete="name"
+              required
+            >
+
+            <div class="field-error" id="complainantNameError"></div>
+
+          </div>
+
+          <div class="form-group">
+
+            <div class="form-label-row">
+
+              <label class="form-label" for="complainantEmail">
+                ইমেইল অথবা যোগাযোগ
+              </label>
+
+              <span class="field-note">
+                অভিযোগের খবর জানাতে
+              </span>
+
+            </div>
+
+            <input
+              class="form-control"
+              id="complainantEmail"
+              type="text"
+              placeholder="ইমেইল অথবা মোবাইল নম্বর"
+              maxlength="140"
+              required
+            >
+
+            <div class="field-error" id="complainantEmailError"></div>
+
+          </div>
+
+          <div class="form-group full">
+
+            <div class="form-label-row">
+
+              <label class="form-label" for="complaintSubject">
+                অভিযোগের শিরোনাম
+              </label>
+
+              <span class="field-note">
+                সংক্ষেপে লিখুন
+              </span>
+
+            </div>
+
+            <input
+              class="form-control"
+              id="complaintSubject"
+              type="text"
+              placeholder="অভিযোগের মূল বিষয় লিখুন"
+              maxlength="180"
+              required
+            >
+
+            <div class="field-error" id="complaintSubjectError"></div>
+
+          </div>
+
+          <div class="form-group">
+
+            <div class="form-label-row">
+
+              <label class="form-label" for="reportedUsername">
+                সংশ্লিষ্ট ইউজারনেম
+              </label>
+
+              <span class="field-note">
+                জানা থাকলে
+              </span>
+
+            </div>
+
+            <input
+              class="form-control"
+              id="reportedUsername"
+              type="text"
+              placeholder="@username"
+              maxlength="80"
+              autocapitalize="none"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <div class="form-label-row">
+
+              <label class="form-label" for="relatedUrl">
+                সংশ্লিষ্ট পোস্ট অথবা প্রোফাইলের লিংক
+              </label>
+
+              <span class="field-note">
+                জানা থাকলে
+              </span>
+
+            </div>
+
+            <input
+              class="form-control"
+              id="relatedUrl"
+              type="url"
+              placeholder="https://..."
+            >
+
+            <div class="field-error" id="relatedUrlError"></div>
+
+          </div>
+
+          <div class="form-group full">
+
+            <div class="form-label-row">
+
+              <label class="form-label" for="complaintDetails">
+                অভিযোগের বিস্তারিত
+              </label>
+
+              <span class="field-note" id="detailsCounter">
+                ০ / ৩০০০
+              </span>
+
+            </div>
+
+            <textarea
+              class="form-control"
+              id="complaintDetails"
+              placeholder="কী ঘটেছে, কখন ঘটেছে, কার সঙ্গে ঘটেছে এবং কী প্রমাণ রয়েছে—স্পষ্টভাবে লিখুন..."
+              maxlength="3000"
+              required
+            ></textarea>
+
+            <div class="field-error" id="complaintDetailsError"></div>
+
+          </div>
+
+          <div class="form-group full">
+
+            <div class="form-label-row">
+
+              <span class="form-label">
+                প্রমাণ অথবা স্ক্রিনশট
+              </span>
+
+              <span class="field-note">
+                ঐচ্ছিক, সর্বোচ্চ ১ এমবি
+              </span>
+
+            </div>
+
+            <input
+              id="evidenceInput"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+            >
+
+            <div class="attachment-box">
+
+              <div class="attachment-preview" id="attachmentPreview">
+                🖼
+              </div>
+
+              <div class="attachment-copy">
+
+                <strong id="attachmentTitle">
+                  স্ক্রিনশট অথবা ছবির প্রমাণ যোগ করুন
+                </strong>
+
+                <p id="attachmentDescription">
+                  JPG, PNG অথবা WEBP ফাইল ব্যবহার করুন।
+                </p>
+
+                <div class="attachment-actions">
+
+                  <button
+                    class="small-button"
+                    id="chooseEvidenceButton"
+                    type="button"
+                  >
+                    ছবি নির্বাচন
+                  </button>
+
+                  <button
+                    class="small-button danger"
+                    id="removeEvidenceButton"
+                    type="button"
+                    hidden
+                  >
+                    ছবি সরান
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="field-error" id="evidenceError"></div>
+
+          </div>
+
+        </div>
+
+        <div class="privacy-box">
+
+          <h3>অভিযোগকারীর গোপনীয়তা</h3>
+
+          <p>
+            অভিযোগকারীর নাম, যোগাযোগের তথ্য এবং জমা দেওয়া প্রমাণ
+            প্রকাশ্য নিউজফিডে দেখানো হবে না। অভিযোগ যাচাই ও প্রয়োজনীয়
+            যোগাযোগের জন্য প্রশাসন তথ্যগুলো ব্যবহার করবে।
+          </p>
+
+        </div>
+
+        <div class="check-list">
+
+          <label class="check-row">
+
+            <input
+              id="anonymousCheckbox"
+              type="checkbox"
+            >
+
+            <span>
+              অভিযোগটি পর্যালোচনার সময় সংশ্লিষ্ট সাধারণ সদস্যের কাছে
+              আমার পরিচয় প্রকাশ করা হবে না।
+            </span>
+
+          </label>
+
+          <label class="check-row">
+
+            <input
+              id="truthCheckbox"
+              type="checkbox"
+              required
+            >
+
+            <span>
+              আমি নিশ্চিত করছি, আমার দেওয়া তথ্য আমার জানা অনুযায়ী সত্য
+              এবং ইচ্ছাকৃতভাবে কাউকে ক্ষতি করার উদ্দেশ্যে অভিযোগ করছি না।
+            </span>
+
+          </label>
+
+          <label class="check-row">
+
+            <input
+              id="policyCheckbox"
+              type="checkbox"
+              required
+            >
+
+            <span>
+              আমি ভুবনডাঙ্গার
+              <a href="policy.html" target="_blank">নীতিমালা</a>
+              পড়েছি এবং অভিযোগ পর্যালোচনার নিয়মে সম্মত।
+            </span>
+
+          </label>
+
+        </div>
+
+        <div
+          class="form-alert"
+          id="formAlert"
+          role="alert"
+        ></div>
+
+        <div class="form-actions">
+
+          <button
+            class="secondary-button"
+            id="resetFormButton"
+            type="button"
+          >
+            ফরম মুছুন
+          </button>
+
+          <button
+            class="primary-button"
+            id="submitComplaintButton"
+            type="submit"
+          >
+            <span class="button-spinner"></span>
+            <span>অভিযোগ জমা দিন</span>
+          </button>
+
+        </div>
+
+      </form>
+
+      <section class="success-panel" id="successPanel">
+
+        <div class="success-icon">
+          ✓
+        </div>
+
+        <h2>অভিযোগ জমা হয়েছে</h2>
+
+        <p>
+          আপনার অভিযোগটি পর্যালোচনার জন্য জমা হয়েছে। নিচের অভিযোগ নম্বরটি
+          সংরক্ষণ করুন। পরবর্তীতে অভিযোগের অবস্থা জানতে এই নম্বর ব্যবহার
+          করতে পারবেন।
+        </p>
+
+        <div class="reference-box">
+
+          <span>অভিযোগ নম্বর</span>
+
+          <strong id="successReference">
+            BDK-000000
+          </strong>
+
+        </div>
+
+        <div class="success-actions">
+
+          <button
+            class="secondary-button"
+            id="copyReferenceButton"
+            type="button"
+          >
+            অভিযোগ নম্বর কপি করুন
+          </button>
+
+          <button
+            class="primary-button"
+            id="newComplaintButton"
+            type="button"
+          >
+            নতুন অভিযোগ করুন
+          </button>
+
+          <a href="index.html" class="secondary-button">
+            হোমে ফিরে যান
+          </a>
+
+        </div>
+
+      </section>
+
+    </section>
+
+    <section class="card track-card">
+
+      <div class="track-head">
+
+        <div>
+          <h2>অভিযোগের অবস্থা দেখুন</h2>
+          <p>অভিযোগ নম্বর এবং জমা দেওয়ার সময় ব্যবহৃত যোগাযোগের তথ্য লিখুন।</p>
+        </div>
+
+        <span>🔎</span>
+
+      </div>
+
+      <form class="track-form" id="trackForm">
+
+        <input
+          class="form-control"
+          id="trackReference"
+          type="text"
+          placeholder="যেমন: BDK-123456"
+          required
+        >
+
+        <input
+          class="form-control"
+          id="trackContact"
+          type="text"
+          placeholder="ইমেইল অথবা মোবাইল নম্বর"
+          required
+        >
+
+        <button class="track-button" type="submit">
+          অবস্থা দেখুন
+        </button>
+
+      </form>
+
+      <div class="track-result" id="trackResult">
+
+        <div class="track-result-head">
+
+          <h3 id="trackTitle">
+            অভিযোগের তথ্য
+          </h3>
+
+          <span class="status-badge" id="trackStatus">
+            পর্যালোচনাধীন
+          </span>
+
+        </div>
+
+        <p id="trackDescription"></p>
+
+      </div>
+
+    </section>
+
+  </section>
+
+  <aside class="right-sidebar">
+
+    <section class="card right-card warning-card">
+
+      <h2 class="right-title">অভিযোগ করার আগে</h2>
+
+      <p>
+        ব্যক্তিগত মতবিরোধ, ভিন্ন সাহিত্যিক মত অথবা কোনো লেখা পছন্দ না হওয়াকে
+        নীতিমালা লঙ্ঘন হিসেবে অভিযোগ করবেন না। অভিযোগের সঙ্গে স্পষ্ট ঘটনা
+        ও প্রাসঙ্গিক তথ্য দিন।
+      </p>
+
+    </section>
+
+    <section class="card right-card">
+
+      <h2 class="right-title">যে তথ্যগুলো সহায়ক</h2>
+
+      <div class="guide-list">
+
+        <div class="guide-item">
+
+          <span class="guide-icon">🔗</span>
+
+          <span class="guide-copy">
+            <strong>পোস্ট অথবা প্রোফাইল লিংক</strong>
+            <span>সংশ্লিষ্ট পেজের সঠিক লিংক যুক্ত করুন।</span>
+          </span>
+
+        </div>
+
+        <div class="guide-item">
+
+          <span class="guide-icon">📅</span>
+
+          <span class="guide-copy">
+            <strong>ঘটনার সময়</strong>
+            <span>ঘটনাটি কখন ঘটেছে তা উল্লেখ করুন।</span>
+          </span>
+
+        </div>
+
+        <div class="guide-item">
+
+          <span class="guide-icon">🖼</span>
+
+          <span class="guide-copy">
+            <strong>স্ক্রিনশট অথবা প্রমাণ</strong>
+            <span>প্রাসঙ্গিক স্ক্রিনশট অভিযোগ যাচাইয়ে সহায়তা করে।</span>
+          </span>
+
+        </div>
+
+        <div class="guide-item">
+
+          <span class="guide-icon">✍</span>
+
+          <span class="guide-copy">
+            <strong>স্পষ্ট বর্ণনা</strong>
+            <span>সংক্ষিপ্ত কিন্তু পূর্ণাঙ্গভাবে ঘটনাটি লিখুন।</span>
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="card right-card emergency-card">
+
+      <h2 class="right-title">জরুরি সহায়তা</h2>
+
+      <p>
+        জীবন, চিকিৎসা, রক্ত অথবা তাৎক্ষণিক মানবিক সহায়তার বিষয় হলে সাধারণ
+        অভিযোগের পরিবর্তে মানবিক আবেদন ব্যবহার করুন।
+      </p>
+
+      <a href="humanitarian-request.html" class="emergency-link">
+        মানবিক আবেদন করুন
+      </a>
+
+    </section>
+
+    <section class="card right-card">
+
+      <h2 class="right-title">প্রতিষ্ঠাতার সঙ্গে যোগাযোগ</h2>
+
+      <p style="color:var(--text-soft);font-size:7px;">
+        জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন।
+      </p>
+
+      <a href="founder-profile.html" class="emergency-link">
+        মাহমুদ সোহেলের প্রোফাইল
+      </a>
+
+    </section>
+
+  </aside>
+
+</main>
+
+<footer class="site-footer">
+
+  <div>
+    🌿 ভুবনডাঙ্গার কবিতা © <span id="footerYear"></span>
+  </div>
+
+  <div class="footer-links">
+    <a href="index.html">হোম</a>
+    <a href="about.html">আমাদের সম্পর্কে</a>
+    <a href="contact.html">যোগাযোগ</a>
+    <a href="complaint.html">অভিযোগ</a>
+    <a href="privacy-security-policy.html">গোপনীয়তা</a>
+    <a href="policy.html">নীতিমালা</a>
+  </div>
+
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const root =
+  document.documentElement;
+
+root.setAttribute(
+  "data-theme",
+  localStorage.getItem("bhubondangaTheme") || "light"
+);
+
+const KEYS = {
+  currentUser:"bhubondangaCurrentUser",
+  users:"bhubondangaUsers",
+  complaints:"bhubondangaComplaints",
+  adminNotifications:"bhubondangaAdminNotifications",
+  notifications:"bhubondangaNotifications",
+  settings:"bhubondangaSiteSettings"
+};
+
+const BENGALI_MONTHS = [
+  "বৈশাখ",
+  "জ্যৈষ্ঠ",
+  "আষাঢ়",
+  "শ্রাবণ",
+  "ভাদ্র",
+  "আশ্বিন",
+  "কার্তিক",
+  "অগ্রহায়ণ",
+  "পৌষ",
+  "মাঘ",
+  "ফাল্গুন",
+  "চৈত্র"
+];
+
+const bnDigits = {
+  "0":"০",
+  "1":"১",
+  "2":"২",
+  "3":"৩",
+  "4":"৪",
+  "5":"৫",
+  "6":"৬",
+  "7":"৭",
+  "8":"৮",
+  "9":"৯"
+};
+
+function toBn(value){
+  return String(value).replace(/[0-9]/g,function(digit){
+    return bnDigits[digit];
+  });
+}
+
+function escapeHtml(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function normalizeUsername(value){
+  return String(value || "")
+    .trim()
+    .toLocaleLowerCase("en-US")
+    .replace(/^@/,"")
+    .replace(/\s+/g,"-")
+    .replace(/-+/g,"-");
+}
+
+function getInitials(name){
+  return String(name || "")
+    .replace(/\s+/g,"")
+    .slice(0,2) || "আ";
+}
+
+function getStorageArray(key){
+  try {
+    const parsed=JSON.parse(localStorage.getItem(key)||"[]");
+
+    if(Array.isArray(parsed)){
+      return parsed;
+    }
+
+    if(parsed && typeof parsed==="object"){
+      return Object.values(parsed);
+    }
+
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+function getStorageObject(key){
+  try {
+    const parsed=JSON.parse(localStorage.getItem(key)||"{}");
+
+    return (
+      parsed &&
+      typeof parsed==="object" &&
+      !Array.isArray(parsed)
+    )
+      ? parsed
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveStorageArray(key,value){
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
+}
+
+function saveStorageObject(key,value){
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
+}
+
+function uniqueId(){
+  return (
+    Date.now().toString(36) +
+    Math.random().toString(36).slice(2,9)
+  );
+}
+
+function createReference(){
+  const datePart =
+    String(Date.now()).slice(-6);
+
+  const randomPart =
+    Math.floor(
+      100 + Math.random() * 900
+    );
+
+  return (
+    "BDK-" +
+    datePart +
+    "-" +
+    randomPart
+  );
+}
+
+function profileUrl(user){
+  const username =
+    normalizeUsername(
+      user.username ||
+      user.slug ||
+      user.email ||
+      user.name
+    );
+
+  if(
+    user.role === "founder" ||
+    username === "mahmud-sohel"
+  ){
+    return "founder-profile.html";
+  }
+
+  return (
+    "profile.html?user=" +
+    encodeURIComponent(username || "your-profile")
+  );
+}
+
+function showToast(message){
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent =
+    message;
+
+  toast.style.display =
+    "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(function(){
+      toast.style.display =
+        "none";
+    },2800);
+}
+
+/* SETTINGS */
+
+function applySiteSettings(){
+  const settings =
+    getStorageObject(KEYS.settings);
+
+  document
+    .getElementById("siteTitle")
+    .textContent =
+      settings.siteTitle ||
+      "ভুবনডাঙ্গার কবিতা";
+
+  document
+    .getElementById("siteSubtitle")
+    .textContent =
+      settings.siteSubtitle ||
+      "বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন";
+
+  if(settings.accentColor){
+    root.style.setProperty(
+      "--blue",
+      settings.accentColor
+    );
+  }
+}
+
+/* CURRENT USER */
+
+const storedUser =
+  getStorageObject(KEYS.currentUser);
+
+const hasIdentity =
+  Boolean(
+    storedUser.name ||
+    storedUser.username ||
+    storedUser.email ||
+    storedUser.role
+  );
+
+const isLoggedIn =
+  storedUser.loggedIn !== false &&
+  hasIdentity;
+
+const currentUser = {
+  ...storedUser,
+
+  name:
+    storedUser.name ||
+    storedUser.fullName ||
+    "",
+
+  username:
+    normalizeUsername(
+      storedUser.username ||
+      storedUser.slug ||
+      storedUser.email ||
+      ""
+    ),
+
+  role:
+    String(
+      storedUser.role || "reader"
+    ).toLocaleLowerCase("en-US"),
+
+  avatar:
+    storedUser.avatar ||
+    storedUser.profileImage ||
+    "",
+
+  initials:
+    storedUser.initials ||
+    getInitials(
+      storedUser.name ||
+      storedUser.fullName ||
+      "আ"
+    ),
+
+  loggedIn:isLoggedIn
+};
+
+function renderCurrentUser(){
+  document
+    .getElementById("anonymousActions")
+    .hidden =
+      currentUser.loggedIn;
+
+  const headerAvatar =
+    document.getElementById("headerAvatar");
+
+  headerAvatar.hidden =
+    !currentUser.loggedIn;
+
+  document
+    .getElementById("sidebarAuth")
+    .hidden =
+      currentUser.loggedIn;
+
+  if(!currentUser.loggedIn){
+    return;
+  }
+
+  const url =
+    profileUrl(currentUser);
+
+  headerAvatar.href =
+    url;
+
+  document
+    .getElementById("sidebarProfileLink")
+    .href =
+      url;
+
+  document
+    .getElementById("drawerProfileLink")
+    .href =
+      url;
+
+  document
+    .getElementById("sidebarName")
+    .textContent =
+      currentUser.name;
+
+  document
+    .getElementById("sidebarRole")
+    .textContent =
+      roleLabel(currentUser.role);
+
+  [
+    headerAvatar,
+    document.getElementById("sidebarAvatar")
+  ].forEach(function(avatar){
+    avatar.href =
+      url;
+
+    avatar.innerHTML =
+      currentUser.avatar
+        ? `
+          <img
+            src="${escapeHtml(currentUser.avatar)}"
+            alt="${escapeHtml(currentUser.name)}"
+            onerror="this.remove();this.parentElement.textContent='${escapeHtml(currentUser.initials)}';"
+          >
+        `
+        : escapeHtml(currentUser.initials);
+  });
+
+  document
+    .getElementById("complainantName")
+    .value =
+      currentUser.name || "";
+
+  document
+    .getElementById("complainantEmail")
+    .value =
+      currentUser.email ||
+      currentUser.mobile ||
+      "";
+}
+
+function roleLabel(role){
+  const labels = {
+    founder:"প্রতিষ্ঠাতা",
+    admin:"অ্যাডমিন",
+    writer:"লেখক",
+    reciter:"আবৃত্তিকার",
+    reader:"পাঠক"
+  };
+
+  return labels[role] ||
+    "ভুবনডাঙ্গার সদস্য";
+}
+
+/* STRICT DATE */
+
+function formatCalendar(
+  locale,
+  date,
+  options,
+  validator,
+  fallback
+){
+  try{
+    const formatter =
+      new Intl.DateTimeFormat(
+        locale,
+        options
+      );
+
+    const resolved =
+      formatter.resolvedOptions();
+
+    const parts =
+      formatter.formatToParts(date);
+
+    const month =
+      parts.find(function(part){
+        return part.type === "month";
+      })?.value || "";
+
+    if(
+      !validator(
+        resolved,
+        month
+      )
+    ){
+      return fallback;
+    }
+
+    return formatter.format(date);
+  }catch{
+    return fallback;
+  }
+}
+
+function renderDates(){
+  const today =
+    new Date();
+
+  const options = {
+    day:"numeric",
+    month:"long",
+    year:"numeric"
+  };
+
+  const bengali =
+    formatCalendar(
+      "bn-BD-u-ca-beng",
+      today,
+      options,
+      function(resolved,month){
+        return (
+          resolved.calendar === "beng" &&
+          BENGALI_MONTHS.some(function(item){
+            return month.includes(item);
+          })
+        );
+      },
+      "বাংলা তারিখ পাওয়া যায়নি"
+    );
+
+  const hijri =
+    formatCalendar(
+      "bn-BD-u-ca-islamic",
+      today,
+      options,
+      function(resolved){
+        return String(
+          resolved.calendar
+        ).startsWith("islamic");
+      },
+      "হিজরি তারিখ পাওয়া যায়নি"
+    );
+
+  const gregorian =
+    formatCalendar(
+      "bn-BD",
+      today,
+      options,
+      function(resolved){
+        return resolved.calendar === "gregory";
+      },
+      "গ্রেগরীয় তারিখ পাওয়া যায়নি"
+    );
+
+  document
+    .querySelectorAll(".bangla-date")
+    .forEach(function(element){
+      element.textContent =
+        bengali;
+    });
+
+  document
+    .querySelectorAll(".hijri-date")
+    .forEach(function(element){
+      element.textContent =
+        hijri;
+    });
+
+  document
+    .querySelectorAll(".gregorian-date")
+    .forEach(function(element){
+      element.textContent =
+        gregorian;
+    });
+}
+
+/* FORM */
+
+const complaintForm =
+  document.getElementById("complaintForm");
+
+const complainantName =
+  document.getElementById("complainantName");
+
+const complainantEmail =
+  document.getElementById("complainantEmail");
+
+const complaintSubject =
+  document.getElementById("complaintSubject");
+
+const complaintDetails =
+  document.getElementById("complaintDetails");
+
+const relatedUrl =
+  document.getElementById("relatedUrl");
+
+const evidenceInput =
+  document.getElementById("evidenceInput");
+
+let selectedEvidence =
+  "";
+
+let selectedEvidenceName =
+  "";
+
+let latestReference =
+  "";
+
+function setFieldState(
+  input,
+  errorId,
+  message
+){
+  input.classList.toggle(
+    "invalid",
+    Boolean(message)
+  );
+
+  document
+    .getElementById(errorId)
+    .textContent =
+      message || "";
+}
+
+function showFormAlert(message,type){
+  const alert =
+    document.getElementById("formAlert");
+
+  alert.textContent =
+    message;
+
+  alert.className =
+    "form-alert show " +
+    type;
+}
+
+function clearFormAlert(){
+  const alert =
+    document.getElementById("formAlert");
+
+  alert.textContent =
+    "";
+
+  alert.className =
+    "form-alert";
+}
+
+function validateComplaintType(){
+  const selected =
+    complaintForm.querySelector(
+      'input[name="complaintType"]:checked'
+    );
+
+  document
+    .getElementById("complaintTypeError")
+    .textContent =
+      selected
+        ? ""
+        : "অভিযোগের একটি ধরন নির্বাচন করুন।";
+
+  return Boolean(selected);
+}
+
+function validateName(){
+  const value =
+    complainantName.value.trim();
+
+  if(value.length < 2){
+    setFieldState(
+      complainantName,
+      "complainantNameError",
+      "আপনার নাম লিখুন।"
+    );
+
+    return false;
+  }
+
+  setFieldState(
+    complainantName,
+    "complainantNameError",
+    ""
+  );
+
+  return true;
+}
+
+function validateContact(){
+  const value =
+    complainantEmail.value.trim();
+
+  if(value.length < 5){
+    setFieldState(
+      complainantEmail,
+      "complainantEmailError",
+      "সঠিক ইমেইল অথবা যোগাযোগের তথ্য লিখুন।"
+    );
+
+    return false;
+  }
+
+  setFieldState(
+    complainantEmail,
+    "complainantEmailError",
+    ""
+  );
+
+  return true;
+}
+
+function validateSubject(){
+  const value =
+    complaintSubject.value.trim();
+
+  if(value.length < 5){
+    setFieldState(
+      complaintSubject,
+      "complaintSubjectError",
+      "অভিযোগের শিরোনাম অন্তত ৫ অক্ষরের লিখুন।"
+    );
+
+    return false;
+  }
+
+  setFieldState(
+    complaintSubject,
+    "complaintSubjectError",
+    ""
+  );
+
+  return true;
+}
+
+function validateDetails(){
+  const value =
+    complaintDetails.value.trim();
+
+  if(value.length < 20){
+    setFieldState(
+      complaintDetails,
+      "complaintDetailsError",
+      "অভিযোগের বিস্তারিত অন্তত ২০ অক্ষরের লিখুন।"
+    );
+
+    return false;
+  }
+
+  setFieldState(
+    complaintDetails,
+    "complaintDetailsError",
+    ""
+  );
+
+  return true;
+}
+
+function validateUrl(){
+  const value =
+    relatedUrl.value.trim();
+
+  if(!value){
+    setFieldState(
+      relatedUrl,
+      "relatedUrlError",
+      ""
+    );
+
+    return true;
+  }
+
+  try{
+    const url =
+      new URL(value);
+
+    if(
+      ![
+        "http:",
+        "https:"
+      ].includes(url.protocol)
+    ){
+      throw new Error();
+    }
+
+    setFieldState(
+      relatedUrl,
+      "relatedUrlError",
+      ""
+    );
+
+    return true;
+  }catch{
+    setFieldState(
+      relatedUrl,
+      "relatedUrlError",
+      "সঠিক ওয়েব লিংক লিখুন।"
+    );
+
+    return false;
+  }
+}
+
+complaintDetails.addEventListener(
+  "input",
+  function(){
+    document
+      .getElementById("detailsCounter")
+      .textContent =
+        toBn(
+          complaintDetails.value.length
+        ) +
+        " / ৩০০০";
+
+    setFieldState(
+      complaintDetails,
+      "complaintDetailsError",
+      ""
+    );
+  }
+);
+
+[
+  complainantName,
+  complainantEmail,
+  complaintSubject,
+  relatedUrl
+].forEach(function(input){
+  input.addEventListener(
+    "input",
+    function(){
+      input.classList.remove("invalid");
+      clearFormAlert();
+    }
+  );
+});
+
+complaintForm
+  .querySelectorAll(
+    'input[name="complaintType"]'
+  )
+  .forEach(function(input){
+    input.addEventListener(
+      "change",
+      function(){
+        document
+          .getElementById("complaintTypeError")
+          .textContent =
+            "";
+      }
+    );
+  });
+
+/* EVIDENCE */
+
+document
+  .getElementById("chooseEvidenceButton")
+  .addEventListener(
+    "click",
+    function(){
+      evidenceInput.click();
+    }
+  );
+
+evidenceInput.addEventListener(
+  "change",
+  function(event){
+    const file =
+      event.target.files[0];
+
+    if(!file){
+      return;
+    }
+
+    document
+      .getElementById("evidenceError")
+      .textContent =
+        "";
+
+    if(
+      ![
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ].includes(file.type)
+    ){
+      document
+        .getElementById("evidenceError")
+        .textContent =
+          "শুধু JPG, PNG অথবা WEBP ছবি ব্যবহার করুন।";
+
+      evidenceInput.value =
+        "";
+
+      return;
+    }
+
+    if(file.size > 1024 * 1024){
+      document
+        .getElementById("evidenceError")
+        .textContent =
+          "ছবির আকার ১ এমবির মধ্যে রাখুন।";
+
+      evidenceInput.value =
+        "";
+
+      return;
+    }
+
+    const reader =
+      new FileReader();
+
+    reader.onload =
+      function(){
+        selectedEvidence =
+          reader.result;
+
+        selectedEvidenceName =
+          file.name;
+
+        document
+          .getElementById("attachmentPreview")
+          .innerHTML = `
+            <img
+              src="${escapeHtml(selectedEvidence)}"
+              alt="প্রমাণের ছবির প্রিভিউ"
+            >
+          `;
+
+        document
+          .getElementById("attachmentTitle")
+          .textContent =
+            file.name;
+
+        document
+          .getElementById("attachmentDescription")
+          .textContent =
+            "ছবিটি অভিযোগের সঙ্গে সংযুক্ত হবে।";
+
+        document
+          .getElementById("removeEvidenceButton")
+          .hidden =
+            false;
+      };
+
+    reader.readAsDataURL(file);
+  }
+);
+
+function removeEvidence(){
+  selectedEvidence =
+    "";
+
+  selectedEvidenceName =
+    "";
+
+  evidenceInput.value =
+    "";
+
+  document
+    .getElementById("attachmentPreview")
+    .textContent =
+      "🖼";
+
+  document
+    .getElementById("attachmentTitle")
+    .textContent =
+      "স্ক্রিনশট অথবা ছবির প্রমাণ যোগ করুন";
+
+  document
+    .getElementById("attachmentDescription")
+    .textContent =
+      "JPG, PNG অথবা WEBP ফাইল ব্যবহার করুন।";
+
+  document
+    .getElementById("removeEvidenceButton")
+    .hidden =
+      true;
+
+  document
+    .getElementById("evidenceError")
+    .textContent =
+      "";
+}
+
+document
+  .getElementById("removeEvidenceButton")
+  .addEventListener(
+    "click",
+    removeEvidence
+  );
+
+/* SUBMIT */
+
+function setSubmitLoading(loading){
+  const button =
+    document.getElementById(
+      "submitComplaintButton"
+    );
+
+  button.disabled =
+    loading;
+
+  button.classList.toggle(
+    "loading",
+    loading
+  );
+}
+
+complaintForm.addEventListener(
+  "submit",
+  async function(event){
+    event.preventDefault();
+
+    clearFormAlert();
+
+    const validType =
+      validateComplaintType();
+
+    const validName =
+      validateName();
+
+    const validContact =
+      validateContact();
+
+    const validSubject =
+      validateSubject();
+
+    const validDetails =
+      validateDetails();
+
+    const validUrl =
+      validateUrl();
+
+    const truthChecked =
+      document
+        .getElementById("truthCheckbox")
+        .checked;
+
+    const policyChecked =
+      document
+        .getElementById("policyCheckbox")
+        .checked;
+
+    if(!truthChecked){
+      showFormAlert(
+        "তথ্য সত্য হওয়ার নিশ্চয়তা দিন।",
+        "error"
+      );
+    }else if(!policyChecked){
+      showFormAlert(
+        "নীতিমালা পড়ে সম্মতি দিন।",
+        "error"
+      );
+    }
+
+    if(
+      !validType ||
+      !validName ||
+      !validContact ||
+      !validSubject ||
+      !validDetails ||
+      !validUrl ||
+      !truthChecked ||
+      !policyChecked
+    ){
+      const invalid =
+        complaintForm.querySelector(
+          ".form-control.invalid"
+        );
+
+      invalid?.scrollIntoView({
+        behavior:"smooth",
+        block:"center"
+      });
+
+      invalid?.focus();
+
+      return;
+    }
+
+    setSubmitLoading(true);
+
+    await new Promise(function(resolve){
+      setTimeout(resolve,450);
+    });
+
+    const reference =
+      createReference();
+
+    const selectedType =
+      complaintForm.querySelector(
+        'input[name="complaintType"]:checked'
+      ).value;
+
+    const now =
+      new Date().toISOString();
+
+    const complaint = {
+      id:uniqueId(),
+      reference:reference,
+      complaintType:selectedType,
+      subject:
+        complaintSubject.value.trim(),
+      details:
+        complaintDetails.value.trim(),
+      complainantName:
+        complainantName.value.trim(),
+      complainantContact:
+        complainantEmail.value.trim(),
+      complainantUsername:
+        currentUser.username || "",
+      complainantUserId:
+        currentUser.id || "",
+      anonymousToReportedUser:
+        document
+          .getElementById("anonymousCheckbox")
+          .checked,
+      reportedUsername:
+        normalizeUsername(
+          document
+            .getElementById("reportedUsername")
+            .value
+        ),
+      relatedUrl:
+        relatedUrl.value.trim(),
+      evidence:
+        selectedEvidence,
+      evidenceName:
+        selectedEvidenceName,
+      status:"pending",
+      statusLabel:"পর্যালোচনাধীন",
+      adminNote:"",
+      createdAt:now,
+      updatedAt:now
+    };
+
+    const complaints =
+      getStorageArray(KEYS.complaints);
+
+    complaints.unshift(
+      complaint
+    );
+
+    try{
+      saveStorageArray(
+        KEYS.complaints,
+        complaints.slice(0,5000)
+      );
+    }catch(error){
+      setSubmitLoading(false);
+
+      showFormAlert(
+        "ব্রাউজারের সংরক্ষণস্থান পূর্ণ। প্রমাণের ছবি বাদ দিয়ে আবার চেষ্টা করুন।",
+        "error"
+      );
+
+      return;
+    }
+
+    const adminNotifications =
+      getStorageArray(
+        KEYS.adminNotifications
+      );
+
+    adminNotifications.unshift({
+      id:uniqueId(),
+      type:"complaint",
+      reference:reference,
+      title:
+        "নতুন অভিযোগ: " +
+        complaint.subject,
+      message:
+        complaint.complaintType,
+      status:"unread",
+      complaintId:
+        complaint.id,
+      url:
+        "admin-dashboard.html?section=complaints&complaint=" +
+        encodeURIComponent(
+          complaint.id
+        ),
+      createdAt:now
+    });
+
+    saveStorageArray(
+      KEYS.adminNotifications,
+      adminNotifications.slice(0,5000)
+    );
+
+    latestReference =
+      reference;
+
+    setSubmitLoading(false);
+    showSuccess(reference);
+  }
+);
+
+function showSuccess(reference){
+  complaintForm.hidden =
+    true;
+
+  document
+    .getElementById("successPanel")
+    .classList.add("show");
+
+  document
+    .getElementById("successReference")
+    .textContent =
+      reference;
+
+  document
+    .querySelector(".complaint-form-card")
+    .scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+  showToast(
+    "আপনার অভিযোগ জমা হয়েছে।"
+  );
+}
+
+function resetComplaintForm(){
+  complaintForm.reset();
+  complaintForm.hidden =
+    false;
+
+  document
+    .getElementById("successPanel")
+    .classList.remove("show");
+
+  document
+    .querySelectorAll(".form-control")
+    .forEach(function(input){
+      input.classList.remove("invalid");
+    });
+
+  document
+    .querySelectorAll(".field-error")
+    .forEach(function(error){
+      error.textContent = "";
+    });
+
+  document
+    .getElementById("detailsCounter")
+    .textContent =
+      "০ / ৩০০০";
+
+  removeEvidence();
+  clearFormAlert();
+
+  if(currentUser.loggedIn){
+    complainantName.value =
+      currentUser.name || "";
+
+    complainantEmail.value =
+      currentUser.email ||
+      currentUser.mobile ||
+      "";
+  }
+}
+
+document
+  .getElementById("resetFormButton")
+  .addEventListener(
+    "click",
+    function(){
+      const confirmed =
+        window.confirm(
+          "ফরমের সব লেখা মুছে ফেলতে চান?"
+        );
+
+      if(confirmed){
+        resetComplaintForm();
+      }
+    }
+  );
+
+document
+  .getElementById("newComplaintButton")
+  .addEventListener(
+    "click",
+    resetComplaintForm
+  );
+
+document
+  .getElementById("copyReferenceButton")
+  .addEventListener(
+    "click",
+    async function(){
+      if(!latestReference){
+        return;
+      }
+
+      try{
+        await navigator.clipboard.writeText(
+          latestReference
+        );
+
+        showToast(
+          "অভিযোগ নম্বর কপি হয়েছে।"
+        );
+      }catch{
+        window.prompt(
+          "অভিযোগ নম্বরটি কপি করুন:",
+          latestReference
+        );
+      }
+    }
+  );
+
+/* TRACK COMPLAINT */
+
+document
+  .getElementById("trackForm")
+  .addEventListener(
+    "submit",
+    function(event){
+      event.preventDefault();
+
+      const reference =
+        document
+          .getElementById("trackReference")
+          .value
+          .trim()
+          .toLocaleUpperCase("en-US");
+
+      const contact =
+        document
+          .getElementById("trackContact")
+          .value
+          .trim()
+          .toLocaleLowerCase("en-US");
+
+      const complaint =
+        getStorageArray(
+          KEYS.complaints
+        ).find(function(item){
+          return (
+            String(
+              item.reference || ""
+            ).toLocaleUpperCase("en-US") ===
+              reference &&
+            String(
+              item.complainantContact || ""
+            ).trim()
+             .toLocaleLowerCase("en-US") ===
+              contact
+          );
+        });
+
+      const result =
+        document.getElementById(
+          "trackResult"
+        );
+
+      result.classList.add("show");
+
+      if(!complaint){
+        document
+          .getElementById("trackTitle")
+          .textContent =
+            "অভিযোগ পাওয়া যায়নি";
+
+        document
+          .getElementById("trackStatus")
+          .textContent =
+            "তথ্য মিলেনি";
+
+        document
+          .getElementById("trackDescription")
+          .textContent =
+            "অভিযোগ নম্বর অথবা যোগাযোগের তথ্য সঠিকভাবে লিখুন।";
+
+        return;
+      }
+
+      const statusMap = {
+        pending:"পর্যালোচনাধীন",
+        reviewing:"যাচাই চলছে",
+        resolved:"সমাধান হয়েছে",
+        rejected:"গ্রহণ করা হয়নি",
+        closed:"বন্ধ করা হয়েছে"
+      };
+
+      document
+        .getElementById("trackTitle")
+        .textContent =
+          complaint.subject ||
+          "অভিযোগের তথ্য";
+
+      document
+        .getElementById("trackStatus")
+        .textContent =
+          complaint.statusLabel ||
+          statusMap[complaint.status] ||
+          "পর্যালোচনাধীন";
+
+      document
+        .getElementById("trackDescription")
+        .textContent =
+          complaint.adminNote ||
+          "অভিযোগটি প্রশাসনের পর্যালোচনায় রয়েছে। প্রয়োজন হলে আপনার সঙ্গে যোগাযোগ করা হবে।";
+    }
+  );
+
+/* SEARCH */
+
+document
+  .getElementById("searchForm")
+  .addEventListener(
+    "submit",
+    function(event){
+      event.preventDefault();
+
+      const query =
+        document
+          .getElementById("searchInput")
+          .value
+          .trim();
+
+      if(!query){
+        showToast(
+          "কী খুঁজতে চান, লিখুন।"
+        );
+
+        return;
+      }
+
+      window.location.href =
+        "search.html?q=" +
+        encodeURIComponent(query);
+    }
+  );
+
+/* DRAWER */
+
+const mobileDrawer =
+  document.getElementById("mobileDrawer");
+
+const drawerBackdrop =
+  document.getElementById("drawerBackdrop");
+
+function openDrawer(){
+  mobileDrawer.classList.add("open");
+  drawerBackdrop.classList.add("show");
+  document.body.classList.add("locked");
+}
+
+function closeDrawer(){
+  mobileDrawer.classList.remove("open");
+  drawerBackdrop.classList.remove("show");
+  document.body.classList.remove("locked");
+}
+
+document
+  .getElementById("openDrawerButton")
+  .addEventListener(
+    "click",
+    openDrawer
+  );
+
+document
+  .getElementById("closeDrawerButton")
+  .addEventListener(
+    "click",
+    closeDrawer
+  );
+
+drawerBackdrop.addEventListener(
+  "click",
+  closeDrawer
+);
+
+/* THEME */
+
+const themeIcon =
+  document.getElementById("themeIcon");
+
+function updateThemeIcon(){
+  themeIcon.textContent =
+    root.getAttribute("data-theme") === "dark"
+      ? "☀️"
+      : "🌙";
+}
+
+document
+  .getElementById("themeButton")
+  .addEventListener(
+    "click",
+    function(){
+      const nextTheme =
+        root.getAttribute("data-theme") === "dark"
+          ? "light"
+          : "dark";
+
+      root.setAttribute(
+        "data-theme",
+        nextTheme
+      );
+
+      localStorage.setItem(
+        "bhubondangaTheme",
+        nextTheme
+      );
+
+      updateThemeIcon();
+    }
+  );
+
+/* INITIAL */
+
+applySiteSettings();
+renderCurrentUser();
+renderDates();
+updateThemeIcon();
+
+document
+  .getElementById("footerYear")
+  .textContent =
+    toBn(
+      new Date().getFullYear()
+    );
+
+setInterval(
+  renderDates,
+  60000
+);
+
+document.addEventListener(
+  "keydown",
+  function(event){
+    if(event.key === "Escape"){
+      closeDrawer();
+    }
+
+    if(
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      event.key.toLowerCase() === "k"
+    ){
+      event.preventDefault();
+
+      document
+        .getElementById("searchInput")
+        .focus();
+    }
+  }
+);
+</script>
+
+</body>
+</html>
