@@ -1419,17 +1419,25 @@ textarea.form-control{
 
 /* RESPONSIVE */
 
-@media(max-width:1260px){
+@media(max-width:1320px) and (min-width:961px){
   .page-grid{
-    grid-template-columns:250px minmax(0,1fr);
-  }
-
-  .right-sidebar{
-    display:none;
+    padding-left:12px;
+    padding-right:12px;
+    grid-template-columns:235px minmax(0,1fr) 265px;
+    gap:12px;
   }
 }
 
-@media(max-width:930px){
+@media(max-width:1120px) and (min-width:961px){
+  .page-grid{
+    grid-template-columns:215px minmax(0,1fr) 235px;
+    gap:9px;
+    padding-left:8px;
+    padding-right:8px;
+  }
+}
+
+@media(max-width:960px){
   :root{
     --header-height:88px;
     --date-height:39px;
@@ -3746,33 +3754,33 @@ function isLeapYear(year){
 }
 
 function getBanglaDate(date){
-  const year =
+  const gregorianYear =
     date.getFullYear();
 
   const currentStart =
-    new Date(year,3,14);
+    new Date(gregorianYear,3,14);
 
   let startYear;
   let banglaYear;
 
   if(date >= currentStart){
     startYear =
-      year;
+      gregorianYear;
 
     banglaYear =
-      year - 593;
+      gregorianYear - 593;
   }else{
     startYear =
-      year - 1;
+      gregorianYear - 1;
 
     banglaYear =
-      year - 594;
+      gregorianYear - 594;
   }
 
   const start =
     new Date(startYear,3,14);
 
-  const current =
+  const today =
     new Date(
       date.getFullYear(),
       date.getMonth(),
@@ -3781,8 +3789,7 @@ function getBanglaDate(date){
 
   let elapsed =
     Math.floor(
-      (current - start) /
-      86400000
+      (today - start) / 86400000
     );
 
   const months = [
@@ -3803,9 +3810,7 @@ function getBanglaDate(date){
   const lengths = [
     31,31,31,31,31,31,
     30,30,30,30,
-    isLeapYear(startYear + 1)
-      ? 30
-      : 29,
+    isLeapYear(startYear + 1) ? 30 : 29,
     30
   ];
 
@@ -3856,11 +3861,7 @@ function getHijriDate(date){
   let formatted =
     "";
 
-  for(
-    let index = 0;
-    index < locales.length;
-    index++
-  ){
+  for(let index = 0; index < locales.length; index++){
     try{
       formatted =
         new Intl.DateTimeFormat(
