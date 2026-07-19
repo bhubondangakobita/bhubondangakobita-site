@@ -355,6 +355,7 @@ html[data-theme="dark"] .brand-copy h1{
 .header-avatar{
   width:41px;
   height:41px;
+  overflow:hidden;
   border:2px solid rgba(255,255,255,.92);
   border-radius:50%;
   display:flex;
@@ -364,6 +365,12 @@ html[data-theme="dark"] .brand-copy h1{
   color:#fff;
   font-size:15px;
   font-weight:700;
+}
+
+.header-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 /* DATE TICKER */
@@ -573,6 +580,7 @@ html[data-theme="dark"] .category-link{
   width:52px;
   height:52px;
   flex:0 0 auto;
+  overflow:hidden;
   border:3px solid rgba(255,255,255,.88);
   border-radius:50%;
   display:flex;
@@ -582,6 +590,12 @@ html[data-theme="dark"] .category-link{
   color:#fff;
   font-size:18px;
   font-weight:700;
+}
+
+.account-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .account-copy h2{
@@ -697,6 +711,10 @@ html[data-theme="dark"] .category-link{
   color:var(--green);
 }
 
+.sidebar-copy{
+  min-width:0;
+}
+
 .sidebar-copy strong{
   display:block;
   font-size:13px;
@@ -706,9 +724,12 @@ html[data-theme="dark"] .category-link{
 
 .sidebar-copy small{
   display:block;
+  overflow:hidden;
   color:var(--muted);
   font-size:9.5px;
   line-height:1.4;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .sidebar-arrow{
@@ -722,7 +743,7 @@ html[data-theme="dark"] .category-link{
   background:var(--border);
 }
 
-/* FOUNDER CONTACT AT BOTTOM */
+/* FOUNDER CONTACT */
 
 .founder-contact{
   margin-top:15px;
@@ -756,6 +777,7 @@ html[data-theme="dark"] .founder-contact{
 .founder-contact-avatar{
   width:43px;
   height:43px;
+  overflow:hidden;
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -764,6 +786,12 @@ html[data-theme="dark"] .founder-contact{
   color:#fff;
   font-size:12px;
   font-weight:700;
+}
+
+.founder-contact-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .founder-contact-copy a{
@@ -788,6 +816,7 @@ html[data-theme="dark"] .founder-contact{
   justify-content:center;
   background:#1679dc;
   color:#fff;
+  font-family:Arial,sans-serif;
   font-size:8px;
   font-weight:800;
 }
@@ -844,6 +873,7 @@ html[data-theme="dark"] .founder-contact{
 .composer-avatar{
   width:55px;
   height:55px;
+  overflow:hidden;
   border-radius:50%;
   display:flex;
   align-items:center;
@@ -852,6 +882,12 @@ html[data-theme="dark"] .founder-contact{
   color:#fff;
   font-size:20px;
   font-weight:700;
+}
+
+.composer-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .composer-prompt{
@@ -944,7 +980,7 @@ html[data-theme="dark"] .founder-contact{
 }
 
 .humanitarian-button{
-  grid-column:1 / -1;
+  grid-column:1/-1;
   width:max-content;
   min-height:41px;
   padding:8px 16px;
@@ -1036,6 +1072,7 @@ html[data-theme="dark"] .founder-contact{
   width:49px;
   height:49px;
   flex:0 0 auto;
+  overflow:hidden;
   border:1px solid var(--border);
   border-radius:50%;
   display:flex;
@@ -1046,6 +1083,12 @@ html[data-theme="dark"] .founder-contact{
   font-size:13px;
   font-weight:700;
   transition:.16s ease;
+}
+
+.author-avatar-link img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .author-avatar-link:hover{
@@ -1061,6 +1104,8 @@ html[data-theme="dark"] .founder-contact{
   display:flex;
   align-items:center;
   gap:5px;
+  width:max-content;
+  max-width:100%;
   font-size:16px;
   font-weight:700;
   line-height:1.45;
@@ -1410,6 +1455,7 @@ html[data-theme="dark"] .founder-contact{
   width:78px;
   height:78px;
   margin:0 auto;
+  overflow:hidden;
   border:3px solid var(--border-strong);
   border-radius:50%;
   display:flex;
@@ -1419,6 +1465,12 @@ html[data-theme="dark"] .founder-contact{
   color:#fff;
   font-size:23px;
   font-weight:700;
+}
+
+.right-profile-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .right-profile h2{
@@ -1857,7 +1909,7 @@ html[data-theme="dark"] .founder-contact{
 }
 
 .form-group.full{
-  grid-column:1 / -1;
+  grid-column:1/-1;
 }
 
 .form-label{
@@ -2140,10 +2192,6 @@ textarea.form-control{
   .header-search input{
     height:34px;
     font-size:11px;
-  }
-
-  .site-header{
-    top:var(--search-height);
   }
 
   .header-inner{
@@ -2458,7 +2506,7 @@ textarea.form-control{
 
   <div class="top-search-inner">
 
-    <div class="header-search">
+    <form class="header-search" id="searchForm">
 
       <input
         id="searchInput"
@@ -2468,14 +2516,13 @@ textarea.form-control{
 
       <button
         class="search-submit"
-        id="searchSubmit"
-        type="button"
+        type="submit"
         aria-label="সার্চ করুন"
       >
         ⌕
       </button>
 
-    </div>
+    </form>
 
   </div>
 
@@ -2539,6 +2586,7 @@ textarea.form-control{
       <a
         href="profile.html?user=your-profile"
         class="header-avatar"
+        id="headerAvatar"
         aria-label="আপনার প্রোফাইল"
       >
         আ
@@ -2559,6 +2607,8 @@ textarea.form-control{
 
     <div class="ticker-group">
 
+      <span class="weekday-date"></span>
+      <span class="ticker-separator">✦</span>
       <span class="bangla-date"></span>
       <span class="ticker-separator">✦</span>
       <span class="hijri-date"></span>
@@ -2569,6 +2619,8 @@ textarea.form-control{
 
     <div class="ticker-group" aria-hidden="true">
 
+      <span class="weekday-date"></span>
+      <span class="ticker-separator">✦</span>
       <span class="bangla-date"></span>
       <span class="ticker-separator">✦</span>
       <span class="hijri-date"></span>
@@ -2640,7 +2692,7 @@ textarea.form-control{
 
       <div class="composer-top">
 
-        <div class="composer-avatar">
+        <div class="composer-avatar" id="composerAvatar">
           আ
         </div>
 
@@ -2776,12 +2828,15 @@ textarea.form-control{
 
     <section class="card right-card right-profile">
 
-      <div class="right-profile-avatar">
+      <div class="right-profile-avatar" id="rightProfileAvatar">
         আ
       </div>
 
       <h2>
-        <a href="profile.html?user=your-profile">
+        <a
+          href="profile.html?user=your-profile"
+          id="rightProfileLink"
+        >
           আপনার সাহিত্যিক ভুবন
         </a>
       </h2>
@@ -2790,7 +2845,7 @@ textarea.form-control{
         আপনার লেখা, স্মৃতি, প্রিয় লেখক ও মানবিক আবেদনের অবস্থা দেখুন।
       </p>
 
-      <div class="right-profile-buttons">
+      <div class="right-profile-buttons" id="rightProfileButtons">
 
         <a href="login.html">লগ ইন</a>
         <a href="register.html" class="primary">রেজিস্টার</a>
@@ -2909,6 +2964,11 @@ textarea.form-control{
         <span>›</span>
       </a>
 
+      <a href="complaint.html" class="quick-link">
+        অভিযোগ করুন
+        <span>›</span>
+      </a>
+
     </section>
 
   </aside>
@@ -2927,6 +2987,7 @@ textarea.form-control{
     <a href="register.html">রেজিস্টার</a>
     <a href="about.html">আমাদের সম্পর্কে</a>
     <a href="contact.html">যোগাযোগ</a>
+    <a href="complaint.html">অভিযোগ করুন</a>
     <a href="privacy-security-policy.html">গোপনীয়তা</a>
     <a href="policy.html">নীতিমালা</a>
   </div>
@@ -3172,6 +3233,33 @@ root.setAttribute(
   localStorage.getItem("bhubondangaTheme") || "light"
 );
 
+const KEYS = {
+  currentUser:"bhubondangaCurrentUser",
+  users:"bhubondangaUsers",
+  homeUserPosts:"bhubondangaHomeUserPosts",
+  profilePoems:"bhubondangaProfilePoems",
+  environmentPosts:"bhubondangaEnvironmentUserPosts",
+  memories:"bhubondangaMemories",
+  lovedPosts:"bhubondangaHomeLovedPosts",
+  humanitarian:"bhubondangaHumanitarianRequests",
+  adminNotifications:"bhubondangaAdminNotifications"
+};
+
+const BENGALI_MONTHS = [
+  "বৈশাখ",
+  "জ্যৈষ্ঠ",
+  "আষাঢ়",
+  "শ্রাবণ",
+  "ভাদ্র",
+  "আশ্বিন",
+  "কার্তিক",
+  "অগ্রহায়ণ",
+  "পৌষ",
+  "মাঘ",
+  "ফাল্গুন",
+  "চৈত্র"
+];
+
 const bnDigits = {
   "0":"০",
   "1":"১",
@@ -3192,7 +3280,7 @@ function toBn(value){
 }
 
 function escapeHtml(value){
-  return String(value)
+  return String(value || "")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
@@ -3200,14 +3288,69 @@ function escapeHtml(value){
     .replace(/'/g,"&#039;");
 }
 
+function normalizeUsername(value){
+  return String(value || "")
+    .trim()
+    .toLocaleLowerCase("en-US")
+    .replace(/^@/,"")
+    .replace(/\s+/g,"-")
+    .replace(/-+/g,"-");
+}
+
+function getInitials(name){
+  return String(name || "")
+    .replace(/\s+/g,"")
+    .slice(0,2) || "আ";
+}
+
 function getStorageArray(key){
   try{
-    return JSON.parse(
-      localStorage.getItem(key) || "[]"
-    );
-  }catch(error){
+    const parsed =
+      JSON.parse(
+        localStorage.getItem(key) || "[]"
+      );
+
+    if(Array.isArray(parsed)){
+      return parsed;
+    }
+
+    if(
+      parsed &&
+      typeof parsed === "object"
+    ){
+      return Object.values(parsed);
+    }
+
+    return [];
+  }catch{
     return [];
   }
+}
+
+function getStorageObject(key){
+  try{
+    const parsed =
+      JSON.parse(
+        localStorage.getItem(key) || "{}"
+      );
+
+    return (
+      parsed &&
+      typeof parsed === "object" &&
+      !Array.isArray(parsed)
+    )
+      ? parsed
+      : {};
+  }catch{
+    return {};
+  }
+}
+
+function saveStorageArray(key,value){
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
 }
 
 function showToast(message){
@@ -3220,7 +3363,9 @@ function showToast(message){
   toast.style.display =
     "block";
 
-  clearTimeout(window.toastTimer);
+  clearTimeout(
+    window.toastTimer
+  );
 
   window.toastTimer =
     setTimeout(function(){
@@ -3229,21 +3374,154 @@ function showToast(message){
     },3000);
 }
 
+const storedUser =
+  getStorageObject(
+    KEYS.currentUser
+  );
+
+const hasIdentity =
+  Boolean(
+    storedUser.name ||
+    storedUser.username ||
+    storedUser.email ||
+    storedUser.role
+  );
+
+const isLoggedIn =
+  storedUser.loggedIn !== false &&
+  hasIdentity;
+
+const currentUser = {
+  ...storedUser,
+
+  name:
+    storedUser.name ||
+    storedUser.fullName ||
+    "আপনার সাহিত্যিক ভুবন",
+
+  username:
+    normalizeUsername(
+      storedUser.username ||
+      storedUser.slug ||
+      storedUser.email ||
+      "your-profile"
+    ),
+
+  role:
+    String(
+      storedUser.role ||
+      "reader"
+    ).toLocaleLowerCase("en-US"),
+
+  avatar:
+    storedUser.avatar ||
+    storedUser.profileImage ||
+    "",
+
+  initials:
+    storedUser.initials ||
+    getInitials(
+      storedUser.name ||
+      storedUser.fullName ||
+      "আ"
+    ),
+
+  loggedIn:
+    isLoggedIn
+};
+
+function profileUrl(user){
+  const username =
+    normalizeUsername(
+      user.username ||
+      user.slug ||
+      user.email ||
+      user.name
+    );
+
+  if(
+    user.role === "founder" ||
+    username === "mahmud-sohel"
+  ){
+    return "founder-profile.html";
+  }
+
+  return (
+    "profile.html?user=" +
+    encodeURIComponent(
+      username ||
+      "your-profile"
+    )
+  );
+}
+
+function roleLabel(role){
+  const labels = {
+    founder:"প্রতিষ্ঠাতা",
+    admin:"অ্যাডমিন",
+    writer:"লেখক",
+    reciter:"আবৃত্তিকার",
+    reader:"পাঠক"
+  };
+
+  return labels[role] ||
+    "ভুবনডাঙ্গার সদস্য";
+}
+
 /* SIDEBAR */
 
 function sidebarHtml(){
+  const userUrl =
+    profileUrl(currentUser);
+
+  const avatarHtml =
+    currentUser.loggedIn &&
+    currentUser.avatar
+      ? `
+        <img
+          src="${escapeHtml(currentUser.avatar)}"
+          alt="${escapeHtml(currentUser.name)}"
+          onerror="this.remove();this.parentElement.textContent='${escapeHtml(currentUser.initials)}';"
+        >
+      `
+      : escapeHtml(
+          currentUser.loggedIn
+            ? currentUser.initials
+            : "আ"
+        );
+
   return `
     <section class="account-card">
 
       <div class="account-top">
 
-        <div class="account-avatar">
-          আ
-        </div>
+        <a
+          href="${escapeHtml(userUrl)}"
+          class="account-avatar"
+        >
+          ${avatarHtml}
+        </a>
 
         <div class="account-copy">
-          <h2>আপনার সাহিত্যিক ভুবন</h2>
-          <p>পাঠক • লেখক • ভুবনডাঙ্গার সদস্য</p>
+
+          <a href="${escapeHtml(userUrl)}">
+            <h2>
+              ${
+                currentUser.loggedIn
+                  ? escapeHtml(currentUser.name)
+                  : "আপনার সাহিত্যিক ভুবন"
+              }
+            </h2>
+          </a>
+
+          <p>
+            ${
+              currentUser.loggedIn
+                ? escapeHtml(roleLabel(currentUser.role))
+                : "পাঠক • লেখক • ভুবনডাঙ্গার সদস্য"
+            }
+          </p>
+
         </div>
 
       </div>
@@ -3252,10 +3530,26 @@ function sidebarHtml(){
         “আপনার ক্ষতগুলিকে জ্ঞানে পরিণত করুন।”
       </div>
 
-      <div class="account-buttons">
-        <a href="login.html">লগ ইন</a>
-        <a href="register.html" class="primary">রেজিস্টার</a>
-      </div>
+      ${
+        currentUser.loggedIn
+          ? `
+            <div class="account-buttons">
+              <a href="${escapeHtml(userUrl)}">
+                প্রোফাইল
+              </a>
+
+              <a href="edit-profile.html" class="primary">
+                সম্পাদনা
+              </a>
+            </div>
+          `
+          : `
+            <div class="account-buttons">
+              <a href="login.html">লগ ইন</a>
+              <a href="register.html" class="primary">রেজিস্টার</a>
+            </div>
+          `
+      }
 
     </section>
 
@@ -3268,7 +3562,7 @@ function sidebarHtml(){
 
       <div class="sidebar-menu">
 
-        <a href="profile.html?user=your-profile">
+        <a href="${escapeHtml(userUrl)}">
           <span class="sidebar-icon">👤</span>
           <span class="sidebar-copy">
             <strong>আপনার প্রোফাইল</strong>
@@ -3286,7 +3580,7 @@ function sidebarHtml(){
           <span class="sidebar-arrow">›</span>
         </a>
 
-        <a href="profile.html?user=your-profile&tab=writings">
+        <a href="${escapeHtml(userUrl)}&tab=writings">
           <span class="sidebar-icon">✍</span>
           <span class="sidebar-copy">
             <strong>আপনার লেখা</strong>
@@ -3295,7 +3589,7 @@ function sidebarHtml(){
           <span class="sidebar-arrow">›</span>
         </a>
 
-        <a href="profile.html?user=your-profile&tab=memories">
+        <a href="${escapeHtml(userUrl)}&tab=memories">
           <span class="sidebar-icon">🔖</span>
           <span class="sidebar-copy">
             <strong>স্মৃতিতে রাখা</strong>
@@ -3468,6 +3762,15 @@ function sidebarHtml(){
         <span class="sidebar-arrow">›</span>
       </a>
 
+      <a href="complaint.html">
+        <span class="sidebar-icon">⚑</span>
+        <span class="sidebar-copy">
+          <strong>অভিযোগ করুন</strong>
+          <small>অনিয়ম অথবা সমস্যার কথা জানান</small>
+        </span>
+        <span class="sidebar-arrow">›</span>
+      </a>
+
       <a href="about.html">
         <span class="sidebar-icon">ℹ</span>
         <span class="sidebar-copy">
@@ -3493,15 +3796,19 @@ function sidebarHtml(){
       <div class="founder-contact-top">
 
         <a
-          href="profile.html?user=mahmud-sohel"
+          href="founder-profile.html"
           class="founder-contact-avatar"
         >
-          মস
+          <img
+            src="images/mahmud-sohel.jpg"
+            alt="মাহমুদ সোহেল"
+            onerror="this.remove();this.parentElement.textContent='মস';"
+          >
         </a>
 
         <div class="founder-contact-copy">
 
-          <a href="profile.html?user=mahmud-sohel">
+          <a href="founder-profile.html">
             মাহমুদ সোহেল
             <span class="founder-badge">✓</span>
           </a>
@@ -3517,7 +3824,7 @@ function sidebarHtml(){
       </div>
 
       <a
-        href="profile.html?user=mahmud-sohel&action=message"
+        href="messages.html?user=mahmud-sohel"
         class="founder-contact-button"
       >
         যোগাযোগ করুন
@@ -3537,196 +3844,382 @@ document
   .innerHTML =
     `<div class="sidebar-shell">${sidebarHtml()}</div>`;
 
-/* DATES */
+/* UNIFIED CALENDAR */
 
-function isLeapYear(year){
-  return (
-    year % 400 === 0 ||
-    (
-      year % 4 === 0 &&
-      year % 100 !== 0
-    )
-  );
+function createCalendarDate(
+  locale,
+  date,
+  calendarValidator,
+  monthValidator,
+  suffix,
+  fallback
+){
+  try{
+    const formatter =
+      new Intl.DateTimeFormat(
+        locale,
+        {
+          timeZone:"Asia/Dhaka",
+          day:"numeric",
+          month:"long",
+          year:"numeric"
+        }
+      );
+
+    const resolved =
+      formatter.resolvedOptions();
+
+    if(
+      !calendarValidator(
+        String(
+          resolved.calendar ||
+          ""
+        )
+      )
+    ){
+      return fallback;
+    }
+
+    const parts =
+      formatter.formatToParts(date);
+
+    const day =
+      parts.find(function(part){
+        return part.type === "day";
+      })?.value || "";
+
+    const month =
+      parts.find(function(part){
+        return part.type === "month";
+      })?.value || "";
+
+    const year =
+      parts.find(function(part){
+        return part.type === "year";
+      })?.value || "";
+
+    if(
+      !day ||
+      !month ||
+      !year ||
+      !monthValidator(month)
+    ){
+      return fallback;
+    }
+
+    return (
+      day +
+      " " +
+      month +
+      " " +
+      year +
+      " " +
+      suffix
+    );
+  }catch{
+    return fallback;
+  }
 }
 
-function getBanglaDate(date){
-  const gregorianYear =
-    date.getFullYear();
+function getWeekday(date){
+  try{
+    const formatter =
+      new Intl.DateTimeFormat(
+        "bn-BD-u-ca-gregory-nu-beng",
+        {
+          timeZone:"Asia/Dhaka",
+          weekday:"long"
+        }
+      );
 
-  const currentStart =
-    new Date(gregorianYear,3,14);
+    if(
+      formatter
+        .resolvedOptions()
+        .calendar !== "gregory"
+    ){
+      return "আজ";
+    }
 
-  let startYear;
-  let banglaYear;
+    const weekday =
+      formatter.format(date);
 
-  if(date >= currentStart){
-    startYear =
-      gregorianYear;
-
-    banglaYear =
-      gregorianYear - 593;
-  }else{
-    startYear =
-      gregorianYear - 1;
-
-    banglaYear =
-      gregorianYear - 594;
+    return weekday
+      ? "আজ " + weekday
+      : "আজ";
+  }catch{
+    return "আজ";
   }
+}
 
-  const start =
-    new Date(startYear,3,14);
-
-  const today =
-    new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
-
-  let elapsed =
-    Math.floor(
-      (today - start) / 86400000
-    );
-
-  const months = [
-    "বৈশাখ",
-    "জ্যৈষ্ঠ",
-    "আষাঢ়",
-    "শ্রাবণ",
-    "ভাদ্র",
-    "আশ্বিন",
-    "কার্তিক",
-    "অগ্রহায়ণ",
-    "পৌষ",
-    "মাঘ",
-    "ফাল্গুন",
-    "চৈত্র"
+function getBanglaCalendarDate(date){
+  const locales = [
+    "bn-BD-u-ca-beng-nu-beng",
+    "bn-BD-u-ca-beng"
   ];
 
-  const lengths = [
-    31,31,31,31,31,31,
-    30,30,30,30,
-    isLeapYear(startYear + 1) ? 30 : 29,
-    30
-  ];
-
-  let monthIndex =
-    0;
-
-  while(
-    monthIndex < 11 &&
-    elapsed >= lengths[monthIndex]
+  for(
+    let index = 0;
+    index < locales.length;
+    index += 1
   ){
-    elapsed -=
-      lengths[monthIndex];
+    const value =
+      createCalendarDate(
+        locales[index],
+        date,
+        function(calendar){
+          return calendar === "beng";
+        },
+        function(month){
+          return BENGALI_MONTHS.some(function(item){
+            return month.includes(item);
+          });
+        },
+        "বঙ্গাব্দ",
+        ""
+      );
 
-    monthIndex++;
+    if(value){
+      return value;
+    }
   }
 
-  return (
-    toBn(elapsed + 1) +
-    " " +
-    months[monthIndex] +
-    " " +
-    toBn(banglaYear) +
-    " বঙ্গাব্দ"
-  );
+  return "বাংলা তারিখ পাওয়া যায়নি";
 }
 
-function getGregorianDate(date){
-  return (
-    new Intl.DateTimeFormat(
-      "bn-BD",
-      {
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    ).format(date) +
-    " খ্রিস্টাব্দ"
-  );
+function getGregorianCalendarDate(date){
+  const locales = [
+    "bn-BD-u-ca-gregory-nu-beng",
+    "bn-BD-u-ca-gregory",
+    "bn-BD"
+  ];
+
+  for(
+    let index = 0;
+    index < locales.length;
+    index += 1
+  ){
+    const value =
+      createCalendarDate(
+        locales[index],
+        date,
+        function(calendar){
+          return calendar === "gregory";
+        },
+        function(month){
+          return Boolean(
+            String(month).trim()
+          );
+        },
+        "খ্রিস্টাব্দ",
+        ""
+      );
+
+    if(value){
+      return value;
+    }
+  }
+
+  return "গ্রেগরীয় তারিখ পাওয়া যায়নি";
 }
 
-function getHijriDate(date){
+function getHijriCalendarDate(date){
   const locales = [
     "bn-BD-u-ca-islamic-umalqura-nu-beng",
     "bn-BD-u-ca-islamic-nu-beng",
-    "ar-SA-u-ca-islamic-umalqura"
+    "bn-BD-u-ca-islamic-umalqura",
+    "bn-BD-u-ca-islamic"
   ];
 
-  let formatted =
-    "";
+  for(
+    let index = 0;
+    index < locales.length;
+    index += 1
+  ){
+    const value =
+      createCalendarDate(
+        locales[index],
+        date,
+        function(calendar){
+          return calendar.startsWith(
+            "islamic"
+          );
+        },
+        function(month){
+          const normalized =
+            String(month || "")
+              .trim()
+              .toLocaleLowerCase("en-US");
 
-  for(let index = 0; index < locales.length; index++){
-    try{
-      formatted =
-        new Intl.DateTimeFormat(
-          locales[index],
-          {
-            day:"numeric",
-            month:"long",
-            year:"numeric"
-          }
-        ).format(date);
+          const gregorianMonthWords = [
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december",
+            "জানুয়ারি",
+            "ফেব্রুয়ারি",
+            "মার্চ",
+            "এপ্রিল",
+            "মে",
+            "জুন",
+            "জুলাই",
+            "আগস্ট",
+            "সেপ্টেম্বর",
+            "অক্টোবর",
+            "নভেম্বর",
+            "ডিসেম্বর"
+          ];
 
-      if(formatted){
-        break;
-      }
-    }catch(error){}
+          return (
+            Boolean(normalized) &&
+            !gregorianMonthWords.some(function(item){
+              return normalized.includes(
+                item.toLocaleLowerCase(
+                  "en-US"
+                )
+              );
+            })
+          );
+        },
+        "হিজরি",
+        ""
+      );
+
+    if(value){
+      return value;
+    }
   }
 
-  formatted =
-    String(formatted)
-      .replace(/AH/gi,"")
-      .replace(/هـ/gi,"")
-      .replace(/হিজরি/gi,"")
-      .replace(/হিজরী/gi,"")
-      .replace(/،/g," ")
-      .replace(/,/g," ")
-      .replace(/\s+/g," ")
-      .trim();
-
-  return formatted
-    ? formatted + " হিজরি"
-    : "হিজরি তারিখ পাওয়া যায়নি";
+  return "হিজরি তারিখ পাওয়া যায়নি";
 }
 
 function renderDates(){
   const today =
     new Date();
 
+  const weekday =
+    getWeekday(today);
+
   const bangla =
-    getBanglaDate(today);
+    getBanglaCalendarDate(today);
 
   const hijri =
-    getHijriDate(today);
+    getHijriCalendarDate(today);
 
   const gregorian =
-    getGregorianDate(today);
+    getGregorianCalendarDate(today);
 
   document
-    .querySelectorAll(".bangla-date")
+    .querySelectorAll(
+      ".weekday-date"
+    )
     .forEach(function(element){
-      element.innerText =
+      element.textContent =
+        weekday;
+    });
+
+  document
+    .querySelectorAll(
+      ".bangla-date"
+    )
+    .forEach(function(element){
+      element.textContent =
         bangla;
     });
 
   document
-    .querySelectorAll(".hijri-date")
+    .querySelectorAll(
+      ".hijri-date"
+    )
     .forEach(function(element){
-      element.innerText =
+      element.textContent =
         hijri;
     });
 
   document
-    .querySelectorAll(".gregorian-date")
+    .querySelectorAll(
+      ".gregorian-date"
+    )
     .forEach(function(element){
-      element.innerText =
+      element.textContent =
         gregorian;
     });
 }
 
 renderDates();
+
+/* USER INTERFACE */
+
+function renderCurrentUser(){
+  const userUrl =
+    profileUrl(currentUser);
+
+  document
+    .getElementById("headerAvatar")
+    .href =
+      userUrl;
+
+  document
+    .getElementById("rightProfileLink")
+    .href =
+      userUrl;
+
+  if(!currentUser.loggedIn){
+    return;
+  }
+
+  const avatarMarkup =
+    currentUser.avatar
+      ? `
+        <img
+          src="${escapeHtml(currentUser.avatar)}"
+          alt="${escapeHtml(currentUser.name)}"
+          onerror="this.remove();this.parentElement.textContent='${escapeHtml(currentUser.initials)}';"
+        >
+      `
+      : escapeHtml(currentUser.initials);
+
+  document
+    .getElementById("headerAvatar")
+    .innerHTML =
+      avatarMarkup;
+
+  document
+    .getElementById("composerAvatar")
+    .innerHTML =
+      avatarMarkup;
+
+  document
+    .getElementById("rightProfileAvatar")
+    .innerHTML =
+      avatarMarkup;
+
+  document
+    .getElementById("rightProfileLink")
+    .textContent =
+      currentUser.name;
+
+  document
+    .getElementById("rightProfileButtons")
+    .innerHTML = `
+      <a href="${escapeHtml(userUrl)}">
+        প্রোফাইল
+      </a>
+
+      <a href="edit-profile.html" class="primary">
+        সম্পাদনা
+      </a>
+    `;
+}
+
+renderCurrentUser();
 
 /* POST DATA */
 
@@ -3735,37 +4228,43 @@ const authors = [
     name:"মাহমুদ সোহেল",
     slug:"mahmud-sohel",
     initials:"মস",
-    founder:true
+    founder:true,
+    avatar:"images/mahmud-sohel.jpg"
   },
   {
     name:"শুভাশিস",
     slug:"shubhashis",
     initials:"শু",
-    founder:false
+    founder:false,
+    avatar:""
   },
   {
     name:"নীরা রহমান",
     slug:"nira-rahman",
     initials:"নর",
-    founder:false
+    founder:false,
+    avatar:""
   },
   {
     name:"সাদিয়া ইসলাম",
     slug:"sadia-islam",
     initials:"সই",
-    founder:false
+    founder:false,
+    avatar:""
   },
   {
     name:"আরিফ হোসেন",
     slug:"arif-hossain",
     initials:"আহ",
-    founder:false
+    founder:false,
+    avatar:""
   },
   {
     name:"ইশরাত জাহান",
     slug:"ishrat-jahan",
     initials:"ইজ",
-    founder:false
+    founder:false,
+    avatar:""
   }
 ];
 
@@ -4028,15 +4527,28 @@ const postSeeds = [
 
 const homePosts = [];
 
-for(let index = 0; index < 120; index++){
+for(
+  let index = 0;
+  index < 120;
+  index += 1
+){
   const seed =
-    postSeeds[index % postSeeds.length];
+    postSeeds[
+      index %
+      postSeeds.length
+    ];
 
   const author =
-    authors[index % authors.length];
+    authors[
+      index %
+      authors.length
+    ];
 
   const cycle =
-    Math.floor(index / postSeeds.length);
+    Math.floor(
+      index /
+      postSeeds.length
+    );
 
   homePosts.push({
     id:
@@ -4084,6 +4596,9 @@ for(let index = 0; index < 120; index++){
     founder:
       author.founder,
 
+    avatar:
+      author.avatar,
+
     time:
       index < 4
         ? "আজ • " +
@@ -4113,87 +4628,113 @@ for(let index = 0; index < 120; index++){
 /* USER SUBMITTED POSTS */
 
 [
-  "bhubondangaHomeUserPosts",
-  "bhubondangaProfilePoems",
-  "bhubondangaEnvironmentUserPosts"
+  KEYS.homeUserPosts,
+  KEYS.profilePoems,
+  KEYS.environmentPosts
 ].forEach(function(storageKey){
   const storedPosts =
-    getStorageArray(storageKey);
+    getStorageArray(
+      storageKey
+    );
 
-  storedPosts.reverse().forEach(function(post){
-    homePosts.unshift({
-      id:
-        post.id ||
-        Date.now(),
+  storedPosts
+    .slice()
+    .reverse()
+    .forEach(function(post){
+      homePosts.unshift({
+        id:
+          post.id ||
+          Date.now(),
 
-      type:
-        post.type ||
-        post.section ||
-        "poem",
+        type:
+          post.type ||
+          post.section ||
+          "poem",
 
-      typeLabel:
-        post.typeLabel ||
-        post.type ||
-        "কবিতা",
+        typeLabel:
+          post.typeLabel ||
+          post.type ||
+          "কবিতা",
 
-      icon:
-        post.type === "environment"
-          ? "🌱"
-          : "✍",
+        icon:
+          post.type === "environment"
+            ? "🌱"
+            : "✍",
 
-      title:
-        post.title ||
-        "শিরোনামহীন লেখা",
+        title:
+          post.title ||
+          "শিরোনামহীন লেখা",
 
-      description:
-        post.description ||
-        post.story ||
-        "",
+        description:
+          post.description ||
+          post.story ||
+          "",
 
-      poem:
-        post.content ||
-        post.body ||
-        "",
+        poem:
+          post.content ||
+          post.body ||
+          "",
 
-      note:
-        post.learning ||
-        "",
+        note:
+          post.learning ||
+          "",
 
-      tags:
-        Array.isArray(post.tags)
-          ? post.tags
-          : [],
+        tags:
+          Array.isArray(post.tags)
+            ? post.tags
+            : [],
 
-      author:
-        post.author ||
-        "আপনার সাহিত্যিক ভুবন",
+        author:
+          post.author ||
+          post.authorName ||
+          "আপনার সাহিত্যিক ভুবন",
 
-      authorSlug:
-        post.authorSlug ||
-        "your-profile",
+        authorSlug:
+          post.authorSlug ||
+          post.authorUsername ||
+          "your-profile",
 
-      initials:
-        post.initials ||
-        "আ",
+        initials:
+          post.initials ||
+          getInitials(
+            post.author ||
+            post.authorName ||
+            "আ"
+          ),
 
-      founder:
-        Boolean(post.founder),
+        founder:
+          Boolean(
+            post.founder
+          ),
 
-      time:
-        "এইমাত্র",
+        avatar:
+          post.avatar ||
+          post.authorAvatar ||
+          "",
 
-      likes:
-        Number(post.likes || 0),
+        time:
+          "এইমাত্র",
 
-      comments:
-        Array.isArray(post.comments)
-          ? post.comments.length
-          : Number(post.comments || 0),
+        likes:
+          Number(
+            post.likes ||
+            0
+          ),
 
-      order:
-        Date.now()
+        comments:
+          Array.isArray(
+            post.comments
+          )
+            ? post.comments.length
+            : Number(
+                post.comments ||
+                0
+              ),
+
+        order:
+          Date.now()
+      });
     });
-  });
 });
 
 let activeFilter =
@@ -4215,8 +4756,29 @@ function postTypeClass(type){
     : "";
 }
 
+function authorProfileUrl(post){
+  if(
+    post.founder ||
+    normalizeUsername(
+      post.authorSlug
+    ) === "mahmud-sohel"
+  ){
+    return "founder-profile.html";
+  }
+
+  return (
+    "profile.html?user=" +
+    encodeURIComponent(
+      post.authorSlug
+    )
+  );
+}
+
 function createAudioPlayer(post){
-  if(post.type !== "recitation"){
+  if(
+    post.type !==
+    "recitation"
+  ){
     return "";
   }
 
@@ -4247,12 +4809,18 @@ function createAudioPlayer(post){
 
 function createPostCard(post){
   const article =
-    document.createElement("article");
+    document.createElement(
+      "article"
+    );
 
   article.className =
-    post.type === "midnight"
+    post.type ===
+    "midnight"
       ? "card post-card midnight"
       : "card post-card";
+
+  const authorUrl =
+    authorProfileUrl(post);
 
   article.innerHTML = `
     <header class="post-header">
@@ -4261,17 +4829,27 @@ function createPostCard(post){
 
         <a
           class="author-avatar-link"
-          href="profile.html?user=${encodeURIComponent(post.authorSlug)}"
+          href="${escapeHtml(authorUrl)}"
           aria-label="${escapeHtml(post.author)}-এর প্রোফাইল"
         >
-          ${escapeHtml(post.initials)}
+          ${
+            post.avatar
+              ? `
+                <img
+                  src="${escapeHtml(post.avatar)}"
+                  alt="${escapeHtml(post.author)}"
+                  onerror="this.remove();this.parentElement.textContent='${escapeHtml(post.initials)}';"
+                >
+              `
+              : escapeHtml(post.initials)
+          }
         </a>
 
         <div class="author-info">
 
           <a
             class="author-name"
-            href="profile.html?user=${encodeURIComponent(post.authorSlug)}"
+            href="${escapeHtml(authorUrl)}"
           >
             ${escapeHtml(post.author)}
 
@@ -4430,7 +5008,10 @@ function createPostCard(post){
           placeholder="সম্মানজনক মন্তব্য লিখুন..."
         >
 
-        <button class="comment-submit" type="submit">
+        <button
+          class="comment-submit"
+          type="submit"
+        >
           যোগ করুন
         </button>
 
@@ -4450,27 +5031,40 @@ function createPostCard(post){
 function filteredPosts(){
   const sort =
     document
-      .getElementById("feedSort")
+      .getElementById(
+        "feedSort"
+      )
       .value;
 
-  let posts =
-    homePosts.filter(function(post){
-      return (
-        activeFilter === "all" ||
-        post.type === activeFilter
-      );
-    });
+  const posts =
+    homePosts.filter(
+      function(post){
+        return (
+          activeFilter === "all" ||
+          post.type === activeFilter
+        );
+      }
+    );
 
   posts.sort(function(a,b){
     if(sort === "popular"){
-      return b.likes - a.likes;
+      return (
+        b.likes -
+        a.likes
+      );
     }
 
     if(sort === "oldest"){
-      return a.order - b.order;
+      return (
+        a.order -
+        b.order
+      );
     }
 
-    return b.order - a.order;
+    return (
+      b.order -
+      a.order
+    );
   });
 
   return posts;
@@ -4478,66 +5072,91 @@ function filteredPosts(){
 
 function renderFeed(){
   const feedList =
-    document.getElementById("feedList");
+    document.getElementById(
+      "feedList"
+    );
 
   const loadMoreButton =
-    document.getElementById("loadMoreButton");
+    document.getElementById(
+      "loadMoreButton"
+    );
 
   const posts =
     filteredPosts();
 
   const visiblePosts =
-    posts.slice(0,visibleCount);
+    posts.slice(
+      0,
+      visibleCount
+    );
 
   feedList.innerHTML =
     "";
 
-  visiblePosts.forEach(function(post){
-    feedList.appendChild(
-      createPostCard(post)
-    );
-  });
+  visiblePosts.forEach(
+    function(post){
+      feedList.appendChild(
+        createPostCard(post)
+      );
+    }
+  );
 
   loadMoreButton.hidden =
-    visibleCount >= posts.length;
+    visibleCount >=
+    posts.length;
 
   restorePostStates();
   bindPostEvents();
 }
 
 document
-  .getElementById("feedFilter")
-  .addEventListener("change",function(event){
-    activeFilter =
-      event.target.value;
+  .getElementById(
+    "feedFilter"
+  )
+  .addEventListener(
+    "change",
+    function(event){
+      activeFilter =
+        event.target.value;
 
-    visibleCount =
-      20;
+      visibleCount =
+        20;
 
-    renderFeed();
-  });
-
-document
-  .getElementById("feedSort")
-  .addEventListener("change",function(){
-    visibleCount =
-      20;
-
-    renderFeed();
-  });
+      renderFeed();
+    }
+  );
 
 document
-  .getElementById("loadMoreButton")
-  .addEventListener("click",function(){
-    visibleCount +=
-      20;
+  .getElementById(
+    "feedSort"
+  )
+  .addEventListener(
+    "change",
+    function(){
+      visibleCount =
+        20;
 
-    renderFeed();
+      renderFeed();
+    }
+  );
 
-    showToast(
-      "আরও ২০টি পোস্ট দেখানো হয়েছে।"
-    );
-  });
+document
+  .getElementById(
+    "loadMoreButton"
+  )
+  .addEventListener(
+    "click",
+    function(){
+      visibleCount +=
+        20;
+
+      renderFeed();
+
+      showToast(
+        "আরও ২০টি পোস্ট দেখানো হয়েছে।"
+      );
+    }
+  );
 
 /* POST MODAL */
 
@@ -4548,17 +5167,21 @@ const postModalBackdrop =
 
 function openPostModal(postId){
   const post =
-    homePosts.find(function(item){
-      return String(item.id) === String(postId);
-    });
+    homePosts.find(
+      function(item){
+        return (
+          String(item.id) ===
+          String(postId)
+        );
+      }
+    );
 
   if(!post){
     return;
   }
 
   const authorUrl =
-    "profile.html?user=" +
-    encodeURIComponent(post.authorSlug);
+    authorProfileUrl(post);
 
   const modalAuthorAvatar =
     document.getElementById(
@@ -4592,26 +5215,34 @@ function openPostModal(postId){
     );
 
   document
-    .getElementById("modalAuthorMeta")
+    .getElementById(
+      "modalAuthorMeta"
+    )
     .innerText =
       post.time +
       " • " +
       post.typeLabel;
 
   document
-    .getElementById("modalPostType")
+    .getElementById(
+      "modalPostType"
+    )
     .innerText =
       post.icon +
       " " +
       post.typeLabel;
 
   document
-    .getElementById("modalPostTitle")
+    .getElementById(
+      "modalPostTitle"
+    )
     .innerText =
       post.title;
 
   document
-    .getElementById("modalPostDescription")
+    .getElementById(
+      "modalPostDescription"
+    )
     .innerText =
       post.description;
 
@@ -4641,44 +5272,52 @@ function openPostModal(postId){
   }
 
   document
-    .getElementById("modalPostTags")
+    .getElementById(
+      "modalPostTags"
+    )
     .innerHTML =
-      post.tags.map(function(tag){
-        return `
-          <span>
-            #${escapeHtml(tag)}
-          </span>
-        `;
-      }).join("");
+      post.tags.map(
+        function(tag){
+          return `
+            <span>
+              #${escapeHtml(tag)}
+            </span>
+          `;
+        }
+      ).join("");
 
-  postModalBackdrop.classList.add(
-    "show"
-  );
+  postModalBackdrop
+    .classList
+    .add("show");
 
-  document.body.classList.add(
-    "locked"
-  );
+  document
+    .body
+    .classList
+    .add("locked");
 
   history.replaceState(
     null,
     "",
-    "#post-" + post.id
+    "#post-" +
+    post.id
   );
 }
 
 function closePostModal(){
-  postModalBackdrop.classList.remove(
-    "show"
-  );
+  postModalBackdrop
+    .classList
+    .remove("show");
 
-  document.body.classList.remove(
-    "locked"
-  );
+  document
+    .body
+    .classList
+    .remove("locked");
 
   if(
-    window.location.hash.startsWith(
-      "#post-"
-    )
+    window.location.hash
+      .startsWith(
+        "#post-"
+      )
   ){
     history.replaceState(
       null,
@@ -4690,32 +5329,45 @@ function closePostModal(){
 }
 
 document
-  .getElementById("postModalClose")
+  .getElementById(
+    "postModalClose"
+  )
   .addEventListener(
     "click",
     closePostModal
   );
 
-postModalBackdrop.addEventListener(
-  "click",
-  function(event){
-    if(event.target === postModalBackdrop){
-      closePostModal();
+postModalBackdrop
+  .addEventListener(
+    "click",
+    function(event){
+      if(
+        event.target ===
+        postModalBackdrop
+      ){
+        closePostModal();
+      }
     }
-  }
-);
+  );
 
 document
-  .querySelectorAll(".trending-post")
-  .forEach(function(link){
-    link.addEventListener("click",function(event){
-      event.preventDefault();
+  .querySelectorAll(
+    ".trending-post"
+  )
+  .forEach(
+    function(link){
+      link.addEventListener(
+        "click",
+        function(event){
+          event.preventDefault();
 
-      openPostModal(
-        link.dataset.postId
+          openPostModal(
+            link.dataset.postId
+          );
+        }
       );
-    });
-  });
+    }
+  );
 
 /* COMMENTS AND REACTIONS */
 
@@ -4735,7 +5387,8 @@ function getComments(id){
 function renderComments(id){
   const container =
     document.getElementById(
-      "commentList-" + id
+      "commentList-" +
+      id
     );
 
   if(!container){
@@ -4748,303 +5401,491 @@ function renderComments(id){
   container.innerHTML =
     "";
 
-  comments.forEach(function(comment){
-    const item =
-      document.createElement("div");
+  comments.forEach(
+    function(comment){
+      const item =
+        document.createElement(
+          "div"
+        );
 
-    item.className =
-      "comment-item";
+      item.className =
+        "comment-item";
 
-    item.innerHTML = `
-      <a href="profile.html?user=your-profile">
-        আপনি
-      </a>
+      item.innerHTML = `
+        <a href="${escapeHtml(profileUrl(currentUser))}">
+          ${
+            currentUser.loggedIn
+              ? escapeHtml(currentUser.name)
+              : "আপনি"
+          }
+        </a>
 
-      <p>${escapeHtml(comment)}</p>
-    `;
+        <p>${escapeHtml(comment)}</p>
+      `;
 
-    container.appendChild(item);
-  });
+      container.appendChild(
+        item
+      );
+    }
+  );
 }
 
 function restorePostStates(){
   const loved =
     getStorageArray(
-      "bhubondangaHomeLovedPosts"
+      KEYS.lovedPosts
     ).map(String);
 
   const memories =
     getStorageArray(
-      "bhubondangaMemories"
+      KEYS.memories
     );
 
   document
-    .querySelectorAll(".love-button")
-    .forEach(function(button){
-      const active =
-        loved.includes(
-          String(button.dataset.id)
+    .querySelectorAll(
+      ".love-button"
+    )
+    .forEach(
+      function(button){
+        const active =
+          loved.includes(
+            String(
+              button.dataset.id
+            )
+          );
+
+        button.classList.toggle(
+          "loved",
+          active
         );
 
-      button.classList.toggle(
-        "loved",
-        active
-      );
-
-      button.innerText =
-        active
-          ? "♥"
-          : "♡";
-    });
+        button.innerText =
+          active
+            ? "♥"
+            : "♡";
+      }
+    );
 
   document
-    .querySelectorAll(".save-button")
-    .forEach(function(button){
-      const active =
-        memories.some(function(item){
-          return (
-            String(item.id) ===
-            String(button.dataset.id)
+    .querySelectorAll(
+      ".save-button"
+    )
+    .forEach(
+      function(button){
+        const active =
+          memories.some(
+            function(item){
+              return (
+                String(
+                  item.id ||
+                  item.itemId ||
+                  item.postId
+                ) ===
+                String(
+                  button.dataset.id
+                )
+              );
+            }
           );
-        });
 
-      button.classList.toggle(
-        "saved",
-        active
-      );
-    });
+        button.classList.toggle(
+          "saved",
+          active
+        );
+      }
+    );
 
   document
-    .querySelectorAll(".comment-form")
-    .forEach(function(form){
-      renderComments(
-        form.dataset.id
-      );
-    });
+    .querySelectorAll(
+      ".comment-form"
+    )
+    .forEach(
+      function(form){
+        renderComments(
+          form.dataset.id
+        );
+      }
+    );
 }
 
 function bindPostEvents(){
   document
-    .querySelectorAll(".post-title-link")
-    .forEach(function(link){
-      link.addEventListener("click",function(event){
-        event.preventDefault();
+    .querySelectorAll(
+      ".post-title-link"
+    )
+    .forEach(
+      function(link){
+        link.addEventListener(
+          "click",
+          function(event){
+            event.preventDefault();
 
-        openPostModal(
-          link.dataset.postId
-        );
-      });
-    });
-
-  document
-    .querySelectorAll(".love-button")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const id =
-          String(button.dataset.id);
-
-        let loved =
-          getStorageArray(
-            "bhubondangaHomeLovedPosts"
-          ).map(String);
-
-        if(loved.includes(id)){
-          loved =
-            loved.filter(function(item){
-              return item !== id;
-            });
-        }else{
-          loved.push(id);
-        }
-
-        localStorage.setItem(
-          "bhubondangaHomeLovedPosts",
-          JSON.stringify(loved)
-        );
-
-        restorePostStates();
-      });
-    });
-
-  document
-    .querySelectorAll(".comment-button")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const panel =
-          document.getElementById(
-            "commentPanel-" +
-            button.dataset.id
-          );
-
-        panel.classList.toggle(
-          "open"
-        );
-      });
-    });
-
-  document
-    .querySelectorAll(".comment-form")
-    .forEach(function(form){
-      form.addEventListener("submit",function(event){
-        event.preventDefault();
-
-        const input =
-          form.querySelector(
-            ".comment-input"
-          );
-
-        const comment =
-          input.value.trim();
-
-        if(!comment){
-          return;
-        }
-
-        const comments =
-          getComments(
-            form.dataset.id
-          );
-
-        comments.unshift(comment);
-
-        localStorage.setItem(
-          commentsKey(form.dataset.id),
-          JSON.stringify(
-            comments.slice(0,50)
-          )
-        );
-
-        input.value =
-          "";
-
-        renderComments(
-          form.dataset.id
-        );
-      });
-    });
-
-  document
-    .querySelectorAll(".save-button")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const id =
-          String(button.dataset.id);
-
-        const post =
-          homePosts.find(function(item){
-            return String(item.id) === id;
-          });
-
-        if(!post){
-          return;
-        }
-
-        let memories =
-          getStorageArray(
-            "bhubondangaMemories"
-          );
-
-        const index =
-          memories.findIndex(function(item){
-            return String(item.id) === id;
-          });
-
-        if(index >= 0){
-          memories.splice(index,1);
-
-          showToast(
-            "স্মৃতি থেকে সরানো হয়েছে।"
-          );
-        }else{
-          memories.unshift({
-            id:post.id,
-            title:post.title,
-            type:post.typeLabel,
-            author:post.author,
-            authorSlug:post.authorSlug
-          });
-
-          showToast(
-            "স্মৃতিতে রাখা হয়েছে।"
-          );
-        }
-
-        localStorage.setItem(
-          "bhubondangaMemories",
-          JSON.stringify(
-            memories.slice(0,150)
-          )
-        );
-
-        restorePostStates();
-      });
-    });
-
-  document
-    .querySelectorAll(".share-button")
-    .forEach(function(button){
-      button.addEventListener("click",async function(){
-        const post =
-          homePosts.find(function(item){
-            return (
-              String(item.id) ===
-              String(button.dataset.id)
+            openPostModal(
+              link.dataset.postId
             );
-          });
-
-        if(!post){
-          return;
-        }
-
-        const url =
-          window.location.href.split("#")[0] +
-          "#post-" +
-          post.id;
-
-        try{
-          if(navigator.share){
-            await navigator.share({
-              title:post.title,
-              text:
-                post.author +
-                " • " +
-                post.typeLabel,
-              url:url
-            });
-
-            return;
           }
-
-          await navigator.clipboard.writeText(
-            url
-          );
-
-          showToast(
-            "পোস্টের লিংক কপি হয়েছে।"
-          );
-        }catch(error){}
-      });
-    });
+        );
+      }
+    );
 
   document
-    .querySelectorAll("[data-audio]")
-    .forEach(function(button){
-      button.addEventListener("click",function(){
-        const playing =
-          button.innerText === "❚❚";
+    .querySelectorAll(
+      ".love-button"
+    )
+    .forEach(
+             button.addEventListener(
+          "click",
+          function(){
+            const id =
+              String(
+                button.dataset.id
+              );
 
-        button.innerText =
-          playing
-            ? "▶"
-            : "❚❚";
+            let loved =
+              getStorageArray(
+                KEYS.lovedPosts
+              ).map(String);
 
-        showToast(
-          playing
-            ? "আবৃত্তি থামানো হয়েছে।"
-            : "অডিও যুক্ত হলে এখানে আবৃত্তি চলবে।"
+            if(
+              loved.includes(id)
+            ){
+              loved =
+                loved.filter(
+                  function(item){
+                    return item !== id;
+                  }
+                );
+
+              showToast(
+                "ভালো লাগা সরানো হয়েছে।"
+              );
+            }else{
+              loved.push(id);
+
+              showToast(
+                "লেখাটি ভালো লেগেছে।"
+              );
+            }
+
+            saveStorageArray(
+              KEYS.lovedPosts,
+              loved
+            );
+
+            restorePostStates();
+          }
         );
-      });
-    });
+      }
+    );
+
+  document
+    .querySelectorAll(
+      ".comment-button"
+    )
+    .forEach(
+      function(button){
+        button.addEventListener(
+          "click",
+          function(){
+            const panel =
+              document.getElementById(
+                "commentPanel-" +
+                button.dataset.id
+              );
+
+            if(!panel){
+              return;
+            }
+
+            panel.classList.toggle(
+              "open"
+            );
+
+            if(
+              panel.classList.contains(
+                "open"
+              )
+            ){
+              panel
+                .querySelector(
+                  ".comment-input"
+                )
+                ?.focus();
+            }
+          }
+        );
+      }
+    );
+
+  document
+    .querySelectorAll(
+      ".comment-form"
+    )
+    .forEach(
+      function(form){
+        form.addEventListener(
+          "submit",
+          function(event){
+            event.preventDefault();
+
+            const input =
+              form.querySelector(
+                ".comment-input"
+              );
+
+            const comment =
+              input.value.trim();
+
+            if(!comment){
+              showToast(
+                "মন্তব্য লিখুন।"
+              );
+
+              return;
+            }
+
+            const comments =
+              getComments(
+                form.dataset.id
+              );
+
+            comments.unshift(
+              comment
+            );
+
+            saveStorageArray(
+              commentsKey(
+                form.dataset.id
+              ),
+              comments.slice(
+                0,
+                50
+              )
+            );
+
+            input.value =
+              "";
+
+            renderComments(
+              form.dataset.id
+            );
+
+            showToast(
+              "মন্তব্য যোগ হয়েছে।"
+            );
+          }
+        );
+      }
+    );
+
+  document
+    .querySelectorAll(
+      ".save-button"
+    )
+    .forEach(
+      function(button){
+        button.addEventListener(
+          "click",
+          function(){
+            const id =
+              String(
+                button.dataset.id
+              );
+
+            const post =
+              homePosts.find(
+                function(item){
+                  return (
+                    String(item.id) ===
+                    id
+                  );
+                }
+              );
+
+            if(!post){
+              return;
+            }
+
+            let memories =
+              getStorageArray(
+                KEYS.memories
+              );
+
+            const savedIndex =
+              memories.findIndex(
+                function(item){
+                  return (
+                    String(
+                      item.id ||
+                      item.itemId ||
+                      item.postId
+                    ) === id
+                  );
+                }
+              );
+
+            if(
+              savedIndex >= 0
+            ){
+              memories.splice(
+                savedIndex,
+                1
+              );
+
+              showToast(
+                "স্মৃতি থেকে সরানো হয়েছে।"
+              );
+            }else{
+              memories.unshift({
+                id:post.id,
+                itemId:post.id,
+                postId:post.id,
+                itemType:"home-post",
+                type:post.type,
+                typeLabel:post.typeLabel,
+                title:post.title,
+                author:post.author,
+                authorSlug:post.authorSlug,
+                description:post.description,
+                poem:post.poem,
+                tags:post.tags,
+                savedAt:
+                  new Date()
+                    .toISOString()
+              });
+
+              showToast(
+                "স্মৃতিতে রাখা হয়েছে।"
+              );
+            }
+
+            saveStorageArray(
+              KEYS.memories,
+              memories.slice(
+                0,
+                500
+              )
+            );
+
+            restorePostStates();
+          }
+        );
+      }
+    );
+
+  document
+    .querySelectorAll(
+      ".share-button"
+    )
+    .forEach(
+      function(button){
+        button.addEventListener(
+          "click",
+          async function(){
+            const post =
+              homePosts.find(
+                function(item){
+                  return (
+                    String(item.id) ===
+                    String(
+                      button.dataset.id
+                    )
+                  );
+                }
+              );
+
+            if(!post){
+              return;
+            }
+
+            const url =
+              window.location.href
+                .split("#")[0] +
+              "#post-" +
+              encodeURIComponent(
+                post.id
+              );
+
+            try{
+              if(
+                navigator.share
+              ){
+                await navigator.share({
+                  title:
+                    post.title,
+                  text:
+                    post.author +
+                    " • " +
+                    post.typeLabel,
+                  url:url
+                });
+
+                return;
+              }
+
+              if(
+                navigator.clipboard &&
+                window.isSecureContext
+              ){
+                await navigator
+                  .clipboard
+                  .writeText(url);
+
+                showToast(
+                  "পোস্টের লিংক কপি হয়েছে।"
+                );
+
+                return;
+              }
+
+              window.prompt(
+                "লিংকটি কপি করুন:",
+                url
+              );
+            }catch(error){}
+          }
+        );
+      }
+    );
+
+  document
+    .querySelectorAll(
+      "[data-audio]"
+    )
+    .forEach(
+      function(button){
+        button.addEventListener(
+          "click",
+          function(){
+            const playing =
+              button.innerText ===
+              "❚❚";
+
+            document
+              .querySelectorAll(
+                "[data-audio]"
+              )
+              .forEach(
+                function(otherButton){
+                  otherButton.innerText =
+                    "▶";
+                }
+              );
+
+            button.innerText =
+              playing
+                ? "▶"
+                : "❚❚";
+
+            showToast(
+              playing
+                ? "আবৃত্তি থামানো হয়েছে।"
+                : "অডিও যুক্ত হলে এখানে আবৃত্তি চলবে।"
+            );
+          }
+        );
+      }
+    );
 }
 
 renderFeed();
@@ -5055,19 +5896,45 @@ function openHashPost(){
   const hash =
     window.location.hash;
 
-  if(!hash.startsWith("#post-")){
+  if(
+    !hash.startsWith(
+      "#post-"
+    )
+  ){
     return;
   }
 
   const id =
-    hash.replace("#post-","");
+    decodeURIComponent(
+      hash.replace(
+        "#post-",
+        ""
+      )
+    );
 
-  setTimeout(function(){
-    openPostModal(id);
-  },250);
+  setTimeout(
+    function(){
+      openPostModal(id);
+    },
+    250
+  );
 }
 
 openHashPost();
+
+window.addEventListener(
+  "hashchange",
+  function(){
+    if(
+      window.location.hash
+        .startsWith(
+          "#post-"
+        )
+    ){
+      openHashPost();
+    }
+  }
+);
 
 /* HUMANITARIAN */
 
@@ -5077,356 +5944,709 @@ const humanitarianModalBackdrop =
   );
 
 function openHumanitarianModal(){
-  humanitarianModalBackdrop.classList.add(
-    "show"
-  );
+  humanitarianModalBackdrop
+    .classList
+    .add("show");
 
-  document.body.classList.add(
-    "locked"
+  document
+    .body
+    .classList
+    .add("locked");
+
+  if(
+    currentUser.loggedIn
+  ){
+    document
+      .getElementById(
+        "requestName"
+      )
+      .value =
+        currentUser.name || "";
+  }
+
+  setTimeout(
+    function(){
+      document
+        .getElementById(
+          "requestType"
+        )
+        .focus();
+    },
+    100
   );
 }
 
 function closeHumanitarianModal(){
-  humanitarianModalBackdrop.classList.remove(
-    "show"
+  humanitarianModalBackdrop
+    .classList
+    .remove("show");
+
+  document
+    .body
+    .classList
+    .remove("locked");
+}
+
+document
+  .getElementById(
+    "humanitarianPlus"
+  )
+  .addEventListener(
+    "click",
+    openHumanitarianModal
   );
 
-  document.body.classList.remove(
-    "locked"
+document
+  .getElementById(
+    "humanitarianApplyButton"
+  )
+  .addEventListener(
+    "click",
+    openHumanitarianModal
+  );
+
+document
+  .getElementById(
+    "humanitarianModalClose"
+  )
+  .addEventListener(
+    "click",
+    closeHumanitarianModal
+  );
+
+document
+  .getElementById(
+    "humanitarianCancel"
+  )
+  .addEventListener(
+    "click",
+    closeHumanitarianModal
+  );
+
+humanitarianModalBackdrop
+  .addEventListener(
+    "click",
+    function(event){
+      if(
+        event.target ===
+        humanitarianModalBackdrop
+      ){
+        closeHumanitarianModal();
+      }
+    }
+  );
+
+function readHumanitarianImage(
+  file
+){
+  return new Promise(
+    function(resolve){
+      if(!file){
+        resolve("");
+
+        return;
+      }
+
+      if(
+        !String(file.type)
+          .startsWith(
+            "image/"
+          )
+      ){
+        showToast(
+          "শুধু ছবি নির্বাচন করুন।"
+        );
+
+        resolve("");
+
+        return;
+      }
+
+      if(
+        file.size >
+        1024 * 1024
+      ){
+        showToast(
+          "ছবির আকার ১ এমবির মধ্যে রাখুন।"
+        );
+
+        resolve("");
+
+        return;
+      }
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        function(){
+          resolve(
+            reader.result || ""
+          );
+        };
+
+      reader.onerror =
+        function(){
+          resolve("");
+        };
+
+      reader.readAsDataURL(
+        file
+      );
+    }
   );
 }
 
 document
-  .getElementById("humanitarianPlus")
+  .getElementById(
+    "humanitarianForm"
+  )
   .addEventListener(
-    "click",
-    openHumanitarianModal
-  );
+    "submit",
+    async function(event){
+      event.preventDefault();
 
-document
-  .getElementById("humanitarianApplyButton")
-  .addEventListener(
-    "click",
-    openHumanitarianModal
-  );
+      const form =
+        event.currentTarget;
 
-document
-  .getElementById("humanitarianModalClose")
-  .addEventListener(
-    "click",
-    closeHumanitarianModal
-  );
+      const requestType =
+        document
+          .getElementById(
+            "requestType"
+          )
+          .value
+          .trim();
 
-document
-  .getElementById("humanitarianCancel")
-  .addEventListener(
-    "click",
-    closeHumanitarianModal
-  );
+      const requestName =
+        document
+          .getElementById(
+            "requestName"
+          )
+          .value
+          .trim();
 
-humanitarianModalBackdrop.addEventListener(
-  "click",
-  function(event){
-    if(
-      event.target ===
-      humanitarianModalBackdrop
-    ){
+      const requestTitle =
+        document
+          .getElementById(
+            "requestTitle"
+          )
+          .value
+          .trim();
+
+      const requestDescription =
+        document
+          .getElementById(
+            "requestDescription"
+          )
+          .value
+          .trim();
+
+      const requestContact =
+        document
+          .getElementById(
+            "requestContact"
+          )
+          .value
+          .trim();
+
+      if(
+        !requestType ||
+        !requestName ||
+        !requestTitle ||
+        !requestDescription ||
+        !requestContact
+      ){
+        showToast(
+          "প্রয়োজনীয় সব তথ্য লিখুন।"
+        );
+
+        return;
+      }
+
+      const imageFile =
+        document
+          .getElementById(
+            "requestImage"
+          )
+          .files[0];
+
+      const image =
+        await readHumanitarianImage(
+          imageFile
+        );
+
+      const request = {
+        id:
+          Date.now()
+            .toString(36) +
+          Math.random()
+            .toString(36)
+            .slice(2,8),
+
+        type:
+          requestType,
+
+        name:
+          requestName,
+
+        title:
+          requestTitle,
+
+        description:
+          requestDescription,
+
+        contact:
+          requestContact,
+
+        image:
+          image,
+
+        imageName:
+          imageFile
+            ? imageFile.name
+            : "",
+
+        authorId:
+          currentUser.id ||
+          "",
+
+        authorName:
+          currentUser.loggedIn
+            ? currentUser.name
+            : requestName,
+
+        authorUsername:
+          currentUser.loggedIn
+            ? currentUser.username
+            : "",
+
+        status:
+          "pending-admin-verification",
+
+        statusLabel:
+          "যাচাইয়ের অপেক্ষায়",
+
+        published:
+          false,
+
+        pinned:
+          false,
+
+        createdAt:
+          new Date()
+            .toISOString(),
+
+        updatedAt:
+          new Date()
+            .toISOString()
+      };
+
+      const requests =
+        getStorageArray(
+          KEYS.humanitarian
+        );
+
+      requests.unshift(
+        request
+      );
+
+      try{
+        saveStorageArray(
+          KEYS.humanitarian,
+          requests.slice(
+            0,
+            500
+          )
+        );
+      }catch(error){
+        showToast(
+          "ছবিটি সংরক্ষণ করা যায়নি। ছোট ছবি দিয়ে আবার চেষ্টা করুন।"
+        );
+
+        return;
+      }
+
+      const notifications =
+        getStorageArray(
+          KEYS.adminNotifications
+        );
+
+      notifications.unshift({
+        id:
+          "notification-" +
+          request.id,
+
+        type:
+          "humanitarian-request",
+
+        title:
+          request.title,
+
+        message:
+          request.name +
+          " একটি মানবিক আবেদন পাঠিয়েছেন।",
+
+        status:
+          "unread",
+
+        requestId:
+          request.id,
+
+        url:
+          "admin-humanitarian-review.html?id=" +
+          encodeURIComponent(
+            request.id
+          ),
+
+        createdAt:
+          request.createdAt
+      });
+
+      saveStorageArray(
+        KEYS.adminNotifications,
+        notifications.slice(
+          0,
+          1000
+        )
+      );
+
+      form.reset();
+
       closeHumanitarianModal();
+
+      showToast(
+        "আবেদনটি যাচাইয়ের জন্য ভুবনডাঙ্গা টিমের কাছে পাঠানো হয়েছে।"
+      );
     }
-  }
-);
-
-document
-  .getElementById("humanitarianForm")
-  .addEventListener("submit",function(event){
-    event.preventDefault();
-
-    const request = {
-      id:Date.now(),
-
-      type:
-        document
-          .getElementById("requestType")
-          .value,
-
-      name:
-        document
-          .getElementById("requestName")
-          .value
-          .trim(),
-
-      title:
-        document
-          .getElementById("requestTitle")
-          .value
-          .trim(),
-
-      description:
-        document
-          .getElementById("requestDescription")
-          .value
-          .trim(),
-
-      contact:
-        document
-          .getElementById("requestContact")
-          .value
-          .trim(),
-
-      status:
-        "pending-admin-verification",
-
-      createdAt:
-        new Date().toISOString()
-    };
-
-    const requests =
-      getStorageArray(
-        "bhubondangaHumanitarianRequests"
-      );
-
-    requests.unshift(request);
-
-    localStorage.setItem(
-      "bhubondangaHumanitarianRequests",
-      JSON.stringify(
-        requests.slice(0,50)
-      )
-    );
-
-    const notifications =
-      getStorageArray(
-        "bhubondangaAdminNotifications"
-      );
-
-    notifications.unshift({
-      id:request.id,
-      type:"humanitarian-request",
-      title:request.title,
-      status:"unread",
-      createdAt:request.createdAt
-    });
-
-    localStorage.setItem(
-      "bhubondangaAdminNotifications",
-      JSON.stringify(
-        notifications.slice(0,100)
-      )
-    );
-
-    event.target.reset();
-
-    closeHumanitarianModal();
-
-    showToast(
-      "আবেদনটি যাচাইয়ের জন্য ভুবনডাঙ্গা টিমের কাছে পাঠানো হয়েছে।"
-    );
-  });
+  );
 
 /* COMPOSER */
 
 document
-  .getElementById("composerPrompt")
-  .addEventListener("click",function(){
-    window.location.href =
-      "submit-poem.html";
-  });
+  .getElementById(
+    "composerPrompt"
+  )
+  .addEventListener(
+    "click",
+    function(){
+      window.location.href =
+        "submit-poem.html";
+    }
+  );
 
 /* SEARCH */
 
-const searchInput =
-  document.getElementById("searchInput");
-
-function performSearch(){
-  const query =
-    searchInput.value.trim();
-
-  if(!query){
-    showToast(
-      "কী খুঁজতে চান, লিখুন।"
-    );
-
-    return;
-  }
-
-  window.location.href =
-    "search.html?q=" +
-    encodeURIComponent(query);
-}
-
 document
-  .getElementById("searchSubmit")
+  .getElementById(
+    "searchForm"
+  )
   .addEventListener(
-    "click",
-    performSearch
-  );
+    "submit",
+    function(event){
+      event.preventDefault();
 
-searchInput.addEventListener(
-  "keydown",
-  function(event){
-    if(event.key === "Enter"){
-      performSearch();
+      const query =
+        document
+          .getElementById(
+            "searchInput"
+          )
+          .value
+          .trim();
+
+      if(!query){
+        showToast(
+          "কী খুঁজতে চান, লিখুন।"
+        );
+
+        return;
+      }
+
+      window.location.href =
+        "search.html?q=" +
+        encodeURIComponent(
+          query
+        );
     }
-  }
-);
+  );
 
 /* DRAWER */
 
 const mobileDrawer =
-  document.getElementById("mobileDrawer");
+  document.getElementById(
+    "mobileDrawer"
+  );
 
 const drawerBackdrop =
-  document.getElementById("drawerBackdrop");
+  document.getElementById(
+    "drawerBackdrop"
+  );
 
 function openDrawer(){
-  mobileDrawer.classList.add(
-    "open"
-  );
+  mobileDrawer
+    .classList
+    .add("open");
 
-  drawerBackdrop.classList.add(
-    "show"
-  );
+  drawerBackdrop
+    .classList
+    .add("show");
 
-  document.body.classList.add(
-    "locked"
-  );
+  document
+    .body
+    .classList
+    .add("locked");
 }
 
 function closeDrawer(){
-  mobileDrawer.classList.remove(
-    "open"
-  );
+  mobileDrawer
+    .classList
+    .remove("open");
 
-  drawerBackdrop.classList.remove(
-    "show"
-  );
+  drawerBackdrop
+    .classList
+    .remove("show");
 
-  document.body.classList.remove(
-    "locked"
-  );
+  document
+    .body
+    .classList
+    .remove("locked");
 }
 
 document
-  .getElementById("openDrawerButton")
+  .getElementById(
+    "openDrawerButton"
+  )
   .addEventListener(
     "click",
     openDrawer
   );
 
 document
-  .getElementById("closeDrawerButton")
+  .getElementById(
+    "closeDrawerButton"
+  )
   .addEventListener(
     "click",
     closeDrawer
   );
 
-drawerBackdrop.addEventListener(
-  "click",
-  closeDrawer
-);
+drawerBackdrop
+  .addEventListener(
+    "click",
+    closeDrawer
+  );
+
+mobileDrawer
+  .querySelectorAll("a")
+  .forEach(
+    function(link){
+      link.addEventListener(
+        "click",
+        closeDrawer
+      );
+    }
+  );
 
 /* FOLLOW BUTTONS */
 
 document
-  .querySelectorAll(".suggested-follow")
-  .forEach(function(button){
-    button.addEventListener("click",function(){
-      const active =
-        button.dataset.following === "true";
+  .querySelectorAll(
+    ".suggested-follow"
+  )
+  .forEach(
+    function(button){
+      button.addEventListener(
+        "click",
+        function(){
+          const active =
+            button.dataset
+              .following ===
+            "true";
 
-      button.dataset.following =
-        String(!active);
+          button.dataset
+            .following =
+              String(!active);
 
-      button.innerText =
-        active
-          ? "ফলো"
-          : "✓ অনুসরণ";
-    });
-  });
+          button.innerText =
+            active
+              ? "ফলো"
+              : "✓ অনুসরণ";
+
+          showToast(
+            active
+              ? "অনুসরণ বন্ধ করা হয়েছে।"
+              : "লেখককে অনুসরণ করা হয়েছে।"
+          );
+        }
+      );
+    }
+  );
 
 /* THEME */
 
 const themeIcon =
-  document.getElementById("themeIcon");
+  document.getElementById(
+    "themeIcon"
+  );
 
 function updateThemeIcon(){
   themeIcon.innerText =
-    root.getAttribute("data-theme") === "dark"
+    root.getAttribute(
+      "data-theme"
+    ) === "dark"
       ? "☀️"
       : "🌙";
 }
 
 document
-  .getElementById("themeButton")
-  .addEventListener("click",function(){
-    const nextTheme =
-      root.getAttribute("data-theme") === "dark"
-        ? "light"
-        : "dark";
+  .getElementById(
+    "themeButton"
+  )
+  .addEventListener(
+    "click",
+    function(){
+      const nextTheme =
+        root.getAttribute(
+          "data-theme"
+        ) === "dark"
+          ? "light"
+          : "dark";
 
-    root.setAttribute(
-      "data-theme",
-      nextTheme
-    );
+      root.setAttribute(
+        "data-theme",
+        nextTheme
+      );
 
-    localStorage.setItem(
-      "bhubondangaTheme",
-      nextTheme
-    );
+      localStorage.setItem(
+        "bhubondangaTheme",
+        nextTheme
+      );
 
-    updateThemeIcon();
-  });
+      updateThemeIcon();
+    }
+  );
 
 updateThemeIcon();
 
 /* FOOTER */
 
 document
-  .getElementById("footerYear")
+  .getElementById(
+    "footerYear"
+  )
   .innerText =
     toBn(
-      new Date().getFullYear()
+      new Date()
+        .getFullYear()
     );
 
 /* TO TOP */
 
 const toTopButton =
-  document.getElementById("toTopButton");
-
-window.addEventListener("scroll",function(){
-  toTopButton.classList.toggle(
-    "show",
-    window.scrollY > 450
+  document.getElementById(
+    "toTopButton"
   );
-});
 
-toTopButton.addEventListener("click",function(){
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-});
+window.addEventListener(
+  "scroll",
+  function(){
+    toTopButton
+      .classList
+      .toggle(
+        "show",
+        window.scrollY >
+        450
+      );
+  },
+  {
+    passive:true
+  }
+);
+
+toTopButton
+  .addEventListener(
+    "click",
+    function(){
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
+    }
+  );
+
+/* STORAGE UPDATE */
+
+window.addEventListener(
+  "storage",
+  function(event){
+    if(
+      event.key ===
+      "bhubondangaTheme"
+    ){
+      root.setAttribute(
+        "data-theme",
+        event.newValue ||
+        "light"
+      );
+
+      updateThemeIcon();
+    }
+
+    if(
+      [
+        KEYS.homeUserPosts,
+        KEYS.profilePoems,
+        KEYS.environmentPosts,
+        KEYS.memories,
+        KEYS.lovedPosts
+      ].includes(
+        event.key
+      )
+    ){
+      window.location.reload();
+    }
+  }
+);
 
 /* KEYBOARD */
 
-document.addEventListener("keydown",function(event){
-  if(event.key === "Escape"){
-    closeDrawer();
-    closePostModal();
-    closeHumanitarianModal();
-  }
+document.addEventListener(
+  "keydown",
+  function(event){
+    if(
+      event.key ===
+      "Escape"
+    ){
+      closeDrawer();
+      closePostModal();
+      closeHumanitarianModal();
+    }
 
-  if(
-    (
-      event.ctrlKey ||
-      event.metaKey
-    ) &&
-    event.key.toLowerCase() === "k"
-  ){
-    event.preventDefault();
-    searchInput.focus();
+    if(
+      (
+        event.ctrlKey ||
+        event.metaKey
+      ) &&
+      event.key
+        .toLowerCase() ===
+        "k"
+    ){
+      event.preventDefault();
+
+      document
+        .getElementById(
+          "searchInput"
+        )
+        .focus();
+    }
   }
-});
+);
+
+/* DATE REFRESH */
+
+setInterval(
+  renderDates,
+  60000
+);
 </script>
 
 </body>
