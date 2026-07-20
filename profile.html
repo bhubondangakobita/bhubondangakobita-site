@@ -3777,17 +3777,17 @@ function renderProfile(){
   document
     .getElementById("founderAvatarBadge")
     .hidden =
-      !currentProfile.founder;
+      !(currentSlug === "mahmud-sohel" && currentProfile.founder);
 
   document
     .getElementById("profileFounderBadge")
     .hidden =
-      !currentProfile.founder;
+      !(currentSlug === "mahmud-sohel" && currentProfile.founder);
 
   document
     .getElementById("rightFounderBadge")
     .hidden =
-      !currentProfile.founder;
+      !(currentSlug === "mahmud-sohel" && currentProfile.founder);
 
   const coverImage =
     document.getElementById("profileCoverImage");
@@ -4961,7 +4961,7 @@ function createPostCard(post){
             ${escapeHtml(post.author)}
 
             ${
-              post.founder
+              post.authorSlug === "mahmud-sohel" && post.founder
                 ? `
                   <span class="founder-badge">
                     ✓
@@ -5337,7 +5337,7 @@ function openPostModal(postId){
     .innerHTML =
       escapeHtml(post.author) +
       (
-        post.founder
+        post.authorSlug === "mahmud-sohel" && post.founder
           ? `
             <span class="founder-badge">
               ✓
@@ -5998,6 +5998,798 @@ document.addEventListener("keydown",function(event){
     }
   }
 });
+</script>
+<!--
+  ভুবনডাঙ্গার কবিতা — profile.html তালিকা-ভিত্তিক সাহিত্যকর্ম আপডেট
+  এই সম্পূর্ণ অংশটি বর্তমান profile.html-এর শেষ </body> ট্যাগের ঠিক আগে বসাতে হবে।
+  বিদ্যমান কোনো CSS, HTML বা JavaScript মুছতে হবে না।
+-->
+
+<style>
+/* PROFILE COMPACT LITERARY LIST — EXISTING DESIGN UNCHANGED */
+.profile-feed{
+  margin-top:13px;
+  display:grid;
+  gap:10px;
+}
+
+.profile-work-list{
+  overflow:hidden;
+  padding:4px 16px;
+}
+
+.profile-work-item{
+  min-height:64px;
+  padding:11px 3px;
+  border-bottom:1px solid var(--border);
+  display:grid;
+  grid-template-columns:138px minmax(0,1fr);
+  align-items:center;
+  gap:16px;
+}
+
+.profile-work-item:last-child{
+  border-bottom:none;
+}
+
+.profile-work-date{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.55;
+  white-space:nowrap;
+}
+
+.profile-work-title{
+  min-width:0;
+  color:var(--text);
+  font-size:15px;
+  font-weight:700;
+  line-height:1.65;
+  transition:.16s ease;
+}
+
+.profile-work-title:hover{
+  color:var(--purple-dark);
+  text-decoration:underline;
+  text-underline-offset:4px;
+}
+
+.profile-work-empty{
+  padding:38px 18px;
+  text-align:center;
+}
+
+.profile-work-empty span{
+  display:block;
+  color:var(--purple);
+  font-size:34px;
+}
+
+.profile-work-empty h3{
+  margin-top:7px;
+  font-size:17px;
+}
+
+.profile-work-empty p{
+  margin-top:3px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+@media(max-width:700px){
+  .profile-work-list{
+    padding:3px 12px;
+  }
+
+  .profile-work-item{
+    min-height:58px;
+    padding:10px 2px;
+    grid-template-columns:106px minmax(0,1fr);
+    gap:10px;
+  }
+
+  .profile-work-date{
+    font-size:9.7px;
+    white-space:normal;
+  }
+
+  .profile-work-title{
+    font-size:13.5px;
+    line-height:1.6;
+  }
+}
+</style>
+
+<script>
+(function(){
+  "use strict";
+
+  const editedTabName = "edited-literature";
+  const editedTabLabel = "সম্পাদিত ও সংকলিত সাহিত্যকর্ম";
+
+  function safeArray(key){
+    try{
+      const value = JSON.parse(localStorage.getItem(key) || "[]");
+      return Array.isArray(value) ? value : [];
+    }catch(error){
+      return [];
+    }
+  }
+
+  function safeDate(value){
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function formatProfileListDate(value,index){
+    let date = safeDate(value);
+
+    if(!date){
+      const baseDate = new Date();
+      date = new Date(baseDate.getTime() - (index * 86400000));
+    }
+
+    return new Intl.DateTimeFormat(
+      "bn-BD",
+      {
+        day:"numeric",
+        month:"long",
+        year:"numeric"
+      }
+    ).format(date);
+  }
+
+  function safeObject(key){
+    try{
+      const value = JSON.parse(localStorage.getItem(key) || "{}");
+      return value && typeof value === "object" && !Array.isArray(value)
+        ? value
+        : {};
+    }catch(error){
+      return {};
+    }
+  }
+
+  function normalizeProfileType(value){
+    const raw = String(value || "").trim();
+    const type = raw.toLocaleLowerCase("bn-BD");
+
+    if(
+      type === "recitation-audio" ||
+      type === "recitation-video" ||
+      type.includes("recitation") ||
+      type.includes("আবৃত্তি")
+    ){
+      return "recitation";
+    }
+
+    if(
+      type === "prolap" ||
+      type === "midnight" ||
+      type === "midnight-prolap" ||
+      type.includes("prolap") ||
+      type.includes("প্রলাপ")
+    ){
+      return "short-prolap";
+    }
+
+    if(
+      type.includes("environment") ||
+      type.includes("nature") ||
+      type.includes("পরিবেশ") ||
+      type.includes("প্রকৃতি")
+    ){
+      return "environment";
+    }
+
+    if(
+      type.includes("humanitarian") ||
+      type.includes("মানবিক")
+    ){
+      return "humanitarian";
+    }
+
+    if(
+      type.includes("quote") ||
+      type.includes("বাণী") ||
+      type.includes("মনীষী") ||
+      type.includes("সম্পাদিত") ||
+      type.includes("সংকলিত")
+    ){
+      return editedTabName;
+    }
+
+    if(
+      type.includes("poem") ||
+      type.includes("কবিতা")
+    ){
+      return "poem";
+    }
+
+    return raw || "poem";
+  }
+
+  function normalizeCompactPost(item,index,fallbackType){
+    const rawType = item.type || item.category || fallbackType || "poem";
+    let type = normalizeProfileType(rawType);
+
+    if(
+      item.famousPoet === true ||
+      item.editorCredit === true ||
+      item.originalAuthorName ||
+      item.originalAuthorUsername
+    ){
+      type = editedTabName;
+    }
+
+    const quoteOwner =
+      item.quoteAuthorName ||
+      item.personName ||
+      item.famousPersonName ||
+      item.originalAuthorName ||
+      "";
+
+    return {
+      ...item,
+      id:String(item.id || item.sourceId || ("profile-list-" + index)),
+      sourceId:item.sourceId || item.id || "",
+      type:type,
+      rawType:String(rawType || ""),
+      title:
+        item.title ||
+        item.heading ||
+        item.name ||
+        item.quoteTitle ||
+        (quoteOwner ? "নির্বাচিত বাণী — " + quoteOwner : "শিরোনামহীন সাহিত্যকর্ম"),
+      createdAt:item.createdAt || item.publishedAt || item.updatedAt || item.date || "",
+      order:Number(item.order || 0),
+      url:item.url || item.href || item.detailUrl || "",
+      poetSlug:item.poetSlug || item.originalAuthorUsername || item.authorUsername || ""
+    };
+  }
+
+  function compactPostUrl(post){
+    if(post.url){
+      return post.url;
+    }
+
+    const id = encodeURIComponent(post.sourceId || post.id);
+
+    if(post.type === "poem"){
+      return "today-poem.html#post-" + id;
+    }
+
+    if(post.type === "recitation"){
+      return "recitation.html#post-" + id;
+    }
+
+    if(post.type === "short-prolap"){
+      const rawType = String(post.rawType || "").toLocaleLowerCase("bn-BD");
+
+      if(rawType.includes("midnight") || rawType.includes("মধ্যরাত")){
+        return "madhyorater-prolap.html#post-" + id;
+      }
+
+      return "today-prolap.html#post-" + id;
+    }
+
+    if(post.type === "environment"){
+      return "today-environment.html#post-" + id;
+    }
+
+    if(post.type === "humanitarian"){
+      return "humanitarian-request.html#post-" + id;
+    }
+
+    if(post.type === editedTabName){
+      if(post.famousPoet || post.poetSlug || post.originalAuthorName){
+        const poet = post.poetSlug || post.originalAuthorUsername || post.authorUsername || "";
+        return "famous-poet-profile.html?poet=" + encodeURIComponent(poet) + "#post-" + id;
+      }
+
+      return "famous-quotes.html#post-" + id;
+    }
+
+    return "index.html#post-" + id;
+  }
+
+  function belongsToCurrentEditor(item,forced){
+    if(forced){
+      return true;
+    }
+
+    const identities = [
+      item.editorUsername,
+      item.publisherUsername,
+      item.postedByUsername,
+      item.username,
+      item.authorSlug,
+      item.userSlug
+    ].filter(Boolean).map(String);
+
+    return profileIdentityCandidates.some(function(identity){
+      return identities.includes(String(identity));
+    });
+  }
+
+  function getEditedLiteraturePosts(){
+    const sharedKeys = [
+      "bhubondangaProfileEditedPosts",
+      "bhubondangaEditorPosts",
+      "bhubondangaProfileQuotes",
+      "bhubondangaFamousQuotePosts",
+      "bhubondangaPublishedFamousQuotes",
+      "bhubondangaFamousQuotesByUsers"
+    ];
+
+    const personalKeys = profileIdentityCandidates.flatMap(function(identity){
+      return [
+        "bhubondangaProfileEditedPosts_" + identity,
+        "bhubondangaEditorPosts_" + identity,
+        "bhubondangaProfileQuotes_" + identity,
+        "bhubondangaFamousQuotePosts_" + identity
+      ];
+    });
+
+    const records = [];
+
+    sharedKeys.forEach(function(key){
+      safeArray(key).forEach(function(item){
+        if(belongsToCurrentEditor(item,false)){
+          records.push(item);
+        }
+      });
+    });
+
+    personalKeys.forEach(function(key){
+      safeArray(key).forEach(function(item){
+        if(belongsToCurrentEditor(item,true)){
+          records.push(item);
+        }
+      });
+    });
+
+    if(profileIdentityCandidates.includes("mahmud-sohel") && !records.length){
+      records.push(
+        {
+          id:"edited-demo-1",
+          type:editedTabName,
+          title:"হঠাৎ দেখা — রবীন্দ্রনাথ ঠাকুর",
+          createdAt:"2026-07-20T09:30:00+04:00",
+          famousPoet:true,
+          poetSlug:"রবীন্দ্রনাথ-ঠাকুর",
+          url:"famous-poet-profile.html?poet=রবীন্দ্রনাথ-ঠাকুর#post-edited-demo-1"
+        },
+        {
+          id:"edited-demo-2",
+          type:editedTabName,
+          title:"সংকল্প — কাজী নজরুল ইসলাম",
+          createdAt:"2026-07-18T18:20:00+04:00",
+          famousPoet:true,
+          poetSlug:"কাজী-নজরুল-ইসলাম",
+          url:"famous-poet-profile.html?poet=কাজী-নজরুল-ইসলাম#post-edited-demo-2"
+        },
+        {
+          id:"edited-demo-3",
+          type:editedTabName,
+          title:"আবার আসিব ফিরে — জীবনানন্দ দাশ",
+          createdAt:"2026-07-16T14:10:00+04:00",
+          famousPoet:true,
+          poetSlug:"জীবনানন্দ-দাশ",
+          url:"famous-poet-profile.html?poet=জীবনানন্দ-দাশ#post-edited-demo-3"
+        },
+        {
+          id:"edited-demo-4",
+          type:editedTabName,
+          title:"নির্বাচিত বাণী — রবীন্দ্রনাথ ঠাকুর",
+          createdAt:"2026-07-14T11:45:00+04:00",
+          url:"famous-quotes.html#post-edited-demo-4"
+        }
+      );
+    }
+
+    const map = new Map();
+
+    records.forEach(function(item,index){
+      const post = normalizeCompactPost(item,index,editedTabName);
+      post.type = editedTabName;
+      const uniqueKey = String(post.sourceId || post.id);
+
+      if(!map.has(uniqueKey)){
+        map.set(uniqueKey,post);
+      }
+    });
+
+    return Array.from(map.values());
+  }
+
+  const navigationTrack = document.querySelector(".profile-navigation-track");
+
+  if(navigationTrack && !navigationTrack.querySelector('[data-tab="' + editedTabName + '"]')){
+    const editedButton = document.createElement("button");
+    editedButton.className = "profile-tab";
+    editedButton.type = "button";
+    editedButton.dataset.tab = editedTabName;
+    editedButton.innerHTML = '✎ ' + editedTabLabel + ' <span class="profile-tab-count">০</span>';
+    navigationTrack.appendChild(editedButton);
+
+    editedButton.addEventListener("click",function(){
+      activateTab(editedTabName);
+
+      const updatedUrl = new URL(window.location.href);
+      updatedUrl.searchParams.set("tab",editedTabName);
+      history.replaceState(null,"",updatedUrl);
+    });
+  }
+
+  const storedCurrentUser = safeObject("bhubondangaCurrentUser");
+
+  const profileIdentityCandidates = [
+    currentSlug,
+    currentSlug === "your-profile" ? storedCurrentUser.username : "",
+    currentSlug === "your-profile" ? storedCurrentUser.slug : ""
+  ].filter(Boolean).map(String);
+
+  function belongsToCurrentProfile(item,forced){
+    if(forced){
+      return true;
+    }
+
+    if(
+      item.famousPoet === true ||
+      item.editorCredit === true ||
+      item.originalAuthorName ||
+      item.originalAuthorUsername ||
+      normalizeProfileType(item.type || item.category) === editedTabName
+    ){
+      return false;
+    }
+
+    const identities = [
+      item.authorSlug,
+      item.authorUsername,
+      item.username,
+      item.userSlug,
+      item.postedByUsername,
+      item.publisherUsername
+    ].filter(Boolean).map(String);
+
+    return profileIdentityCandidates.some(function(identity){
+      return identities.includes(identity);
+    });
+  }
+
+  function getStoredProfileWorks(){
+    const sharedKeys = [
+      "bhubondangaProfilePosts",
+      "bhubondangaProfilePoems",
+      "bhubondangaHomeUserPosts",
+      "bhubondangaPublishedPosts",
+      "bhubondangaIndexFeedPosts",
+      "bhubondangaNewsfeedPosts",
+      "bhubondangaHomeFeedPosts",
+      "bhubondangaTodayPoemPosts",
+      "bhubondangaPublishedPoems",
+      "bhubondangaTodayProlapPosts",
+      "bhubondangaPublishedProlaps",
+      "bhubondangaPublishedMidnightProlaps",
+      "bhubondangaMidnightProlaps",
+      "bhubondangaRecitationPosts",
+      "bhubondangaPublishedRecitations",
+      "bhubondangaEnvironmentPosts",
+      "bhubondangaPublishedEnvironmentPosts",
+      "bhubondangaHumanitarianRequests"
+    ];
+
+    const personalKeys = profileIdentityCandidates.flatMap(function(identity){
+      return [
+        "bhubondangaProfilePosts_" + identity,
+        "bhubondangaProfilePoems_" + identity,
+        "bhubondangaProfileRecitations_" + identity,
+        "bhubondangaProfileProlaps_" + identity,
+        "bhubondangaProfileEnvironmentPosts_" + identity,
+        "bhubondangaProfileHumanitarianRequests_" + identity
+      ];
+    });
+
+    const records = [];
+
+    sharedKeys.forEach(function(key){
+      safeArray(key).forEach(function(item){
+        if(belongsToCurrentProfile(item,false)){
+          records.push(item);
+        }
+      });
+    });
+
+    personalKeys.forEach(function(key){
+      safeArray(key).forEach(function(item){
+        if(belongsToCurrentProfile(item,true)){
+          records.push(item);
+        }
+      });
+    });
+
+    const allowedTypes = [
+      "poem",
+      "recitation",
+      "short-prolap",
+      "environment",
+      "humanitarian"
+    ];
+
+    const map = new Map();
+
+    records.forEach(function(item,index){
+      const post = normalizeCompactPost(item,index,item.type || item.category);
+
+      if(!allowedTypes.includes(post.type)){
+        return;
+      }
+
+      const uniqueKey = String(post.sourceId || post.id);
+
+      if(!map.has(uniqueKey)){
+        map.set(uniqueKey,post);
+      }
+    });
+
+    return Array.from(map.values());
+  }
+
+  const generatedProfilePosts = Array.isArray(profilePosts)
+    ? profilePosts.map(function(item,index){
+        const normalized = normalizeCompactPost(item,index,item.type);
+
+        if(!normalized.createdAt){
+          const baseDate = new Date();
+          normalized.createdAt = new Date(baseDate.getTime() - (index * 86400000)).toISOString();
+        }
+
+        return normalized;
+      })
+    : [];
+
+  const originalProfilePostsMap = new Map();
+
+  getStoredProfileWorks()
+    .concat(generatedProfilePosts)
+    .forEach(function(post){
+      const uniqueKey = String(post.sourceId || post.id);
+
+      if(!originalProfilePostsMap.has(uniqueKey)){
+        originalProfilePostsMap.set(uniqueKey,post);
+      }
+    });
+
+  const originalProfilePosts = Array.from(originalProfilePostsMap.values());
+
+  let editedLiteraturePosts = getEditedLiteraturePosts();
+
+  function currentCompactPosts(){
+    if(activeTab === editedTabName){
+      return editedLiteraturePosts.slice();
+    }
+
+    if(activeTab === "profile"){
+      return originalProfilePosts.slice();
+    }
+
+    return originalProfilePosts.filter(function(post){
+      return post.type === activeTab;
+    });
+  }
+
+  function compactSort(posts){
+    const sort = document.getElementById("feedSort").value;
+
+    return posts.sort(function(a,b){
+      const aDate = safeDate(a.createdAt);
+      const bDate = safeDate(b.createdAt);
+      const aTime = aDate ? aDate.getTime() : Number(a.order || 0);
+      const bTime = bDate ? bDate.getTime() : Number(b.order || 0);
+
+      if(sort === "oldest"){
+        return aTime - bTime;
+      }
+
+      if(sort === "popular"){
+        return Number(b.likes || 0) - Number(a.likes || 0);
+      }
+
+      return bTime - aTime;
+    });
+  }
+
+  function createCompactListItem(post,index){
+    const article = document.createElement("article");
+    article.className = "profile-work-item";
+
+    const dateText = formatProfileListDate(post.createdAt,index);
+    const modalAvailable = Array.isArray(profilePosts) && profilePosts.some(function(item){
+      return String(item.id) === String(post.id);
+    });
+
+    const targetUrl = modalAvailable
+      ? "#post-" + encodeURIComponent(post.id)
+      : compactPostUrl(post);
+
+    article.innerHTML =
+      '<time class="profile-work-date" datetime="' +
+      escapeHtml(post.createdAt || "") +
+      '">' +
+      escapeHtml(dateText) +
+      '</time>' +
+      '<a class="profile-work-title' +
+      (modalAvailable ? ' profile-work-modal-link' : '') +
+      '" href="' +
+      escapeHtml(targetUrl) +
+      '"' +
+      (modalAvailable ? ' data-post-id="' + escapeHtml(post.id) + '"' : '') +
+      '>' +
+      escapeHtml(post.title) +
+      '</a>';
+
+    return article;
+  }
+
+  function updateDynamicTabCounts(){
+    const countMap = {
+      poem:originalProfilePosts.filter(function(post){return post.type === "poem";}).length,
+      recitation:originalProfilePosts.filter(function(post){return post.type === "recitation";}).length,
+      "short-prolap":originalProfilePosts.filter(function(post){return post.type === "short-prolap";}).length,
+      environment:originalProfilePosts.filter(function(post){return post.type === "environment";}).length,
+      humanitarian:originalProfilePosts.filter(function(post){return post.type === "humanitarian";}).length
+    };
+
+    document.querySelectorAll(".profile-tab").forEach(function(button){
+      const count = button.querySelector(".profile-tab-count");
+      if(!count){
+        return;
+      }
+
+      if(button.dataset.tab === editedTabName){
+        count.textContent = toBn(editedLiteraturePosts.length);
+        return;
+      }
+
+      if(Object.prototype.hasOwnProperty.call(countMap,button.dataset.tab)){
+        count.textContent = toBn(countMap[button.dataset.tab]);
+      }
+    });
+  }
+
+  getFilteredPosts = function(){
+    return compactSort(currentCompactPosts());
+  };
+
+  updateFeedHeading = function(){
+    const headings = {
+      profile:"প্রকাশিত সাহিত্যকর্ম",
+      poem:"কবিতার তালিকা",
+      recitation:"আবৃত্তির তালিকা",
+      "short-prolap":"ছোট কথার প্রলাপের তালিকা",
+      environment:"পরিবেশবিষয়ক লেখার তালিকা",
+      humanitarian:"মানবিক আবেদনের তালিকা"
+    };
+
+    headings[editedTabName] = editedTabLabel;
+
+    document.getElementById("feedHeading").innerText =
+      headings[activeTab] || "প্রকাশিত সাহিত্যকর্ম";
+  };
+
+  renderFeed = function(){
+    editedLiteraturePosts = getEditedLiteraturePosts();
+
+    const feed = document.getElementById("profileFeed");
+    const posts = getFilteredPosts();
+    const visiblePosts = posts.slice(0,visibleCount);
+
+    feed.innerHTML = "";
+
+    if(visiblePosts.length){
+      const listCard = document.createElement("section");
+      listCard.className = "card profile-work-list";
+
+      visiblePosts.forEach(function(post,index){
+        listCard.appendChild(
+          createCompactListItem(post,index)
+        );
+      });
+
+      feed.appendChild(listCard);
+    }else{
+      feed.innerHTML =
+        '<section class="card profile-work-empty">' +
+          '<span>✦</span>' +
+          '<h3>এখনো কোনো সাহিত্যকর্ম যুক্ত হয়নি</h3>' +
+          '<p>প্রকাশিত হলে তারিখ ও শিরোনাম এখানে দেখা যাবে।</p>' +
+        '</section>';
+    }
+
+    document.getElementById("loadMoreButton").hidden =
+      visibleCount >= posts.length;
+
+    document.getElementById("profileIntro").hidden =
+      activeTab !== "profile";
+
+    const helperText = document.querySelector(".feed-title p");
+    if(helperText){
+      helperText.textContent = activeTab === editedTabName
+        ? "খ্যাতিমান কবিদের সম্পাদিত লেখা ও সংকলিত মনীষীদের বাণী—তারিখসহ শিরোনামে ক্লিক করলে পূর্ণ লেখাটি খুলবে।"
+        : "প্রথমে ২০টি শিরোনাম দেখা যাবে। শিরোনামে ক্লিক করলে সংশ্লিষ্ট পূর্ণ লেখাটি খুলবে।";
+    }
+
+    updateFeedHeading();
+    updateDynamicTabCounts();
+
+    document.querySelectorAll(".profile-work-modal-link").forEach(function(link){
+      link.addEventListener("click",function(event){
+        event.preventDefault();
+        openPostModal(link.dataset.postId);
+      });
+    });
+
+    document.querySelectorAll("#desktopSidebarContent .sidebar-menu a.active .sidebar-copy small, #drawerSidebarContent .sidebar-menu a.active .sidebar-copy small").forEach(function(element){
+      element.textContent = "লেখকের সাহিত্যকর্মের তালিকা";
+    });
+  };
+
+  activateTab = function(tabName){
+    const validTabs = [
+      "profile",
+      "poem",
+      "recitation",
+      "short-prolap",
+      "environment",
+      "humanitarian",
+      editedTabName
+    ];
+
+    activeTab = validTabs.includes(tabName)
+      ? tabName
+      : "profile";
+
+    visibleCount = 20;
+
+    document.querySelectorAll(".profile-tab").forEach(function(button){
+      button.classList.toggle(
+        "active",
+        button.dataset.tab === activeTab
+      );
+    });
+
+    renderFeed();
+  };
+
+  updateDynamicTabCounts();
+  activateTab(urlParams.get("tab") || activeTab || "profile");
+
+  window.addEventListener("storage",function(event){
+    const editedKeys = [
+      "bhubondangaProfileEditedPosts",
+      "bhubondangaEditorPosts",
+      "bhubondangaProfileQuotes",
+      "bhubondangaFamousQuotePosts",
+      "bhubondangaPublishedFamousQuotes"
+    ].concat(
+      profileIdentityCandidates.flatMap(function(identity){
+        return [
+          "bhubondangaProfileEditedPosts_" + identity,
+          "bhubondangaEditorPosts_" + identity,
+          "bhubondangaProfileQuotes_" + identity,
+          "bhubondangaFamousQuotePosts_" + identity
+        ];
+      })
+    );
+
+    if(editedKeys.includes(event.key)){
+      editedLiteraturePosts = getEditedLiteraturePosts();
+      renderFeed();
+    }
+  });
+})();
 </script>
 
 </body>
