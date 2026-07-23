@@ -423,6 +423,10 @@ html[data-theme="dark"] .founder-contact{background:linear-gradient(135deg,rgba(
   .poem-title-cell,.poem-date-cell,.poem-editor-cell{padding-left:92px}
   .poem-title-cell::before,.poem-date-cell::before,.poem-editor-cell::before{width:84px;font-size:9px}
 }
+
+/* FAMOUS POET POST OPTIONS — FUNCTIONALITY ONLY */
+.post-options-wrap{position:relative;flex:0 0 auto}.post-options-menu{position:absolute;right:0;top:39px;z-index:120;width:190px;padding:6px;border:1px solid var(--border);border-radius:12px;display:none;background:var(--surface);box-shadow:var(--shadow)}.post-options-menu.open{display:grid;gap:3px}.post-options-menu button{min-height:37px;padding:7px 9px;border:0;border-radius:9px;background:transparent;color:var(--text-soft);font-size:10px;font-weight:700;text-align:left}.post-options-menu button:hover{background:var(--purple-soft);color:var(--purple)}.post-options-menu .danger{color:var(--red)}@media(max-width:760px){.post-options-menu{position:fixed;left:14px;right:14px;top:auto;bottom:18px;width:auto;z-index:2600;border-radius:16px}.post-options-menu button{min-height:43px;font-size:11px}}
+
 </style>
 </head>
 <body>
@@ -1011,7 +1015,7 @@ function createHomeCard(poem){
   var article=document.createElement("article");article.className="card post-card";article.id="post-"+poem.sourceId;
   var editorHtml=poem.editorName?' • সম্পাদনা করেছেন '+(editorLink(poem)?'<a class="editor-credit" href="'+escapeHtml(editorLink(poem))+'">'+escapeHtml(poem.editorName)+'</a>':escapeHtml(poem.editorName)):'';
   article.innerHTML=
-    '<header class="post-header"><div class="post-author"><a class="author-avatar-link" href="'+escapeHtml(currentProfileUrl)+'">'+imageMarkup(wiki.image,poetName)+'</a><div class="author-info"><a class="author-name" href="'+escapeHtml(currentProfileUrl)+'">'+escapeHtml(poetName)+'</a><div class="author-meta">'+escapeHtml(formatDate(poem.publicationDate))+editorHtml+'</div></div></div><button class="post-options" type="button" aria-label="আরও">⋯</button></header>'+
+    '<header class="post-header"><div class="post-author"><a class="author-avatar-link" href="'+escapeHtml(currentProfileUrl)+'">'+imageMarkup(wiki.image,poetName)+'</a><div class="author-info"><a class="author-name" href="'+escapeHtml(currentProfileUrl)+'">'+escapeHtml(poetName)+'</a><div class="author-meta">'+escapeHtml(formatDate(poem.publicationDate))+editorHtml+'</div></div></div><div class="post-options-wrap"><button class="post-options" type="button" data-id="'+escapeHtml(poem.sourceId)+'" aria-label="আরও">⋯</button><div class="post-options-menu" data-options-menu="'+escapeHtml(poem.sourceId)+'"><button type="button" data-poet-menu-command="copy" data-id="'+escapeHtml(poem.sourceId)+'">🔗 লিংক কপি করুন</button><button type="button" data-poet-menu-command="save" data-id="'+escapeHtml(poem.sourceId)+'">🔖 স্মৃতিতে রাখুন</button><button class="danger" type="button" data-poet-menu-command="report" data-id="'+escapeHtml(poem.sourceId)+'">⚑ রিপোর্ট করুন</button></div></div></header>'+
     '<div class="post-body"><span class="post-type">✍ কবিতা</span><h2 class="post-title"><a href="'+escapeHtml(poemLink(poem))+'">'+escapeHtml(poem.title)+'</a></h2>'+
     (poem.description?'<div class="post-description">'+escapeHtml(poem.description)+'</div>':'')+
     '<div class="poem-body">'+escapeHtml(poem.body||"কবিতার পূর্ণাঙ্গ পাঠ এখনো যুক্ত হয়নি।")+'</div>'+
@@ -1027,6 +1031,16 @@ function restoreHomeStates(){
   document.querySelectorAll(".love-button").forEach(function(button){var active=loved.includes(String(button.dataset.id));button.classList.toggle("loved",active);button.textContent=active?"♥":"♡"});
   document.querySelectorAll(".save-button").forEach(function(button){var active=memories.some(function(item){return String(item.id)===String(button.dataset.id)});button.classList.toggle("saved",active)});
 }
+
+function closePoetPostMenus(except){document.querySelectorAll(".post-options-menu.open").forEach(function(menu){if(menu!==except)menu.classList.remove("open")})}
+async function copyPoetPostLink(poem){var url=new URL(poemLink(poem),location.href).href;try{if(navigator.clipboard&&location.protocol!=="file:"){await navigator.clipboard.writeText(url);showToast("কবিতার লিংক কপি হয়েছে।");return}}catch(error){}var area=document.createElement("textarea");area.value=url;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();try{document.execCommand("copy");showToast("কবিতার লিংক কপি হয়েছে।")}catch(error){showToast("লিংক কপি করা যায়নি।")}area.remove()}
+function togglePoetMemory(poem){var memories=getArray("bhubondangaMemories"),index=memories.findIndex(function(item){return String(item.id)===String(poem.sourceId)});if(index>=0){memories.splice(index,1);showToast("স্মৃতি থেকে সরানো হয়েছে।")}else{memories.unshift({id:poem.sourceId,title:poem.title,type:"কবিতা",author:poetName,url:poemLink(poem),savedAt:new Date().toISOString()});showToast("স্মৃতিতে রাখা হয়েছে।")}saveArray("bhubondangaMemories",memories.slice(0,500));restoreHomeStates()}
+function bindPoetPostMenus(){
+  document.querySelectorAll(".post-options").forEach(function(button){button.addEventListener("click",function(event){event.stopPropagation();var menu=document.querySelector('[data-options-menu="'+CSS.escape(button.dataset.id)+'"]');if(!menu)return;var open=!menu.classList.contains("open");closePoetPostMenus();menu.classList.toggle("open",open)})});
+  document.querySelectorAll("[data-poet-menu-command]").forEach(function(button){button.addEventListener("click",async function(){var poem=poemBySourceId(button.dataset.id);if(!poem)return;closePoetPostMenus();if(button.dataset.poetMenuCommand==="copy")await copyPoetPostLink(poem);else if(button.dataset.poetMenuCommand==="save")togglePoetMemory(poem);else if(button.dataset.poetMenuCommand==="report")location.href="report.html?type=post&postId="+encodeURIComponent(poem.sourceId)+"&title="+encodeURIComponent(poem.title)+"&author="+encodeURIComponent(poetName)+"&source="+encodeURIComponent(new URL(poemLink(poem),location.href).href)})});
+  if(!window.__poetPostMenuBound){document.addEventListener("click",function(event){if(!event.target.closest(".post-options-wrap"))closePoetPostMenus()});window.__poetPostMenuBound=true}
+}
+
 function bindHomeEvents(){
   document.querySelectorAll(".love-button").forEach(function(button){button.addEventListener("click",function(){
     var id=String(button.dataset.id),poem=poemBySourceId(id);if(!poem)return;
@@ -1039,18 +1053,13 @@ function bindHomeEvents(){
     event.preventDefault();
     if(!(storedUser.loggedIn===true||storedUser.name||storedUser.username)){showToast("মন্তব্য করতে প্রথমে লগ ইন করুন।");return}
     var input=form.querySelector("input"),text=input.value.trim();if(!text)return;
-    var comments=getArray("bhubondangaHomeComments");comments.push({id:Date.now(),postId:form.dataset.commentId,authorName:storedUser.name||"আপনি",username:storedUser.username||"your-profile",text:text,createdAt:new Date().toISOString()});saveArray("bhubondangaHomeComments",comments.slice(-3000));input.value="";renderHomeFeed();
+    var comments=getArray("bhubondangaHomeComments");comments.push({id:Date.now(),postId:form.dataset.commentId,authorName:storedUser.name||"আপনি",username:storedUser.username||"your-profile",text:text,createdAt:new Date().toISOString()});saveArray("bhubondangaHomeComments",comments.slice(-3000));input.value="";renderComments(form.dataset.commentId);var countNode=document.querySelector('[data-comment-count="'+CSS.escape(form.dataset.commentId)+'"]');if(countNode){var poem=poemBySourceId(form.dataset.commentId);if(poem)countNode.textContent=toBn(commentCount(poem))}showToast("মন্তব্য যোগ হয়েছে।");
   })});
-  document.querySelectorAll(".save-button").forEach(function(button){button.addEventListener("click",function(){
-    var poem=poemBySourceId(button.dataset.id);if(!poem)return;
-    var memories=getArray("bhubondangaMemories"),index=memories.findIndex(function(item){return String(item.id)===String(poem.sourceId)});
-    if(index>=0){memories.splice(index,1);showToast("স্মৃতি থেকে সরানো হয়েছে।")}else{memories.unshift({id:poem.sourceId,title:poem.title,type:"কবিতা",author:poetName,url:poemLink(poem),savedAt:new Date().toISOString()});showToast("স্মৃতিতে রাখা হয়েছে।")}
-    saveArray("bhubondangaMemories",memories.slice(0,500));restoreHomeStates();
-  })});
+  document.querySelectorAll(".save-button").forEach(function(button){button.addEventListener("click",function(){var poem=poemBySourceId(button.dataset.id);if(poem)togglePoetMemory(poem)})});
   document.querySelectorAll(".share-button").forEach(function(button){button.addEventListener("click",async function(){
     var poem=poemBySourceId(button.dataset.id);if(!poem)return;var url=new URL(poemLink(poem),location.href).href;
     try{if(navigator.share)await navigator.share({title:poem.title+" | "+poetName,text:poetName+"-এর কবিতা",url:url});else{await navigator.clipboard.writeText(url);showToast("কবিতার লিংক কপি হয়েছে।")}}catch(error){}
-  })});
+  })});  bindPoetPostMenus();
 }
 function renderHomeFeed(){
   poems=getPoems();renderEditors();updateCounts();
@@ -1171,6 +1180,7 @@ document.addEventListener("keydown",function(event){
 });
 
 })();
+document.addEventListener("contextmenu",function(event){event.preventDefault()},{capture:true});
 </script>
 </body>
 </html>
