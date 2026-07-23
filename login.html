@@ -422,7 +422,56 @@ $('#leftSidebar').innerHTML=leftSidebarHtml();$('#rightSidebar').innerHTML=right
 function syncTheme(){const dark=root.getAttribute('data-theme')==='dark';$('#themeUse')?.setAttribute('href',dark?'#i-sun':'#i-moon');$$('[data-drawer-theme]').forEach(b=>{b.setAttribute('aria-pressed',String(dark));$('.theme-mode-title',b).textContent=dark?'লাইট মোড':'ডার্ক মোড';$('.theme-mode-subtitle',b).textContent=dark?'ডার্ক মোড চালু আছে':'লাইট মোড চালু আছে';$('.theme-mode-icon use',b)?.setAttribute('href',dark?'#i-sun':'#i-moon')})}
 function toggleTheme(){const next=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',next);localStorage.setItem('bhubondangaTheme',next);syncTheme()}
 $('#themeToggle')?.addEventListener('click',toggleTheme);$$('[data-drawer-theme]').forEach(b=>b.addEventListener('click',toggleTheme));syncTheme();
-function dates(){const d=new Date(),fmt=(loc,opt)=>{try{return new Intl.DateTimeFormat(loc,opt).format(d)}catch(e){return''}};const hour=d.getHours(),g=hour<5?'শুভরাত্রি':hour<12?'শুভ সকাল':hour<17?'শুভ অপরাহ্ণ':hour<20?'শুভ সন্ধ্যা':'শুভরাত্রি';$$('.greeting').forEach(e=>e.textContent=g+'—আপন ভুবনে স্বাগতম');$$('.weekday-date').forEach(e=>e.textContent=fmt('bn-BD',{weekday:'long'}));$$('.bangla-date').forEach(e=>e.textContent=fmt('bn-BD-u-ca-beng',{day:'numeric',month:'long',year:'numeric'})+' বঙ্গাব্দ');$$('.hijri-date').forEach(e=>e.textContent=fmt('bn-BD-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'})+' হিজরি');$$('.gregorian-date').forEach(e=>e.textContent=fmt('bn-BD',{day:'numeric',month:'long',year:'numeric'})+' খ্রিস্টাব্দ');$('#yearText').textContent=fmt('bn-BD',{year:'numeric'})}dates();
+function toBanglaDigits(value){
+  const digits={'0':'০','1':'১','2':'২','3':'৩','4':'৪','5':'৫','6':'৬','7':'৭','8':'৮','9':'৯'};
+  return String(value).replace(/[0-9]/g,d=>digits[d]);
+}
+function isGregorianLeapYear(year){
+  return year%400===0||(year%4===0&&year%100!==0);
+}
+function dhakaDateParts(date=new Date()){
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).formatToParts(date);
+  const result={};
+  parts.forEach(part=>{if(part.type!=='literal')result[part.type]=Number(part.value)});
+  return result;
+}
+function getBanglaCalendarDate(date=new Date()){
+  const parts=dhakaDateParts(date);
+  const currentUtc=Date.UTC(parts.year,parts.month-1,parts.day);
+  const currentBanglaStart=Date.UTC(parts.year,3,14);
+  const startYear=currentUtc>=currentBanglaStart?parts.year:parts.year-1;
+  const banglaYear=startYear-593;
+  const startUtc=Date.UTC(startYear,3,14);
+  let elapsed=Math.floor((currentUtc-startUtc)/86400000);
+  const months=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  const lengths=[31,31,31,31,31,31,30,30,30,30,isGregorianLeapYear(startYear+1)?30:29,30];
+  let monthIndex=0;
+  while(monthIndex<11&&elapsed>=lengths[monthIndex]){
+    elapsed-=lengths[monthIndex];
+    monthIndex++;
+  }
+  return toBanglaDigits(elapsed+1)+' '+months[monthIndex]+' '+toBanglaDigits(banglaYear)+' বঙ্গাব্দ';
+}
+function dates(){
+  const d=new Date();
+  const fmt=(loc,opt)=>{try{return new Intl.DateTimeFormat(loc,{timeZone:'Asia/Dhaka',...opt}).format(d)}catch(e){return''}};
+  const hour=dhakaDateParts(d).hour;
+  const g=hour<5?'শুভরাত্রি':hour<12?'শুভ সকাল':hour<17?'শুভ অপরাহ্ণ':hour<20?'শুভ সন্ধ্যা':'শুভরাত্রি';
+  const bangla=getBanglaCalendarDate(d);
+  const hijri=fmt('bn-BD-u-ca-islamic',{day:'numeric',month:'long',year:'numeric'})
+    .replace(/\s*(হিজরি|হিজরী|AH|هـ)\s*/gi,' ')
+    .replace(/[،,]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim()+' হিজরি';
+  const gregorian=fmt('bn-BD',{day:'numeric',month:'long',year:'numeric'})+' খ্রিস্টাব্দ';
+  $$('.greeting').forEach(e=>e.textContent=g+'—আপন ভুবনে স্বাগতম');
+  $$('.weekday-date').forEach(e=>e.textContent=fmt('bn-BD',{weekday:'long'}));
+  $$('.bangla-date').forEach(e=>e.textContent=bangla);
+  $$('.hijri-date').forEach(e=>e.textContent=hijri);
+  $$('.gregorian-date').forEach(e=>e.textContent=gregorian);
+  $('#yearText').textContent=fmt('bn-BD',{year:'numeric'});
+}
+dates();
 const u=currentUser(),ha=$('#headerAvatar');if(u){ha.href=profileUrl(u);ha.innerHTML=u.avatar?'<img src="'+esc(u.avatar)+'" alt="'+esc(u.name||'প্রোফাইল')+'">':icon('user')}
 $('#globalSearchForm')?.addEventListener('submit',e=>{e.preventDefault();const q=$('#globalSearchInput').value.trim();if(q)location.href='search.html?q='+encodeURIComponent(q)});
 const more=$('#mobileMoreBtn'),mm=$('#mobileMoreMenu');function closeMore(){mm?.classList.remove('show');more?.setAttribute('aria-expanded','false')}more?.addEventListener('click',e=>{e.stopPropagation();const sh=!mm.classList.contains('show');closeMore();if(sh){mm.classList.add('show');more.setAttribute('aria-expanded','true')}});document.addEventListener('click',e=>{if(mm&&!mm.contains(e.target)&&e.target!==more)closeMore()});
