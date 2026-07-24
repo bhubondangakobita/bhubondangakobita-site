@@ -341,7 +341,7 @@ html[data-theme="dark"] .humanitarian-mini{background:linear-gradient(135deg,rgb
 @media(max-width:860px){.humanitarian-mini{grid-template-columns:46px minmax(0,1fr);padding:10px}.humanitarian-mini .humanitarian-actions{grid-column:1/-1}.quick-type{min-height:66px}}
 
 
-/* BALANCED DESKTOP SIDEBARS + TRANSLATION-SAFE BRAND — V19 */
+/* DEDUPLICATED DESKTOP SIDEBARS + TRANSLATION-SAFE BRAND — V20 */
 .notranslate{unicode-bidi:isolate}
 @media (min-width:861px){
   .header-inner,.topnav-inner,.layout{width:min(1380px,calc(100% - 40px))}
@@ -374,6 +374,10 @@ html[data-theme="dark"] .humanitarian-mini{background:linear-gradient(135deg,rgb
   .desktop-side-quote,.desktop-side-note{margin-top:auto;padding:10px;border-left:3px solid var(--green);border-radius:0 10px 10px 0;background:rgba(79,138,120,.075);color:var(--text-soft);font-size:8.7px;line-height:1.65}
   .desktop-side-quote{border-left-color:var(--primary-2);background:var(--rainbow-soft)}
   .center-col{min-width:0}
+  #leftSidebar .desktop-sidebar-shell,#rightSidebar .desktop-sidebar-shell{min-height:590px}
+  .desktop-support-intro .desktop-side-leaf{font-family:inherit;font-size:23px;color:var(--primary)}
+  .desktop-support-shell .desktop-side-note a{color:var(--primary);font-weight:800}
+  .desktop-personal-shell .desktop-account-panel{margin-bottom:0}
 }
 </style>
 
@@ -928,28 +932,29 @@ function mobileRightSidebarHtml(){return mobileAccountHtml()+'<section class="gl
 function desktopLeftSidebarHtml(){
   const personal=[
     ['user','আপনার প্রোফাইল',currentProfileUrl],
-    ['message','বার্তা','messages.html'],
+    ['edit','প্রোফাইল সম্পাদনা','edit-profile.html'],
+    ['message','বার্তা ও গ্রুপ','messages.html'],
     ['bell','নোটিফিকেশন','notifications.html'],
     ['bookmark','আর্কাইভ','archive.html'],
-    ['star','মেমোরিজ','archive.html?tab=memories'],
-    ['edit','প্রোফাইল সেটিংস','edit-profile.html']
+    ['star','মেমোরিজ','archive.html?tab=memories']
   ];
-  return '<div class="side-box glass desktop-sidebar-shell"><div class="desktop-side-intro"><a class="desktop-side-leaf leaf-home-link notranslate" translate="no" href="index.html" aria-label="ভুবনডাঙ্গার হোমে ফিরে যান" title="হোম">🌿</a><div><h3><a href="index.html">আপন ভুবন</a></h3><p>প্রোফাইল ও ব্যক্তিগত কার্যক্রম</p></div></div><div class="desktop-side-label">আপনার জায়গা</div><div class="desktop-side-menu">'+personal.map(x=>'<a class="desktop-side-link" href="'+esc(x[2])+'"><span class="desktop-side-icon">'+icon(x[0])+'</span><span>'+esc(x[1])+'</span><span>›</span></a>').join('')+'<button class="desktop-side-theme" type="button" data-drawer-theme aria-pressed="false"><span class="desktop-side-icon theme-mode-icon">'+icon('moon')+'</span><span class="theme-switch-copy"><strong class="theme-mode-title">ডার্ক মোড</strong><small class="theme-mode-subtitle">লাইট মোড চালু আছে</small></span><span class="theme-switch" aria-hidden="true"><span class="theme-switch-knob"></span></span></button></div><div class="desktop-side-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></div>';
+  return '<div class="side-box glass desktop-sidebar-shell desktop-personal-shell">'+desktopAccountHtml()+'<div class="desktop-side-label">আপনার ব্যক্তিগত কেন্দ্র</div><div class="desktop-side-menu">'+personal.map(x=>'<a class="desktop-side-link" href="'+esc(x[2])+'"><span class="desktop-side-icon">'+icon(x[0])+'</span><span>'+esc(x[1])+'</span><span>›</span></a>').join('')+'<button class="desktop-side-theme" type="button" data-drawer-theme aria-pressed="false"><span class="desktop-side-icon theme-mode-icon">'+icon('moon')+'</span><span class="theme-switch-copy"><strong class="theme-mode-title">ডার্ক মোড</strong><small class="theme-mode-subtitle">লাইট মোড চালু আছে</small></span><span class="theme-switch" aria-hidden="true"><span class="theme-switch-knob"></span></span></button></div><div class="desktop-side-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></div>';
 }
 function desktopAccountHtml(){
   if(loggedIn)return '<div class="desktop-account-panel"><div class="account-avatar">'+(currentAvatar&&currentUsername!=='mahmud-sohel'?'<img src="'+esc(currentAvatar)+'" alt="'+esc(currentName)+'">':icon('user'))+'</div><h3>'+esc(currentName)+'</h3><p>আপনার ব্যক্তিগত ভুবন</p><div class="desktop-account-actions"><a href="'+esc(currentProfileUrl)+'">প্রোফাইল</a><a class="primary" href="edit-profile.html">সম্পাদনা</a></div></div>';
   return '<div class="desktop-account-panel"><div class="account-avatar">'+icon('user')+'</div><h3>অতিথি পাঠক</h3><p>লেখা প্রকাশ ও প্রতিক্রিয়ার জন্য প্রবেশ করুন</p><div class="desktop-account-actions"><a href="login.html">লগইন</a><a class="primary" href="register.html">নিবন্ধন</a></div></div>';
 }
 function desktopRightSidebarHtml(){
-  const quick=[
-    ['mic','আবৃত্তি','recitation.html'],
-    ['star','খ্যাতিমান কবি','famous-poet.html'],
-    ['heart','প্রিয় লেখক','favorite-authors.html'],
-    ['shield','মানবিক নোটিস','humanitarian-notice.html'],
+  const support=[
+    ['shield','যাচাইকৃত মানবিক নোটিস','humanitarian-notice.html'],
+    ['users','আমাদের সম্পর্কে','about.html'],
+    ['message','যোগাযোগ','contact.html'],
+    ['flag','অভিযোগ ও রিপোর্ট','complaint.html'],
+    ['shield','গোপনীয়তা ও নিরাপত্তা','privacy-security-policy.html'],
     ['quote','নীতিমালা','policy.html'],
-    ['message','যোগাযোগ','contact.html']
+    ['bookmark','লেখার সুরক্ষা','creative-work-protection.html']
   ];
-  return '<div class="side-box glass desktop-sidebar-shell">'+desktopAccountHtml()+'<div class="desktop-side-label">দ্রুত দেখুন</div><div class="desktop-side-menu">'+quick.map(x=>'<a class="desktop-side-link" href="'+esc(x[2])+'"><span class="desktop-side-icon">'+icon(x[0])+'</span><span>'+esc(x[1])+'</span><span>›</span></a>').join('')+'</div><div class="desktop-side-note">সাধারণ সাহিত্যিক লেখা সরাসরি প্রকাশিত হয়। মানবিক আবেদন যাচাইয়ের পর অগ্রাধিকার পায়।</div></div>';
+  return '<div class="side-box glass desktop-sidebar-shell desktop-support-shell"><div class="desktop-side-intro desktop-support-intro"><span class="desktop-side-leaf">🛡️</span><div><h3>সহায়তা ও আস্থা কেন্দ্র</h3><p>নীতিমালা, নিরাপত্তা ও প্রয়োজনীয় সহায়তা</p></div></div><div class="desktop-side-label">গুরুত্বপূর্ণ লিংক</div><div class="desktop-side-menu">'+support.map(x=>'<a class="desktop-side-link" href="'+esc(x[2])+'"><span class="desktop-side-icon">'+icon(x[0])+'</span><span>'+esc(x[1])+'</span><span>›</span></a>').join('')+'</div><div class="desktop-side-note"><a href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</a></div></div>';
 }
 document.getElementById('leftSidebar').innerHTML=desktopLeftSidebarHtml();
 document.getElementById('rightSidebar').innerHTML=desktopRightSidebarHtml();
@@ -1107,10 +1112,10 @@ const menu=[
 function leftHTML(){return '<div class="repair-side-box"><section class="repair-apn"><a class="repair-leaf leaf-home-link" href="index.html" aria-label="ভুবনডাঙ্গার হোমে ফিরে যান" title="হোম">🌿</a><h3><a href="index.html">আপন ভুবন</a></h3><p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p><blockquote>“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</blockquote></section><section class="repair-menu-card"><nav class="repair-menu-list">'+menu.map(x=>'<a class="repair-menu-item" href="'+x[2]+'"><span class="repair-menu-icon">'+svg(x[0])+'</span><strong>'+x[1]+'</strong><span>›</span></a>').join('')+'<button class="repair-menu-item" type="button" data-repair-theme><span class="repair-menu-icon" data-repair-theme-icon>'+svg(root.getAttribute('data-theme')==='dark'?'sun':'moon')+'</span><strong data-repair-theme-title>'+(root.getAttribute('data-theme')==='dark'?'লাইট মোড':'ডার্ক মোড')+'</strong><span class="repair-theme-switch"><i></i></span></button></nav></section><section class="repair-contact"><a href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</a><p>প্রতিষ্ঠাতার প্রোফাইল ও যোগাযোগের মাধ্যম দেখুন।</p></section></div>'}
 function rightHTML(){const u=user(),logged=Boolean(u.name||u.username||u.email),p=logged?profileUrl(u):'login.html';return '<section class="repair-account"><div class="repair-account-avatar">'+svg('user')+'</div><h3>'+esc(logged?(u.name||u.username):'অতিথি পাঠক')+'</h3><p>'+(logged?'আপনার ব্যক্তিগত ভুবন':'লেখা প্রকাশ ও প্রতিক্রিয়ার জন্য লগইন করুন')+'</p><div class="repair-account-actions"><a href="'+p+'">'+(logged?'প্রোফাইল':'লগইন')+'</a><a class="primary" href="'+(logged?'edit-profile.html':'register.html')+'">'+(logged?'সম্পাদনা':'রেজিস্টার')+'</a></div></section><section class="repair-quick"><h3>দ্রুত দেখুন</h3><a href="bhubondangar-lekhok.html">ভুবনডাঙ্গার লেখক <span>›</span></a><a href="favorite-authors.html">প্রিয় লেখক <span>›</span></a><a href="humanitarian-notice.html">যাচাইকৃত মানবিক নোটিস <span>›</span></a><a href="policy.html">নীতিমালা <span>›</span></a></section>'}
 function fillSidebars(){
- const left=document.getElementById('leftSidebar');if(left)left.innerHTML=leftHTML();
- const desktop=document.getElementById('desktopSidebar');if(desktop)desktop.innerHTML=leftHTML();
- if(!left&&!desktop){const l=document.querySelector('.left-sidebar .sidebar-shell');if(l)l.innerHTML=leftHTML()}
- const right=document.getElementById('rightSidebar');if(right)right.innerHTML=rightHTML();
+ const left=document.getElementById('leftSidebar');if(left&&!left.querySelector('.desktop-sidebar-shell'))left.innerHTML=leftHTML();
+ const desktop=document.getElementById('desktopSidebar');if(desktop&&!desktop.querySelector('.desktop-sidebar-shell'))desktop.innerHTML=leftHTML();
+ if(!left&&!desktop){const l=document.querySelector('.left-sidebar .sidebar-shell');if(l&&!l.querySelector('.desktop-sidebar-shell'))l.innerHTML=leftHTML()}
+ const right=document.getElementById('rightSidebar');if(right&&!right.querySelector('.desktop-sidebar-shell'))right.innerHTML=rightHTML();
  /* Pages with a custom .right-sidebar keep their own profile/detail widgets. */
  const md=document.getElementById('mobileDrawer');
  if(md){
