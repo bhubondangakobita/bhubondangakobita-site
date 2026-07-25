@@ -1,3542 +1,671 @@
-<!DOCTYPE html>
-<html lang="bn" data-theme="light">
+<!doctype html>
+<html lang="bn" data-theme="light" data-style="pearl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>মনীষীর প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-
-<meta
-  name="description"
-  content="পৃথিবীর বিখ্যাত মনীষীদের পরিচিতি, চিন্তার ক্ষেত্র এবং নির্বাচিত বাণী।"
->
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-:root{
-  --header-height:84px;
-  --date-height:39px;
-  --nav-height:56px;
-
-  --surface:#ffffff;
-  --surface-soft:#f7f9fc;
-  --surface-soft-2:#f1f6fb;
-
-  --text:#153657;
-  --text-soft:#5d728b;
-  --muted:#8796a8;
-
-  --border:rgba(48,82,126,.14);
-  --border-strong:rgba(70,101,145,.24);
-
-  --blue:#477bac;
-  --blue-dark:#2d5982;
-  --blue-soft:#edf5fb;
-
-  --purple:#8178a8;
-  --purple-dark:#62598b;
-  --purple-soft:#f3f1f9;
-
-  --green:#41836f;
-  --green-dark:#286954;
-  --green-soft:#edf8f3;
-
-  --gold:#a47b45;
-  --gold-soft:#faf5ec;
-
-  --red:#c65e76;
-  --red-soft:#fdf0f3;
-
-  --header-bg:rgba(253,254,255,.97);
-
-  --nav-bg:
-    linear-gradient(
-      90deg,
-      rgba(250,248,242,.98),
-      rgba(248,245,250,.98),
-      rgba(242,247,252,.98)
-    );
-
-  --page-bg:
-    radial-gradient(circle at 4% 2%,rgba(170,212,239,.19),transparent 28%),
-    radial-gradient(circle at 96% 5%,rgba(210,198,232,.16),transparent 30%),
-    linear-gradient(150deg,#fbfdff 0%,#eef6fb 48%,#f8f6fb 100%);
-
-  --shadow:0 9px 27px rgba(29,65,108,.065);
-  --shadow-soft:0 4px 15px rgba(29,65,108,.055);
-}
-
-html[data-theme="dark"]{
-  --surface:#0d1b2d;
-  --surface-soft:#12243a;
-  --surface-soft-2:#142a43;
-
-  --text:#f3f7fd;
-  --text-soft:#c7d4e4;
-  --muted:#91a4bc;
-
-  --border:rgba(123,164,215,.20);
-  --border-strong:rgba(130,174,225,.32);
-
-  --blue:#82b5e5;
-  --blue-dark:#acd2f1;
-  --blue-soft:rgba(91,151,211,.14);
-
-  --purple:#c0b6e9;
-  --purple-dark:#d5cef3;
-  --purple-soft:rgba(153,137,207,.14);
-
-  --green:#84d2b9;
-  --green-dark:#a4e2cf;
-  --green-soft:rgba(67,157,132,.14);
-
-  --gold:#e1c08a;
-  --gold-soft:rgba(181,139,79,.13);
-
-  --red:#ff91a8;
-  --red-soft:rgba(214,95,122,.13);
-
-  --header-bg:rgba(6,16,30,.97);
-
-  --nav-bg:
-    linear-gradient(
-      90deg,
-      rgba(36,31,24,.98),
-      rgba(31,27,43,.98),
-      rgba(20,31,47,.98)
-    );
-
-  --page-bg:
-    radial-gradient(circle at 4% 2%,rgba(50,108,172,.20),transparent 28%),
-    radial-gradient(circle at 96% 5%,rgba(108,79,157,.17),transparent 30%),
-    linear-gradient(180deg,#050b14 0%,#0a1729 56%,#060d18 100%);
-
-  --shadow:0 18px 44px rgba(0,0,0,.36);
-  --shadow-soft:0 0 20px rgba(111,174,235,.08);
-}
-
-body{
-  min-height:100vh;
-  overflow-x:hidden;
-  color:var(--text);
-  background:var(--page-bg);
-  font-family:'Noto Serif Bengali',Georgia,serif;
-  font-size:14px;
-  line-height:1.75;
-}
-
-body.locked{
-  overflow:hidden;
-}
-
-a{
-  color:inherit;
-  text-decoration:none;
-}
-
-button,
-input,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-button,
-a{
-  -webkit-tap-highlight-color:transparent;
-}
-
-[hidden]{
-  display:none!important;
-}
-
-/* HEADER */
-
-.site-header{
-  position:sticky;
-  top:0;
-  z-index:1700;
-  min-height:var(--header-height);
-  border-bottom:1px solid var(--border);
-  background:var(--header-bg);
-  box-shadow:0 4px 15px rgba(28,61,102,.05);
-  backdrop-filter:blur(18px);
-}
-
-.header-inner{
-  width:min(1500px,100%);
-  min-height:var(--header-height);
-  margin:0 auto;
-  padding:0 22px;
-  display:grid;
-  grid-template-columns:390px minmax(270px,1fr) auto;
-  align-items:center;
-  gap:20px;
-}
-
-.header-left{
-  min-width:0;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.menu-button{
-  display:none;
-  width:40px;
-  height:40px;
-  border:none;
-  background:transparent;
-  color:var(--text);
-  font-size:28px;
-}
-
-.brand{
-  min-width:0;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.brand-leaf{
-  font-size:43px;
-  line-height:1;
-}
-
-.brand-copy h1{
-  color:#163f6e;
-  font-size:27px;
-  font-weight:700;
-  line-height:1.15;
-  white-space:nowrap;
-}
-
-.brand-copy p{
-  margin-top:3px;
-  color:var(--green);
-  font-size:12.5px;
-  white-space:nowrap;
-}
-
-html[data-theme="dark"] .brand-copy h1{
-  color:#fff;
-}
-
-.header-search{
-  position:relative;
-}
-
-.header-search input{
-  width:100%;
-  height:43px;
-  padding:0 52px 0 44px;
-  border:1px solid var(--border);
-  border-radius:999px;
-  outline:none;
-  background:var(--surface);
-  color:var(--text);
-  font-size:12.5px;
-}
-
-.header-search input:focus{
-  border-color:var(--purple);
-  box-shadow:0 0 0 3px var(--purple-soft);
-}
-
-.header-search::before{
-  content:"⌕";
-  position:absolute;
-  left:16px;
-  top:50%;
-  transform:translateY(-50%);
-  color:var(--text-soft);
-  font-size:21px;
-}
-
-.search-button{
-  position:absolute;
-  top:50%;
-  right:6px;
-  width:32px;
-  height:32px;
-  transform:translateY(-50%);
-  border:none;
-  border-radius:50%;
-  background:var(--blue);
-  color:#fff;
-}
-
-.header-actions{
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:7px;
-}
-
-.header-action{
-  width:40px;
-  height:40px;
-  border:1px solid var(--border);
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--surface);
-  color:var(--text);
-  font-size:16px;
-}
-
-.header-avatar{
-  width:43px;
-  height:43px;
-  border:2px solid rgba(255,255,255,.92);
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-size:14px;
-  font-weight:700;
-}
-
-/* DATE */
-
-.date-ticker{
-  position:sticky;
-  top:var(--header-height);
-  z-index:1650;
-  height:var(--date-height);
-  overflow:hidden;
-  border-bottom:1px solid var(--border);
-  background:
-    linear-gradient(
-      90deg,
-      rgba(239,247,252,.99),
-      rgba(242,244,251,.99),
-      rgba(247,245,251,.99)
-    );
-}
-
-html[data-theme="dark"] .date-ticker{
-  background:rgba(9,24,41,.98);
-}
-
-.ticker-track{
-  width:max-content;
-  min-width:200%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  animation:dateScroll 36s linear infinite;
-}
-
-.ticker-group{
-  min-width:100vw;
-  padding:0 46px;
-  display:flex;
-  align-items:center;
-  justify-content:space-around;
-  gap:68px;
-  color:var(--text-soft);
-  font-size:11.5px;
-  white-space:nowrap;
-}
-
-.ticker-separator{
-  color:var(--purple);
-}
-
-@keyframes dateScroll{
-  from{
-    transform:translateX(0);
-  }
-
-  to{
-    transform:translateX(-50%);
-  }
-}
-
-/* NAV */
-
-.category-bar{
-  position:sticky;
-  top:calc(var(--header-height) + var(--date-height));
-  z-index:1600;
-  min-height:var(--nav-height);
-  border-bottom:1px solid rgba(126,103,148,.14);
-  background:var(--nav-bg);
-  backdrop-filter:blur(16px);
-}
-
-.category-track{
-  width:min(1500px,100%);
-  min-height:var(--nav-height);
-  margin:0 auto;
-  padding:0 22px;
-  display:flex;
-  align-items:center;
-  gap:29px;
-  overflow-x:auto;
-  scrollbar-width:none;
-}
-
-.category-track::-webkit-scrollbar{
-  display:none;
-}
-
-.category-link{
-  flex:0 0 auto;
-  min-height:var(--nav-height);
-  padding:0 3px;
-  border-bottom:3px solid transparent;
-  display:flex;
-  align-items:center;
-  color:#66617a;
-  font-size:14px;
-  font-weight:600;
-  white-space:nowrap;
-}
-
-html[data-theme="dark"] .category-link{
-  color:var(--text-soft);
-}
-
-.category-link:hover,
-.category-link.active{
-  color:var(--blue);
-  border-bottom-color:var(--blue);
-}
-
-/* LAYOUT */
-
-.page-grid{
-  width:min(1500px,100%);
-  margin:0 auto;
-  padding:15px 20px 35px;
-  display:grid;
-  grid-template-columns:255px minmax(0,1fr) 285px;
-  gap:15px;
-}
-
-.card{
-  border:1px solid var(--border);
-  border-radius:16px;
-  background:var(--surface);
-  box-shadow:var(--shadow);
-}
-
-.left-sidebar,
-.right-sidebar{
-  position:sticky;
-  top:calc(
-    var(--header-height) +
-    var(--date-height) +
-    var(--nav-height) +
-    15px
-  );
-  height:calc(100vh - 218px);
-  overflow-y:auto;
-  scrollbar-width:none;
-}
-
-.left-sidebar::-webkit-scrollbar,
-.right-sidebar::-webkit-scrollbar,
-.mobile-drawer::-webkit-scrollbar{
-  display:none;
-}
-
-/* SIDEBAR */
-
-.sidebar-shell{
-  padding:11px;
-  border:1px solid var(--border);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 12% 0,var(--blue-soft),transparent 35%),
-    var(--surface);
-  box-shadow:var(--shadow);
-}
-
-.sidebar-head{
-  padding:13px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:
-    radial-gradient(circle at top right,var(--purple-soft),transparent 50%),
-    var(--surface-soft);
-}
-
-.sidebar-head h2{
-  font-size:16px;
-}
-
-.sidebar-head p{
-  margin-top:3px;
-  color:var(--text-soft);
-  font-size:9.5px;
-}
-
-.sidebar-quote{
-  margin-top:10px;
-  padding:10px;
-  border-left:3px solid var(--purple);
-  border-radius:0 9px 9px 0;
-  background:var(--purple-soft);
-  color:var(--text-soft);
-  font-size:9.5px;
-}
-
-.sidebar-section{
-  margin-top:13px;
-}
-
-.sidebar-title{
-  padding:0 7px 6px;
-  color:var(--muted);
-  font-size:10px;
-  font-weight:700;
-}
-
-.sidebar-menu{
-  display:grid;
-  gap:4px;
-}
-
-.sidebar-menu a{
-  min-height:45px;
-  padding:7px 8px;
-  border:1px solid transparent;
-  border-radius:11px;
-  display:grid;
-  grid-template-columns:32px minmax(0,1fr) auto;
-  align-items:center;
-  gap:8px;
-  color:var(--text-soft);
-}
-
-.sidebar-menu a:hover,
-.sidebar-menu a.active{
-  border-color:var(--border);
-  background:var(--purple-soft);
-  color:var(--purple-dark);
-}
-
-.sidebar-icon{
-  width:32px;
-  height:32px;
-  border-radius:9px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--blue-soft);
-  color:var(--blue);
-  font-size:14px;
-}
-
-.sidebar-copy strong{
-  display:block;
-  font-size:11.5px;
-  font-weight:600;
-}
-
-.sidebar-copy small{
-  display:block;
-  color:var(--muted);
-  font-size:8px;
-}
-
-.sidebar-divider{
-  height:1px;
-  margin:12px 4px;
-  background:var(--border);
-}
-
-.founder-contact{
-  margin-top:13px;
-  padding:11px;
-  border:1px solid var(--border);
-  border-radius:13px;
-  background:var(--surface-soft);
-}
-
-.founder-top{
-  display:grid;
-  grid-template-columns:38px minmax(0,1fr);
-  gap:8px;
-  align-items:center;
-}
-
-.founder-avatar{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,#6c7fa2,#76658e);
-  color:#fff;
-  font-size:10px;
-  font-weight:700;
-}
-
-.founder-name{
-  display:flex;
-  align-items:center;
-  gap:4px;
-  font-size:11.5px;
-  font-weight:600;
-}
-
-.founder-badge{
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background:#217cd2;
-  color:#fff;
-  font-size:7px;
-}
-
-.founder-copy p{
-  color:var(--muted);
-  font-size:8px;
-}
-
-.founder-message{
-  margin-top:8px;
-  padding:8px;
-  border-left:3px solid var(--green);
-  border-radius:0 8px 8px 0;
-  background:var(--green-soft);
-  color:var(--text-soft);
-  font-size:9px;
-}
-
-/* PROFILE */
-
-.main-content{
-  min-width:0;
-}
-
-.profile-hero{
-  overflow:hidden;
-}
-
-.profile-cover{
-  height:135px;
-  background:
-    radial-gradient(circle at 15% 10%,rgba(255,255,255,.40),transparent 25%),
-    radial-gradient(circle at 90% 5%,var(--purple-soft),transparent 35%),
-    linear-gradient(120deg,var(--blue-soft),var(--purple-soft),var(--green-soft));
-}
-
-.profile-hero-inner{
-  position:relative;
-  padding:0 21px 20px;
-}
-
-.profile-avatar{
-  width:112px;
-  height:112px;
-  margin-top:-57px;
-  border:5px solid var(--surface);
-  border-radius:28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  box-shadow:var(--shadow);
-  font-size:27px;
-  font-weight:800;
-}
-
-.profile-main-row{
-  margin-top:10px;
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:16px;
-}
-
-.profile-name-wrap{
-  min-width:0;
-}
-
-.profile-name{
-  font-size:29px;
-  line-height:1.35;
-}
-
-.profile-identity{
-  margin-top:3px;
-  color:var(--text-soft);
-  font-size:12px;
-}
-
-.profile-category{
-  margin-top:8px;
-  display:inline-flex;
-  padding:5px 10px;
-  border-radius:999px;
-  background:var(--purple-soft);
-  color:var(--purple-dark);
-  font-size:9px;
-  font-weight:700;
-}
-
-.profile-buttons{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-  gap:7px;
-}
-
-.profile-button{
-  min-height:38px;
-  padding:7px 12px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:6px;
-  background:var(--surface-soft);
-  color:var(--text-soft);
-  font-size:9.5px;
-  font-weight:700;
-}
-
-.profile-button.primary{
-  border-color:var(--blue);
-  background:var(--blue);
-  color:#fff;
-}
-
-.profile-button.saved{
-  border-color:var(--gold);
-  background:var(--gold-soft);
-  color:var(--gold);
-}
-
-.profile-tabs{
-  position:sticky;
-  top:calc(var(--header-height) + var(--date-height) + var(--nav-height));
-  z-index:900;
-  margin-top:11px;
-  padding:0 14px;
-  display:flex;
-  align-items:center;
-  gap:22px;
-  overflow-x:auto;
-  scrollbar-width:none;
-}
-
-.profile-tabs::-webkit-scrollbar{
-  display:none;
-}
-
-.profile-tab{
-  flex:0 0 auto;
-  min-height:52px;
-  padding:0 2px;
-  border:none;
-  border-bottom:3px solid transparent;
-  display:flex;
-  align-items:center;
-  background:transparent;
-  color:var(--text-soft);
-  font-size:11px;
-  font-weight:700;
-}
-
-.profile-tab.active{
-  border-bottom-color:var(--purple);
-  color:var(--purple-dark);
-}
-
-.profile-section{
-  margin-top:11px;
-  padding:18px;
-}
-
-.profile-section[hidden]{
-  display:none;
-}
-
-.section-heading{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.section-heading h2{
-  font-size:18px;
-}
-
-.section-heading a{
-  color:var(--purple-dark);
-  font-size:9px;
-  font-weight:700;
-}
-
-.about-text{
-  margin-top:10px;
-  color:var(--text-soft);
-  font-size:12px;
-  line-height:2;
-}
-
-.info-grid{
-  margin-top:14px;
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-}
-
-.info-item{
-  padding:12px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  background:var(--surface-soft);
-}
-
-.info-item span{
-  display:block;
-  color:var(--muted);
-  font-size:8.5px;
-}
-
-.info-item strong{
-  display:block;
-  margin-top:3px;
-  font-size:11px;
-}
-
-.quote-feature{
-  margin-top:12px;
-  padding:19px;
-  border:1px solid var(--border);
-  border-radius:14px;
-  background:
-    radial-gradient(circle at 90% 5%,var(--purple-soft),transparent 45%),
-    var(--surface-soft);
-}
-
-.quote-mark{
-  color:var(--purple);
-  font-size:45px;
-  line-height:.8;
-}
-
-.feature-quote{
-  margin-top:5px;
-  color:var(--text);
-  font-size:18px;
-  line-height:1.9;
-}
-
-.quote-credit{
-  margin-top:10px;
-  color:var(--text-soft);
-  font-size:10px;
-}
-
-.quote-tools{
-  margin-top:13px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-}
-
-.quote-tool{
-  min-height:35px;
-  padding:6px 11px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  background:var(--surface);
-  color:var(--text-soft);
-  font-size:9px;
-  font-weight:700;
-}
-
-.related-grid{
-  margin-top:12px;
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;
-}
-
-.related-card{
-  padding:11px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  display:grid;
-  grid-template-columns:39px minmax(0,1fr);
-  align-items:center;
-  gap:9px;
-  background:var(--surface-soft);
-}
-
-.related-avatar{
-  width:39px;
-  height:39px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-size:9px;
-  font-weight:800;
-}
-
-.related-copy{
-  min-width:0;
-}
-
-.related-copy strong{
-  display:block;
-  overflow:hidden;
-  font-size:10.5px;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.related-copy span{
-  display:block;
-  overflow:hidden;
-  color:var(--muted);
-  font-size:8px;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-.profile-navigation{
-  margin-top:11px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-}
-
-.nav-profile{
-  padding:12px;
-  border:1px solid var(--border);
-  border-radius:11px;
-  background:var(--surface);
-}
-
-.nav-profile:last-child{
-  text-align:right;
-}
-
-.nav-profile span{
-  display:block;
-  color:var(--muted);
-  font-size:8.5px;
-}
-
-.nav-profile strong{
-  display:block;
-  margin-top:2px;
-  font-size:10.5px;
-}
-
-/* NOT FOUND */
-
-.not-found{
-  padding:42px 20px;
-  text-align:center;
-}
-
-.not-found span{
-  display:block;
-  font-size:48px;
-}
-
-.not-found h1{
-  margin-top:8px;
-  font-size:23px;
-}
-
-.not-found p{
-  margin-top:5px;
-  color:var(--muted);
-  font-size:10.5px;
-}
-
-.not-found a{
-  min-height:40px;
-  margin-top:13px;
-  padding:8px 15px;
-  border-radius:9px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--blue);
-  color:#fff;
-  font-size:10px;
-  font-weight:700;
-}
-
-/* RIGHT */
-
-.right-sidebar{
-  display:grid;
-  gap:10px;
-  align-content:start;
-}
-
-.right-card{
-  padding:13px;
-}
-
-.right-title{
-  margin-bottom:8px;
-  font-size:14px;
-}
-
-.profile-summary{
-  text-align:center;
-}
-
-.summary-avatar{
-  width:65px;
-  height:65px;
-  margin:0 auto;
-  border-radius:17px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(135deg,var(--blue),var(--purple));
-  color:#fff;
-  font-size:16px;
-  font-weight:800;
-}
-
-.profile-summary h3{
-  margin-top:7px;
-  font-size:14px;
-}
-
-.profile-summary p{
-  color:var(--muted);
-  font-size:8.5px;
-}
-
-.summary-row{
-  margin-top:10px;
-  padding:7px 0;
-  border-top:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  color:var(--text-soft);
-  font-size:9px;
-}
-
-.quick-link{
-  padding:8px 0;
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  color:var(--text-soft);
-  font-size:9.5px;
-}
-
-.quick-link:last-child{
-  border-bottom:none;
-}
-
-.quick-link:hover{
-  color:var(--purple-dark);
-}
-
-.profile-note{
-  padding:10px;
-  border-left:3px solid var(--green);
-  border-radius:0 9px 9px 0;
-  background:var(--green-soft);
-  color:var(--text-soft);
-  font-size:9px;
-}
-
-/* DRAWER */
-
-.drawer-backdrop{
-  position:fixed;
-  inset:0;
-  z-index:1900;
-  display:none;
-  background:rgba(0,0,0,.52);
-}
-
-.drawer-backdrop.show{
-  display:block;
-}
-
-.mobile-drawer{
-  position:fixed;
-  top:0;
-  left:-360px;
-  z-index:2000;
-  width:335px;
-  max-width:92vw;
-  height:100vh;
-  padding:14px;
-  overflow-y:auto;
-  border-right:1px solid var(--border);
-  background:var(--surface);
-  box-shadow:18px 0 48px rgba(0,0,0,.28);
-  transition:left .25s ease;
-}
-
-.mobile-drawer.open{
-  left:0;
-}
-
-.drawer-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.drawer-brand{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.drawer-brand span{
-  font-size:35px;
-}
-
-.drawer-brand h2{
-  font-size:19px;
-}
-
-.drawer-close{
-  width:38px;
-  height:38px;
-  border:none;
-  background:transparent;
-  color:var(--text);
-  font-size:29px;
-}
-
-.drawer-content{
-  margin-top:12px;
-}
-
-/* FOOTER */
-
-.site-footer{
-  width:min(1500px,100%);
-  margin:0 auto;
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:13px;
-  background:#173e67;
-  color:#fff;
-  font-size:10px;
-}
-
-.footer-links{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-}
-
-.to-top{
-  position:fixed;
-  right:17px;
-  bottom:17px;
-  z-index:1750;
-  width:41px;
-  height:41px;
-  display:none;
-  border:none;
-  border-radius:50%;
-  background:var(--purple);
-  color:#fff;
-  font-size:17px;
-}
-
-.to-top.show{
-  display:block;
-}
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:69px;
-  z-index:2800;
-  display:none;
-  transform:translateX(-50%);
-  max-width:92%;
-  padding:9px 15px;
-  border-radius:999px;
-  background:var(--purple-dark);
-  color:#fff;
-  text-align:center;
-  font-size:10px;
-}
-
-/* RESPONSIVE */
-
-@media(max-width:1260px){
-  .page-grid{
-    grid-template-columns:245px minmax(0,1fr);
-  }
-
-  .right-sidebar{
-    display:none;
-  }
-}
-
-@media(max-width:930px){
-  :root{
-    --header-height:87px;
-    --date-height:39px;
-    --nav-height:55px;
-  }
-
-  .header-inner{
-    min-height:var(--header-height);
-    padding:7px 13px;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:8px;
-  }
-
-  .menu-button{
-    display:block;
-  }
-
-  .header-search{
-    display:none;
-  }
-
-  .notification-action,
-  .message-action{
-    display:none;
-  }
-
-  .brand-leaf{
-    font-size:39px;
-  }
-
-  .brand-copy h1{
-    font-size:23px;
-  }
-
-  .brand-copy p{
-    font-size:11px;
-  }
-
-  .ticker-group{
-    min-width:max-content;
-    padding:0 25px;
-    gap:43px;
-    font-size:10.5px;
-  }
-
-  .category-track{
-    padding:0 14px;
-    gap:25px;
-  }
-
-  .page-grid{
-    display:block;
-    padding:12px 9px 27px;
-  }
-
-  .left-sidebar,
-  .right-sidebar{
-    display:none;
-  }
-}
-
-@media(max-width:680px){
-  :root{
-    --header-height:84px;
-    --date-height:38px;
-    --nav-height:53px;
-  }
-
-  body{
-    font-size:13px;
-  }
-
-  .header-inner{
-    padding:6px 10px;
-  }
-
-  .menu-button{
-    width:36px;
-    height:36px;
-    font-size:25px;
-  }
-
-  .brand{
-    gap:7px;
-  }
-
-  .brand-leaf{
-    font-size:36px;
-  }
-
-  .brand-copy h1{
-    font-size:20px;
-  }
-
-  .brand-copy p{
-    max-width:215px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    font-size:10px;
-  }
-
-  .header-action{
-    width:37px;
-    height:37px;
-  }
-
-  .header-avatar{
-    width:39px;
-    height:39px;
-  }
-
-  .ticker-group{
-    padding:0 22px;
-    gap:37px;
-    font-size:10px;
-  }
-
-  .category-track{
-    gap:22px;
-  }
-
-  .category-link{
-    font-size:12.5px;
-  }
-
-  .profile-cover{
-    height:110px;
-  }
-
-  .profile-hero-inner{
-    padding:0 14px 16px;
-  }
-
-  .profile-avatar{
-    width:94px;
-    height:94px;
-    margin-top:-47px;
-    border-radius:23px;
-    font-size:23px;
-  }
-
-  .profile-main-row{
-    display:block;
-  }
-
-  .profile-name{
-    font-size:23px;
-  }
-
-  .profile-buttons{
-    margin-top:12px;
-    justify-content:flex-start;
-  }
-
-  .profile-tabs{
-    top:calc(var(--header-height) + var(--date-height) + var(--nav-height));
-    gap:18px;
-  }
-
-  .profile-section{
-    padding:15px 13px;
-  }
-
-  .info-grid,
-  .related-grid{
-    grid-template-columns:1fr;
-  }
-
-  .feature-quote{
-    font-size:16px;
-  }
-
-  .site-footer{
-    display:block;
-    text-align:center;
-  }
-
-  .footer-links{
-    margin-top:7px;
-    justify-content:center;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<header class="site-header">
-
-  <div class="header-inner">
-
-    <div class="header-left">
-
-      <button
-        class="menu-button"
-        id="openDrawerButton"
-        type="button"
-        aria-label="মেনু খুলুন"
-      >
-        ☰
-      </button>
-
-      <a href="index.html" class="brand">
-
-        <span class="brand-leaf">🌿</span>
-
-        <span class="brand-copy">
-          <h1>ভুবনডাঙ্গার কবিতা</h1>
-          <p>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</p>
-        </span>
-
-      </a>
-
-    </div>
-
-    <div class="header-search">
-
-      <input
-        id="headerSearchInput"
-        type="search"
-        placeholder="মনীষীর নাম খুঁজুন..."
-      >
-
-      <button
-        class="search-button"
-        id="headerSearchButton"
-        type="button"
-      >
-        ⌕
-      </button>
-
-    </div>
-
-    <div class="header-actions">
-
-      <a
-        href="notifications.html"
-        class="header-action notification-action"
-      >
-        🔔
-      </a>
-
-      <a
-        href="messages.html"
-        class="header-action message-action"
-      >
-        💬
-      </a>
-
-      <button
-        class="header-action"
-        id="themeButton"
-        type="button"
-      >
-        <span id="themeIcon">🌙</span>
-      </button>
-
-      <a
-        href="profile.html?user=your-profile"
-        class="header-avatar"
-        id="headerAvatar"
-      >
-        আ
-      </a>
-
-    </div>
-
-  </div>
-
-</header>
-
-<section class="date-ticker">
-
-  <div class="ticker-track">
-
-    <div class="ticker-group">
-      <span class="bangla-date"></span>
-      <span class="ticker-separator">✦</span>
-      <span class="hijri-date"></span>
-      <span class="ticker-separator">✦</span>
-      <span class="gregorian-date"></span>
-    </div>
-
-    <div class="ticker-group" aria-hidden="true">
-      <span class="bangla-date"></span>
-      <span class="ticker-separator">✦</span>
-      <span class="hijri-date"></span>
-      <span class="ticker-separator">✦</span>
-      <span class="gregorian-date"></span>
-    </div>
-
-  </div>
-
-</section>
-
-<nav class="category-bar">
-
-  <div class="category-track">
-
-    <a href="index.html" class="category-link">হোম</a>
-    <a href="today-poem.html" class="category-link">কবিতা</a>
-    <a href="today-prolap.html" class="category-link">প্রলাপ</a>
-    <a href="madhyorater-prolap.html" class="category-link">মধ্যরাতের প্রলাপ</a>
-    <a href="today-letter.html" class="category-link">চিঠিপত্র</a>
-    <a href="famous-quotes.html" class="category-link active">বিখ্যাত মনীষীদের বাণী</a>
-    <a href="recitation.html" class="category-link">আবৃত্তি</a>
-    <a href="famous-poet.html" class="category-link">খ্যাতিমান কবি</a>
-    <a href="today-discussion.html" class="category-link">সাহিত্য আলোচনা</a>
-    <a href="today-environment.html" class="category-link">পরিবেশের কথা</a>
-
-  </div>
-
-</nav>
-
-<div class="drawer-backdrop" id="drawerBackdrop"></div>
-
-<aside class="mobile-drawer" id="mobileDrawer">
-
-  <div class="drawer-head">
-
-    <a href="index.html" class="drawer-brand">
-      <span>🌿</span>
-      <h2>আপন ভুবন</h2>
-    </a>
-
-    <button
-      class="drawer-close"
-      id="closeDrawerButton"
-      type="button"
-    >
-      ×
-    </button>
-
-  </div>
-
-  <div class="drawer-content">
-
-    <div class="sidebar-shell">
-
-      <section class="sidebar-head">
-        <h2>আপন ভুবন</h2>
-        <p>আপনার লেখা, পাঠ, স্মৃতি ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p>
-      </section>
-
-      <div class="sidebar-quote">
-        “আপনার ক্ষতগুলিকে জ্ঞানে পরিণত করুন।”
-      </div>
-
-      <section class="sidebar-section">
-
-        <div class="sidebar-title">প্রধান মেনু</div>
-
-        <div class="sidebar-menu">
-
-          <a href="famous-quotes.html" class="active">
-            <span class="sidebar-icon">❝</span>
-            <span class="sidebar-copy">
-              <strong>মনীষীদের বাণী</strong>
-              <small>একশোজনের বাণী</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="famous-poet.html">
-            <span class="sidebar-icon">🖋</span>
-            <span class="sidebar-copy">
-              <strong>খ্যাতিমান কবি</strong>
-              <small>কবিদের পরিচিতি</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="today-poem.html">
-            <span class="sidebar-icon">📜</span>
-            <span class="sidebar-copy">
-              <strong>কবিতার ভুবন</strong>
-              <small>সাম্প্রতিক কবিতা</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="profile.html?user=your-profile">
-            <span class="sidebar-icon">👤</span>
-            <span class="sidebar-copy">
-              <strong>আপনার প্রোফাইল</strong>
-              <small>লেখা ও পরিচিতি</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="policy.html">
-            <span class="sidebar-icon">⚖</span>
-            <span class="sidebar-copy">
-              <strong>নীতিমালা</strong>
-              <small>লেখা ও প্রকাশের দায়িত্ব</small>
-            </span>
-            <span>›</span>
-          </a>
-
-        </div>
-
-      </section>
-
-      <section class="founder-contact">
-
-        <div class="founder-top">
-
-          <a
-            href="profile.html?user=mahmud-sohel"
-            class="founder-avatar"
-          >
-            মস
-          </a>
-
-          <div class="founder-copy">
-
-            <a
-              href="profile.html?user=mahmud-sohel"
-              class="founder-name"
-            >
-              মাহমুদ সোহেল
-              <span class="founder-badge">✓</span>
-            </a>
-
-            <p>ভুবনডাঙ্গার কবিতার প্রতিষ্ঠাতা</p>
-
-          </div>
-
-        </div>
-
-        <div class="founder-message">
-          জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন।
-        </div>
-
-      </section>
-
-    </div>
-
-  </div>
-
-</aside>
-
-<main class="page-grid">
-
-  <aside class="left-sidebar">
-
-    <div class="sidebar-shell">
-
-      <section class="sidebar-head">
-
-        <h2>আপন ভুবন</h2>
-
-        <p>
-          আপনার লেখা, পাঠ, স্মৃতি এবং সাহিত্যিক পথচলার নিজস্ব জায়গা।
-        </p>
-
-      </section>
-
-      <div class="sidebar-quote">
-        “আপনার ক্ষতগুলিকে জ্ঞানে পরিণত করুন।”
-      </div>
-
-      <section class="sidebar-section">
-
-        <div class="sidebar-title">
-          প্রধান মেনু
-        </div>
-
-        <div class="sidebar-menu">
-
-          <a href="write.html">
-            <span class="sidebar-icon">✍</span>
-            <span class="sidebar-copy">
-              <strong>লিখুন</strong>
-              <small>নতুন লেখা প্রকাশ করুন</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="famous-quotes.html" class="active">
-            <span class="sidebar-icon">❝</span>
-            <span class="sidebar-copy">
-              <strong>মনীষীদের বাণী</strong>
-              <small>বিশ্ববিখ্যাত মানুষের চিন্তা</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="famous-poet.html">
-            <span class="sidebar-icon">🖋</span>
-            <span class="sidebar-copy">
-              <strong>খ্যাতিমান কবি</strong>
-              <small>বাংলা ভাষার কবিদের ভুবন</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="today-poem.html">
-            <span class="sidebar-icon">📜</span>
-            <span class="sidebar-copy">
-              <strong>কবিতার ভুবন</strong>
-              <small>আজকের ও সাম্প্রতিক কবিতা</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="today-prolap.html">
-            <span class="sidebar-icon">☁</span>
-            <span class="sidebar-copy">
-              <strong>প্রলাপ</strong>
-              <small>ছোট ছোট মনের কথা</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="today-letter.html">
-            <span class="sidebar-icon">✉</span>
-            <span class="sidebar-copy">
-              <strong>চিঠিপত্র</strong>
-              <small>চিঠির ভাষায় অনুভব</small>
-            </span>
-            <span>›</span>
-          </a>
-
-          <a href="profile.html?user=your-profile">
-            <span class="sidebar-icon">👤</span>
-            <span class="sidebar-copy">
-              <strong>আপনার প্রোফাইল</strong>
-              <small>লেখা ও পরিচিতি</small>
-            </span>
-            <span>›</span>
-          </a>
-
-        </div>
-
-      </section>
-
-      <div class="sidebar-divider"></div>
-
-      <div class="sidebar-menu">
-
-        <a href="today-discussion.html">
-          <span class="sidebar-icon">💬</span>
-          <span class="sidebar-copy">
-            <strong>সাহিত্য আলোচনা</strong>
-            <small>সাহিত্য নিয়ে মুক্ত আলোচনা</small>
-          </span>
-          <span>›</span>
-        </a>
-
-        <a href="today-environment.html">
-          <span class="sidebar-icon">🌱</span>
-          <span class="sidebar-copy">
-            <strong>পরিবেশের কথা</strong>
-            <small>প্রকৃতি ও চারপাশ</small>
-          </span>
-          <span>›</span>
-        </a>
-
-        <a href="policy.html">
-          <span class="sidebar-icon">⚖</span>
-          <span class="sidebar-copy">
-            <strong>নীতিমালা</strong>
-            <small>লেখা ও প্রকাশের দায়িত্ব</small>
-          </span>
-          <span>›</span>
-        </a>
-
-      </div>
-
-      <section class="founder-contact">
-
-        <div class="founder-top">
-
-          <a
-            href="profile.html?user=mahmud-sohel"
-            class="founder-avatar"
-          >
-            মস
-          </a>
-
-          <div class="founder-copy">
-
-            <a
-              href="profile.html?user=mahmud-sohel"
-              class="founder-name"
-            >
-              মাহমুদ সোহেল
-              <span class="founder-badge">✓</span>
-            </a>
-
-            <p>ভুবনডাঙ্গার কবিতার প্রতিষ্ঠাতা</p>
-
-          </div>
-
-        </div>
-
-        <div class="founder-message">
-          জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন।
-        </div>
-
-      </section>
-
-    </div>
-
-  </aside>
-
-  <section class="main-content" id="profileContent"></section>
-
-  <aside class="right-sidebar">
-
-    <section class="card right-card profile-summary">
-
-      <div class="summary-avatar" id="summaryAvatar">
-        ম
-      </div>
-
-      <h3 id="summaryName">
-        মনীষীর নাম
-      </h3>
-
-      <p id="summaryIdentity">
-        পরিচিতি
-      </p>
-
-      <div class="summary-row">
-        <span>তালিকায় অবস্থান</span>
-        <strong id="summaryPosition">০</strong>
-      </div>
-
-      <div class="summary-row">
-        <span>একই বিভাগের মনীষী</span>
-        <strong id="summaryCategoryCount">০</strong>
-      </div>
-
-      <div class="summary-row">
-        <span>সংরক্ষিত বাণী</span>
-        <strong id="summarySavedCount">০</strong>
-      </div>
-
-    </section>
-
-    <section class="card right-card">
-
-      <h2 class="right-title">
-        দ্রুত দেখুন
-      </h2>
-
-      <a href="famous-quotes.html" class="quick-link">
-        একশোজন মনীষী
-        <span>›</span>
-      </a>
-
-      <a href="#selected-quote" class="quick-link">
-        নির্বাচিত বাণী
-        <span>›</span>
-      </a>
-
-      <a href="#related-people" class="quick-link">
-        সম্পর্কিত মনীষী
-        <span>›</span>
-      </a>
-
-      <a href="saved-quotes.html" class="quick-link">
-        স্মৃতিতে রাখা বাণী
-        <span>›</span>
-      </a>
-
-    </section>
-
-    <section class="card right-card">
-
-      <h2 class="right-title">
-        পরিচিতি সম্পর্কে
-      </h2>
-
-      <div class="profile-note">
-        এই প্রোফাইলে মনীষীর সংক্ষিপ্ত পরিচয়, চিন্তার ক্ষেত্র এবং
-        একটি নির্বাচিত বাণী সহজভাবে উপস্থাপন করা হয়েছে।
-      </div>
-
-    </section>
-
-  </aside>
-
-</main>
-
-<footer class="site-footer">
-
-  <div>
-    🌿 ভুবনডাঙ্গার কবিতা © <span id="footerYear"></span>
-  </div>
-
-  <div class="footer-links">
-    <a href="index.html">হোম</a>
-    <a href="famous-quotes.html">মনীষীদের বাণী</a>
-    <a href="famous-poet.html">খ্যাতিমান কবি</a>
-    <a href="about.html">আমাদের সম্পর্কে</a>
-    <a href="policy.html">নীতিমালা</a>
-  </div>
-
-</footer>
-
-<button
-  class="to-top"
-  id="toTopButton"
-  type="button"
->
-  ↑
-</button>
-
-<div class="toast" id="toast"></div>
-
-<script>
-const root =
-  document.documentElement;
-
-root.setAttribute(
-  "data-theme",
-  localStorage.getItem("bhubondangaTheme") || "light"
-);
-
-const rawPeople = [
-
-  ["সক্রেটিস","প্রাচীন গ্রিক দার্শনিক","প্রাচীন দর্শন","যে জীবনকে প্রশ্ন করা হয় না, সে জীবন বেঁচে থাকার যোগ্য নয়।"],
-  ["প্লেটো","প্রাচীন গ্রিক দার্শনিক","প্রাচীন দর্শন","মতামত জ্ঞান ও অজ্ঞতার মধ্যবর্তী অবস্থান।"],
-  ["এরিস্টটল","প্রাচীন গ্রিক দার্শনিক","প্রাচীন দর্শন","মানুষ স্বভাবতই জানতে চায়।"],
-  ["কনফুসিয়াস","চীনা দার্শনিক ও শিক্ষক","প্রাচ্য দর্শন","শেখা এবং সময়মতো তা অনুশীলন করা আনন্দের।"],
-  ["লাওৎসে","চীনা দার্শনিক","প্রাচ্য দর্শন","হাজার মাইলের যাত্রাও একটি পদক্ষেপ থেকে শুরু হয়।"],
-  ["গৌতম বুদ্ধ","বৌদ্ধধর্মের প্রবর্তক ও দার্শনিক","প্রাচ্য দর্শন","মনই সবকিছুর অগ্রদূত; চিন্তাই জীবনকে গড়ে।"],
-  ["মহাবীর","জৈনধর্মের চব্বিশতম তীর্থঙ্কর","প্রাচ্য দর্শন","আপনি যেমন দুঃখ চান না, অন্য প্রাণও তেমনি দুঃখ চায় না।"],
-  ["চাণক্য","ভারতীয় রাষ্ট্রচিন্তক ও শিক্ষক","প্রাচ্য দর্শন","শিক্ষা এমন বন্ধু, যে সর্বত্র সম্মান এনে দেয়।"],
-  ["হেরাক্লিটাস","প্রাচীন গ্রিক দার্শনিক","প্রাচীন দর্শন","একই নদীতে দুবার নামা যায় না; সবকিছুই পরিবর্তনশীল।"],
-  ["পিথাগোরাস","গ্রিক দার্শনিক ও গণিতবিদ","প্রাচীন দর্শন","নীরবতার চেয়ে উত্তম কথা না থাকলে নীরব থাকাই ভালো।"],
-  ["এপিকিউরাস","প্রাচীন গ্রিক দার্শনিক","প্রাচীন দর্শন","যার সামান্যতেই তৃপ্তি নেই, তার কিছুতেই তৃপ্তি নেই।"],
-  ["জেনো","স্টোইক দর্শনের প্রতিষ্ঠাতা","প্রাচীন দর্শন","প্রকৃতির সঙ্গে সামঞ্জস্য রেখে বাঁচাই উত্তম জীবন।"],
-  ["সেনেকা","রোমান স্টোইক দার্শনিক","প্রাচীন দর্শন","জীবন ছোট নয়; আমরা তার অনেকটাই অপচয় করি।"],
-  ["এপিকটিটাস","গ্রিক স্টোইক দার্শনিক","প্রাচীন দর্শন","ঘটনা নয়, ঘটনার প্রতি আমাদের দৃষ্টিভঙ্গিই কষ্ট বাড়ায়।"],
-  ["মার্কাস অরেলিয়াস","রোমান সম্রাট ও স্টোইক দার্শনিক","প্রাচীন দর্শন","আমাদের জীবনকে আমাদের চিন্তাই রূপ দেয়।"],
-  ["সিসেরো","রোমান রাষ্ট্রনায়ক ও দার্শনিক","প্রাচীন দর্শন","কৃতজ্ঞতা শুধু শ্রেষ্ঠ গুণ নয়, অন্য গুণগুলোরও জননী।"],
-  ["সেন্ট অগাস্টিন","খ্রিষ্টীয় দার্শনিক ও ধর্মতাত্ত্বিক","ধর্ম ও দর্শন","হৃদয় সত্যের আশ্রয় না পাওয়া পর্যন্ত অস্থির থাকে।"],
-  ["টমাস অ্যাকুইনাস","খ্রিষ্টীয় দার্শনিক ও ধর্মতাত্ত্বিক","ধর্ম ও দর্শন","সত্য যে-ই বলুক, সত্যকে গ্রহণ করতে হবে।"],
-  ["আল-ফারাবি","মুসলিম দার্শনিক ও রাজনৈতিক চিন্তক","ইসলামি চিন্তা","সুখই মানবজীবনের চূড়ান্ত লক্ষ্য।"],
-  ["ইবনে সিনা","চিকিৎসাবিদ ও দার্শনিক","ইসলামি চিন্তা","জ্ঞান মানুষের আত্মাকে পরিপূর্ণতার দিকে এগিয়ে দেয়।"],
-  ["ইমাম আল-গাজ্জালি","মুসলিম দার্শনিক ও ধর্মতাত্ত্বিক","ইসলামি চিন্তা","কর্মহীন জ্ঞান নিষ্ফল, আর জ্ঞানহীন কর্ম পথভ্রষ্ট।"],
-  ["ইবনে রুশদ","আন্দালুসীয় দার্শনিক ও বিচারক","ইসলামি চিন্তা","যুক্তি ও সত্যের অনুসন্ধান বিশ্বাসের শত্রু নয়।"],
-  ["জালালউদ্দিন রুমি","ফারসি সুফি কবি ও চিন্তক","ইসলামি চিন্তা","তুমি যা খুঁজছ, সেই অনুসন্ধানও তোমাকে রূপান্তর করছে।"],
-  ["শেখ সাদি","ফারসি কবি ও নীতিচিন্তক","ইসলামি চিন্তা","আদমসন্তান এক দেহের অঙ্গ; একজনের ব্যথা সকলের ব্যথা।"],
-  ["হাফিজ","ফারসি কবি ও সুফি চিন্তক","ইসলামি চিন্তা","ভয় পেরিয়ে গেলে ভালোবাসার বিস্তৃত আকাশ দেখা যায়।"],
-  ["ইবনে খালদুন","ইতিহাসবিদ ও সমাজচিন্তক","ইসলামি চিন্তা","অন্যায় সভ্যতার পতন ডেকে আনে।"],
-  ["নিকোলো মাকিয়াভেলি","ইতালীয় রাজনৈতিক চিন্তক","রাজনীতি ও সমাজ","সবাই বাহ্যিক রূপ দেখে; অল্পজন প্রকৃত সত্য উপলব্ধি করে।"],
-  ["ডেসিডেরিয়াস ইরাসমাস","ডাচ মানবতাবাদী চিন্তক","ধর্ম ও দর্শন","শান্তিই সবচেয়ে বড় বিজয়।"],
-  ["লিওনার্দো দা ভিঞ্চি","শিল্পী, উদ্ভাবক ও চিন্তক","বিজ্ঞান ও সৃজনশীলতা","শেখা মনকে কখনও ক্লান্ত করে না।"],
-  ["ফ্রান্সিস বেকন","ইংরেজ দার্শনিক ও রাষ্ট্রনায়ক","আধুনিক দর্শন","জ্ঞানই শক্তি।"],
-  ["রেনে দেকার্ত","ফরাসি দার্শনিক ও গণিতবিদ","আধুনিক দর্শন","আমি চিন্তা করি, তাই আমি আছি।"],
-  ["ব্লেজ পাসকাল","ফরাসি গণিতবিদ ও দার্শনিক","আধুনিক দর্শন","হৃদয়ের এমন যুক্তি আছে, যা সাধারণ যুক্তি জানে না।"],
-  ["বারুখ স্পিনোজা","ডাচ দার্শনিক","আধুনিক দর্শন","শান্তি যুদ্ধের অনুপস্থিতি নয়; এটি মনের শক্তি।"],
-  ["জন লক","ইংরেজ দার্শনিক","আধুনিক দর্শন","নতুন মতকে অনেক সময় শুধু নতুন বলেই সন্দেহ করা হয়।"],
-  ["আইজ্যাক নিউটন","ইংরেজ পদার্থবিদ ও গণিতবিদ","বিজ্ঞান ও সৃজনশীলতা","দূর পর্যন্ত দেখেছি, কারণ মহৎ পূর্বসূরিদের কাঁধে দাঁড়িয়েছি।"],
-  ["গটফ্রিড লাইবনিজ","জার্মান দার্শনিক ও গণিতবিদ","আধুনিক দর্শন","বর্তমানের ভেতর ভবিষ্যতের বীজ এবং অতীতের চিহ্ন থাকে।"],
-  ["মন্টেস্কু","ফরাসি রাজনৈতিক দার্শনিক","রাজনীতি ও সমাজ","ক্ষমতার অপব্যবহার রোধে ক্ষমতাকে ক্ষমতা দিয়েই নিয়ন্ত্রণ করতে হয়।"],
-  ["ভলতেয়ার","ফরাসি দার্শনিক ও লেখক","আধুনিক দর্শন","শেষ পর্যন্ত আমাদের নিজের বাগানই চাষ করতে হয়।"],
-  ["জ্যাঁ-জাক রুশো","ফরাসি দার্শনিক","রাজনীতি ও সমাজ","মানুষ স্বাধীন হয়ে জন্মায়, অথচ সর্বত্র শৃঙ্খলে আবদ্ধ।"],
-  ["ডেভিড হিউম","স্কটিশ দার্শনিক","আধুনিক দর্শন","বুদ্ধি মানুষের আবেগকে বোঝা ও পরিচালনার সেবা করে।"],
-  ["অ্যাডাম স্মিথ","স্কটিশ অর্থনীতিবিদ ও নীতিচিন্তক","রাজনীতি ও সমাজ","সহমর্মিতা মানুষকে অন্যের সুখ-দুঃখ নিয়ে ভাবতে শেখায়।"],
-  ["ইমানুয়েল কান্ট","জার্মান দার্শনিক","আধুনিক দর্শন","জানার সাহস করো; নিজের বুদ্ধি ব্যবহারের সাহস রাখো।"],
-  ["ইয়োহান গ্যেটে","জার্মান কবি ও চিন্তক","সাহিত্য ও মানবতা","শুধু জানা যথেষ্ট নয়; তা প্রয়োগ করতে হবে।"],
-  ["গেয়র্গ হেগেল","জার্মান দার্শনিক","আধুনিক দর্শন","যা যুক্তিসঙ্গত, তা বাস্তবকে বুঝতে সাহায্য করে।"],
-  ["আর্থার শোপেনহাওয়ার","জার্মান দার্শনিক","আধুনিক দর্শন","প্রতিভা লক্ষ্য ভেদ করে; জিনিয়াস এমন লক্ষ্য দেখে যা অন্যরা দেখে না।"],
-  ["সোরেন কিয়ের্কেগার্ড","ড্যানিশ দার্শনিক","আধুনিক দর্শন","জীবন পেছনে তাকিয়ে বোঝা যায়, কিন্তু সামনে এগিয়েই বাঁচতে হয়।"],
-  ["জন স্টুয়ার্ট মিল","ইংরেজ দার্শনিক ও অর্থনীতিবিদ","রাজনীতি ও সমাজ","উচ্চতর চেতনার অসন্তুষ্টি, নিচু তৃপ্তির চেয়ে মূল্যবান।"],
-  ["চার্লস ডারউইন","ইংরেজ প্রকৃতিবিদ","বিজ্ঞান ও সৃজনশীলতা","অজ্ঞতার চেয়ে আত্মবিশ্বাসই অনেক সময় বেশি জন্ম দেয়।"],
-  ["কার্ল মার্ক্স","জার্মান দার্শনিক ও অর্থনীতিবিদ","রাজনীতি ও সমাজ","বিশ্বকে শুধু ব্যাখ্যা নয়, পরিবর্তনও করতে হয়।"],
-  ["ফ্রিডরিখ এঙ্গেলস","জার্মান সমাজচিন্তক","রাজনীতি ও সমাজ","স্বাধীনতা মানে প্রয়োজনকে বুঝে সচেতনভাবে কাজ করা।"],
-  ["ফ্রিডরিখ নীটশে","জার্মান দার্শনিক","আধুনিক দর্শন","যার বাঁচার একটি কারণ আছে, সে বহু কষ্ট সহ্য করতে পারে।"],
-  ["লিও তলস্তয়","রুশ সাহিত্যিক ও নীতিচিন্তক","সাহিত্য ও মানবতা","ধৈর্য ও সময়—এই দুই সবচেয়ে শক্তিশালী যোদ্ধা।"],
-  ["ফিওদর দস্তয়েভস্কি","রুশ ঔপন্যাসিক ও চিন্তক","সাহিত্য ও মানবতা","সৌন্দর্য পৃথিবীকে রক্ষা করতে পারে।"],
-  ["ভিক্টর হুগো","ফরাসি সাহিত্যিক ও মানবতাবাদী","সাহিত্য ও মানবতা","যে ধারণার সময় এসে গেছে, তার চেয়ে শক্তিশালী কিছু নেই।"],
-  ["উইলিয়াম শেক্সপিয়র","ইংরেজ নাট্যকার ও কবি","সাহিত্য ও মানবতা","সবার আগে নিজের প্রতি সত্য থাকো।"],
-  ["জন মিল্টন","ইংরেজ কবি ও চিন্তক","সাহিত্য ও মানবতা","মন নিজের ভুবন; সে নরককে স্বর্গ, স্বর্গকে নরক করতে পারে।"],
-  ["স্যামুয়েল জনসন","ইংরেজ লেখক ও অভিধানকার","সাহিত্য ও মানবতা","কৌতূহল সক্রিয় মনের স্থায়ী বৈশিষ্ট্য।"],
-  ["রালফ ওয়াল্ডো এমারসন","আমেরিকান দার্শনিক ও প্রাবন্ধিক","সাহিত্য ও মানবতা","নিজের ওপর আস্থা রাখো; প্রত্যেক হৃদয় সেই সত্যে সাড়া দেয়।"],
-  ["হেনরি ডেভিড থোরো","আমেরিকান দার্শনিক ও প্রকৃতিবিদ","সাহিত্য ও মানবতা","সচেতনভাবে বাঁচতে চাই বলেই আমি প্রকৃতির কাছে গিয়েছিলাম।"],
-  ["আব্রাহাম লিংকন","মার্কিন রাষ্ট্রপতি ও রাষ্ট্রনায়ক","নেতৃত্ব ও মানবতা","জনগণের সরকার, জনগণের দ্বারা, জনগণের জন্য—এটাই গণতন্ত্রের অঙ্গীকার।"],
-  ["ফ্রেডেরিক ডগলাস","দাসপ্রথাবিরোধী নেতা ও লেখক","নেতৃত্ব ও মানবতা","সংগ্রাম ছাড়া অগ্রগতি নেই।"],
-  ["এলিজাবেথ ক্যাডি স্ট্যান্টন","নারী অধিকার আন্দোলনের নেত্রী","নেতৃত্ব ও মানবতা","নিজের ওপর নির্ভরশীলতা ছাড়া প্রকৃত স্বাধীনতা অসম্পূর্ণ।"],
-  ["মহাত্মা গান্ধী","ভারতীয় স্বাধীনতা আন্দোলনের নেতা","নেতৃত্ব ও মানবতা","ক্ষমা দুর্বলের গুণ নয়; এটি শক্তির প্রকাশ।"],
-  ["স্বামী বিবেকানন্দ","ভারতীয় সন্ন্যাসী ও দার্শনিক","প্রাচ্য দর্শন","উঠো, জাগো, লক্ষ্য না পাওয়া পর্যন্ত থেমো না।"],
-  ["রবীন্দ্রনাথ ঠাকুর","কবি, দার্শনিক ও শিক্ষাবিদ","সাহিত্য ও মানবতা","বিশ্বাস সেই পাখি, যে অন্ধকার ভোরেও আলোর অনুভব পায়।"],
-  ["কাজী নজরুল ইসলাম","কবি ও মানবতার কণ্ঠস্বর","সাহিত্য ও মানবতা","মানুষের মর্যাদা সব সংকীর্ণ পরিচয়ের ঊর্ধ্বে।"],
-  ["রামকৃষ্ণ পরমহংস","ভারতীয় সাধক ও আধ্যাত্মিক শিক্ষক","ধর্ম ও দর্শন","যত মত, তত পথ।"],
-  ["শ্রী অরবিন্দ","ভারতীয় দার্শনিক ও কবি","প্রাচ্য দর্শন","মানুষ শেষ সৃষ্টি নয়; সে এক পরিবর্তনশীল সত্তা।"],
-  ["মার্টিন লুথার কিং জুনিয়র","নাগরিক অধিকার আন্দোলনের নেতা","নেতৃত্ব ও মানবতা","অন্ধকার অন্ধকারকে দূর করতে পারে না; আলোই পারে।"],
-  ["নেলসন ম্যান্ডেলা","দক্ষিণ আফ্রিকার রাষ্ট্রনায়ক","নেতৃত্ব ও মানবতা","সাহস ভয়ের অনুপস্থিতি নয়; ভয়কে জয় করাই সাহস।"],
-  ["এলেনর রুজভেল্ট","মানবাধিকারকর্মী ও কূটনীতিক","নেতৃত্ব ও মানবতা","আপনার অনুমতি ছাড়া কেউ আপনাকে হীন মনে করাতে পারে না।"],
-  ["হেলেন কেলার","লেখক ও মানবাধিকারকর্মী","নেতৃত্ব ও মানবতা","জীবন হয় সাহসী অভিযান, নয়তো কিছুই নয়।"],
-  ["অ্যান ফ্রাঙ্ক","ডায়েরি লেখক ও হলোকাস্টের স্মারক কণ্ঠ","সাহিত্য ও মানবতা","সবকিছুর পরও আমি বিশ্বাস করি, মানুষের অন্তরে ভালোত্ব আছে।"],
-  ["মাদার তেরেসা","মানবসেবী ও ধর্মীয় ব্যক্তিত্ব","নেতৃত্ব ও মানবতা","বড় কাজ না পারলেও ছোট কাজ মহান ভালোবাসায় করা যায়।"],
-  ["দালাই লামা","তিব্বতি বৌদ্ধ ধর্মীয় নেতা","ধর্ম ও দর্শন","যখনই সম্ভব, সদয় হও; আর তা সবসময়ই সম্ভব।"],
-  ["ম্যালকম এক্স","মানবাধিকারকর্মী ও বক্তা","নেতৃত্ব ও মানবতা","শিক্ষা ভবিষ্যতের পাসপোর্ট।"],
-  ["রোজা পার্কস","নাগরিক অধিকার আন্দোলনের নেত্রী","নেতৃত্ব ও মানবতা","কী করা উচিত তা জানলে ভয় অনেকটাই কমে যায়।"],
-  ["ডেসমন্ড টুটু","দক্ষিণ আফ্রিকান ধর্মযাজক ও মানবাধিকারকর্মী","নেতৃত্ব ও মানবতা","আমার মানবতা তোমার মানবতার সঙ্গে অবিচ্ছেদ্য।"],
-  ["ভ্যাকলাভ হাভেল","চেক লেখক ও রাষ্ট্রনায়ক","নেতৃত্ব ও মানবতা","আশা নিশ্চয়তা নয়; অর্থপূর্ণ কাজ চালিয়ে যাওয়ার শক্তি।"],
-  ["আলবার্ট আইনস্টাইন","তাত্ত্বিক পদার্থবিদ","বিজ্ঞান ও সৃজনশীলতা","কল্পনা জ্ঞানের চেয়ে বেশি বিস্তৃত।"],
-  ["মারি কুরি","পদার্থবিদ ও রসায়নবিদ","বিজ্ঞান ও সৃজনশীলতা","জীবনে ভয় পাওয়ার কিছু নেই; বোঝার চেষ্টা করতে হয়।"],
-  ["নিকোলা টেসলা","উদ্ভাবক ও বৈদ্যুতিক প্রকৌশলী","বিজ্ঞান ও সৃজনশীলতা","বর্তমান অন্যদের হতে পারে; ভবিষ্যতের জন্যই আমি কাজ করেছি।"],
-  ["ম্যাক্স প্ল্যাঙ্ক","তাত্ত্বিক পদার্থবিদ","বিজ্ঞান ও সৃজনশীলতা","বিজ্ঞান শেষ রহস্য মুছে দেয় না; বরং রহস্যকে আরও গভীর করে।"],
-  ["নীলস বোর","পদার্থবিদ ও দার্শনিক চিন্তক","বিজ্ঞান ও সৃজনশীলতা","বিরোধী সত্যগুলো কখনও কখনও পরস্পরকে সম্পূর্ণ করে।"],
-  ["রিচার্ড ফাইনম্যান","তাত্ত্বিক পদার্থবিদ ও শিক্ষক","বিজ্ঞান ও সৃজনশীলতা","আমি যা তৈরি করতে পারি না, তা পুরোপুরি বুঝি না।"],
-  ["কার্ল সাগান","জ্যোতির্বিজ্ঞানী ও বিজ্ঞানলেখক","বিজ্ঞান ও সৃজনশীলতা","আমরা নক্ষত্রের উপাদান দিয়ে তৈরি।"],
-  ["স্টিফেন হকিং","তাত্ত্বিক পদার্থবিদ","বিজ্ঞান ও সৃজনশীলতা","জীবন যত কঠিনই হোক, কিছু না কিছু করার পথ থাকে।"],
-  ["অ্যালান টুরিং","গণিতবিদ ও কম্পিউটারবিজ্ঞানী","বিজ্ঞান ও সৃজনশীলতা","আমরা অল্প দূর সামনে দেখি, তবু সেখানে অনেক কাজ অপেক্ষা করে।"],
-  ["গ্যালিলিও গ্যালিলেই","জ্যোতির্বিজ্ঞানী ও পদার্থবিদ","বিজ্ঞান ও সৃজনশীলতা","প্রকৃতির বই গণিতের ভাষায় লেখা।"],
-  ["নিকোলাস কোপার্নিকাস","জ্যোতির্বিজ্ঞানী","বিজ্ঞান ও সৃজনশীলতা","গ্রহগুলোর বিন্যাস বোঝার কেন্দ্রে সূর্যকে স্থান দিতে হয়।"],
-  ["ইয়োহানেস কেপলার","জ্যোতির্বিজ্ঞানী ও গণিতবিদ","বিজ্ঞান ও সৃজনশীলতা","প্রকৃতির নিয়মে স্রষ্টার চিন্তার ছাপ খুঁজেছি।"],
-  ["লুই পাস্তুর","রসায়নবিদ ও অণুজীববিজ্ঞানী","বিজ্ঞান ও সৃজনশীলতা","সুযোগ প্রস্তুত মনকেই সহায়তা করে।"],
-  ["ফ্লোরেন্স নাইটিঙ্গেল","আধুনিক নার্সিংয়ের পথিকৃৎ","নেতৃত্ব ও মানবতা","ভয়কে জীবন থেকে সরিয়ে কাজ শুরু করতে হয়।"],
-  ["হিপোক্রেটিস","প্রাচীন গ্রিক চিকিৎসক","বিজ্ঞান ও সৃজনশীলতা","জীবন সংক্ষিপ্ত, কিন্তু চিকিৎসাশিল্প দীর্ঘ।"],
-  ["সান জু","চীনা সামরিক কৌশলবিদ","প্রাচ্য দর্শন","নিজেকে ও প্রতিপক্ষকে জানলে বহু লড়াইতেও ভয় থাকে না।"],
-  ["মিয়ামোতো মুসাশি","জাপানি যোদ্ধা ও কৌশলচিন্তক","প্রাচ্য দর্শন","একটি পথ গভীরভাবে বুঝলে অন্য পথও স্পষ্ট হতে শুরু করে।"],
-  ["খলিল জিবরান","লেবানিজ-আমেরিকান কবি ও দার্শনিক","সাহিত্য ও মানবতা","কাজ হলো দৃশ্যমান ভালোবাসা।"],
-  ["অস্কার ওয়াইল্ড","আইরিশ লেখক ও নাট্যকার","সাহিত্য ও মানবতা","নিজের মতো হও; অন্য সবার ভূমিকা ইতিমধ্যে নেওয়া।"],
-  ["জর্জ বার্নার্ড শ","আইরিশ নাট্যকার ও চিন্তক","সাহিত্য ও মানবতা","জীবন নিজেকে খোঁজা নয়; নিজেকে সৃষ্টি করা।"],
-  ["মার্ক টোয়েন","আমেরিকান লেখক ও রসিক","সাহিত্য ও মানবতা","সঠিক কাজ করো; কিছু মানুষকে সন্তুষ্ট করবে, বাকিদের বিস্মিত করবে।"]
-
-];
-
-const categoryDescriptions = {
-
-  "প্রাচীন দর্শন":
-    "জ্ঞান, নৈতিকতা, মানবজীবন এবং উত্তমভাবে বেঁচে থাকার প্রশ্ন তাঁর চিন্তার সঙ্গে ঘনিষ্ঠভাবে যুক্ত।",
-
-  "প্রাচ্য দর্শন":
-    "আত্মজ্ঞান, শৃঙ্খলা, মানবিকতা, প্রকৃতি এবং জীবনের ভারসাম্য তাঁর চিন্তার গুরুত্বপূর্ণ বিষয়।",
-
-  "ধর্ম ও দর্শন":
-    "বিশ্বাস, নৈতিকতা, সত্য, মানবজীবন এবং আধ্যাত্মিক উপলব্ধির আলোচনায় তাঁর পরিচিতি গুরুত্বপূর্ণ।",
-
-  "ইসলামি চিন্তা":
-    "জ্ঞান, নৈতিকতা, মানবকল্যাণ, আত্মিক উন্নতি এবং সমাজ সম্পর্কে তাঁর চিন্তা আলোচিত।",
-
-  "আধুনিক দর্শন":
-    "জ্ঞান, যুক্তি, ব্যক্তি, স্বাধীনতা এবং বাস্তবতাকে বোঝার আধুনিক আলোচনায় তাঁর চিন্তা গুরুত্বপূর্ণ।",
-
-  "রাজনীতি ও সমাজ":
-    "রাষ্ট্র, সমাজ, স্বাধীনতা, ন্যায়, অর্থনীতি এবং মানুষের পারস্পরিক সম্পর্ক তাঁর চিন্তার গুরুত্বপূর্ণ ক্ষেত্র।",
-
-  "বিজ্ঞান ও সৃজনশীলতা":
-    "পর্যবেক্ষণ, অনুসন্ধান, আবিষ্কার, যুক্তি এবং নতুনভাবে পৃথিবীকে বোঝার প্রচেষ্টায় তাঁর পরিচিতি বিশেষভাবে আলোচিত।",
-
-  "সাহিত্য ও মানবতা":
-    "মানুষের অনুভূতি, সৃজনশীলতা, স্বাধীনতা, সৌন্দর্য এবং মানবিক জীবনের নানা প্রশ্ন তাঁর কাজের সঙ্গে যুক্ত।",
-
-  "নেতৃত্ব ও মানবতা":
-    "ন্যায়, স্বাধীনতা, সাহস, সহমর্মিতা এবং মানুষের মর্যাদা রক্ষার আলোচনায় তাঁর ভূমিকা স্মরণীয়।"
-
-};
-
-const people =
-  rawPeople.map(function(item,index){
-
-    return {
-      id:index + 1,
-      name:item[0],
-      identity:item[1],
-      category:item[2],
-      quote:item[3]
-    };
-
-  });
-
-const bnDigits = {
-  "0":"০",
-  "1":"১",
-  "2":"২",
-  "3":"৩",
-  "4":"৪",
-  "5":"৫",
-  "6":"৬",
-  "7":"৭",
-  "8":"৮",
-  "9":"৯"
-};
-
-function toBn(value){
-
-  return String(value).replace(/[0-9]/g,function(digit){
-    return bnDigits[digit];
-  });
-
-}
-
-function escapeHtml(value){
-
-  return String(value || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-function getInitials(name){
-
-  return String(name || "")
-    .replace(/\s+/g,"")
-    .slice(0,2);
-
-}
-
-function normalizeName(value){
-
-  return String(value || "")
-    .normalize("NFC")
-    .trim()
-    .toLocaleLowerCase("bn-BD")
-    .replace(/[\s\-–—_.]+/g,"");
-
-}
-
-function getStorageArray(key){
-
-  try{
-
-    const value =
-      JSON.parse(
-        localStorage.getItem(key) || "[]"
-      );
-
-    return Array.isArray(value)
-      ? value
-      : [];
-
-  }catch(error){
-
-    return [];
-
-  }
-
-}
-
-function getStorageObject(key){
-
-  try{
-
-    const value =
-      JSON.parse(
-        localStorage.getItem(key) || "{}"
-      );
-
-    return (
-      value &&
-      typeof value === "object" &&
-      !Array.isArray(value)
-    )
-      ? value
-      : {};
-
-  }catch(error){
-
-    return {};
-
-  }
-
-}
-
-function saveStorageArray(key,value){
-
-  localStorage.setItem(
-    key,
-    JSON.stringify(value)
-  );
-
-}
-
-function showToast(message){
-
-  const toast =
-    document.getElementById("toast");
-
-  toast.innerText =
-    message;
-
-  toast.style.display =
-    "block";
-
-  clearTimeout(window.toastTimer);
-
-  window.toastTimer =
-    setTimeout(function(){
-
-      toast.style.display =
-        "none";
-
-    },2800);
-
-}
-
-const savedQuotesKey =
-  "bhubondangaSavedQuotes";
-
-const currentUser =
-  getStorageObject(
-    "bhubondangaCurrentUser"
-  );
-
-const userLoggedIn =
-  currentUser.loggedIn !== false &&
-  Boolean(
-    currentUser.loggedIn ||
-    currentUser.name ||
-    currentUser.username ||
-    currentUser.email
-  );
-
-document
-  .getElementById("headerAvatar")
-  .innerText =
-    userLoggedIn
-      ? (
-        currentUser.initials ||
-        getInitials(currentUser.name || "আ")
-      )
-      : "আ";
-
-const pageParams =
-  new URLSearchParams(
-    window.location.search
-  );
-
-const requestedPerson =
-  pageParams.get("person") ||
-  people[0].name;
-
-const currentPersonIndex =
-  people.findIndex(function(person){
-
-    return (
-      normalizeName(person.name) ===
-      normalizeName(requestedPerson)
-    );
-
-  });
-
-const currentPerson =
-  currentPersonIndex >= 0
-    ? people[currentPersonIndex]
-    : null;
-
-function profileUrl(person){
-
-  return (
-    "thinker-profile.html?person=" +
-    encodeURIComponent(person.name)
-  );
-
-}
-
-function quoteDetailUrl(person){
-
-  return (
-    "quote-detail.html?person=" +
-    encodeURIComponent(person.name) +
-    "&quote=" +
-    encodeURIComponent(person.quote)
-  );
-
-}
-
-function getSavedQuotes(){
-
-  return getStorageArray(
-    savedQuotesKey
-  );
-
-}
-
-function isCurrentQuoteSaved(){
-
-  if(!currentPerson){
-    return false;
-  }
-
-  return getSavedQuotes().some(function(item){
-
-    return (
-      String(item.id) ===
-      String(currentPerson.id)
-    );
-
-  });
-
-}
-
-function toggleCurrentQuote(){
-
-  if(!currentPerson){
-    return;
-  }
-
-  let saved =
-    getSavedQuotes();
-
-  const foundIndex =
-    saved.findIndex(function(item){
-
-      return (
-        String(item.id) ===
-        String(currentPerson.id)
-      );
-
-    });
-
-  if(foundIndex >= 0){
-
-    saved.splice(
-      foundIndex,
-      1
-    );
-
-    showToast(
-      "বাণীটি স্মৃতি থেকে সরানো হয়েছে।"
-    );
-
-  }else{
-
-    saved.unshift({
-
-      id:
-        currentPerson.id,
-
-      name:
-        currentPerson.name,
-
-      identity:
-        currentPerson.identity,
-
-      category:
-        currentPerson.category,
-
-      quote:
-        currentPerson.quote,
-
-      url:
-        quoteDetailUrl(currentPerson),
-
-      savedAt:
-        new Date().toISOString()
-
-    });
-
-    showToast(
-      "বাণীটি স্মৃতিতে রাখা হয়েছে।"
-    );
-
-  }
-
-  saveStorageArray(
-    savedQuotesKey,
-    saved.slice(0,500)
-  );
-
-  updateSavedButton();
-  updateRightSummary();
-
-}
-
-function updateSavedButton(){
-
-  const button =
-    document.getElementById(
-      "saveProfileQuoteButton"
-    );
-
-  if(!button){
-    return;
-  }
-
-  const saved =
-    isCurrentQuoteSaved();
-
-  button.classList.toggle(
-    "saved",
-    saved
-  );
-
-  button.innerHTML =
-    saved
-      ? "✓ স্মৃতিতে রাখা"
-      : "🔖 স্মৃতিতে রাখুন";
-
-}
-
-async function copyCurrentQuote(){
-
-  if(!currentPerson){
-    return;
-  }
-
-  const text =
-    "“" +
-    currentPerson.quote +
-    "” — " +
-    currentPerson.name;
-
-  try{
-
-    await navigator.clipboard.writeText(
-      text
-    );
-
-    showToast(
-      "বাণীটি কপি হয়েছে।"
-    );
-
-  }catch(error){
-
-    showToast(
-      "বাণীটি কপি করা যায়নি।"
-    );
-
-  }
-
-}
-
-async function shareCurrentProfile(){
-
-  if(!currentPerson){
-    return;
-  }
-
-  const url =
-    window.location.href;
-
-  try{
-
-    if(navigator.share){
-
-      await navigator.share({
-
-        title:
-          currentPerson.name +
-          " | ভুবনডাঙ্গার কবিতা",
-
-        text:
-          currentPerson.name +
-          " — " +
-          currentPerson.identity,
-
-        url:
-          url
-
-      });
-
-      return;
-
-    }
-
-    await navigator.clipboard.writeText(
-      url
-    );
-
-    showToast(
-      "প্রোফাইলের লিংক কপি হয়েছে।"
-    );
-
-  }catch(error){}
-
-}
-
-function createRelatedPeople(){
-
-  if(!currentPerson){
-    return [];
-  }
-
-  const sameCategory =
-    people.filter(function(person){
-
-      return (
-        person.category ===
-          currentPerson.category &&
-        person.id !==
-          currentPerson.id
-      );
-
-    });
-
-  const otherPeople =
-    people.filter(function(person){
-
-      return (
-        person.category !==
-          currentPerson.category &&
-        person.id !==
-          currentPerson.id
-      );
-
-    });
-
-  return sameCategory
-    .concat(otherPeople)
-    .slice(0,8);
-
-}
-
-function createRelatedCards(){
-
-  return createRelatedPeople()
-    .map(function(person){
-
-      return `
-        <a
-          href="${profileUrl(person)}"
-          class="related-card"
-        >
-
-          <span class="related-avatar">
-            ${escapeHtml(getInitials(person.name))}
-          </span>
-
-          <span class="related-copy">
-
-            <strong>
-              ${escapeHtml(person.name)}
-            </strong>
-
-            <span>
-              ${escapeHtml(person.identity)}
-            </span>
-
-          </span>
-
-        </a>
-      `;
-
-    })
-    .join("");
-
-}
-
-function createProfileBio(person){
-
-  const categoryText =
-    categoryDescriptions[
-      person.category
-    ] ||
-    "তাঁর চিন্তা ও কাজ মানবজীবনের বিভিন্ন গুরুত্বপূর্ণ প্রশ্নের সঙ্গে যুক্ত।";
-
-  return (
-    person.name +
-    " ছিলেন " +
-    person.identity +
-    "। " +
-    categoryText +
-    " তাঁর নির্বাচিত বাণী পাঠককে প্রশ্ন করতে, ভাবতে এবং নিজের জীবন ও সমাজকে নতুনভাবে দেখতে উৎসাহিত করে।"
-  );
-
-}
-
-function renderProfile(){
-
-  const container =
-    document.getElementById(
-      "profileContent"
-    );
-
-  if(!currentPerson){
-
-    container.innerHTML = `
-      <section class="card not-found">
-
-        <span>❝</span>
-
-        <h1>
-          মনীষীর প্রোফাইল পাওয়া যায়নি
-        </h1>
-
-        <p>
-          নামটি সঠিক কি না দেখে আবার চেষ্টা করুন।
-        </p>
-
-        <a href="famous-quotes.html">
-          একশোজন মনীষীর তালিকায় ফিরে যান
-        </a>
-
-      </section>
-    `;
-
-    document.title =
-      "প্রোফাইল পাওয়া যায়নি | ভুবনডাঙ্গার কবিতা";
-
-    return;
-
-  }
-
-  const previousPerson =
-    people[
-      (
-        currentPersonIndex -
-        1 +
-        people.length
-      ) %
-      people.length
-    ];
-
-  const nextPerson =
-    people[
-      (
-        currentPersonIndex +
-        1
-      ) %
-      people.length
-    ];
-
-  document.title =
-    currentPerson.name +
-    " | বিখ্যাত মনীষীদের বাণী";
-
-  container.innerHTML = `
-
-    <section class="card profile-hero">
-
-      <div class="profile-cover"></div>
-
-      <div class="profile-hero-inner">
-
-        <div class="profile-avatar">
-          ${escapeHtml(getInitials(currentPerson.name))}
-        </div>
-
-        <div class="profile-main-row">
-
-          <div class="profile-name-wrap">
-
-            <h1 class="profile-name">
-              ${escapeHtml(currentPerson.name)}
-            </h1>
-
-            <p class="profile-identity">
-              ${escapeHtml(currentPerson.identity)}
-            </p>
-
-            <span class="profile-category">
-              ${escapeHtml(currentPerson.category)}
-            </span>
-
-          </div>
-
-          <div class="profile-buttons">
-
-            <a
-              href="famous-quotes.html?q=${encodeURIComponent(currentPerson.name)}"
-              class="profile-button"
-            >
-              ❝ বাণীর তালিকা
-            </a>
-
-            <button
-              class="profile-button"
-              id="saveProfileQuoteButton"
-              type="button"
-            >
-              🔖 স্মৃতিতে রাখুন
-            </button>
-
-            <button
-              class="profile-button primary"
-              id="shareProfileButton"
-              type="button"
-            >
-              ↗ শেয়ার
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <nav class="card profile-tabs">
-
-      <button
-        class="profile-tab active"
-        type="button"
-        data-tab="about"
-      >
-        পরিচিতি
-      </button>
-
-      <button
-        class="profile-tab"
-        type="button"
-        data-tab="quote"
-      >
-        নির্বাচিত বাণী
-      </button>
-
-      <button
-        class="profile-tab"
-        type="button"
-        data-tab="related"
-      >
-        একই ভুবনের মনীষী
-      </button>
-
-    </nav>
-
-    <section
-      class="card profile-section"
-      id="tab-about"
-    >
-
-      <div class="section-heading">
-
-        <h2>
-          সংক্ষিপ্ত পরিচিতি
-        </h2>
-
-        <a href="famous-quotes.html">
-          সব মনীষী
-        </a>
-
-      </div>
-
-      <p class="about-text">
-        ${escapeHtml(createProfileBio(currentPerson))}
-      </p>
-
-      <div class="info-grid">
-
-        <div class="info-item">
-          <span>নাম</span>
-          <strong>
-            ${escapeHtml(currentPerson.name)}
-          </strong>
-        </div>
-
-        <div class="info-item">
-          <span>পরিচিতি</span>
-          <strong>
-            ${escapeHtml(currentPerson.identity)}
-          </strong>
-        </div>
-
-        <div class="info-item">
-          <span>চিন্তার ক্ষেত্র</span>
-          <strong>
-            ${escapeHtml(currentPerson.category)}
-          </strong>
-        </div>
-
-        <div class="info-item">
-          <span>একশোজনের তালিকায় অবস্থান</span>
-          <strong>
-            ${toBn(currentPerson.id)}
-          </strong>
-        </div>
-
-      </div>
-
-    </section>
-
-    <section
-      class="card profile-section"
-      id="tab-quote"
-      hidden
-    >
-
-      <div
-        class="section-heading"
-        id="selected-quote"
-      >
-
-        <h2>
-          নির্বাচিত বাণী
-        </h2>
-
-        <a href="${quoteDetailUrl(currentPerson)}">
-          পৃথক পাতায় পড়ুন
-        </a>
-
-      </div>
-
-      <div class="quote-feature">
-
-        <div class="quote-mark">
-          “
-        </div>
-
-        <p class="feature-quote">
-          ${escapeHtml(currentPerson.quote)}
-        </p>
-
-        <p class="quote-credit">
-          — ${escapeHtml(currentPerson.name)}
-          · বাংলা ভাবানুবাদ
-        </p>
-
-        <div class="quote-tools">
-
-          <button
-            class="quote-tool"
-            id="copyQuoteButton"
-            type="button"
-          >
-            ⧉ বাণী কপি করুন
-          </button>
-
-          <button
-            class="quote-tool"
-            id="saveQuoteInsideButton"
-            type="button"
-          >
-            🔖 স্মৃতিতে রাখুন
-          </button>
-
-          <button
-            class="quote-tool"
-            id="shareQuoteButton"
-            type="button"
-          >
-            ↗ শেয়ার করুন
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-    <section
-      class="card profile-section"
-      id="tab-related"
-      hidden
-    >
-
-      <div
-        class="section-heading"
-        id="related-people"
-      >
-
-        <h2>
-          সম্পর্কিত মনীষী
-        </h2>
-
-        <a
-          href="famous-quotes.html?category=${encodeURIComponent(currentPerson.category)}"
-        >
-          বিভাগ দেখুন
-        </a>
-
-      </div>
-
-      <div class="related-grid">
-        ${createRelatedCards()}
-      </div>
-
-    </section>
-
-    <div class="profile-navigation">
-
-      <a
-        href="${profileUrl(previousPerson)}"
-        class="nav-profile"
-      >
-        <span>← আগের মনীষী</span>
-        <strong>
-          ${escapeHtml(previousPerson.name)}
-        </strong>
-      </a>
-
-      <a
-        href="${profileUrl(nextPerson)}"
-        class="nav-profile"
-      >
-        <span>পরের মনীষী →</span>
-        <strong>
-          ${escapeHtml(nextPerson.name)}
-        </strong>
-      </a>
-
-    </div>
-  `;
-
-  bindProfileEvents();
-  updateSavedButton();
-
-}
-
-function bindProfileEvents(){
-
-  document
-    .querySelectorAll(".profile-tab")
-    .forEach(function(button){
-
-      button.addEventListener(
-        "click",
-        function(){
-
-          const selected =
-            button.dataset.tab;
-
-          document
-            .querySelectorAll(".profile-tab")
-            .forEach(function(item){
-
-              item.classList.toggle(
-                "active",
-                item === button
-              );
-
-            });
-
-          ["about","quote","related"]
-            .forEach(function(tabName){
-
-              const section =
-                document.getElementById(
-                  "tab-" + tabName
-                );
-
-              if(section){
-
-                section.hidden =
-                  tabName !== selected;
-
-              }
-
-            });
-
-        }
-      );
-
-    });
-
-  const saveButton =
-    document.getElementById(
-      "saveProfileQuoteButton"
-    );
-
-  const shareButton =
-    document.getElementById(
-      "shareProfileButton"
-    );
-
-  const copyQuoteButton =
-    document.getElementById(
-      "copyQuoteButton"
-    );
-
-  const saveInsideButton =
-    document.getElementById(
-      "saveQuoteInsideButton"
-    );
-
-  const shareQuoteButton =
-    document.getElementById(
-      "shareQuoteButton"
-    );
-
-  if(saveButton){
-
-    saveButton.addEventListener(
-      "click",
-      toggleCurrentQuote
-    );
-
-  }
-
-  if(shareButton){
-
-    shareButton.addEventListener(
-      "click",
-      shareCurrentProfile
-    );
-
-  }
-
-  if(copyQuoteButton){
-
-    copyQuoteButton.addEventListener(
-      "click",
-      copyCurrentQuote
-    );
-
-  }
-
-  if(saveInsideButton){
-
-    saveInsideButton.addEventListener(
-      "click",
-      toggleCurrentQuote
-    );
-
-  }
-
-  if(shareQuoteButton){
-
-    shareQuoteButton.addEventListener(
-      "click",
-      shareCurrentProfile
-    );
-
-  }
-
-}
-
-function updateRightSummary(){
-
-  if(!currentPerson){
-    return;
-  }
-
-  const categoryCount =
-    people.filter(function(person){
-
-      return (
-        person.category ===
-        currentPerson.category
-      );
-
-    }).length;
-
-  document
-    .getElementById("summaryAvatar")
-    .innerText =
-      getInitials(
-        currentPerson.name
-      );
-
-  document
-    .getElementById("summaryName")
-    .innerText =
-      currentPerson.name;
-
-  document
-    .getElementById("summaryIdentity")
-    .innerText =
-      currentPerson.identity;
-
-  document
-    .getElementById("summaryPosition")
-    .innerText =
-      toBn(
-        currentPerson.id
-      ) +
-      "/১০০";
-
-  document
-    .getElementById("summaryCategoryCount")
-    .innerText =
-      toBn(
-        categoryCount
-      );
-
-  document
-    .getElementById("summarySavedCount")
-    .innerText =
-      toBn(
-        getSavedQuotes().length
-      );
-
-}
-
-/* SEARCH */
-
-const headerSearchInput =
-  document.getElementById(
-    "headerSearchInput"
-  );
-
-function performHeaderSearch(){
-
-  const query =
-    headerSearchInput.value.trim();
-
-  if(!query){
-
-    showToast(
-      "মনীষীর নাম লিখুন।"
-    );
-
-    return;
-
-  }
-
-  const exactMatch =
-    people.find(function(person){
-
-      return (
-        normalizeName(person.name) ===
-        normalizeName(query)
-      );
-
-    });
-
-  if(exactMatch){
-
-    window.location.href =
-      profileUrl(exactMatch);
-
-    return;
-
-  }
-
-  window.location.href =
-    "famous-quotes.html?q=" +
-    encodeURIComponent(query);
-
-}
-
-document
-  .getElementById("headerSearchButton")
-  .addEventListener(
-    "click",
-    performHeaderSearch
-  );
-
-headerSearchInput.addEventListener(
-  "keydown",
-  function(event){
-
-    if(event.key === "Enter"){
-
-      performHeaderSearch();
-
-    }
-
-  }
-);
-
-/* DATE */
-
-function formatBanglaDate(date){
-
-  const banglaMonths = [
-    "বৈশাখ",
-    "জ্যৈষ্ঠ",
-    "আষাঢ়",
-    "শ্রাবণ",
-    "ভাদ্র",
-    "আশ্বিন",
-    "কার্তিক",
-    "অগ্রহায়ণ",
-    "পৌষ",
-    "মাঘ",
-    "ফাল্গুন",
-    "চৈত্র"
-  ];
-
-  const locales = [
-    "bn-BD-u-ca-beng-nu-beng",
-    "bn-IN-u-ca-beng-nu-beng"
-  ];
-
-  for(
-    let index = 0;
-    index < locales.length;
-    index++
-  ){
-
-    try{
-
-      const formatter =
-        new Intl.DateTimeFormat(
-          locales[index],
-          {
-            day:"numeric",
-            month:"long",
-            year:"numeric"
-          }
-        );
-
-      const resolvedCalendar =
-        formatter
-          .resolvedOptions()
-          .calendar;
-
-      const parts =
-        formatter.formatToParts(
-          date
-        );
-
-      const monthPart =
-        parts.find(function(part){
-
-          return part.type === "month";
-
-        });
-
-      const monthName =
-        monthPart
-          ? monthPart.value
-          : "";
-
-      const validMonth =
-        banglaMonths.some(function(month){
-
-          return (
-            monthName.includes(month) ||
-            month.includes(monthName)
-          );
-
-        });
-
-      if(
-        resolvedCalendar === "beng" &&
-        validMonth
-      ){
-
-        return (
-          formatter.format(date) +
-          " বঙ্গাব্দ"
-        );
-
-      }
-
-    }catch(error){}
-
-  }
-
-  return "বাংলা তারিখ পাওয়া যায়নি";
-
-}
-
-function formatHijriDate(date){
-
-  const locales = [
-    "bn-BD-u-ca-islamic-umalqura-nu-beng",
-    "bn-BD-u-ca-islamic-nu-beng"
-  ];
-
-  for(
-    let index = 0;
-    index < locales.length;
-    index++
-  ){
-
-    try{
-
-      const formatter =
-        new Intl.DateTimeFormat(
-          locales[index],
-          {
-            day:"numeric",
-            month:"long",
-            year:"numeric"
-          }
-        );
-
-      const calendar =
-        formatter
-          .resolvedOptions()
-          .calendar;
-
-      if(
-        !String(calendar)
-          .startsWith("islamic")
-      ){
-        continue;
-      }
-
-      let value =
-        formatter.format(date);
-
-      value =
-        value
-          .replace(/হিজরি/gi,"")
-          .replace(/হিজরী/gi,"")
-          .replace(/AH/gi,"")
-          .replace(/\s+/g," ")
-          .trim();
-
-      if(value){
-
-        return (
-          value +
-          " হিজরি"
-        );
-
-      }
-
-    }catch(error){}
-
-  }
-
-  return "হিজরি তারিখ পাওয়া যায়নি";
-
-}
-
-function formatGregorianDate(date){
-
-  return (
-    new Intl.DateTimeFormat(
-      "bn-BD",
-      {
-        day:"numeric",
-        month:"long",
-        year:"numeric"
-      }
-    ).format(date) +
-    " খ্রিস্টাব্দ"
-  );
-
-}
-
-function renderDates(){
-
-  const today =
-    new Date();
-
-  const bangla =
-    formatBanglaDate(today);
-
-  const hijri =
-    formatHijriDate(today);
-
-  const gregorian =
-    formatGregorianDate(today);
-
-  document
-    .querySelectorAll(".bangla-date")
-    .forEach(function(element){
-
-      element.innerText =
-        bangla;
-
-    });
-
-  document
-    .querySelectorAll(".hijri-date")
-    .forEach(function(element){
-
-      element.innerText =
-        hijri;
-
-    });
-
-  document
-    .querySelectorAll(".gregorian-date")
-    .forEach(function(element){
-
-      element.innerText =
-        gregorian;
-
-    });
-
-}
-
-/* DRAWER */
-
-const mobileDrawer =
-  document.getElementById(
-    "mobileDrawer"
-  );
-
-const drawerBackdrop =
-  document.getElementById(
-    "drawerBackdrop"
-  );
-
-function openDrawer(){
-
-  mobileDrawer.classList.add(
-    "open"
-  );
-
-  drawerBackdrop.classList.add(
-    "show"
-  );
-
-  document.body.classList.add(
-    "locked"
-  );
-
-}
-
-function closeDrawer(){
-
-  mobileDrawer.classList.remove(
-    "open"
-  );
-
-  drawerBackdrop.classList.remove(
-    "show"
-  );
-
-  document.body.classList.remove(
-    "locked"
-  );
-
-}
-
-document
-  .getElementById("openDrawerButton")
-  .addEventListener(
-    "click",
-    openDrawer
-  );
-
-document
-  .getElementById("closeDrawerButton")
-  .addEventListener(
-    "click",
-    closeDrawer
-  );
-
-drawerBackdrop.addEventListener(
-  "click",
-  closeDrawer
-);
-
-/* THEME */
-
-const themeIcon =
-  document.getElementById(
-    "themeIcon"
-  );
-
-function updateThemeIcon(){
-
-  themeIcon.innerText =
-    root.getAttribute("data-theme") === "dark"
-      ? "☀️"
-      : "🌙";
-
-}
-
-document
-  .getElementById("themeButton")
-  .addEventListener(
-    "click",
-    function(){
-
-      const nextTheme =
-        root.getAttribute("data-theme") === "dark"
-          ? "light"
-          : "dark";
-
-      root.setAttribute(
-        "data-theme",
-        nextTheme
-      );
-
-      localStorage.setItem(
-        "bhubondangaTheme",
-        nextTheme
-      );
-
-      updateThemeIcon();
-
-    }
-  );
-
-/* TOP */
-
-const toTopButton =
-  document.getElementById(
-    "toTopButton"
-  );
-
-window.addEventListener(
-  "scroll",
-  function(){
-
-    toTopButton.classList.toggle(
-      "show",
-      window.scrollY > 450
-    );
-
-  }
-);
-
-toTopButton.addEventListener(
-  "click",
-  function(){
-
-    window.scrollTo({
-      top:0,
-      behavior:"smooth"
-    });
-
-  }
-);
-
-/* INITIAL */
-
-renderProfile();
-updateRightSummary();
-renderDates();
-updateThemeIcon();
-
-document
-  .getElementById("footerYear")
-  .innerText =
-    toBn(
-      new Date().getFullYear()
-    );
-
-setInterval(
-  renderDates,
-  60000
-);
-
-document.addEventListener(
-  "keydown",
-  function(event){
-
-    if(event.key === "Escape"){
-
-      closeDrawer();
-
-    }
-
-  }
-);
+<script id="bhubondanga-device-compat-v12">
+(function(){
+  var ua=navigator.userAgent||"";
+  var coarse=false;
+  try{coarse=window.matchMedia&&matchMedia("(pointer:coarse)").matches}catch(e){}
+  var smallScreen=Math.min(screen.width||9999,screen.height||9999)<=900;
+  var compact=/Android|iPhone|iPod|Mobile/i.test(ua)||(coarse&&smallScreen);
+  document.documentElement.classList.toggle("compact-device",compact);
+  document.documentElement.classList.toggle("android-device",/Android/i.test(ua));
+  document.documentElement.classList.toggle("samsung-browser",/SamsungBrowser/i.test(ua));
+})();
 </script>
 
-</body>
-</html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<title>বিখ্যাত মনীষী | ভুবনডাঙ্গার কবিতা</title>
+<meta name="description" content="কাজী নজরুল ইসলাম-এর ভুবনডাঙ্গা প্রোফাইল">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+ --header:68px;--ticker:30px;--quick:43px;--page:#eef3fa;
+ --surface:rgba(255,255,255,.76);--surface2:rgba(255,255,255,.91);
+ --text:#173052;--soft:#687995;--muted:#91a0b7;--line:rgba(102,126,170,.18);
+ --primary:#688bf0;--violet:#8f75ec;--green:#4f987d;--danger:#c94c68;
+ --shadow:0 14px 38px rgba(74,85,151,.11),inset 0 1px 0 rgba(255,255,255,.94);
+ --bg:radial-gradient(circle at 8% 0,rgba(130,194,233,.16),transparent 27%),radial-gradient(circle at 96% 6%,rgba(185,164,231,.15),transparent 28%),linear-gradient(155deg,#fcfeff,#edf2f9 55%,#f8f7fc);
+}
+html[data-theme="middle"]{--page:#dce5f2;--surface:rgba(239,245,253,.79);--surface2:rgba(247,250,255,.93);--text:#18304f;--soft:#5d708e;--bg:linear-gradient(145deg,#e7eef7,#d7e1ef 55%,#ebeaf5)}
+html[data-theme="dark"]{--page:#071426;--surface:rgba(13,30,55,.83);--surface2:rgba(16,35,63,.95);--text:#f3f7ff;--soft:#c4d0e8;--muted:#8da0bf;--line:rgba(158,181,238,.18);--primary:#9aafff;--violet:#b69cff;--green:#88d4ba;--danger:#ff91ae;--shadow:0 18px 46px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.075);--bg:radial-gradient(circle at 12% 8%,rgba(81,115,205,.10),transparent 24%),radial-gradient(circle at 88% 15%,rgba(144,93,210,.09),transparent 26%),linear-gradient(180deg,#06111f,#08182a 62%,#0a1b2f)}
+html{scroll-behavior:smooth}
+body{min-height:100vh;overflow-x:hidden;background:var(--bg);color:var(--text);font-family:'Noto Serif Bengali',Georgia,serif;line-height:1.62}
+body.locked{overflow:hidden}
+a{text-decoration:none;color:inherit}button,input,textarea,select{font:inherit}button{cursor:pointer}img{display:block;max-width:100%}[hidden]{display:none!important}
+.glass{position:relative;border:1px solid var(--line);border-radius:17px;background:var(--surface);box-shadow:var(--shadow);backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%)}
+.icon{width:1.15em;height:1.15em;display:inline-block;vertical-align:-.18em;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+.site-header{position:sticky;top:0;z-index:1000;height:var(--header);border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--surface2) 92%,transparent);backdrop-filter:blur(20px)}
+.header-inner{width:min(1420px,100%);height:100%;margin:auto;padding:0 14px;display:grid;grid-template-columns:325px minmax(250px,1fr) auto;gap:12px;align-items:center}
+.brand{display:flex;align-items:center;gap:9px;min-width:0}.leaf{width:40px;height:40px;flex:0 0 40px;border:1px solid rgba(79,152,125,.24);border-radius:13px;display:grid;place-items:center;background:var(--surface2);font:26px/1 "Apple Color Emoji","Segoe UI Emoji";box-shadow:var(--shadow)}
+.brand h1{font-size:22px;line-height:1.05;white-space:nowrap}.brand p{margin-top:2px;color:var(--green);font-size:8.7px;white-space:nowrap}
+.search{position:relative}.search input{width:100%;height:37px;padding:0 42px 0 36px;border:1px solid var(--line);border-radius:999px;outline:none;background:var(--surface2);color:var(--text);font-size:10px}.search span{position:absolute;left:12px;top:50%;transform:translateY(-50%)}.search button{position:absolute;right:4px;top:4px;width:29px;height:29px;border:0;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff}
+.header-actions{display:flex;gap:6px}.round{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:var(--surface2);color:var(--text)}
+.datebar{position:sticky;top:var(--header);z-index:990;height:var(--ticker);overflow:hidden;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--surface2) 91%,transparent)}
+.track{width:max-content;min-width:200%;height:100%;display:flex;animation:flow 46s linear infinite}.dategroup{height:100%;display:flex;align-items:center;gap:18px;padding:0 23px;white-space:nowrap;color:var(--soft);font-size:9px;font-weight:700}.hello{color:var(--green)}.sep{color:var(--primary)}@keyframes flow{to{transform:translateX(-50%)}}
+.quickbar{position:sticky;top:calc(var(--header) + var(--ticker));z-index:980;height:var(--quick);border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--surface2) 92%,transparent);backdrop-filter:blur(16px)}
+.quick-inner{width:min(1420px,100%);height:100%;margin:auto;padding:0 14px;display:flex;align-items:center;gap:5px}
+.quick-link{flex:0 0 auto;min-width:92px;height:31px;padding:0 10px;border:1px solid transparent;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:5px;color:var(--soft);font-size:9px;font-weight:800}
+.quick-link.active{border-color:var(--line);background:var(--surface2);color:var(--primary)}
+.badge{min-width:15px;height:15px;padding:0 4px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;background:#e34f59;color:white;font:700 8px/1 system-ui}
+.layout{width:min(1420px,100%);margin:auto;padding:12px;display:grid;grid-template-columns:230px minmax(0,1fr) 230px;gap:12px;align-items:start}
+.sidebar{position:sticky;top:calc(var(--header) + var(--ticker) + var(--quick) + 12px);height:calc(100dvh - var(--header) - var(--ticker) - var(--quick) - 24px);overflow-y:auto;scrollbar-width:none}.sidebar::-webkit-scrollbar,.drawer::-webkit-scrollbar{display:none}
+.identity{padding:10px;text-align:center}.identity .bigleaf{font:28px/1 "Apple Color Emoji","Segoe UI Emoji"}.identity h2{margin-top:2px;font-size:15px;color:var(--primary)}.identity .quote{margin-top:6px;padding:6px;border-left:3px solid var(--primary);border-radius:0 8px 8px 0;background:rgba(104,139,240,.08);color:var(--soft);font-size:7.7px}
+.side-card{margin-top:8px;padding:7px}.side-list{display:grid;gap:3px}.side-item{min-height:35px;padding:5px 6px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:9px;display:grid;grid-template-columns:25px 1fr auto;gap:6px;align-items:center;background:color-mix(in srgb,var(--surface2) 56%,transparent);color:var(--soft);font-size:8.5px;font-weight:750}.side-item:hover,.side-item.active{color:var(--primary);border-color:var(--line);background:rgba(104,139,240,.09)}.side-ico{width:25px;height:25px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;background:var(--surface2)}
+.authcard,.rightcard{margin-top:8px;padding:8px}.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px}.auth-actions a,.auth-actions button{min-height:32px;border:1px solid var(--line);border-radius:9px;display:flex;align-items:center;justify-content:center;background:var(--surface2);color:var(--primary);font-size:8px;font-weight:800}.auth-actions .primary{background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff;border-color:transparent}.auth-actions .wide{grid-column:1/-1}
+.rightcard h3{font-size:11px;margin-bottom:4px}.rline{padding:6px 0;border-bottom:1px solid var(--line);font-size:8px;color:var(--soft)}.rline:last-child{border:0}.rline a{display:flex;justify-content:space-between}.contact-note{margin-top:7px;padding:7px;border-left:3px solid var(--green);border-radius:0 8px 8px 0;background:rgba(79,152,125,.08);font-size:7.6px;color:var(--soft)}
+.center{min-width:0;display:grid;gap:10px}
+.profile-hero{overflow:visible}
+.cover{position:relative;height:285px;overflow:hidden;border-radius:18px;background:linear-gradient(135deg,#dcecff,#cddcf4 55%,#e9e2fa);isolation:isolate}
+.cover::before{content:"";position:absolute;inset:0;background:var(--cover-image,linear-gradient(135deg,rgba(112,165,218,.55),rgba(191,176,234,.48))),radial-gradient(circle at 24% 35%,rgba(255,255,255,.6),transparent 22%),linear-gradient(135deg,#cde4f5,#d9d8f1);background-size:cover;background-position:center}
+.cover::after{content:"";position:absolute;inset:auto 0 0;height:70%;background:linear-gradient(180deg,transparent,rgba(255,255,255,.36) 32%,rgba(255,255,255,.92));z-index:1}
+html[data-theme="dark"] .cover::after{background:linear-gradient(180deg,transparent,rgba(7,17,32,.24) 28%,rgba(10,25,46,.94))}
+.cover-edit{position:absolute;right:14px;top:14px;z-index:3;width:38px;height:38px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text)}
+.profile-panel{position:relative;z-index:4;margin:-115px 18px 0 138px;min-height:154px;padding:18px 18px 15px 36px;border:1px solid rgba(255,255,255,.72);border-radius:28px;background:color-mix(in srgb,var(--surface2) 89%,transparent);box-shadow:var(--shadow);backdrop-filter:blur(25px) saturate(145%)}
+.avatar-wrap{position:absolute;left:-108px;bottom:20px;width:142px;height:142px;border:5px solid color-mix(in srgb,var(--surface2) 94%,white);border-radius:50%;background:linear-gradient(135deg,#d5e5fb,#e8def8);box-shadow:var(--shadow);overflow:visible}
+.profile-avatar{width:100%;height:100%;border-radius:50%;object-fit:cover}.avatar-fallback{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;font-size:45px;color:var(--primary)}
+.avatar-camera{position:absolute;right:-3px;bottom:7px;width:35px;height:35px;border:3px solid var(--surface2);border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff}
+.name-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.name-row h2{font-size:28px;line-height:1.08}.role-chip{padding:4px 9px;border-radius:999px;background:var(--surface2);color:var(--primary);font-size:8px;font-weight:800;box-shadow:var(--shadow)}.wiki{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#111;color:#fff;font:800 14px/1 Georgia}
+.meta{margin-top:6px;color:var(--soft);font-size:9.5px}.bio{margin-top:8px;max-width:760px;color:var(--text);font-size:10.5px}.bio.owner{cursor:text}.bio.owner:hover{outline:1px dashed var(--primary);outline-offset:4px;border-radius:5px}
+.hero-actions{margin-top:12px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}.hero-actions button,.hero-actions a{min-height:37px;padding:0 15px;border:1px solid var(--line);border-radius:11px;display:flex;align-items:center;justify-content:center;gap:6px;background:var(--surface2);color:var(--text);font-size:9px;font-weight:800}.hero-actions .primary{min-width:150px;border:0;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff}.hero-actions .dots{width:40px;padding:0}
+.category-wrap{position:sticky;top:calc(var(--header) + var(--ticker) + var(--quick));z-index:970;margin-top:10px}
+.categories{height:49px;padding:0 6px;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none}.categories::-webkit-scrollbar{display:none}.cat{flex:0 0 auto;height:100%;padding:0 17px;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--text);font-size:10px;font-weight:800;white-space:nowrap}.cat.active{color:var(--primary);border-bottom-color:var(--primary)}
+.composer{padding:10px}.composer-top{display:grid;grid-template-columns:38px 1fr;gap:9px;align-items:center}.composer-avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff}.composer-prompt{min-height:39px;padding:0 14px;border:1px solid var(--line);border-radius:999px;text-align:left;background:var(--surface2);color:var(--soft);font-size:9.5px}.composer-choices{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.compose-type{min-height:54px;padding:5px 2px;border:1px solid var(--line);border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:var(--surface2);color:var(--text);font-size:8px}.compose-type span:first-child{font-size:20px}
+.section-head{padding:10px 12px;display:flex;justify-content:space-between;align-items:center}.section-head h2{font-size:19px}.section-head small{color:var(--muted);font-size:8px}
+.post-list{display:grid;gap:10px}.post{padding:13px}.author{display:grid;grid-template-columns:42px 1fr auto;gap:8px;align-items:center}.author-avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff}.author strong{font-size:10.5px}.author small{display:block;color:var(--muted);font-size:7.7px}.post-menu{width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:var(--surface2);color:var(--text)}.tag{display:inline-flex;margin-top:8px;padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff;font-size:7.5px}.post h3{margin-top:8px;font-size:20px}.post-body{margin-top:6px;color:var(--soft);font-size:11px;white-space:pre-line}.post-media{margin-top:10px;width:100%;max-height:430px;object-fit:cover;border-radius:13px;border:1px solid var(--line)}.readmore{display:inline-block;margin-top:6px;color:var(--primary);font-size:8px;font-weight:800}
+.actions{margin-top:10px;padding-top:8px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.action{min-height:34px;border:0;border-radius:8px;background:transparent;color:var(--soft);font-size:8px}.action:hover,.action.active{background:rgba(104,139,240,.08);color:var(--primary)}
+.comments{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}.comments.open{display:block}.comment-list{display:grid;gap:5px}.comment{padding:7px 8px;border-radius:9px;background:var(--surface2);font-size:8.5px;color:var(--soft)}.comment a{color:var(--primary);font-weight:800}.comment-form{margin-top:6px;display:grid;grid-template-columns:1fr auto;gap:6px}.comment-form textarea{min-height:42px;padding:8px;border:1px solid var(--line);border-radius:10px;resize:none;outline:none;background:var(--surface2);color:var(--text);font-size:16px}.comment-form button{width:42px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--violet));color:#fff}
+.title-list{display:grid;gap:7px}.title-item{padding:11px 12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.title-item h3{font-size:13px}.title-item p{margin-top:2px;color:var(--muted);font-size:8px}.title-item span{color:var(--primary);font-size:8px}.more-btn{min-width:160px;min-height:38px;margin:3px auto 8px;border:1px solid var(--line);border-radius:999px;background:var(--surface2);color:var(--primary);font-size:9px;font-weight:800}
+.footer{margin:2px 0 10px;padding:14px;text-align:center;color:var(--soft);font-size:8px}.footer a{margin:0 5px}
+.edge{position:fixed;top:66%;z-index:1200;width:23px;height:58px;border:1px solid var(--line);display:none;place-items:center;background:linear-gradient(180deg,var(--surface2),rgba(150,130,231,.62));color:var(--primary);box-shadow:var(--shadow)}.edge.left{left:0;border-left:0;border-radius:0 11px 11px 0}.edge.right{right:0;border-right:0;border-radius:11px 0 0 11px}
+.backdrop{position:fixed;inset:0;z-index:1500;display:none;background:rgba(4,13,29,.52);backdrop-filter:blur(3px)}.backdrop.show{display:block}
+.drawer{position:fixed;top:0;bottom:0;z-index:1510;width:min(345px,88vw);padding:9px;overflow:auto;background:var(--page);transition:.24s ease}.drawer.left{left:0;transform:translateX(-105%)}.drawer.right{right:0;transform:translateX(105%)}.drawer.open{transform:translateX(0)}.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.drawer-close{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--surface2)}
+.sheet{position:fixed;left:50%;bottom:0;z-index:1700;width:min(620px,100%);max-height:min(78dvh,760px);padding:10px 12px 18px;overflow:auto;border-radius:24px 24px 0 0;background:var(--page);box-shadow:0 -24px 60px rgba(0,0,0,.24);transform:translate(-50%,105%);transition:.24s}.sheet.open{transform:translate(-50%,0)}.grab{width:46px;height:5px;margin:0 auto 10px;border-radius:999px;background:var(--muted)}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.sheet-head h2{font-size:20px}.sheet-list{display:grid;gap:7px}.sheet-item{min-height:52px;padding:0 14px;border:1px solid var(--line);border-radius:13px;display:flex;align-items:center;gap:10px;background:var(--surface2);color:var(--text);font-size:10px;font-weight:800}.sheet-item.danger{color:var(--danger)}
+.toast{position:fixed;left:50%;bottom:70px;z-index:2000;display:none;transform:translateX(-50%);padding:9px 14px;border-radius:999px;background:var(--text);color:var(--page);font-size:9px}.toast.show{display:block}
+@media(max-width:1100px) and (min-width:861px){.layout{grid-template-columns:215px minmax(0,1fr) 215px}}
+@media(max-width:860px){
+ :root{--header:66px;--ticker:29px;--quick:44px}
+ .header-inner{padding:0 9px;grid-template-columns:minmax(0,1fr) minmax(107px,34%);gap:7px}.brand{gap:7px}.leaf{width:38px;height:38px;flex-basis:38px;font-size:25px}.brand h1{font-size:17px}.brand p{font-size:6.9px}.search input{height:36px;font-size:9px}.header-actions{display:none}
+ .dategroup{font-size:8.2px;gap:16px;padding:0 18px}.quick-inner{padding:0 7px;gap:3px}.quick-link{min-width:0;flex:1;height:37px;padding:0 4px;font-size:8px}.quick-link .icon{width:17px;height:17px}
+ .layout{display:block;padding:8px 13px}.sidebar{display:none}.edge{display:grid}.center{gap:8px}
+ .cover{height:235px;border-radius:15px}.cover-edit{right:11px;top:11px;width:34px;height:34px}.profile-panel{margin:-90px 10px 0 106px;min-height:139px;padding:14px 11px 12px 27px;border-radius:23px}.avatar-wrap{left:-82px;bottom:22px;width:106px;height:106px;border-width:4px}.avatar-camera{width:31px;height:31px}.name-row h2{font-size:20px;max-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.role-chip{font-size:7px}.meta{font-size:8px}.bio{font-size:9px}.hero-actions{margin-top:9px;gap:5px}.hero-actions button,.hero-actions a{min-height:34px;padding:0 11px;font-size:8px}.hero-actions .primary{min-width:120px}
+ .category-wrap{top:calc(var(--header) + var(--ticker) + var(--quick))}.categories{height:45px}.cat{padding:0 13px;font-size:9px}
+ .composer{padding:9px}.composer-choices{grid-template-columns:repeat(5,1fr);gap:4px}.compose-type{min-height:52px;font-size:7.3px}.compose-type span:first-child{font-size:18px}
+ .section-head{padding:9px 10px}.section-head h2{font-size:17px}.post{padding:11px}.post h3{font-size:17px}.post-body{font-size:10px}.actions{grid-template-columns:repeat(4,1fr)}.action{font-size:0}.action .icon{width:18px;height:18px}
+}
+@media(max-width:480px){.quick-link span.label{display:none}.profile-panel{margin-left:92px;padding-left:22px}.avatar-wrap{left:-72px;width:96px;height:96px}.name-row h2{font-size:18px}.composer-choices{grid-template-columns:repeat(4,1fr)}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style id="samsung-date-ticker-fix-v11">
+.track{
+  min-width:0!important;width:max-content!important;display:inline-flex!important;
+  flex-wrap:nowrap!important;align-items:center!important;direction:ltr!important;
+  unicode-bidi:isolate!important;animation:profileDateScrollSamsung 46s linear infinite!important;
+  will-change:transform!important;transform:translate3d(0,0,0);
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.dategroup{
+  flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important;
+  display:inline-flex!important;white-space:nowrap!important;direction:ltr!important;unicode-bidi:isolate!important;
+}
+@keyframes profileDateScrollSamsung{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}
+</style>
+
+
+<style id="bhubondanga-four-theme-system-v12">
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html[data-style="pearl"]{
+ --primary:#688bf0;--primary-2:#8f75ec;--violet:#8f75ec;--green:#4f987d;
+}
+html[data-style="ocean"]{
+ --primary:#2f9fff;--primary-2:#756fff;--violet:#7b78ff;--green:#3dd6b0;
+}
+html[data-style="lavender"]{
+ --primary:#7d69e8;--primary-2:#b06be5;--violet:#a36fe8;--green:#64a88c;
+}
+html[data-style="rose"]{
+ --primary:#df6fbe;--primary-2:#6e9cff;--violet:#c06ee7;--green:#5bb799;
+}
+html[data-theme="light"][data-style="ocean"]{
+ --bg:radial-gradient(circle at 8% 0,rgba(69,173,255,.18),transparent 28%),radial-gradient(circle at 94% 6%,rgba(111,112,255,.16),transparent 28%),linear-gradient(155deg,#fbfeff,#eaf4ff 54%,#f5f2ff);
+}
+html[data-theme="light"][data-style="lavender"]{
+ --bg:radial-gradient(circle at 8% 0,rgba(168,137,244,.16),transparent 28%),radial-gradient(circle at 94% 7%,rgba(229,156,219,.14),transparent 29%),linear-gradient(155deg,#fffefe,#f3effd 55%,#f7f5ff);
+}
+html[data-theme="light"][data-style="rose"]{
+ --bg:radial-gradient(circle at 7% 0,rgba(255,164,213,.17),transparent 28%),radial-gradient(circle at 96% 8%,rgba(117,169,255,.15),transparent 29%),linear-gradient(155deg,#fffdfd,#f8eff9 52%,#edf4ff);
+}
+html[data-theme="middle"][data-style="ocean"]{
+ --bg:linear-gradient(145deg,#dceaf5,#cdddeb 55%,#dcd9ef);
+}
+html[data-theme="middle"][data-style="lavender"]{
+ --bg:linear-gradient(145deg,#e5e0ef,#d6d1e7 55%,#e7dce9);
+}
+html[data-theme="middle"][data-style="rose"]{
+ --bg:linear-gradient(145deg,#eadde7,#d7dbe8 55%,#e5d9eb);
+}
+html[data-theme="dark"][data-style="ocean"]{
+ --page:#03182d;--surface:rgba(5,37,68,.82);--surface2:rgba(7,44,79,.94);
+ --surface-strong:rgba(10,45,78,.93);--surface-solid:#0a2948;
+ --text:#f2f9ff;--soft:#c5dcf3;--text-soft:#c5dcf3;--muted:#8fb2d0;
+ --line:rgba(115,195,255,.20);--border:rgba(115,195,255,.20);
+ --bg:radial-gradient(circle at 12% 8%,rgba(27,154,255,.19),transparent 25%),radial-gradient(circle at 87% 14%,rgba(89,80,255,.15),transparent 26%),linear-gradient(180deg,#02101f,#03213b 62%,#051a31);
+}
+html[data-theme="dark"][data-style="lavender"]{
+ --page:#160d28;--surface:rgba(39,24,68,.83);--surface2:rgba(49,29,82,.95);
+ --surface-strong:rgba(51,31,85,.93);--surface-solid:#2d1b4d;
+ --text:#fbf7ff;--soft:#decdf0;--text-soft:#decdf0;--muted:#ad96c7;
+ --line:rgba(201,157,255,.20);--border:rgba(201,157,255,.20);
+ --bg:radial-gradient(circle at 12% 8%,rgba(159,104,239,.18),transparent 25%),radial-gradient(circle at 88% 14%,rgba(221,105,188,.13),transparent 27%),linear-gradient(180deg,#10091e,#221039 62%,#1b102f);
+}
+html[data-theme="dark"][data-style="rose"]{
+ --page:#250d22;--surface:rgba(66,24,60,.82);--surface2:rgba(78,29,71,.94);
+ --surface-strong:rgba(79,32,72,.93);--surface-solid:#431c3e;
+ --text:#fff7fc;--soft:#f0cfe4;--text-soft:#f0cfe4;--muted:#c399b8;
+ --line:rgba(255,143,212,.20);--border:rgba(255,143,212,.20);
+ --bg:radial-gradient(circle at 10% 8%,rgba(255,91,190,.18),transparent 26%),radial-gradient(circle at 88% 15%,rgba(86,139,255,.15),transparent 28%),linear-gradient(180deg,#190817,#35122e 62%,#25102a);
+}
+.unified-theme-panel{
+ position:fixed;inset:0;z-index:99999;display:none;align-items:flex-end;justify-content:center;
+ background:rgba(5,13,29,.48);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)
+}
+.unified-theme-panel.open{display:flex}
+.unified-theme-card{
+ width:min(620px,100%);max-height:82dvh;overflow:auto;padding:12px 14px 20px;
+ border:1px solid var(--line,var(--border));border-radius:24px 24px 0 0;
+ background:var(--page,#eef3fa);color:var(--text,#173052);box-shadow:0 -28px 70px rgba(0,0,0,.24)
+}
+.unified-theme-grab{width:48px;height:5px;margin:0 auto 12px;border-radius:999px;background:var(--muted,#91a0b7)}
+.unified-theme-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.unified-theme-head h2{font-size:20px}
+.unified-theme-close{width:38px;height:38px;border:1px solid var(--line,var(--border));border-radius:50%;background:var(--surface2,var(--surface-strong));color:inherit}
+.unified-theme-label{margin:13px 0 7px;color:var(--soft,var(--text-soft));font-size:10px;font-weight:800}
+.unified-theme-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.unified-theme-choice{
+ min-height:58px;padding:9px;border:1px solid var(--line,var(--border));border-radius:14px;
+ display:flex;align-items:center;gap:9px;background:var(--surface2,var(--surface-strong));color:inherit;text-align:left;font-size:10px;font-weight:800
+}
+.unified-theme-choice.active{outline:2px solid var(--primary);outline-offset:1px}
+.theme-swatch{width:35px;height:35px;flex:0 0 35px;border-radius:50%;border:2px solid rgba(255,255,255,.82);box-shadow:0 7px 18px rgba(64,72,125,.18)}
+.theme-swatch.pearl{background:linear-gradient(135deg,#fdfefe,#dfe8ff 55%,#e8ddff)}
+.theme-swatch.ocean{background:linear-gradient(135deg,#052a4e,#1598ed 55%,#6861ff)}
+.theme-swatch.lavender{background:linear-gradient(135deg,#f7f2ff,#b69be8 55%,#e4a7d4)}
+.theme-swatch.rose{background:linear-gradient(135deg,#ffd8ed,#dc79c2 48%,#70a2ff)}
+.theme-mode-mark{width:35px;height:35px;flex:0 0 35px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary-2,var(--violet)));color:#fff;font:800 15px/1 system-ui}
+@media(max-width:420px){.unified-theme-grid{grid-template-columns:1fr}.unified-theme-card{padding-left:10px;padding-right:10px}}
+</style>
+
+<style id="bhubondanga-android-profile-layout-v12">
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{min-width:0}
+.icon{shape-rendering:geometricPrecision}
+html.compact-device .site-header,
+html.compact-device .datebar,
+html.compact-device .quickbar{width:100%!important;max-width:100vw!important}
+html.compact-device .header-inner{
+ width:100%!important;max-width:100%!important;padding:0 9px!important;
+ grid-template-columns:minmax(0,1fr) minmax(106px,34%)!important;gap:7px!important
+}
+html.compact-device .brand{min-width:0!important;overflow:hidden}
+html.compact-device .brand h1{font-size:17px!important;overflow:hidden;text-overflow:ellipsis}
+html.compact-device .brand p{font-size:7px!important;overflow:hidden;text-overflow:ellipsis}
+html.compact-device .header-actions{display:none!important}
+html.compact-device .quick-inner{width:100%!important;padding:0 5px!important;gap:2px!important}
+html.compact-device .quick-link{
+ min-width:0!important;flex:1 1 0!important;padding:2px 2px!important;
+ flex-direction:column!important;gap:1px!important;font-size:6.7px!important;line-height:1.05!important
+}
+html.compact-device .quick-link .icon{width:17px!important;height:17px!important;flex:0 0 17px!important}
+html.compact-device .quick-link span.label{display:block!important;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html.compact-device .layout{
+ width:100%!important;max-width:100%!important;display:block!important;
+ grid-template-columns:minmax(0,1fr)!important;padding:8px 10px!important;margin:0!important
+}
+html.compact-device .sidebar{display:none!important}
+html.compact-device .edge{display:grid!important}
+html.compact-device .center{width:100%!important;max-width:100%!important;min-width:0!important;gap:8px!important}
+html.compact-device .profile-hero,
+html.compact-device .cover,
+html.compact-device .profile-panel,
+html.compact-device .category-wrap,
+html.compact-device .composer,
+html.compact-device .profile-content,
+html.compact-device .post,
+html.compact-device .section-head{width:100%!important;max-width:100%!important;min-width:0!important}
+html.compact-device .cover{height:235px!important;border-radius:15px!important}
+html.compact-device .profile-panel{
+ margin:-90px 10px 0 106px!important;min-height:139px!important;padding:14px 11px 12px 27px!important;border-radius:23px!important
+}
+html.compact-device .avatar-wrap{left:-82px!important;bottom:22px!important;width:106px!important;height:106px!important;border-width:4px!important}
+html.compact-device .name-row h2{font-size:20px!important;max-width:calc(100vw - 190px)!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+html.compact-device .bio{font-size:9px!important;overflow-wrap:anywhere}
+html.compact-device .hero-actions{gap:5px!important}
+html.compact-device .hero-actions button,
+html.compact-device .hero-actions a{min-height:34px!important;padding:0 10px!important;font-size:8px!important}
+html.compact-device .hero-actions .primary{min-width:118px!important}
+html.compact-device .categories{height:45px!important;max-width:100vw!important}
+html.compact-device .cat{padding:0 12px!important;font-size:8.8px!important}
+html.compact-device .composer-choices{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+html.compact-device .post h3{font-size:17px!important}
+html.compact-device .post-body{font-size:10px!important}
+html.compact-device .drawer{width:min(360px,92vw)!important;height:100dvh!important}
+html.compact-device .sheet{width:100%!important;max-width:100%!important}
+html.compact-device .edge{top:64%!important}
+html.android-device .glass,
+html.android-device .profile-panel,
+html.android-device .drawer,
+html.android-device .sheet{
+ -webkit-backdrop-filter:none!important;
+ backdrop-filter:none!important;
+ background-color:var(--surface2)!important;
+}
+@media(max-width:380px){
+ html.compact-device .profile-panel{margin-left:91px!important;padding-left:21px!important}
+ html.compact-device .avatar-wrap{left:-70px!important;width:94px!important;height:94px!important}
+ html.compact-device .name-row h2{font-size:18px!important;max-width:calc(100vw - 165px)!important}
+}
+</style>
+
+</head>
+<body>
+
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+<symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.7 12 3l9 7.7"/><path d="M5 9.8V21h14V9.8"/><path d="M9 21v-7h6v7"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-5 4-7 8-7s7.2 2 8 7"/></symbol>
+<symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c.5-4 2.8-6 6-6s5.5 2 6 6"/><path d="M14 15c3.5-.3 6 1.5 7 5"/></symbol>
+<symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 17h12l-1.5-2V10a4.5 4.5 0 0 0-9 0v5z"/><path d="M10 20h4"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15.5A8 8 0 1 1 8.5 4 6.5 6.5 0 0 0 20 15.5z"/></symbol>
+<symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 7h4l1.5-2h5L16 7h4v13H4z"/><circle cx="12" cy="13" r="4"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.9-8.6a5.5 5.5 0 0 0-.1-7.8z"/></symbol>
+<symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.3 10.8 7.4-4.5M8.3 13.2l7.4 4.5"/></symbol>
+<symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="m4 20 4.5-1 10-10-3.5-3.5-10 10z"/><path d="m13.5 6.5 3.5 3.5"/></symbol>
+<symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7-.8-1.9.9-1.9-2.1-2.1-1.9.9-1.9-.8-.7-2h-3l-.7 2-1.9.8-1.9-.9L3 6l.9 1.9-.8 1.9-2 .7v3l2 .7.8 1.9-.9 1.9 2.1 2.1 1.9-.9 1.9.8.7 2h3l.7-2 1.9-.8 1.9.9 2.1-2.1-.9-1.9.8-1.9z"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 22V4"/><path d="M5 5h11l-2 4 2 4H5"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><path d="M4 8h16v12H4z"/><path d="M3 4h18v4H3z"/><path d="M9 12h6"/></symbol>
+<symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="m6 7 1 14h10l1-14"/><path d="M10 11v6M14 11v6"/></symbol>
+</svg>
+
+<header class="site-header"><div class="header-inner">
+<a class="brand" href="index.html"><span class="leaf">🌿</span><span><h1>ভুবনডাঙ্গার কবিতা</h1><p>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</p></span></a>
+<form class="search" action="search.html"><span><svg class="icon"><use href="#i-search"></use></svg></span><input name="q" type="search" placeholder="কবিতা, লেখক বা বিষয় খুঁজুন..."><button aria-label="সার্চ">⌕</button></form>
+<div class="header-actions"><button class="round" data-theme title="থিম">◐</button><a class="round" href="index.html" title="হোম">⌂</a></div>
+</div></header>
+<section class="datebar"><div class="track"><div class="dategroup"><span class="hello">শুভ দিন—আপন ভুবনে স্বাগতম</span><span class="sep">◆</span><span class="weekday"></span><span class="sep">◆</span><span class="bangla"></span><span class="sep">◆</span><span class="hijri"></span><span class="sep">◆</span><span class="gregorian"></span></div><div class="dategroup" aria-hidden="true"><span class="hello">শুভ দিন—আপন ভুবনে স্বাগতম</span><span class="sep">◆</span><span class="weekday"></span><span class="sep">◆</span><span class="bangla"></span><span class="sep">◆</span><span class="hijri"></span><span class="sep">◆</span><span class="gregorian"></span></div></div></section>
+<nav class="quickbar"><div class="quick-inner" id="quickInner"></div></nav>
+<button class="edge left" data-open-left aria-label="বাম মেনু">☷</button><button class="edge right" data-open-right aria-label="ডান মেনু">☷</button>
+<div class="backdrop" id="backdrop"></div><aside class="drawer left" id="leftDrawer"></aside><aside class="drawer right" id="rightDrawer"></aside>
+<main class="layout">
+<aside class="sidebar" id="leftSidebar"></aside>
+<section class="center">
+<section class="profile-hero">
+<div class="cover" id="cover"><button class="cover-edit" id="coverEdit" aria-label="কভার পরিবর্তন"><svg class="icon"><use href="#i-camera"></use></svg></button></div>
+<div class="profile-panel">
+<div class="avatar-wrap" id="avatarWrap"><img id="profileAvatar" class="profile-avatar" alt=""><button class="avatar-camera" id="avatarCamera" aria-label="প্রোফাইল ছবি পরিবর্তন"><svg class="icon"><use href="#i-camera"></use></svg></button></div>
+<div class="name-row"><h2 id="profileName"></h2><span class="role-chip" id="roleChip"></span><a class="wiki" href="https://bn.wikipedia.org/" target="_blank" rel="noopener" title="উইকিপিডিয়া">W</a></div>
+<div class="meta">⌖ <span id="profileLocation"></span></div><p class="bio" id="profileBio"></p><div class="hero-actions" id="heroActions"></div>
+</div>
+<div class="category-wrap"><nav class="glass categories" id="categories"></nav></div>
+</section>
+<section class="glass composer" id="composer"><div class="composer-top"><div class="composer-avatar"><img id="miniAvatar" alt=""></div><button class="composer-prompt" id="composerPrompt">আজ আপনার ভেতরে কী কথা জমে আছে?</button></div><div class="composer-choices" id="composerChoices" hidden></div></section>
+<div id="content"></div>
+<footer class="glass footer">🌿 ভুবনডাঙ্গার কবিতা © ২০২৬ · <a href="about.html">আমাদের সম্পর্কে</a><a href="contact.html">যোগাযোগ</a><a href="policy.html">নীতিমালা</a></footer>
+</section>
+<aside class="sidebar" id="rightSidebar"></aside>
+</main>
+<section class="sheet" id="sheet"><div class="grab"></div><div class="sheet-head"><h2 id="sheetTitle">অপশন</h2><button class="drawer-close" data-close>×</button></div><div class="sheet-list" id="sheetList"></div></section>
+<input id="imageInput" type="file" accept="image/*" hidden>
+<div class="toast" id="toast"></div>
+<script>
+window.SUPABASE_URL="https://ihjiisysrwgxxkuywuhc.supabase.co";
+window.SUPABASE_KEY="sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz";
+window.PROFILE_CONFIG={"file": "thinker-profile.html", "role": "poet", "name": "বিখ্যাত মনীষী", "roleLabel": "বিখ্যাত মনীষী", "location": "বাংলা সাহিত্য", "bio": "এই মনীষীর জীবন, বাণী, সূত্র এবং সম্পাদনার ইতিহাস এখানে দেখা যাবে।", "avatar": "", "storagePrefix": "bd_thinker_", "allowComposer": false, "poetMode": true, "profileHref": "thinker-profile.html", "tabs": [["home", "হোম"], ["poem", "বাণী"], ["edits", "সম্পাদনা"]], "moreTabs": [["letters", "জীবনী"], ["environment", "ভাবনা"]]};
+window.DEFAULT_AVATAR="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20400%20400%27%3E%3Cdefs%3E%3ClinearGradient%20id=%27g%27%20x1=%270%27%20y1=%270%27%20x2=%271%27%20y2=%271%27%3E%3Cstop%20stop-color=%27%236d91f1%27/%3E%3Cstop%20offset=%271%27%20stop-color=%27%239979e7%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width=%27400%27%20height=%27400%27%20rx=%27200%27%20fill=%27url(%23g)%27/%3E%3Ccircle%20cx=%27200%27%20cy=%27145%27%20r=%2770%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%2722%27/%3E%3Cpath%20d=%27M75%20350c18-88%2068-126%20125-126s107%2038%20125%20126%27%20fill=%27none%27%20stroke=%27white%27%20stroke-width=%2722%27%20stroke-linecap=%27round%27/%3E%3C/svg%3E";
+
+function toBnDateNumber(value){
+  const map=['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  return String(value).replace(/\d/g,d=>map[Number(d)]);
+}
+function dhakaCalendarParts(date){
+  const shifted=new Date(date.getTime()+21600000);
+  return{
+    year:shifted.getUTCFullYear(),
+    month:shifted.getUTCMonth()+1,
+    day:shifted.getUTCDate(),
+    weekday:shifted.getUTCDay(),
+    hour:shifted.getUTCHours()
+  };
+}
+function banglaCalendarDate(date){
+  const p=dhakaCalendarParts(date);
+  const current=Date.UTC(p.year,p.month-1,p.day);
+  const thisStart=Date.UTC(p.year,3,14);
+  let startYear,banglaYear;
+  if(current>=thisStart){startYear=p.year;banglaYear=p.year-593}
+  else{startYear=p.year-1;banglaYear=p.year-594}
+  let elapsed=Math.floor((current-Date.UTC(startYear,3,14))/86400000);
+  const names=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+  const leap=(startYear+1)%400===0||((startYear+1)%4===0&&(startYear+1)%100!==0);
+  const lengths=[31,31,31,31,31,31,30,30,30,30,leap?30:29,30];
+  let month=0;
+  while(month<11&&elapsed>=lengths[month]){elapsed-=lengths[month];month++}
+  return toBnDateNumber(elapsed+1)+' '+names[month]+' '+toBnDateNumber(banglaYear)+' বঙ্গাব্দ';
+}
+function fallbackIslamicParts(date){
+  const p=dhakaCalendarParts(date);
+  let y=p.year,m=p.month,d=p.day;
+  if(m<=2){y-=1;m+=12}
+  const a=Math.floor(y/100);
+  const b=2-a+Math.floor(a/4);
+  let jd=Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+b-1524.5;
+  jd+=2;
+  const islamicToJD=(iy,im,id)=>id+Math.ceil(29.5*(im-1))+(iy-1)*354+Math.floor((3+11*iy)/30)+1948439.5-1;
+  jd=Math.floor(jd)+0.5;
+  const iy=Math.floor((30*(jd-1948439.5)+10646)/10631);
+  const im=Math.min(12,Math.ceil((jd-(29+islamicToJD(iy,1,1)))/29.5)+1);
+  const id=Math.floor(jd-islamicToJD(iy,im,1)+1);
+  return{year:iy,month:im,day:id};
+}
+function samsungSafeHijriParts(date){
+  try{
+    const fmt=new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{
+      timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'
+    });
+    let out={};
+    if(typeof fmt.formatToParts==='function'){
+      fmt.formatToParts(date).forEach(part=>{
+        if(part.type==='day'||part.type==='month'||part.type==='year'){
+          out[part.type]=Number(String(part.value).replace(/\D/g,''));
+        }
+      });
+    }else{
+      const nums=fmt.format(date).match(/\d+/g)||[];
+      out={month:Number(nums[0]),day:Number(nums[1]),year:Number(nums[2])};
+    }
+    if(out.year>=1300&&out.year<=1600&&out.month>=1&&out.month<=12&&out.day>=1&&out.day<=30)return out;
+  }catch(e){}
+  return fallbackIslamicParts(date);
+}
+function hijriCalendarDate(date){
+  const p=samsungSafeHijriParts(date);
+  const names=['মহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];
+  return toBnDateNumber(p.day)+' '+names[p.month-1]+' '+toBnDateNumber(p.year)+' হিজরি';
+}
+function gregorianCalendarDate(date){
+  const p=dhakaCalendarParts(date);
+  const names=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+  return toBnDateNumber(p.day)+' '+names[p.month-1]+' '+toBnDateNumber(p.year)+' খ্রিস্টাব্দ';
+}
+function weekdayCalendarName(date){
+  return ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'][dhakaCalendarParts(date).weekday];
+}
+
+(function renderUniversalProfileDates(){
+  function render(){
+    const now=new Date();
+    document.querySelectorAll('.weekday').forEach(x=>x.textContent=weekdayCalendarName(now));
+    document.querySelectorAll('.gregorian').forEach(x=>x.textContent=gregorianCalendarDate(now));
+    document.querySelectorAll('.hijri').forEach(x=>x.textContent=hijriCalendarDate(now));
+    document.querySelectorAll('.bangla').forEach(x=>x.textContent=banglaCalendarDate(now));
+  }
+  render();
+  setInterval(render,60000);
+})();
+
+
+(function(){
+'use strict';
+const CONFIG=window.PROFILE_CONFIG;
+const SUPA_URL=window.SUPABASE_URL, SUPA_KEY=window.SUPABASE_KEY;
+let client=null,session=null,userRole='visitor',isOwner=false,visibleCount=20,activeTab='home';
+try{if(window.supabase?.createClient){client=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});window.supabaseClient=client}}catch(e){}
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+const ICON_PATHS={
+'i-home':'<path d="M3 10.7 12 3l9 7.7"/><path d="M5 9.8V21h14V9.8"/><path d="M9 21v-7h6v7"/>',
+'i-user':'<circle cx="12" cy="8" r="4"/><path d="M4 21c.8-5 4-7 8-7s7.2 2 8 7"/>',
+'i-users':'<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c.5-4 2.8-6 6-6s5.5 2 6 6"/><path d="M14 15c3.5-.3 6 1.5 7 5"/>',
+'i-message':'<path d="M4 5h16v12H8l-4 3z"/>',
+'i-bell':'<path d="M6 17h12l-1.5-2V10a4.5 4.5 0 0 0-9 0v5z"/><path d="M10 20h4"/>',
+'i-moon':'<path d="M20 15.5A8 8 0 1 1 8.5 4 6.5 6.5 0 0 0 20 15.5z"/>',
+'i-more':'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
+'i-camera':'<path d="M4 7h4l1.5-2h5L16 7h4v13H4z"/><circle cx="12" cy="13" r="4"/>',
+'i-heart':'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.9-8.6a5.5 5.5 0 0 0-.1-7.8z"/>',
+'i-share':'<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.3 10.8 7.4-4.5M8.3 13.2l7.4 4.5"/>',
+'i-bookmark':'<path d="M6 3h12v18l-6-4-6 4z"/>',
+'i-edit':'<path d="m4 20 4.5-1 10-10-3.5-3.5-10 10z"/><path d="m13.5 6.5 3.5 3.5"/>',
+'i-settings':'<circle cx="12" cy="12" r="3"/><path d="M19 13.5v-3l-2-.7-.8-1.9.9-1.9-2.1-2.1-1.9.9-1.9-.8-.7-2h-3l-.7 2-1.9.8-1.9-.9L3 6l.9 1.9-.8 1.9-2 .7v3l2 .7.8 1.9-.9 1.9 2.1 2.1 1.9-.9 1.9.8.7 2h3l.7-2 1.9-.8 1.9.9 2.1-2.1-.9-1.9.8-1.9z"/>',
+'i-copy':'<rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>',
+'i-flag':'<path d="M5 22V4"/><path d="M5 5h11l-2 4 2 4H5"/>',
+'i-lock':'<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+'i-archive':'<path d="M4 8h16v12H4z"/><path d="M3 4h18v4H3z"/><path d="M9 12h6"/>',
+'i-history':'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>',
+'i-eye':'<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+'i-dashboard':'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>',
+'i-trash':'<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="m6 7 1 14h10l1-14"/><path d="M10 11v6M14 11v6"/>'
+};
+const ico=id=>`<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${ICON_PATHS[id]||ICON_PATHS['i-settings']}</svg>`;
+
+const nav=[
+ ['index.html','i-home','হোম'],['madhyorater-prolap.html','i-moon','মধ্যরাতের প্রলাপ'],
+ ['famous-poet.html','i-users','খ্যাতিমান কবি'],['famous-quotes.html','i-bookmark','বিখ্যাত মনীষীদের বাণী'],
+ ['today-poem.html','i-edit','কবিতা'],['today-prolap.html','i-message','প্রলাপ'],
+ ['today-letter.html','i-message','চিঠিপত্র'],['today-environment.html','i-heart','পরিবেশের কথা'],
+ ['humanitarian-notice.html','i-heart','মানবিক আবেদন']
+];
+const profileData={
+ name:CONFIG.name,roleLabel:CONFIG.roleLabel,location:CONFIG.location,bio:CONFIG.bio,
+ avatar:localStorage.getItem(CONFIG.storagePrefix+'Avatar')||CONFIG.avatar,
+ cover:localStorage.getItem(CONFIG.storagePrefix+'Cover')||''
+};
+function badge(n){n=Number(n||0);return n>0?`<span class="badge">${n>99?'99+':n}</span>`:''}
+function logged(){return !!session?.user}
+function identity(){return `<section class="glass identity"><div class="bigleaf">🌿</div><h2>আপন ভুবন</h2><div class="quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></section>`}
+function navCard(){return `<section class="glass side-card"><nav class="side-list">${nav.map((x,i)=>`<a class="side-item${i===0?' active':''}" href="${x[0]}"><span class="side-ico">${ico(x[1])}</span><span>${x[2]}</span><span>›</span></a>`).join('')}</nav></section>`}
+function authCard(){
+ if(!logged())return `<section class="glass authcard"><div class="auth-actions"><a class="primary" href="login.html">লগইন</a><a href="register.html">রেজিস্টার</a><button class="wide" data-theme>থিম পরিবর্তন করুন</button></div></section>`;
+ return `<section class="glass authcard"><div style="font-size:8.5px;font-weight:800;margin-bottom:6px">${esc(session.user.user_metadata?.full_name||session.user.email||'সদস্য')}</div><div class="auth-actions"><a href="profile.html">প্রোফাইল</a><a href="settings.html">সেটিংস</a><button class="wide" data-theme>থিম</button><button class="wide" data-logout>লগআউট</button></div></section>`;
+}
+function rightCards(){
+ return `<section class="glass rightcard"><h3>সক্রিয় লেখক</h3><div class="rline"><a href="profile.html">নতুন লেখক <span>›</span></a></div><div class="rline"><a href="famous-poet.html">খ্যাতিমান কবি <span>›</span></a></div></section><section class="glass rightcard"><h3>ভুবনডাঙ্গা</h3><div class="rline"><a href="about.html">আমাদের সম্পর্কে <span>›</span></a></div><div class="rline"><a href="contact.html">যোগাযোগ <span>›</span></a></div><div class="rline"><a href="complaint.html">অভিযোগ করুন <span>›</span></a></div><div class="contact-note">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</div></section>`;
+}
+function renderSidebars(){
+ const l=identity()+navCard()+authCard(),r=rightCards();
+ $('#leftSidebar').innerHTML=l;$('#rightSidebar').innerHTML=r;
+ $('#leftDrawer').innerHTML=`<div class="drawer-head"><strong>আপন ভুবন</strong><button class="drawer-close" data-close>×</button></div>${l}`;
+ $('#rightDrawer').innerHTML=`<div class="drawer-head"><strong>${logged()?'সদস্য মেনু':'ভিজিটর মেনু'}</strong><button class="drawer-close" data-close>×</button></div>${authCard()+r}`;
+}
+function renderQuick(){
+ const q=$('#quickInner'),m=Number(localStorage.getItem('bhubondangaUnreadMessages')||0),n=Number(localStorage.getItem('bhubondangaUnreadNotifications')||0);
+ q.innerHTML=logged()?`<a class="quick-link active" href="index.html">${ico('i-home')}<span class="label">হোম</span></a><a class="quick-link" href="messages.html">${ico('i-message')}<span class="label">ইনবক্স</span>${badge(m)}</a><a class="quick-link" href="notifications.html">${ico('i-bell')}<span class="label">নোটিফিকেশন</span>${badge(n)}</a><a class="quick-link" href="madhyorater-prolap.html">${ico('i-moon')}<span class="label">মধ্যরাতের প্রলাপ</span></a>`:`<a class="quick-link active" href="index.html">${ico('i-home')}<span class="label">হোম</span></a><a class="quick-link" href="login.html">${ico('i-user')}<span class="label">লগইন</span></a><a class="quick-link" href="register.html">${ico('i-users')}<span class="label">রেজিস্টার</span></a><a class="quick-link" href="madhyorater-prolap.html">${ico('i-moon')}<span class="label">মধ্যরাতের প্রলাপ</span></a>`;
+}
+function renderProfile(){
+ $('#profileName').textContent=profileData.name;$('#roleChip').textContent=profileData.roleLabel;$('#profileLocation').textContent=profileData.location;$('#profileBio').textContent=profileData.bio;
+ $('#profileAvatar').src=profileData.avatar||window.DEFAULT_AVATAR;
+ $('#miniAvatar').src=profileData.avatar||window.DEFAULT_AVATAR;
+ $('#cover').style.setProperty('--cover-image',profileData.cover?`url("${profileData.cover}")`:'linear-gradient(135deg,rgba(105,164,222,.55),rgba(184,164,229,.52))');
+ $('#profileBio').classList.toggle('owner',isOwner);
+ $('#coverEdit').hidden=!isOwner;$('#avatarCamera').hidden=!isOwner;
+ const a=$('#heroActions');
+ if(isOwner){a.innerHTML=`<button class="primary" data-follow>${ico('i-users')} অনুসারী</button><button data-message>${ico('i-message')} বার্তা</button><button class="dots" data-profile-menu>${ico('i-more')}</button>`}
+ else{a.innerHTML=`<button class="primary" data-follow>${ico('i-users')} ফলো করুন</button><button data-message>${ico('i-message')} বার্তা পাঠান</button><button class="dots" data-profile-menu>${ico('i-more')}</button>`}
+ $('#composer').hidden=!(isOwner&&CONFIG.allowComposer);
+}
+function tabs(){
+ let t=CONFIG.tabs.slice();$('#categories').innerHTML=t.map(x=>`<button class="cat${x[0]==='home'?' active':''}" data-tab="${x[0]}">${x[1]}</button>`).join('')+`<button class="cat" data-more-tabs>আরও⌄</button>`;
+}
+const demoPosts=[
+ {id:1,type:'কবিতা',title:'মায়ের হাতের গন্ধ',body:'পৃথিবীর সব সুগন্ধ মুছে গেলেও\nমায়ের হাতের গন্ধ থেকে যায়;\nভাতের ধোঁয়া, শীতের কম্বল,\nআর অসুখের রাতে জেগে থাকা প্রার্থনার মতো।',date:'২০ জুলাই, ২০২৬ · ১:৪৮ AM'},
+ {id:2,type:'ছোট কথার প্রলাপ',title:'অভিমান আসলে অপেক্ষার একটি ছায়া',body:'যার কাছে কোনো প্রত্যাশা নেই, তার ওপর অভিমানও হয় না। অভিমান মানে মানুষটি একবার ফিরে তাকাক—এই নীরব অপেক্ষা।',date:'২০ জুলাই, ২০২৬ · ১০:১০ AM'},
+ {id:3,type:'আবৃত্তি',title:'আমার স্বর, আমার পথ',body:'শব্দ যখন কণ্ঠে এসে আশ্রয় নেয়, তখন কবিতার আরেকটি জীবন শুরু হয়।',date:'১৯ জুলাই, ২০২৬ · ৮:৩০ PM'}
+];
+const titleData={
+ poem:['মায়ের হাতের গন্ধ','বৃষ্টির পরের নীরবতা','যে শহর তোমাকে মনে রাখে','অপেক্ষার সিঁড়ি'],
+ recitation:['আমার স্বর, আমার পথ','নক্ষত্রের কাছে পাঠ','শব্দের ভেতর দিয়ে'],
+ prolap:['অভিমান আসলে অপেক্ষার একটি ছায়া','সব উত্তর শব্দে বলা যায় না','মুখোমুখি নীরবতা'],
+ children:['রঙিন ঘুড়ি','চাঁদের সঙ্গে আড়ি','বৃষ্টির স্কুল'],
+ environment:['নদীর কাছে ক্ষমা','একটি গাছের চিঠি','সবুজ ফিরুক'],
+ songs:['তুমি এলে ভোর হয়','অচেনা নক্ষত্র','ফিরে এসো গান হয়ে'],
+ letters:['তোমার নামে একটি চিঠি','বাবাকে লেখা','হারানো বন্ধুর কাছে'],
+ edits:['সংকল্প — কাজী নজরুল ইসলাম','বিদ্রোহী — কাজী নজরুল ইসলাম','বনলতা সেন — জীবনানন্দ দাশ']
+};
+function postCard(p){
+ return `<article class="glass post" data-post="${p.id}"><div class="author"><a class="author-avatar" href="${CONFIG.profileHref}"><img src="${esc(profileData.avatar||window.DEFAULT_AVATAR)}" alt=""></a><div><a href="${CONFIG.profileHref}"><strong>${esc(profileData.name)}</strong></a><small>${esc(p.date)}</small></div><button class="post-menu" data-post-menu="${p.id}">${ico('i-more')}</button></div><span class="tag">${esc(p.type)}</span><a href="post-details.html?id=${p.id}"><h3>${esc(p.title)}</h3></a><div class="post-body">${esc(p.body)}</div><a class="readmore" href="post-details.html?id=${p.id}">পূর্ণ লেখা পড়ুন →</a><div class="actions"><button class="action" data-like>${ico('i-heart')} <span>ভালোবাসা</span></button><button class="action" data-comment>${ico('i-message')} <span>মন্তব্য</span></button><button class="action" data-share>${ico('i-share')} <span>শেয়ার</span></button><button class="action" data-save>${ico('i-bookmark')} <span>সেভ</span></button></div><div class="comments"><div class="comment-list"></div><form class="comment-form"><textarea aria-label="মন্তব্য লিখুন" placeholder="মন্তব্য লিখুন..."></textarea><button aria-label="পাঠান">➤</button></form></div></article>`;
+}
+function renderContent(tab='home'){
+ activeTab=tab;$$('.cat').forEach(x=>x.classList.toggle('active',x.dataset.tab===tab));
+ const content=$('#content');
+ if(tab==='home'){content.innerHTML=`<section class="glass section-head"><div><h2>${CONFIG.poetMode?'কবির প্রকাশনা':'প্রকাশিত লেখা'}</h2><small>প্রথমে ২০টি, তারপর “আরও দেখুন”</small></div></section><section class="post-list">${demoPosts.slice(0,visibleCount).map(postCard).join('')}</section><button class="more-btn" data-load-more>আরও দেখুন</button>`;return}
+ const map={poem:'poem',recitation:'recitation',prolap:'prolap',children:'children',environment:'environment',songs:'songs',letters:'letters',edits:'edits'};
+ const key=map[tab]||'poem',arr=titleData[key]||[];
+ content.innerHTML=`<section class="glass section-head"><div><h2>${esc($(`[data-tab="${tab}"]`)?.textContent||'শিরোনাম')}</h2><small>শুধু ক্লিকযোগ্য শিরোনাম ও প্রকাশের সময়</small></div></section><section class="title-list">${arr.slice(0,visibleCount).map((x,i)=>`<a class="glass title-item" href="post-details.html?id=${key}-${i+1}"><div><h3>${esc(x)}</h3><p>${esc(profileData.name)} · ${20-i} জুলাই, ২০২৬</p></div><span>মূল লেখা →</span></a>`).join('')}</section><button class="more-btn" data-load-more>আরও দেখুন</button>`;
+}
+function openSheet(title,items){
+ $('#sheetTitle').textContent=title;$('#sheetList').innerHTML=items.map(i=>`<${i.href?'a':'button'} class="sheet-item${i.danger?' danger':''}" ${i.href?`href="${i.href}"`:'type="button"'} ${i.action?`data-sheet-action="${i.action}"`:''}>${ico(i.icon||'i-settings')}<span>${esc(i.label)}</span></${i.href?'a':'button'}>`).join('');
+ $('#backdrop').classList.add('show');$('#sheet').classList.add('open');document.body.classList.add('locked');
+}
+function closeAll(){['leftDrawer','rightDrawer'].forEach(id=>$('#'+id).classList.remove('open'));$('#backdrop').classList.remove('show');$('#sheet').classList.remove('open');document.body.classList.remove('locked')}
+function profileMenu(){
+ if(isOwner){
+  const dash=CONFIG.role==='founder'?'founder-dashboard.html':CONFIG.role==='admin'?'admin-dashboard.html':'settings.html';
+  openSheet('প্রোফাইল সেটিংস',[
+   {label:'প্রোফাইল সম্পাদনা করুন',href:'edit-profile.html',icon:'i-edit'},
+   {label:'ড্যাশবোর্ড',href:dash,icon:'i-dashboard'},
+   {label:'প্রোফাইল সেটিংস',href:'settings.html',icon:'i-settings'},
+   {label:'আর্কাইভ',href:'archive.html',icon:'i-archive'},
+   {label:'ভিজিটর হিসেবে দেখুন',action:'view-as',icon:'i-eye'},
+   {label:'কার্যকলাপের ইতিহাস',href:'archive.html#activity',icon:'i-history'},
+   {label:'প্রাইভেসি',href:'settings.html#privacy',icon:'i-lock'},
+   {label:'প্রোফাইল শেয়ার করুন',action:'share-profile',icon:'i-share'},
+   {label:'প্রোফাইল লিঙ্ক কপি করুন',action:'copy-profile',icon:'i-copy'},
+   {label:'থিম পরিবর্তন',action:'theme',icon:'i-settings'},
+   {label:'লগআউট',action:'logout',icon:'i-lock',danger:true}
+  ]);
+ }else openSheet('প্রোফাইল',[
+   {label:'ফলো করুন',action:'follow',icon:'i-users'},{label:'বার্তা পাঠান',href:'messages.html',icon:'i-message'},
+   {label:'প্রোফাইল শেয়ার করুন',action:'share-profile',icon:'i-share'},{label:'প্রোফাইল লিঙ্ক কপি করুন',action:'copy-profile',icon:'i-copy'},
+   {label:'প্রিয় তালিকায় যুক্ত করুন',action:'favorite',icon:'i-heart'},{label:'রিপোর্ট করুন',action:'report-profile',icon:'i-flag',danger:true}
+ ]);
+}
+function postMenu(id){
+ openSheet('পোস্টের অপশন',isOwner?[
+  {label:'পোস্ট সেভ করুন',action:'save-post',icon:'i-bookmark'},{label:'পোস্ট সম্পাদনা করুন',action:'edit-post',icon:'i-edit'},
+  {label:'প্রাইভেসি সম্পাদনা',action:'privacy-post',icon:'i-lock'},{label:'নিউজফিড দৃশ্যমানতা',action:'feed-visibility',icon:'i-eye'},
+  {label:'লিঙ্ক কপি করুন',action:'copy-post',icon:'i-copy'},{label:'আর্কাইভে নিন',action:'archive-post',icon:'i-archive'},
+  {label:'ডিলিট করুন',action:'delete-post',icon:'i-trash',danger:true}
+ ]:[
+  {label:'পোস্ট সেভ করুন',action:'save-post',icon:'i-bookmark'},{label:'লিঙ্ক কপি করুন',action:'copy-post',icon:'i-copy'},
+  {label:'প্রিয় তালিকায় যুক্ত করুন',action:'favorite',icon:'i-heart'},{label:'রিপোর্ট করুন',action:'report-post',icon:'i-flag',danger:true}
+ ]);
+}
+function avatarMenu(){
+ const items=[{label:'প্রোফাইল ছবি দেখুন',action:'view-avatar',icon:'i-eye'}];
+ if(isOwner)items.push({label:'প্রোফাইল ছবি পরিবর্তন করুন',action:'change-avatar',icon:'i-camera'},{label:'স্টোরি যোগ করুন',action:'add-story',icon:'i-edit'});
+ openSheet('প্রোফাইল ছবি',items);
+}
+function coverMenu(){
+ const items=[{label:'কভার দেখুন',action:'view-cover',icon:'i-eye'}];
+ if(isOwner)items.push({label:'কভার পরিবর্তন করুন',action:'change-cover',icon:'i-camera'});
+ openSheet('কভার ছবি',items);
+}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+
+function applyThemeChoice(kind,value){
+ if(kind==='style'){
+  document.documentElement.dataset.style=value;
+  localStorage.setItem('bhubondangaThemeStyle',value);
+ }else{
+  document.documentElement.dataset.theme=value;
+  localStorage.setItem('bhubondangaTheme',value);
+ }
+ closeAll();
+ toast('থিম পরিবর্তন হয়েছে');
+}
+function theme(){
+ const s=document.documentElement.dataset.style||'pearl';
+ const m=document.documentElement.dataset.theme||'light';
+ openSheet('থিম পরিবর্তন করুন',[
+  {label:(s==='pearl'?'✓ ':'')+'মুক্তা গ্লাস',action:'style:pearl',icon:'i-settings'},
+  {label:(s==='ocean'?'✓ ':'')+'নীল জ্যোৎস্না',action:'style:ocean',icon:'i-moon'},
+  {label:(s==='lavender'?'✓ ':'')+'ল্যাভেন্ডার',action:'style:lavender',icon:'i-heart'},
+  {label:(s==='rose'?'✓ ':'')+'অরোরা গোলাপি',action:'style:rose',icon:'i-heart'},
+  {label:(m==='light'?'✓ ':'')+'লাইট মোড',action:'mode:light',icon:'i-eye'},
+  {label:(m==='middle'?'✓ ':'')+'মিডল মোড',action:'mode:middle',icon:'i-eye'},
+  {label:(m==='dark'?'✓ ':'')+'ডার্ক মোড',action:'mode:dark',icon:'i-moon'}
+ ]);
+}
+
+async function logout(){try{if(client)await client.auth.signOut({scope:'local'})}catch(e){}location.href='login.html'}
+function compress(file,maxW=1200,q=.82){return new Promise((resolve,reject)=>{const r=new FileReader;r.onload=()=>{const im=new Image;im.onload=()=>{let w=im.width,h=im.height;if(w>maxW){h=Math.round(h*maxW/w);w=maxW}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(im,0,0,w,h);resolve(c.toDataURL('image/jpeg',q))};im.onerror=reject;im.src=r.result};r.onerror=reject;r.readAsDataURL(file)})}
+async function choose(kind){const inp=$('#imageInput');inp.dataset.kind=kind;inp.click()}
+$('#imageInput').addEventListener('change',async e=>{const f=e.target.files?.[0];if(!f)return;const kind=e.target.dataset.kind;try{const data=await compress(f,kind==='cover'?1600:700,.84);localStorage.setItem(CONFIG.storagePrefix+(kind==='cover'?'Cover':'Avatar'),data);profileData[kind]=data;renderProfile();toast('ছবি পরিবর্তন হয়েছে')}catch(err){toast('ছবি পরিবর্তন করা যায়নি')}e.target.value=''});
+function editBio(){if(!isOwner)return;const next=prompt('আপনার বায়ো লিখুন',profileData.bio);if(next!==null&&next.trim()){profileData.bio=next.trim();localStorage.setItem(CONFIG.storagePrefix+'Bio',profileData.bio);renderProfile();toast('বায়ো সংরক্ষিত হয়েছে')}}
+function composerTypes(){
+ let arr=[['🖋️','কবিতা'],['☁️','ছোট কথার প্রলাপ'],['🎙️','আবৃত্তি'],['🌱','পরিবেশের কথা'],['✉️','চিঠিপত্র'],['🧸','শিশুতোষ']];
+ if(CONFIG.role==='founder')arr.push(['☾','মধ্যরাতের প্রলাপ'],['🎵','গান']);
+ $('#composerChoices').innerHTML=arr.map(x=>`<button class="compose-type"><span>${x[0]}</span><span>${x[1]}</span></button>`).join('');
+}
+document.addEventListener('click',async e=>{
+ const c=e.target.closest('[data-comment]');if(c){c.closest('.post').querySelector('.comments').classList.toggle('open');return}
+ const m=e.target.closest('[data-post-menu]');if(m){postMenu(m.dataset.postMenu);return}
+ if(e.target.closest('[data-profile-menu]')){profileMenu();return}
+ if(e.target.closest('#avatarWrap')){avatarMenu();return}
+ if(e.target.closest('#coverEdit')||e.target.closest('#cover')){if(!e.target.closest('.profile-panel'))coverMenu();return}
+ if(e.target.closest('#profileBio')){editBio();return}
+ const tab=e.target.closest('[data-tab]');if(tab){visibleCount=20;renderContent(tab.dataset.tab);return}
+ if(e.target.closest('[data-more-tabs]')){openSheet('আরও বিভাগ',CONFIG.moreTabs.map(x=>({label:x[1],action:'tab:'+x[0],icon:'i-bookmark'})));return}
+ if(e.target.closest('[data-load-more]')){visibleCount+=20;renderContent(activeTab);toast('আরও লেখা দেখানো হয়েছে');return}
+ if(e.target.closest('#composerPrompt')){$('#composerChoices').hidden=!$('#composerChoices').hidden;return}
+ if(e.target.closest('[data-open-left]')){$('#leftDrawer').classList.add('open');$('#backdrop').classList.add('show');document.body.classList.add('locked');return}
+ if(e.target.closest('[data-open-right]')){$('#rightDrawer').classList.add('open');$('#backdrop').classList.add('show');document.body.classList.add('locked');return}
+ if(e.target.closest('[data-close]')||e.target=== $('#backdrop')){closeAll();return}
+ if(e.target.closest('[data-theme]')){theme();return}
+ if(e.target.closest('[data-logout]')){logout();return}
+ if(e.target.closest('[data-message]')){location.href=logged()?'messages.html':'login.html';return}
+ if(e.target.closest('[data-follow]')){if(!logged())location.href='login.html';else toast('ফলো অবস্থা পরিবর্তন হয়েছে');return}
+ const act=e.target.closest('[data-sheet-action]')?.dataset.sheetAction;if(!act)return;
+ if(act.startsWith('tab:')){closeAll();renderContent(act.split(':')[1]);return}
+ if(act.startsWith('style:')){applyThemeChoice('style',act.split(':')[1]);return}
+ if(act.startsWith('mode:')){applyThemeChoice('mode',act.split(':')[1]);return}
+ if(act==='theme'){theme();return}if(act==='logout'){logout();return}
+ if(act==='change-avatar'){closeAll();choose('avatar');return}if(act==='change-cover'){closeAll();choose('cover');return}
+ if(act==='copy-profile'||act==='copy-post'){await navigator.clipboard?.writeText(location.href);toast('লিঙ্ক কপি হয়েছে');closeAll();return}
+ if(act==='share-profile'){if(navigator.share)navigator.share({title:profileData.name,url:location.href});else await navigator.clipboard?.writeText(location.href);closeAll();return}
+ if(act==='view-as'){location.href=location.pathname+'?view=visitor';return}
+ toast('অপশনটি নির্বাচন করা হয়েছে');closeAll();
+});
+document.addEventListener('submit',e=>{const f=e.target.closest('.comment-form');if(!f)return;e.preventDefault();if(!logged()){location.href='login.html';return}const ta=f.querySelector('textarea'),v=ta.value.trim();if(!v)return;const item=document.createElement('div');item.className='comment';item.innerHTML=`<a href="profile.html">${esc(session.user.user_metadata?.full_name||'আপনি')}</a> — ${esc(v)}`;f.previousElementSibling.appendChild(item);ta.value='';toast('মন্তব্য যোগ হয়েছে')});
+async function init(){
+ const theme=localStorage.getItem('bhubondangaTheme');if(theme)document.documentElement.dataset.theme=theme;const style=localStorage.getItem('bhubondangaThemeStyle');if(style)document.documentElement.dataset.style=style;
+ if(localStorage.getItem(CONFIG.storagePrefix+'Bio'))profileData.bio=localStorage.getItem(CONFIG.storagePrefix+'Bio');
+ if(client){try{session=(await client.auth.getSession()).data?.session||null;if(session){userRole=session.user.app_metadata?.role||session.user.user_metadata?.role||'user';try{const r=await client.from('user_roles').select('role,active').eq('user_id',session.user.id).eq('active',true).maybeSingle();if(r.data?.role)userRole=r.data.role}catch(e){}}client.auth.onAuthStateChange((_e,s)=>{session=s;initRender()})}catch(e){}}
+ initRender();
+}
+function initRender(){
+ const q=new URLSearchParams(location.search),target=q.get('user');
+ isOwner=logged()&&q.get('view')!=='visitor'&&(!target||target==='me'||target===session.user.id);
+ if(CONFIG.role==='founder')isOwner=isOwner&&userRole==='founder';
+ if(CONFIG.role==='admin')isOwner=isOwner&&['admin','founder'].includes(userRole);
+ renderSidebars();renderQuick();renderProfile();tabs();composerTypes();renderContent('home');
+}
+init();
+})();
+
+</script>
+</body></html>
