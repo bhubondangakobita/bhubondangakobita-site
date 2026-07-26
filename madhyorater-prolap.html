@@ -2443,6 +2443,45 @@ body.bdx-drawer-lock{overflow:hidden!important}
 @media(max-width:420px){.bdx-edge{width:23px;height:48px}.bdx-edge-left{left:-10px}.bdx-edge-right{right:-10px}}
 </style>
 
+
+<style id="bdx-legacy-sidebar-cleanup-v15">
+/* Remove every pre-v14 sidebar handle/drawer that remained inside older pages. */
+body > .edge-menu,
+body > button.edge-menu,
+body > .midnight-edge,
+body > button.midnight-edge,
+body > .edge:not(.bdx-edge),
+body > button.edge:not(.bdx-edge),
+#leftEdgeMenu,#rightEdgeMenu,#leftEdge,#rightEdge,#le,#re,
+#midnightLeftEdge,#midnightRightEdge,#openDrawerButton,
+#mobileDrawer,#rightMobileDrawer,#midnightRightDrawer,
+#leftDrawer,#rightDrawer,#drawerBackdrop,
+.drawer-backdrop:not(.bdx-overlay),
+.mobile-drawer:not(.bdx-drawer),
+.midnight-right-drawer,
+.repair-edge,.repair-drawer{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+  opacity:0!important;
+}
+
+/* Only the current v14/v15 slim arrows may remain visible on mobile. */
+#bdxOpenLeftV14,#bdxOpenRightV14,
+.bdx-edge{
+  display:none;
+}
+@media(max-width:899px){
+  #bdxOpenLeftV14,#bdxOpenRightV14,
+  .bdx-edge{
+    display:grid!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    opacity:.72!important;
+  }
+}
+</style>
+
 </head>
 <body data-shell="index-standard-night-shell"><svg aria-hidden="true" class="std-sprite" focusable="false">
 <symbol id="std-home" viewbox="0 0 24 24"><path d="m3 11 9-7 9 7"></path><path d="M5 10v10h14V10M9 20v-6h6v6"></path></symbol>
@@ -5156,6 +5195,74 @@ $('#bdx-universal-shell-v14').addEventListener('click',function(e){
 });
 D.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawers()});
 D.body.classList.remove('theme-open','unified-theme-open','locked');
+})();
+</script>
+
+
+<script id="bdx-legacy-sidebar-cleanup-script-v15">
+(function(){
+'use strict';
+
+const legacySelectors = [
+  '#leftEdgeMenu','#rightEdgeMenu','#leftEdge','#rightEdge','#le','#re',
+  '#midnightLeftEdge','#midnightRightEdge','#openDrawerButton',
+  'body > .edge-menu','body > .midnight-edge',
+  'body > .edge:not(.bdx-edge)'
+];
+
+const legacyDrawerSelectors = [
+  '#mobileDrawer','#rightMobileDrawer','#midnightRightDrawer',
+  '#leftDrawer','#rightDrawer','#drawerBackdrop',
+  '.drawer-backdrop:not(.bdx-overlay)',
+  '.mobile-drawer:not(.bdx-drawer)',
+  '.midnight-right-drawer'
+];
+
+function cleanLegacyControls(){
+  legacySelectors.forEach(selector=>{
+    document.querySelectorAll(selector).forEach(node=>{
+      if(node.id==='bdxOpenLeftV14'||node.id==='bdxOpenRightV14') return;
+      node.setAttribute('aria-hidden','true');
+      node.hidden=true;
+      node.style.setProperty('display','none','important');
+      node.style.setProperty('pointer-events','none','important');
+    });
+  });
+
+  legacyDrawerSelectors.forEach(selector=>{
+    document.querySelectorAll(selector).forEach(node=>{
+      if(node.classList.contains('bdx-drawer')||node.classList.contains('bdx-overlay')) return;
+      node.classList.remove('open','show','active','visible');
+      node.setAttribute('aria-hidden','true');
+      node.hidden=true;
+      node.style.setProperty('display','none','important');
+      node.style.setProperty('pointer-events','none','important');
+    });
+  });
+
+  const newDrawerOpen =
+    document.querySelector('#bdxMobileLeftV14.open,#bdxMobileRightV14.open');
+
+  if(!newDrawerOpen){
+    document.body.classList.remove(
+      'locked','drawer-open','menu-open',
+      'theme-open','unified-theme-open'
+    );
+  }
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',cleanLegacyControls,{once:true});
+}else{
+  cleanLegacyControls();
+}
+
+window.addEventListener('load',cleanLegacyControls,{once:true});
+
+/* Older repair scripts may reinsert their buttons after load. */
+const observer=new MutationObserver(()=>cleanLegacyControls());
+observer.observe(document.documentElement,{childList:true,subtree:true});
+setTimeout(()=>observer.disconnect(),5000);
 })();
 </script>
 
