@@ -155,11 +155,12 @@ html[data-theme="dark"] .theme-switch-knob{transform:translateX(19px)}
 </style>
 
 
-<style id="bdx-universal-sidebar-theme-v13">
+<style id="bdx-universal-sidebar-theme-v14">
 /* =========================================================
-   BHUBONDANGA UNIVERSAL SIDEBAR + FOUR THEME SYSTEM v13
-   Same shell on every public/profile/category page.
-   Existing page content is preserved.
+   BHUBONDANGA UNIVERSAL SIDEBAR + FOUR THEME SYSTEM v14
+   - slim mobile edge arrows, never cover content
+   - direct theme selection, no locking popup
+   - same sidebar order and content on every page
    ========================================================= */
 :root{
   --bdx-rail-width:clamp(185px,17vw,238px);
@@ -168,14 +169,13 @@ html[data-theme="dark"] .theme-switch-knob{transform:translateX(19px)}
   --bdx-violet:var(--violet,#8f75ec);
   --bdx-green:var(--green,#4f987d);
   --bdx-text:var(--text,#173052);
-  --bdx-soft:var(--soft,#687995);
-  --bdx-line:var(--line,rgba(102,126,170,.18));
-  --bdx-surface:var(--surface2,rgba(255,255,255,.92));
+  --bdx-soft:var(--soft,#5b718f);
+  --bdx-line:var(--line,rgba(102,126,170,.19));
+  --bdx-surface:var(--surface2,rgba(255,255,255,.94));
   --bdx-page:var(--page,#eef3fa);
-  --bdx-shadow:var(--shadow,0 14px 38px rgba(74,85,151,.11));
+  --bdx-shadow:var(--shadow,0 12px 32px rgba(74,85,151,.10));
 }
 
-/* Four approved visual identities. */
 html[data-bdx-palette="pearl"]{
   --primary:#688bf0!important;--violet:#8f75ec!important;--green:#4f987d!important;
   --bdx-primary:#688bf0;--bdx-violet:#8f75ec;--bdx-green:#4f987d;
@@ -195,222 +195,118 @@ html[data-bdx-palette="rose"]{
   --bdx-primary:#d06ea9;--bdx-violet:#9778e4;--bdx-green:#5697a1;
   --bg:radial-gradient(circle at 8% 0,rgba(236,119,173,.17),transparent 28%),radial-gradient(circle at 96% 5%,rgba(161,119,229,.15),transparent 29%),linear-gradient(155deg,#fff9fc,#f4eaf5 56%,#edf5fa)!important;
 }
-
-/* Middle mode works even on older pages that only had light/dark. */
 html[data-theme="middle"],html[data-mode="middle"]{
-  --page:#dce5f1!important;
-  --surface:rgba(239,245,252,.83)!important;
-  --surface2:rgba(248,251,255,.95)!important;
-  --text:#18304f!important;
-  --soft:#5d708d!important;
+  --page:#dce5f1!important;--surface:rgba(239,245,252,.84)!important;
+  --surface2:rgba(248,251,255,.96)!important;--text:#18304f!important;--soft:#566c88!important;
+}
+html[data-theme="light"],html[data-mode="light"]{
+  --soft:#526b89!important;--muted:#70819b!important;
 }
 
-/* Disable the old theme launchers/panels that caused page click-lock. */
-#themeToggle,
-[data-theme-switch],
-[data-drawer-theme],
-[data-repair-theme],
-[data-theme-trigger],
-[data-theme]:not(html),
-.theme-switch-row,
-.unified-theme-launch,
+/* Old theme controls are disabled because they caused click-lock. */
+#themeToggle,[data-theme-switch],[data-drawer-theme],[data-repair-theme],
+[data-theme-trigger],[data-theme]:not(html),.theme-switch-row,.unified-theme-launch,
 #themePanel,#themeModal,#themeSheet,#unifiedThemePanel,
 .theme-modal,.theme-sheet,.unified-theme-panel,.unified-theme-backdrop{
   display:none!important;
 }
 
-/* Hide previous duplicated navigation rails and drawers. */
-body > .edge,
-body > button.edge,
-body > .edge-menu,
+/* Remove all older duplicate sidebars/drawers/edge buttons. */
+body > .edge,body > button.edge,body > .edge-menu,
 #leftDrawer,#rightDrawer,#mobileDrawer,#rightMobileDrawer,
 #leftSidebar,#rightSidebar,
 main.layout > .left-col,main.layout > .right-col,
-main.layout > aside.sidebar,
-.layout > .left-col,.layout > .right-col{
+main.layout > aside.sidebar,.layout > .left-col,.layout > .right-col{
   display:none!important;
 }
 
-/* Use the complete central content area between the two new rails. */
 @media (min-width:900px){
-  body > main,
-  body > main.layout,
-  body > .layout,
-  body > .page-shell,
-  body > .main-shell,
-  body > .content-shell{
+  body > main,body > main.layout,body > .layout,body > .page-shell,
+  body > .main-shell,body > .content-shell{
     width:min(980px,calc(100vw - (var(--bdx-rail-width) * 2) - 42px))!important;
     max-width:calc(100vw - (var(--bdx-rail-width) * 2) - 42px)!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
+    margin-left:auto!important;margin-right:auto!important;
   }
-  body > main.layout,
-  body > .layout{
-    display:block!important;
-    grid-template-columns:none!important;
-  }
-  body > main.layout > .center,
-  body > main.layout > .center-col,
-  body > .layout > .center,
-  body > .layout > .center-col{
-    display:block!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    margin:0!important;
+  body > main.layout,body > .layout{display:block!important;grid-template-columns:none!important}
+  body > main.layout > .center,body > main.layout > .center-col,
+  body > .layout > .center,body > .layout > .center-col{
+    display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important
   }
 }
 @media (max-width:899px){
-  body > main,
-  body > main.layout,
-  body > .layout,
-  body > .page-shell,
-  body > .main-shell,
-  body > .content-shell{
-    width:100%!important;
-    max-width:100%!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
+  body > main,body > main.layout,body > .layout,body > .page-shell,
+  body > .main-shell,body > .content-shell{
+    width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important
   }
 }
 
-/* Universal fixed desktop rails. */
+/* Desktop rails. */
 .bdx-rail{
-  position:fixed;
-  top:var(--bdx-rail-top);
-  bottom:12px;
-  z-index:920;
-  width:var(--bdx-rail-width);
-  padding:0 2px 3px;
-  overflow-y:auto;
-  overflow-x:hidden;
-  scrollbar-width:none;
+  position:fixed;top:var(--bdx-rail-top);bottom:12px;z-index:920;
+  width:var(--bdx-rail-width);padding:0 2px 3px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;
 }
 .bdx-rail::-webkit-scrollbar,.bdx-drawer::-webkit-scrollbar{display:none}
-.bdx-rail-left{left:10px}
-.bdx-rail-right{right:10px}
-
+.bdx-rail-left{left:10px}.bdx-rail-right{right:10px}
 .bdx-card{
-  margin-bottom:8px;
-  padding:8px;
-  border:1px solid var(--bdx-line);
-  border-radius:15px;
-  background:color-mix(in srgb,var(--bdx-surface) 88%,transparent);
-  box-shadow:var(--bdx-shadow);
-  backdrop-filter:blur(22px) saturate(135%);
-  -webkit-backdrop-filter:blur(22px) saturate(135%);
-  color:var(--bdx-text);
+  margin-bottom:8px;padding:8px;border:1px solid var(--bdx-line);border-radius:15px;
+  background:color-mix(in srgb,var(--bdx-surface) 91%,transparent);box-shadow:var(--bdx-shadow);
+  backdrop-filter:blur(22px) saturate(135%);-webkit-backdrop-filter:blur(22px) saturate(135%);color:var(--bdx-text)
 }
-.bdx-identity{text-align:center;padding:10px 8px}
-.bdx-logo{font:29px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"}
+.bdx-identity{text-align:center;padding:10px 8px}.bdx-logo{font:29px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"}
 .bdx-identity h2{margin:4px 0 2px;color:var(--bdx-primary);font-size:15px}
-.bdx-identity p{color:var(--bdx-soft);font-size:7.5px}
-.bdx-quote{margin-top:7px;padding:7px 6px;border-left:3px solid var(--bdx-primary);border-radius:0 8px 8px 0;background:color-mix(in srgb,var(--bdx-primary) 8%,transparent);color:var(--bdx-soft);font-size:7.5px}
-
+.bdx-identity p{color:var(--bdx-soft);font-size:7.5px}.bdx-quote{margin-top:7px;padding:7px 6px;border-left:3px solid var(--bdx-primary);border-radius:0 8px 8px 0;background:color-mix(in srgb,var(--bdx-primary) 8%,transparent);color:var(--bdx-soft);font-size:7.5px}
 .bdx-nav{display:grid;gap:3px}
-.bdx-nav a,.bdx-profile-link,.bdx-quick-link,.bdx-action-link,.bdx-mode{
-  min-height:35px;
-  padding:5px 7px;
-  border:1px solid color-mix(in srgb,var(--bdx-line) 76%,transparent);
-  border-radius:9px;
-  display:grid;
-  grid-template-columns:25px minmax(0,1fr) auto;
-  gap:6px;
-  align-items:center;
-  background:color-mix(in srgb,var(--bdx-surface) 66%,transparent);
-  color:var(--bdx-soft);
-  text-decoration:none!important;
-  font-size:8.2px;
-  font-weight:800;
+.bdx-nav a,.bdx-mode{
+  min-height:35px;padding:5px 7px;border:1px solid color-mix(in srgb,var(--bdx-line) 76%,transparent);
+  border-radius:9px;display:grid;grid-template-columns:25px minmax(0,1fr) auto;gap:6px;align-items:center;
+  background:color-mix(in srgb,var(--bdx-surface) 72%,transparent);color:var(--bdx-soft);text-decoration:none!important;font-size:8.2px;font-weight:800
 }
-.bdx-nav a:hover,.bdx-nav a[aria-current="page"],.bdx-profile-link:hover,.bdx-quick-link:hover{
-  color:var(--bdx-primary);
-  border-color:var(--bdx-line);
-  background:color-mix(in srgb,var(--bdx-primary) 9%,transparent);
-}
-.bdx-icon{
-  width:25px;height:25px;border:1px solid var(--bdx-line);border-radius:8px;
-  display:grid;place-items:center;background:var(--bdx-surface);font:15px/1 system-ui;
-}
-.bdx-card h3{margin:0 0 6px;font-size:11px}
-.bdx-card-title{display:flex;align-items:center;justify-content:space-between;gap:6px}
-
+.bdx-nav a:hover,.bdx-nav a[aria-current="page"]{color:var(--bdx-primary);border-color:var(--bdx-line);background:color-mix(in srgb,var(--bdx-primary) 9%,transparent)}
+.bdx-icon{width:25px;height:25px;border:1px solid var(--bdx-line);border-radius:8px;display:grid;place-items:center;background:var(--bdx-surface);font:15px/1 system-ui}
+.bdx-card h3{margin:0 0 6px;font-size:11px}.bdx-card-title{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .bdx-theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.bdx-theme{
-  min-height:46px;
-  padding:5px 4px;
-  border:1px solid var(--bdx-line);
-  border-radius:10px;
-  background:var(--bdx-surface);
-  color:var(--bdx-text);
-  font-size:7.4px;
-  font-weight:800;
-}
+.bdx-theme{min-height:46px;padding:5px 4px;border:1px solid var(--bdx-line);border-radius:10px;background:var(--bdx-surface);color:var(--bdx-text);font-size:7.4px;font-weight:800}
 .bdx-theme[aria-pressed="true"]{outline:2px solid var(--bdx-primary);outline-offset:-2px}
 .bdx-swatch{display:block;width:100%;height:17px;margin-bottom:4px;border-radius:6px}
 .bdx-theme[data-bdx-style="pearl"] .bdx-swatch{background:linear-gradient(135deg,#d8e7ff,#d8c8fa,#dcf4ed)}
 .bdx-theme[data-bdx-style="moon"] .bdx-swatch{background:linear-gradient(135deg,#68b5ff,#6b7be3)}
 .bdx-theme[data-bdx-style="lavender"] .bdx-swatch{background:linear-gradient(135deg,#aa8bea,#d99bdd)}
 .bdx-theme[data-bdx-style="rose"] .bdx-swatch{background:linear-gradient(135deg,#f28db7,#a686eb)}
-.bdx-mode{width:100%;margin-top:6px;grid-template-columns:25px 1fr auto;text-align:left}
-
-.bdx-account{text-align:center}
-.bdx-account-avatar{
-  width:48px;height:48px;margin:0 auto 5px;border:1px solid var(--bdx-line);border-radius:50%;
-  display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-violet));color:#fff;font:20px/1 system-ui;
-}
-.bdx-account-avatar img{width:100%;height:100%;object-fit:cover}
-.bdx-account strong{display:block;font-size:10px}
-.bdx-account p{margin:2px 0 7px;color:var(--bdx-soft);font-size:7.5px}
-.bdx-account-buttons{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.bdx-account-buttons a,.bdx-account-buttons button{
-  min-height:32px;border:1px solid var(--bdx-line);border-radius:9px;display:grid;place-items:center;
-  background:var(--bdx-surface);color:var(--bdx-primary);font-size:8px;font-weight:800;text-decoration:none!important;
-}
-.bdx-account-buttons .primary{border:0;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-violet));color:#fff}
-.bdx-account-buttons .wide{grid-column:1/-1}
-
-.bdx-contact{
-  display:block;padding:7px;border-left:3px solid var(--bdx-green);border-radius:0 8px 8px 0;
-  background:color-mix(in srgb,var(--bdx-green) 8%,transparent);color:var(--bdx-soft)!important;
-  text-decoration:none!important;font-size:7.4px;font-weight:700;
-}
+.bdx-mode{width:100%;margin-top:6px;text-align:left}
+.bdx-account{text-align:center}.bdx-account-avatar{width:48px;height:48px;margin:0 auto 5px;border:1px solid var(--bdx-line);border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-violet));color:#fff;font:20px/1 system-ui}
+.bdx-account-avatar img{width:100%;height:100%;object-fit:cover}.bdx-account strong{display:block;font-size:10px}.bdx-account p{margin:2px 0 7px;color:var(--bdx-soft);font-size:7.5px}
+.bdx-account-buttons{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bdx-account-buttons a,.bdx-account-buttons button{min-height:32px;border:1px solid var(--bdx-line);border-radius:9px;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-primary);font-size:8px;font-weight:800;text-decoration:none!important}
+.bdx-account-buttons .primary{border:0;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-violet));color:#fff}.bdx-account-buttons .wide{grid-column:1/-1}
+.bdx-contact{display:block;padding:7px;border-left:3px solid var(--bdx-green);border-radius:0 8px 8px 0;background:color-mix(in srgb,var(--bdx-green) 8%,transparent);color:var(--bdx-soft)!important;text-decoration:none!important;font-size:7.4px;font-weight:700}
 .bdx-note{margin-top:6px;color:var(--bdx-soft);font-size:7.3px}
 
-/* Mobile drawers use the exact same content. */
+/* Mobile: only a thin arrow is visible; it sits mostly outside the viewport. */
 .bdx-edge{
-  position:fixed;top:61%;z-index:1450;width:31px;height:76px;border:1px solid var(--bdx-line);
-  display:none;place-items:center;background:linear-gradient(180deg,var(--bdx-surface),color-mix(in srgb,var(--bdx-violet) 45%,var(--bdx-surface)));
-  color:var(--bdx-primary);box-shadow:var(--bdx-shadow);font-size:16px;
+  position:fixed;top:58%;z-index:1450;width:25px;height:52px;border:1px solid color-mix(in srgb,var(--bdx-primary) 45%,var(--bdx-line));
+  display:none;place-items:center;background:color-mix(in srgb,var(--bdx-surface) 86%,transparent);
+  color:var(--bdx-primary);box-shadow:0 7px 20px rgba(50,65,120,.13);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  font:800 23px/1 system-ui;opacity:.72;transition:.18s
 }
-.bdx-edge-left{left:0;border-left:0;border-radius:0 12px 12px 0}
-.bdx-edge-right{right:0;border-right:0;border-radius:12px 0 0 12px}
-.bdx-overlay{
-  position:fixed;inset:0;z-index:2100;display:none;background:rgba(4,13,29,.52);backdrop-filter:blur(3px)
-}
+.bdx-edge:active,.bdx-edge:focus-visible{opacity:1;transform:translateX(0)}
+.bdx-edge-left{left:-10px;border-left:0;border-radius:0 10px 10px 0;padding-left:8px}
+.bdx-edge-right{right:-10px;border-right:0;border-radius:10px 0 0 10px;padding-right:8px}
+.bdx-overlay{position:fixed;inset:0;z-index:2100;display:none;background:rgba(4,13,29,.48);backdrop-filter:blur(3px)}
 .bdx-overlay.show{display:block}
-.bdx-drawer{
-  position:fixed;top:0;bottom:0;z-index:2110;width:min(350px,89vw);padding:9px;overflow:auto;
-  background:var(--bdx-page);transition:transform .23s ease;box-shadow:0 20px 70px rgba(0,0,0,.26)
-}
-.bdx-drawer-left{left:0;transform:translateX(-104%)}
-.bdx-drawer-right{right:0;transform:translateX(104%)}
-.bdx-drawer.open{transform:none}
+.bdx-drawer{position:fixed;top:0;bottom:0;z-index:2110;width:min(350px,89vw);padding:9px;overflow:auto;background:var(--bdx-page);transition:transform .23s ease;box-shadow:0 20px 70px rgba(0,0,0,.26)}
+.bdx-drawer-left{left:0;transform:translateX(-104%)}.bdx-drawer-right{right:0;transform:translateX(104%)}.bdx-drawer.open{transform:none}
 .bdx-drawer-head{position:sticky;top:-9px;z-index:2;margin:-9px -9px 7px;padding:10px;display:flex;align-items:center;justify-content:space-between;background:var(--bdx-page);border-bottom:1px solid var(--bdx-line)}
-.bdx-drawer-head strong{font-size:14px}
-.bdx-close{width:35px;height:35px;border:1px solid var(--bdx-line);border-radius:50%;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-text);font-size:20px}
+.bdx-drawer-head strong{font-size:14px}.bdx-close{width:35px;height:35px;border:1px solid var(--bdx-line);border-radius:50%;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-text);font-size:20px}
 body.bdx-drawer-lock{overflow:hidden!important}
 
 @media(max-width:899px){
-  .bdx-rail{display:none}
-  .bdx-edge{display:grid}
+  .bdx-rail{display:none}.bdx-edge{display:grid}
+  /* Make light content less washed-out without redesigning special pages. */
+  html[data-theme="light"] body,html[data-mode="light"] body{color:var(--text,#173052)!important}
+  html[data-theme="light"] .glass,html[data-mode="light"] .glass{border-color:color-mix(in srgb,var(--line,rgba(102,126,170,.18)) 125%,transparent)!important}
 }
-@media(min-width:900px){
-  .bdx-edge,.bdx-drawer,.bdx-overlay{display:none!important}
-}
-@media(max-width:420px){
-  .bdx-edge{width:27px;height:68px}
-}
+@media(min-width:900px){.bdx-edge,.bdx-drawer,.bdx-overlay{display:none!important}}
+@media(max-width:420px){.bdx-edge{width:23px;height:48px}.bdx-edge-left{left:-10px}.bdx-edge-right{right:-10px}}
 </style>
 
 </head>
@@ -811,25 +707,21 @@ init();
 
 </script>
 
-<div id="bdx-universal-shell-v13">
-  <aside class="bdx-rail bdx-rail-left" id="bdxDesktopLeft" aria-label="প্রধান বাম সাইডবার"></aside>
-  <aside class="bdx-rail bdx-rail-right" id="bdxDesktopRight" aria-label="প্রধান ডান সাইডবার"></aside>
-
-  <button class="bdx-edge bdx-edge-left" id="bdxOpenLeft" type="button" aria-label="বাম সাইডবার খুলুন">☷</button>
-  <button class="bdx-edge bdx-edge-right" id="bdxOpenRight" type="button" aria-label="ডান সাইডবার খুলুন">☷</button>
-  <div class="bdx-overlay" id="bdxOverlay"></div>
-  <aside class="bdx-drawer bdx-drawer-left" id="bdxMobileLeft" aria-label="মোবাইল বাম সাইডবার"></aside>
-  <aside class="bdx-drawer bdx-drawer-right" id="bdxMobileRight" aria-label="মোবাইল ডান সাইডবার"></aside>
+<div id="bdx-universal-shell-v14">
+  <aside class="bdx-rail bdx-rail-left" id="bdxDesktopLeftV14" aria-label="প্রধান বাম সাইডবার"></aside>
+  <aside class="bdx-rail bdx-rail-right" id="bdxDesktopRightV14" aria-label="প্রধান ডান সাইডবার"></aside>
+  <button class="bdx-edge bdx-edge-left" id="bdxOpenLeftV14" type="button" aria-label="বাম সাইডবার খুলুন">›</button>
+  <button class="bdx-edge bdx-edge-right" id="bdxOpenRightV14" type="button" aria-label="ডান সাইডবার খুলুন">‹</button>
+  <div class="bdx-overlay" id="bdxOverlayV14"></div>
+  <aside class="bdx-drawer bdx-drawer-left" id="bdxMobileLeftV14" aria-label="মোবাইল বাম সাইডবার"></aside>
+  <aside class="bdx-drawer bdx-drawer-right" id="bdxMobileRightV14" aria-label="মোবাইল ডান সাইডবার"></aside>
 </div>
-
-
-<script id="bdx-universal-sidebar-theme-script-v13">
+<script id="bdx-universal-sidebar-theme-script-v14">
 (function(){
 'use strict';
 const D=document,H=D.documentElement;
 const $=(s,r=D)=>r.querySelector(s);
 const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??f}catch(e){return f}};
-const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 const user=read('bhubondangaCurrentUser',read('bhubondangaSessionUser',null));
 const logged=Boolean(user&&(user.name||user.displayName||user.username||user.email));
@@ -837,186 +729,91 @@ const role=String(user?.role||user?.app_metadata?.role||'user').toLowerCase();
 const currentFile=(location.pathname.split('/').pop()||'index.html').toLowerCase();
 
 const NAV=[
- ['index.html','⌂','হোম'],
- ['poem.html','🖋','কবিতা'],
- ['recitation.html','🎙','আবৃত্তি'],
- ['madhyorater-prolap.html','☾','মধ্যরাতের প্রলাপ'],
- ['environment.html','🌱','পরিবেশের কথা'],
- ['letter.html','✉','চিঠিপত্র'],
- ['small-prolap.html','☁','ছোট কথার প্রলাপ'],
- ['discussion.html','◌','সাহিত্য আলোচনা'],
- ['famous-poet.html','♙','খ্যাতিমান কবি'],
- ['famous-quotes.html','❝','মনীষীদের বাণী'],
- ['humanitarian-notice.html','♡','মানবিক আবেদন']
+ ['index.html','⌂','হোম'],['poem.html','🖋','কবিতা'],['recitation.html','🎙','আবৃত্তি'],
+ ['madhyorater-prolap.html','☾','মধ্যরাতের প্রলাপ'],['environment.html','🌱','পরিবেশের কথা'],
+ ['letter.html','✉','চিঠিপত্র'],['small-prolap.html','☁','ছোট কথার প্রলাপ'],
+ ['discussion.html','◌','সাহিত্য আলোচনা'],['famous-poet.html','♙','খ্যাতিমান কবি'],
+ ['famous-quotes.html','❝','মনীষীদের বাণী'],['humanitarian-notice.html','♡','মানবিক আবেদন']
 ];
+const THEMES=[['pearl','মুক্তা গ্লাস'],['moon','নীল জ্যোৎস্না'],['lavender','ল্যাভেন্ডার'],['rose','অরোরা গোলাপি']];
+const normalizeFile=h=>String(h).split('?')[0].split('#')[0].toLowerCase();
 
-const THEMES=[
- ['pearl','মুক্তা গ্লাস'],
- ['moon','নীল জ্যোৎস্না'],
- ['lavender','ল্যাভেন্ডার'],
- ['rose','অরোরা গোলাপি']
-];
-
-function normalizeFile(href){return String(href).split('?')[0].split('#')[0].toLowerCase()}
 function navHtml(){
- return '<nav class="bdx-nav">'+NAV.map(([href,icon,label])=>
-  '<a href="'+href+'" '+(normalizeFile(href)===currentFile?'aria-current="page"':'')+'>'+
-  '<span class="bdx-icon">'+icon+'</span><span>'+label+'</span><span>›</span></a>'
- ).join('')+'</nav>';
+ return '<nav class="bdx-nav">'+NAV.map(([href,icon,label])=>'<a href="'+href+'" '+(normalizeFile(href)===currentFile?'aria-current="page"':'')+'><span class="bdx-icon">'+icon+'</span><span>'+label+'</span><span>›</span></a>').join('')+'</nav>';
 }
-function identityHtml(){
- return '<section class="bdx-card bdx-identity"><div class="bdx-logo">🌿</div><h2><a href="index.html">আপন ভুবন</a></h2>'+
- '<p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p>'+
- '<div class="bdx-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></section>';
-}
+function identityHtml(){return '<section class="bdx-card bdx-identity"><div class="bdx-logo">🌿</div><h2><a href="index.html">আপন ভুবন</a></h2><p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p><div class="bdx-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></section>'}
 function themeHtml(){
  const palette=localStorage.getItem('bhubondangaGlassTheme')||localStorage.getItem('bhubondangaStyle')||'pearl';
  const mode=localStorage.getItem('bhubondangaThemeMode')||localStorage.getItem('bhubondangaTheme')||H.dataset.theme||'light';
  const modeLabel=mode==='dark'?'ডার্ক':mode==='middle'?'মিডল':'লাইট';
- return '<section class="bdx-card"><div class="bdx-card-title"><h3>চারটি থিম</h3><small style="font-size:7px;color:var(--bdx-soft)">সব পেজে একই</small></div>'+
- '<div class="bdx-theme-grid">'+THEMES.map(([key,label])=>
- '<button class="bdx-theme" type="button" data-bdx-style="'+key+'" aria-pressed="'+(palette===key)+'">'+
- '<span class="bdx-swatch"></span>'+label+'</button>').join('')+'</div>'+
- '<button class="bdx-mode" type="button" data-bdx-mode><span class="bdx-icon">◐</span><span>আলো: <b data-bdx-mode-label>'+modeLabel+'</b></span><span>›</span></button></section>';
+ return '<section class="bdx-card"><div class="bdx-card-title"><h3>চারটি থিম</h3><small style="font-size:7px;color:var(--bdx-soft)">সরাসরি বদলাবে</small></div><div class="bdx-theme-grid">'+THEMES.map(([key,label])=>'<button class="bdx-theme" type="button" data-bdx-style="'+key+'" aria-pressed="'+(palette===key)+'"><span class="bdx-swatch"></span>'+label+'</button>').join('')+'</div><button class="bdx-mode" type="button" data-bdx-mode><span class="bdx-icon">◐</span><span>আলো: <b data-bdx-mode-label>'+modeLabel+'</b></span><span>›</span></button></section>';
 }
-function leftHtml(){
- return identityHtml()+'<section class="bdx-card">'+navHtml()+'</section>'+themeHtml()+
- '<section class="bdx-card"><a class="bdx-contact" href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</a><p class="bdx-note">প্রতিষ্ঠাতার প্রোফাইল ও যোগাযোগের মাধ্যম দেখুন।</p></section>';
-}
-function avatarMarkup(){
- const url=user?.avatar||user?.avatar_url||user?.profileImage||'';
- if(url)return '<img src="'+esc(url)+'" alt="">';
- return '♙';
-}
+function leftHtml(){return identityHtml()+'<section class="bdx-card">'+navHtml()+'</section>'+themeHtml()+'<section class="bdx-card"><a class="bdx-contact" href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</a><p class="bdx-note">প্রতিষ্ঠাতার প্রোফাইল ও যোগাযোগের মাধ্যম দেখুন।</p></section>'}
+function avatarMarkup(){const u=user?.avatar||user?.avatar_url||user?.profileImage||'';return u?'<img src="'+esc(u)+'" alt="">':'♙'}
 function accountHtml(){
- if(!logged){
-  return '<section class="bdx-card bdx-account"><div class="bdx-account-avatar">♙</div><strong>অতিথি পাঠক</strong><p>লেখা প্রকাশ ও প্রতিক্রিয়ার জন্য লগইন করুন</p>'+
-  '<div class="bdx-account-buttons"><a class="primary" href="login.html">লগইন</a><a href="register.html">রেজিস্টার</a></div></section>';
- }
+ if(!logged)return '<section class="bdx-card bdx-account"><div class="bdx-account-avatar">♙</div><strong>অতিথি পাঠক</strong><p>লেখা প্রকাশ ও প্রতিক্রিয়ার জন্য লগইন করুন</p><div class="bdx-account-buttons"><a class="primary" href="login.html">লগইন</a><a href="register.html">রেজিস্টার</a></div></section>';
  const name=user.name||user.displayName||user.username||user.email||'ভুবনডাঙ্গার সদস্য';
- let profile='profile.html';
- if(role==='founder')profile='founder-profile.html';
- else if(role==='admin')profile='admin-profile.html';
+ let profile='profile.html';if(role==='founder')profile='founder-profile.html';else if(role==='admin')profile='admin-profile.html';
  const dashboard=role==='founder'?'founder-dashboard.html':role==='admin'?'admin-dashboard.html':'';
- return '<section class="bdx-card bdx-account"><div class="bdx-account-avatar">'+avatarMarkup()+'</div><strong>'+esc(name)+'</strong><p>আপনার ব্যক্তিগত ভুবন</p>'+
- '<div class="bdx-account-buttons"><a class="primary" href="'+profile+'">প্রোফাইল</a><a href="edit-profile.html">সম্পাদনা</a>'+
- '<a href="messages.html">ইনবক্স</a><a href="notifications.html">নোটিফিকেশন</a>'+
- (dashboard?'<a class="wide" href="'+dashboard+'">ড্যাশবোর্ড</a>':'')+
- '<button class="wide" type="button" data-bdx-logout>লগআউট</button></div></section>';
+ return '<section class="bdx-card bdx-account"><div class="bdx-account-avatar">'+avatarMarkup()+'</div><strong>'+esc(name)+'</strong><p>আপনার ব্যক্তিগত ভুবন</p><div class="bdx-account-buttons"><a class="primary" href="'+profile+'">প্রোফাইল</a><a href="edit-profile.html">সম্পাদনা</a><a href="messages.html">ইনবক্স</a><a href="notifications.html">নোটিফিকেশন</a>'+(dashboard?'<a class="wide" href="'+dashboard+'">ড্যাশবোর্ড</a>':'')+'<button class="wide" type="button" data-bdx-logout>লগআউট</button></div></section>';
 }
 function profileLinks(){
- const links=[
-  ['profile.html','সাধারণ কবি/লেখক প্রোফাইল'],
-  ['founder-profile.html','Founder প্রোফাইল'],
-  ['admin-profile.html','Admin প্রোফাইল'],
-  ['poet-profile.html','খ্যাতিমান কবির প্রোফাইল'],
-  ['thinker-profile.html','মনীষীর প্রোফাইল']
- ];
- return '<section class="bdx-card"><h3>প্রোফাইলসমূহ</h3><div class="bdx-nav">'+links.map(([h,t])=>
- '<a href="'+h+'"><span class="bdx-icon">♙</span><span>'+t+'</span><span>›</span></a>').join('')+'</div></section>';
+ const links=[['profile.html','সাধারণ কবি/লেখক প্রোফাইল'],['founder-profile.html','Founder প্রোফাইল'],['admin-profile.html','Admin প্রোফাইল'],['poet-profile.html','খ্যাতিমান কবির প্রোফাইল'],['thinker-profile.html','মনীষীর প্রোফাইল']];
+ return '<section class="bdx-card"><h3>প্রোফাইলসমূহ</h3><div class="bdx-nav">'+links.map(([h,t])=>'<a href="'+h+'"><span class="bdx-icon">♙</span><span>'+t+'</span><span>›</span></a>').join('')+'</div></section>';
 }
 function quickHtml(){
- const links=[
-  ['bhubondangar-lekhok.html','ভুবনডাঙ্গার লেখক'],
-  ['favorite-authors.html','প্রিয় লেখক'],
-  ['messages.html','ইনবক্স'],
-  ['notifications.html','নোটিফিকেশন'],
-  ['humanitarian-notice.html','যাচাইকৃত মানবিক নোটিস'],
-  ['about.html','আমাদের সম্পর্কে'],
-  ['contact.html','যোগাযোগ'],
-  ['complaint.html','অভিযোগ করুন'],
-  ['policy.html','নীতিমালা']
- ];
- return '<section class="bdx-card"><h3>দ্রুত দেখুন</h3><div class="bdx-nav">'+links.map(([h,t])=>
- '<a href="'+h+'"><span class="bdx-icon">•</span><span>'+t+'</span><span>›</span></a>').join('')+'</div></section>';
+ const links=[['bhubondangar-lekhok.html','ভুবনডাঙ্গার লেখক'],['favorite-authors.html','প্রিয় লেখক'],['messages.html','ইনবক্স'],['notifications.html','নোটিফিকেশন'],['humanitarian-notice.html','যাচাইকৃত মানবিক নোটিস'],['about.html','আমাদের সম্পর্কে'],['contact.html','যোগাযোগ'],['complaint.html','অভিযোগ করুন'],['policy.html','নীতিমালা']];
+ return '<section class="bdx-card"><h3>দ্রুত দেখুন</h3><div class="bdx-nav">'+links.map(([h,t])=>'<a href="'+h+'"><span class="bdx-icon">•</span><span>'+t+'</span><span>›</span></a>').join('')+'</div></section>';
 }
-function rightHtml(){
- return accountHtml()+profileLinks()+quickHtml()+themeHtml()+
- '<section class="bdx-card"><p class="bdx-note">সাধারণ সাহিত্যিক লেখা সংশ্লিষ্ট category newsfeed-এ প্রকাশিত হবে। মানবিক আবেদন যাচাইয়ের পর অগ্রাধিকার পাবে।</p></section>';
-}
-function drawerHead(title){
- return '<div class="bdx-drawer-head"><strong>'+title+'</strong><button class="bdx-close" type="button" data-bdx-close>×</button></div>';
-}
+function rightHtml(){return accountHtml()+profileLinks()+quickHtml()+themeHtml()+'<section class="bdx-card"><p class="bdx-note">সাহিত্যিক লেখা সংশ্লিষ্ট category newsfeed-এ প্রকাশিত হবে। মানবিক আবেদন যাচাইয়ের পর অগ্রাধিকার পাবে।</p></section>'}
+function drawerHead(title){return '<div class="bdx-drawer-head"><strong>'+title+'</strong><button class="bdx-close" type="button" data-bdx-close>×</button></div>'}
 function renderShell(){
  const left=leftHtml(),right=rightHtml();
- $('#bdxDesktopLeft').innerHTML=left;
- $('#bdxDesktopRight').innerHTML=right;
- $('#bdxMobileLeft').innerHTML=drawerHead('🌿 আপন ভুবন')+left;
- $('#bdxMobileRight').innerHTML=drawerHead(logged?'আপনার ভুবন':'অতিথি পাঠক')+right;
+ $('#bdxDesktopLeftV14').innerHTML=left;$('#bdxDesktopRightV14').innerHTML=right;
+ $('#bdxMobileLeftV14').innerHTML=drawerHead('🌿 আপন ভুবন')+left;
+ $('#bdxMobileRightV14').innerHTML=drawerHead(logged?'আপনার ভুবন':'অতিথি পাঠক')+right;
  syncThemeButtons();
 }
 function closeDrawers(){
- $('#bdxMobileLeft').classList.remove('open');
- $('#bdxMobileRight').classList.remove('open');
- $('#bdxOverlay').classList.remove('show');
- D.body.classList.remove('bdx-drawer-lock');
+ $('#bdxMobileLeftV14').classList.remove('open');$('#bdxMobileRightV14').classList.remove('open');
+ $('#bdxOverlayV14').classList.remove('show');D.body.classList.remove('bdx-drawer-lock');
 }
 function openDrawer(side){
- closeDrawers();
- $('#bdxOverlay').classList.add('show');
- $(side==='left'?'#bdxMobileLeft':'#bdxMobileRight').classList.add('open');
+ closeDrawers();$('#bdxOverlayV14').classList.add('show');
+ $(side==='left'?'#bdxMobileLeftV14':'#bdxMobileRightV14').classList.add('open');
  D.body.classList.add('bdx-drawer-lock');
 }
 function applyPalette(key){
- H.dataset.bdxPalette=key;
- localStorage.setItem('bhubondangaGlassTheme',key);
- localStorage.setItem('bhubondangaStyle',key);
- syncThemeButtons();
+ H.dataset.bdxPalette=key;localStorage.setItem('bhubondangaGlassTheme',key);localStorage.setItem('bhubondangaStyle',key);syncThemeButtons();
 }
 function applyMode(mode){
- H.dataset.theme=mode;
- H.dataset.mode=mode;
- localStorage.setItem('bhubondangaTheme',mode);
- localStorage.setItem('bhubondangaThemeMode',mode);
- document.querySelector('meta[name="theme-color"]')?.setAttribute('content',mode==='dark'?'#071426':'#f7f9ff');
- syncThemeButtons();
+ H.dataset.theme=mode;H.dataset.mode=mode;localStorage.setItem('bhubondangaTheme',mode);localStorage.setItem('bhubondangaThemeMode',mode);
+ D.querySelector('meta[name="theme-color"]')?.setAttribute('content',mode==='dark'?'#071426':'#f7f9ff');syncThemeButtons();
 }
 function syncThemeButtons(){
- const palette=H.dataset.bdxPalette||'pearl';
- document.querySelectorAll('[data-bdx-style]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.bdxStyle===palette)));
- const mode=H.dataset.theme||H.dataset.mode||'light';
- const label=mode==='dark'?'ডার্ক':mode==='middle'?'মিডল':'লাইট';
- document.querySelectorAll('[data-bdx-mode-label]').forEach(x=>x.textContent=label);
+ const p=H.dataset.bdxPalette||'pearl';D.querySelectorAll('[data-bdx-style]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.bdxStyle===p)));
+ const m=H.dataset.theme||H.dataset.mode||'light',label=m==='dark'?'ডার্ক':m==='middle'?'মিডল':'লাইট';D.querySelectorAll('[data-bdx-mode-label]').forEach(x=>x.textContent=label);
 }
-function cycleMode(){
- const current=H.dataset.theme||H.dataset.mode||'light';
- const list=['light','middle','dark'];
- applyMode(list[(list.indexOf(current)+1)%list.length]);
-}
+function cycleMode(){const cur=H.dataset.theme||H.dataset.mode||'light',list=['light','middle','dark'];applyMode(list[(list.indexOf(cur)+1)%list.length])}
 async function logout(){
- try{
-  if(window.supabaseClient?.auth)await window.supabaseClient.auth.signOut({scope:'local'});
-  else if(window.supabase?.auth)await window.supabase.auth.signOut();
- }catch(e){}
- localStorage.removeItem('bhubondangaCurrentUser');
- localStorage.removeItem('bhubondangaSessionUser');
- location.href='login.html';
+ try{if(W.supabaseClient?.auth)await W.supabaseClient.auth.signOut({scope:'local'});else if(W.supabase?.auth)await W.supabase.auth.signOut()}catch(e){}
+ localStorage.removeItem('bhubondangaCurrentUser');localStorage.removeItem('bhubondangaSessionUser');location.href='login.html';
 }
-
 const initialPalette=localStorage.getItem('bhubondangaGlassTheme')||localStorage.getItem('bhubondangaStyle')||'pearl';
 const initialMode=localStorage.getItem('bhubondangaThemeMode')||localStorage.getItem('bhubondangaTheme')||H.dataset.theme||H.dataset.mode||'light';
-applyPalette(initialPalette);
-applyMode(initialMode);
-renderShell();
+applyPalette(initialPalette);applyMode(initialMode);renderShell();
 
-$('#bdxOpenLeft').addEventListener('click',()=>openDrawer('left'));
-$('#bdxOpenRight').addEventListener('click',()=>openDrawer('right'));
-$('#bdxOverlay').addEventListener('click',closeDrawers);
-
-$('#bdx-universal-shell-v13').addEventListener('click',function(e){
- const close=e.target.closest('[data-bdx-close]');
- if(close){closeDrawers();return}
- const style=e.target.closest('[data-bdx-style]');
- if(style){e.preventDefault();applyPalette(style.dataset.bdxStyle);return}
- const mode=e.target.closest('[data-bdx-mode]');
- if(mode){e.preventDefault();cycleMode();return}
- const logoutButton=e.target.closest('[data-bdx-logout]');
- if(logoutButton){e.preventDefault();logout();return}
+$('#bdxOpenLeftV14').addEventListener('click',()=>openDrawer('left'));
+$('#bdxOpenRightV14').addEventListener('click',()=>openDrawer('right'));
+$('#bdxOverlayV14').addEventListener('click',closeDrawers);
+$('#bdx-universal-shell-v14').addEventListener('click',function(e){
+ const close=e.target.closest('[data-bdx-close]');if(close){closeDrawers();return}
+ const style=e.target.closest('[data-bdx-style]');if(style){e.preventDefault();applyPalette(style.dataset.bdxStyle);return}
+ const mode=e.target.closest('[data-bdx-mode]');if(mode){e.preventDefault();cycleMode();return}
+ const logoutButton=e.target.closest('[data-bdx-logout]');if(logoutButton){e.preventDefault();logout()}
 });
 D.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawers()});
-
-/* A safety reset for pages previously left locked by a broken theme modal. */
-D.body.classList.remove('theme-open','unified-theme-open');
+D.body.classList.remove('theme-open','unified-theme-open','locked');
 })();
 </script>
 
