@@ -809,8 +809,27 @@ html[data-theme="middle"]{--page:#dfe7f1!important;--surface:rgba(240,245,251,.8
 @media(prefers-reduced-motion:reduce){.bd-final-drawer{transition:none!important}}
 </style>
 
+
+<style id="bd-sidebar-visibility-safety-v8">
+/* Static fallback + final responsive guarantee. JS may enhance these cards, but is not required to display them. */
+@media (min-width:900px){
+  main.layout,.layout{display:grid!important;grid-template-columns:clamp(205px,17vw,250px) minmax(0,1fr) clamp(215px,18vw,270px)!important;gap:clamp(10px,1vw,16px)!important;align-items:start!important;width:min(1500px,100%)!important;max-width:1500px!important;margin-inline:auto!important}
+  main.layout>#leftSidebar,main.layout>#rightSidebar,.layout>#leftSidebar,.layout>#rightSidebar{display:block!important;visibility:visible!important;opacity:1!important;min-width:0!important}
+  main.layout>.center-col,.layout>.center-col{display:grid!important;min-width:0!important;width:100%!important;max-width:none!important}
+  .bd-final-handle,.bd-final-drawer,.bd-final-backdrop{display:none!important}
+}
+@media (min-width:900px) and (max-width:1120px){
+  main.layout,.layout{grid-template-columns:190px minmax(0,1fr) 205px!important;gap:9px!important;padding:9px!important}
+}
+/* Fine-pointer desktop windows stay three-column even when browser zoom reduces CSS width slightly. */
+@media (min-width:780px) and (max-width:899px) and (pointer:fine){
+  main.layout,.layout{display:grid!important;grid-template-columns:170px minmax(0,1fr) 180px!important;gap:8px!important;padding:8px!important;width:100%!important;max-width:100%!important}
+  #leftSidebar,#rightSidebar,.left-col,.right-col{display:block!important;visibility:visible!important;opacity:1!important}
+  .desktop-nav{display:flex!important}.mobile-nav-shell,.bd-final-handle,.bd-final-drawer,.bd-final-backdrop{display:none!important}
+}
+</style>
 </head>
-<body data-bd-family="public" data-build="original-index-sidebar-auth-fix-v1">
+<body data-bd-family="public" data-build="index-sidebar-safety-moderation-v8">
 <svg class="svg-sprite" aria-hidden="true" focusable="false">
   <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"/><path d="M4 20c3-6 7-9 13-12"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
@@ -906,7 +925,30 @@ html[data-theme="middle"]{--page:#dfe7f1!important;--surface:rgba(240,245,251,.8
 <button class="edge-menu edge-menu-left" id="leftEdgeMenu" type="button" aria-label="বাম পাশের মেনু খুলুন"><svg class="icon"><use href="#i-menu"></use></svg></button>
 <button class="edge-menu edge-menu-right" id="rightEdgeMenu" type="button" aria-label="ডান পাশের মেনু খুলুন"><svg class="icon"><use href="#i-menu"></use></svg></button>
 <main class="layout">
-  <aside class="sidebar left-col" id="leftSidebar"></aside>
+  <aside class="sidebar left-col" id="leftSidebar" aria-label="বাম সাইডবার">
+<div class="bd-final-sidebar" data-bd-static-sidebar="left">
+  <section class="bd-final-card bd-final-identity">
+    <a class="bd-final-leaf" href="index.html" aria-label="হোম">🌿</a>
+    <h3>আপন ভুবন</h3>
+    <p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p>
+    <div class="bd-final-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div>
+  </section>
+  <section class="bd-final-card bd-final-account" data-bd-static-account>
+    <div class="bd-final-avatar"><svg class="icon"><use href="#i-user"></use></svg></div>
+    <strong>অতিথি পাঠক</strong>
+    <small>লিখতে ও প্রতিক্রিয়া জানাতে প্রবেশ করুন</small>
+    <div class="bd-final-two"><a class="bd-final-btn primary" href="login.html">লগইন</a><a class="bd-final-btn" href="register.html">নিবন্ধন</a></div>
+  </section>
+  <section class="bd-final-card">
+    <div class="bd-final-title"><h3>ব্যক্তিগত কেন্দ্র</h3><small>অতিথি</small></div>
+    <nav class="bd-final-menu">
+      <a href="login.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-user"></use></svg></span><span>লগইন</span><span>›</span></a>
+      <a href="register.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-users"></use></svg></span><span>রেজিস্টার</span><span>›</span></a>
+    </nav>
+  </section>
+  <section class="bd-final-card bd-final-contact"><a href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</a><p>প্রতিষ্ঠাতার প্রোফাইল ও যোগাযোগের মাধ্যম দেখুন।</p></section>
+</div>
+</aside>
   <section class="center-col">
     <section class="glass composer" id="composer">
       <div class="composer-top">
@@ -975,7 +1017,26 @@ html[data-theme="middle"]{--page:#dfe7f1!important;--surface:rgba(240,245,251,.8
     <section class="post-list" id="postList"></section>
     <div class="load-wrap"><button class="load-btn" id="loadMoreBtn" type="button">আরও দেখুন</button></div>
   </section>
-  <aside class="sidebar right-col" id="rightSidebar"></aside>
+  <aside class="sidebar right-col" id="rightSidebar" aria-label="ডান সাইডবার">
+<div class="bd-final-sidebar" data-bd-static-sidebar="right">
+  <section class="bd-final-card">
+    <div class="bd-final-title"><h3>সক্রিয় লেখক</h3><small>সবুজ বাতি</small></div>
+    <div class="bd-final-writers"><div class="bd-final-empty">এখন কোনো বাস্তব সক্রিয় লেখক দেখা যাচ্ছে না।</div></div>
+  </section>
+  <section class="bd-final-card">
+    <div class="bd-final-title"><h3>সহায়তা ও আস্থা</h3><small>গুরুত্বপূর্ণ</small></div>
+    <nav class="bd-final-menu">
+      <a href="humanitarian-notice.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-shield"></use></svg></span><span>যাচাইকৃত মানবিক নোটিস</span><span>›</span></a>
+      <a href="about.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-users"></use></svg></span><span>আমাদের সম্পর্কে</span><span>›</span></a>
+      <a href="contact.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-message"></use></svg></span><span>যোগাযোগ</span><span>›</span></a>
+      <a href="complaint.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-flag"></use></svg></span><span>অভিযোগ ও রিপোর্ট</span><span>›</span></a>
+      <a href="privacy-security-policy.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-shield"></use></svg></span><span>গোপনীয়তা ও নিরাপত্তা</span><span>›</span></a>
+      <a href="policy.html"><span class="bd-final-icon"><svg class="icon"><use href="#i-quote"></use></svg></span><span>নীতিমালা</span><span>›</span></a>
+    </nav>
+  </section>
+  <section class="bd-final-card bd-final-contact">সাধারণ সাহিত্যিক লেখা সরাসরি প্রকাশিত হয়। মানবিক আবেদন যাচাইয়ের পর অগ্রাধিকার পায়।</section>
+</div>
+</aside>
 </main>
 <footer class="site-footer">
   <div><a href="index.html">ভুবনডাঙ্গার কবিতা</a> © <span id="yearText"></span></div>
@@ -1090,7 +1151,7 @@ function toggleLove(p){let loved=arr(likedKey).map(String),counts=likesObject(),
 const postActionBoard=document.getElementById('postActionBoard');let activePostMenuId='';
 function closePostActionBoard(){if(!postActionBoard)return;postActionBoard.classList.remove('open');postActionBoard.setAttribute('aria-hidden','true');postActionBoard.innerHTML='';activePostMenuId='';document.querySelectorAll('[data-post-menu][aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'))}
 function openPostActionBoard(button,p){const memories=arr(memoryKey),saved=memories.some(x=>String(x.id)===String(p.id)),edit=canEdit(p)?'<button type="button" data-action="edit" data-id="'+esc(p.id)+'">'+icon('edit')+'সম্পাদনা/ব্যবস্থাপনা</button>':'';postActionBoard.innerHTML='<button type="button" data-action="copy" data-id="'+esc(p.id)+'">'+icon('link')+'লিংক কপি করুন</button><button type="button" data-action="save" data-id="'+esc(p.id)+'">'+icon('bookmark')+(saved?'সেভ থেকে সরান':'সেভ করুন')+'</button><a class="report-action" href="complaint.html?post='+encodeURIComponent(p.id)+'">'+icon('flag')+'রিপোর্ট করুন</a>'+edit;postActionBoard.classList.add('open');postActionBoard.setAttribute('aria-hidden','false');button.setAttribute('aria-expanded','true');activePostMenuId=String(p.id);const r=button.getBoundingClientRect(),w=Math.min(220,innerWidth-24),h=Math.max(132,postActionBoard.offsetHeight||160);let left=Math.min(innerWidth-w-12,Math.max(12,r.right-w)),top=r.bottom+7;if(top+h>innerHeight-10)top=Math.max(10,r.top-h-7);postActionBoard.style.width=w+'px';postActionBoard.style.left=left+'px';postActionBoard.style.top=top+'px'}
-function handlePostAction(action){const kind=action.dataset.action,p=findPost(action.dataset.id);if(!p&&kind!=='cancel-comment')return;if(kind==='love')toggleLove(p);if(kind==='save')toggleSave(p);if(kind==='share')sharePost(p);if(kind==='copy')copyPostLink(p);if(kind==='edit'&&canEdit(p))location.href=addParam(typeRoute(p.type,p.id,p.title),'edit','1');if(kind==='comment'){const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]');box?.classList.toggle('open');renderComments(p.id)}if(kind==='cancel-comment')document.querySelector('[data-comment-box="'+CSS.escape(String(action.dataset.id))+'"]')?.classList.remove('open');if(kind==='submit-comment'){if(!loggedIn){toast('মন্তব্য করতে লগইন করুন।');return}const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]'),input=box?.querySelector('textarea'),text=input?.value.trim();if(!text)return;const list=arr(commentKey);list.push({id:Date.now(),postId:p.id,author:currentName,authorUsername:currentUsername,text,createdAt:new Date().toISOString()});save(commentKey,list.slice(-3000));p.comments=Number(p.comments||0)+1;touchActivity(p.id,2);input.value='';renderComments(p.id);toast('মন্তব্য যোগ হয়েছে।')}if(['save','copy','edit'].includes(kind))closePostActionBoard()}
+function handlePostAction(action){const kind=action.dataset.action,p=findPost(action.dataset.id);if(!p&&kind!=='cancel-comment')return;if(kind==='love')toggleLove(p);if(kind==='save')toggleSave(p);if(kind==='share')sharePost(p);if(kind==='copy')copyPostLink(p);if(kind==='edit'&&canEdit(p))location.href=addParam(typeRoute(p.type,p.id,p.title),'edit','1');if(kind==='comment'){const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]');box?.classList.toggle('open');renderComments(p.id)}if(kind==='cancel-comment')document.querySelector('[data-comment-box="'+CSS.escape(String(action.dataset.id))+'"]')?.classList.remove('open');if(kind==='submit-comment'){if(!loggedIn){toast('মন্তব্য করতে লগইন করুন।');return}const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]'),input=box?.querySelector('textarea'),text=input?.value.trim();if(!text)return;const terms=scanModeration(text);if(terms.length){showInlineCommentModeration(p,box,input,text,terms);return}box?.querySelector('.comment-moderation-warning')?.remove();const list=arr(commentKey);list.push({id:Date.now(),postId:p.id,author:currentName,authorUsername:currentUsername,text,createdAt:new Date().toISOString()});save(commentKey,list.slice(-3000));p.comments=Number(p.comments||0)+1;touchActivity(p.id,2);input.value='';renderComments(p.id);toast('মন্তব্য যোগ হয়েছে.')}if(['save','copy','edit'].includes(kind))closePostActionBoard()}
 document.getElementById('postList').addEventListener('click',function(e){const menuButton=e.target.closest('[data-post-menu]');if(menuButton){e.stopPropagation();const p=findPost(menuButton.dataset.id);if(!p)return;if(activePostMenuId===String(p.id)&&postActionBoard.classList.contains('open'))closePostActionBoard();else{closePostActionBoard();openPostActionBoard(menuButton,p)}return}const action=e.target.closest('[data-action]');if(action)handlePostAction(action)});
 postActionBoard.addEventListener('click',e=>{const action=e.target.closest('[data-action]');if(action){e.preventDefault();handlePostAction(action)}});
 document.addEventListener('click',e=>{if(!postActionBoard.contains(e.target)&&!e.target.closest('[data-post-menu]'))closePostActionBoard()});addEventListener('scroll',closePostActionBoard,{passive:true});addEventListener('resize',closePostActionBoard);
@@ -1100,6 +1161,14 @@ document.getElementById('sortFilter').addEventListener('change',e=>{sort=e.targe
 const moderationTerms=['শালা','শালী','হারামজাদা','হারামজাদী','খানকি','মাগী','বেশ্যা','চোদা','চুদি','চুদ','বাল','গুদ','মাদারচোদ','বাঞ্চোদ','বোকাচোদা'];
 function normalizeModerationText(value){return String(value||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/([\u0980-\u09FF])\1{2,}/g,'$1$1').toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim()}
 function scanModeration(value){const normalized=normalizeModerationText(value),tokens=normalized.split(' ').filter(Boolean),compact=normalized.replace(/\s/g,''),found=[];moderationTerms.forEach(term=>{const t=normalizeModerationText(term);if(tokens.includes(t)||(t.length>=5&&compact.includes(t)))found.push(term)});return[...new Set(found)]}
+function showInlineCommentModeration(post,box,input,text,terms){
+  let warning=box.querySelector('.comment-moderation-warning');
+  if(!warning){warning=document.createElement('div');warning.className='moderation-warning comment-moderation-warning';box.insertBefore(warning,box.querySelector('.comment-row'))}
+  warning.innerHTML='<strong>গালি-ডিটেক্টরের ছোট্ট সতর্কতা</strong><p>ধরা পড়েছে: '+esc(terms.join(', '))+'। আপনি মন্তব্যটি সম্পাদনা করতে পারেন, অথবা অপরিবর্তিত অবস্থায় Admin–Founder পর্যালোচনায় পাঠাতে পারেন।</p><div class="moderation-actions"><button type="button" data-comment-edit>মন্তব্যটি ঠিক করি</button><button class="continue" type="button" data-comment-review>পর্যালোচনায় পাঠান</button></div>';
+  warning.hidden=false;
+  warning.querySelector('[data-comment-edit]').onclick=()=>{warning.hidden=true;input.focus({preventScroll:true})};
+  warning.querySelector('[data-comment-review]').onclick=()=>{const notice={id:'comment-review-'+Date.now(),postId:post.id,author:currentName,authorUsername:currentUsername,text,terms,status:'pending_review',createdAt:new Date().toISOString(),type:'comment_moderation'};const q1=arr('bhubondangaAdminModerationQueue');q1.unshift(notice);save('bhubondangaAdminModerationQueue',q1.slice(0,2000));const q2=arr('bhubondangaFounderModerationQueue');q2.unshift(notice);save('bhubondangaFounderModerationQueue',q2.slice(0,2000));input.value='';warning.remove();toast('মন্তব্যটি Admin–Founder পর্যালোচনায় পাঠানো হয়েছে।')};
+}
 const composerPrompt=document.getElementById('composerPrompt'),composerChoices=document.getElementById('composerChoices'),composerNote=document.getElementById('composerNote'),composerForm=document.getElementById('composerForm'),postTitle=document.getElementById('postTitle'),postBody=document.getElementById('postBody'),ownWork=document.getElementById('ownWork'),originalArea=document.getElementById('originalAuthorArea'),originalAuthor=document.getElementById('originalAuthor'),moderationWarning=document.getElementById('moderationWarning'),moderationText=document.getElementById('moderationText'),knownPoetNames=Array.from(document.querySelectorAll('#poetDirectory option')).map(o=>o.value.trim());let pendingPublish=null;
 const canonicalSuggestion=$('#canonicalPoemSuggestion'),canonicalSuggestionTitle=$('#canonicalSuggestionTitle'),canonicalSuggestionText=$('#canonicalSuggestionText'),canonicalSuggestionMeta=$('#canonicalSuggestionMeta'),canonicalLockedNote=$('#canonicalLockedNote');let suggestedCanonical=null;
 function formatCanonicalDate(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'}).format(new Date(v))}catch(e){return''}}
@@ -1440,5 +1509,9 @@ setTimeout(async()=>{try{if(window.BhubondangaAuth?.current){const info=await wi
 })();
 </script>
 
+
+<script id="bd-sidebar-watchdog-v8">
+(()=>{const ensure=()=>{if(innerWidth<900&&!(innerWidth>=780&&matchMedia('(pointer:fine)').matches))return;const l=document.getElementById('leftSidebar'),r=document.getElementById('rightSidebar');[l,r].forEach(x=>{if(x){x.style.removeProperty('display');x.style.removeProperty('visibility');x.style.removeProperty('opacity')}});document.querySelector('main.layout,.layout')?.style.removeProperty('display')};addEventListener('DOMContentLoaded',ensure,{once:true});addEventListener('resize',ensure,{passive:true});setTimeout(ensure,700)})();
+</script>
 </body>
 </html>
