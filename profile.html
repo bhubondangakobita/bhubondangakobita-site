@@ -325,7 +325,75 @@ html[data-theme="dark"] .site-shell>.site-header{background:rgba(6,16,31,.95)!im
 @media(max-width:959px){main.layout,.layout,main.page-grid{display:block!important;width:100%!important;max-width:100%!important;margin:0!important;padding:8px 12px!important;overflow:visible!important}#leftSidebar,#rightSidebar,.layout>.sidebar,.page-grid>.left-sidebar,.page-grid>.right-sidebar{display:none!important}.layout>*:not(#leftSidebar):not(#rightSidebar),.page-grid>.main-content{width:100%!important;max-width:100%!important;min-width:0!important}.desktop-nav{display:none!important}.mobile-nav-shell{display:flex!important}[data-bd9-handle]{display:flex!important}.category-wrap,.tab-wrap{position:sticky!important;top:calc(var(--header,66px) + var(--ticker,29px) + var(--quick,44px))!important;z-index:970!important}.more-btn,.load-btn,.load-more-button,.load-area button{display:flex!important;margin:9px auto!important;min-width:170px!important;justify-content:center!important}.site-footer{margin-bottom:10px!important}}
 @media(max-width:430px){[data-bd9-drawer]{width:min(330px,89vw)!important}.bd9-card{padding:9px;border-radius:13px;backdrop-filter:blur(8px) saturate(110%);-webkit-backdrop-filter:blur(8px) saturate(110%)}input,textarea,select{font-size:16px!important}}
 .bd9-moderation-note{margin-top:8px;padding:10px;border:1px solid rgba(198,80,120,.22);border-radius:10px;background:rgba(198,80,120,.08);color:var(--soft,var(--text-soft,#687995));font-size:9px}.bd9-moderation-note strong{color:#c65078}.bd9-moderation-actions{margin-top:7px;display:flex;gap:6px}.bd9-moderation-actions button{min-height:34px;padding:6px 10px;border:1px solid var(--line,var(--border,rgba(105,126,170,.18)));border-radius:8px;background:var(--surface2,var(--surface-strong,#fff));color:var(--text,#193451)}
-</style></head>
+</style><style id="bd-requested-repair-20260727">
+/* Requested repair only: bounded desktop sidebars and iOS/mobile input stability. */
+html{-webkit-text-size-adjust:100%}
+@media (min-width:960px){
+  body .layout,body main.layout,body .page-grid,body main.page-grid{
+    align-items:start!important;
+    overflow:visible!important;
+  }
+  body #leftSidebar,
+  body #rightSidebar,
+  body .layout>.sidebar,
+  body main.layout>.sidebar,
+  body .page-grid>.left-sidebar,
+  body .page-grid>.right-sidebar,
+  body main.page-grid>.left-sidebar,
+  body main.page-grid>.right-sidebar{
+    position:sticky!important;
+    top:calc(var(--header-h,var(--header-height,var(--header,76px))) + var(--ticker-h,var(--date-height,var(--ticker,36px))) + var(--nav-h,var(--nav-height,var(--quick,52px))) + 12px)!important;
+    height:calc(100vh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    height:calc(100dvh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    max-height:calc(100vh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    max-height:calc(100dvh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    min-height:0!important;
+    align-self:start!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    overscroll-behavior-y:contain!important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none!important;
+  }
+  body #leftSidebar::-webkit-scrollbar,
+  body #rightSidebar::-webkit-scrollbar,
+  body .layout>.sidebar::-webkit-scrollbar,
+  body .page-grid>.left-sidebar::-webkit-scrollbar,
+  body .page-grid>.right-sidebar::-webkit-scrollbar{display:none!important}
+}
+@media (max-width:959px){
+  input,textarea,select{
+    font-size:16px!important;
+    scroll-margin-top:18px;
+    scroll-margin-bottom:calc(38dvh + env(safe-area-inset-bottom));
+  }
+  button,a,label,[role="button"]{touch-action:manipulation}
+}
+</style>
+<style id="bd-profile-popup-repair-20260727">
+/* Requested repair only: keep the profile option sheet above every legacy overlay and fully interactive. */
+body.bd-profile-sheet-active #backdrop{
+  display:block!important;
+  z-index:32750!important;
+  pointer-events:auto!important;
+}
+body.bd-profile-sheet-active #sheet,
+#sheet.open{
+  z-index:32760!important;
+  pointer-events:auto!important;
+  touch-action:pan-y!important;
+  isolation:isolate;
+}
+body.bd-profile-sheet-active #sheet *,
+#sheet.open *{pointer-events:auto!important}
+body.bd-profile-sheet-active .bd9-backdrop,
+body.bd-profile-sheet-active .bd10-backdrop,
+body.bd-profile-sheet-active .bd-final-backdrop{
+  display:none!important;
+  pointer-events:none!important;
+}
+</style>
+</head>
 <body class="bd9-shell-page" data-bd-family="profile">
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
 <symbol id="i-home" viewbox="0 0 24 24"><path d="M3 10.7 12 3l9 7.7"></path><path d="M5 9.8V21h14V9.8"></path><path d="M9 21v-7h6v7"></path></symbol>
@@ -936,4 +1004,53 @@ const badWords=['মাগী','চোদ','চুদ','শালা','হার
 D.addEventListener('click',e=>{if(e.target.closest('[data-bd9-edit-warning]')){e.target.closest('.bd9-moderation-note')?.remove();return}const b=e.target.closest('[data-bd9-review-submit]');if(b){const f=b.closest('form');if(!f)return;f.dataset.bd9Reviewed='1';let h=f.querySelector('input[name="moderation_status"]');if(!h){h=D.createElement('input');h.type='hidden';h.name='moderation_status';f.appendChild(h)}h.value='pending_review';f.requestSubmit()}});
 D.addEventListener('contextmenu',e=>e.preventDefault(),{capture:true});D.addEventListener('dragstart',e=>{if(e.target instanceof HTMLImageElement)e.preventDefault()},{capture:true});
 })();
-</script></body></html>
+</script><script id="bd-requested-repair-script-20260727">
+(()=>{'use strict';
+  const selector='#leftSidebar,#rightSidebar,.layout>.sidebar,main.layout>.sidebar,.page-grid>.left-sidebar,.page-grid>.right-sidebar,main.page-grid>.left-sidebar,main.page-grid>.right-sidebar';
+  const desktop=window.matchMedia('(min-width:960px)');
+  const wheelGuard=function(e){
+    if(!desktop.matches)return;
+    const el=e.currentTarget;
+    const canScroll=el.scrollHeight>el.clientHeight+1;
+    if(!canScroll){e.preventDefault();e.stopPropagation();return}
+    const atTop=el.scrollTop<=0;
+    const atBottom=Math.ceil(el.scrollTop+el.clientHeight)>=el.scrollHeight;
+    if((e.deltaY<0&&atTop)||(e.deltaY>0&&atBottom))e.preventDefault();
+    e.stopPropagation();
+  };
+  const bind=()=>document.querySelectorAll(selector).forEach(el=>{
+    if(el.dataset.bdBoundedSidebar==='1')return;
+    el.dataset.bdBoundedSidebar='1';
+    el.addEventListener('wheel',wheelGuard,{passive:false});
+  });
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+  window.addEventListener('resize',bind,{passive:true});
+})();
+</script>
+<script id="bd-profile-popup-repair-script-20260727">
+(()=>{'use strict';
+  const body=document.body;
+  const sheet=document.getElementById('sheet');
+  const backdrop=document.getElementById('backdrop');
+  if(!body||!sheet||!backdrop)return;
+  const sync=()=>{
+    const open=sheet.classList.contains('open');
+    body.classList.toggle('bd-profile-sheet-active',open);
+    if(open){
+      body.classList.remove('bd9-lock','bd10-lock','bd-final-lock');
+      document.querySelectorAll('.bd9-backdrop,.bd10-backdrop,.bd-final-backdrop').forEach(layer=>{
+        layer.setAttribute('aria-hidden','true');
+      });
+    }
+  };
+  new MutationObserver(sync).observe(sheet,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('click',e=>{
+    if(e.target.closest('[data-profile-menu],[data-post-menu],#avatarWrap,#coverEdit,#cover,[data-more-tabs],#sheet')||e.target===backdrop){
+      requestAnimationFrame(sync);
+    }
+  },true);
+  window.addEventListener('pageshow',sync);
+  sync();
+})();
+</script>
+</body></html>

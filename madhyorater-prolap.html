@@ -2444,6 +2444,51 @@ html[data-page="midnight"][data-theme="light"] .date-ticker,html[data-page="midn
 html[data-page="midnight"][data-theme="light"] .category-link,html[data-page="midnight"][data-theme="middle"] .category-link,html[data-page="midnight"][data-theme="light"] .site-header h1,html[data-page="midnight"][data-theme="middle"] .site-header h1{color:#183451!important}
 html[data-page="midnight"][data-theme="light"] .site-header p,html[data-page="midnight"][data-theme="middle"] .site-header p{color:#4f987d!important}
 </style>
+<style id="bd-requested-repair-20260727">
+/* Requested repair only: bounded desktop sidebars and iOS/mobile input stability. */
+html{-webkit-text-size-adjust:100%}
+@media (min-width:960px){
+  body .layout,body main.layout,body .page-grid,body main.page-grid{
+    align-items:start!important;
+    overflow:visible!important;
+  }
+  body #leftSidebar,
+  body #rightSidebar,
+  body .layout>.sidebar,
+  body main.layout>.sidebar,
+  body .page-grid>.left-sidebar,
+  body .page-grid>.right-sidebar,
+  body main.page-grid>.left-sidebar,
+  body main.page-grid>.right-sidebar{
+    position:sticky!important;
+    top:calc(var(--header-h,var(--header-height,var(--header,76px))) + var(--ticker-h,var(--date-height,var(--ticker,36px))) + var(--nav-h,var(--nav-height,var(--quick,52px))) + 12px)!important;
+    height:calc(100vh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    height:calc(100dvh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    max-height:calc(100vh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    max-height:calc(100dvh - var(--header-h,var(--header-height,var(--header,76px))) - var(--ticker-h,var(--date-height,var(--ticker,36px))) - var(--nav-h,var(--nav-height,var(--quick,52px))) - 24px)!important;
+    min-height:0!important;
+    align-self:start!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    overscroll-behavior-y:contain!important;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none!important;
+  }
+  body #leftSidebar::-webkit-scrollbar,
+  body #rightSidebar::-webkit-scrollbar,
+  body .layout>.sidebar::-webkit-scrollbar,
+  body .page-grid>.left-sidebar::-webkit-scrollbar,
+  body .page-grid>.right-sidebar::-webkit-scrollbar{display:none!important}
+}
+@media (max-width:959px){
+  input,textarea,select{
+    font-size:16px!important;
+    scroll-margin-top:18px;
+    scroll-margin-bottom:calc(38dvh + env(safe-area-inset-bottom));
+  }
+  button,a,label,[role="button"]{touch-action:manipulation}
+}
+</style>
 </head>
 <body class="bd9-shell-page" data-bd-family="category" data-shell="index-standard-night-shell"><svg aria-hidden="true" class="std-sprite" focusable="false">
 <symbol id="std-home" viewbox="0 0 24 24"><path d="m3 11 9-7 9 7"></path><path d="M5 10v10h14V10M9 20v-6h6v6"></path></symbol>
@@ -5086,6 +5131,29 @@ H.setAttribute('data-theme',localStorage.getItem('bhubondangaTheme')||H.getAttri
 D.addEventListener('DOMContentLoaded',()=>{init();setTimeout(refresh,0);setTimeout(refresh,350)},{once:true});window.addEventListener('pageshow',()=>setTimeout(refresh,50));
 window.BhubondangaMobileShellV10={open,close,refresh};
 try{window.BhubondangaAuth?.current?.().then(info=>{if(info?.legacyUser)refresh()}).catch(()=>{})}catch(_){ }
+})();
+</script>
+<script id="bd-requested-repair-script-20260727">
+(()=>{'use strict';
+  const selector='#leftSidebar,#rightSidebar,.layout>.sidebar,main.layout>.sidebar,.page-grid>.left-sidebar,.page-grid>.right-sidebar,main.page-grid>.left-sidebar,main.page-grid>.right-sidebar';
+  const desktop=window.matchMedia('(min-width:960px)');
+  const wheelGuard=function(e){
+    if(!desktop.matches)return;
+    const el=e.currentTarget;
+    const canScroll=el.scrollHeight>el.clientHeight+1;
+    if(!canScroll){e.preventDefault();e.stopPropagation();return}
+    const atTop=el.scrollTop<=0;
+    const atBottom=Math.ceil(el.scrollTop+el.clientHeight)>=el.scrollHeight;
+    if((e.deltaY<0&&atTop)||(e.deltaY>0&&atBottom))e.preventDefault();
+    e.stopPropagation();
+  };
+  const bind=()=>document.querySelectorAll(selector).forEach(el=>{
+    if(el.dataset.bdBoundedSidebar==='1')return;
+    el.dataset.bdBoundedSidebar='1';
+    el.addEventListener('wheel',wheelGuard,{passive:false});
+  });
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+  window.addEventListener('resize',bind,{passive:true});
 })();
 </script>
 </body>
