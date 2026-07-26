@@ -1,0 +1,18 @@
+/* ভুবনডাঙ্গা calendar + special day ticker v1 */
+(function(W){'use strict';
+const BN='০১২৩৪৫৬৭৮৯';const bn=v=>String(v).replace(/\d/g,d=>BN[d]);
+const WEEK={Saturday:'শনিবার',Sunday:'রবিবার',Monday:'সোমবার',Tuesday:'মঙ্গলবার',Wednesday:'বুধবার',Thursday:'বৃহস্পতিবার',Friday:'শুক্রবার'};
+const GM=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+const BM=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+const HM=['মুহাররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];
+const FIXED={'02-21':'আন্তর্জাতিক মাতৃভাষা দিবসে ভাষাশহীদদের প্রতি শ্রদ্ধা','03-26':'মহান স্বাধীনতা দিবস','04-14':'শুভ বাংলা নববর্ষ','05-01':'মহান মে দিবস','08-15':'জাতীয় শোক দিবস','12-14':'শহীদ বুদ্ধিজীবী দিবস','12-16':'মহান বিজয় দিবস'};
+function dhakaParts(date=new Date()){return Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit',weekday:'long',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(date).map(x=>[x.type,x.value]));}
+function banglaDate(y,m,d){const cur=Date.UTC(y,m-1,d),ny=Date.UTC(y,3,14),start=cur>=ny?ny:Date.UTC(y-1,3,14),by=cur>=ny?y-593:y-594;let days=Math.floor((cur-start)/86400000),i=0;const leap=(y%400===0)||(y%4===0&&y%100!==0),lens=[31,31,31,31,31,31,30,30,30,30,30,leap?30:29];while(i<11&&days>=lens[i])days-=lens[i++];return `${bn(days+1)} ${BM[i]} ${bn(by)} বঙ্গাব্দ`;}
+function hijriDate(date){try{const p={};new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura-nu-latn',{timeZone:'Asia/Dhaka',day:'numeric',month:'numeric',year:'numeric'}).formatToParts(date).forEach(x=>{if(['day','month','year'].includes(x.type))p[x.type]=Number(String(x.value).replace(/\D/g,''))});if(p.day&&p.month&&p.year)return `${bn(p.day)} ${HM[p.month-1]} ${bn(p.year)} হিজরি`;}catch(e){}return 'হিজরি তারিখ';}
+function greeting(h){return h<5?'শুভ রাত্রি—আপন ভুবনে স্বাগতম':h<12?'শুভ সকাল—আপনার দিনটি ভালো কাটুক':h<17?'শুভ দুপুর—আপনার দিনটি সুন্দর কাটুক':h<20?'শুভ সন্ধ্যা—আপন ভুবনে স্বাগতম':'শুভ রাত্রি—আপন ভুবনে স্বাগতম';}
+function islamicGreeting(hijri){if(/রমজান/.test(hijri))return 'পবিত্র রমজান—সংযম, সহমর্মিতা ও শান্তির মাস';if(/শাওয়াল/.test(hijri)&&/^১ |^২ |^৩ /.test(hijri))return 'ঈদ মোবারক—সবার জীবনে শান্তি ও আনন্দ আসুক';return '';}
+function snapshot(date=new Date()){const p=dhakaParts(date),y=+p.year,m=+p.month,d=+p.day,h=+p.hour;const greg=`${bn(d)} ${GM[m-1]}, ${bn(y)} খ্রিস্টাব্দ`;const hijri=hijriDate(date);const key=String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');const special=FIXED[key]||islamicGreeting(hijri)||'';return{greeting:greeting(h),weekday:WEEK[p.weekday]||p.weekday,bangla:banglaDate(y,m,d),hijri,gregorian:greg,special};}
+function setAll(sel,val){document.querySelectorAll(sel).forEach(x=>x.textContent=val||'');}
+function update(){const s=snapshot();setAll('.greeting,[data-greeting]',s.special||s.greeting);setAll('.weekday-date,.weekday,[data-weekday]',s.weekday);setAll('.bangla-date,.bangla,[data-bangla]',s.bangla);setAll('.hijri-date,.hijri,[data-hijri]',s.hijri);setAll('.gregorian-date,.gregorian,[data-gregorian]',s.gregorian);document.querySelectorAll('.greeting,[data-greeting]').forEach(x=>x.classList.toggle('bd-special-day',Boolean(s.special)));return s;}
+W.BhubondangaCalendar=Object.freeze({snapshot,update,bn});
+})(window);
