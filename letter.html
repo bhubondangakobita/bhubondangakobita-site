@@ -519,262 +519,51 @@ html[data-theme="dark"] .letter-room,html[data-theme="dark"] .letter-room-hero,h
 
 </style>
 
-<style id="bdx-universal-sidebar-theme-v13">
-/* =========================================================
-   BHUBONDANGA UNIVERSAL SIDEBAR + FOUR THEME SYSTEM v13
-   Same shell on every public/profile/category page.
-   Existing page content is preserved.
-   ========================================================= */
+<style id="bdx-universal-sidebar-theme-v14">
+/* BHUBONDANGA RESTORED CLASSY TWO-SIDEBAR SYSTEM v14
+   Keeps the inline composer/comment fixes. No category duplication in sidebars. */
 :root{
-  --bdx-rail-width:clamp(185px,17vw,238px);
-  --bdx-rail-top:150px;
-  --bdx-primary:var(--primary,#688bf0);
-  --bdx-violet:var(--violet,#8f75ec);
-  --bdx-green:var(--green,#4f987d);
-  --bdx-text:var(--text,#173052);
-  --bdx-soft:var(--soft,#687995);
-  --bdx-line:var(--line,rgba(102,126,170,.18));
-  --bdx-surface:var(--surface2,rgba(255,255,255,.92));
+  --bdx-rail-width:clamp(190px,16.4vw,236px);
+  --bdx-rail-top:calc(var(--header-h,76px) + var(--ticker-h,36px) + var(--nav-h,52px) + 12px);
+  --bdx-primary:var(--primary,#6f88dc);
+  --bdx-secondary:var(--primary-2,#9276df);
+  --bdx-green:var(--green,#4f947b);
+  --bdx-text:var(--text,#203754);
+  --bdx-soft:var(--text-soft,var(--soft,#687995));
+  --bdx-muted:var(--muted,#8b96aa);
+  --bdx-line:var(--border,var(--line,rgba(102,126,170,.18)));
+  --bdx-surface:var(--surface-strong,var(--surface2,rgba(255,255,255,.92)));
   --bdx-page:var(--page,#eef3fa);
-  --bdx-shadow:var(--shadow,0 14px 38px rgba(74,85,151,.11));
+  --bdx-shadow:0 12px 34px rgba(59,72,132,.10),inset 0 1px 0 rgba(255,255,255,.78);
 }
-
-/* Four approved visual identities. */
-html[data-bdx-palette="pearl"]{
-  --primary:#688bf0!important;--violet:#8f75ec!important;--green:#4f987d!important;
-  --bdx-primary:#688bf0;--bdx-violet:#8f75ec;--bdx-green:#4f987d;
-}
-html[data-bdx-palette="moon"]{
-  --primary:#438fdf!important;--violet:#6776df!important;--green:#4597a0!important;
-  --bdx-primary:#438fdf;--bdx-violet:#6776df;--bdx-green:#4597a0;
-  --bg:radial-gradient(circle at 8% 0,rgba(85,171,234,.18),transparent 28%),radial-gradient(circle at 96% 5%,rgba(95,116,224,.14),transparent 29%),linear-gradient(155deg,#f7fcff,#e7f1fb 56%,#edf0fc)!important;
-}
-html[data-bdx-palette="lavender"]{
-  --primary:#846fe1!important;--violet:#b079db!important;--green:#6e8db4!important;
-  --bdx-primary:#846fe1;--bdx-violet:#b079db;--bdx-green:#6e8db4;
-  --bg:radial-gradient(circle at 8% 0,rgba(164,126,229,.18),transparent 28%),radial-gradient(circle at 96% 5%,rgba(215,141,214,.14),transparent 29%),linear-gradient(155deg,#fdfaff,#eee8fa 56%,#f6edf9)!important;
-}
-html[data-bdx-palette="rose"]{
-  --primary:#d06ea9!important;--violet:#9778e4!important;--green:#5697a1!important;
-  --bdx-primary:#d06ea9;--bdx-violet:#9778e4;--bdx-green:#5697a1;
-  --bg:radial-gradient(circle at 8% 0,rgba(236,119,173,.17),transparent 28%),radial-gradient(circle at 96% 5%,rgba(161,119,229,.15),transparent 29%),linear-gradient(155deg,#fff9fc,#f4eaf5 56%,#edf5fa)!important;
-}
-
-/* Middle mode works even on older pages that only had light/dark. */
-html[data-theme="middle"],html[data-mode="middle"]{
-  --page:#dce5f1!important;
-  --surface:rgba(239,245,252,.83)!important;
-  --surface2:rgba(248,251,255,.95)!important;
-  --text:#18304f!important;
-  --soft:#5d708d!important;
-}
-
-/* Disable the old theme launchers/panels that caused page click-lock. */
-#themeToggle,
-[data-theme-switch],
-[data-drawer-theme],
-[data-repair-theme],
-[data-theme-trigger],
-[data-theme]:not(html),
-.theme-switch-row,
-.unified-theme-launch,
-#themePanel,#themeModal,#themeSheet,#unifiedThemePanel,
-.theme-modal,.theme-sheet,.unified-theme-panel,.unified-theme-backdrop{
-  display:none!important;
-}
-
-/* Hide previous duplicated navigation rails and drawers. */
-body > .edge,
-body > button.edge,
-body > .edge-menu,
-#leftDrawer,#rightDrawer,#mobileDrawer,#rightMobileDrawer,
-#leftSidebar,#rightSidebar,
-main.layout > .left-col,main.layout > .right-col,
-main.layout > aside.sidebar,
-.layout > .left-col,.layout > .right-col{
-  display:none!important;
-}
-
-/* Use the complete central content area between the two new rails. */
-@media (min-width:900px){
-  body > main,
-  body > main.layout,
-  body > .layout,
-  body > .page-shell,
-  body > .main-shell,
-  body > .content-shell{
-    width:min(980px,calc(100vw - (var(--bdx-rail-width) * 2) - 42px))!important;
-    max-width:calc(100vw - (var(--bdx-rail-width) * 2) - 42px)!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
-  }
-  body > main.layout,
-  body > .layout{
-    display:block!important;
-    grid-template-columns:none!important;
-  }
-  body > main.layout > .center,
-  body > main.layout > .center-col,
-  body > .layout > .center,
-  body > .layout > .center-col{
-    display:block!important;
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-    margin:0!important;
-  }
-}
-@media (max-width:899px){
-  body > main,
-  body > main.layout,
-  body > .layout,
-  body > .page-shell,
-  body > .main-shell,
-  body > .content-shell{
-    width:100%!important;
-    max-width:100%!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
-  }
-}
-
-/* Universal fixed desktop rails. */
-.bdx-rail{
-  position:fixed;
-  top:var(--bdx-rail-top);
-  bottom:12px;
-  z-index:920;
-  width:var(--bdx-rail-width);
-  padding:0 2px 3px;
-  overflow-y:auto;
-  overflow-x:hidden;
-  scrollbar-width:none;
-}
-.bdx-rail::-webkit-scrollbar,.bdx-drawer::-webkit-scrollbar{display:none}
-.bdx-rail-left{left:10px}
-.bdx-rail-right{right:10px}
-
-.bdx-card{
-  margin-bottom:8px;
-  padding:8px;
-  border:1px solid var(--bdx-line);
-  border-radius:15px;
-  background:color-mix(in srgb,var(--bdx-surface) 88%,transparent);
-  box-shadow:var(--bdx-shadow);
-  backdrop-filter:blur(22px) saturate(135%);
-  -webkit-backdrop-filter:blur(22px) saturate(135%);
-  color:var(--bdx-text);
-}
-.bdx-identity{text-align:center;padding:10px 8px}
-.bdx-logo{font:29px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"}
-.bdx-identity h2{margin:4px 0 2px;color:var(--bdx-primary);font-size:15px}
-.bdx-identity p{color:var(--bdx-soft);font-size:7.5px}
-.bdx-quote{margin-top:7px;padding:7px 6px;border-left:3px solid var(--bdx-primary);border-radius:0 8px 8px 0;background:color-mix(in srgb,var(--bdx-primary) 8%,transparent);color:var(--bdx-soft);font-size:7.5px}
-
-.bdx-nav{display:grid;gap:3px}
-.bdx-nav a,.bdx-profile-link,.bdx-quick-link,.bdx-action-link,.bdx-mode{
-  min-height:35px;
-  padding:5px 7px;
-  border:1px solid color-mix(in srgb,var(--bdx-line) 76%,transparent);
-  border-radius:9px;
-  display:grid;
-  grid-template-columns:25px minmax(0,1fr) auto;
-  gap:6px;
-  align-items:center;
-  background:color-mix(in srgb,var(--bdx-surface) 66%,transparent);
-  color:var(--bdx-soft);
-  text-decoration:none!important;
-  font-size:8.2px;
-  font-weight:800;
-}
-.bdx-nav a:hover,.bdx-nav a[aria-current="page"],.bdx-profile-link:hover,.bdx-quick-link:hover{
-  color:var(--bdx-primary);
-  border-color:var(--bdx-line);
-  background:color-mix(in srgb,var(--bdx-primary) 9%,transparent);
-}
-.bdx-icon{
-  width:25px;height:25px;border:1px solid var(--bdx-line);border-radius:8px;
-  display:grid;place-items:center;background:var(--bdx-surface);font:15px/1 system-ui;
-}
-.bdx-card h3{margin:0 0 6px;font-size:11px}
-.bdx-card-title{display:flex;align-items:center;justify-content:space-between;gap:6px}
-
-.bdx-theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.bdx-theme{
-  min-height:46px;
-  padding:5px 4px;
-  border:1px solid var(--bdx-line);
-  border-radius:10px;
-  background:var(--bdx-surface);
-  color:var(--bdx-text);
-  font-size:7.4px;
-  font-weight:800;
-}
-.bdx-theme[aria-pressed="true"]{outline:2px solid var(--bdx-primary);outline-offset:-2px}
-.bdx-swatch{display:block;width:100%;height:17px;margin-bottom:4px;border-radius:6px}
-.bdx-theme[data-bdx-style="pearl"] .bdx-swatch{background:linear-gradient(135deg,#d8e7ff,#d8c8fa,#dcf4ed)}
-.bdx-theme[data-bdx-style="moon"] .bdx-swatch{background:linear-gradient(135deg,#68b5ff,#6b7be3)}
-.bdx-theme[data-bdx-style="lavender"] .bdx-swatch{background:linear-gradient(135deg,#aa8bea,#d99bdd)}
-.bdx-theme[data-bdx-style="rose"] .bdx-swatch{background:linear-gradient(135deg,#f28db7,#a686eb)}
-.bdx-mode{width:100%;margin-top:6px;grid-template-columns:25px 1fr auto;text-align:left}
-
-.bdx-account{text-align:center}
-.bdx-account-avatar{
-  width:48px;height:48px;margin:0 auto 5px;border:1px solid var(--bdx-line);border-radius:50%;
-  display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-violet));color:#fff;font:20px/1 system-ui;
-}
-.bdx-account-avatar img{width:100%;height:100%;object-fit:cover}
-.bdx-account strong{display:block;font-size:10px}
-.bdx-account p{margin:2px 0 7px;color:var(--bdx-soft);font-size:7.5px}
-.bdx-account-buttons{display:grid;grid-template-columns:1fr 1fr;gap:5px}
-.bdx-account-buttons a,.bdx-account-buttons button{
-  min-height:32px;border:1px solid var(--bdx-line);border-radius:9px;display:grid;place-items:center;
-  background:var(--bdx-surface);color:var(--bdx-primary);font-size:8px;font-weight:800;text-decoration:none!important;
-}
-.bdx-account-buttons .primary{border:0;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-violet));color:#fff}
-.bdx-account-buttons .wide{grid-column:1/-1}
-
-.bdx-contact{
-  display:block;padding:7px;border-left:3px solid var(--bdx-green);border-radius:0 8px 8px 0;
-  background:color-mix(in srgb,var(--bdx-green) 8%,transparent);color:var(--bdx-soft)!important;
-  text-decoration:none!important;font-size:7.4px;font-weight:700;
-}
-.bdx-note{margin-top:6px;color:var(--bdx-soft);font-size:7.3px}
-
-/* Mobile drawers use the exact same content. */
-.bdx-edge{
-  position:fixed;top:61%;z-index:1450;width:31px;height:76px;border:1px solid var(--bdx-line);
-  display:none;place-items:center;background:linear-gradient(180deg,var(--bdx-surface),color-mix(in srgb,var(--bdx-violet) 45%,var(--bdx-surface)));
-  color:var(--bdx-primary);box-shadow:var(--bdx-shadow);font-size:16px;
-}
-.bdx-edge-left{left:0;border-left:0;border-radius:0 12px 12px 0}
-.bdx-edge-right{right:0;border-right:0;border-radius:12px 0 0 12px}
-.bdx-overlay{
-  position:fixed;inset:0;z-index:2100;display:none;background:rgba(4,13,29,.52);backdrop-filter:blur(3px)
-}
-.bdx-overlay.show{display:block}
-.bdx-drawer{
-  position:fixed;top:0;bottom:0;z-index:2110;width:min(350px,89vw);padding:9px;overflow:auto;
-  background:var(--bdx-page);transition:transform .23s ease;box-shadow:0 20px 70px rgba(0,0,0,.26)
-}
-.bdx-drawer-left{left:0;transform:translateX(-104%)}
-.bdx-drawer-right{right:0;transform:translateX(104%)}
-.bdx-drawer.open{transform:none}
-.bdx-drawer-head{position:sticky;top:-9px;z-index:2;margin:-9px -9px 7px;padding:10px;display:flex;align-items:center;justify-content:space-between;background:var(--bdx-page);border-bottom:1px solid var(--bdx-line)}
-.bdx-drawer-head strong{font-size:14px}
-.bdx-close{width:35px;height:35px;border:1px solid var(--bdx-line);border-radius:50%;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-text);font-size:20px}
-body.bdx-drawer-lock{overflow:hidden!important}
-
-@media(max-width:899px){
-  .bdx-rail{display:none}
-  .bdx-edge{display:grid}
-}
-@media(min-width:900px){
-  .bdx-edge,.bdx-drawer,.bdx-overlay{display:none!important}
-}
-@media(max-width:420px){
-  .bdx-edge{width:27px;height:68px}
-}
+html[data-bdx-palette="pearl"]{--bdx-primary:#6789e8;--bdx-secondary:#927be1;--bdx-green:#4d987e;--primary:#6789e8;--primary-2:#927be1}
+html[data-bdx-palette="moon"]{--bdx-primary:#3d93dd;--bdx-secondary:#6679df;--bdx-green:#45959e;--primary:#3d93dd;--primary-2:#6679df}
+html[data-bdx-palette="lavender"]{--bdx-primary:#806dde;--bdx-secondary:#b275d8;--bdx-green:#658fa4;--primary:#806dde;--primary-2:#b275d8}
+html[data-bdx-palette="rose"]{--bdx-primary:#cf6ea8;--bdx-secondary:#9779e1;--bdx-green:#55979d;--primary:#cf6ea8;--primary-2:#9779e1}
+html[data-bdx-palette="silver"]{--bdx-primary:#607d9f;--bdx-secondary:#8793b7;--bdx-green:#5f9183;--primary:#607d9f;--primary-2:#8793b7}
+html[data-theme="middle"],html[data-mode="middle"]{--page:#dfe7f1!important;--surface:rgba(240,245,251,.86)!important;--surface-strong:rgba(249,251,255,.96)!important;--text:#1c3452!important;--text-soft:#5c6e89!important}
+#themeToggle,[data-theme-switch],[data-drawer-theme],[data-repair-theme],[data-theme-trigger],[data-theme]:not(html),.theme-switch-row,.unified-theme-launch,#themePanel,#themeModal,#themeSheet,#unifiedThemePanel,.theme-modal,.theme-sheet,.unified-theme-panel,.unified-theme-backdrop{display:none!important}
+body > .edge,body > button.edge,body > .edge-menu,#leftDrawer,#rightDrawer,#mobileDrawer,#rightMobileDrawer,#leftSidebar,#rightSidebar,main.layout > .left-col,main.layout > .right-col,main.layout > aside.sidebar,.layout > .left-col,.layout > .right-col{display:none!important}
+.bdx-rail{position:fixed;top:var(--bdx-rail-top);bottom:12px;z-index:920;width:var(--bdx-rail-width);padding:0 2px 3px;overflow:auto hidden;scrollbar-width:none}.bdx-rail::-webkit-scrollbar,.bdx-drawer::-webkit-scrollbar{display:none}.bdx-rail-left{left:10px}.bdx-rail-right{right:10px}
+.bdx-stack{display:grid;gap:8px}.bdx-card{position:relative;overflow:hidden;padding:10px;border:1px solid var(--bdx-line);border-radius:15px;background:rgba(255,255,255,.78);box-shadow:var(--bdx-shadow);backdrop-filter:blur(14px) saturate(125%);-webkit-backdrop-filter:blur(14px) saturate(125%);color:var(--bdx-text)}
+html[data-theme="dark"] .bdx-card{background:rgba(13,28,51,.84);box-shadow:0 16px 38px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07)}
+.bdx-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(104,157,242,.08),rgba(152,124,226,.10),rgba(112,205,183,.06));opacity:.9}.bdx-card>*{position:relative;z-index:1}
+.bdx-card-title{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:8px}.bdx-card-title h3{font-size:11.5px;line-height:1.35}.bdx-card-title small{color:var(--bdx-muted);font-size:7.5px}.bdx-title-icon{width:28px;height:28px;border:1px solid var(--bdx-line);border-radius:9px;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-primary)}.bdx-title-icon svg,.bdx-icon svg{width:16px;height:16px}
+.bdx-account{text-align:center}.bdx-avatar{width:52px;height:52px;margin:0 auto 6px;border:1px solid var(--bdx-line);border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-secondary));color:#fff}.bdx-avatar img{width:100%;height:100%;object-fit:cover}.bdx-account strong{display:block;font-size:11px}.bdx-account p{margin:2px 0 8px;color:var(--bdx-muted);font-size:7.8px}.bdx-two{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bdx-btn,.bdx-link,.bdx-action,.bdx-mode-btn{min-height:34px;border:1px solid var(--bdx-line);border-radius:9px;display:flex;align-items:center;justify-content:center;gap:5px;background:var(--bdx-surface);color:var(--bdx-primary);font-size:8px;font-weight:800;text-decoration:none!important}.bdx-btn.primary{border-color:transparent;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-secondary));color:#fff}.bdx-btn.wide{grid-column:1/-1}
+.bdx-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.bdx-action{min-height:58px;padding:6px;flex-direction:column;color:var(--bdx-soft);font-size:8.2px}.bdx-action .bdx-icon{width:27px;height:27px;border:1px solid var(--bdx-line);border-radius:9px;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-primary)}.bdx-action:hover{color:var(--bdx-primary);border-color:var(--bdx-primary)}
+.bdx-theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bdx-theme{min-height:47px;padding:5px;border:1px solid var(--bdx-line);border-radius:10px;background:var(--bdx-surface);color:var(--bdx-soft);font-size:7.4px;font-weight:800}.bdx-theme[aria-pressed="true"]{outline:2px solid var(--bdx-primary);outline-offset:-2px;color:var(--bdx-primary)}.bdx-swatch{display:block;height:17px;margin-bottom:4px;border-radius:6px}.bdx-theme[data-bdx-style="pearl"] .bdx-swatch{background:linear-gradient(135deg,#dceaff,#dacdf8,#dff5ee)}.bdx-theme[data-bdx-style="moon"] .bdx-swatch{background:linear-gradient(135deg,#69b8f1,#657ce3)}.bdx-theme[data-bdx-style="lavender"] .bdx-swatch{background:linear-gradient(135deg,#a88be7,#d99bd7)}.bdx-theme[data-bdx-style="rose"] .bdx-swatch{background:linear-gradient(135deg,#f18eb8,#a887e8)}.bdx-theme[data-bdx-style="silver"] .bdx-swatch{background:linear-gradient(135deg,#f7fbff,#cbd6e3,#95a9bd)}
+.bdx-mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:6px}.bdx-mode-btn{min-height:31px;padding:4px;font-size:7.2px}.bdx-mode-btn[aria-pressed="true"]{background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-secondary));color:#fff;border-color:transparent}
+.bdx-list{display:grid}.bdx-list a{min-height:39px;padding:7px 2px;border-bottom:1px solid var(--bdx-line);display:grid;grid-template-columns:27px minmax(0,1fr) auto;gap:7px;align-items:center;color:var(--bdx-soft);font-size:8.7px;font-weight:750;text-decoration:none!important}.bdx-list a:last-child{border-bottom:0}.bdx-list a:hover{color:var(--bdx-primary)}.bdx-icon{width:27px;height:27px;border:1px solid var(--bdx-line);border-radius:9px;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-primary)}
+.bdx-writers{display:grid;gap:5px}.bdx-writer{min-height:41px;padding:6px;border:1px solid var(--bdx-line);border-radius:10px;display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:7px;align-items:center;background:var(--bdx-surface);color:var(--bdx-soft);text-decoration:none!important}.bdx-writer-avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(135deg,var(--bdx-primary),var(--bdx-secondary));color:#fff;font-size:9px;font-weight:800}.bdx-writer-avatar img{width:100%;height:100%;object-fit:cover}.bdx-writer strong{display:block;font-size:8.8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bdx-writer small{display:block;color:var(--bdx-muted);font-size:7px}.bdx-online{width:9px;height:9px;border-radius:50%;background:#20a56c;box-shadow:0 0 0 3px rgba(32,165,108,.13),0 0 9px rgba(32,165,108,.35)}.bdx-empty{padding:9px;color:var(--bdx-muted);font-size:8px;text-align:center}
+.bdx-note{padding:9px;border-left:3px solid var(--bdx-green);border-radius:0 9px 9px 0;background:rgba(79,148,123,.075);color:var(--bdx-soft);font-size:8px;line-height:1.65}.bdx-note a{color:var(--bdx-primary);font-weight:800}.bdx-quote{border-left-color:var(--bdx-secondary);background:rgba(132,110,222,.07)}
+.bdx-edge{position:fixed;top:69%;z-index:1450;width:18px;height:52px;border:1px solid var(--bdx-line);display:none;place-items:center;background:linear-gradient(180deg,var(--bdx-surface),rgba(133,112,223,.32));color:var(--bdx-primary);box-shadow:var(--bdx-shadow);font-size:20px;line-height:1;opacity:.76}.bdx-edge-left{left:-7px;border-radius:0 9px 9px 0}.bdx-edge-right{right:-7px;border-radius:9px 0 0 9px}.bdx-edge:hover,.bdx-edge:focus{opacity:1}.bdx-overlay{position:fixed;inset:0;z-index:2100;display:none;background:rgba(4,13,29,.50);backdrop-filter:blur(3px)}.bdx-overlay.show{display:block}.bdx-drawer{position:fixed;top:0;bottom:0;z-index:2110;width:min(350px,89vw);padding:9px;overflow:auto;background:var(--bdx-page);transition:transform .23s ease;box-shadow:0 20px 70px rgba(0,0,0,.26)}.bdx-drawer-left{left:0;transform:translateX(-104%)}.bdx-drawer-right{right:0;transform:translateX(104%)}.bdx-drawer.open{transform:none}.bdx-drawer-head{position:sticky;top:-9px;z-index:2;margin:-9px -9px 7px;padding:10px;display:flex;align-items:center;justify-content:space-between;background:var(--bdx-page);border-bottom:1px solid var(--bdx-line)}.bdx-drawer-head strong{font-size:14px}.bdx-close{width:35px;height:35px;border:1px solid var(--bdx-line);border-radius:50%;display:grid;place-items:center;background:var(--bdx-surface);color:var(--bdx-text);font-size:20px}body.bdx-drawer-lock{overflow:hidden!important}
+@media(min-width:1180px){body.bdx-sidebars-ready:not(.bdx-special-wide)>main,body.bdx-sidebars-ready:not(.bdx-special-wide)>main.layout,body.bdx-sidebars-ready:not(.bdx-special-wide)>.layout,body.bdx-sidebars-ready:not(.bdx-special-wide)>.page-shell,body.bdx-sidebars-ready:not(.bdx-special-wide)>.main-shell,body.bdx-sidebars-ready:not(.bdx-special-wide)>.content-shell{width:min(1000px,calc(100vw - (var(--bdx-rail-width) * 2) - 46px))!important;max-width:calc(100vw - (var(--bdx-rail-width) * 2) - 46px)!important;margin-left:auto!important;margin-right:auto!important}body.bdx-sidebars-ready:not(.bdx-special-wide)>main.layout,body.bdx-sidebars-ready:not(.bdx-special-wide)>.layout{display:block!important;grid-template-columns:none!important}body.bdx-sidebars-ready:not(.bdx-special-wide)>main.layout>.center-col,body.bdx-sidebars-ready:not(.bdx-special-wide)>.layout>.center-col{width:100%!important;max-width:none!important;min-width:0!important;margin:0!important}.bdx-edge,.bdx-drawer,.bdx-overlay{display:none!important}}
+@media(max-width:1179px){.bdx-rail{display:none}.bdx-edge{display:grid}body.bdx-sidebars-ready>main,body.bdx-sidebars-ready>main.layout,body.bdx-sidebars-ready>.layout,body.bdx-sidebars-ready>.page-shell,body.bdx-sidebars-ready>.main-shell,body.bdx-sidebars-ready>.content-shell{width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important}}
+@media(min-width:1180px) and (max-width:1599px){body.bdx-special-wide .bdx-rail{display:none}body.bdx-special-wide .bdx-edge{display:grid}body.bdx-special-wide>main,body.bdx-special-wide>main.layout,body.bdx-special-wide>.layout{width:100%!important;max-width:100%!important}}
+@media(min-width:1600px){body.bdx-special-wide>main,body.bdx-special-wide>main.layout,body.bdx-special-wide>.layout{width:min(1160px,calc(100vw - (var(--bdx-rail-width) * 2) - 50px))!important;max-width:calc(100vw - (var(--bdx-rail-width) * 2) - 50px)!important;margin-left:auto!important;margin-right:auto!important}}
+@media(max-width:520px){.bdx-drawer{width:min(330px,90vw)}.bdx-card{border-radius:13px;padding:9px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}}
+@media(prefers-reduced-motion:reduce){.bdx-drawer{transition:none}}
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){.bdx-card{background:var(--bdx-surface)}}
 </style>
 
 
@@ -1017,212 +806,57 @@ renderGlobalHumanPins();render();
 })();
 </script>
 
-<div id="bdx-universal-shell-v13">
-  <aside class="bdx-rail bdx-rail-left" id="bdxDesktopLeft" aria-label="প্রধান বাম সাইডবার"></aside>
-  <aside class="bdx-rail bdx-rail-right" id="bdxDesktopRight" aria-label="প্রধান ডান সাইডবার"></aside>
-
-  <button class="bdx-edge bdx-edge-left" id="bdxOpenLeft" type="button" aria-label="বাম সাইডবার খুলুন">☷</button>
-  <button class="bdx-edge bdx-edge-right" id="bdxOpenRight" type="button" aria-label="ডান সাইডবার খুলুন">☷</button>
+<div id="bdx-universal-shell-v14">
+  <aside class="bdx-rail bdx-rail-left" id="bdxDesktopLeft" aria-label="ব্যক্তিগত বাম সাইডবার"></aside>
+  <aside class="bdx-rail bdx-rail-right" id="bdxDesktopRight" aria-label="সহায়তা ও সক্রিয় লেখকের ডান সাইডবার"></aside>
+  <button class="bdx-edge bdx-edge-left" id="bdxOpenLeft" type="button" aria-label="বাম সাইডবার খুলুন">›</button>
+  <button class="bdx-edge bdx-edge-right" id="bdxOpenRight" type="button" aria-label="ডান সাইডবার খুলুন">‹</button>
   <div class="bdx-overlay" id="bdxOverlay"></div>
   <aside class="bdx-drawer bdx-drawer-left" id="bdxMobileLeft" aria-label="মোবাইল বাম সাইডবার"></aside>
   <aside class="bdx-drawer bdx-drawer-right" id="bdxMobileRight" aria-label="মোবাইল ডান সাইডবার"></aside>
 </div>
 
-
-<script id="bdx-universal-sidebar-theme-script-v13">
+<script id="bdx-universal-sidebar-theme-script-v14">
 (function(){
 'use strict';
-const D=document,H=D.documentElement;
-const $=(s,r=D)=>r.querySelector(s);
-const read=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??f}catch(e){return f}};
-const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const D=document,H=D.documentElement,B=D.body;
+const $=(s,r=D)=>r.querySelector(s), $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+const read=(k,f=null,store=localStorage)=>{try{const v=store.getItem(k);return v?JSON.parse(v):f}catch(e){return f}};
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
-const user=read('bhubondangaCurrentUser',read('bhubondangaSessionUser',null));
-const logged=Boolean(user&&(user.name||user.displayName||user.username||user.email));
-const role=String(user?.role||user?.app_metadata?.role||'user').toLowerCase();
+const svg=(body)=>'<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+body+'</svg>';
+const icons={user:svg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'),edit:svg('<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>'),pen:svg('<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/>'),message:svg('<path d="M4 5h16v11H8l-4 4V5Z"/>'),bell:svg('<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>'),archive:svg('<rect x="3" y="5" width="18" height="15" rx="2"/><path d="M8 3h8M9 10h6"/>'),star:svg('<path d="m12 3 2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1-4.4-4.3 6.1-.9Z"/>'),settings:svg('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21h-4v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H3v-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3h4a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9A1.7 1.7 0 0 0 21 10h.1v4H21a1.7 1.7 0 0 0-1.6 1Z"/>'),shield:svg('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>'),users:svg('<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 21a6 6 0 0 1 12 0M14 16a5 5 0 0 1 7 5"/>'),flag:svg('<path d="M5 21V4M5 5h12l-2 4 2 4H5"/>'),info:svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),book:svg('<path d="M4 5a3 3 0 0 1 3-3h13v17H7a3 3 0 0 0-3 3V5Z"/><path d="M4 19a3 3 0 0 1 3-3h13"/>'),link:svg('<path d="M10 13a5 5 0 0 0 7.1 0l2-2a5 5 0 0 0-7.1-7.1l-1.1 1.1M14 11a5 5 0 0 0-7.1 0l-2 2A5 5 0 0 0 12 20.1l1.1-1.1"/>'),logout:svg('<path d="M10 17l5-5-5-5M15 12H3M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"/>'),bookmark:svg('<path d="M6 3h12v18l-6-4-6 4V3Z"/>')};
 const currentFile=(location.pathname.split('/').pop()||'index.html').toLowerCase();
-
-const NAV=[
- ['index.html','⌂','হোম'],
- ['poem.html','🖋','কবিতা'],
- ['recitation.html','🎙','আবৃত্তি'],
- ['madhyorater-prolap.html','☾','মধ্যরাতের প্রলাপ'],
- ['environment.html','🌱','পরিবেশের কথা'],
- ['letter.html','✉','চিঠিপত্র'],
- ['small-prolap.html','☁','ছোট কথার প্রলাপ'],
- ['discussion.html','◌','সাহিত্য আলোচনা'],
- ['famous-poet.html','♙','খ্যাতিমান কবি'],
- ['famous-quotes.html','❝','মনীষীদের বাণী'],
- ['humanitarian-notice.html','♡','মানবিক আবেদন']
-];
-
-const THEMES=[
- ['pearl','মুক্তা গ্লাস'],
- ['moon','নীল জ্যোৎস্না'],
- ['lavender','ল্যাভেন্ডার'],
- ['rose','অরোরা গোলাপি']
-];
-
-function normalizeFile(href){return String(href).split('?')[0].split('#')[0].toLowerCase()}
-function navHtml(){
- return '<nav class="bdx-nav">'+NAV.map(([href,icon,label])=>
-  '<a href="'+href+'" '+(normalizeFile(href)===currentFile?'aria-current="page"':'')+'>'+
-  '<span class="bdx-icon">'+icon+'</span><span>'+label+'</span><span>›</span></a>'
- ).join('')+'</nav>';
-}
-function identityHtml(){
- return '<section class="bdx-card bdx-identity"><div class="bdx-logo">🌿</div><h2><a href="index.html">আপন ভুবন</a></h2>'+
- '<p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p>'+
- '<div class="bdx-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></section>';
-}
-function themeHtml(){
- const palette=localStorage.getItem('bhubondangaGlassTheme')||localStorage.getItem('bhubondangaStyle')||'pearl';
- const mode=localStorage.getItem('bhubondangaThemeMode')||localStorage.getItem('bhubondangaTheme')||H.dataset.theme||'light';
- const modeLabel=mode==='dark'?'ডার্ক':mode==='middle'?'মিডল':'লাইট';
- return '<section class="bdx-card"><div class="bdx-card-title"><h3>চারটি থিম</h3><small style="font-size:7px;color:var(--bdx-soft)">সব পেজে একই</small></div>'+
- '<div class="bdx-theme-grid">'+THEMES.map(([key,label])=>
- '<button class="bdx-theme" type="button" data-bdx-style="'+key+'" aria-pressed="'+(palette===key)+'">'+
- '<span class="bdx-swatch"></span>'+label+'</button>').join('')+'</div>'+
- '<button class="bdx-mode" type="button" data-bdx-mode><span class="bdx-icon">◐</span><span>আলো: <b data-bdx-mode-label>'+modeLabel+'</b></span><span>›</span></button></section>';
-}
-function leftHtml(){
- return identityHtml()+'<section class="bdx-card">'+navHtml()+'</section>'+themeHtml()+
- '<section class="bdx-card"><a class="bdx-contact" href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</a><p class="bdx-note">প্রতিষ্ঠাতার প্রোফাইল ও যোগাযোগের মাধ্যম দেখুন।</p></section>';
-}
-function avatarMarkup(){
- const url=user?.avatar||user?.avatar_url||user?.profileImage||'';
- if(url)return '<img src="'+esc(url)+'" alt="">';
- return '♙';
-}
-function accountHtml(){
- if(!logged){
-  return '<section class="bdx-card bdx-account"><div class="bdx-account-avatar">♙</div><strong>অতিথি পাঠক</strong><p>লেখা প্রকাশ ও প্রতিক্রিয়ার জন্য লগইন করুন</p>'+
-  '<div class="bdx-account-buttons"><a class="primary" href="login.html">লগইন</a><a href="register.html">রেজিস্টার</a></div></section>';
- }
- const name=user.name||user.displayName||user.username||user.email||'ভুবনডাঙ্গার সদস্য';
- let profile='profile.html';
- if(role==='founder')profile='founder-profile.html';
- else if(role==='admin')profile='admin-profile.html';
- const dashboard=role==='founder'?'founder-dashboard.html':role==='admin'?'admin-dashboard.html':'';
- return '<section class="bdx-card bdx-account"><div class="bdx-account-avatar">'+avatarMarkup()+'</div><strong>'+esc(name)+'</strong><p>আপনার ব্যক্তিগত ভুবন</p>'+
- '<div class="bdx-account-buttons"><a class="primary" href="'+profile+'">প্রোফাইল</a><a href="edit-profile.html">সম্পাদনা</a>'+
- '<a href="messages.html">ইনবক্স</a><a href="notifications.html">নোটিফিকেশন</a>'+
- (dashboard?'<a class="wide" href="'+dashboard+'">ড্যাশবোর্ড</a>':'')+
- '<button class="wide" type="button" data-bdx-logout>লগআউট</button></div></section>';
-}
-function profileLinks(){
- const links=[
-  ['profile.html','সাধারণ কবি/লেখক প্রোফাইল'],
-  ['founder-profile.html','Founder প্রোফাইল'],
-  ['admin-profile.html','Admin প্রোফাইল'],
-  ['poet-profile.html','খ্যাতিমান কবির প্রোফাইল'],
-  ['thinker-profile.html','মনীষীর প্রোফাইল']
- ];
- return '<section class="bdx-card"><h3>প্রোফাইলসমূহ</h3><div class="bdx-nav">'+links.map(([h,t])=>
- '<a href="'+h+'"><span class="bdx-icon">♙</span><span>'+t+'</span><span>›</span></a>').join('')+'</div></section>';
-}
-function quickHtml(){
- const links=[
-  ['bhubondangar-lekhok.html','ভুবনডাঙ্গার লেখক'],
-  ['favorite-authors.html','প্রিয় লেখক'],
-  ['messages.html','ইনবক্স'],
-  ['notifications.html','নোটিফিকেশন'],
-  ['humanitarian-notice.html','যাচাইকৃত মানবিক নোটিস'],
-  ['about.html','আমাদের সম্পর্কে'],
-  ['contact.html','যোগাযোগ'],
-  ['complaint.html','অভিযোগ করুন'],
-  ['policy.html','নীতিমালা']
- ];
- return '<section class="bdx-card"><h3>দ্রুত দেখুন</h3><div class="bdx-nav">'+links.map(([h,t])=>
- '<a href="'+h+'"><span class="bdx-icon">•</span><span>'+t+'</span><span>›</span></a>').join('')+'</div></section>';
-}
-function rightHtml(){
- return accountHtml()+profileLinks()+quickHtml()+themeHtml()+
- '<section class="bdx-card"><p class="bdx-note">সাধারণ সাহিত্যিক লেখা সংশ্লিষ্ট category newsfeed-এ প্রকাশিত হবে। মানবিক আবেদন যাচাইয়ের পর অগ্রাধিকার পাবে।</p></section>';
-}
-function drawerHead(title){
- return '<div class="bdx-drawer-head"><strong>'+title+'</strong><button class="bdx-close" type="button" data-bdx-close>×</button></div>';
-}
-function renderShell(){
- const left=leftHtml(),right=rightHtml();
- $('#bdxDesktopLeft').innerHTML=left;
- $('#bdxDesktopRight').innerHTML=right;
- $('#bdxMobileLeft').innerHTML=drawerHead('🌿 আপন ভুবন')+left;
- $('#bdxMobileRight').innerHTML=drawerHead(logged?'আপনার ভুবন':'অতিথি পাঠক')+right;
- syncThemeButtons();
-}
-function closeDrawers(){
- $('#bdxMobileLeft').classList.remove('open');
- $('#bdxMobileRight').classList.remove('open');
- $('#bdxOverlay').classList.remove('show');
- D.body.classList.remove('bdx-drawer-lock');
-}
-function openDrawer(side){
- closeDrawers();
- $('#bdxOverlay').classList.add('show');
- $(side==='left'?'#bdxMobileLeft':'#bdxMobileRight').classList.add('open');
- D.body.classList.add('bdx-drawer-lock');
-}
-function applyPalette(key){
- H.dataset.bdxPalette=key;
- localStorage.setItem('bhubondangaGlassTheme',key);
- localStorage.setItem('bhubondangaStyle',key);
- syncThemeButtons();
-}
-function applyMode(mode){
- H.dataset.theme=mode;
- H.dataset.mode=mode;
- localStorage.setItem('bhubondangaTheme',mode);
- localStorage.setItem('bhubondangaThemeMode',mode);
- document.querySelector('meta[name="theme-color"]')?.setAttribute('content',mode==='dark'?'#071426':'#f7f9ff');
- syncThemeButtons();
-}
-function syncThemeButtons(){
- const palette=H.dataset.bdxPalette||'pearl';
- document.querySelectorAll('[data-bdx-style]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.bdxStyle===palette)));
- const mode=H.dataset.theme||H.dataset.mode||'light';
- const label=mode==='dark'?'ডার্ক':mode==='middle'?'মিডল':'লাইট';
- document.querySelectorAll('[data-bdx-mode-label]').forEach(x=>x.textContent=label);
-}
-function cycleMode(){
- const current=H.dataset.theme||H.dataset.mode||'light';
- const list=['light','middle','dark'];
- applyMode(list[(list.indexOf(current)+1)%list.length]);
-}
-async function logout(){
- try{
-  if(window.supabaseClient?.auth)await window.supabaseClient.auth.signOut({scope:'local'});
-  else if(window.supabase?.auth)await window.supabase.auth.signOut();
- }catch(e){}
- localStorage.removeItem('bhubondangaCurrentUser');
- localStorage.removeItem('bhubondangaSessionUser');
- location.href='login.html';
-}
-
-const initialPalette=localStorage.getItem('bhubondangaGlassTheme')||localStorage.getItem('bhubondangaStyle')||'pearl';
-const initialMode=localStorage.getItem('bhubondangaThemeMode')||localStorage.getItem('bhubondangaTheme')||H.dataset.theme||H.dataset.mode||'light';
-applyPalette(initialPalette);
-applyMode(initialMode);
-renderShell();
-
-$('#bdxOpenLeft').addEventListener('click',()=>openDrawer('left'));
-$('#bdxOpenRight').addEventListener('click',()=>openDrawer('right'));
-$('#bdxOverlay').addEventListener('click',closeDrawers);
-
-$('#bdx-universal-shell-v13').addEventListener('click',function(e){
- const close=e.target.closest('[data-bdx-close]');
- if(close){closeDrawers();return}
- const style=e.target.closest('[data-bdx-style]');
- if(style){e.preventDefault();applyPalette(style.dataset.bdxStyle);return}
- const mode=e.target.closest('[data-bdx-mode]');
- if(mode){e.preventDefault();cycleMode();return}
- const logoutButton=e.target.closest('[data-bdx-logout]');
- if(logoutButton){e.preventDefault();logout();return}
-});
-D.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawers()});
-
-/* A safety reset for pages previously left locked by a broken theme modal. */
-D.body.classList.remove('theme-open','unified-theme-open');
+if(currentFile==='messages.html')B.classList.add('bdx-special-wide');
+B.classList.add('bdx-sidebars-ready');
+const legacyUser=()=>read('bhubondangaCurrentUser',read('bhubondangaSessionUser',null,sessionStorage));
+let user=legacyUser();
+const logged=()=>Boolean(user&&(user.id||user.name||user.displayName||user.username||user.email||user.role));
+const roleOf=()=>String(user?.role||user?.app_metadata?.role||'user').toLowerCase();
+function profileUrl(){const role=roleOf();if(role==='founder')return'founder-profile.html';if(role==='admin')return'admin-profile.html';return'profile.html'}
+function avatar(){const url=user?.avatar||user?.avatar_url||user?.profileImage||'';return url?'<img src="'+esc(url)+'" alt="">':icons.user}
+function accountHtml(){if(!logged())return '<section class="bdx-card bdx-account"><div class="bdx-avatar">'+icons.user+'</div><strong>অতিথি পাঠক</strong><p>লিখতে ও প্রতিক্রিয়া জানাতে প্রবেশ করুন</p><div class="bdx-two"><a class="bdx-btn primary" href="login.html">লগইন</a><a class="bdx-btn" href="register.html">নিবন্ধন</a></div></section>';const name=user.name||user.displayName||user.username||user.email||'ভুবনডাঙ্গার সদস্য';return '<section class="bdx-card bdx-account"><a class="bdx-avatar" href="'+profileUrl()+'">'+avatar()+'</a><strong>'+esc(name)+'</strong><p>আপনার ব্যক্তিগত ভুবন</p><div class="bdx-two"><a class="bdx-btn primary" href="'+profileUrl()+'">প্রোফাইল</a><a class="bdx-btn" href="edit-profile.html">সম্পাদনা</a></div></section>'}
+function personalHtml(){if(!logged())return '<section class="bdx-card"><div class="bdx-card-title"><span class="bdx-title-icon">'+icons.user+'</span><h3>আপনার ব্যক্তিগত কেন্দ্র</h3></div><div class="bdx-note">নোটিফিকেশন, ইনবক্স, আর্কাইভ ও সেটিংস দেখতে লগইন করুন।</div></section>';const actions=[['pen','লিখুন','#','data-bdx-write'],['message','ইনবক্স','messages.html',''],['bell','নোটিফিকেশন','notifications.html',''],['archive','আর্কাইভ','archive.html',''],['star','মেমোরিজ','memories.html',''],['settings','সেটিংস','settings.html','']];return '<section class="bdx-card"><div class="bdx-card-title"><span class="bdx-title-icon">'+icons.user+'</span><h3>আপনার ব্যক্তিগত কেন্দ্র</h3></div><div class="bdx-action-grid">'+actions.map(([i,t,h,a])=>a?'<button class="bdx-action" type="button" '+a+'><span class="bdx-icon">'+icons[i]+'</span>'+t+'</button>':'<a class="bdx-action" href="'+h+'"><span class="bdx-icon">'+icons[i]+'</span>'+t+'</a>').join('')+'</div><button class="bdx-btn wide" style="width:100%;margin-top:6px" type="button" data-bdx-logout>'+icons.logout+' লগআউট</button></section>'}
+const themes=[['pearl','মুক্তা গ্লাস'],['moon','নীল জ্যোৎস্না'],['lavender','ল্যাভেন্ডার'],['rose','অরোরা গোলাপি'],['silver','রূপালি কুয়াশা']];
+function themeHtml(){const palette=localStorage.getItem('bhubondangaGlassTheme')||localStorage.getItem('bhubondangaStyle')||'pearl',mode=localStorage.getItem('bhubondangaThemeMode')||localStorage.getItem('bhubondangaTheme')||H.dataset.theme||'light';return '<section class="bdx-card"><div class="bdx-card-title"><span class="bdx-title-icon">'+icons.settings+'</span><h3>রঙ ও আলো</h3><small>সব পেজে একই</small></div><div class="bdx-theme-grid">'+themes.map(([k,t])=>'<button class="bdx-theme" type="button" data-bdx-style="'+k+'" aria-pressed="'+(k===palette)+'"><span class="bdx-swatch"></span>'+t+'</button>').join('')+'</div><div class="bdx-mode-grid">'+[['light','লাইট'],['middle','মিডল'],['dark','ডার্ক']].map(([k,t])=>'<button class="bdx-mode-btn" type="button" data-bdx-mode="'+k+'" aria-pressed="'+(k===mode)+'">'+t+'</button>').join('')+'</div></section>'}
+function activeWriters(){let rows=[];for(const key of ['bhubondangaActiveWriters','bhubondangaOnlineWriters']){const x=read(key,[]);if(Array.isArray(x))rows.push(...x)}if(logged())rows.unshift({id:user.id||user.username||user.email,name:user.name||user.displayName||user.username||user.email,role:user.role||'সদস্য',avatar:user.avatar||user.avatar_url||'',online:true,url:profileUrl()});const now=Date.now(),seen=new Set();return rows.filter(x=>{const id=String(x.id||x.username||x.email||x.name||'');if(!id||seen.has(id))return false;const last=Number(x.lastSeen||x.last_seen||0);const live=x.online===true||x.isOnline===true||(last&&now-last<5*60*1000);if(!live)return false;seen.add(id);return true}).slice(0,7)}
+function initials(name){return String(name||'ভ').trim().split(/\s+/).map(x=>x[0]).join('').slice(0,2)}
+function writersHtml(){const rows=activeWriters();return '<section class="bdx-card"><div class="bdx-card-title"><span class="bdx-title-icon">'+icons.users+'</span><h3>সক্রিয় লেখক</h3><small>সবুজ বাতি</small></div><div class="bdx-writers">'+(rows.length?rows.map(x=>{const url=x.url||('profile.html?user='+encodeURIComponent(x.username||x.id||x.name||''));const av=x.avatar?'<img src="'+esc(x.avatar)+'" alt="">':esc(initials(x.name));return '<a class="bdx-writer" href="'+esc(url)+'"><span class="bdx-writer-avatar">'+av+'</span><span><strong>'+esc(x.name||'লেখক')+'</strong><small>'+esc(x.role||'সদস্য')+'</small></span><span class="bdx-online" aria-label="সক্রিয়"></span></a>'}).join(''):'<div class="bdx-empty">এই মুহূর্তে সক্রিয় লেখকের তথ্য পাওয়া যায়নি।</div>')+'</div></section>'}
+function supportHtml(){const links=[['shield','যাচাইকৃত মানবিক নোটিস','humanitarian-notice.html'],['info','আমাদের সম্পর্কে','about.html'],['message','যোগাযোগ','contact.html'],['flag','অভিযোগ ও রিপোর্ট','complaint.html'],['shield','গোপনীয়তা ও নিরাপত্তা','privacy-security-policy.html'],['book','নীতিমালা','policy.html'],['bookmark','লেখার সুরক্ষা','creative-work-protection.html']];return '<section class="bdx-card"><div class="bdx-card-title"><span class="bdx-title-icon">'+icons.shield+'</span><h3>সহায়তা ও আস্থা</h3></div><div class="bdx-list">'+links.map(([i,t,h])=>'<a href="'+h+'"><span class="bdx-icon">'+icons[i]+'</span><span>'+t+'</span><span>›</span></a>').join('')+'</div></section>'}
+function savedHtml(){if(!logged())return'';const items=read('bhubondangaMemories',[]);const rows=Array.isArray(items)?items.slice(0,4):[];return '<section class="bdx-card"><div class="bdx-card-title"><span class="bdx-title-icon">'+icons.bookmark+'</span><h3>সংরক্ষিত লেখা</h3></div><div class="bdx-list">'+(rows.length?rows.map(x=>'<a href="'+esc(x.url||'archive.html?tab=memories')+'"><span class="bdx-icon">'+icons.bookmark+'</span><span>'+esc(x.title||'সংরক্ষিত লেখা')+'</span><span>›</span></a>').join(''):'<div class="bdx-empty">এখনও কোনো লেখা সেভ করা হয়নি।</div>')+'</div></section>'}
+function leftHtml(){return '<div class="bdx-stack">'+accountHtml()+personalHtml()+themeHtml()+'<section class="bdx-card"><div class="bdx-note bdx-quote"><strong>🌿 আপন ভুবন</strong><br>“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”<br><br><a href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন →</a></div></section></div>'}
+function rightHtml(){return '<div class="bdx-stack">'+writersHtml()+supportHtml()+savedHtml()+'<section class="bdx-card"><div class="bdx-note">সাধারণ সাহিত্যিক লেখা সরাসরি প্রকাশিত হয়। অশ্লীল বা অপমানজনক শব্দ শনাক্ত হলে Review queue-তে পাঠানো হয়।</div></section></div>'}
+function head(t){return '<div class="bdx-drawer-head"><strong>'+t+'</strong><button class="bdx-close" type="button" data-bdx-close>×</button></div>'}
+function render(){const l=leftHtml(),r=rightHtml();$('#bdxDesktopLeft').innerHTML=l;$('#bdxDesktopRight').innerHTML=r;$('#bdxMobileLeft').innerHTML=head('🌿 আপন ভুবন')+l;$('#bdxMobileRight').innerHTML=head('সক্রিয় লেখক ও সহায়তা')+r;sync()}
+function close(){['#bdxMobileLeft','#bdxMobileRight'].forEach(s=>$(s)?.classList.remove('open'));$('#bdxOverlay')?.classList.remove('show');B.classList.remove('bdx-drawer-lock')}
+function open(side){close();$('#bdxOverlay').classList.add('show');$(side==='left'?'#bdxMobileLeft':'#bdxMobileRight').classList.add('open');B.classList.add('bdx-drawer-lock')}
+function applyPalette(k){H.dataset.bdxPalette=k;localStorage.setItem('bhubondangaGlassTheme',k);localStorage.setItem('bhubondangaStyle',k);sync()}
+function applyMode(k){H.dataset.theme=k;H.dataset.mode=k;localStorage.setItem('bhubondangaTheme',k);localStorage.setItem('bhubondangaThemeMode',k);sync()}
+function sync(){const p=H.dataset.bdxPalette||'pearl',m=H.dataset.theme||H.dataset.mode||'light';$$('[data-bdx-style]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.bdxStyle===p)));$$('[data-bdx-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.bdxMode===m)))}
+function writeInline(){close();if(!logged()){location.href='login.html?next='+encodeURIComponent(location.href);return}const target=$('#composerPrompt')||$('[data-composer-prompt]')||$('.composer-prompt')||$('[data-open-composer]');if(target){target.click();return}location.href='index.html#composer'}
+async function logout(){try{if(window.BhubondangaAuth?.signOut)await window.BhubondangaAuth.signOut();else if(window.supabaseClient?.auth)await window.supabaseClient.auth.signOut()}catch(e){}localStorage.removeItem('bhubondangaCurrentUser');sessionStorage.removeItem('bhubondangaSessionUser');location.href='login.html'}
+applyPalette(localStorage.getItem('bhubondangaGlassTheme')||localStorage.getItem('bhubondangaStyle')||'pearl');applyMode(localStorage.getItem('bhubondangaThemeMode')||localStorage.getItem('bhubondangaTheme')||H.dataset.theme||'light');render();
+$('#bdxOpenLeft').addEventListener('click',()=>open('left'));$('#bdxOpenRight').addEventListener('click',()=>open('right'));$('#bdxOverlay').addEventListener('click',close);$('#bdx-universal-shell-v14').addEventListener('click',e=>{const c=e.target.closest('[data-bdx-close]');if(c){close();return}const st=e.target.closest('[data-bdx-style]');if(st){applyPalette(st.dataset.bdxStyle);return}const md=e.target.closest('[data-bdx-mode]');if(md){applyMode(md.dataset.bdxMode);return}if(e.target.closest('[data-bdx-write]')){writeInline();return}if(e.target.closest('[data-bdx-logout]')){logout();return}});D.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+(async()=>{try{if(window.BhubondangaAuth?.current){const info=await window.BhubondangaAuth.current();if(info?.user){user=info.legacyUser||{id:info.user.id,email:info.user.email,name:info.user.user_metadata?.full_name||info.user.email,role:info.user.app_metadata?.role||'user'};render()}}}catch(e){}})();
 })();
 </script>
 
