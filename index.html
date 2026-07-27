@@ -770,7 +770,7 @@ const $=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s)
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const safe=(k,f=null,store=localStorage)=>{try{const v=store.getItem(k);return v?JSON.parse(v):f}catch(_){return f}};
 const bn='০১২৩৪৫৬৭৮৯',bnNum=v=>String(v).replace(/\d/g,d=>bn[d]);
-const canonicalFile=()=>((location.pathname.split('/').pop()||'index.html').toLowerCase().replace(/\(\d+\)/g,'').replace(/\.html\.html$/,'.html').trim());
+const canonicalFile=()=>{let n='index.html';try{n=decodeURIComponent(location.pathname.split('/').pop()||'index.html')}catch(_){n=location.pathname.split('/').pop()||'index.html'}return n.toLowerCase().replace(/\s*\(\d+\)(?=\.html$)/i,'').replace(/\s+/g,'').replace(/\.html\.html$/,'.html').trim()};
 const roleOf=u=>String(u?.app_metadata?.role||u?.user_metadata?.role||'user').toLowerCase();
 function toast(msg){let t=$('#bdSingleToast');if(!t){t=D.createElement('div');t.id='bdSingleToast';t.className='bd-single-toast';D.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2600)}
 function legacyUser(){const a=safe('bhubondangaCurrentUser'),b=safe('bhubondangaSessionUser',null,sessionStorage),u=a||b;return u&&u.loggedIn!==false?u:null}
@@ -788,7 +788,7 @@ W.BhubondangaData={
 function specialGreeting(){const now=new Date(),parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',month:'2-digit',day:'2-digit'}).formatToParts(now),mo=parts.find(x=>x.type==='month')?.value,da=parts.find(x=>x.type==='day')?.value,key=mo+'-'+da;const fixed={'02-21':'আন্তর্জাতিক মাতৃভাষা দিবস','03-26':'স্বাধীনতা দিবস','04-14':'শুভ বাংলা নববর্ষ','08-15':'জাতীয় শোক দিবস','12-16':'বিজয় দিবস'};if(fixed[key])return fixed[key];const hour=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',hour:'2-digit',hour12:false}).format(now));return hour<5?'শুভ রাত্রি':hour<12?'শুভ সকাল':hour<17?'শুভ দুপুর':hour<20?'শুভ সন্ধ্যা':'শুভ রাত্রি'}
 function dates(){const now=new Date(),opt={timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'};let greg='',bangla='',hijri='';try{greg=new Intl.DateTimeFormat('bn-BD',opt).format(now)}catch(_){greg=now.toLocaleDateString('bn-BD')}try{bangla=new Intl.DateTimeFormat('bn-BD-u-ca-beng',opt).format(now)}catch(_){bangla=greg}try{hijri=new Intl.DateTimeFormat('bn-BD-u-ca-islamic-civil',opt).format(now)}catch(_){hijri='ইসলামিক তারিখ'}let wd='';try{wd=new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',weekday:'long'}).format(now)}catch(_){wd='আজ'}$$('.weekday').forEach(x=>x.textContent=wd);$$('.gregorian').forEach(x=>x.textContent=greg+' খ্রিস্টাব্দ');$$('.bangla').forEach(x=>x.textContent=bangla+' বঙ্গাব্দ');$$('.hijri').forEach(x=>x.textContent=hijri+' হিজরি');$$('.greeting,.hello').forEach(x=>x.textContent=specialGreeting()+'—আপনার দিনটি ভালো কাটুক')}
 function authUI(){const logged=!!state.session,who=identity(),privateNames=['messages.html','notifications.html','settings.html','archive.html','memories.html','edit-profile.html','founder-dashboard.html','admin-dashboard.html'];$$('a').forEach(a=>{const href=(a.getAttribute('href')||'').split('?')[0].toLowerCase();if(privateNames.includes(href))a.classList.toggle('bd-auth-hidden',!logged);if(['login.html','register.html','forgot-password.html'].includes(href))a.classList.toggle('bd-auth-hidden',logged)});$$('[data-auth-only]').forEach(x=>x.classList.toggle('bd-auth-hidden',!logged));$$('[data-guest-only]').forEach(x=>x.classList.toggle('bd-auth-hidden',logged));const h=$('#headerAvatar');if(h){if(h.tagName==='A')h.href=logged?profileUrl(who):'login.html';h.title=logged?who.author_name:'লগইন করুন';if(logged&&who.author_avatar)h.innerHTML='<img src="'+esc(who.author_avatar)+'" alt="'+esc(who.author_name)+'">'}const ca=$('#composerAvatar');if(ca&&logged&&who.author_avatar)ca.innerHTML='<img src="'+esc(who.author_avatar)+'" alt="">';if(!logged){$$('#headerUnreadBadge,.badge').forEach(x=>{if(x.closest('a[href*="notification"],a[href*="message"]'))x.hidden=true})}}
-async function resolveAuth(){let session=null;if(client){try{session=(await client.auth.getSession()).data?.session||null}catch(_){session=null}}state.session=session;if(session){state.role=await getRole(session.user.id,session.user);state.profile=await getProfile(session.user.id)}else{const l=legacyUser();state.role=String(l?.role||'visitor').toLowerCase();state.profile=l?{id:l.id||l.uid,username:l.username||l.slug,display_name:l.name||l.displayName,avatar_url:l.avatar||l.photo}:null}await founderId();try{W.__BD_IDENTITY=identity();W.__BD_LIVE_SESSION=state.session;W.__BD_LIVE_ROLE=state.role}catch(_){}authUI();return state}
+async function resolveAuth(){let session=null;if(client){try{session=(await client.auth.getSession()).data?.session||null}catch(_){session=null}}state.session=session;if(session){state.role=await getRole(session.user.id,session.user);state.profile=await getProfile(session.user.id)}else{const l=legacyUser();state.role=String(l?.role||'visitor').toLowerCase();state.profile=l?{id:l.id||l.uid,username:l.username||l.slug,display_name:l.name||l.displayName,avatar_url:l.avatar||l.photo}:null}await founderId();try{W.__BD_IDENTITY=identity();W.__BD_LIVE_SESSION=state.session;W.__BD_LIVE_ROLE=state.role;D.dispatchEvent(new CustomEvent('bd:auth-ready',{detail:{session:state.session,identity:W.__BD_IDENTITY,role:state.role}}))}catch(_){}authUI();return state}
 function typeLabel(type){return({poem:'কবিতা',prolap:'ছোট কথার প্রলাপ',recitation:'আবৃত্তি',environment:'পরিবেশের কথা',letters:'চিঠিপত্র',children:'শিশুতোষ',midnight:'মধ্যরাতের প্রলাপ',song:'গান',songs:'গান'})[type]||'কবিতা'}
 function normalizeType(raw){const s=String(raw||'poem').toLowerCase();if(s.includes('midnight')||s.includes('মধ্যরাত'))return'midnight';if(s.includes('song')||s.includes('গান'))return'song';if(s.includes('prolap')||s.includes('প্রলাপ'))return'prolap';if(s.includes('recitation')||s.includes('আবৃত্তি'))return'recitation';if(s.includes('environment')||s.includes('পরিবেশ'))return'environment';if(s.includes('letter')||s.includes('চিঠি'))return'letters';if(s.includes('children')||s.includes('শিশু'))return'children';return'poem'}
 const blocked=['হারামজাদা','শুয়োর','কুত্তা','চোদ','মাগী','বাল','খানকি'];function flagged(text){const n=String(text||'').toLowerCase().replace(/[\s._-]+/g,'');return blocked.some(w=>n.includes(w.replace(/[\s._-]+/g,'')))}
@@ -801,7 +801,32 @@ function svgUser(){return'<svg class="icon" viewBox="0 0 24 24" aria-hidden="tru
 function card(p,midnight=false){const founder=String(p.author_username||'').toLowerCase()==='mahmud-sohel'||p.author_name==='মাহমুদ সোহেল'||(state.founderId&&String(p.author_id)===String(state.founderId)),url=profileUrl(Object.assign({},p,{role:founder?'founder':''})),avatar=p.author_avatar?'<img src="'+esc(p.author_avatar)+'" alt="">':svgUser(),badge=founder?'<span class="bd-founder-badge">Founder</span>':'',time=prettyDate(p.created_at),body=esc(p.body||''),title=esc(p.title||'শিরোনামহীন'),cat=esc(p.category||typeLabel(p.type));if(midnight)return'<article class="card prolap-card bd-live-post" data-post-id="'+esc(p.id)+'"><div class="prolap-head"><div class="prolap-author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="prolap-author-copy"><a href="'+url+'">'+esc(p.author_name)+badge+'</a><p>'+time+'</p></div></div><span class="post-order">নতুন</span></div><div class="prolap-body"><div class="prolap-label-row"><span class="prolap-label">'+cat+'</span></div><h3 class="prolap-title"><a href="post-details.html?id='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="prolap-text">'+body+'</div></div></article>';return'<article class="glass post style-'+esc(p.card_style||'pearl')+' bd-live-post" data-post-id="'+esc(p.id)+'"><div class="post-head author"><div class="author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="author-meta"><div class="author-name-row"><a href="'+url+'"><strong>'+esc(p.author_name||'ভুবনডাঙ্গার সদস্য')+'</strong></a>'+badge+'</div><small class="bd-post-time">'+time+'</small></div></div><div class="three-dot"><button class="three-dot-btn post-menu" type="button" data-live-menu="'+esc(p.id)+'" aria-label="পোস্টের অপশন">•••</button></div></div><span class="pill tag">'+cat+'</span><h3 class="post-title"><a href="post-details.html?id='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="post-body">'+body+'</div><a class="post-read-more readmore" href="post-details.html?id='+encodeURIComponent(p.id)+'">পূর্ণ লেখা পড়ুন →</a><div class="post-footer actions"><div class="post-actions"><button class="action-btn action" type="button" data-live-like>♡ <span>ভালোবাসা</span></button><button class="action-btn action" type="button" data-comment>◌ <span>মন্তব্য</span></button><button class="action-btn action" type="button" data-live-share>↗ <span>শেয়ার</span></button><button class="action-btn action" type="button" data-live-save>▱ <span>সেভ</span></button></div></div><div class="comments comment-box"><div class="comment-list"></div><form class="comment-form" data-post-id="'+esc(p.id)+'"><textarea placeholder="মন্তব্য লিখুন..."></textarea><button type="submit">➤</button></form></div></article>'}
 async function pageFilter(){const f=canonicalFile(),o={limit:40,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
 function targetFor(f){if(f==='index.html')return $('#postList');if(['today-poem.html','today-prolap.html','environment.html'].includes(f))return $('#feedList');if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))return $('#content');if(f==='madhyorater-prolap.html')return $('#prolapFeed');return null}
-async function loadFeed(){if(!client||state.feedBusy)return;const f=canonicalFile(),opt=await pageFilter();if(!opt)return;const host=targetFor(f);if(!host)return;state.feedBusy=true;try{let q=client.from('posts').select('*').in('status',['published','published_flagged']).order('created_at',{ascending:false}).limit(opt.limit||40);if(opt.authorId)q=q.eq('author_id',opt.authorId);else if(opt.authorUsername)q=q.eq('author_username',opt.authorUsername);if(opt.type)q=q.eq('type',opt.type);const r=await q;if(r.error)throw r.error;const rows=r.data||[];let html=rows.map(x=>card(x,opt.midnight)).join('');if(!html)html='<section class="bd-realtime-note">এখনও কোনো প্রকাশিত লেখা নেই।</section>';if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))host.innerHTML='<section class="glass section-head"><div><h2>প্রকাশিত লেখা</h2><small>Supabase থেকে সরাসরি হালনাগাদ</small></div></section><section class="post-list">'+html+'</section>';else host.innerHTML=html;const count=$('#feedCount');if(count)count.textContent=bnNum(rows.length)+'টি লেখা'}catch(e){console.warn('Bhubondanga feed:',e?.message||e)}finally{state.feedBusy=false}}
+async function loadFeed(){
+  if(!client||state.feedBusy)return;
+  const f=canonicalFile(),opt=await pageFilter();
+  if(!opt)return;
+  const host=targetFor(f);
+  if(!host)return;
+  state.feedBusy=true;
+  try{
+    let q=client.from('posts').select('*').in('status',['published','published_flagged']).order('created_at',{ascending:false}).limit(opt.limit||40);
+    if(opt.authorId)q=q.eq('author_id',opt.authorId);else if(opt.authorUsername)q=q.eq('author_username',opt.authorUsername);
+    if(opt.type)q=q.eq('type',opt.type);
+    const r=await q;if(r.error)throw r.error;
+    const rows=r.data||[];
+    if(f==='index.html'){
+      W.__BD_SUPABASE_POSTS=rows;
+      D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows}}));
+      const count=$('#feedCount');if(count)count.textContent=bnNum(rows.length)+'টি লেখা';
+      return;
+    }
+    let html=rows.map(x=>card(x,opt.midnight)).join('');
+    if(!html)html='<section class="bd-realtime-note">এখনও কোনো প্রকাশিত লেখা নেই।</section>';
+    if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))host.innerHTML='<section class="glass section-head"><div><h2>প্রকাশিত লেখা</h2><small>Supabase থেকে সরাসরি হালনাগাদ</small></div></section><section class="post-list">'+html+'</section>';
+    else host.innerHTML=html;
+    const count=$('#feedCount');if(count)count.textContent=bnNum(rows.length)+'টি লেখা';
+  }catch(e){console.warn('Bhubondanga feed:',e?.message||e)}finally{state.feedBusy=false}
+}
 function realtime(){if(!client||state.channel)return;try{state.channel=client.channel('bd-live-'+canonicalFile()).on('postgres_changes',{event:'*',schema:'public',table:'posts'},()=>loadFeed()).subscribe()}catch(_){}}
 async function submitComment(form){if(!state.session){location.href='login.html?next='+encodeURIComponent(location.href);return}const ta=form.querySelector('textarea'),body=ta?.value.trim();if(!body)return;const who=identity(),postId=form.dataset.postId||form.closest('[data-post-id]')?.dataset.postId;if(!postId)return;const payload={id:'comment-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),post_id:postId,author_id:state.session.user.id,author_username:who.author_username,author_name:who.author_name,body,status:flagged(body)?'pending_review':'published'};const r=await client.from('comments').insert(payload);if(r.error)throw r.error;ta.value='';const list=form.parentElement.querySelector('.comment-list');if(list)list.insertAdjacentHTML('beforeend','<div class="comment comment-item"><a href="'+profileUrl(who)+'">'+esc(who.author_name)+'</a> — '+esc(body)+'</div>');toast('মন্তব্য যোগ হয়েছে')}
 D.addEventListener('click',async e=>{const close=e.target.closest('#bdPublishClose,#bdPublishCancel')||e.target.id==='bdPublishBackdrop';if(close){e.preventDefault();closePublisher();return}const typeBtn=e.target.closest('.compose-type');if(typeBtn){e.preventDefault();e.stopImmediatePropagation();openPublisher(typeBtn.dataset.type||typeBtn.textContent);return}const prompt=e.target.closest('#composerPrompt,.composer-prompt');if(prompt&&!$('#composerForm')){e.preventDefault();e.stopImmediatePropagation();openPublisher('poem');return}const c=e.target.closest('.bd-live-post [data-comment]');if(c){e.preventDefault();const box=c.closest('.bd-live-post').querySelector('.comments,.comment-box');box?.classList.toggle('open');return}if(e.target.closest('[data-live-share]')){const post=e.target.closest('.bd-live-post'),url=location.origin+location.pathname.replace(/[^/]+$/,'post-details.html')+'?id='+encodeURIComponent(post?.dataset.postId||'');if(navigator.share)await navigator.share({title:D.title,url}).catch(()=>{});else await navigator.clipboard?.writeText(url);toast('লিঙ্ক শেয়ার করা হয়েছে');return}if(e.target.closest('[data-live-save]')){const id=e.target.closest('.bd-live-post')?.dataset.postId,a=safe('bhubondangaSavedItems',[]);if(id&&!a.some(x=>x.id===id)){a.unshift({id,url:'post-details.html?id='+id,createdAt:new Date().toISOString()});localStorage.setItem('bhubondangaSavedItems',JSON.stringify(a))}toast('স্মৃতিতে রাখা হয়েছে');return}if(e.target.closest('[data-live-like]')){e.target.closest('[data-live-like]').classList.toggle('active');return}},true);
@@ -1084,8 +1109,470 @@ html[data-theme="dark"] .sidebar .contact-card,html[data-theme="dark"] .mobile-d
   .composer-quick-types{grid-template-columns:repeat(5,minmax(0,1fr))!important}
 }
 </style>
+<style id="bd-challenge-two-masterclass-3d-20260727">
+/*
+  Challenge Two — desktop masterclass layer.
+  The original HTML, sections, sidebars, navigation, composer, feed and scripts remain intact.
+  Dark-mode visuals are deliberately untouched.
+*/
+
+/* ---------- structural guarantee: both desktop sidebars always remain present ---------- */
+@media (min-width:900px){
+  main.layout{
+    display:grid!important;
+    width:min(1560px,100%)!important;
+    max-width:1560px!important;
+    margin-inline:auto!important;
+    grid-template-areas:"left center right"!important;
+    grid-template-columns:230px minmax(0,1fr) 250px!important;
+    gap:14px!important;
+    padding:13px 14px!important;
+    align-items:stretch!important;
+    perspective:1800px;
+  }
+  #leftSidebar{
+    grid-area:left!important;
+  }
+  .center-col{
+    grid-area:center!important;
+  }
+  #rightSidebar{
+    grid-area:right!important;
+  }
+  #leftSidebar,#rightSidebar,.left-col,.right-col{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+  }
+  .center-col{
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+  }
+  .edge-menu,.mobile-nav-shell{
+    display:none!important;
+  }
+  .desktop-nav{
+    display:flex!important;
+  }
+}
+
+/* Laptop / browser desktop-site widths: compact sidebars without removing either one. */
+@media (min-width:900px) and (max-width:1180px){
+  main.layout{
+    grid-template-columns:clamp(176px,19.2vw,220px) minmax(0,1fr) clamp(186px,20.5vw,230px)!important;
+    gap:10px!important;
+    padding:10px!important;
+  }
+  .header-inner{
+    grid-template-columns:minmax(248px,310px) minmax(230px,1fr) auto!important;
+    gap:10px!important;
+    padding-inline:10px!important;
+  }
+  #leftSidebar .side-box,#rightSidebar .right-section,
+  #leftSidebar .bd9-card,#rightSidebar .bd9-card{
+    padding:8px!important;
+  }
+  #leftSidebar .menu-card{
+    padding:8px 5px 6px!important;
+  }
+  #leftSidebar .menu-item,
+  #rightSidebar .bd9-menu a,
+  #rightSidebar .bd9-menu button{
+    min-height:35px!important;
+    padding:4px 5px!important;
+    gap:5px!important;
+  }
+  #leftSidebar .menu-icon,
+  #rightSidebar .bd9-menu span:first-child{
+    width:25px!important;
+    height:25px!important;
+  }
+  #leftSidebar .menu-item strong,
+  #rightSidebar .quick-item a,
+  #rightSidebar .bd9-menu b{
+    font-size:8px!important;
+  }
+}
+
+@media (min-width:1181px) and (max-width:1599px){
+  main.layout{
+    grid-template-columns:230px minmax(0,1fr) 250px!important;
+  }
+}
+
+@media (min-width:1600px){
+  main.layout{
+    grid-template-columns:260px minmax(0,1fr) 285px!important;
+    gap:16px!important;
+    padding:15px!important;
+  }
+}
+
+/* ---------- light-mode visual system: pearl aurora, optical depth and restrained 3D ---------- */
+html[data-theme="light"]{
+  --bd-c2-ink:#173455;
+  --bd-c2-soft:#61738d;
+  --bd-c2-line:rgba(83,109,166,.17);
+  --bd-c2-line-strong:rgba(104,104,205,.29);
+  --bd-c2-panel:linear-gradient(145deg,rgba(255,255,255,.94),rgba(246,250,255,.82) 48%,rgba(246,242,255,.78));
+  --bd-c2-panel-soft:linear-gradient(145deg,rgba(255,255,255,.86),rgba(241,247,255,.72) 51%,rgba(248,243,255,.68));
+  --bd-c2-depth:0 24px 54px rgba(47,66,126,.13),0 8px 18px rgba(88,74,154,.075),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(117,132,188,.08);
+  --bd-c2-depth-soft:0 15px 34px rgba(48,67,124,.095),0 5px 12px rgba(92,79,154,.055),inset 0 1px 0 rgba(255,255,255,.98);
+}
+
+html[data-theme="light"] body{
+  background:
+    radial-gradient(circle at 4% 3%,rgba(105,177,236,.18),transparent 26%),
+    radial-gradient(circle at 96% 7%,rgba(184,150,232,.17),transparent 28%),
+    radial-gradient(circle at 52% 108%,rgba(93,207,183,.10),transparent 34%),
+    linear-gradient(155deg,#fbfdff 0%,#edf3fa 48%,#f8f5fc 100%)!important;
+}
+html[data-theme="light"] body::before,
+html[data-theme="light"] body::after{
+  content:"";
+  position:fixed;
+  z-index:-1;
+  pointer-events:none;
+  border-radius:50%;
+  filter:blur(2px);
+}
+html[data-theme="light"] body::before{
+  width:42vw;height:42vw;left:-18vw;top:20vh;
+  background:radial-gradient(circle,rgba(91,155,235,.12),transparent 67%);
+}
+html[data-theme="light"] body::after{
+  width:38vw;height:38vw;right:-15vw;bottom:-12vw;
+  background:radial-gradient(circle,rgba(155,117,224,.12),transparent 69%);
+}
+
+html[data-theme="light"] .site-header{
+  border-bottom:1px solid rgba(91,113,171,.15)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.965),rgba(249,252,255,.91))!important;
+  box-shadow:0 10px 30px rgba(44,61,112,.08),inset 0 -1px 0 rgba(255,255,255,.92)!important;
+  backdrop-filter:blur(26px) saturate(155%)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(155%)!important;
+}
+html[data-theme="light"] .date-bar{
+  background:linear-gradient(90deg,rgba(248,252,255,.94),rgba(247,244,255,.91),rgba(248,253,251,.94))!important;
+  border-bottom-color:rgba(91,113,171,.12)!important;
+}
+html[data-theme="light"] .topnav{
+  background:rgba(255,255,255,.91)!important;
+  border-bottom-color:rgba(91,113,171,.14)!important;
+  box-shadow:0 9px 24px rgba(52,68,123,.055)!important;
+  backdrop-filter:blur(24px) saturate(150%)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(150%)!important;
+}
+
+html[data-theme="light"] .logo-mark{
+  transform:perspective(600px) rotateX(2deg) rotateY(-3deg) translateZ(0)!important;
+  border:1px solid rgba(69,137,109,.23)!important;
+  background:
+    radial-gradient(circle at 27% 18%,rgba(255,255,255,1),transparent 31%),
+    linear-gradient(145deg,rgba(255,255,255,.99),rgba(228,246,238,.92))!important;
+  box-shadow:0 14px 26px rgba(45,105,83,.14),0 4px 9px rgba(55,92,81,.08),inset 0 1px 0 #fff,inset 0 -2px 0 rgba(72,140,111,.07)!important;
+}
+html[data-theme="light"] .brand-copy h1{
+  color:#183653!important;
+  text-shadow:0 1px 0 #fff,0 8px 20px rgba(54,72,120,.08)!important;
+}
+html[data-theme="light"] .searchbar input{
+  border-color:rgba(84,107,164,.16)!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,255,.88))!important;
+  box-shadow:0 10px 24px rgba(50,68,124,.07),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(92,112,166,.06)!important;
+}
+html[data-theme="light"] .searchbar input:focus{
+  border-color:rgba(105,111,215,.54)!important;
+  box-shadow:0 0 0 4px rgba(122,127,220,.11),0 14px 30px rgba(63,74,145,.10),inset 0 1px 0 #fff!important;
+}
+html[data-theme="light"] .searchbar button,
+html[data-theme="light"] .avatar,
+html[data-theme="light"] .bd9-btn.primary,
+html[data-theme="light"] .account-actions a.primary,
+html[data-theme="light"] .publish-btn,
+html[data-theme="light"] .load-btn,
+html[data-theme="light"] .humanitarian-actions .primary{
+  border:0!important;
+  background:linear-gradient(145deg,#718fe9 0%,#8078df 52%,#9b7edd 100%)!important;
+  box-shadow:0 12px 24px rgba(91,91,191,.25),inset 0 1px 0 rgba(255,255,255,.58),inset 0 -2px 0 rgba(54,54,150,.13)!important;
+}
+
+html[data-theme="light"] .nav-link{
+  position:relative;
+  border-bottom-color:transparent!important;
+  transition:color .18s ease,transform .18s ease!important;
+}
+html[data-theme="light"] .nav-link::after{
+  content:"";
+  position:absolute;
+  left:50%;right:50%;bottom:5px;height:3px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#6f95e8,#8c77df,#65b7a0);
+  box-shadow:0 4px 9px rgba(112,103,205,.22);
+  transition:left .18s ease,right .18s ease;
+}
+html[data-theme="light"] .nav-link.active::after,
+html[data-theme="light"] .nav-link:hover::after{left:8%;right:8%}
+html[data-theme="light"] .nav-link.active{color:#676ed0!important}
+
+@media (min-width:900px){
+  html[data-theme="light"] main.layout{
+    isolation:isolate;
+  }
+  html[data-theme="light"] #leftSidebar,
+  html[data-theme="light"] #rightSidebar,
+  html[data-theme="light"] .center-col{
+    transform-style:preserve-3d;
+  }
+
+  html[data-theme="light"] #leftSidebar .side-box.glass,
+  html[data-theme="light"] #rightSidebar .right-section.glass,
+  html[data-theme="light"] #leftSidebar .bd9-card,
+  html[data-theme="light"] #rightSidebar .bd9-card,
+  html[data-theme="light"] .center-col > .glass,
+  html[data-theme="light"] .center-col .post,
+  html[data-theme="light"] .bd-live-post{
+    border:1px solid var(--bd-c2-line)!important;
+    background:var(--bd-c2-panel)!important;
+    box-shadow:var(--bd-c2-depth)!important;
+    backdrop-filter:blur(26px) saturate(148%)!important;
+    -webkit-backdrop-filter:blur(26px) saturate(148%)!important;
+  }
+
+  html[data-theme="light"] #leftSidebar .side-box.glass,
+  html[data-theme="light"] #rightSidebar .right-section.glass,
+  html[data-theme="light"] #leftSidebar .bd9-card,
+  html[data-theme="light"] #rightSidebar .bd9-card{
+    border-radius:16px!important;
+    box-shadow:0 18px 40px rgba(48,66,123,.105),0 6px 14px rgba(90,75,153,.055),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(103,120,172,.07)!important;
+  }
+
+  html[data-theme="light"] #leftSidebar::before,
+  html[data-theme="light"] #rightSidebar::before{
+    content:"";
+    position:sticky;
+    top:0;
+    z-index:10;
+    display:block;
+    height:3px;
+    margin:0 11px 8px;
+    border-radius:999px;
+    background:linear-gradient(90deg,rgba(92,153,228,.22),rgba(143,105,220,.48),rgba(90,183,156,.22));
+    box-shadow:0 4px 14px rgba(116,101,207,.16);
+    pointer-events:none;
+  }
+
+  html[data-theme="light"] .composer{
+    border-color:rgba(103,108,208,.24)!important;
+    background:
+      radial-gradient(circle at 8% 0%,rgba(109,160,235,.16),transparent 34%),
+      radial-gradient(circle at 96% 0%,rgba(166,126,226,.15),transparent 36%),
+      linear-gradient(145deg,rgba(255,255,255,.96),rgba(245,249,255,.84) 52%,rgba(247,242,255,.82))!important;
+    box-shadow:0 28px 62px rgba(49,66,126,.145),0 9px 20px rgba(94,75,158,.075),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(107,114,184,.08)!important;
+  }
+  html[data-theme="light"] .composer::before{
+    display:block!important;
+    background:
+      linear-gradient(115deg,transparent 0 20%,rgba(255,255,255,.64) 35%,transparent 48%),
+      linear-gradient(135deg,rgba(104,164,235,.09),rgba(149,112,223,.11),rgba(93,190,163,.07))!important;
+    opacity:.62!important;
+  }
+  html[data-theme="light"] .composer-prompt{
+    border-color:rgba(91,112,175,.15)!important;
+    background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(249,251,255,.91))!important;
+    box-shadow:0 12px 26px rgba(50,68,124,.075),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(91,112,175,.06)!important;
+  }
+  html[data-theme="light"] .composer-avatar{
+    box-shadow:0 13px 24px rgba(100,91,198,.24),inset 0 1px 0 rgba(255,255,255,.52),inset 0 -2px 0 rgba(66,61,159,.12)!important;
+  }
+
+  html[data-theme="light"] .humanitarian-strip{
+    border-color:rgba(66,145,119,.21)!important;
+    background:
+      radial-gradient(circle at 3% 12%,rgba(82,187,150,.16),transparent 30%),
+      linear-gradient(145deg,rgba(255,255,255,.95),rgba(242,251,247,.83) 54%,rgba(244,248,255,.78))!important;
+    box-shadow:0 24px 52px rgba(45,104,87,.12),0 7px 16px rgba(66,91,130,.06),inset 0 1px 0 #fff!important;
+  }
+  html[data-theme="light"] .humanitarian-icon{
+    transform:perspective(500px) rotateX(4deg) rotateY(-5deg)!important;
+    box-shadow:0 16px 28px rgba(53,137,110,.19),inset 0 1px 0 #fff,inset 0 -2px 0 rgba(48,123,98,.08)!important;
+  }
+
+  html[data-theme="light"] .feed-head{
+    border-color:rgba(96,111,180,.18)!important;
+    background:
+      radial-gradient(circle at 94% 15%,rgba(160,123,226,.12),transparent 30%),
+      linear-gradient(145deg,rgba(255,255,255,.95),rgba(246,249,255,.82))!important;
+    box-shadow:0 22px 48px rgba(49,66,124,.115),0 7px 15px rgba(91,75,153,.06),inset 0 1px 0 #fff!important;
+  }
+
+  html[data-theme="light"] .quick-type,
+  html[data-theme="light"] .composer-style-option,
+  html[data-theme="light"] .controls select,
+  html[data-theme="light"] .humanitarian-actions a,
+  html[data-theme="light"] .account-actions a,
+  html[data-theme="light"] .bd9-btn,
+  html[data-theme="light"] .bd9-palettes button,
+  html[data-theme="light"] .bd9-modes button{
+    border-color:rgba(89,109,169,.15)!important;
+    background:linear-gradient(155deg,rgba(255,255,255,.98),rgba(244,248,255,.86))!important;
+    box-shadow:0 10px 21px rgba(53,70,126,.075),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(90,110,166,.055)!important;
+  }
+
+  html[data-theme="light"] .menu-card{
+    border-color:rgba(93,112,176,.17)!important;
+    background:
+      radial-gradient(circle at 50% 0%,rgba(125,146,230,.16),transparent 39%),
+      linear-gradient(180deg,rgba(248,252,255,.96),rgba(255,255,255,.89) 38%,rgba(248,250,255,.92))!important;
+    box-shadow:0 18px 38px rgba(48,66,124,.095),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(91,111,171,.06)!important;
+  }
+  html[data-theme="light"] .menu-item,
+  html[data-theme="light"] .bd9-menu a,
+  html[data-theme="light"] .bd9-menu button{
+    border:1px solid rgba(86,108,165,.10)!important;
+    background:linear-gradient(160deg,rgba(255,255,255,.90),rgba(246,249,255,.75))!important;
+    box-shadow:0 6px 13px rgba(50,67,120,.045),inset 0 1px 0 rgba(255,255,255,.96)!important;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,color .16s ease!important;
+  }
+
+  html[data-theme="light"] .post,
+  html[data-theme="light"] .bd-live-post{
+    overflow:visible!important;
+    transform-origin:center top;
+  }
+  html[data-theme="light"] .post::after,
+  html[data-theme="light"] .bd-live-post::after{
+    content:"";
+    position:absolute;
+    left:4%;right:4%;top:1px;height:1px;
+    border-radius:999px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.98),transparent);
+    pointer-events:none;
+  }
+}
+
+/* Hover-capable desktop only: subtle physical response, never an aggressive carnival tilt. */
+@media (min-width:900px) and (hover:hover) and (pointer:fine){
+  html[data-theme="light"] .bd-c2-depth-card{
+    --bd-c2-rx:0deg;
+    --bd-c2-ry:0deg;
+    --bd-c2-gx:50%;
+    --bd-c2-gy:30%;
+    transform:perspective(1200px) rotateX(var(--bd-c2-rx)) rotateY(var(--bd-c2-ry)) translate3d(0,0,0)!important;
+    transition:transform .18s cubic-bezier(.2,.75,.25,1),box-shadow .18s ease,border-color .18s ease!important;
+    will-change:transform;
+  }
+  html[data-theme="light"] .bd-c2-depth-card::after{
+    background:
+      radial-gradient(circle at var(--bd-c2-gx) var(--bd-c2-gy),rgba(255,255,255,.55),transparent 31%),
+      linear-gradient(180deg,rgba(255,255,255,.45),transparent 34%)!important;
+  }
+  html[data-theme="light"] .bd-c2-depth-card:hover{
+    border-color:rgba(111,104,206,.29)!important;
+    box-shadow:0 30px 64px rgba(46,62,121,.16),0 11px 24px rgba(92,72,154,.09),inset 0 1px 0 #fff!important;
+  }
+  html[data-theme="light"] .menu-item:hover,
+  html[data-theme="light"] .bd9-menu a:hover,
+  html[data-theme="light"] .quick-type:hover,
+  html[data-theme="light"] .composer-style-option:hover,
+  html[data-theme="light"] .humanitarian-actions a:hover,
+  html[data-theme="light"] .account-actions a:hover,
+  html[data-theme="light"] .bd9-btn:hover{
+    transform:translate3d(0,-2px,0)!important;
+    border-color:rgba(111,104,206,.28)!important;
+    box-shadow:0 13px 25px rgba(52,67,126,.11),inset 0 1px 0 #fff!important;
+  }
+  html[data-theme="light"] .nav-link:hover{transform:translateY(-1px)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .bd-c2-depth-card{transform:none!important;transition:none!important}
+  html[data-theme="light"] .menu-item,
+  html[data-theme="light"] .bd9-menu a,
+  html[data-theme="light"] .quick-type,
+  html[data-theme="light"] .composer-style-option{transition:none!important}
+}
+</style>
+
+
+<style id="bd-index-master-challenge-three-20260727">
+/* One self-contained layout system: frozen desktop chrome, independent sidebars, and a click-safe feed. */
+:root{--bd-sticky-stack:calc(var(--header-h) + var(--ticker-h) + var(--nav-h))}
+html,body{max-width:100%;overflow-x:hidden}
+.site-header,.date-bar,.topnav{left:0;right:0;width:100%}
+.date-bar{contain:layout paint;isolation:isolate}
+.date-track{pointer-events:none}
+.topnav{isolation:isolate;box-shadow:0 9px 25px rgba(55,67,126,.055)}
+.desktop-nav{gap:8px!important;padding:7px 16px!important;overflow-x:auto!important;overflow-y:hidden!important}
+.desktop-nav .nav-link{height:38px!important;padding:0 13px!important;border:1px solid rgba(107,118,180,.17)!important;border-bottom-width:1px!important;border-radius:13px!important;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(239,243,255,.76))!important;box-shadow:0 7px 15px rgba(64,75,139,.07),inset 0 1px 0 rgba(255,255,255,.98)!important;transition:border-color .18s ease,box-shadow .18s ease,color .18s ease!important}
+.desktop-nav .nav-link::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(105,168,238,.08),rgba(154,126,229,.08),rgba(91,185,156,.05));opacity:.8}
+.desktop-nav .nav-link>*{position:relative;z-index:1}
+.desktop-nav .nav-link.active,.desktop-nav .nav-link:hover{color:var(--primary)!important;border-color:rgba(105,105,207,.34)!important;box-shadow:0 11px 22px rgba(72,77,152,.12),inset 0 1px 0 #fff!important}
+html[data-theme="dark"] .desktop-nav .nav-link{background:linear-gradient(145deg,rgba(22,42,69,.95),rgba(13,27,50,.91))!important;border-color:rgba(166,181,245,.16)!important}
+
+/* Stable desktop: two sidebars always remain, center never collapses. */
+@media(min-width:900px){
+  .layout{display:grid!important;width:min(1500px,100%)!important;max-width:1500px!important;margin:0 auto!important;padding:12px!important;gap:12px!important;grid-template-columns:clamp(178px,17.8vw,250px) minmax(0,1fr) clamp(178px,18.2vw,260px)!important;align-items:start!important;overflow:visible!important}
+  .left-col,.right-col,#leftSidebar,#rightSidebar{display:block!important;min-width:0!important;width:auto!important}
+  .center-col{display:grid!important;gap:12px!important;width:100%!important;min-width:0!important;max-width:none!important;overflow:visible!important}
+  .sidebar{position:sticky!important;top:calc(var(--bd-sticky-stack) + 12px)!important;height:calc(100dvh - var(--bd-sticky-stack) - 24px)!important;max-height:calc(100dvh - var(--bd-sticky-stack) - 24px)!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:thin!important;scrollbar-color:rgba(111,119,190,.30) transparent!important}
+  .sidebar::-webkit-scrollbar{display:block!important;width:5px!important}.sidebar::-webkit-scrollbar-thumb{background:rgba(111,119,190,.27);border-radius:999px}
+  .edge-menu{display:none!important}.desktop-nav{display:flex!important}.mobile-nav-shell{display:none!important}
+  .feed-head .controls #categoryFilter{display:none!important}
+}
+@media(min-width:900px) and (max-width:1100px){
+  .layout{grid-template-columns:178px minmax(0,1fr) 182px!important;gap:9px!important;padding:9px!important}
+  .header-inner{grid-template-columns:minmax(260px,330px) minmax(220px,1fr) auto!important;gap:9px!important;padding:0 10px!important}
+  .desktop-nav .nav-link{padding:0 9px!important;font-size:10px!important}
+}
+@media(min-width:1101px) and (max-width:1280px){.layout{grid-template-columns:210px minmax(0,1fr) 218px!important}}
+
+/* Posts keep dimensional depth without transforms; this fixes Safari/desktop hit testing. */
+.post,.bd-live-post,.post.bd-c2-depth-card,.bd-live-post.bd-c2-depth-card{transform:none!important;will-change:auto!important;perspective:none!important;isolation:isolate!important;overflow:visible!important;cursor:default}
+.post::before,.post::after,.bd-live-post::before,.bd-live-post::after{pointer-events:none!important}
+.post{border-color:rgba(104,117,178,.20)!important;background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(246,247,255,.88))!important;box-shadow:0 23px 50px rgba(47,59,116,.10),0 8px 20px rgba(106,87,170,.06),inset 0 1px 0 #fff!important}
+.post:hover{border-color:rgba(105,105,207,.29)!important;box-shadow:0 27px 58px rgba(47,59,116,.13),0 9px 22px rgba(106,87,170,.075),inset 0 1px 0 #fff!important}
+html[data-theme="dark"] .post{background:linear-gradient(145deg,rgba(17,34,59,.97),rgba(10,23,44,.94))!important}
+.post-title a,.post-read-more,[data-open-post]{cursor:pointer;pointer-events:auto!important}
+.post-body.collapsed{position:relative;max-height:9.4em;overflow:hidden;cursor:pointer;white-space:pre-line}
+.post-body.collapsed::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3.8em;pointer-events:none;background:linear-gradient(transparent,var(--surface-solid))}
+.owner-hint{display:inline-flex;margin-left:8px;padding:2px 8px;border:1px solid rgba(72,146,116,.20);border-radius:999px;background:rgba(72,146,116,.075);color:var(--green);font-size:8px;font-weight:800}
+.post-action-board .danger-action{color:#b83e5a!important;background:rgba(194,64,90,.06)!important}.post-action-board .danger-action:hover{background:rgba(194,64,90,.13)!important}
+
+/* Full post viewer lives inside index.html, so every desktop/mobile post always opens. */
+.master-post-shell{position:fixed;inset:0;z-index:6000;display:none;place-items:center;padding:20px}
+.master-post-shell.open{display:grid}
+.master-post-backdrop{position:absolute;inset:0;width:100%;height:100%;border:0;background:rgba(14,23,43,.48);backdrop-filter:blur(12px) saturate(125%);-webkit-backdrop-filter:blur(12px) saturate(125%)}
+.master-post-dialog{position:relative;z-index:1;width:min(880px,100%);max-height:calc(100dvh - 40px);overflow:auto;padding:0 28px 28px;border:1px solid rgba(152,162,219,.30);border-radius:28px;background:linear-gradient(145deg,rgba(255,255,255,.985),rgba(241,245,255,.965));color:var(--text);box-shadow:0 38px 100px rgba(18,29,69,.32),inset 0 1px 0 #fff;scrollbar-width:thin}
+html[data-theme="dark"] .master-post-dialog{background:linear-gradient(145deg,rgba(18,37,64,.99),rgba(8,20,39,.985));border-color:rgba(170,184,247,.22)}
+.master-post-top{position:sticky;top:0;z-index:2;margin:0 -28px 20px;padding:20px 28px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;border-bottom:1px solid var(--border);background:inherit;backdrop-filter:blur(18px)}
+.master-post-top h2{margin-top:6px;font-size:clamp(22px,3vw,34px);line-height:1.35}.master-post-kicker{display:inline-flex;padding:4px 11px;border:1px solid rgba(108,108,204,.22);border-radius:999px;background:var(--rainbow-soft);color:var(--primary);font-size:10px;font-weight:800}
+.master-post-close{width:42px;height:42px;flex:0 0 42px;border:1px solid var(--border);border-radius:50%;background:var(--surface-strong);color:var(--text);font-size:25px;line-height:1;box-shadow:var(--shadow-soft)}
+.master-post-author{display:flex;align-items:center;gap:11px;margin-bottom:18px}.master-post-avatar{width:45px;height:45px;overflow:hidden;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff}.master-post-avatar img{width:100%;height:100%;object-fit:cover}.master-post-author strong{display:block;font-size:14px}.master-post-author small{display:block;color:var(--muted);font-size:9px}.master-post-original{display:inline-flex;margin-bottom:17px;padding:6px 10px;border-radius:10px;background:rgba(171,126,56,.08);color:var(--gold);font-size:10px;font-weight:700}.master-post-body{white-space:pre-wrap;font-size:clamp(14px,1.55vw,18px);line-height:2.05;overflow-wrap:anywhere}.master-post-actions{position:sticky;bottom:-28px;margin:28px -28px -28px;padding:14px 28px calc(14px + env(safe-area-inset-bottom));display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid var(--border);background:inherit}.master-post-actions a,.master-post-actions button{min-height:40px;padding:0 13px;border:1px solid var(--border);border-radius:11px;display:inline-flex;align-items:center;gap:6px;background:var(--surface-strong);color:var(--text-soft);font-size:10px;font-weight:800}.master-post-actions .danger{margin-left:auto;color:#b83e5a;border-color:rgba(194,64,90,.22);background:rgba(194,64,90,.07)}
+body.post-view-open{overflow:hidden!important}
+
+/* Mobile keeps categories hidden behind the More sheet and retains both edge drawers. */
+@media(max-width:899px){
+  :root{--bd-sticky-stack:calc(var(--header-h) + var(--ticker-h) + var(--nav-h))}
+  .layout{display:block!important;width:100%!important;max-width:100%!important;padding:8px 14px 18px!important}.left-col,.right-col{display:none!important}.center-col{min-width:0!important;width:100%!important}
+  .desktop-nav{display:none!important}.mobile-nav-shell{display:flex!important}.edge-menu{display:flex!important}
+  .mobile-more-menu{position:fixed!important;left:12px!important;right:12px!important;top:auto!important;bottom:calc(12px + env(safe-area-inset-bottom))!important;max-height:min(62dvh,520px)!important;overflow-y:auto!important;padding:12px!important;border-radius:20px!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;box-shadow:0 30px 80px rgba(20,31,71,.30)!important}
+  .feed-head{display:flex!important;align-items:center!important;gap:8px!important}.feed-head>div:first-child{min-width:0;flex:1}.feed-head .controls{margin:0!important;display:grid!important;grid-template-columns:1fr!important;gap:5px!important}.feed-head .controls select{min-width:118px!important;max-width:150px!important}
+  .post{overflow:hidden!important}.post-body.collapsed{max-height:8.4em}.master-post-shell{padding:0}.master-post-dialog{width:100%;height:100dvh;max-height:100dvh;border-radius:0;padding:0 16px 22px}.master-post-top{margin:0 -16px 16px;padding:15px 16px 12px}.master-post-actions{bottom:-22px;margin:24px -16px -22px;padding:12px 16px calc(12px + env(safe-area-inset-bottom))}.master-post-actions .danger{margin-left:0}.master-post-body{font-size:14px;line-height:1.95}
+}
+@media(max-width:520px){.mobile-more-menu{grid-template-columns:1fr!important}.master-post-actions a,.master-post-actions button{flex:1;justify-content:center}.master-post-top h2{font-size:21px}.post-title{font-size:16px!important}}
+</style>
+
+
+
 </head>
-<body class="bd9-shell-page" data-bd-family="public" data-build="index-master-composer-category-glass-v10" data-page="index">
+<body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
 <symbol id="i-leaf" viewbox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"></path><path d="M4 20c3-6 7-9 13-12"></path></symbol>
 <symbol id="i-menu" viewbox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></symbol>
@@ -1295,6 +1782,11 @@ html[data-theme="dark"] .sidebar .contact-card,html[data-theme="dark"] .mobile-d
 <div class="footer-links"><a href="index.html">হোম</a><a href="about.html">আমাদের সম্পর্কে</a><a href="contact.html">যোগাযোগ</a><a href="complaint.html">অভিযোগ</a><a href="privacy-security-policy.html">গোপনীয়তা</a><a href="policy.html">নীতিমালা</a><a href="policy.html#creative-work-protection">লেখার সুরক্ষা</a></div>
 </footer>
 <button aria-label="উপরে যান" class="to-top" id="toTop" type="button"><svg class="icon"><use href="#i-up"></use></svg></button>
+
+<div class="master-post-shell" id="masterPostShell" aria-hidden="true">
+  <button class="master-post-backdrop" type="button" data-close-post aria-label="পোস্ট বন্ধ করুন"></button>
+  <article class="master-post-dialog" id="masterPostDialog" role="dialog" aria-modal="true" aria-label="পূর্ণ পোস্ট"></article>
+</div>
 <div class="toast" id="toast"></div>
 <div aria-hidden="true" class="post-action-board" id="postActionBoard" role="menu"></div>
 <script>
@@ -1369,19 +1861,48 @@ function poetProfileRoute(name){return 'poet-profile.html?poet='+encodeURICompon
 function typeRoute(type,id,title){const q='?post='+encodeURIComponent(id||slug(title));if(type==='poem')return ROUTES.poem+q;if(type==='prolap')return ROUTES.prolap+q;if(type==='midnight')return ROUTES.midnight+q;if(type==='letter')return ROUTES.letter+q;if(type==='recitation')return ROUTES.recitationDetail+'?id='+encodeURIComponent(id||slug(title));if(type==='environment')return ROUTES.environment+q;if(type==='discussion')return ROUTES.discussionDetail+'?id='+encodeURIComponent(id||slug(title));return ROUTES.home}
 const sourceKeys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts','bhubondangaTodayPoemPosts','bhubondangaPublishedPoems','bhubondangaTodayProlapPosts','bhubondangaPublishedProlaps','bhubondangaPublishedMidnightProlaps','bhubondangaMidnightProlaps','bhubondangaLetterPosts','bhubondangaRecitationPosts','bhubondangaPublishedRecitations','bhubondangaPublishedEnvironmentPosts','bhubondangaEnvironmentPosts','bhubondangaDiscussionPosts'];
 const cardStyles=['pearl','lavender','aqua','rose','mint','silver','aurora','clear'];
-function storedPosts(){const map=new Map();sourceKeys.forEach(key=>arr(key).forEach((x,i)=>{if(!x||x.status==='deleted'||x.status==='rejected')return;const id=String(x.id||x.postId||x.sourceId||key+'-'+i);if(map.has(id))return;const type=normalizeType(x.type||x.category||x.typeLabel,x);map.set(id,{id,type,title:x.title||x.heading||x.name||(type==='prolap'?'ছোট কথার প্রলাপ':'শিরোনামহীন সাহিত্যকর্ম'),body:x.body||x.content||x.text||x.description||'',authorName:x.authorName||x.displayAuthorName||x.author||x.postedByName||'ভুবনডাঙ্গার একজন লেখক',authorUsername:x.authorUsername||x.authorSlug||x.postedByUsername||slug(x.authorName||x.author||''),authorAvatar:x.authorAvatar||x.avatar||x.profileImage||'',createdAt:x.createdAt||x.publishedAt||x.updatedAt||new Date().toISOString(),likes:Number(x.likes||x.baseLikes||0),comments:Number(x.comments||x.baseComments||0),status:x.status||'published',cardStyle:x.cardStyle||x.style||cardStyles[i%cardStyles.length],originalAuthor:x.originalAuthor||'',demo:Boolean(x.demo)})}));return Array.from(map.values())}
+function storedPosts(){
+  const map=new Map();
+  function add(x,i,source){
+    if(!x||x.status==='deleted'||x.status==='rejected'||x.status==='archived')return;
+    const id=String(x.id||x.postId||x.sourceId||source+'-'+i);
+    if(map.has(id))return;
+    const type=normalizeType(x.type||x.category||x.typeLabel,x);
+    map.set(id,{
+      id,type,
+      title:x.title||x.heading||x.name||(type==='prolap'?'ছোট কথার প্রলাপ':'শিরোনামহীন সাহিত্যকর্ম'),
+      body:x.body||x.content||x.text||x.description||'',
+      authorId:x.author_id||x.authorId||x.user_id||x.userId||'',
+      authorName:x.author_name||x.authorName||x.display_name||x.displayAuthorName||x.author||x.postedByName||'ভুবনডাঙ্গার একজন লেখক',
+      authorUsername:x.author_username||x.authorUsername||x.username||x.authorSlug||x.postedByUsername||slug(x.author_name||x.authorName||x.author||''),
+      authorAvatar:x.author_avatar||x.authorAvatar||x.avatar_url||x.avatar||x.profileImage||'',
+      createdAt:x.created_at||x.createdAt||x.publishedAt||x.updatedAt||new Date().toISOString(),
+      likes:Number(x.likes_count??x.likes??x.baseLikes??0),
+      comments:Number(x.comments_count??x.comments??x.baseComments??0),
+      status:x.status||'published',
+      cardStyle:x.card_style||x.cardStyle||x.style||cardStyles[i%cardStyles.length],
+      originalAuthor:x.original_author||x.originalAuthor||'',
+      demo:Boolean(x.demo),
+      source
+    });
+  }
+  sourceKeys.forEach(key=>arr(key).forEach((x,i)=>add(x,i,key)));
+  (Array.isArray(window.__BD_SUPABASE_POSTS)?window.__BD_SUPABASE_POSTS:[]).forEach((x,i)=>add(x,i,'supabase'));
+  return Array.from(map.values());
+}
 function demoPosts(){const now=Date.now();return[
-  ['poem','নমুনা কবিতার শিরোনাম','এই জায়গায় একজন লেখকের প্রকাশিত কবিতার অংশ দেখা যাবে। পূর্ণ লেখা পড়তে শিরোনামে ক্লিক করা যাবে।','ভুবনডাঙ্গার একজন লেখক'],
-  ['prolap','আজকের ছোট কথার প্রলাপ','কখনো কখনো অল্প কয়েকটি বাক্যই মনের দীর্ঘ নীরবতাকে প্রকাশ করে।','একজন ভুবনডাঙ্গার পাঠক'],
-  ['recitation','কণ্ঠে কবিতার একটি বিকেল','অডিও বা ভিডিও আবৃত্তি সংশ্লিষ্ট আবৃত্তি পেজ থেকে সরাসরি প্রকাশিত হয়ে এখানে আসবে।','একজন আবৃত্তিকার'],
-  ['letter','নিজের কাছে একটি চিঠি','যে কথাটি কাউকে বলা হয়নি, সেই কথাও চিঠির ভাষায় এখানে জায়গা পেতে পারে।','একজন চিঠিলেখক'],
-  ['environment','একটি গাছের পাশে দাঁড়িয়ে','পরিবেশের কথা সংশ্লিষ্ট পেজ থেকে সরাসরি প্রকাশিত হয়ে নিউজফিডে দেখা যাবে।','একজন প্রকৃতিপ্রেমী'],
-  ['discussion','কবিতা পড়ার ভিন্ন অভিজ্ঞতা','সাহিত্য নিয়ে সম্মানজনক আলোচনা ও মতভেদ এই ভুবনকে আরও সমৃদ্ধ করবে।','একজন সাহিত্যপাঠক'],
-  ['midnight','মধ্যরাতের প্রলাপ','এই বিশেষ বিভাগটি সবাই পড়তে পারবেন; প্রকাশিত লেখাগুলো এখানে নিউজফিডেও দেখা যাবে।','মাহমুদ সোহেল'],
-  ['poem','শব্দের ভেতরে মানুষ','প্রকাশিত প্রতিটি লেখার নিজস্ব কার্ড-আবহ থাকবে, তবে পাঠযোগ্যতা ও বিন্যাস একই থাকবে।','ভুবনডাঙ্গার একজন লেখক']
-].map((x,i)=>({id:'demo-'+(i+1),type:x[0],title:x[1],body:x[2],authorName:x[3],authorUsername:x[3]==='মাহমুদ সোহেল'?'mahmud-sohel':'demo-writer-'+(i+1),authorAvatar:'',createdAt:new Date(now-i*3600000).toISOString(),likes:18+i*3,comments:i%4,status:'published',cardStyle:cardStyles[i],demo:true}))}
+  ['poem','বৃষ্টির পরে নীরবতা','বৃষ্টির শেষে জানালার কাঁচে যে অল্প আলো থেমে থাকে, সেখানে পুরোনো দিনের গন্ধ মিশে থাকে। শহর ঘুমিয়ে পড়লেও কিছু শব্দ মানুষের ভেতর জেগে থাকে।','সায়মা তারাসসুম','pearl'],
+  ['prolap','এক মুঠো শান্তি','সব উত্তর একদিনে পাওয়া যায় না। কখনো নিজের পাশে কিছুক্ষণ নীরবে বসে থাকাও বড় একটি উত্তর।','আরিফ হাসান','lavender'],
+  ['recitation','আমার স্বর, আমার পথ','কবিতার প্রতিটি উচ্চারণে থাকে স্মৃতি, শ্বাস ও অনুভবের নিজস্ব ছন্দ। শুনুন একটি নতুন আবৃত্তি।','নাজনীন তিথি','aqua'],
+  ['letter','নিজের কাছে ফেরার চিঠি','প্রিয় আমি, ক্লান্ত হলে থেমে যেয়ো—কিন্তু নিজের আলোকে ছোট করে দেখো না। তোমার পথ এখনো অনেক বাকি।','মেহরাব নীল','rose'],
+  ['environment','একটি গাছের ছায়ায়','একটি গাছ শুধু ছায়া দেয় না; সে শহরের বাতাস, পাখির আশ্রয় এবং আগামী প্রজন্মের জন্য রেখে যাওয়া নীরব প্রতিশ্রুতি।','তানিয়া রহমান','mint'],
+  ['discussion','কবিতা কি শুধু অনুভূতি?','কবিতা অনুভূতি থেকে জন্ম নেয়, কিন্তু ভাষা, নির্মাণ ও পাঠকের অভিজ্ঞতা তাকে পূর্ণতা দেয়। আপনার মতামত লিখুন।','রাশেদ কবির','silver'],
+  ['midnight','মধ্যরাতের জানালা','রাত যত গভীর হয়, মনের ভেতরের অপ্রকাশিত বাক্যগুলো তত স্পষ্ট হয়ে ওঠে। কিছু কথা শুধু নীরব রাতই বুঝতে পারে।','মাহমুদ সোহেল','aurora'],
+  ['poem','আলোর দিকে যাত্রা','ভাঙা পথের শেষে দাঁড়িয়ে দেখি—অন্ধকার কখনো শেষ কথা নয়। দূরে একটি ক্ষুদ্র আলোও পথ চিনিয়ে দিতে পারে।','ঈশিতা নওরীন','clear']
+].map((x,i)=>({id:'demo-'+(i+1),type:x[0],title:x[1],body:x[2],authorName:x[3],authorUsername:x[3]==='মাহমুদ সোহেল'?'mahmud-sohel':'demo-writer-'+(i+1),authorAvatar:'',createdAt:new Date(now-i*3600000).toISOString(),likes:27+i*4,comments:(i+2)%6,status:'published',cardStyle:x[4],demo:true}))}
 let posts=storedPosts();if(!posts.length)posts=demoPosts();
 let visible=20,category='all',sort='forYou';
+document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
 const likedKey='bhubondangaIndexLovedPosts',memoryKey='bhubondangaMemories',commentKey='bhubondangaIndexComments',likeCountKey='bhubondangaIndexLikeCounts',activityKey='bhubondangaPostActivity';
 function likesObject(){return obj(likeCountKey)}
 function activityObject(){return obj(activityKey)}
@@ -1392,20 +1913,119 @@ function formatDate(value){const d=new Date(value);if(Number.isNaN(d.getTime()))
 function addParam(url,key,value){return url+(url.includes('?')?'&':'?')+encodeURIComponent(key)+'='+encodeURIComponent(value)}
 function renderComments(id){const box=document.querySelector('[data-comments-list="'+CSS.escape(String(id))+'"]');if(!box)return;const list=arr(commentKey).filter(x=>String(x.postId)===String(id));box.innerHTML=list.slice(-10).map(x=>'<div class="comment-item"><a href="'+esc(profileUrl(x.authorUsername||slug(x.author||'পাঠক')))+'">'+esc(x.author||'পাঠক')+'</a><br>'+esc(x.text)+'</div>').join('')}
 function authorAvatarMarkup(p){if(p.authorAvatar&&p.authorUsername!=='mahmud-sohel')return '<img src="'+esc(p.authorAvatar)+'" alt="'+esc(p.authorName)+'" onerror="this.remove();this.parentElement.innerHTML=\''+icon('user').replace(/'/g,"\\'")+'\'">';return icon(p.authorUsername==='mahmud-sohel'?'poem':'user')}
-function canEdit(p){return loggedIn&&!p.demo&&(isFounder||String(p.authorUsername)===String(currentUsername))}
-function renderPosts(){const list=filteredPosts(),shown=list.slice(0,visible),loved=arr(likedKey).map(String),memories=arr(memoryKey),likeCounts=likesObject(),box=document.getElementById('postList');closePostActionBoard();if(!shown.length){box.innerHTML='<section class="glass empty-feed"><div class="empty-icon">'+icon('poem')+'</div><h3>এখনো কোনো লেখা নেই</h3><p>প্রথম কবিতা বা প্রলাপটি প্রকাশ করুন।</p></section>';const more=document.getElementById('loadMoreBtn');more.hidden=false;more.classList.add('is-end');more.setAttribute('aria-disabled','true');return}box.innerHTML=shown.map(p=>{const url=typeRoute(p.type,p.id,p.title),isLoved=loved.includes(String(p.id)),isSaved=memories.some(x=>String(x.id)===String(p.id)),count=Number(likeCounts[p.id]??p.likes),badges=(p.authorUsername==='mahmud-sohel'?'<span class="founder-badge">প্রতিষ্ঠাতা</span>':'')+(p.status==='pending_review'||p.status==='published_flagged'?'<span class="review-badge">পর্যালোচনাধীন</span>':'')+(p.demo?'<span class="demo-badge">নমুনা</span>':'');return '<article class="glass post style-'+esc(p.cardStyle||'pearl')+'" data-post="'+esc(p.id)+'"><div class="post-head"><div class="author"><a class="author-avatar" href="'+esc(profileUrl(p.authorUsername||slug(p.authorName)))+'">'+authorAvatarMarkup(p)+'</a><div class="author-meta"><div class="author-name-row"><a href="'+esc(profileUrl(p.authorUsername||slug(p.authorName)))+'">'+esc(p.authorName)+'</a>'+badges+'</div><small>'+esc(formatDate(p.createdAt))+'</small></div></div><div class="three-dot"><button class="three-dot-btn" type="button" data-post-menu data-id="'+esc(p.id)+'" aria-haspopup="menu" aria-expanded="false" aria-label="পোস্টের অপশন">'+icon('more')+'</button></div></div><a class="pill" href="'+esc(url)+'">'+esc(typeLabel(p.type))+'</a><h3 class="post-title"><a href="'+esc(url)+'">'+esc(p.title)+'</a></h3><div class="post-body collapsed">'+esc(p.body||'এই সাহিত্যকর্মের পূর্ণ লেখা দেখতে শিরোনামে ক্লিক করুন।')+'</div>'+(p.originalAuthor?'<a class="review-badge" style="margin-top:7px" href="'+esc(poetProfileRoute(p.originalAuthor))+'">মূল কবি: '+esc(p.originalAuthor)+'</a>':'')+'<a class="post-read-more" href="'+esc(url)+'">পূর্ণ লেখা পড়ুন →</a><div class="post-footer"><div class="post-actions"><button class="action-btn '+(isLoved?'active':'')+'" type="button" data-action="love" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('heart')+'</span><span>'+toBn(count)+'</span></button><button class="action-btn" type="button" data-action="comment" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('comment')+'</span><span>'+toBn(p.comments||0)+'</span></button><button class="action-btn" type="button" data-action="share" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('share')+'</span><span>শেয়ার</span></button><button class="action-btn '+(isSaved?'active':'')+'" type="button" data-action="save" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('bookmark')+'</span><span>সেভ</span></button></div></div><div class="comment-box" data-comment-box="'+esc(p.id)+'"><textarea placeholder="মন্তব্য লিখুন..."></textarea><div class="comment-row"><button class="ghost-btn" type="button" data-action="cancel-comment" data-id="'+esc(p.id)+'">বাতিল</button><button class="primary-btn" type="button" data-action="submit-comment" data-id="'+esc(p.id)+'">মন্তব্য করুন</button></div><div class="comment-list" data-comments-list="'+esc(p.id)+'"></div></div></article>'}).join('');const more=document.getElementById('loadMoreBtn');more.hidden=false;more.classList.toggle('is-end',visible>=list.length);more.setAttribute('aria-disabled',visible>=list.length?'true':'false');shown.forEach(p=>renderComments(p.id))}
+function liveIdentity(){return window.__BD_IDENTITY||{}}
+function isLoggedInNow(){const live=liveIdentity();return loggedIn||Boolean(window.__BD_LIVE_SESSION)||Boolean(live.author_id||live.author_username)}
+function canEdit(p){const live=liveIdentity(),liveUser=String(live.author_username||currentUsername||''),liveId=String(live.author_id||'');return isLoggedInNow()&&!p.demo&&(isFounder||String(p.authorUsername||'')===liveUser||(liveId&&String(p.authorId||'')===liveId))}
+function postViewUrl(p){const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('post',p.id);return u.href}
+function renderPosts(){
+  const list=filteredPosts(),shown=list.slice(0,visible),loved=arr(likedKey).map(String),memories=arr(memoryKey),likeCounts=likesObject(),box=document.getElementById('postList');
+  closePostActionBoard();
+  if(!shown.length){
+    box.innerHTML='<section class="glass empty-feed"><div class="empty-icon">'+icon('poem')+'</div><h3>এখনো কোনো লেখা নেই</h3><p>প্রথম কবিতা বা প্রলাপটি প্রকাশ করুন।</p></section>';
+    const more=document.getElementById('loadMoreBtn');more.hidden=false;more.classList.add('is-end');more.setAttribute('aria-disabled','true');return;
+  }
+  box.innerHTML=shown.map(p=>{
+    const url=postViewUrl(p),isLoved=loved.includes(String(p.id)),isSaved=memories.some(x=>String(x.id)===String(p.id)),count=Number(likeCounts[p.id]??p.likes),owner=canEdit(p),badges=(p.authorUsername==='mahmud-sohel'?'<span class="founder-badge">প্রতিষ্ঠাতা</span>':'')+(p.status==='pending_review'||p.status==='published_flagged'?'<span class="review-badge">পর্যালোচনাধীন</span>':'')+(p.demo?'<span class="demo-badge">নমুনা</span>':'');
+    return '<article class="glass post style-'+esc(p.cardStyle||'pearl')+'" data-post="'+esc(p.id)+'" data-post-card tabindex="0" aria-label="'+esc(p.title)+' পোস্ট খুলুন">'
+      +'<div class="post-head"><div class="author"><a class="author-avatar" href="'+esc(profileUrl(p.authorUsername||slug(p.authorName)))+'">'+authorAvatarMarkup(p)+'</a><div class="author-meta"><div class="author-name-row"><a href="'+esc(profileUrl(p.authorUsername||slug(p.authorName)))+'">'+esc(p.authorName)+'</a>'+badges+'</div><small>'+esc(formatDate(p.createdAt))+'</small></div></div><div class="three-dot"><button class="three-dot-btn" type="button" data-post-menu data-id="'+esc(p.id)+'" aria-haspopup="menu" aria-expanded="false" aria-label="পোস্টের অপশন">'+icon('more')+'</button></div></div>'
+      +'<a class="pill" href="'+esc(typeRoute(p.type,p.id,p.title))+'">'+esc(typeLabel(p.type))+'</a>'
+      +'<h3 class="post-title"><a href="'+esc(url)+'" data-open-post="'+esc(p.id)+'">'+esc(p.title)+'</a></h3>'
+      +'<div class="post-body collapsed" data-open-post="'+esc(p.id)+'">'+esc(p.body||'এই সাহিত্যকর্মের পূর্ণ লেখা দেখতে ক্লিক করুন।')+'</div>'
+      +(p.originalAuthor?'<a class="review-badge" style="margin-top:7px" href="'+esc(poetProfileRoute(p.originalAuthor))+'">মূল কবি: '+esc(p.originalAuthor)+'</a>':'')
+      +'<a class="post-read-more" href="'+esc(url)+'" data-open-post="'+esc(p.id)+'">পূর্ণ লেখা পড়ুন →</a>'
+      +(owner?'<span class="owner-hint">আপনার পোস্ট</span>':'')
+      +'<div class="post-footer"><div class="post-actions"><button class="action-btn '+(isLoved?'active':'')+'" type="button" data-action="love" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('heart')+'</span><span>'+toBn(count)+'</span></button><button class="action-btn" type="button" data-action="comment" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('comment')+'</span><span>'+toBn(p.comments||0)+'</span></button><button class="action-btn" type="button" data-action="share" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('share')+'</span><span>শেয়ার</span></button><button class="action-btn '+(isSaved?'active':'')+'" type="button" data-action="save" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('bookmark')+'</span><span>সেভ</span></button></div></div>'
+      +'<div class="comment-box" data-comment-box="'+esc(p.id)+'"><textarea placeholder="মন্তব্য লিখুন..."></textarea><div class="comment-row"><button class="ghost-btn" type="button" data-action="cancel-comment" data-id="'+esc(p.id)+'">বাতিল</button><button class="primary-btn" type="button" data-action="submit-comment" data-id="'+esc(p.id)+'">মন্তব্য করুন</button></div><div class="comment-list" data-comments-list="'+esc(p.id)+'"></div></div></article>';
+  }).join('');
+  const more=document.getElementById('loadMoreBtn');more.hidden=false;more.classList.toggle('is-end',visible>=list.length);more.setAttribute('aria-disabled',visible>=list.length?'true':'false');shown.forEach(p=>renderComments(p.id));
+  requestAnimationFrame(openRequestedPost);
+}
 function findPost(id){return posts.find(p=>String(p.id)===String(id))}
 async function copyText(value){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(value)}else{const t=document.createElement('textarea');t.value=value;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.focus({preventScroll:true});t.select();document.execCommand('copy');t.remove()}toast('পোস্টের লিংক ক্লিপবোর্ডে কপি হয়েছে।');return true}catch(e){toast('লিংক কপি করা যায়নি।');return false}}
-async function copyPostLink(p){return copyText(new URL(typeRoute(p.type,p.id,p.title),location.href).href)}
-async function sharePost(p){const url=new URL(typeRoute(p.type,p.id,p.title),location.href).href;try{if(navigator.share){await navigator.share({title:p.title,text:p.authorName+'-এর লেখা',url});return}await copyText(url)}catch(e){}}
-function toggleSave(p){let memories=arr(memoryKey);const i=memories.findIndex(x=>String(x.id)===String(p.id));if(i>=0){memories.splice(i,1);toast('সেভ থেকে সরানো হয়েছে।')}else{memories.unshift({id:p.id,type:p.type,title:p.title,author:p.authorName,url:typeRoute(p.type,p.id,p.title),savedAt:new Date().toISOString()});touchActivity(p.id,1);toast('সেভ করা হয়েছে।')}save(memoryKey,memories.slice(0,500));renderPosts()}
+async function copyPostLink(p){return copyText(new URL(postViewUrl(p),location.href).href)}
+async function sharePost(p){const url=new URL(postViewUrl(p),location.href).href;try{if(navigator.share){await navigator.share({title:p.title,text:p.authorName+'-এর লেখা',url});return}await copyText(url)}catch(e){}}
+function toggleSave(p){let memories=arr(memoryKey);const i=memories.findIndex(x=>String(x.id)===String(p.id));if(i>=0){memories.splice(i,1);toast('সেভ থেকে সরানো হয়েছে।')}else{memories.unshift({id:p.id,type:p.type,title:p.title,author:p.authorName,url:postViewUrl(p),savedAt:new Date().toISOString()});touchActivity(p.id,1);toast('সেভ করা হয়েছে।')}save(memoryKey,memories.slice(0,500));renderPosts()}
 function toggleLove(p){let loved=arr(likedKey).map(String),counts=likesObject(),on=loved.includes(String(p.id));loved=on?loved.filter(x=>x!==String(p.id)):loved.concat(String(p.id));counts[p.id]=Math.max(0,Number(counts[p.id]??p.likes)+(on?-1:1));save(likedKey,loved);save(likeCountKey,counts);if(!on)touchActivity(p.id,1);renderPosts()}
 const postActionBoard=document.getElementById('postActionBoard');let activePostMenuId='';
 function closePostActionBoard(){if(!postActionBoard)return;postActionBoard.classList.remove('open');postActionBoard.setAttribute('aria-hidden','true');postActionBoard.innerHTML='';activePostMenuId='';document.querySelectorAll('[data-post-menu][aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'))}
-function openPostActionBoard(button,p){const memories=arr(memoryKey),saved=memories.some(x=>String(x.id)===String(p.id)),edit=canEdit(p)?'<button type="button" data-action="edit" data-id="'+esc(p.id)+'">'+icon('edit')+'সম্পাদনা/ব্যবস্থাপনা</button>':'';postActionBoard.innerHTML='<button type="button" data-action="copy" data-id="'+esc(p.id)+'">'+icon('link')+'লিংক কপি করুন</button><button type="button" data-action="save" data-id="'+esc(p.id)+'">'+icon('bookmark')+(saved?'সেভ থেকে সরান':'সেভ করুন')+'</button><a class="report-action" href="complaint.html?post='+encodeURIComponent(p.id)+'">'+icon('flag')+'রিপোর্ট করুন</a>'+edit;postActionBoard.classList.add('open');postActionBoard.setAttribute('aria-hidden','false');button.setAttribute('aria-expanded','true');activePostMenuId=String(p.id);const r=button.getBoundingClientRect(),w=Math.min(220,innerWidth-24),h=Math.max(132,postActionBoard.offsetHeight||160);let left=Math.min(innerWidth-w-12,Math.max(12,r.right-w)),top=r.bottom+7;if(top+h>innerHeight-10)top=Math.max(10,r.top-h-7);postActionBoard.style.width=w+'px';postActionBoard.style.left=left+'px';postActionBoard.style.top=top+'px'}
-function handlePostAction(action){const kind=action.dataset.action,p=findPost(action.dataset.id);if(!p&&kind!=='cancel-comment')return;if(kind==='love')toggleLove(p);if(kind==='save')toggleSave(p);if(kind==='share')sharePost(p);if(kind==='copy')copyPostLink(p);if(kind==='edit'&&canEdit(p))location.href=addParam(typeRoute(p.type,p.id,p.title),'edit','1');if(kind==='comment'){const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]');box?.classList.toggle('open');renderComments(p.id)}if(kind==='cancel-comment')document.querySelector('[data-comment-box="'+CSS.escape(String(action.dataset.id))+'"]')?.classList.remove('open');if(kind==='submit-comment'){if(!loggedIn){toast('মন্তব্য করতে লগইন করুন।');return}const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]'),input=box?.querySelector('textarea'),text=input?.value.trim();if(!text)return;const terms=scanModeration(text);if(terms.length){showInlineCommentModeration(p,box,input,text,terms);return}box?.querySelector('.comment-moderation-warning')?.remove();const list=arr(commentKey);list.push({id:Date.now(),postId:p.id,author:currentName,authorUsername:currentUsername,text,createdAt:new Date().toISOString()});save(commentKey,list.slice(-3000));p.comments=Number(p.comments||0)+1;touchActivity(p.id,2);input.value='';renderComments(p.id);toast('মন্তব্য যোগ হয়েছে.')}if(['save','copy','edit'].includes(kind))closePostActionBoard()}
-document.getElementById('postList').addEventListener('click',function(e){const menuButton=e.target.closest('[data-post-menu]');if(menuButton){e.stopPropagation();const p=findPost(menuButton.dataset.id);if(!p)return;if(activePostMenuId===String(p.id)&&postActionBoard.classList.contains('open'))closePostActionBoard();else{closePostActionBoard();openPostActionBoard(menuButton,p)}return}const action=e.target.closest('[data-action]');if(action)handlePostAction(action)});
+function openPostActionBoard(button,p){
+  const memories=arr(memoryKey),saved=memories.some(x=>String(x.id)===String(p.id)),owner=canEdit(p);
+  const edit=owner?'<button type="button" data-action="edit" data-id="'+esc(p.id)+'">'+icon('edit')+'সম্পাদনা/ব্যবস্থাপনা</button>':'';
+  const remove=owner?'<button class="danger-action" type="button" data-action="delete" data-id="'+esc(p.id)+'">'+icon('x')+'হোম থেকে মুছুন</button>':'';
+  postActionBoard.innerHTML='<button type="button" data-action="open" data-id="'+esc(p.id)+'">'+icon('poem')+'পূর্ণ পোস্ট খুলুন</button><button type="button" data-action="copy" data-id="'+esc(p.id)+'">'+icon('link')+'লিংক কপি করুন</button><button type="button" data-action="save" data-id="'+esc(p.id)+'">'+icon('bookmark')+(saved?'সেভ থেকে সরান':'সেভ করুন')+'</button><a class="report-action" href="complaint.html?post='+encodeURIComponent(p.id)+'">'+icon('flag')+'রিপোর্ট করুন</a>'+edit+remove;
+  postActionBoard.classList.add('open');postActionBoard.setAttribute('aria-hidden','false');button.setAttribute('aria-expanded','true');activePostMenuId=String(p.id);
+  const r=button.getBoundingClientRect(),w=Math.min(230,innerWidth-24),h=Math.max(150,postActionBoard.offsetHeight||190);let left=Math.min(innerWidth-w-12,Math.max(12,r.right-w)),top=r.bottom+7;if(top+h>innerHeight-10)top=Math.max(10,r.top-h-7);postActionBoard.style.width=w+'px';postActionBoard.style.left=left+'px';postActionBoard.style.top=top+'px';
+}
+async function deletePostFromHome(p){
+  if(!canEdit(p)){toast('শুধু নিজের পোস্ট মুছতে পারবেন।');return}
+  if(!confirm('পোস্টটি হোম থেকে সরিয়ে আর্কাইভে রাখতে চান?'))return;
+  const archived=arr('bhubondangaArchivePosts');
+  archived.unshift({...p,status:'archived',deletedAt:new Date().toISOString()});save('bhubondangaArchivePosts',archived.slice(0,2000));
+  sourceKeys.forEach(key=>{const list=arr(key),next=list.filter(x=>String(x.id||x.postId||x.sourceId)!==String(p.id));if(next.length!==list.length)save(key,next)});
+  if(Array.isArray(window.__BD_SUPABASE_POSTS))window.__BD_SUPABASE_POSTS=window.__BD_SUPABASE_POSTS.filter(x=>String(x.id)!==String(p.id));
+  if(p.source==='supabase'){
+    try{
+      const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;
+      if(c){let r=await c.from('posts').delete().eq('id',p.id);if(r.error)r=await c.from('posts').update({status:'deleted'}).eq('id',p.id);if(r.error)throw r.error}
+    }catch(err){console.warn('Delete sync:',err?.message||err);toast('হোম থেকে সরানো হয়েছে; অনলাইন সিঙ্ক পরে আবার চেষ্টা করবে।')}
+  }
+  posts=posts.filter(x=>String(x.id)!==String(p.id));closePostActionBoard();closePostViewer(false);renderPosts();toast('পোস্টটি হোম থেকে সরিয়ে আর্কাইভে রাখা হয়েছে।');
+}
+function viewerMarkup(p){
+  const owner=canEdit(p),categoryUrl=typeRoute(p.type,p.id,p.title);
+  return '<div class="master-post-top"><div><span class="master-post-kicker">'+esc(typeLabel(p.type))+'</span><h2>'+esc(p.title)+'</h2></div><button class="master-post-close" type="button" data-close-post aria-label="বন্ধ করুন">×</button></div>'
+    +'<div class="master-post-author"><span class="master-post-avatar">'+authorAvatarMarkup(p)+'</span><div><strong>'+esc(p.authorName)+'</strong><small>'+esc(formatDate(p.createdAt))+'</small></div></div>'
+    +(p.originalAuthor?'<div class="master-post-original">মূল কবি/লেখক: '+esc(p.originalAuthor)+'</div>':'')
+    +'<div class="master-post-body">'+esc(p.body||'পূর্ণ লেখা পাওয়া যায়নি।')+'</div>'
+    +'<div class="master-post-actions"><a href="'+esc(categoryUrl)+'">এই বিভাগের পাতা</a><button type="button" data-view-action="share" data-id="'+esc(p.id)+'">'+icon('share')+' শেয়ার</button><button type="button" data-view-action="save" data-id="'+esc(p.id)+'">'+icon('bookmark')+' সেভ</button>'+(owner?'<button class="danger" type="button" data-view-action="delete" data-id="'+esc(p.id)+'">'+icon('x')+' হোম থেকে মুছুন</button>':'')+'</div>';
+}
+function openPostViewer(p,updateHistory=true){
+  if(!p)return false;const shell=document.getElementById('masterPostShell'),dialog=document.getElementById('masterPostDialog');if(!shell||!dialog)return false;
+  dialog.innerHTML=viewerMarkup(p);shell.classList.add('open');shell.setAttribute('aria-hidden','false');document.body.classList.add('post-view-open');shell.dataset.postId=String(p.id);
+  if(updateHistory){const u=new URL(location.href);u.searchParams.set('post',p.id);history.pushState({post:p.id},'',u)}
+  setTimeout(()=>dialog.querySelector('[data-close-post]')?.focus(),30);return true;
+}
+function closePostViewer(updateHistory=true){
+  const shell=document.getElementById('masterPostShell');if(!shell)return;shell.classList.remove('open');shell.setAttribute('aria-hidden','true');document.body.classList.remove('post-view-open');shell.dataset.postId='';
+  if(updateHistory){const u=new URL(location.href);u.searchParams.delete('post');history.replaceState({},'',u.pathname+u.search+u.hash)}
+}
+function openRequestedPost(){const id=new URLSearchParams(location.search).get('post');if(!id)return;const shell=document.getElementById('masterPostShell');if(shell?.classList.contains('open')&&shell.dataset.postId===String(id))return;const p=findPost(id);if(p)openPostViewer(p,false)}
+function handlePostAction(action){
+  const kind=action.dataset.action,p=findPost(action.dataset.id);if(!p&&kind!=='cancel-comment')return;
+  if(kind==='open')openPostViewer(p);
+  if(kind==='love')toggleLove(p);
+  if(kind==='save')toggleSave(p);
+  if(kind==='share')sharePost(p);
+  if(kind==='copy')copyPostLink(p);
+  if(kind==='delete')deletePostFromHome(p);
+  if(kind==='edit'&&canEdit(p))location.href=addParam(typeRoute(p.type,p.id,p.title),'edit','1');
+  if(kind==='comment'){const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]');box?.classList.toggle('open');renderComments(p.id)}
+  if(kind==='cancel-comment')document.querySelector('[data-comment-box="'+CSS.escape(String(action.dataset.id))+'"]')?.classList.remove('open');
+  if(kind==='submit-comment'){
+    if(!isLoggedInNow()){toast('মন্তব্য করতে লগইন করুন।');return}
+    const box=document.querySelector('[data-comment-box="'+CSS.escape(String(p.id))+'"]'),input=box?.querySelector('textarea'),text=input?.value.trim();if(!text)return;const terms=scanModeration(text);if(terms.length){showInlineCommentModeration(p,box,input,text,terms);return}
+    box?.querySelector('.comment-moderation-warning')?.remove();const who=liveIdentity(),list=arr(commentKey);list.push({id:Date.now(),postId:p.id,author:who.author_name||currentName,authorUsername:who.author_username||currentUsername,text,createdAt:new Date().toISOString()});save(commentKey,list.slice(-3000));p.comments=Number(p.comments||0)+1;touchActivity(p.id,2);input.value='';renderComments(p.id);toast('মন্তব্য যোগ হয়েছে।')
+  }
+  if(['save','copy','edit','open'].includes(kind))closePostActionBoard();
+}
+document.getElementById('postList').addEventListener('click',function(e){
+  const menuButton=e.target.closest('[data-post-menu]');if(menuButton){e.preventDefault();e.stopPropagation();const p=findPost(menuButton.dataset.id);if(!p)return;if(activePostMenuId===String(p.id)&&postActionBoard.classList.contains('open'))closePostActionBoard();else{closePostActionBoard();openPostActionBoard(menuButton,p)}return}
+  const action=e.target.closest('[data-action]');if(action){e.preventDefault();handlePostAction(action);return}
+  const opener=e.target.closest('[data-open-post]');if(opener){e.preventDefault();const p=findPost(opener.dataset.openPost);if(p)openPostViewer(p);return}
+  const card=e.target.closest('[data-post-card]');if(card&&!e.target.closest('a,button,textarea,input,select,label')){const p=findPost(card.dataset.post);if(p)openPostViewer(p)}
+});
+document.getElementById('postList').addEventListener('keydown',function(e){const card=e.target.closest('[data-post-card]');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();const p=findPost(card.dataset.post);if(p)openPostViewer(p)}});
 postActionBoard.addEventListener('click',e=>{const action=e.target.closest('[data-action]');if(action){e.preventDefault();handlePostAction(action)}});
+const masterPostShell=document.getElementById('masterPostShell');
+masterPostShell?.addEventListener('click',e=>{
+  if(e.target.closest('[data-close-post]')){e.preventDefault();closePostViewer();return}
+  const b=e.target.closest('[data-view-action]');if(!b)return;e.preventDefault();const p=findPost(b.dataset.id);if(!p)return;
+  if(b.dataset.viewAction==='share')sharePost(p);
+  if(b.dataset.viewAction==='save')toggleSave(p);
+  if(b.dataset.viewAction==='delete')deletePostFromHome(p);
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&masterPostShell?.classList.contains('open'))closePostViewer()});
+addEventListener('popstate',()=>{const id=new URLSearchParams(location.search).get('post');if(id)openRequestedPost();else closePostViewer(false)});
 document.addEventListener('click',e=>{if(!postActionBoard.contains(e.target)&&!e.target.closest('[data-post-menu]'))closePostActionBoard()});addEventListener('scroll',closePostActionBoard,{passive:true});addEventListener('resize',closePostActionBoard);
 document.getElementById('loadMoreBtn').addEventListener('click',()=>{const total=filteredPosts().length;if(visible>=total){toast('এই মুহূর্তে আর কোনো লেখা নেই।');return}visible+=20;renderPosts()});
 document.getElementById('categoryFilter').addEventListener('change',e=>{category=e.target.value;visible=20;renderPosts()});
@@ -1508,6 +2128,23 @@ const themeBtn=document.getElementById('themeToggle'),themeUse=document.getEleme
 const toTop=document.getElementById('toTop');addEventListener('scroll',()=>toTop.classList.toggle('show',scrollY>500));toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
 const backdrop=document.getElementById('drawerBackdrop'),drawer=document.getElementById('mobileDrawer'),rightDrawer=document.getElementById('rightMobileDrawer');function openDrawer(){rightDrawer.classList.remove('open');drawer.classList.add('open');backdrop.classList.add('show');document.body.classList.add('locked')}function openRightDrawer(){drawer.classList.remove('open');rightDrawer.classList.add('open');backdrop.classList.add('show');document.body.classList.add('locked')}function closeDrawer(){drawer.classList.remove('open');rightDrawer.classList.remove('open');backdrop.classList.remove('show');document.body.classList.remove('locked')}document.getElementById('leftEdgeMenu').addEventListener('click',openDrawer);document.getElementById('rightEdgeMenu').addEventListener('click',openRightDrawer);document.getElementById('closeDrawer').addEventListener('click',closeDrawer);document.getElementById('closeRightDrawer').addEventListener('click',closeDrawer);document.getElementById('mobileQuickMenu').addEventListener('click',()=>{closeMobileMore();openDrawer()});backdrop.addEventListener('click',closeDrawer);drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeDrawer));rightDrawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeDrawer));
 const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=document.getElementById('mobileMoreMenu');function closeMobileMore(){mobileMoreMenu.classList.remove('open');mobileMoreBtn.setAttribute('aria-expanded','false')}mobileMoreBtn.addEventListener('click',e=>{e.stopPropagation();const open=!mobileMoreMenu.classList.contains('open');closeMobileMore();if(open){mobileMoreMenu.classList.add('open');mobileMoreBtn.setAttribute('aria-expanded','true')}});document.addEventListener('click',e=>{if(!mobileMoreMenu.contains(e.target)&&e.target!==mobileMoreBtn)closeMobileMore()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeMobileMore();closePostActionBoard()}});
+})();
+</script>
+
+
+<script id="bd-index-master-controller-20260727">
+(function(){
+  'use strict';
+  const D=document;
+  function syncAuthChrome(){
+    const live=window.__BD_IDENTITY||{},logged=Boolean(window.__BD_LIVE_SESSION)||Boolean(live.author_id||live.author_username);D.body.classList.toggle('is-authenticated',logged);D.body.classList.toggle('is-visitor',!logged);
+    const n=D.getElementById('headerNotifications'),m=D.getElementById('headerMessages'),a=D.getElementById('headerAvatar');
+    if(n)n.hidden=!logged;if(m)m.hidden=!logged;
+    if(a){if(logged){a.classList.remove('header-login-state');a.href=(live.role==='founder'||live.author_username==='mahmud-sohel')?'founder-profile.html':'profile.html?user='+encodeURIComponent(live.author_id||live.author_username||'me');a.title=live.author_name||'আপনার প্রোফাইল';a.innerHTML=live.author_avatar?'<img src="'+String(live.author_avatar).replace(/"/g,'&quot;')+'" alt="">':'<svg class="icon"><use href="#i-user"></use></svg>'}else{a.classList.add('header-login-state');a.href='login.html';a.title='লগইন করুন';a.textContent='লগইন'}}
+  }
+  D.addEventListener('bd:auth-ready',syncAuthChrome);
+  function init(){syncAuthChrome();setTimeout(syncAuthChrome,500);setTimeout(syncAuthChrome,1400)}
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
 
@@ -1841,451 +2478,455 @@ html[data-theme="dark"] .composer-style-picker{background:linear-gradient(145deg
 }
 </style>
 
-<style id="bd-index-nextgen-3d-masterclass-20260727">
-/*
-  Bhubondanga Next-Generation 3D Masterclass skin.
-  Presentation only: all content, routes, data, composer logic and Supabase behaviour remain untouched.
-  Dark mode is intentionally left unchanged.
-*/
+<script id="bd-challenge-two-masterclass-3d-script-20260727">
+(function(){
+  'use strict';
+  var root=document.documentElement;
+  var canTilt=window.matchMedia&&window.matchMedia('(min-width:900px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches;
+  var selector='.composer,.humanitarian-strip,.feed-head,#leftSidebar .side-box.glass,#rightSidebar .right-section.glass,#leftSidebar .bd9-card,#rightSidebar .bd9-card';
 
-html[data-theme="light"]{
-  --bd3d-ink:#183452;
-  --bd3d-soft:#61718b;
-  --bd3d-line:rgba(108,123,178,.20);
-  --bd3d-line-hi:rgba(255,255,255,.96);
-  --bd3d-blue:#678cf2;
-  --bd3d-violet:#9077ea;
-  --bd3d-mint:#5bb99d;
-  --bd3d-rose:#d884ae;
-  --bd3d-glow:0 28px 80px rgba(62,76,145,.14),0 10px 28px rgba(92,79,157,.09),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(116,134,205,.08);
-  --bd3d-glow-soft:0 15px 42px rgba(66,82,151,.11),0 4px 13px rgba(91,78,154,.065),inset 0 1px 0 rgba(255,255,255,.98);
-  --page-bg:
-    radial-gradient(circle at 7% 4%,rgba(101,169,255,.21),transparent 29%),
-    radial-gradient(circle at 92% 8%,rgba(167,122,239,.18),transparent 31%),
-    radial-gradient(circle at 80% 92%,rgba(86,196,164,.13),transparent 30%),
-    linear-gradient(145deg,#fbfdff 0%,#eef3fb 44%,#f8f5ff 72%,#f6fcfa 100%);
-}
+  function decorate(scope){
+    (scope||document).querySelectorAll(selector).forEach(function(card){
+      if(card.dataset.bdC2Ready==='1')return;
+      card.dataset.bdC2Ready='1';
+      card.classList.add('bd-c2-depth-card');
+      if(!canTilt)return;
+      card.addEventListener('pointermove',function(event){
+        if(root.getAttribute('data-theme')!=='light')return;
+        var rect=card.getBoundingClientRect();
+        if(!rect.width||!rect.height)return;
+        var px=Math.max(0,Math.min(1,(event.clientX-rect.left)/rect.width));
+        var py=Math.max(0,Math.min(1,(event.clientY-rect.top)/rect.height));
+        var ry=(px-.5)*1.35;
+        var rx=(.5-py)*1.05;
+        card.style.setProperty('--bd-c2-rx',rx.toFixed(2)+'deg');
+        card.style.setProperty('--bd-c2-ry',ry.toFixed(2)+'deg');
+        card.style.setProperty('--bd-c2-gx',(px*100).toFixed(1)+'%');
+        card.style.setProperty('--bd-c2-gy',(py*100).toFixed(1)+'%');
+      },{passive:true});
+      card.addEventListener('pointerleave',function(){
+        card.style.setProperty('--bd-c2-rx','0deg');
+        card.style.setProperty('--bd-c2-ry','0deg');
+        card.style.setProperty('--bd-c2-gx','50%');
+        card.style.setProperty('--bd-c2-gy','30%');
+      },{passive:true});
+    });
+  }
 
-html[data-theme="light"] body{
-  background-color:#f3f6fb;
-  background-image:
-    radial-gradient(circle at 7% 4%,rgba(101,169,255,.21),transparent 29%),
-    radial-gradient(circle at 92% 8%,rgba(167,122,239,.18),transparent 31%),
-    radial-gradient(circle at 80% 92%,rgba(86,196,164,.13),transparent 30%),
-    linear-gradient(rgba(111,126,177,.025) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(111,126,177,.025) 1px,transparent 1px),
-    linear-gradient(145deg,#fbfdff 0%,#eef3fb 44%,#f8f5ff 72%,#f6fcfa 100%);
-  background-size:auto,auto,auto,34px 34px,34px 34px,auto;
-  background-attachment:fixed;
-}
+  function start(){
+    decorate(document);
+    var center=document.querySelector('.center-col');
+    if(center&&window.MutationObserver){
+      new MutationObserver(function(records){
+        records.forEach(function(record){
+          record.addedNodes.forEach(function(node){
+            if(node.nodeType!==1)return;
+            if(node.matches&&node.matches(selector))decorate(node.parentNode||document);
+            else decorate(node);
+          });
+        });
+      }).observe(center,{childList:true,subtree:true});
+    }
+  }
 
-/* Premium fixed chrome */
-html[data-theme="light"] .site-header{
-  border-bottom-color:rgba(108,123,178,.16)!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(248,251,255,.88))!important;
-  box-shadow:0 14px 42px rgba(51,69,133,.10),inset 0 -1px 0 rgba(255,255,255,.96)!important;
-  backdrop-filter:blur(30px) saturate(155%)!important;
-  -webkit-backdrop-filter:blur(30px) saturate(155%)!important;
-}
-html[data-theme="light"] .site-header::after{
-  content:"";position:absolute;left:3%;right:3%;bottom:-1px;height:2px;pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(102,143,242,.52),rgba(151,113,235,.48),rgba(83,186,156,.42),transparent);
-  filter:blur(.2px);opacity:.72;
-}
-html[data-theme="light"] .header-inner{perspective:1200px}
-html[data-theme="light"] .logo-mark{
-  border-color:rgba(93,160,135,.30)!important;
-  background:radial-gradient(circle at 28% 18%,#fff 0 18%,transparent 38%),linear-gradient(145deg,#ffffff,#e9f7f1 58%,#edf0ff)!important;
-  box-shadow:0 16px 30px rgba(60,125,101,.18),0 4px 9px rgba(67,91,153,.09),inset 0 1px 0 #fff,inset 0 -2px 5px rgba(76,143,116,.10)!important;
-  transform:translateZ(18px) rotate(-2deg);
-}
-html[data-theme="light"] .brand-leaf-emoji{filter:saturate(1.18) drop-shadow(0 7px 9px rgba(39,104,78,.20))!important}
-html[data-theme="light"] .brand-copy h1{
-  color:#173653;
-  text-shadow:0 1px 0 #fff,0 9px 24px rgba(42,73,122,.10)!important;
-}
-html[data-theme="light"] .searchbar input{
-  border-color:rgba(105,121,175,.20)!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(247,250,255,.88))!important;
-  box-shadow:0 10px 28px rgba(58,75,137,.085),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(97,115,177,.07)!important;
-}
-html[data-theme="light"] .searchbar input:focus{
-  border-color:rgba(103,140,242,.62)!important;
-  box-shadow:0 0 0 4px rgba(103,140,242,.10),0 16px 38px rgba(68,82,151,.13),inset 0 1px 0 #fff!important;
-}
-html[data-theme="light"] .searchbar button{
-  background:linear-gradient(145deg,#7397f5,#8b79e9 58%,#a372df)!important;
-  box-shadow:0 10px 22px rgba(93,97,206,.28),inset 0 1px 0 rgba(255,255,255,.56),inset 0 -2px 5px rgba(54,43,135,.18)!important;
-}
-html[data-theme="light"] .icon-btn,html[data-theme="light"] .avatar{
-  border-color:rgba(105,121,175,.20)!important;
-  box-shadow:0 10px 25px rgba(64,78,142,.11),inset 0 1px 0 #fff!important;
-}
-html[data-theme="light"] .date-bar{
-  background:linear-gradient(90deg,rgba(247,251,255,.93),rgba(252,249,255,.93),rgba(247,253,251,.93))!important;
-  box-shadow:0 5px 16px rgba(70,83,143,.055)!important;
-}
-html[data-theme="light"] .topnav{
-  background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(249,251,255,.91))!important;
-  box-shadow:0 9px 26px rgba(62,76,137,.075)!important;
-}
-html[data-theme="light"] .nav-link{position:relative;border-bottom:0!important;padding:0 2px;transition:color .18s ease,transform .18s ease}
-html[data-theme="light"] .nav-link::after{
-  content:"";position:absolute;left:50%;right:50%;bottom:7px;height:3px;border-radius:999px;
-  background:linear-gradient(90deg,#678cf2,#9278ea,#58b99c);
-  box-shadow:0 4px 12px rgba(108,111,222,.24);transition:left .2s ease,right .2s ease;
-}
-html[data-theme="light"] .nav-link.active::after,html[data-theme="light"] .nav-link:hover::after{left:3px;right:3px}
-html[data-theme="light"] .nav-link:hover{transform:translateY(-1px)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+  else start();
+})();
+</script>
 
-/* 3D scene and responsive column safety */
-html[data-theme="light"] .layout{perspective:1800px;perspective-origin:50% 15%}
-@media (min-width:900px) and (max-width:1180px){
-  html[data-theme="light"] main.layout,html[data-theme="light"] .layout{grid-template-columns:minmax(215px,240px) minmax(0,1fr)!important;gap:16px!important}
+<style id="bd-index-final-critical-layout-20260727">
+/* FINAL AUTHORITY — only the date/time ticker is frozen.
+   Header, navigation/category bar and newsfeed stay in normal page flow. */
+:root{--bd-only-ticker-h:var(--ticker-h,36px)}
+
+html{
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:100%!important;
+  max-height:none!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
 }
-@media (min-width:1181px){
-  html[data-theme="light"] main.layout,html[data-theme="light"] .layout{grid-template-columns:minmax(235px,260px) minmax(560px,1fr) minmax(255px,285px)!important;gap:16px!important}
+body{
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  overflow:visible!important;
+  padding-top:0!important;
 }
 
-/* Unified optical glass system */
-html[data-theme="light"] .glass,
-html[data-theme="light"] .bd9-card{
-  border-color:rgba(104,120,176,.20)!important;
-  box-shadow:var(--bd3d-glow)!important;
-  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;
-  backdrop-filter:blur(28px) saturate(150%)!important;
-}
-html[data-theme="light"] .glass{
-  background:linear-gradient(145deg,rgba(255,255,255,.90),rgba(246,249,255,.79) 54%,rgba(250,247,255,.76))!important;
-}
-html[data-theme="light"] .glass::after{
-  left:3%;right:3%;height:42%;
-  background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,255,255,.22) 45%,transparent)!important;
-  opacity:.52!important;
-}
-html[data-theme="light"] .bd9-card{
-  background:linear-gradient(150deg,rgba(255,255,255,.94),rgba(244,248,255,.82) 50%,rgba(250,246,255,.78))!important;
-}
-html[data-theme="light"] .bd9-sidebar-stack{gap:12px!important}
-html[data-theme="light"] .bd9-identity{
-  background:radial-gradient(circle at 50% 0,rgba(102,143,242,.18),transparent 46%),linear-gradient(150deg,rgba(255,255,255,.96),rgba(239,246,255,.87) 54%,rgba(247,241,255,.82))!important;
-}
-html[data-theme="light"] .bd9-leaf{
-  text-shadow:0 12px 24px rgba(49,115,89,.24);filter:saturate(1.14);transform:translateZ(12px);
-}
-html[data-theme="light"] .bd9-quote{
-  border-color:rgba(112,126,181,.19)!important;
-  background:linear-gradient(135deg,rgba(255,255,255,.86),rgba(235,241,255,.68))!important;
-  box-shadow:inset 0 1px 0 #fff,0 9px 20px rgba(58,74,137,.075)!important;
-}
-html[data-theme="light"] .bd9-menu a,
-html[data-theme="light"] .bd9-palettes button,
-html[data-theme="light"] .bd9-modes button{
-  border-color:rgba(105,121,175,.17)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(242,246,253,.80))!important;
-  box-shadow:0 7px 17px rgba(64,79,142,.065),inset 0 1px 0 #fff!important;
+/* Header is not locked. */
+.site-header,.header{
+  position:relative!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  width:100%!important;
+  z-index:120!important;
+  transform:none!important;
 }
 
-/* Composer as the page's hero object */
-html[data-theme="light"] .composer{
-  border-color:rgba(113,112,209,.26)!important;
-  background:
-    radial-gradient(circle at 8% 0,rgba(105,154,245,.18),transparent 34%),
-    radial-gradient(circle at 96% 8%,rgba(171,127,235,.14),transparent 32%),
-    linear-gradient(145deg,rgba(255,255,255,.96),rgba(240,245,255,.86) 54%,rgba(249,243,255,.84))!important;
-  box-shadow:0 34px 90px rgba(63,72,145,.17),0 10px 28px rgba(105,79,162,.095),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(115,120,205,.09)!important;
+/* This is the only frozen bar. */
+.date-bar,.datebar,.date-ticker,.date-strip{
+  position:sticky!important;
+  top:0!important;
+  left:auto!important;
+  right:auto!important;
+  width:100%!important;
+  max-width:100vw!important;
+  z-index:3200!important;
+  overflow:hidden!important;
+  contain:paint!important;
+  transform:translateZ(0)!important;
 }
-html[data-theme="light"] .composer::before{
-  background:linear-gradient(125deg,rgba(103,140,242,.16),rgba(151,112,231,.17) 48%,rgba(88,185,156,.11))!important;opacity:.62!important;
-}
-html[data-theme="light"] .composer-avatar{
-  border:3px solid rgba(255,255,255,.92);
-  background:linear-gradient(145deg,#638cf0,#8e76e9 58%,#5bb99d)!important;
-  box-shadow:0 12px 26px rgba(80,92,190,.24),inset 0 1px 0 rgba(255,255,255,.48)!important;
-}
-html[data-theme="light"] .composer-prompt{
-  border-color:rgba(106,122,178,.20)!important;
-  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(247,249,255,.87))!important;
-  box-shadow:0 12px 30px rgba(60,75,139,.085),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(102,119,180,.07)!important;
-  transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease!important;
-}
-html[data-theme="light"] .composer-prompt:hover{
-  border-color:rgba(109,119,220,.42)!important;
-  box-shadow:0 17px 36px rgba(72,79,157,.12),0 0 0 4px rgba(119,124,225,.07),inset 0 1px 0 #fff!important;
-}
-html[data-theme="light"] .quick-type{
-  position:relative;overflow:hidden;
-  border-color:rgba(105,121,175,.19)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(239,244,255,.85) 60%,rgba(248,242,255,.82))!important;
-  box-shadow:0 13px 28px rgba(60,74,140,.10),inset 0 1px 0 #fff,inset 0 -2px 5px rgba(92,106,172,.06)!important;
-}
-html[data-theme="light"] .quick-type::before{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(125deg,rgba(105,154,245,.11),rgba(158,126,233,.10),rgba(88,185,156,.08));opacity:.55;
-}
-html[data-theme="light"] .quick-type>*{position:relative;z-index:1}
-html[data-theme="light"] .quick-symbol{filter:drop-shadow(0 6px 7px rgba(54,65,118,.16))!important}
-html[data-theme="light"] .composer-style-picker{
-  border-color:rgba(112,113,208,.24)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(237,242,255,.74) 56%,rgba(247,241,255,.72))!important;
-  box-shadow:0 15px 36px rgba(68,75,147,.10),inset 0 1px 0 #fff!important;
-}
-html[data-theme="light"] .composer-style-option{box-shadow:0 9px 20px rgba(61,75,137,.075),inset 0 1px 0 #fff!important}
-html[data-theme="light"] .style-swatch{box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 8px 17px rgba(61,70,124,.16)!important}
-
-/* Humanitarian priority object */
-html[data-theme="light"] .humanitarian-strip:not(.multi),
-html[data-theme="light"] .humanitarian-mini{
-  border-color:rgba(70,155,126,.30)!important;
-  background:radial-gradient(circle at 8% 0,rgba(93,205,166,.18),transparent 34%),linear-gradient(145deg,rgba(255,255,255,.96),rgba(235,250,244,.88) 55%,rgba(239,247,255,.82))!important;
-  box-shadow:0 28px 74px rgba(47,121,94,.14),0 8px 22px rgba(66,106,139,.07),inset 0 1px 0 #fff!important;
-}
-html[data-theme="light"] .humanitarian-icon{
-  background:linear-gradient(145deg,#69c9aa,#4da688)!important;
-  box-shadow:0 14px 30px rgba(55,144,113,.25),inset 0 1px 0 rgba(255,255,255,.55),inset 0 -3px 7px rgba(28,99,74,.13)!important;
-}
-html[data-theme="light"] .humanitarian-actions a{
-  box-shadow:0 9px 20px rgba(62,105,91,.10),inset 0 1px 0 rgba(255,255,255,.88)!important;
-}
-html[data-theme="light"] .humanitarian-actions a.primary{
-  background:linear-gradient(145deg,#5ab79a,#438f78)!important;
-  box-shadow:0 12px 24px rgba(54,137,108,.24),inset 0 1px 0 rgba(255,255,255,.36)!important;
+.date-track,.track,.ticker,.ticker-track{
+  pointer-events:none!important;
+  will-change:transform!important;
+  backface-visibility:hidden!important;
+  -webkit-backface-visibility:hidden!important;
 }
 
-/* Feed header and premium content cards */
-html[data-theme="light"] .feed-head{
-  border-color:rgba(110,119,202,.22)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(241,245,255,.82) 58%,rgba(249,244,255,.79))!important;
+/* Navigation and all category/character bars scroll normally with the page. */
+.topnav,.nav,.quickbar,.category-bar,.utility-grid{
+  position:relative!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  width:100%!important;
+  z-index:100!important;
+  transform:none!important;
 }
-html[data-theme="light"] .feed-head h2{
-  background:linear-gradient(90deg,#24486c,#6e6bc8 60%,#438c78);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-  text-shadow:0 8px 22px rgba(74,83,151,.08);
-}
-html[data-theme="light"] .controls select{
-  border-color:rgba(105,121,175,.18)!important;
-  background:linear-gradient(180deg,#fff,#f5f8fd)!important;
-  box-shadow:0 8px 20px rgba(61,75,137,.07),inset 0 1px 0 #fff!important;
-}
-html[data-theme="light"] .post-list{gap:14px!important}
-html[data-theme="light"] .post{
-  --bd-rx:0deg;--bd-ry:0deg;--bd-lift:0px;
-  position:relative;overflow:hidden;
-  border-color:rgba(105,121,175,.20)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(245,248,255,.82) 58%,rgba(250,246,255,.78))!important;
-  box-shadow:0 27px 72px rgba(59,74,139,.135),0 8px 22px rgba(93,78,151,.075),inset 0 1px 0 #fff,inset 0 -1px 0 rgba(104,121,184,.08)!important;
-  transform:perspective(1500px) rotateX(var(--bd-rx)) rotateY(var(--bd-ry)) translateY(var(--bd-lift))!important;
-  transform-style:preserve-3d;backface-visibility:hidden;
-  transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease,border-color .28s ease!important;
-}
-html[data-theme="light"] .post::before{
-  background:var(--card-tint,var(--rainbow)),linear-gradient(125deg,rgba(104,151,245,.12),rgba(160,127,234,.10),rgba(91,190,159,.07))!important;
-  opacity:.94!important;
-}
-html[data-theme="light"] .post::after{
-  content:"";position:absolute;left:5%;right:5%;top:0;height:40%;pointer-events:none;border-radius:inherit;
-  background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.15) 48%,transparent);opacity:.48;
-}
-html[data-theme="light"] .post>*{position:relative;z-index:1}
-html[data-theme="light"] .author-avatar{
-  border:3px solid rgba(255,255,255,.94);
-  box-shadow:0 11px 24px rgba(70,80,163,.20),inset 0 1px 0 rgba(255,255,255,.55)!important;
-}
-html[data-theme="light"] .post-title{letter-spacing:-.01em}
-html[data-theme="light"] .post-title a{
-  background-image:linear-gradient(90deg,currentColor,currentColor);background-repeat:no-repeat;background-size:0 1px;background-position:0 100%;transition:background-size .25s ease;
-}
-html[data-theme="light"] .post:hover .post-title a{background-size:100% 1px}
-html[data-theme="light"] .post-actions{
-  border-top-color:rgba(106,122,178,.14)!important;
-  background:linear-gradient(180deg,transparent,rgba(244,247,255,.36));
-}
-html[data-theme="light"] .action-btn{border-radius:10px;transition:background .18s ease,color .18s ease,transform .18s ease!important}
-html[data-theme="light"] .action-btn:hover{
-  background:linear-gradient(145deg,rgba(234,240,255,.92),rgba(246,239,255,.82))!important;
-  color:#6f70cc!important;transform:translateY(-1px);
-}
-html[data-theme="light"] .post-menu-btn,html[data-theme="light"] .three-dot-btn{
-  border-color:rgba(106,122,178,.17)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(240,244,252,.86))!important;
-  box-shadow:0 8px 18px rgba(63,77,139,.08),inset 0 1px 0 #fff!important;
+.category-wrap,.profile-tabs,.categories-wrap,.categories,
+.feed-head,.controls{
+  position:relative!important;
+  top:auto!important;
 }
 
-/* Drawers, overlays and utility controls */
-html[data-theme="light"] .edge-menu{
-  background:linear-gradient(180deg,rgba(255,255,255,.87),rgba(224,232,255,.79) 45%,rgba(153,135,230,.66))!important;
-  box-shadow:0 16px 38px rgba(65,76,151,.24),inset 0 1px 0 #fff!important;
+/* Glass decoration never blocks a post click. */
+.glass::before,.glass::after,.post::before,.post::after{pointer-events:none!important}
+.post,.bd-live-post,.post.bd-c2-depth-card,.bd-live-post.bd-c2-depth-card{
+  transform:none!important;
+  will-change:auto!important;
+  perspective:none!important;
+  isolation:isolate!important;
 }
-html[data-theme="light"] .mobile-drawer{
-  background:linear-gradient(160deg,#f8fbff,#eef3fb 58%,#f8f3ff)!important;
-  box-shadow:28px 0 80px rgba(22,35,77,.28)!important;
-}
-html[data-theme="light"] .right-drawer{box-shadow:-28px 0 80px rgba(22,35,77,.28)!important}
-html[data-theme="light"] .to-top{
-  background:linear-gradient(145deg,#6c92f3,#8f78e9)!important;
-  box-shadow:0 15px 32px rgba(79,86,190,.28),inset 0 1px 0 rgba(255,255,255,.45)!important;
-}
-html[data-theme="light"] .site-footer{
-  border-color:rgba(105,121,175,.18)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.89),rgba(241,246,255,.78) 56%,rgba(249,244,255,.76))!important;
-  box-shadow:var(--bd3d-glow-soft)!important;
+.post-title a,.post-read-more,.post-body,[data-open-post],
+.three-dot-btn,.action-btn{
+  position:relative!important;
+  z-index:5!important;
+  pointer-events:auto!important;
 }
 
-/* Fine-pointer 3D micro-interactions only; mobile remains stable and flat. */
-@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  html[data-theme="light"] .glass,
-  html[data-theme="light"] .bd9-card,
-  html[data-theme="light"] .quick-type,
-  html[data-theme="light"] .composer-style-option,
-  html[data-theme="light"] .bd9-menu a,
-  html[data-theme="light"] .bd9-palettes button,
-  html[data-theme="light"] .bd9-modes button{transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .24s ease,border-color .24s ease!important}
-  html[data-theme="light"] .post:hover{--bd-lift:-5px;border-color:rgba(116,111,220,.34)!important;box-shadow:0 38px 96px rgba(58,70,142,.18),0 13px 35px rgba(105,78,161,.10),inset 0 1px 0 #fff!important}
-  html[data-theme="light"] .composer:hover,
-  html[data-theme="light"] .feed-head:hover,
-  html[data-theme="light"] .humanitarian-mini:hover,
-  html[data-theme="light"] .humanitarian-strip:not(.multi):hover{transform:translateY(-3px);box-shadow:0 38px 92px rgba(62,75,146,.17),0 12px 32px rgba(99,81,158,.09),inset 0 1px 0 #fff!important}
-  html[data-theme="light"] .quick-type:hover,
-  html[data-theme="light"] .composer-style-option:hover{transform:translateY(-4px) scale(1.012)!important;box-shadow:0 18px 38px rgba(63,77,143,.14),inset 0 1px 0 #fff!important}
-  html[data-theme="light"] .bd9-card:hover{transform:translateY(-3px);box-shadow:0 28px 72px rgba(58,73,139,.15),0 9px 26px rgba(95,78,151,.08),inset 0 1px 0 #fff!important}
-  html[data-theme="light"] .bd9-menu a:hover{transform:translateX(4px) translateY(-1px)!important}
-  html[data-theme="light"] .logo-mark:hover{transform:translateZ(24px) rotate(2deg) scale(1.04)}
+@media(min-width:900px){
+  main.layout,.layout,.page-grid{
+    display:grid!important;
+    width:min(1500px,100%)!important;
+    max-width:1500px!important;
+    height:auto!important;
+    max-height:none!important;
+    min-height:0!important;
+    margin:0 auto!important;
+    padding:12px!important;
+    gap:12px!important;
+    grid-template-columns:clamp(178px,17.8vw,250px) minmax(0,1fr) clamp(178px,18.2vw,260px)!important;
+    align-items:start!important;
+    overflow:visible!important;
+  }
+
+  .center-col,.center,.main-content,.page-main{
+    display:grid!important;
+    gap:12px!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    max-height:none!important;
+    min-height:0!important;
+    overflow:visible!important;
+    padding-bottom:28px!important;
+  }
+
+  #leftSidebar,#rightSidebar,.sidebar,.left-sidebar,.right-sidebar,.left-col,.right-col{
+    display:block!important;
+    visibility:visible!important;
+    opacity:1!important;
+    min-width:0!important;
+  }
+
+  /* Sidebars remain independently scrollable under the frozen ticker only. */
+  #leftSidebar,#rightSidebar,.sidebar,.left-sidebar,.right-sidebar{
+    position:sticky!important;
+    top:calc(var(--bd-only-ticker-h) + 12px)!important;
+    width:auto!important;
+    height:auto!important;
+    max-height:calc(100dvh - var(--bd-only-ticker-h) - 24px)!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    align-self:start!important;
+    overscroll-behavior-y:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+
+  .site-footer,.footer{display:flex!important}
+  #drawerBackdrop,#backdrop,#midnightDrawerBackdrop,.drawer-backdrop,
+  #mobileDrawer,#rightMobileDrawer,#leftDrawer,#rightDrawer,#midnightLeftDrawer,#midnightRightDrawer,.mobile-drawer{display:none!important}
+  #leftEdgeMenu,#rightEdgeMenu,#midnightLeftEdge,#midnightRightEdge,.edge-menu,.edge,.midnight-edge{display:none!important}
 }
 
-@media(max-width:899px){
-  html[data-theme="light"] body{background-size:auto,auto,auto,42px 42px,42px 42px,auto}
-  html[data-theme="light"] .glass,html[data-theme="light"] .post,html[data-theme="light"] .bd9-card{box-shadow:0 16px 42px rgba(62,75,142,.12),0 5px 14px rgba(91,78,151,.06),inset 0 1px 0 #fff!important}
-  html[data-theme="light"] .post{transform:none!important}
-  html[data-theme="light"] .composer:hover,html[data-theme="light"] .feed-head:hover,html[data-theme="light"] .humanitarian-mini:hover,html[data-theme="light"] .humanitarian-strip:not(.multi):hover{transform:none!important}
-  html[data-theme="light"] .logo-mark{transform:none!important}
-  html[data-theme="light"] .mobile-main-link.active{
-    border-color:rgba(112,113,208,.24)!important;
-    background:linear-gradient(145deg,rgba(236,242,255,.94),rgba(246,238,255,.88))!important;
-    box-shadow:0 9px 20px rgba(68,76,150,.10),inset 0 1px 0 #fff!important;
+@media(min-width:900px) and (max-width:1180px){
+  main.layout,.layout,.page-grid{
+    padding:9px!important;
+    gap:9px!important;
+    grid-template-columns:178px minmax(0,1fr) 182px!important;
+  }
+}
+@media(min-width:900px) and (max-width:980px){
+  main.layout,.layout,.page-grid{
+    grid-template-columns:168px minmax(0,1fr) 170px!important;
+    gap:7px!important;
+    padding:7px!important;
   }
 }
 
-@media(prefers-reduced-motion:reduce){
-  html[data-theme="light"] *,html[data-theme="light"] *::before,html[data-theme="light"] *::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
-  html[data-theme="light"] .post{transform:none!important}
+@media(max-width:899px){
+  html{height:auto!important;min-height:100%!important;max-height:none!important;overflow-x:hidden!important;overflow-y:auto!important}
+  body{height:auto!important;min-height:100dvh!important;max-height:none!important;overflow:visible!important;padding-top:0!important}
+  main.layout,.layout,.page-grid{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    max-height:none!important;
+    min-height:0!important;
+    padding:8px 14px 20px!important;
+    overflow:visible!important;
+  }
+  .center-col,.center,.main-content,.page-main{
+    width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  #leftSidebar,#rightSidebar,.sidebar,.left-sidebar,.right-sidebar,.left-col,.right-col{display:none!important}
 }
 </style>
 
-<script id="bd-index-nextgen-3d-tilt-20260727">
+
+<script id="bd-truth-final-routing-20260727">
 (function(){
   'use strict';
-  if(!window.matchMedia||!matchMedia('(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)').matches)return;
-  var root=document.documentElement,active=null,raf=0,x=0,y=0;
-  function isLight(){return root.getAttribute('data-theme')==='light'}
-  function targetOf(node){return node&&node.closest?node.closest('.post'):null}
-  function paint(){raf=0;if(!active||!isLight())return;var r=active.getBoundingClientRect();if(!r.width||!r.height)return;var px=(x-r.left)/r.width-.5,py=(y-r.top)/r.height-.5;active.style.setProperty('--bd-ry',(px*1.7).toFixed(2)+'deg');active.style.setProperty('--bd-rx',(-py*1.25).toFixed(2)+'deg')}
-  document.addEventListener('pointermove',function(e){var t=targetOf(e.target);if(t!==active){if(active){active.style.removeProperty('--bd-rx');active.style.removeProperty('--bd-ry')}active=t}if(!active)return;x=e.clientX;y=e.clientY;if(!raf)raf=requestAnimationFrame(paint)},{passive:true});
-  document.addEventListener('pointerout',function(e){if(!active)return;var next=e.relatedTarget;if(next&&active.contains(next))return;active.style.removeProperty('--bd-rx');active.style.removeProperty('--bd-ry');active=null},{passive:true});
-  addEventListener('blur',function(){if(active){active.style.removeProperty('--bd-rx');active.style.removeProperty('--bd-ry');active=null}});
+  const currentDocumentUrl=()=>{const u=new URL(location.href);u.search='';u.hash='';return u};
+  function currentPostUrl(id){const u=currentDocumentUrl();u.searchParams.set('post',id);return u.href}
+  function normalizeHomeLinks(){
+    const name=(()=>{try{return decodeURIComponent(location.pathname.split('/').pop()||'')}catch(_){return location.pathname.split('/').pop()||''}})();
+    if(!/^index(?:\s*\(\d+\))?\.html$/i.test(name))return;
+    const home=currentDocumentUrl().href;
+    document.querySelectorAll('a[href="index.html"],a[href="./index.html"]').forEach(a=>a.href=home);
+  }
+  function normalizeLegacyCards(root=document){
+    root.querySelectorAll?.('#postList .bd-live-post[data-post-id]').forEach(card=>{
+      const id=card.dataset.postId;if(!id)return;
+      card.querySelectorAll('a[href*="post-details.html"],.post-title a,.post-read-more').forEach(a=>a.href=currentPostUrl(id));
+      card.querySelector('.post-title a')?.setAttribute('data-bd-current-post',id);
+      card.querySelector('.post-read-more')?.setAttribute('data-bd-current-post',id);
+    });
+  }
+  normalizeHomeLinks();normalizeLegacyCards();
+  const host=document.getElementById('postList');
+  if(host)new MutationObserver(()=>normalizeLegacyCards(host)).observe(host,{childList:true,subtree:true});
+  document.addEventListener('click',function(e){
+    const trigger=e.target.closest('#postList .bd-live-post [data-bd-current-post],#postList .bd-live-post .post-body');
+    if(!trigger)return;
+    if(e.target.closest('button,form,textarea,input,select,label,[data-live-like],[data-comment],[data-live-share],[data-live-save],[data-live-menu]'))return;
+    const card=trigger.closest('.bd-live-post[data-post-id]');if(!card)return;
+    e.preventDefault();e.stopImmediatePropagation();location.href=currentPostUrl(card.dataset.postId);
+  },true);
 })();
 </script>
 
 
+<style id="bd-theme-card-welcome-v1">
+/* Overall theme inspiration only: no sample-image text or artwork is copied. */
+html[data-bd-glass="crystal"]{--primary:#5e8fcf;--primary-2:#879fd1;--green:#4f8f83}
+html[data-bd-glass="ocean"]{--primary:#138bd0;--primary-2:#356fe3;--green:#32a7a0}
 
-<style id="bd-live-context-system-20260728">
-/* Index Master consistency: date ticker and contextual sidebars always remain live. */
-.date-track,.date-ticker-track,.ticker-track,.bd-date-track,.ticker{
-  width:max-content!important;min-width:max-content!important;
-  animation:bdMasterDateFlow 44s linear infinite!important;
-  animation-play-state:running!important;will-change:transform!important;
-  transform:translate3d(0,0,0);backface-visibility:hidden
-}
-.date-group,.date-ticker-group,.ticker-group,.bd-date-group,.dg{
-  flex:0 0 auto!important;min-width:max-content!important;white-space:nowrap!important
-}
-@keyframes bdMasterDateFlow{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+/* Overall theme surfaces. The date ticker's existing sticky behavior is intentionally untouched. */
+html[data-theme="light"][data-bd-glass="pearl"] body{background:radial-gradient(circle at 8% 5%,rgba(124,177,241,.18),transparent 28%),radial-gradient(circle at 92% 4%,rgba(185,143,232,.16),transparent 30%),linear-gradient(155deg,#fbfdff,#edf3fa 52%,#faf6fd)!important}
+html[data-theme="light"][data-bd-glass="crystal"] body{background:radial-gradient(circle at 12% 4%,rgba(164,199,231,.18),transparent 30%),linear-gradient(160deg,#ffffff,#eef3f8 58%,#f8fafc)!important}
+html[data-theme="light"][data-bd-glass="lavender"] body{background:radial-gradient(circle at 10% 5%,rgba(175,139,236,.20),transparent 30%),radial-gradient(circle at 90% 12%,rgba(238,177,224,.16),transparent 30%),linear-gradient(155deg,#fdfbff,#f1ecfb 52%,#f8f5ff)!important}
+html[data-theme="light"][data-bd-glass="rose"] body{background:radial-gradient(circle at 8% 3%,rgba(242,173,212,.20),transparent 29%),radial-gradient(circle at 94% 8%,rgba(148,178,242,.16),transparent 31%),linear-gradient(155deg,#fffafe,#f7eef8 52%,#f6f7ff)!important}
+html[data-theme="light"][data-bd-glass="moon"] body{background:radial-gradient(circle at 9% 4%,rgba(99,168,231,.22),transparent 30%),radial-gradient(circle at 90% 8%,rgba(94,198,212,.14),transparent 31%),linear-gradient(155deg,#f8fcff,#eaf3fb 52%,#f4fbfb)!important}
+html[data-theme="light"][data-bd-glass="ocean"] body{background:radial-gradient(circle at 12% 4%,rgba(47,166,226,.23),transparent 31%),radial-gradient(circle at 92% 10%,rgba(62,116,232,.17),transparent 32%),linear-gradient(155deg,#f7fcff,#e5f3fb 52%,#eef5ff)!important}
+html[data-theme="middle"][data-bd-glass="crystal"] body{background:linear-gradient(155deg,#eaf0f6,#dbe5ef 55%,#e9edf4)!important}
+html[data-theme="middle"][data-bd-glass="ocean"] body{background:radial-gradient(circle at 10% 4%,rgba(41,141,205,.20),transparent 30%),linear-gradient(155deg,#e4f0f8,#d4e6f2 55%,#e5ecf6)!important}
+html[data-theme="dark"][data-bd-glass="lavender"] body{background:radial-gradient(circle at 18% 0,rgba(126,73,222,.22),transparent 33%),linear-gradient(160deg,#110c2b,#080d22 55%,#161039)!important}
+html[data-theme="dark"][data-bd-glass="rose"] body{background:radial-gradient(circle at 15% 0,rgba(205,73,158,.18),transparent 34%),linear-gradient(160deg,#160c25,#090d20 55%,#20102c)!important}
+html[data-theme="dark"][data-bd-glass="moon"] body,
+html[data-theme="dark"][data-bd-glass="ocean"] body{background:radial-gradient(circle at 18% 0,rgba(23,127,210,.22),transparent 34%),linear-gradient(160deg,#061d34,#061020 56%,#082747)!important}
+html[data-theme="dark"][data-bd-glass="crystal"] body{background:radial-gradient(circle at 18% 0,rgba(124,151,190,.15),transparent 34%),linear-gradient(160deg,#101a29,#09111d 56%,#152033)!important}
 
-.bd-live-context-card{position:relative;overflow:hidden;padding:13px;border:1px solid var(--border,rgba(112,126,170,.18));border-radius:18px;background:var(--surface,rgba(255,255,255,.78));box-shadow:var(--shadow,0 16px 42px rgba(70,78,142,.11));backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%)}
-.bd-live-context-card::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(91,165,255,.10),rgba(156,121,235,.12),rgba(103,210,181,.08));opacity:.75}
-.bd-live-context-card>*{position:relative;z-index:1}.bd-live-context-card+.bd-live-context-card{margin-top:10px}
-.bd-live-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}.bd-live-head h3{font-size:13px;line-height:1.4}.bd-live-head small{color:var(--muted,#8b96aa);font-size:7.8px;font-weight:800}.bd-live-pulse{display:inline-flex;align-items:center;gap:5px;color:var(--green,#4f8a78)}.bd-live-pulse::before{content:"";width:7px;height:7px;border-radius:50%;background:#37bf7a;box-shadow:0 0 0 0 rgba(55,191,122,.38);animation:bdPulse 1.8s ease-out infinite}@keyframes bdPulse{70%{box-shadow:0 0 0 7px rgba(55,191,122,0)}100%{box-shadow:0 0 0 0 rgba(55,191,122,0)}}
-.bd-live-window{height:214px;overflow:hidden;mask-image:linear-gradient(transparent,#000 7%,#000 93%,transparent);-webkit-mask-image:linear-gradient(transparent,#000 7%,#000 93%,transparent)}
-.bd-live-track{display:grid;gap:6px;animation:bdVerticalFlow 30s linear infinite;will-change:transform}.bd-live-window:hover .bd-live-track,.bd-live-window:focus-within .bd-live-track{animation-play-state:paused}
-@keyframes bdVerticalFlow{from{transform:translateY(0)}to{transform:translateY(calc(-50% - 3px))}}
-.bd-live-item{min-height:48px;padding:6px 7px;border:1px solid var(--border,rgba(112,126,170,.16));border-radius:12px;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:center;background:var(--surface-strong,rgba(255,255,255,.90));color:inherit;text-decoration:none;box-shadow:0 6px 15px rgba(66,82,145,.06),inset 0 1px 0 rgba(255,255,255,.78)}
-.bd-live-item:hover{border-color:var(--border-strong,rgba(108,103,205,.29));transform:translateY(-1px)}.bd-live-avatar{position:relative;width:34px;height:34px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary,#7a7fdc),var(--primary-2,#9a82e4));color:#fff;font-size:12px;font-weight:900}.bd-live-avatar img{width:100%;height:100%;object-fit:cover}.bd-live-avatar.online::after{content:"";position:absolute;right:0;bottom:0;width:8px;height:8px;border:2px solid var(--surface-solid,#fff);border-radius:50%;background:#37bf7a}.bd-live-copy{min-width:0}.bd-live-copy strong,.bd-live-copy span{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bd-live-copy strong{font-size:9.7px}.bd-live-copy span{color:var(--muted,#8b96aa);font-size:7.6px}.bd-live-meta{color:var(--primary,#7a7fdc);font-size:7px;font-weight:900;white-space:nowrap}
-.bd-live-empty{padding:18px 9px;text-align:center;color:var(--muted,#8b96aa);font-size:9px}
-.bd-quote-flow{height:150px}.bd-quote-item{min-height:61px;padding:9px 10px;border-left:3px solid var(--primary-2,#9a82e4);border-radius:0 11px 11px 0;background:var(--surface-strong,rgba(255,255,255,.9));color:var(--text-soft,#61708a);font-size:8.8px;line-height:1.75}.bd-quote-item b{display:block;margin-top:2px;color:var(--primary,#7a7fdc);font-size:7.5px}
-.bd-monthly-winner{position:relative;overflow:hidden;margin-bottom:11px;padding:13px 14px;border:1px solid rgba(169,131,80,.28);border-radius:18px;display:grid;grid-template-columns:50px minmax(0,1fr) auto;gap:11px;align-items:center;background:radial-gradient(circle at 7% 0,rgba(242,199,115,.20),transparent 35%),linear-gradient(135deg,var(--surface-strong,rgba(255,255,255,.94)),rgba(250,245,232,.86),rgba(244,241,255,.82));box-shadow:0 20px 54px rgba(125,92,45,.12),inset 0 1px 0 rgba(255,255,255,.95)}.bd-monthly-medal{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#f3c86f,#ad7e35);color:#fff;font-size:23px;box-shadow:0 12px 25px rgba(146,102,39,.22)}.bd-monthly-winner h3{font-size:14px;line-height:1.45}.bd-monthly-winner p{margin-top:2px;color:var(--text-soft,#61708a);font-size:8.7px;line-height:1.7}.bd-monthly-winner a{min-height:35px;padding:6px 10px;border:1px solid rgba(169,131,80,.26);border-radius:10px;display:grid;place-items:center;background:var(--surface-strong,rgba(255,255,255,.9));color:var(--gold,#a98350);font-size:8px;font-weight:900;text-decoration:none}.bd-monthly-winner.demo::after{content:"ডেমো";position:absolute;right:9px;top:7px;padding:2px 6px;border-radius:999px;background:rgba(122,127,220,.10);color:var(--primary,#7a7fdc);font-size:6.5px;font-weight:900}
-.bd-editor-rank{display:grid;gap:6px}.bd-rank-row{padding:7px 8px;border:1px solid var(--border,rgba(112,126,170,.16));border-radius:11px;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:7px;align-items:center;background:var(--surface-strong,rgba(255,255,255,.9))}.bd-rank-no{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary,#7a7fdc),var(--primary-2,#9a82e4));color:#fff;font-size:8px;font-weight:900}.bd-rank-row strong{font-size:9px}.bd-rank-row small{display:block;color:var(--muted,#8b96aa);font-size:7px}.bd-rank-score{color:var(--primary,#7a7fdc);font-size:8px;font-weight:900}
-.bd-edited-works{margin-top:12px;padding:14px}.bd-edited-head{display:flex;align-items:flex-end;justify-content:space-between;gap:8px}.bd-edited-head h2{font-size:17px}.bd-edited-head p{color:var(--muted,#8b96aa);font-size:8px}.bd-edited-list{margin-top:10px;display:grid;gap:7px}.bd-edited-row{padding:9px 10px;border:1px solid var(--border,rgba(112,126,170,.16));border-radius:12px;background:var(--surface-strong,rgba(255,255,255,.90))}.bd-edited-row a{font-size:10px;font-weight:800;color:inherit;text-decoration:none}.bd-edited-row p{margin-top:2px;color:var(--text-soft,#61708a);font-size:7.7px}.bd-edited-row .bd-edited-status{display:inline-flex;margin-top:5px;padding:2px 6px;border-radius:999px;background:rgba(79,138,120,.10);color:var(--green,#4f8a78);font-size:6.7px;font-weight:900}
-@media(max-width:899px){.bd-live-context-card{border-radius:15px}.bd-live-window{height:188px}.bd-monthly-winner{grid-template-columns:44px minmax(0,1fr);padding:11px}.bd-monthly-medal{width:42px;height:42px}.bd-monthly-winner a{grid-column:1/-1}.bd-live-track{animation-duration:26s}}
-@media(max-width:520px){.bd-monthly-winner{margin-left:0;margin-right:0}.bd-live-item{grid-template-columns:32px minmax(0,1fr) auto}.bd-live-avatar{width:32px;height:32px}}
-@media(prefers-reduced-motion:reduce){.date-track,.date-ticker-track,.ticker-track,.bd-date-track,.ticker{animation-duration:84s!important}.bd-live-track{animation-duration:58s!important}.bd-live-pulse::before{animation-duration:3.5s!important}}
+/* Each writing card keeps its own identity while reflecting the active overall theme. */
+.post,.bd-live-post{
+  --pc-a:rgba(255,255,255,.98);--pc-b:rgba(239,244,255,.94);--pc-c:rgba(156,136,230,.12);
+  --pc-accent:#737bd8;--pc-ink:#173451;--pc-soft:#596d88;
+  background:radial-gradient(circle at 94% 4%,var(--theme-card-glow,rgba(122,127,220,.12)),transparent 35%),linear-gradient(145deg,var(--pc-a),var(--pc-b))!important;
+  border-color:color-mix(in srgb,var(--pc-accent) 28%,transparent)!important;
+  color:var(--pc-ink)!important;
+  box-shadow:0 20px 48px color-mix(in srgb,var(--pc-accent) 13%,transparent),0 7px 18px rgba(54,67,118,.07),inset 0 1px 0 rgba(255,255,255,.98)!important;
+}
+html[data-bd-glass="pearl"]{--theme-card-glow:rgba(151,124,228,.13)}
+html[data-bd-glass="crystal"]{--theme-card-glow:rgba(119,161,205,.13)}
+html[data-bd-glass="lavender"]{--theme-card-glow:rgba(154,102,228,.17)}
+html[data-bd-glass="rose"]{--theme-card-glow:rgba(222,119,178,.15)}
+html[data-bd-glass="moon"]{--theme-card-glow:rgba(71,154,215,.16)}
+html[data-bd-glass="ocean"]{--theme-card-glow:rgba(19,139,208,.18)}
+.post.style-pearl,.bd-live-post.style-pearl{--pc-a:rgba(255,255,255,.99);--pc-b:rgba(238,243,255,.95);--pc-accent:#7484d8}
+.post.style-lavender,.bd-live-post.style-lavender{--pc-a:rgba(253,249,255,.99);--pc-b:rgba(226,209,249,.95);--pc-accent:#9069d8}
+.post.style-aqua,.bd-live-post.style-aqua{--pc-a:rgba(246,254,255,.99);--pc-b:rgba(194,235,243,.94);--pc-accent:#309eb9}
+.post.style-rose,.bd-live-post.style-rose{--pc-a:rgba(255,249,253,.99);--pc-b:rgba(247,207,229,.94);--pc-accent:#c45f99}
+.post.style-mint,.bd-live-post.style-mint{--pc-a:rgba(248,255,252,.99);--pc-b:rgba(203,239,225,.94);--pc-accent:#388f73}
+.post.style-silver,.bd-live-post.style-silver{--pc-a:rgba(252,253,255,.99);--pc-b:rgba(218,227,238,.95);--pc-accent:#6d8199}
+.post.style-aurora,.bd-live-post.style-aurora{--pc-a:rgba(246,251,255,.99);--pc-b:rgba(230,212,250,.94);--pc-accent:#7b63d9;background:radial-gradient(circle at 92% 5%,rgba(240,157,205,.24),transparent 33%),radial-gradient(circle at 4% 100%,rgba(82,195,204,.18),transparent 34%),linear-gradient(135deg,var(--pc-a),var(--pc-b))!important}
+.post.style-clear,.bd-live-post.style-clear{--pc-a:rgba(255,255,255,.90);--pc-b:rgba(246,249,253,.76);--pc-accent:#7c8da5;backdrop-filter:blur(28px) saturate(135%)!important;-webkit-backdrop-filter:blur(28px) saturate(135%)!important}
+.post .post-title,.post .post-title a,.bd-live-post .post-title,.bd-live-post .post-title a{color:var(--pc-ink)!important}
+.post .post-body,.post .author-meta,.post .author-meta a,.post .author-meta small,.post .action-btn,.bd-live-post .post-body,.bd-live-post .author-meta,.bd-live-post .author-meta a,.bd-live-post .bd-post-time{color:var(--pc-soft)!important}
+.post .pill,.bd-live-post .pill{background:color-mix(in srgb,var(--pc-accent) 13%,white)!important;color:var(--pc-accent)!important;border:1px solid color-mix(in srgb,var(--pc-accent) 20%,transparent)!important}
+.post .post-read-more,.bd-live-post .post-read-more{color:var(--pc-accent)!important}
+
+html[data-theme="dark"] .post,html[data-theme="dark"] .bd-live-post{--pc-ink:#f5f7ff;--pc-soft:#cbd5ea;--pc-a:rgba(18,36,61,.98);--pc-b:rgba(10,22,43,.97);border-color:color-mix(in srgb,var(--pc-accent) 38%,transparent)!important;box-shadow:0 24px 58px rgba(0,0,0,.34),0 0 30px color-mix(in srgb,var(--pc-accent) 12%,transparent),inset 0 1px 0 rgba(255,255,255,.08)!important}
+html[data-theme="dark"] .post.style-lavender,html[data-theme="dark"] .bd-live-post.style-lavender{--pc-a:rgba(42,28,79,.98);--pc-b:rgba(18,18,48,.97);--pc-accent:#b58aff}
+html[data-theme="dark"] .post.style-aqua,html[data-theme="dark"] .bd-live-post.style-aqua{--pc-a:rgba(13,55,73,.98);--pc-b:rgba(8,28,49,.97);--pc-accent:#63d2ea}
+html[data-theme="dark"] .post.style-rose,html[data-theme="dark"] .bd-live-post.style-rose{--pc-a:rgba(66,28,60,.98);--pc-b:rgba(26,18,43,.97);--pc-accent:#f08ac2}
+html[data-theme="dark"] .post.style-mint,html[data-theme="dark"] .bd-live-post.style-mint{--pc-a:rgba(20,61,56,.98);--pc-b:rgba(10,31,42,.97);--pc-accent:#7bd7b7}
+html[data-theme="dark"] .post.style-silver,html[data-theme="dark"] .bd-live-post.style-silver{--pc-a:rgba(38,49,66,.98);--pc-b:rgba(16,24,38,.97);--pc-accent:#b4c7dd}
+html[data-theme="dark"] .post.style-aurora,html[data-theme="dark"] .bd-live-post.style-aurora{--pc-a:rgba(38,26,82,.98);--pc-b:rgba(11,25,54,.97);--pc-accent:#c493ff;background:radial-gradient(circle at 92% 4%,rgba(235,101,205,.23),transparent 34%),radial-gradient(circle at 4% 100%,rgba(55,190,218,.19),transparent 36%),linear-gradient(135deg,var(--pc-a),var(--pc-b))!important}
+html[data-theme="dark"] .post .pill,html[data-theme="dark"] .bd-live-post .pill{background:color-mix(in srgb,var(--pc-accent) 18%,rgba(12,23,43,.85))!important;color:#f6f3ff!important}
+
+/* The writing-card chooser folds away immediately after a choice. */
+.composer-style-picker{transition:max-height .22s ease,padding .22s ease,margin .22s ease,box-shadow .22s ease!important;overflow:hidden!important}
+.composer-style-head{align-items:center!important}
+.composer-style-selected{min-height:34px;padding:5px 8px;border:1px solid var(--border-strong);border-radius:10px;display:flex;align-items:center;gap:7px;background:var(--surface-strong);color:var(--text-soft);font-size:8.5px;font-weight:800;white-space:nowrap}
+.composer-style-selected .selected-style-swatch{width:24px;height:20px;flex:0 0 24px;border-radius:7px;border:1px solid rgba(255,255,255,.85);box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 4px 9px rgba(60,71,127,.12)}
+.composer-style-picker.is-collapsed{padding:7px 9px!important;margin-top:7px!important;border-radius:12px!important;box-shadow:none!important}
+.composer-style-picker.is-collapsed .composer-style-head{margin-bottom:0!important}
+.composer-style-picker.is-collapsed .composer-style-grid{display:none!important}
+.composer-style-picker.is-collapsed .composer-style-head>strong,.composer-style-picker.is-collapsed .composer-style-head>small{display:none!important}
+.composer-form[data-preview-style="pearl"]{--preview-accent:#7484d8}
+.composer-form[data-preview-style="lavender"]{--preview-accent:#9069d8}
+.composer-form[data-preview-style="aqua"]{--preview-accent:#309eb9}
+.composer-form[data-preview-style="rose"]{--preview-accent:#c45f99}
+.composer-form[data-preview-style="mint"]{--preview-accent:#388f73}
+.composer-form[data-preview-style="silver"]{--preview-accent:#6d8199}
+.composer-form[data-preview-style="aurora"]{--preview-accent:#7b63d9}
+.composer-form[data-preview-style="clear"]{--preview-accent:#7c8da5}
+.composer-form[data-preview-style]{border-top-color:color-mix(in srgb,var(--preview-accent) 32%,transparent)!important}
+
+/* Today's new members: compact, flowing, and replaced by real Supabase profiles when available. */
+.bd-new-members-card{padding:10px!important;overflow:hidden!important}
+.bd-new-members-head{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-bottom:7px}
+.bd-new-members-head h3{margin:0!important;font-size:11px!important}.bd-new-members-count{min-width:25px;height:22px;padding:0 7px;border-radius:999px;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;font:800 8px/1 Arial,sans-serif;box-shadow:0 7px 15px color-mix(in srgb,var(--primary) 24%,transparent)}
+.bd-welcome-flow{height:26px;margin-bottom:7px;overflow:hidden;border:1px solid var(--border);border-radius:9px;background:var(--rainbow-soft)}
+.bd-welcome-flow-track{width:max-content;display:flex;align-items:center;height:100%;animation:bdWelcomeHorizontal 22s linear infinite;white-space:nowrap}
+.bd-welcome-flow-track span{padding-right:34px;color:var(--primary);font-size:7.8px;font-weight:800}
+@keyframes bdWelcomeHorizontal{to{transform:translateX(-50%)}}
+.bd-member-window{height:176px;overflow:hidden;mask-image:linear-gradient(transparent,#000 10%,#000 90%,transparent);-webkit-mask-image:linear-gradient(transparent,#000 10%,#000 90%,transparent)}
+.bd-member-track{display:grid;gap:5px;animation:bdMemberRise var(--member-speed,24s) linear infinite;will-change:transform}
+.bd-member-window:hover .bd-member-track{animation-play-state:paused}
+.bd-member-group{display:grid;gap:5px}
+.bd-member-item{min-height:42px;padding:5px 6px;border:1px solid rgba(111,128,178,.13);border-radius:10px;display:grid;grid-template-columns:31px minmax(0,1fr) auto;gap:7px;align-items:center;background:rgba(255,255,255,.58);color:var(--text-soft);box-shadow:inset 0 1px 0 rgba(255,255,255,.78)}
+html[data-theme="dark"] .bd-member-item{background:rgba(17,36,63,.70)}
+.bd-member-avatar{width:31px;height:31px;overflow:hidden;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;font:800 11px/1 Arial,sans-serif}.bd-member-avatar img{width:100%;height:100%;object-fit:cover}
+.bd-member-copy{min-width:0}.bd-member-copy strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text);font-size:8.5px}.bd-member-copy small{display:block;margin-top:1px;color:var(--muted);font-size:6.9px}.bd-member-open{color:var(--primary);font-size:13px}
+.bd-member-demo{margin-top:6px;text-align:center;color:var(--muted);font-size:6.8px}
+@keyframes bdMemberRise{from{transform:translateY(0)}to{transform:translateY(calc(-50% - 2.5px))}}
+@media(max-width:899px){.bd-member-window{height:205px}.bd-new-members-card{margin-top:8px!important}}
+@media(prefers-reduced-motion:reduce){.bd-member-track,.bd-welcome-flow-track{animation:none!important}.bd-member-window{overflow:auto;mask-image:none;-webkit-mask-image:none}}
 </style>
 
-
-<script id="bd-live-context-system-js-20260728">
+<script id="bd-theme-card-welcome-v1-script">
 (function(){
-'use strict';
-if(window.__BD_LIVE_CONTEXT_V1)return;window.__BD_LIVE_CONTEXT_V1=true;
-const D=document,W=window,$=(s,r=D)=>r.querySelector(s),$$=(s,r=D)=>Array.from(r.querySelectorAll(s));
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const read=k=>{try{const v=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}};
-const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
-const norm=v=>String(v||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').toLocaleLowerCase('bn-BD').replace(/[“”‘’'"`´.,;:!?।॥\-–—_()\[\]{}\/\\]+/g,' ').replace(/\s+/g,' ').trim();
-const slug=v=>norm(v).replace(/\s+/g,'-');
-const ts=v=>{const n=new Date(v||0).getTime();return Number.isFinite(n)?n:0};
-const approved=x=>!['rejected','pending','pending_review','draft','archived','deleted'].includes(String(x?.status||'published').toLowerCase());
-const bn=n=>Number(n||0).toLocaleString('bn-BD');
-function dhakaParts(date=new Date()){const o={};try{new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(date).forEach(p=>{if(p.type!=='literal')o[p.type]=p.value})}catch(_){o.year=date.getFullYear();o.month=String(date.getMonth()+1).padStart(2,'0');o.day=String(date.getDate()).padStart(2,'0');o.hour=String(date.getHours()).padStart(2,'0');o.minute=String(date.getMinutes()).padStart(2,'0')}return{year:+o.year,month:+o.month,day:+o.day,hour:+o.hour,minute:+o.minute}}
-function monthKeyFromDate(d){const p=dhakaParts(d);return p.year+'-'+String(p.month).padStart(2,'0')}
-function previousMonthKey(){const p=dhakaParts(),d=new Date(Date.UTC(p.year,p.month-1,15));d.setUTCMonth(d.getUTCMonth()-1);return d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0')}
-function recordMonth(x){const d=new Date(x.firstEditedAt||x.createdAt||x.publishedAt||x.updatedAt||0);return monthKeyFromDate(d)}
-function canonicalContributions(){
- const keys=['bhubondangaRemoteContributionsCache','bhubondangaCanonicalPoems','bhubondangaPoetContributions','bhubondangaUserEdits','bhubondangaPoetArchive','bhubondangaPublishedPoems','bhubondangaHomeUserPosts'];
- const all=keys.flatMap(read),map=new Map();
- all.forEach((x,i)=>{if(!x||!approved(x))return;const type=String(x.type||x.category||'poem').toLowerCase();const poet=x.poetName||x.originalAuthor||x.original_author||x.originalPoet||x.authorOfWork||'';const title=x.title||x.poemTitle||'';if(!poet||!title||(/prolap|প্রলাপ|letter|চিঠি|recitation|আবৃত্তি|environment|পরিবেশ/.test(type)&&!String(type).includes('poem')))return;const key=x.canonicalKey||x.canonicalId||slug(poet)+'::'+norm(title);const when=ts(x.firstEditedAt||x.createdAt||x.publishedAt||x.date)||i;const rec={key,canonicalId:x.canonicalId||x.id||key,poet,title,body:x.body||x.content||x.text||'',name:x.firstEditorName||x.contributorName||x.editorName||x.authorName||x.author_name||'অজ্ঞাত সম্পাদক',user:x.firstEditorUsername||x.contributorUsername||x.editorUsername||x.authorUsername||x.author_username||'',avatar:x.contributorAvatar||x.editorAvatar||x.authorAvatar||x.author_avatar||'',createdAt:x.firstEditedAt||x.createdAt||x.publishedAt||new Date(when).toISOString(),status:x.status||'published',url:x.url||('poet-details.html?poet='+encodeURIComponent(poet)+'&poem='+encodeURIComponent(x.canonicalId||x.id||title))};const old=map.get(key);if(!old||ts(rec.createdAt)<ts(old.createdAt))map.set(key,rec)});
- return Array.from(map.values()).sort((a,b)=>ts(b.createdAt)-ts(a.createdAt));
-}
-function rankForMonth(key){const rows=canonicalContributions().filter(x=>recordMonth(x)===key),m=new Map();rows.forEach(x=>{const id=x.user||norm(x.name);const v=m.get(id)||{id,user:x.user,name:x.name,avatar:x.avatar,count:0,first:ts(x.createdAt)};v.count++;v.first=Math.min(v.first||Infinity,ts(x.createdAt)||Infinity);m.set(id,v)});return Array.from(m.values()).sort((a,b)=>b.count-a.count||a.first-b.first||String(a.name).localeCompare(String(b.name),'bn'))}
-function demoRank(){return[{id:'demo-1',name:'সাবিহা রহমান',user:'sabiha-rahman',count:12,avatar:''},{id:'demo-2',name:'আরিফুল ইসলাম',user:'ariful-islam',count:9,avatar:''},{id:'demo-3',name:'নাবিলা সুলতানা',user:'nabila-sultana',count:7,avatar:''}]}
-function ensureMonthlyAward(){const target=previousMonthKey(),key='bhubondangaMonthlyContributorAward',old=(()=>{try{return JSON.parse(localStorage.getItem(key)||'null')}catch(_){return null}})();if(old&&old.month===target)return old;const rank=rankForMonth(target);if(!rank.length)return null;const award={month:target,calculatedAt:new Date().toISOString(),winner:rank[0],ranking:rank.slice(0,20)};try{localStorage.setItem(key,JSON.stringify(award));localStorage.setItem('bhubondangaMonthlyContributorCongratulations',JSON.stringify({month:target,user:rank[0].user||'',name:rank[0].name,message:'অভিনন্দন! আপনি '+target+' মাসের সেরা সাহিত্য-সহযোগী।',createdAt:new Date().toISOString(),read:false}))}catch(_){}W.dispatchEvent(new CustomEvent('bhubondanga-monthly-winner',{detail:award}));return award}
-function itemAvatar(x,online=false){const label=esc((x.name||x.author||x.title||'ভ').trim().slice(0,1));return '<span class="bd-live-avatar '+(online?'online':'')+'">'+(x.avatar?'<img src="'+esc(x.avatar)+'" alt="">':label)+'</span>'}
-function itemMarkup(x){return '<a class="bd-live-item" href="'+esc(x.url||'#')+'">'+itemAvatar(x,!!x.online)+'<span class="bd-live-copy"><strong>'+esc(x.name||x.title||'ভুবনডাঙ্গার সদস্য')+'</strong><span>'+esc(x.sub||x.meta||'আপন ভুবনে সক্রিয়')+'</span></span><span class="bd-live-meta">'+esc(x.badge||'লাইভ')+'</span></a>'}
-function doubled(items){if(!items.length)return '<div class="bd-live-empty">এখনো বাস্তব তথ্য পাওয়া যায়নি। নতুন কার্যক্রম শুরু হলেই এখানে চলমানভাবে দেখা যাবে।</div>';const html=items.map(itemMarkup).join('');return html+html}
-function postData(type){const keys={poem:['bhubondangaPublishedPoems','bhubondangaHomeUserPosts'],prolap:['bhubondangaPublishedProlaps','bhubondangaHomeUserPosts'],letter:['bhubondangaLetterPosts','bhubondangaHomeUserPosts'],environment:['bhubondangaPublishedEnvironmentPosts','bhubondangaEnvironmentPosts','bhubondangaHomeUserPosts'],recitation:['bhubondangaPublishedRecitations','bhubondangaRecitations','bhubondangaHomeUserPosts']}[type]||['bhubondangaHomeUserPosts','bhubondangaPublishedPosts'];let all=keys.flatMap(read).filter(x=>x&&approved(x));if(type)all=all.filter(x=>String(x.type||x.category||'').toLowerCase().includes(type)||({poem:'কবিতা',prolap:'প্রলাপ',letter:'চিঠি',environment:'পরিবেশ',recitation:'আবৃত্তি'}[type]&&String(x.type||x.category||'').includes(({poem:'কবিতা',prolap:'প্রলাপ',letter:'চিঠি',environment:'পরিবেশ',recitation:'আবৃত্তি'})[type])));const seen=new Set();return all.sort((a,b)=>ts(b.createdAt||b.publishedAt)-ts(a.createdAt||a.publishedAt)).filter(x=>{const k=String(x.id||norm((x.title||'')+(x.authorName||x.author_name||'')));if(seen.has(k))return false;seen.add(k);return true}).slice(0,8).map(x=>({name:x.title||x.authorName||x.author_name||'নতুন প্রকাশনা',sub:(x.authorName||x.author_name||'ভুবনডাঙ্গার লেখক')+' • সম্প্রতি প্রকাশিত',avatar:x.authorAvatar||x.author_avatar||'',badge:'নতুন',url:x.url||('post-details.html?id='+encodeURIComponent(x.id||''))}))}
-function activeFriends(){
- let a=read('bhubondangaActiveFriends');if(!a.length){const friendships=read('bhubondangaFriendships');a=friendships.filter(x=>x.mutual===true||x.status==='friends'||x.followBack===true)}
- if(!a.length)a=[{name:'মেহজাবিন নূর',username:'mehjabin-noor',online:true,sub:'কবিতা পড়ছেন'},{name:'রাফিদ হাসান',username:'rafid-hasan',online:true,sub:'নতুন লেখা সম্পাদনা করছেন'},{name:'সাদিয়া ইসলাম',username:'sadia-islam',online:true,sub:'চিঠিপত্রে সক্রিয়'},{name:'নাফিসা তাবাসসুম',username:'nafisa-tabassum',online:true,sub:'পরিবেশের লেখা পড়ছেন'},{name:'অর্ণব সেন',username:'arnab-sen',online:true,sub:'আবৃত্তি শুনছেন'}];
- return a.slice(0,10).map(x=>({name:x.name||x.displayName||x.display_name||x.username||'বন্ধু',avatar:x.avatar||x.avatar_url||x.photo||'',online:x.online!==false,sub:x.activity||x.sub||'এখন সক্রিয়',badge:x.mutual===false?'ফলো':'বন্ধু',url:x.url||('profile.html?user='+encodeURIComponent(x.username||x.slug||x.id||''))}))
-}
-function contextual(){const p=(location.pathname.split('/').pop()||'').toLowerCase(),t=D.title;let title='সক্রিয় ভুবন',small='চলমান',items=[];
- if(/profile/.test(p)||/প্রোফাইল/.test(t)){title='সক্রিয় বন্ধু';small='ফলো + ফলো ব্যাক';items=activeFriends()}
- else if(/poem/.test(p)||/কবিতা/.test(t)){title='সাম্প্রতিক কবিতা ও সম্পাদক';small='নতুন সংযোজন';items=canonicalContributions().slice(0,8).map(x=>({name:x.title,sub:x.poet+' • সম্পাদনা: '+x.name,avatar:x.avatar,badge:'কবিতা',url:x.url}))}
- else if(/environment/.test(p)||/পরিবেশ/.test(t)){title='পরিবেশে সাম্প্রতিক অবদান';small='সবুজ ভুবন';items=postData('environment')}
- else if(/recitation/.test(p)||/আবৃত্তি/.test(t)){title='সাম্প্রতিক আবৃত্তি';small='কণ্ঠের ভুবন';items=postData('recitation')}
- else if(/letter/.test(p)||/চিঠি/.test(t)){title='সাম্প্রতিক চিঠি';small='অনুভূতির ডাক';items=postData('letter')}
- else if(/prolap/.test(p)||/প্রলাপ/.test(t)){title=/madhyorater/.test(p)?'মধ্যরাতের সর্বশেষ সংকলন':'সাম্প্রতিক ছোট কথার প্রলাপ';small='চলমান পাঠ';items=postData('prolap')}
- else{items=postData(null)}
- if(!items.length&&title.includes('কবিতা'))items=[{name:'সংকল্প',sub:'কাজী নজরুল ইসলাম • প্রথম সম্পাদনা: সাবিহা রহমান',badge:'ডেমো',url:'#'},{name:'আকাশের দিকে',sub:'নতুন কবিতা • আরিফুল ইসলাম',badge:'ডেমো',url:'#'},{name:'মাটির গন্ধ',sub:'নতুন কবিতা • নাবিলা সুলতানা',badge:'ডেমো',url:'#'}];
- if(!items.length&&title.includes('পরিবেশ'))items=[{name:'ছাদের কোণে এক বাটি পানি',sub:'মাহমুদ সোহেল • পাখিদের জন্য ছোট মানবিক উদ্যোগ',badge:'ডেমো',url:'#'},{name:'একটি গাছের ছায়া',sub:'নতুন পরিবেশ লেখা',badge:'ডেমো',url:'#'},{name:'পলিথিনের বদলে কাপড়ের ব্যাগ',sub:'আজকের সবুজ অভ্যাস',badge:'ডেমো',url:'#'}];
- return{title,small,items}
-}
-function sidebarTarget(){return $('#rightSidebar')||$('.right-sidebar')||$('.right-col')||$('.rightcol')||$('.sidebar.right')||$('#rightMobileDrawer .drawer-content')}
-function injectContextSidebar(){const target=sidebarTarget();if(!target||$('#bdLiveContextCard',target))return;const ctx=contextual(),card=D.createElement('section');card.className='bd-live-context-card';card.id='bdLiveContextCard';card.innerHTML='<div class="bd-live-head"><h3>'+esc(ctx.title)+'</h3><small class="bd-live-pulse">'+esc(ctx.small)+'</small></div><div class="bd-live-window" tabindex="0"><div class="bd-live-track">'+doubled(ctx.items)+'</div></div>';target.prepend(card);injectRanking(target);injectQuotes(target)}
-function injectRanking(target){if($('#bdEditorRankCard',target))return;const key=monthKeyFromDate(new Date()),rank=rankForMonth(key),rows=(rank.length?rank:demoRank()).slice(0,5),card=D.createElement('section');card.className='bd-live-context-card';card.id='bdEditorRankCard';card.innerHTML='<div class="bd-live-head"><h3>মাসের সম্পাদক র‍্যাঙ্কিং</h3><small>'+(rank.length?'স্বয়ংক্রিয় হিসাব':'ডেমো')+'</small></div><div class="bd-editor-rank">'+rows.map((x,i)=>'<a class="bd-rank-row" href="'+(x.user?'profile.html?user='+encodeURIComponent(x.user):'#')+'"><span class="bd-rank-no">'+bn(i+1)+'</span><span><strong>'+esc(x.name)+'</strong><small>অনুমোদিত স্বতন্ত্র সংযোজন</small></span><span class="bd-rank-score">'+bn(x.count)+'</span></a>').join('')+'</div>';target.append(card)}
-function injectQuotes(target){if($('#bdQuoteFlowCard',target))return;const q=[['মানুষের প্রতি বিশ্বাস হারানো পাপ।','রবীন্দ্রনাথ ঠাকুর'],['বিশ্বে যা-কিছু মহান সৃষ্টি চির-কল্যাণকর, অর্ধেক তার করিয়াছে নারী, অর্ধেক তার নর।','কাজী নজরুল ইসলাম'],['সবার উপরে মানুষ সত্য, তাহার উপরে নাই।','চণ্ডীদাস'],['নিজের ক্ষতগুলোকে জ্ঞানে পরিণত করুন।','আপন ভুবনের বাণী'],['নিজে ভালো থাকবেন এবং অন্যকেও ভালো রাখবেন।','ভুবনডাঙ্গার মানবিক অঙ্গীকার']],html=q.map(x=>'<div class="bd-quote-item">'+esc(x[0])+'<b>— '+esc(x[1])+'</b></div>').join(''),card=D.createElement('section');card.className='bd-live-context-card';card.id='bdQuoteFlowCard';card.innerHTML='<div class="bd-live-head"><h3>মনীষীদের বাণী</h3><small>চলমান পাঠ</small></div><div class="bd-live-window bd-quote-flow"><div class="bd-live-track">'+html+html+'</div></div>';target.append(card)}
-function isHomeLike(){const p=(location.pathname.split('/').pop()||'index.html').toLowerCase();if(p==='index.html'||p===''||p==='home.html')return true;if(/profile/.test(p)||$('.profile-hero,.profile-shell,#profileHero')){const h=location.hash.toLowerCase();return !h||h==='#home'}return false}
-function centerTarget(){return $('.center-col')||$('.center')||$('.main-content')||$('main')}
-function injectMonthlyWinner(){if(!isHomeLike()||$('#bdMonthlyWinner'))return;let award=ensureMonthlyAward(),demo=false;if(!award){demo=true;const r=demoRank();award={month:previousMonthKey(),winner:r[0],ranking:r}}const box=D.createElement('section');box.id='bdMonthlyWinner';box.className='bd-monthly-winner'+(demo?' demo':'');const w=award.winner||{},href=w.user==='mahmud-sohel'?'founder-profile.html':w.user?'profile.html?user='+encodeURIComponent(w.user):'#';box.innerHTML='<div class="bd-monthly-medal">✦</div><div><h3>অভিনন্দন, '+esc(w.name||'মাসের সাহিত্য-সহযোগী')+'</h3><p>'+esc(award.month)+' মাসে '+bn(w.count||0)+'টি অনুমোদিত স্বতন্ত্র কবিতা/রচনা সংযোজন করে মাসের ১ নম্বর সাহিত্য-সহযোগী হয়েছেন। একই কবিতায় প্রথম অনুমোদিত সম্পাদনাকারীর স্বীকৃতিই স্থায়ী থাকবে।</p></div><a href="'+href+'">প্রোফাইল দেখুন</a>';const c=centerTarget();if(!c)return;const composer=$('.composer',c)||$('#composer',c)||$('.page-hero',c)||c.firstElementChild;if(composer)composer.insertAdjacentElement('afterend',box);else c.prepend(box)}
-function profileUsername(){const q=new URLSearchParams(location.search).get('user');if(q)return q;const p=(location.pathname.split('/').pop()||'').toLowerCase();if(p.includes('founder-profile'))return'mahmud-sohel';const d=D.body.dataset.username||D.body.dataset.profileUsername;try{const u=JSON.parse(localStorage.getItem('bhubondangaCurrentUser')||'null');return d||u?.username||u?.slug||''}catch(_){return d||''}}
-function injectEditedWorks(){const p=(location.pathname.split('/').pop()||'').toLowerCase();if((!/profile/.test(p)&&!$('.profile-hero,.profile-shell,#profileHero'))||$('#bdEditedWorks'))return;const user=profileUsername(),all=canonicalContributions(),mine=user?all.filter(x=>norm(x.user)===norm(user)||(!x.user&&p.includes('founder')&&norm(x.name)===norm('মাহমুদ সোহেল'))):all.slice(0,10);const sec=D.createElement('section');sec.id='bdEditedWorks';sec.className='glass bd-edited-works';sec.innerHTML='<div class="bd-edited-head"><div><h2>সম্পাদিত ও সংযোজিত কাজ</h2><p>প্রথম অনুমোদিত সম্পাদক, মূল কবি ও প্রকাশের তথ্য</p></div><strong>'+bn(mine.length)+'</strong></div><div class="bd-edited-list">'+(mine.length?mine.slice(0,30).map(x=>'<article class="bd-edited-row"><a href="'+esc(x.url)+'">'+esc(x.title)+'</a><p>মূল কবি: '+esc(x.poet)+' • প্রথম সম্পাদনা: '+esc(x.name)+' • '+new Date(x.createdAt).toLocaleDateString('bn-BD',{timeZone:'Asia/Dhaka'})+'</p><span class="bd-edited-status">অনুমোদিত ও সংরক্ষিত</span></article>').join(''):'<div class="bd-live-empty">এখনো কোনো অনুমোদিত সম্পাদনা বা সংযোজন নেই।</div>')+'</div>';const c=centerTarget();if(c)c.append(sec)}
-function keepTickerLive(){const selectors=['.date-track','.date-ticker-track','.ticker-track','.bd-date-track','.ticker'];selectors.flatMap(s=>$$(s)).forEach(track=>{track.style.animationPlayState='running';if(track.children.length&&track.scrollWidth<innerWidth*1.65){const copy=Array.from(track.children).map(n=>n.cloneNode(true));copy.forEach(n=>{n.setAttribute('aria-hidden','true');track.append(n)})}})}
-async function hydrateRemote(){const c=W.bdSupabase||W.supabaseClient||W.BhubondangaSupabase?.client;if(!c?.from)return false;let changed=false;try{const r=await c.from('posts').select('id,title,body,type,category,original_author,author_name,author_username,author_avatar,status,created_at,published_at').in('status',['published','published_flagged']).order('created_at',{ascending:true}).limit(5000);if(!r.error&&Array.isArray(r.data)){const rows=r.data.filter(x=>x.original_author&&x.title).map(x=>({id:x.id,title:x.title,body:x.body,type:x.type||x.category||'poem',originalAuthor:x.original_author,authorName:x.author_name,authorUsername:x.author_username,authorAvatar:x.author_avatar,status:x.status,createdAt:x.created_at||x.published_at}));save('bhubondangaRemoteContributionsCache',rows);changed=true}}catch(_){}try{const a=await c.from('monthly_contributor_awards').select('*').order('month_start',{ascending:false}).limit(1).maybeSingle();if(!a.error&&a.data){const row=a.data,award={month:String(row.month_start||'').slice(0,7),calculatedAt:row.calculated_at||new Date().toISOString(),winner:{user:row.winner_username||'',name:row.winner_name||'মাসের সাহিত্য-সহযোগী',avatar:row.winner_avatar||'',count:Number(row.contribution_count||0)},ranking:[]};try{localStorage.setItem('bhubondangaMonthlyContributorAward',JSON.stringify(award))}catch(_){}changed=true}}catch(_){}return changed}
-function boundaryCheck(){const p=dhakaParts();if(p.day===1&&p.hour===0)ensureMonthlyAward()}
-function renderDynamic(){['bdLiveContextCard','bdEditorRankCard','bdQuoteFlowCard','bdMonthlyWinner','bdEditedWorks'].forEach(id=>$('#'+id)?.remove());keepTickerLive();injectContextSidebar();injectMonthlyWinner();injectEditedWorks()}
-let started=false;function init(){if(started)return;started=true;renderDynamic();boundaryCheck();setInterval(boundaryCheck,60000);setInterval(keepTickerLive,45000);hydrateRemote().then(ok=>{if(ok){ensureMonthlyAward();renderDynamic()}})}
-setTimeout(init,0);if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
-W.addEventListener('storage',e=>{if(e.key&&/Contribution|Canonical|UserEdits|PublishedPoems|ActiveFriends|Friendships|RemoteContributions/.test(e.key)){setTimeout(renderDynamic,80)}});
-W.BhubondangaContributionSystem={canonicalContributions,rankForMonth,ensureMonthlyAward,hydrateRemote,refresh:renderDynamic};
+  'use strict';
+  const D=document,H=D.documentElement;
+  const q=(s,c=D)=>c.querySelector(s), qa=(s,c=D)=>Array.from(c.querySelectorAll(s));
+  const names={pearl:'মুক্তা',lavender:'ল্যাভেন্ডার',aqua:'নীল জল',rose:'গোলাপি',mint:'মিন্ট',silver:'রূপালি',aurora:'অরোরা',clear:'ক্লাসিক'};
+  const demoMembers=[
+    {name:'তাসনিম জাহান',username:'tasnim-jahan'},
+    {name:'রাকিবুল হাসান',username:'rakibul-hasan'},
+    {name:'নুসরাত কবির',username:'nusrat-kabir'},
+    {name:'আদিবা রহমান',username:'adiba-rahman'},
+    {name:'সাব্বির আহমেদ',username:'sabbir-ahmed'},
+    {name:'মেহজাবিন নূর',username:'mehjabin-noor'}
+  ];
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const initial=n=>Array.from(String(n||'ভ')).slice(0,1).join('');
+  function addThemeButtons(){
+    qa('.bd9-palettes,.bd-theme-palette').forEach(box=>{
+      if(!box.querySelector('[data-bd9-palette="crystal"],[data-final-palette="crystal"]')){
+        const crystal=D.createElement('button');crystal.type='button';crystal.textContent='ক্রিস্টাল';
+        crystal.setAttribute(box.classList.contains('bd9-palettes')?'data-bd9-palette':'data-final-palette','crystal');box.appendChild(crystal);
+      }
+      if(!box.querySelector('[data-bd9-palette="ocean"],[data-final-palette="ocean"]')){
+        const ocean=D.createElement('button');ocean.type='button';ocean.textContent='ওশান';
+        ocean.setAttribute(box.classList.contains('bd9-palettes')?'data-bd9-palette':'data-final-palette','ocean');box.appendChild(ocean);
+      }
+    });
+  }
+  function swatchBackground(style){return ({pearl:'linear-gradient(135deg,#fff,#eef2ff 52%,#f5edff)',lavender:'linear-gradient(135deg,#f5efff,#c7aaf2 55%,#9d85e5)',aqua:'linear-gradient(135deg,#effcff,#9ddce8 55%,#69accf)',rose:'linear-gradient(135deg,#fff0f8,#efa4cb 55%,#c981b4)',mint:'linear-gradient(135deg,#effff9,#a5e1cb 55%,#6fb79d)',silver:'linear-gradient(135deg,#f9fbfd,#cbd6e3 55%,#9bacc1)',aurora:'linear-gradient(135deg,#88c8ff,#b89af0 35%,#f0a9cc 68%,#91ddca)',clear:'linear-gradient(135deg,#fff,#e9eef5)'})[style]||'#fff'}
+  function ensureSelectedButton(){
+    const picker=q('#composerStylePicker'),head=picker&&q('.composer-style-head',picker);if(!picker||!head)return null;
+    let btn=q('.composer-style-selected',head);
+    if(!btn){btn=D.createElement('button');btn.type='button';btn.className='composer-style-selected';btn.setAttribute('aria-expanded','true');btn.innerHTML='<span class="selected-style-swatch"></span><span class="selected-style-label">নির্বাচিত: মুক্তা</span><span aria-hidden="true">⌃</span>';head.appendChild(btn)}
+    return btn;
+  }
+  function updateStyleUI(collapse){
+    const select=q('#cardStyle'),picker=q('#composerStylePicker'),form=q('#composerForm'),btn=ensureSelectedButton();if(!select||!picker)return;
+    const style=select.value||'pearl';
+    qa('[data-card-style]').forEach(b=>{const on=b.dataset.cardStyle===style;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false')});
+    if(form)form.dataset.previewStyle=style;
+    if(btn){q('.selected-style-label',btn).textContent='নির্বাচিত: '+(names[style]||style);q('.selected-style-swatch',btn).style.background=swatchBackground(style)}
+    if(collapse===true){picker.classList.add('is-collapsed');btn?.setAttribute('aria-expanded','false');if(btn)btn.lastElementChild.textContent='⌄'}
+    if(collapse===false){picker.classList.remove('is-collapsed');btn?.setAttribute('aria-expanded','true');if(btn)btn.lastElementChild.textContent='⌃'}
+  }
+  function bindPicker(){
+    const picker=q('#composerStylePicker'),select=q('#cardStyle');if(!picker||!select)return;
+    const btn=ensureSelectedButton();
+    D.addEventListener('click',e=>{
+      const styleBtn=e.target.closest('[data-card-style]');
+      if(styleBtn){select.value=styleBtn.dataset.cardStyle;select.dispatchEvent(new Event('change',{bubbles:true}));updateStyleUI(true);return}
+      const selected=e.target.closest('.composer-style-selected');if(selected){e.preventDefault();updateStyleUI(picker.classList.contains('is-collapsed')?false:true)}
+    },true);
+    select.addEventListener('change',()=>updateStyleUI());
+    const prompt=q('#composerPrompt'),avatar=q('#composerAvatar');
+    [prompt,avatar].filter(Boolean).forEach(x=>x.addEventListener('click',()=>setTimeout(()=>updateStyleUI(false),35)));
+    const form=q('#composerForm');if(form)form.addEventListener('reset',()=>setTimeout(()=>{select.value='pearl';updateStyleUI(true)},0));
+    updateStyleUI(true);
+  }
+  function readLocalMembers(){
+    const keys=['bhubondangaRegisteredUsers','bhubondangaUsers','bhubondangaMembers','registeredUsers'];const out=[];
+    keys.forEach(k=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(a))a.forEach(x=>{const created=x.created_at||x.createdAt||x.registeredAt||x.joinedAt;if(created&&Date.now()-new Date(created).getTime()>86400000)return;out.push({name:x.display_name||x.displayName||x.name||x.username,username:x.username||x.slug||x.id,avatar:x.avatar_url||x.avatar||x.photo||'',createdAt:created})})}catch(_){}});
+    return out.filter(x=>x.name).slice(0,12);
+  }
+  async function fetchMembers(){
+    const local=readLocalMembers();if(local.length)return{rows:local,demo:false};
+    const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;
+    if(c){try{const start=new Date();start.setHours(0,0,0,0);let r=await c.from('profiles').select('id,display_name,username,avatar_url,created_at').gte('created_at',start.toISOString()).order('created_at',{ascending:false}).limit(12);if(!r.error&&r.data?.length)return{rows:r.data.map(x=>({name:x.display_name||x.username||'নতুন সদস্য',username:x.username||x.id,avatar:x.avatar_url||'',createdAt:x.created_at})),demo:false}}catch(_){}}
+    return{rows:demoMembers,demo:true};
+  }
+  function memberItem(x){const url='profile.html?user='+encodeURIComponent(x.username||'member');const avatar=x.avatar?'<img src="'+esc(x.avatar)+'" alt="">':esc(initial(x.name));return '<a class="bd-member-item" href="'+url+'"><span class="bd-member-avatar">'+avatar+'</span><span class="bd-member-copy"><strong>'+esc(x.name||'নতুন সদস্য')+'</strong><small>স্বাগতম আপনার ভুবনে</small></span><span class="bd-member-open">›</span></a>'}
+  function cardHtml(rows,demo){const items=rows.map(memberItem).join('');return '<section class="glass right-section bd-new-members-card" data-new-members-card><div class="bd-new-members-head"><h3>আজকের নতুন সদস্য</h3><span class="bd-new-members-count">'+rows.length+'</span></div><div class="bd-welcome-flow"><div class="bd-welcome-flow-track"><span>স্বাগতম আপনার ভুবনে • আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।</span><span aria-hidden="true">স্বাগতম আপনার ভুবনে • আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।</span></div></div><div class="bd-member-window"><div class="bd-member-track" style="--member-speed:'+Math.max(18,rows.length*4)+'s"><div class="bd-member-group">'+items+'</div><div class="bd-member-group" aria-hidden="true">'+items+'</div></div></div>'+(demo?'<div class="bd-member-demo">ডেমো সদস্য—নিবন্ধন শুরু হলে বাস্তব সদস্য দেখাবে</div>':'')+'</section>'}
+  async function installMembers(){
+    const result=await fetchMembers();
+    ['#rightSidebar','#rightMobileDrawer'].forEach(sel=>{const root=q(sel);if(!root)return;root.querySelectorAll('[data-new-members-card]').forEach(x=>x.remove());const stack=q('.bd9-sidebar-stack',root)||root;const account=q('.account-card',stack);if(account)account.insertAdjacentHTML('afterend',cardHtml(result.rows,result.demo));else stack.insertAdjacentHTML('afterbegin',cardHtml(result.rows,result.demo))});
+  }
+  function init(){addThemeButtons();bindPicker();installMembers();setTimeout(addThemeButtons,250);setTimeout(installMembers,1000)}
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  addEventListener('pageshow',()=>{setTimeout(()=>{addThemeButtons();updateStyleUI(true);installMembers()},80)});
 })();
 </script>
-
 </body>
 </html>
