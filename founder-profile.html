@@ -2054,4 +2054,105 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 })();
 
 </script>
+
+<style id="bd-stability-revision-v2">
+/* Bhubondanga revision v2: stable date, iPhone-safe writing, collapsed composer, owner archive controls. */
+:root{--bd-keyboard-height:0px}
+html,body{max-width:100%!important;overflow-x:hidden!important;-webkit-text-size-adjust:100%}
+body.bd-keyboard-open{scroll-padding-bottom:calc(var(--bd-keyboard-height) + 22px)!important}
+
+/* One deterministic, non-moving date line on every device. */
+.datebar,.date-bar,.date-ticker,.date-strip{overflow:hidden!important;contain:layout paint!important}
+.track,.date-track,.ticker-track,.ticker{animation:none!important;transition:none!important;transform:none!important;will-change:auto!important;width:100%!important;min-width:0!important;max-width:100%!important;display:block!important}
+.bd-date-static{width:min(1180px,100%);height:100%;margin:auto;padding:0 12px;display:grid;grid-template-columns:repeat(4,max-content);align-items:center;justify-content:center;gap:clamp(10px,3vw,34px);white-space:nowrap;color:var(--soft,var(--text-soft,#61708a));font-size:clamp(8px,.72vw,11px);font-weight:750;direction:ltr;unicode-bidi:isolate}
+.bd-date-static span{display:inline-flex;align-items:center;gap:6px;direction:ltr;unicode-bidi:isolate}.bd-date-static b{color:var(--primary,#688bf0);font-weight:900}.bd-date-static .bd-date-greeting{color:var(--green,#4f987d)}
+@media(max-width:620px){.bd-date-static{grid-template-columns:repeat(3,max-content);gap:8px;padding:0 7px;font-size:7.8px}.bd-date-static .bd-date-gregorian{display:none}}
+
+/* All writing tools stay folded until the prompt is pressed. */
+.bd-revision-collapsed [data-bd-expandable],
+.bd-revision-collapsed #composerChoices,
+.bd-revision-collapsed .composer-choices,
+.bd-revision-collapsed .composer-quick-types,
+.bd-revision-collapsed #composerForm,
+.bd-revision-collapsed #publishForm,
+.bd-revision-collapsed .compact-form,
+.bd-revision-collapsed .bd-inline-profile-composer,
+.bd-revision-collapsed .bd-choice-shell,
+.bd-revision-collapsed .bd-card-style-title,
+.bd-revision-collapsed .bd-card-style-chooser{display:none!important}
+.bd-revision-expanded #composerChoices,
+.bd-revision-expanded .composer-choices,
+.bd-revision-expanded .composer-quick-types{display:grid!important}
+.bd-revision-expanded #publishForm:not([hidden]),
+.bd-revision-expanded .compact-form:not([hidden]),
+.bd-revision-expanded .bd-inline-profile-composer{display:block!important}
+.bd-revision-expanded .bd-choice-shell{display:block!important}
+#composerPrompt,.composer-prompt,#publishPrompt,.compact-prompt{touch-action:manipulation!important;min-height:42px!important}
+.bd-style-summary{width:100%;min-height:38px;margin-top:8px;padding:7px 11px;border:1px solid var(--line,var(--border,rgba(105,126,170,.18)));border-radius:10px;background:var(--surface2,var(--surface-strong,rgba(255,255,255,.9)));color:var(--primary,#688bf0);font:inherit;font-size:9px;font-weight:800;text-align:left}
+
+/* Safari/iPhone: 16px prevents focus zoom; no fixed transform around inputs. */
+@media(max-width:959px){
+ input,textarea,select,[contenteditable="true"]{font-size:16px!important;line-height:1.5!important;max-width:100%!important;transform:none!important;-webkit-transform:none!important;scroll-margin-top:calc(var(--header,66px) + var(--ticker,29px) + 18px)!important;scroll-margin-bottom:calc(var(--bd-keyboard-height) + 24px)!important}
+ textarea{min-height:118px}
+ .sheet,.bd-publish-sheet,.bdp-modal-card,.comment-modal{max-height:calc(100dvh - var(--bd-keyboard-height) - 12px)!important}
+}
+
+/* Owner/admin action sheet. Delete is soft-delete to archive. */
+.bd-revision-backdrop{position:fixed;inset:0;z-index:65000;display:none;background:rgba(4,13,29,.52);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}.bd-revision-backdrop.show{display:block}
+.bd-revision-sheet{position:fixed;left:50%;bottom:0;z-index:65010;width:min(520px,100%);padding:10px 12px calc(16px + env(safe-area-inset-bottom));border:1px solid var(--line,var(--border,rgba(105,126,170,.2)));border-radius:24px 24px 0 0;background:var(--page,var(--surface-solid,#fff));color:var(--text,#173052);box-shadow:0 -24px 60px rgba(0,0,0,.28);transform:translate(-50%,105%);transition:transform .22s ease}.bd-revision-sheet.open{transform:translate(-50%,0)}
+.bd-revision-grab{width:44px;height:5px;margin:0 auto 10px;border-radius:99px;background:var(--muted,#91a0b7)}.bd-revision-sheet h3{font-size:16px;margin-bottom:4px}.bd-revision-sheet p{color:var(--soft,var(--text-soft,#61708a));font-size:9px;margin-bottom:9px}.bd-revision-action{width:100%;min-height:46px;margin-top:6px;padding:8px 12px;border:1px solid var(--line,var(--border,rgba(105,126,170,.2)));border-radius:12px;display:flex;align-items:center;gap:9px;background:var(--surface2,var(--surface-strong,#fff));color:var(--text,#173052);font:inherit;font-size:10px;font-weight:800;text-align:left}.bd-revision-action.danger{color:#c34f6c;background:rgba(195,79,108,.07)}
+.bd-revision-toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));z-index:65100;max-width:90vw;padding:9px 14px;border-radius:999px;background:#173052;color:#fff;font-size:10px;opacity:0;pointer-events:none;transform:translate(-50%,12px);transition:.18s}.bd-revision-toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+<script id="bd-stability-revision-script-v2">
+(function(){
+'use strict';
+const D=document,W=window,H=D.documentElement,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
+const bn='০১২৩৪৫৬৭৮৯',bnNum=v=>String(v).replace(/\d/g,d=>bn[d]);
+const read=(k,f=null,store=localStorage)=>{try{const v=store.getItem(k);return v?JSON.parse(v):f}catch(_){return f}},write=(k,v,store=localStorage)=>{try{store.setItem(k,JSON.stringify(v));return true}catch(_){return false}};
+function toast(msg){let t=$('#bdRevisionToast');if(!t){t=D.createElement('div');t.id='bdRevisionToast';t.className='bd-revision-toast';D.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600)}
+
+/* Deterministic Asia/Dhaka date: avoids browser/locale differences. */
+function dhakaParts(){const d=new Date(Date.now()+6*3600000);return{y:d.getUTCFullYear(),m:d.getUTCMonth()+1,day:d.getUTCDate(),wd:d.getUTCDay(),h:d.getUTCHours(),min:d.getUTCMinutes()}}
+const wd=['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
+const gm=['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
+const bm=['বৈশাখ','জ্যৈষ্ঠ','আষাঢ়','শ্রাবণ','ভাদ্র','আশ্বিন','কার্তিক','অগ্রহায়ণ','পৌষ','মাঘ','ফাল্গুন','চৈত্র'];
+const hm=['মহররম','সফর','রবিউল আউয়াল','রবিউস সানি','জমাদিউল আউয়াল','জমাদিউস সানি','রজব','শাবান','রমজান','শাওয়াল','জিলকদ','জিলহজ'];
+function isLeap(y){return y%4===0&&(y%100!==0||y%400===0)}
+function banglaDate(p){const startYear=(p.m>4||(p.m===4&&p.day>=14))?p.y:p.y-1;const start=Date.UTC(startYear,3,14),cur=Date.UTC(p.y,p.m-1,p.day),delta=Math.floor((cur-start)/86400000);const lens=[31,31,31,31,31,31,30,30,30,30,isLeap(startYear+1)?30:29,30];let n=Math.max(0,delta),mi=0;while(mi<11&&n>=lens[mi]){n-=lens[mi];mi++}return{y:startYear-593,m:mi,d:n+1}}
+function gregorianToJD(y,m,d){if(m<=2){y--;m+=12}const A=Math.floor(y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5}
+function islamicToJD(y,m,d){return d+Math.ceil(29.5*(m-1))+(y-1)*354+Math.floor((3+11*y)/30)+1948439.5-1}
+function hijriDate(p){const jd=Math.floor(gregorianToJD(p.y,p.m,p.day))+0.5;let y=Math.floor((30*(jd-1948439.5)+10646)/10631);let m=Math.min(12,Math.ceil((jd-(29+islamicToJD(y,1,1)))/29.5)+1);if(m<1)m=1;let d=Math.floor(jd-islamicToJD(y,m,1)+1);if(d<1){m--;if(m<1){m=12;y--}d=Math.floor(jd-islamicToJD(y,m,1)+1)}return{y,m,d}}
+function greeting(h){return h<5?'শুভ রাত্রি':h<12?'শুভ সকাল':h<17?'শুভ দুপুর':h<20?'শুভ সন্ধ্যা':'শুভ রাত্রি'}
+function renderDate(){const p=dhakaParts(),b=banglaDate(p),h=hijriDate(p),markup='<div class="bd-date-static" role="status" aria-label="ঢাকার স্থির তারিখ"><span><b>▣</b>'+wd[p.wd]+'</span><span>'+bnNum(b.d)+' '+bm[b.m]+' '+bnNum(b.y)+' বঙ্গাব্দ</span><span class="bd-date-gregorian">'+bnNum(p.day)+' '+gm[p.m-1]+' '+bnNum(p.y)+'</span><span class="bd-date-greeting">'+greeting(p.h)+' • '+bnNum(String(p.h).padStart(2,'0'))+':'+bnNum(String(p.min).padStart(2,'0'))+' • '+bnNum(h.d)+' '+hm[h.m-1]+' '+bnNum(h.y)+' হিজরি</span></div>';$$('.datebar,.date-bar,.date-ticker,.date-strip').forEach(bar=>{if(bar.dataset.bdStaticDate==='1')return;bar.dataset.bdStaticDate='1';bar.innerHTML=markup})}
+
+/* Keep all composer details folded until the prompt is deliberately opened. */
+function composerHosts(){return Array.from(new Set($$('.composer,.compact-publisher,.letter-composer').filter(h=>h.querySelector('#composerPrompt,.composer-prompt,#publishPrompt,.compact-prompt'))))}
+function expandables(host){return $$('#composerChoices,.composer-choices,.composer-quick-types,#composerForm,#publishForm,.compact-form,.bd-inline-profile-composer,.bd-choice-shell,.bd-card-style-title,.bd-card-style-chooser',host)}
+function collapse(host){host.classList.add('bd-revision-collapsed');host.classList.remove('bd-revision-expanded');const prompt=$('#composerPrompt,.composer-prompt,#publishPrompt,.compact-prompt',host);prompt?.setAttribute('aria-expanded','false');expandables(host).forEach(x=>{x.hidden=true;x.setAttribute('data-bd-expandable','1')})}
+function expand(host){host.classList.remove('bd-revision-collapsed');host.classList.add('bd-revision-expanded');const prompt=$('#composerPrompt,.composer-prompt,#publishPrompt,.compact-prompt',host);prompt?.setAttribute('aria-expanded','true');const choices=$$('#composerChoices,.composer-choices,.composer-quick-types',host);choices.forEach(x=>x.hidden=false);const form=$('#publishForm,.compact-form',host);if(form)form.hidden=false}
+function sanitizeProfileComposer(host){$$('[data-bdp-action^=\"compose:\"]',host).forEach(x=>x.removeAttribute('data-bdp-action'));const p=$('#composerPrompt,.composer-prompt',host);if(p)p.removeAttribute('data-bdp-action')}
+function setupComposers(){composerHosts().forEach(host=>{sanitizeProfileComposer(host);if(host.dataset.bdRevisionComposer==='1')return;host.dataset.bdRevisionComposer='1';collapse(host);const prompt=$('#composerPrompt,.composer-prompt,#publishPrompt,.compact-prompt',host);prompt?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();sanitizeProfileComposer(host);host.classList.contains('bd-revision-expanded')?collapse(host):expand(host)},true);host.addEventListener('click',e=>{const type=e.target.closest('.compose-type,.quick-type,.tool-chip,[data-open-type]');if(type){setTimeout(()=>{const form=$('.bd-inline-profile-composer,#composerForm,#publishForm,.compact-form',host);if(form){form.hidden=false;host.classList.remove('bd-revision-collapsed');host.classList.add('bd-revision-expanded')}$$('#composerChoices,.composer-choices,.composer-quick-types',host).forEach(x=>x.hidden=true)},30)}if(e.target.closest('[data-bd-compose-cancel],#publishCancel,.bd-publish-cancel,[data-bdp-close]'))setTimeout(()=>collapse(host),20);const style=e.target.closest('.bd-card-style,[data-bd-choice-value]');if(style)setTimeout(()=>{const chooser=$('.bd-card-style-chooser,.bd-choice-panel',host),title=$('.bd-card-style-title',host);if(chooser)chooser.hidden=true;if(title)title.hidden=true;let sum=$('.bd-style-summary',host);if(!sum){sum=D.createElement('button');sum.type='button';sum.className='bd-style-summary';host.appendChild(sum);sum.addEventListener('click',()=>{if(chooser)chooser.hidden=!chooser.hidden;if(title)title.hidden=!title.hidden})}sum.textContent='নির্বাচিত লেখার কার্ড: '+style.textContent.trim()+' ▾'},80)},true)});setTimeout(()=>composerHosts().forEach(h=>{if(!h.classList.contains('bd-revision-expanded'))collapse(h)}),1200)}
+
+/* iOS visual viewport: prevent zoom/jump and reserve only keyboard height. */
+function setupKeyboard(){const vv=W.visualViewport;if(!vv)return;let base=Math.max(D.documentElement.clientHeight,W.innerHeight||0);const sync=()=>{base=Math.max(base,D.documentElement.clientHeight,W.innerHeight||0);const k=Math.max(0,Math.round(base-vv.height-vv.offsetTop));H.style.setProperty('--bd-keyboard-height',k+'px');D.body?.classList.toggle('bd-keyboard-open',k>120)};vv.addEventListener('resize',sync,{passive:true});vv.addEventListener('scroll',sync,{passive:true});D.addEventListener('focusin',e=>{if(e.target.matches('input,textarea,select,[contenteditable="true"]')){base=Math.max(D.documentElement.clientHeight,W.innerHeight||0);requestAnimationFrame(sync)}},true);D.addEventListener('focusout',()=>setTimeout(()=>{H.style.setProperty('--bd-keyboard-height','0px');D.body?.classList.remove('bd-keyboard-open')},180),true)}
+
+/* Owner can remove any own post at any time; it is archived, not destroyed. */
+let viewer={id:'',name:'',username:'',role:'visitor',logged:false};
+function localViewer(){const a=read('bhubondangaCurrentUser'),b=read('bhubondangaSessionUser',null,sessionStorage),u=a||b||{};return{id:String(u.id||u.uid||''),name:String(u.name||u.displayName||u.author_name||''),username:String(u.username||u.slug||'').replace(/^@/,''),role:String(u.role||'visitor').toLowerCase(),logged:!!(u.id||u.uid||u.loggedIn)}}
+async function resolveViewer(){viewer=localViewer();try{const x=await W.BhubondangaAuth?.current?.();const u=x?.user,p=x?.profile||{},l=x?.legacyUser||{};if(u||l){viewer={id:String(u?.id||l.id||l.uid||viewer.id),name:String(p.display_name||u?.user_metadata?.full_name||u?.user_metadata?.name||l.name||viewer.name),username:String(p.username||u?.user_metadata?.username||l.username||viewer.username).replace(/^@/,''),role:String(x.role||l.role||viewer.role||'user').toLowerCase(),logged:true}}}catch(_){}return viewer}
+function cardId(card){return String(card?.dataset?.postId||card?.dataset?.post||card?.getAttribute('data-post-id')||card?.id||'local-'+Date.now())}
+function cardAuthor(card){return{ id:String(card?.dataset?.authorId||card?.getAttribute('data-user-id')||''), name:String(card?.dataset?.authorName||$('.author strong,.author-meta a,.prolap-author-copy a,.bd-demo-author strong',card)?.textContent||'').trim(), username:String(card?.dataset?.authorUsername||'').replace(/^@/,'') }}
+function pageOwner(){const file=(location.pathname.split('/').pop()||'').toLowerCase(),q=new URLSearchParams(location.search).get('user')||'';if(file.includes('founder-profile'))return viewer.role==='founder';if(file.includes('admin-profile'))return viewer.role==='admin'||viewer.role==='founder';if(file.includes('profile'))return !q||q==='me'||q===viewer.id||q===viewer.username;return false}
+function manageable(card){if(!viewer.logged||!card||card.classList.contains('bd-master-demo-post'))return false;if(viewer.role==='founder'||viewer.role==='admin')return true;if(pageOwner()&&/profile/i.test(location.pathname))return true;const a=cardAuthor(card);return !!((a.id&&a.id===viewer.id)||(a.username&&a.username===viewer.username)||(a.name&&viewer.name&&a.name===viewer.name))}
+function ensureSheet(){if($('#bdRevisionSheet'))return;D.body.insertAdjacentHTML('beforeend','<div class="bd-revision-backdrop" id="bdRevisionBackdrop"></div><section class="bd-revision-sheet" id="bdRevisionSheet" aria-hidden="true"><div class="bd-revision-grab"></div><h3>প্রকাশনা নিয়ন্ত্রণ</h3><p>নিজের লেখা যেকোনো সময় সরানো যাবে। এটি স্থায়ীভাবে নষ্ট না হয়ে আর্কাইভে থাকবে।</p><button class="bd-revision-action" type="button" data-bdr-action="archive">▤ আর্কাইভে নিন</button><button class="bd-revision-action danger" type="button" data-bdr-action="remove">⌫ হোম থেকে সরান</button><button class="bd-revision-action" type="button" data-bdr-action="close">বন্ধ করুন</button></section>');$('#bdRevisionBackdrop').addEventListener('click',closeSheet)}
+let activeCard=null;
+function openSheet(card){ensureSheet();activeCard=card;$('#bdRevisionBackdrop').classList.add('show');$('#bdRevisionSheet').classList.add('open');$('#bdRevisionSheet').setAttribute('aria-hidden','false');D.body.classList.add('locked')}
+function closeSheet(){$('#bdRevisionBackdrop')?.classList.remove('show');$('#bdRevisionSheet')?.classList.remove('open');$('#bdRevisionSheet')?.setAttribute('aria-hidden','true');D.body.classList.remove('locked');activeCard=null}
+async function archiveCard(card){if(!card)return;const id=cardId(card),items=read('bhubondangaArchive',[]);if(!items.some(x=>String(x.id)===id))items.unshift({id,title:$('h3,.post-title,.prolap-title',card)?.textContent?.trim()||'প্রকাশনা',html:card.outerHTML,archivedAt:new Date().toISOString(),reason:'owner_removed'});write('bhubondangaArchive',items.slice(0,250));try{const client=W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase;if(client&&id&&!id.startsWith('local-')&&!id.startsWith('demo-')){let r=await client.from('posts').update({status:'archived',archived_at:new Date().toISOString()}).eq('id',id);if(r?.error)await client.from('posts').update({status:'archived'}).eq('id',id)}}catch(_){}card.style.transition='opacity .18s,transform .18s';card.style.opacity='0';card.style.transform='scale(.985)';setTimeout(()=>card.remove(),190);closeSheet();toast('প্রকাশনাটি আর্কাইভে রাখা হয়েছে—পরে Restore করা যাবে।')}
+function setupPostManager(){ensureSheet();D.addEventListener('click',e=>{const menu=e.target.closest('[data-post-menu],[data-bdp-post-menu],[data-bdr-menu],.post-menu-btn,.three-dot-btn,.three-dot button,.post-menu');if(menu){const card=menu.closest('article,.post,.feed-post,.prolap-card,.letter-card,.bd-live-post');if(card&&manageable(card)){e.preventDefault();e.stopImmediatePropagation();openSheet(card);return}}const act=e.target.closest('[data-bdr-action]');if(!act)return;e.preventDefault();const a=act.dataset.bdrAction;if(a==='close')closeSheet();else if(a==='archive'||a==='remove')archiveCard(activeCard)},true)}
+
+function init(){renderDate();setupKeyboard();setupComposers();resolveViewer().then(()=>setupPostManager());setInterval(renderDate,60000);new MutationObserver(()=>{composerHosts().forEach(h=>{sanitizeProfileComposer(h);if(!h.dataset.bdRevisionComposer)setupComposers()})}).observe(D.body,{childList:true,subtree:true})}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body></html>
