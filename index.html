@@ -1553,5 +1553,142 @@ const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=docu
 })();
 </script>
 
+
+
+<style id="bd-desktop-composer-final-repair-20260727">
+/* Final targeted repair: desktop/Safari composer interaction only. */
+#composer,
+#composer .composer-top,
+#composerPrompt,
+#composerChoices,
+#composerNote,
+#composerForm{
+  pointer-events:auto!important;
+}
+#composer::before,#composer::after{pointer-events:none!important}
+
+@media (min-width:900px){
+  html,body{height:100%!important;overflow:hidden!important}
+  .layout{
+    height:calc(100dvh - var(--bd-top))!important;
+    max-height:calc(100dvh - var(--bd-top))!important;
+    overflow:hidden!important;
+  }
+  .center-col{
+    position:relative!important;
+    z-index:5!important;
+    height:100%!important;
+    max-height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #composer{
+    position:relative!important;
+    z-index:100!important;
+    isolation:isolate!important;
+    flex:none!important;
+  }
+  #composerPrompt{
+    position:relative!important;
+    z-index:103!important;
+    cursor:pointer!important;
+    touch-action:manipulation!important;
+    -webkit-user-select:none!important;
+    user-select:none!important;
+  }
+  #composerChoices:not([hidden]){display:grid!important}
+  #composerNote:not([hidden]),#composerForm:not([hidden]){display:block!important}
+}
+</style>
+<script id="bd-desktop-composer-final-repair-script-20260727">
+(function(){
+  'use strict';
+  var D=document;
+  var lastActivation=0;
+
+  function byId(id){return D.getElementById(id)}
+  function reveal(el,display){
+    if(!el)return;
+    el.hidden=false;
+    el.removeAttribute('hidden');
+    el.style.display=display||'';
+    el.style.visibility='visible';
+    el.style.opacity='1';
+    el.style.pointerEvents='auto';
+  }
+  function conceal(el){
+    if(!el)return;
+    el.hidden=true;
+    el.setAttribute('hidden','');
+    el.style.display='none';
+    el.style.visibility='hidden';
+    el.style.opacity='0';
+    el.style.pointerEvents='none';
+  }
+  function choicesClosed(){
+    var c=byId('composerChoices');
+    return !c||c.hidden||c.hasAttribute('hidden')||getComputedStyle(c).display==='none';
+  }
+  function formClosed(){
+    var f=byId('composerForm');
+    return !f||f.hidden||f.hasAttribute('hidden')||getComputedStyle(f).display==='none';
+  }
+  function openChoices(){
+    var p=byId('composerPrompt'),c=byId('composerChoices'),n=byId('composerNote');
+    reveal(c,'grid');
+    reveal(n,'block');
+    if(p)p.setAttribute('aria-expanded','true');
+  }
+  function toggleChoices(){
+    var p=byId('composerPrompt'),c=byId('composerChoices'),n=byId('composerNote');
+    if(choicesClosed()){openChoices();return}
+    if(formClosed()){
+      conceal(c);conceal(n);
+      if(p)p.setAttribute('aria-expanded','false');
+    }
+  }
+  function openType(type){
+    openChoices();
+    reveal(byId('composerForm'),'block');
+    var input=D.querySelector('input[name="postType"][value="'+type+'"]');
+    if(input){
+      input.checked=true;
+      input.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+    D.querySelectorAll('#composerChoices [data-open-type]').forEach(function(btn){
+      btn.classList.toggle('active',btn.getAttribute('data-open-type')===type);
+    });
+    var title=byId('postTitle');
+    if(title)setTimeout(function(){try{title.focus({preventScroll:true})}catch(_){title.focus()}},30);
+  }
+  function activate(e){
+    var prompt=e.target.closest&&e.target.closest('#composerPrompt');
+    var typeBtn=e.target.closest&&e.target.closest('#composerChoices [data-open-type]');
+    if(!prompt&&!typeBtn)return;
+    e.preventDefault();
+    e.stopPropagation();
+    if(typeof e.stopImmediatePropagation==='function')e.stopImmediatePropagation();
+    if(typeBtn)openType(typeBtn.getAttribute('data-open-type')||'poem');
+    else toggleChoices();
+  }
+  D.addEventListener('pointerup',function(e){
+    if(!(e.target.closest&&e.target.closest('#composerPrompt,#composerChoices [data-open-type]')))return;
+    lastActivation=Date.now();
+    activate(e);
+  },true);
+  D.addEventListener('click',function(e){
+    if(!(e.target.closest&&e.target.closest('#composerPrompt,#composerChoices [data-open-type]')))return;
+    if(Date.now()-lastActivation<750){
+      e.preventDefault();e.stopPropagation();
+      if(typeof e.stopImmediatePropagation==='function')e.stopImmediatePropagation();
+      return;
+    }
+    activate(e);
+  },true);
+})();
+</script>
+
 </body>
 </html>
