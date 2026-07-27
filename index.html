@@ -1494,5 +1494,80 @@ const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=docu
 })();
 </script>
 
+
+<style id="bd-desktop-composer-click-fix-20260727">
+/* Functional-only desktop composer repair. Approved visuals remain unchanged. */
+@media (min-width:900px){
+  #composer{position:relative!important;isolation:isolate!important;z-index:2!important}
+  #composer::before,#composer::after{pointer-events:none!important}
+  #composer .composer-top,#composerPrompt,#composerChoices,#composerNote,#composerForm{position:relative!important;z-index:3!important;pointer-events:auto!important}
+}
+</style>
+<script id="bd-desktop-composer-click-fix-script-20260727">
+(function(){
+  'use strict';
+  const D=document;
+  const desktop=()=>window.matchMedia('(min-width:900px)').matches;
+  function nodes(){
+    return {
+      prompt:D.getElementById('composerPrompt'),
+      choices:D.getElementById('composerChoices'),
+      note:D.getElementById('composerNote'),
+      form:D.getElementById('composerForm')
+    };
+  }
+  function showChoices(){
+    const n=nodes();
+    if(!n.prompt||!n.choices)return;
+    n.choices.hidden=false;
+    if(n.note)n.note.hidden=false;
+    n.prompt.setAttribute('aria-expanded','true');
+  }
+  function hideChoices(){
+    const n=nodes();
+    if(!n.prompt||!n.choices)return;
+    n.choices.hidden=true;
+    if(n.note)n.note.hidden=true;
+    n.prompt.setAttribute('aria-expanded','false');
+  }
+  function openType(type){
+    const n=nodes();
+    if(!n.form)return;
+    showChoices();
+    n.form.hidden=false;
+    const input=D.querySelector('input[name="postType"][value="'+type+'"]');
+    if(input){
+      input.checked=true;
+      input.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+    D.querySelectorAll('#composerChoices [data-open-type]').forEach(function(btn){
+      btn.classList.toggle('active',btn.dataset.openType===type);
+    });
+  }
+  D.addEventListener('click',function(event){
+    if(!desktop())return;
+    const prompt=event.target.closest('#composerPrompt');
+    if(prompt){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const n=nodes();
+      if(!n.choices)return;
+      if(n.choices.hidden)showChoices();
+      else if(n.form&&n.form.hidden)hideChoices();
+      return;
+    }
+    const typeButton=event.target.closest('#composerChoices [data-open-type]');
+    if(typeButton){
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openType(typeButton.dataset.openType||'poem');
+    }
+  },true);
+  addEventListener('pageshow',function(){
+    const n=nodes();
+    if(n.prompt)n.prompt.style.pointerEvents='auto';
+  });
+})();
+</script>
 </body>
 </html>
