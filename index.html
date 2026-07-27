@@ -1504,138 +1504,52 @@ const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=docu
 </script>
 
 
-<style id="bd-final-composer-branching-and-mobile-fix">
-/* Functional repair only; approved Master Standard appearance is preserved. */
-#composer{position:relative!important;isolation:isolate!important;z-index:120!important;pointer-events:auto!important;touch-action:manipulation!important}
-#composer::before,#composer::after{pointer-events:none!important}
-#composer .composer-top,#composerPrompt,#composerChoices,#composerNote,#composerForm{position:relative!important;z-index:3!important;pointer-events:auto!important}
-#composerPrompt{cursor:pointer!important;-webkit-tap-highlight-color:transparent!important;touch-action:manipulation!important}
-#composerChoices[hidden],#composerNote[hidden],#composerForm[hidden]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
-#composerChoices:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-#composerForm:not([hidden]),#composerNote:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-.bd-monthly-honour{padding:12px;display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:10px;align-items:center;border-color:rgba(196,151,55,.32)!important;background:linear-gradient(135deg,rgba(255,249,224,.93),rgba(244,239,255,.91))!important}
-.bd-monthly-honour[hidden]{display:none!important}.bd-monthly-medal{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#e6b54b,#9e7adf);color:white;font-size:22px;box-shadow:0 10px 24px rgba(149,114,54,.18)}.bd-monthly-honour h3{font-size:14px}.bd-monthly-honour p{margin-top:2px;color:var(--text-soft);font-size:9px}.bd-monthly-honour a{min-height:36px;padding:7px 11px;border-radius:10px;display:flex;align-items:center;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;font-size:9px;font-weight:800}
-html[data-theme="dark"] .bd-monthly-honour{background:linear-gradient(135deg,rgba(61,47,17,.94),rgba(29,24,59,.94))!important}
-@media(max-width:959px){
- input,textarea,select,[contenteditable="true"]{font-size:16px!important}
- #composer{z-index:150!important}
- .bd-monthly-honour{grid-template-columns:42px minmax(0,1fr);padding:10px}.bd-monthly-medal{width:42px;height:42px}.bd-monthly-honour a{grid-column:1/-1;justify-content:center}
-}
-</style>
-<script id="bd-final-composer-branching-and-mobile-script">
-(function(){
- 'use strict';
- const D=document,$=(s,c=D)=>c.querySelector(s),safe=(k,f=[])=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(_){return f}},save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
- function openChoices(){const p=$('#composerPrompt'),c=$('#composerChoices'),n=$('#composerNote');if(!p||!c)return;c.hidden=false;if(n)n.hidden=false;p.setAttribute('aria-expanded','true')}
- function closeChoices(){const p=$('#composerPrompt'),c=$('#composerChoices'),n=$('#composerNote'),f=$('#composerForm');if(!p||!c)return;if(f&&!f.hidden)return;c.hidden=true;if(n)n.hidden=true;p.setAttribute('aria-expanded','false')}
- function openType(type){openChoices();const f=$('#composerForm');if(f)f.hidden=false;const input=D.querySelector('input[name="postType"][value="'+type+'"]');if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}D.querySelectorAll('#composerChoices [data-open-type]').forEach(b=>b.classList.toggle('active',b.dataset.openType===type));try{typeof updateComposerRules==='function'&&updateComposerRules();typeof syncQuickType==='function'&&syncQuickType()}catch(_){}}
- function bindComposer(){
-   const old=$('#composerPrompt');if(!old)return;
-   const fresh=old.cloneNode(true);old.replaceWith(fresh);
-   let stamp=0;const act=e=>{const now=Date.now();if(now-stamp<250)return;stamp=now;e.preventDefault();e.stopPropagation();const c=$('#composerChoices');if(c?.hidden)openChoices();else closeChoices()};
-   fresh.addEventListener('pointerup',act,{passive:false});fresh.addEventListener('click',act);
-   D.querySelectorAll('#composerChoices [data-open-type]').forEach(oldBtn=>{const b=oldBtn.cloneNode(true);oldBtn.replaceWith(b);const fn=e=>{e.preventDefault();e.stopPropagation();openType(b.dataset.openType||'poem')};b.addEventListener('pointerup',fn,{passive:false});b.addEventListener('click',fn)});
- }
- async function liveIdentity(){try{const x=await window.BhubondangaAuth?.current?.();return x}catch(_){return null}}
- window.BhubondangaSyncContribution=async function(post,terms,registration){
-   const auth=await liveIdentity(),client=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||auth?.client;if(!client||!auth?.session?.user)return;
-   const who=window.__BD_IDENTITY||{},type=String(post.type||'poem').toLowerCase();
-   const payload={id:post.id,author_id:auth.session.user.id,author_username:post.authorUsername||who.author_username||'',author_name:post.authorName||who.author_name||'ভুবনডাঙ্গার সদস্য',author_avatar:post.authorAvatar||who.author_avatar||'',type,category:type,title:post.title,body:post.body,original_author:post.originalAuthor||'',status:(terms&&terms.length)?'pending_review':'published',card_style:post.cardStyle||'pearl'};
-   try{await client.from('posts').upsert(payload,{onConflict:'id'})}catch(e){console.warn('Post sync:',e?.message||e)}
-   if(terms&&terms.length){try{await client.from('moderation_queue').insert({post_id:post.id,submitted_by:auth.session.user.id,matched_terms:['স্বয়ংক্রিয় ভাষা সতর্কতা'],status:'pending'})}catch(_){}return}
-   if(type==='poem'&&post.originalAuthor){
-     const norm=v=>String(v||'').toLocaleLowerCase('bn-BD').replace(/[\s\u200c\u200d.,!?;:'"“”‘’()\[\]{}\-–—_/\\]+/g,'');
-     const canonicalKey=norm(post.originalAuthor)+'::'+norm(post.title),canonicalId=post.canonicalPoemId||('canonical-'+canonicalKey.slice(0,70));
-     try{await client.from('canonical_poems').upsert({canonical_key:canonicalKey,canonical_id:canonicalId,poet_name:post.originalAuthor,title:post.title,body:post.body,first_editor_id:auth.session.user.id,first_editor_name:post.authorName,first_edited_at:post.createdAt,status:'published'},{onConflict:'canonical_key',ignoreDuplicates:true})}catch(_){}
-     try{await client.from('editor_contributions').upsert({canonical_id:canonicalId,poet_name:post.originalAuthor,poet_slug:norm(post.originalAuthor),work_title:post.title,contributor_id:auth.session.user.id,contributor_name:post.authorName,contributor_slug:post.authorUsername,post_id:post.id,status:'approved',created_at:post.createdAt},{onConflict:'canonical_id',ignoreDuplicates:true})}catch(_){}
-   }
- };
- function previousMonthRange(now=new Date()){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit'}).formatToParts(now),o={};parts.forEach(x=>{if(x.type!=='literal')o[x.type]=x.value});const y=Number(o.year),m=Number(o.month);return{start:new Date(Date.UTC(y,m-2,1,-6,0,0)),end:new Date(Date.UTC(y,m-1,1,-6,0,0))}}
- function uniqContributions(rows){const seen=new Set(),out=[];for(const r of rows){const author=r.original_author||r.originalAuthor;if(!author)continue;const name=r.author_name||r.authorName||'ভুবনডাঙ্গার সদস্য',user=r.author_username||r.authorUsername||r.author_id||r.authorId||name,key=String(user)+'::'+String(author).toLowerCase()+'::'+String(r.title||'').toLowerCase().replace(/\s+/g,'');if(seen.has(key))continue;seen.add(key);out.push({name,user,avatar:r.author_avatar||r.authorAvatar||'',author,title:r.title,created:r.created_at||r.createdAt})}return out}
- async function renderHonour(){const box=$('#monthlyHonourPin');if(!box)return;const dhakaDay=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric'}).format(new Date()));if(dhakaDay!==1){box.hidden=true;return}const {start,end}=previousMonthRange(),local=[...safe('bhubondangaHomeUserPosts',[]),...safe('bhubondangaPublishedPosts',[])].filter(x=>{const d=new Date(x.createdAt||x.created_at||0);return d>=start&&d<end});let rows=local;const client=window.bdSupabase||window.supabaseClient;try{if(client){const r=await client.from('posts').select('author_id,author_name,author_username,author_avatar,original_author,title,created_at,status').gte('created_at',start.toISOString()).lt('created_at',end.toISOString()).in('status',['published','published_flagged']);if(!r.error&&r.data?.length)rows=r.data}}catch(_){}
- const unique=uniqContributions(rows),score=new Map();unique.forEach(x=>{const k=x.user||x.name;const v=score.get(k)||{...x,count:0};v.count++;score.set(k,v)});const winner=[...score.values()].sort((a,b)=>b.count-a.count)[0];if(!winner){box.hidden=true;return}box.hidden=false;const href=winner.user==='mahmud-sohel'?'founder-profile.html':'profile.html?user='+encodeURIComponent(winner.user);box.innerHTML='<div class="bd-monthly-medal">✦</div><div><h3>মাসের সাহিত্য-সহযোগী: '+String(winner.name).replace(/[&<>]/g,'')+'</h3><p>গত মাসে '+winner.count+'টি স্বতন্ত্র কবিতা/রচনা সংযোজন করে ভুবনডাঙ্গাকে সমৃদ্ধ করেছেন। এই সম্মাননা আজ ২৪ ঘণ্টা পিন থাকবে।</p></div><a href="'+href+'">প্রোফাইল দেখুন</a>';
- }
- function preventKeyboardJump(){if(!window.visualViewport)return;let y=0;D.addEventListener('focusin',e=>{if(e.target.matches('input,textarea,select,[contenteditable="true"]'))y=scrollY},{capture:true});visualViewport.addEventListener('resize',()=>{const a=D.activeElement;if(!a||!a.matches('input,textarea,select,[contenteditable="true"]'))return;requestAnimationFrame(()=>{if(Math.abs(scrollY-y)>180)scrollTo({top:y,behavior:'auto'})})})}
- function init(){bindComposer();preventKeyboardJump();setTimeout(renderHonour,900)}
- if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
- addEventListener('pageshow',()=>setTimeout(()=>{bindComposer();renderHonour()},80));
-})();
-</script>
-
-
-<style id="bd-self-contained-composer-final-fix">
-/* Self-contained functional repair: keeps the approved design unchanged. */
-#composer{position:relative!important;z-index:60!important;isolation:isolate!important;pointer-events:auto!important}
+<style id="bd-safari-composer-fix">
+/* Safari/iPad desktop-mode interaction repair — visual design remains unchanged. */
+#composer{position:relative!important;isolation:isolate!important;z-index:90!important;pointer-events:auto!important}
 #composer::before,#composer::after{pointer-events:none!important}
 #composer .composer-top,#composerPrompt,#composerChoices,#composerNote,#composerForm,
-#composer input,#composer textarea,#composer select,#composer button,#composer a,#composer label{
-  position:relative!important;z-index:62!important;pointer-events:auto!important
+#composer button,#composer a,#composer input,#composer textarea,#composer select,#composer label{
+  position:relative!important;z-index:92!important;pointer-events:auto!important
 }
-#composerPrompt{cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
-#composerChoices[hidden],#composerNote[hidden],#composerForm[hidden]{display:none!important}
-#composerChoices:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important}
-#composerNote:not([hidden]),#composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important}
-@media (min-width:901px){
-  .center-col,.center,.main-feed,.feed-column{position:relative!important;z-index:1!important;min-width:0!important}
-  #composer{z-index:80!important}
-}
+#composerPrompt{-webkit-appearance:none!important;appearance:none!important;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;user-select:none!important;-webkit-user-select:none!important}
+#composerChoices[hidden],#composerNote[hidden],#composerForm[hidden]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+#composerChoices:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+#composerNote:not([hidden]),#composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+@media(min-width:861px){.layout,.center-col{overflow:visible!important}.center-col{position:relative!important;z-index:5!important}#composer{z-index:100!important}}
 </style>
-<script id="bd-self-contained-composer-final-script">
+<script id="bd-safari-composer-fix-script">
 (function(){
   'use strict';
-  var D=document;
-  function parts(){return {
-    box:D.getElementById('composer'),
-    prompt:D.getElementById('composerPrompt'),
-    choices:D.getElementById('composerChoices'),
-    note:D.getElementById('composerNote'),
-    form:D.getElementById('composerForm')
-  }}
-  function reveal(el,display){if(!el)return;el.hidden=false;el.removeAttribute('hidden');el.style.removeProperty('display');if(display)el.style.display=display;el.style.visibility='visible';el.style.opacity='1';el.style.pointerEvents='auto'}
-  function conceal(el){if(!el)return;el.hidden=true;el.setAttribute('hidden','');el.style.display='none'}
-  window.BDOpenComposer=function(type){
-    var p=parts(); if(!p.prompt)return false;
-    reveal(p.choices,'grid'); reveal(p.note,'block');
-    if(type){
-      reveal(p.form,'block');
-      var input=D.querySelector('input[name="postType"][value="'+String(type).replace(/"/g,'')+'"]');
-      if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}
-    }
-    p.prompt.setAttribute('aria-expanded','true');
-    if(p.box){p.box.scrollIntoView({block:'nearest',behavior:'smooth'})}
-    return false;
-  };
-  window.BDToggleComposer=function(){
-    var p=parts(); if(!p.choices)return false;
-    var closed=p.choices.hidden||p.choices.hasAttribute('hidden')||getComputedStyle(p.choices).display==='none';
-    if(closed)return window.BDOpenComposer();
-    if(p.form&&(p.form.hidden||p.form.hasAttribute('hidden')||getComputedStyle(p.form).display==='none')){conceal(p.choices);conceal(p.note);p.prompt&&p.prompt.setAttribute('aria-expanded','false')}
-    return false;
-  };
+  var D=document, lastTouch=0;
+  function q(id){return D.getElementById(id)}
+  function show(el,display){if(!el)return;el.hidden=false;el.removeAttribute('hidden');el.style.display=display||'';el.style.visibility='visible';el.style.opacity='1';el.style.pointerEvents='auto'}
+  function hide(el){if(!el)return;el.hidden=true;el.setAttribute('hidden','');el.style.display='none';el.style.visibility='hidden';el.style.opacity='0';el.style.pointerEvents='none'}
+  function openChoices(){var p=q('composerPrompt'),c=q('composerChoices'),n=q('composerNote');if(!p||!c)return;show(c,'grid');show(n,'block');p.setAttribute('aria-expanded','true')}
+  function toggleChoices(){var p=q('composerPrompt'),c=q('composerChoices'),n=q('composerNote'),f=q('composerForm');if(!p||!c)return;
+    var closed=c.hidden||c.hasAttribute('hidden')||getComputedStyle(c).display==='none';
+    if(closed){openChoices();return}
+    var formClosed=!f||f.hidden||f.hasAttribute('hidden')||getComputedStyle(f).display==='none';
+    if(formClosed){hide(c);hide(n);p.setAttribute('aria-expanded','false')}
+  }
+  function openType(type){openChoices();var f=q('composerForm');show(f,'block');var i=D.querySelector('input[name="postType"][value="'+type+'"]');if(i){i.checked=true;i.dispatchEvent(new Event('change',{bubbles:true}))}try{if(typeof updateComposerRules==='function')updateComposerRules();if(typeof syncQuickType==='function')syncQuickType()}catch(e){}}
+  function safeActivate(fn,e){if(e){e.preventDefault();e.stopPropagation()}fn()}
   function bind(){
-    var p=parts(); if(!p.prompt)return;
-    p.prompt.setAttribute('onclick','return window.BDToggleComposer(event)');
-    p.prompt.setAttribute('onpointerup','return window.BDToggleComposer(event)');
-    p.prompt.style.pointerEvents='auto';
-    D.querySelectorAll('#composerChoices [data-open-type],#composerChoices .compose-type').forEach(function(b){
-      var t=b.getAttribute('data-open-type')||b.getAttribute('data-type')||'poem';
-      b.setAttribute('onclick','return window.BDOpenComposer("'+t+'")');
-      b.style.pointerEvents='auto';
+    var old=q('composerPrompt');if(!old||old.dataset.safariBound==='1')return;
+    var p=old.cloneNode(true);p.dataset.safariBound='1';old.parentNode.replaceChild(p,old);
+    p.addEventListener('touchend',function(e){lastTouch=Date.now();safeActivate(toggleChoices,e)},{passive:false});
+    p.addEventListener('click',function(e){if(Date.now()-lastTouch<700){e.preventDefault();e.stopPropagation();return}safeActivate(toggleChoices,e)},false);
+    D.querySelectorAll('#composerChoices [data-open-type]').forEach(function(oldBtn){
+      if(oldBtn.dataset.safariBound==='1')return;
+      var b=oldBtn.cloneNode(true);b.dataset.safariBound='1';oldBtn.parentNode.replaceChild(b,oldBtn);
+      var type=b.getAttribute('data-open-type')||'poem', touched=0;
+      b.addEventListener('touchend',function(e){touched=Date.now();safeActivate(function(){openType(type)},e)},{passive:false});
+      b.addEventListener('click',function(e){if(Date.now()-touched<700){e.preventDefault();e.stopPropagation();return}safeActivate(function(){openType(type)},e)},false);
     });
   }
-  var last=0;
-  D.addEventListener('pointerup',function(e){
-    var b=e.target.closest&&e.target.closest('#composerPrompt'); if(!b)return;
-    var now=Date.now(); if(now-last<350)return; last=now;
-    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();window.BDToggleComposer();
-  },true);
-  D.addEventListener('click',function(e){
-    var b=e.target.closest&&e.target.closest('#composerPrompt'); if(!b)return;
-    if(Date.now()-last<450){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();return}
-    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();window.BDToggleComposer();
-  },true);
-  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-  new MutationObserver(bind).observe(D.documentElement,{childList:true,subtree:true});
+  function init(){bind();setTimeout(bind,120);setTimeout(bind,800)}
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.addEventListener('pageshow',function(){setTimeout(init,60)});
 })();
 </script>
 
