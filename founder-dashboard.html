@@ -983,9 +983,9 @@ function guardPage(){const file=location.pathname.split('/').pop().toLowerCase()
 renderDates();normalizeBrand();applyAuth();handles();renderActive();guardPage();setInterval(renderDates,60000);
 })();
 </script>
-<script src="supabase-config.js"></script>
-<script src="supabase-auth.js"></script>
-<script src="role-guard.js"></script>
+
+
+
 
 <script id="bd-emergency-master-script-v4">
 (function(){
@@ -1055,6 +1055,20 @@ D.addEventListener('click',async e=>{const b=e.target.closest('[data-bd-logout]'
 
 /* Explicitly keep comments inline and do not auto-focus or auto-scroll. */
 D.addEventListener('click',e=>{const b=e.target.closest('[data-comment],[data-action="comment"]');if(!b)return;requestAnimationFrame(()=>cleanupObsoleteUI())},{capture:false});
+})();
+</script>
+
+
+<style id="bd-founder-monthly-honour-final">
+.bd-winner-card{padding:13px;border:1px solid rgba(196,151,55,.32);border-radius:14px;background:linear-gradient(135deg,rgba(255,249,224,.95),rgba(244,239,255,.92));display:grid;grid-template-columns:48px minmax(0,1fr) auto;gap:10px;align-items:center}.bd-winner-medal{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#e6b54b,#8d73db);color:#fff;font-size:24px}.bd-winner-card h3{font-size:14px}.bd-winner-card p{margin-top:3px;color:var(--soft);font-size:9px}.bd-winner-card a{padding:8px 11px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--primary2,var(--primary)));color:#fff;font-size:9px;font-weight:800}@media(max-width:700px){.bd-winner-card{grid-template-columns:44px minmax(0,1fr)}.bd-winner-card a{grid-column:1/-1;text-align:center}}
+</style>
+<script id="bd-founder-monthly-honour-script">
+(async function(){
+ const D=document,$=(s,c=D)=>c.querySelector(s),bn=v=>String(v).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]),safe=(k,f=[])=>{try{return JSON.parse(localStorage.getItem(k)||'null')||f}catch(_){return f}};
+ function range(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dhaka',year:'numeric',month:'2-digit'}).formatToParts(new Date()),o={};parts.forEach(x=>{if(x.type!=='literal')o[x.type]=x.value});const y=Number(o.year),m=Number(o.month);return{start:new Date(Date.UTC(y,m-2,1,-6)),end:new Date(Date.UTC(y,m-1,1,-6))}}
+ function winner(rows){const seen=new Set(),score=new Map();for(const r of rows){const original=r.original_author||r.originalAuthor;if(!original)continue;const u=r.author_username||r.authorUsername||r.author_id||r.authorId||r.author_name||r.authorName,key=String(u)+'::'+String(original).toLowerCase()+'::'+String(r.title||'').toLowerCase().replace(/\s+/g,'');if(seen.has(key))continue;seen.add(key);const v=score.get(u)||{user:u,id:r.author_id||r.authorId||'',name:r.author_name||r.authorName||'ভুবনডাঙ্গার সদস্য',avatar:r.author_avatar||r.authorAvatar||'',count:0};v.count++;score.set(u,v)}return[...score.values()].sort((a,b)=>b.count-a.count)[0]||null}
+ async function run(){const {start,end}=range(),client=window.bdSupabase||window.supabaseClient;let rows=[...safe('bhubondangaHomeUserPosts'),...safe('bhubondangaPublishedPosts')].filter(x=>{const d=new Date(x.createdAt||x.created_at||0);return d>=start&&d<end});try{if(client){const r=await client.from('posts').select('author_id,author_name,author_username,author_avatar,original_author,title,created_at,status').gte('created_at',start.toISOString()).lt('created_at',end.toISOString()).in('status',['published','published_flagged']);if(!r.error)rows=r.data||rows}}catch(_){}const w=winner(rows),host=$('#top');if(!host)return;if(!w){host.innerHTML='<div class="empty">গত মাসে অনুমোদিত সম্পাদনার তথ্য পাওয়া যায়নি।</div>';return}host.innerHTML='<article class="bd-winner-card"><div class="bd-winner-medal">✦</div><div><h3>'+w.name+'</h3><p>গত মাসে '+bn(w.count)+'টি স্বতন্ত্র কবিতা/রচনা সংযোজন করেছেন। মাসের ১ তারিখে তাঁর প্রোফাইল ২৪ ঘণ্টা স্বয়ংক্রিয়ভাবে পিন হবে।</p></div><a href="'+(w.user==='mahmud-sohel'?'founder-profile.html':'profile.html?user='+encodeURIComponent(w.id||w.user))+'">প্রোফাইল দেখুন</a></article>';$('#f3')&&($('#f3').textContent=bn(w.count));const dhakaDay=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Dhaka',day:'numeric'}).format(new Date()));if(dhakaDay===1){const key='bd-honour-notified-'+start.toISOString().slice(0,7);if(!localStorage.getItem(key)){const msg={id:'honour-'+Date.now(),type:'monthly_honour',recipientId:w.id,recipientUsername:w.user,message:'অভিনন্দন! গত মাসে ভুবনডাঙ্গার সাহিত্য ভুবনে সর্বাধিক স্বতন্ত্র সম্পাদনা/সংযোজনের জন্য আপনার প্রোফাইল আজ ২৪ ঘণ্টা সম্মাননা হিসেবে পিন হয়েছে।',createdAt:new Date().toISOString(),read:false};const n=safe('bhubondangaNotifications',[]);n.unshift(msg);localStorage.setItem('bhubondangaNotifications',JSON.stringify(n.slice(0,1000)));try{await client?.from('notifications').insert({user_id:w.id,type:'monthly_honour',message:msg.message,unread:true})}catch(_){}localStorage.setItem(key,'1')}}}
+ $('#calc')?.addEventListener('click',run);run()
 })();
 </script>
 
