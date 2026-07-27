@@ -1233,4 +1233,65 @@ init();
 })();
 </script>
 
+
+<style id="bd-self-contained-founder-sidebar-final-fix">
+/* Self-contained sidebar repair; no external stylesheet is required. */
+#backdrop,#drawerBackdrop,.drawer-backdrop{pointer-events:none}
+#backdrop.show,#drawerBackdrop.show,.drawer-backdrop.show{pointer-events:auto!important}
+#leftDrawer,#rightDrawer,#mobileDrawer,#rightMobileDrawer,[data-bd9-drawer]{pointer-events:none}
+#leftDrawer.open,#rightDrawer.open,#mobileDrawer.open,#rightMobileDrawer.open,[data-bd9-drawer].open{pointer-events:auto!important}
+#leftDrawer a,#rightDrawer a,#mobileDrawer a,#rightMobileDrawer a,
+#leftDrawer button,#rightDrawer button,#mobileDrawer button,#rightMobileDrawer button,
+#leftDrawer label,#rightDrawer label,#mobileDrawer label,#rightMobileDrawer label{
+  pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important
+}
+#leftEdgeMenu,#rightEdgeMenu,.edge-menu,.edge,[data-open-left],[data-open-right],[data-bd9-handle]{
+  pointer-events:auto!important;touch-action:manipulation!important;cursor:pointer!important
+}
+body.bd-drawer-open{overflow:hidden!important;touch-action:none}
+</style>
+<script id="bd-self-contained-founder-sidebar-final-script">
+(function(){
+ 'use strict';
+ var D=document;
+ function one(sel){return D.querySelector(sel)}
+ function left(){return one('#leftDrawer,#mobileDrawer,#midnightLeftDrawer,[data-bd9-drawer="left"]')}
+ function right(){return one('#rightDrawer,#rightMobileDrawer,#midnightRightDrawer,[data-bd9-drawer="right"]')}
+ function back(){return one('#backdrop,#drawerBackdrop,#midnightDrawerBackdrop,.drawer-backdrop')}
+ function close(){
+   [left(),right()].forEach(function(x){if(x)x.classList.remove('open')});
+   var b=back();if(b)b.classList.remove('show');
+   D.body.classList.remove('locked','drawer-open','bd-drawer-open');
+ }
+ function open(which){
+   close();var x=which==='right'?right():left();if(!x)return false;
+   x.classList.add('open');x.style.pointerEvents='auto';
+   var b=back();if(b){b.classList.add('show');b.style.pointerEvents='auto'}
+   D.body.classList.add('bd-drawer-open');
+   return false;
+ }
+ window.BDOpenFounderSidebar=open;window.BDCloseFounderSidebar=close;
+ function bind(){
+   D.querySelectorAll('#leftEdgeMenu,.edge-menu-left,.edge.left,[data-open-left],[data-bd9-handle="left"]').forEach(function(x){x.setAttribute('onclick','return window.BDOpenFounderSidebar("left")')});
+   D.querySelectorAll('#rightEdgeMenu,.edge-menu-right,.edge.right,[data-open-right],[data-bd9-handle="right"]').forEach(function(x){x.setAttribute('onclick','return window.BDOpenFounderSidebar("right")')});
+   D.querySelectorAll('.drawer-close,[data-bd9-close],[data-close],#closeDrawer,#closeRightDrawer').forEach(function(x){x.setAttribute('onclick','window.BDCloseFounderSidebar();return false')});
+   D.querySelectorAll('#leftDrawer a,#rightDrawer a,#mobileDrawer a,#rightMobileDrawer a').forEach(function(a){a.style.pointerEvents='auto'});
+ }
+ D.addEventListener('pointerup',function(e){
+   var l=e.target.closest&&e.target.closest('#leftEdgeMenu,.edge-menu-left,.edge.left,[data-open-left],[data-bd9-handle="left"]');
+   var r=e.target.closest&&e.target.closest('#rightEdgeMenu,.edge-menu-right,.edge.right,[data-open-right],[data-bd9-handle="right"]');
+   var c=e.target.closest&&e.target.closest('.drawer-close,[data-bd9-close],[data-close],#closeDrawer,#closeRightDrawer');
+   if(l||r||c){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();c?close():open(r?'right':'left')}
+ },true);
+ D.addEventListener('click',function(e){
+   var b=back();if(e.target===b){e.preventDefault();close();return}
+   var link=e.target.closest&&e.target.closest('#leftDrawer a,#rightDrawer a,#mobileDrawer a,#rightMobileDrawer a');
+   if(link&&link.getAttribute('href')&&!link.getAttribute('href').startsWith('#')){close()}
+ },true);
+ D.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
+ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+ new MutationObserver(bind).observe(D.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
 </body></html>

@@ -1562,5 +1562,82 @@ html[data-theme="dark"] .bd-monthly-honour{background:linear-gradient(135deg,rgb
 })();
 </script>
 
+
+<style id="bd-self-contained-composer-final-fix">
+/* Self-contained functional repair: keeps the approved design unchanged. */
+#composer{position:relative!important;z-index:60!important;isolation:isolate!important;pointer-events:auto!important}
+#composer::before,#composer::after{pointer-events:none!important}
+#composer .composer-top,#composerPrompt,#composerChoices,#composerNote,#composerForm,
+#composer input,#composer textarea,#composer select,#composer button,#composer a,#composer label{
+  position:relative!important;z-index:62!important;pointer-events:auto!important
+}
+#composerPrompt{cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+#composerChoices[hidden],#composerNote[hidden],#composerForm[hidden]{display:none!important}
+#composerChoices:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important}
+#composerNote:not([hidden]),#composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important}
+@media (min-width:901px){
+  .center-col,.center,.main-feed,.feed-column{position:relative!important;z-index:1!important;min-width:0!important}
+  #composer{z-index:80!important}
+}
+</style>
+<script id="bd-self-contained-composer-final-script">
+(function(){
+  'use strict';
+  var D=document;
+  function parts(){return {
+    box:D.getElementById('composer'),
+    prompt:D.getElementById('composerPrompt'),
+    choices:D.getElementById('composerChoices'),
+    note:D.getElementById('composerNote'),
+    form:D.getElementById('composerForm')
+  }}
+  function reveal(el,display){if(!el)return;el.hidden=false;el.removeAttribute('hidden');el.style.removeProperty('display');if(display)el.style.display=display;el.style.visibility='visible';el.style.opacity='1';el.style.pointerEvents='auto'}
+  function conceal(el){if(!el)return;el.hidden=true;el.setAttribute('hidden','');el.style.display='none'}
+  window.BDOpenComposer=function(type){
+    var p=parts(); if(!p.prompt)return false;
+    reveal(p.choices,'grid'); reveal(p.note,'block');
+    if(type){
+      reveal(p.form,'block');
+      var input=D.querySelector('input[name="postType"][value="'+String(type).replace(/"/g,'')+'"]');
+      if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}
+    }
+    p.prompt.setAttribute('aria-expanded','true');
+    if(p.box){p.box.scrollIntoView({block:'nearest',behavior:'smooth'})}
+    return false;
+  };
+  window.BDToggleComposer=function(){
+    var p=parts(); if(!p.choices)return false;
+    var closed=p.choices.hidden||p.choices.hasAttribute('hidden')||getComputedStyle(p.choices).display==='none';
+    if(closed)return window.BDOpenComposer();
+    if(p.form&&(p.form.hidden||p.form.hasAttribute('hidden')||getComputedStyle(p.form).display==='none')){conceal(p.choices);conceal(p.note);p.prompt&&p.prompt.setAttribute('aria-expanded','false')}
+    return false;
+  };
+  function bind(){
+    var p=parts(); if(!p.prompt)return;
+    p.prompt.setAttribute('onclick','return window.BDToggleComposer(event)');
+    p.prompt.setAttribute('onpointerup','return window.BDToggleComposer(event)');
+    p.prompt.style.pointerEvents='auto';
+    D.querySelectorAll('#composerChoices [data-open-type],#composerChoices .compose-type').forEach(function(b){
+      var t=b.getAttribute('data-open-type')||b.getAttribute('data-type')||'poem';
+      b.setAttribute('onclick','return window.BDOpenComposer("'+t+'")');
+      b.style.pointerEvents='auto';
+    });
+  }
+  var last=0;
+  D.addEventListener('pointerup',function(e){
+    var b=e.target.closest&&e.target.closest('#composerPrompt'); if(!b)return;
+    var now=Date.now(); if(now-last<350)return; last=now;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();window.BDToggleComposer();
+  },true);
+  D.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('#composerPrompt'); if(!b)return;
+    if(Date.now()-last<450){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();return}
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();window.BDToggleComposer();
+  },true);
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+  new MutationObserver(bind).observe(D.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 </html>
