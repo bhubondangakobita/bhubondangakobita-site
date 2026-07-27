@@ -1057,8 +1057,35 @@ html[data-theme="dark"] .sidebar .contact-card,html[data-theme="dark"] .mobile-d
 }
 </style>
 
+
+<style id="bd-index-composer-screen-width-final-20260727">
+/* Final targeted correction: preserve current colourful sidebars and cards. */
+#composer,#composerPrompt,#composerChoices,#composerForm,#composerStylePicker{pointer-events:auto!important}
+#composerPrompt{cursor:pointer!important;touch-action:manipulation!important;z-index:20!important}
+#composerChoices[hidden],#composerNote[hidden],#composerForm[hidden]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+#composerChoices:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+#composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+#composerNote:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+.composer-style-picker{display:block!important}
+.composer-style-option{background:var(--surface-strong)!important}
+@media(max-width:899px){
+  main.layout,.layout,.page-grid{padding-left:14px!important;padding-right:14px!important}
+  .center-col,.center,.main-content,.page-main{width:100%!important;max-width:100%!important}
+  #composer,.humanitarian-strip,.feed-head,.post{width:100%!important;max-width:100%!important}
+  #leftEdgeMenu,#rightEdgeMenu,#midnightLeftEdge,#midnightRightEdge,.edge-menu,.edge,.midnight-edge{width:18px!important;min-width:18px!important;height:58px!important}
+  .composer-quick-types{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important}
+  .quick-type{min-width:0!important;min-height:62px!important;padding:7px 2px!important}
+  .quick-type span:last-child{font-size:9px!important;white-space:nowrap!important}
+  .composer-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .composer-style-option{min-height:57px!important}
+}
+@media(min-width:900px){
+  #composerPrompt{min-height:46px!important}
+  .composer-quick-types{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+}
+</style>
 </head>
-<body class="bd9-shell-page" data-bd-family="public" data-build="index-sidebar-safety-moderation-v9-composer-stable" data-page="index">
+<body class="bd9-shell-page" data-bd-family="public" data-build="index-master-composer-category-glass-v10" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
 <symbol id="i-leaf" viewbox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"></path><path d="M4 20c3-6 7-9 13-12"></path></symbol>
 <symbol id="i-menu" viewbox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></symbol>
@@ -1180,15 +1207,18 @@ html[data-theme="dark"] .sidebar .contact-card,html[data-theme="dark"] .mobile-d
 <div aria-label="প্রকাশনার ধরন নির্বাচন করুন" class="composer-quick-types" hidden="" id="composerChoices">
 <button class="quick-type" data-open-type="poem" type="button"><span aria-hidden="true" class="quick-symbol write-modern">🖋️</span><span>কবিতা</span></button>
 <button class="quick-type" data-open-type="prolap" type="button"><span aria-hidden="true" class="quick-symbol prolap-symbol">☾</span><span>প্রলাপ</span></button>
-<a class="quick-type" href="letter.html#composer"><span aria-hidden="true" class="quick-symbol">✉️</span><span>চিঠিপত্র</span></a>
-<a class="quick-type" href="recitation.html#composer"><span aria-hidden="true" class="quick-symbol">🎙️</span><span>আবৃত্তি</span></a>
-<a class="quick-type" href="environment.html#composer"><span aria-hidden="true" class="quick-symbol">🌱</span><span>পরিবেশ</span></a>
+<button class="quick-type" data-open-type="letter" type="button"><span aria-hidden="true" class="quick-symbol">✉️</span><span>চিঠিপত্র</span></button>
+<button class="quick-type" data-open-type="recitation" type="button"><span aria-hidden="true" class="quick-symbol">🎙️</span><span>আবৃত্তি</span></button>
+<button class="quick-type" data-open-type="environment" type="button"><span aria-hidden="true" class="quick-symbol">🌱</span><span>পরিবেশ</span></button>
 </div>
 <div class="composer-note" hidden="" id="composerNote">কবিতা অথবা প্রলাপ এখানে লিখুন। চিঠিপত্র, আবৃত্তি ও পরিবেশ নির্বাচন করলে সংশ্লিষ্ট প্রকাশনা পাতায় নিয়ে যাওয়া হবে। প্রকাশকারীর নাম তাঁর প্রোফাইল থেকে স্বয়ংক্রিয়ভাবে যুক্ত হবে।</div>
 <form class="composer-form" hidden="" id="composerForm" novalidate="">
 <div aria-label="লেখার ধরন" class="type-row" role="radiogroup">
 <div class="type-option"><input id="typePoem" name="postType" type="radio" value="poem"/><label for="typePoem"><svg class="icon"><use href="#i-poem"></use></svg>কবিতা</label></div>
 <div class="type-option"><input id="typeProlap" name="postType" type="radio" value="prolap"/><label for="typeProlap"><svg class="icon"><use href="#i-cloud"></use></svg>প্রলাপ</label></div>
+<div class="type-option"><input id="typeLetter" name="postType" type="radio" value="letter"/><label for="typeLetter"><svg class="icon"><use href="#i-letter"></use></svg>চিঠিপত্র</label></div>
+<div class="type-option"><input id="typeRecitation" name="postType" type="radio" value="recitation"/><label for="typeRecitation"><svg class="icon"><use href="#i-mic"></use></svg>আবৃত্তি</label></div>
+<div class="type-option"><input id="typeEnvironment" name="postType" type="radio" value="environment"/><label for="typeEnvironment"><svg class="icon"><use href="#i-tree"></use></svg>পরিবেশ</label></div>
 </div>
 <div class="composer-grid">
 <input class="form-control" id="postTitle" maxlength="160" placeholder="লেখার শিরোনাম" type="text"/><div class="canonical-poem-suggestion" hidden="" id="canonicalPoemSuggestion"><strong id="canonicalSuggestionTitle"></strong><p id="canonicalSuggestionText"></p><div class="canonical-poem-suggestion-meta" id="canonicalSuggestionMeta"></div><div class="canonical-poem-suggestion-actions"><button class="use" id="useCanonicalPoem" type="button">এই সংরক্ষিত কবিতাটি ব্যবহার করুন</button><button id="dismissCanonicalPoem" type="button">এখন নয়</button></div><div class="canonical-poem-locked" hidden="" id="canonicalLockedNote">এই পোস্টটি মূল সংরক্ষিত কবিতার পুনঃপ্রকাশ হবে; প্রথম সম্পাদনাকারীর তথ্য অপরিবর্তিত থাকবে।</div></div>
@@ -1196,7 +1226,6 @@ html[data-theme="dark"] .sidebar .contact-card,html[data-theme="dark"] .mobile-d
 <option value="pearl">Pearl Mist</option><option value="lavender">Lavender Bloom</option><option value="aqua">Aqua Crystal</option><option value="rose">Rose Dusk</option><option value="mint">Mint Dew</option><option value="silver">Silver Frost</option><option value="aurora">Soft Aurora</option><option value="clear">Classic Clear</option>
 </select>
 </div>
-<textarea class="form-control" id="postBody" maxlength="12000" placeholder="আপনার লেখা লিখুন..."></textarea>
 <div class="composer-style-picker" id="composerStylePicker" aria-label="লেখার গ্লাস কার্ড নির্বাচন করুন">
   <div class="composer-style-head"><strong>লেখার গ্লাস কার্ড</strong><small>লিখতে শুরু করলে আপনার পছন্দের কার্ডটি নির্বাচন করুন</small></div>
   <div class="composer-style-grid" role="listbox" aria-label="গ্লাস কার্ডের ধরন">
@@ -1210,6 +1239,8 @@ html[data-theme="dark"] .sidebar .contact-card,html[data-theme="dark"] .mobile-d
     <button class="composer-style-option" data-card-style="clear" type="button" role="option" aria-selected="false"><span class="style-swatch"></span><span>ক্লাসিক</span></button>
   </div>
 </div>
+<textarea class="form-control" id="postBody" maxlength="12000" placeholder="আপনার লেখা লিখুন..."></textarea>
+
 <label class="ownership-row"><input checked="" id="ownWork" type="checkbox"/><span>এটি আমার নিজস্ব লেখা অথবা প্রকাশের প্রয়োজনীয় অনুমতি আমার আছে।</span></label>
 <div class="author-area" hidden="" id="originalAuthorArea">
 <p>অন্য কারও লেখা হলে মূল কবি/লেখকের নাম নির্বাচন বা লিখুন। পরিচিত কবির লেখা প্রকাশে মূল লেখকের নাম আবশ্যক।</p>
@@ -1404,7 +1435,6 @@ function syncQuickType(){const selected=document.querySelector('input[name="post
 function showComposerChoices(){composerChoices.hidden=false;composerNote.hidden=false;composerPrompt.setAttribute('aria-expanded','true')}
 function openComposer(type){showComposerChoices();composerForm.hidden=false;if(type){const input=document.querySelector('input[name="postType"][value="'+type+'"]');if(input){input.checked=true;updateComposerRules();syncQuickType()}}}
 function closeComposer(){composerForm.reset();clearCanonicalMatch();composerForm.hidden=true;composerChoices.hidden=true;composerNote.hidden=true;composerPrompt.setAttribute('aria-expanded','false');originalArea.hidden=true;moderationWarning.hidden=true;pendingPublish=null;document.getElementById('composerHint').textContent='লেখার ধরন নির্বাচন করুন। কবিতার শিরোনাম আবশ্যক।';syncQuickType()}
-let composerLastTouch=0;
 function toggleComposerFromPrompt(event){
   if(event){event.preventDefault();event.stopPropagation()}
   if(composerChoices.hidden){showComposerChoices();return}
@@ -1414,27 +1444,18 @@ function toggleComposerFromPrompt(event){
     composerPrompt.setAttribute('aria-expanded','false');
   }
 }
-composerPrompt.addEventListener('touchend',event=>{
-  composerLastTouch=Date.now();
-  toggleComposerFromPrompt(event);
-},{passive:false});
-composerPrompt.addEventListener('click',event=>{
-  if(Date.now()-composerLastTouch<800){event.preventDefault();event.stopPropagation();return}
-  toggleComposerFromPrompt(event);
-});
+composerPrompt.addEventListener('click',toggleComposerFromPrompt);
 document.querySelectorAll('#composerChoices [data-open-type]').forEach(button=>{
-  let buttonLastTouch=0;
-  function activateType(event){event.preventDefault();event.stopPropagation();openComposer(button.dataset.openType)}
-  button.addEventListener('touchend',event=>{buttonLastTouch=Date.now();activateType(event)},{passive:false});
   button.addEventListener('click',event=>{
-    if(Date.now()-buttonLastTouch<800){event.preventDefault();event.stopPropagation();return}
-    activateType(event);
+    event.preventDefault();
+    event.stopPropagation();
+    openComposer(button.dataset.openType||'poem');
   });
 });
 document.getElementById('cancelComposer').addEventListener('click',closeComposer);
 const composerParams=new URLSearchParams(location.search);if(composerParams.get('mode')==='other-poet'&&composerParams.get('author')){const requestedAuthor=composerParams.get('author');if(knownPoetNames.includes(requestedAuthor)){showComposerChoices();openComposer('poem');ownWork.checked=false;originalArea.hidden=false;originalAuthor.value=requestedAuthor;updateComposerRules();syncQuickType();}}
 
-function updateComposerRules(){const type=document.querySelector('input[name="postType"]:checked')?.value;postTitle.placeholder=type==='poem'?'কবিতার শিরোনাম (আবশ্যক)':'প্রলাপের শিরোনাম (ঐচ্ছিক)';document.getElementById('composerHint').textContent=type==='poem'?'কবিতার শিরোনাম এবং মূল লেখা দিন।':'প্রলাপের লেখা দিন; শিরোনাম না দিলে স্বয়ংক্রিয় শিরোনাম হবে।'}
+function updateComposerRules(){const type=document.querySelector('input[name="postType"]:checked')?.value,labels={poem:['কবিতার শিরোনাম (আবশ্যক)','কবিতার শিরোনাম এবং মূল লেখা দিন।'],prolap:['প্রলাপের শিরোনাম (ঐচ্ছিক)','প্রলাপের লেখা দিন; শিরোনাম না দিলে স্বয়ংক্রিয় শিরোনাম হবে।'],letter:['চিঠির বিষয় বা শিরোনাম','চিঠির বিষয়, প্রাপক ও মূল লেখা দিন।'],recitation:['আবৃত্তির শিরোনাম','আবৃত্তির শিরোনাম ও বিবরণ লিখুন।'],environment:['পরিবেশ বিষয়ক লেখার শিরোনাম','পরিবেশের কথার শিরোনাম ও মূল লেখা দিন।']},copy=labels[type]||labels.poem;postTitle.placeholder=copy[0];document.getElementById('composerHint').textContent=copy[1]}
 document.querySelectorAll('input[name="postType"]').forEach(x=>x.addEventListener('change',()=>{updateComposerRules();syncQuickType();clearCanonicalMatch();refreshCanonicalSuggestion()}));ownWork.addEventListener('change',()=>{originalArea.hidden=ownWork.checked;clearCanonicalMatch();if(!ownWork.checked)originalAuthor.focus({preventScroll:true})});
 const canonicalStoreKey='bhubondangaCanonicalPoems';
 function normalizePoemTitle(v){return String(v||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').toLocaleLowerCase('bn-BD').replace(/[“”‘’'"`´.,;:!?।॥\-–—_()\[\]{}\/\\]+/g,' ').replace(/\s+/g,' ').trim()}
@@ -1446,9 +1467,9 @@ function findCanonicalPoem(author,title){const key=canonicalIdentity(author,titl
 function contributionRecord(post,canonical){return{postId:post.id,canonicalId:canonical.canonicalId,title:canonical.title,type:'poem',url:'poet-details.html?poet='+encodeURIComponent(canonical.poetName)+'&poem='+encodeURIComponent(canonical.canonicalId)+'#poem-reader',originalAuthor:canonical.poetName,originalAuthorSlug:canonical.poetSlug,contributorName:canonical.firstEditorName,contributorUsername:canonical.firstEditorUsername,createdAt:canonical.firstEditedAt,status:post.status}}
 function registerCanonicalPoem(post){if(post.type!=='poem'||!post.originalAuthor)return{canonical:null,isNew:false};const list=canonicalList(),key=canonicalIdentity(post.originalAuthor,post.title),existing=list.find(x=>(x.canonicalKey||canonicalIdentity(x.poetName||x.originalAuthor||'',x.title||x.poemTitle||''))===key);if(existing)return{canonical:existing,isNew:false};const canonical={canonicalId:'canonical-'+slug(post.originalAuthor)+'-'+Date.now(),canonicalKey:key,poetName:post.originalAuthor,poetSlug:slug(post.originalAuthor),title:post.title,normalizedTitle:normalizePoemTitle(post.title),body:post.body,firstEditorName:post.authorName,firstEditorUsername:post.authorUsername,firstEditedAt:post.createdAt,createdAt:post.createdAt,status:'published'};list.unshift(canonical);save(canonicalStoreKey,list.slice(0,5000));return{canonical,isNew:true}}
 function saveFirstContributionIndexes(post,canonical){if(!canonical)return;const record=contributionRecord(post,canonical),poetItems=arr('bhubondangaPoetContributions');if(!poetItems.some(x=>String(x.canonicalId||'')===String(canonical.canonicalId))){poetItems.unshift(record);save('bhubondangaPoetContributions',poetItems.slice(0,5000))}const edits=arr('bhubondangaUserEdits');if(!edits.some(x=>String(x.canonicalId||'')===String(canonical.canonicalId))){edits.unshift(record);save('bhubondangaUserEdits',edits.slice(0,5000))}}
-function buildPost(payload,status){const live=window.__BD_IDENTITY||{},name=live.author_name||currentName,user=live.author_username||currentUsername||'your-profile',avatar=live.author_avatar||currentAvatar||'',uid=live.author_id||'';return{id:'home-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),authorId:uid,type:payload.type,title:payload.title||'ছোট কথার প্রলাপ',body:payload.body,authorName:name,authorUsername:user,authorAvatar:avatar,originalAuthor:payload.originalAuthor||'',originalAuthorSlug:payload.originalAuthor?slug(payload.originalAuthor):'',contribution:Boolean(payload.originalAuthor),excludeFromAuthorTimeline:false,canonicalPoemId:payload.canonicalPoemId||'',canonicalRepost:Boolean(payload.canonicalPoemId),createdAt:new Date().toISOString(),likes:0,comments:0,status:status||'published',cardStyle:payload.cardStyle}}
-function publishPost(payload,flaggedTerms){const flagged=Boolean(flaggedTerms.length),post=buildPost(payload,flagged?'pending_review':'published');if(flagged){const pending=arr('bhubondangaPendingReviewPosts');pending.unshift(post);save('bhubondangaPendingReviewPosts',pending.slice(0,2000));const notice={id:'mod-'+Date.now(),postId:post.id,userId:currentUsername||'',userName:currentName,matchedTerms:flaggedTerms,status:'pending',post,createdAt:new Date().toISOString()};const userNotices=arr('bhubondangaNotifications');userNotices.unshift({...notice,type:'moderation',message:'বস, আপনার লেখাটি গ্রহণ করা হয়েছে। গালি-ডিটেক্টর একটু বিচলিত হওয়ায় এটি Admin ও Founder-এর পর্যালোচনায় গেছে। অনুমোদনের পর নিউজফিড ও প্রযোজ্য প্রোফাইল বিভাগে প্রকাশিত হবে।'});save('bhubondangaNotifications',userNotices.slice(0,1000));const adminQueue=arr('bhubondangaAdminModerationQueue');adminQueue.unshift(notice);save('bhubondangaAdminModerationQueue',adminQueue.slice(0,2000));const founderQueue=arr('bhubondangaFounderModerationQueue');founderQueue.unshift(notice);save('bhubondangaFounderModerationQueue',founderQueue.slice(0,2000));toast('লেখাটি Admin–Founder পর্যালোচনায় পাঠানো হয়েছে।');try{window.BhubondangaSyncContribution?.(post,flaggedTerms,null)}catch(_){}closeComposer();return}let registration={canonical:null,isNew:false};if(post.originalAuthor&&post.type==='poem'){registration=registerCanonicalPoem(post);if(registration.canonical){post.canonicalPoemId=registration.canonical.canonicalId;post.canonicalRepost=!registration.isNew;post.canonicalEditorName=registration.canonical.firstEditorName;post.canonicalEditedAt=registration.canonical.firstEditedAt;post.body=registration.canonical.body||post.body;post.title=registration.canonical.title||post.title}}const list=arr('bhubondangaHomeUserPosts');list.unshift(post);save('bhubondangaHomeUserPosts',list.slice(0,1000));if(registration.isNew)saveFirstContributionIndexes(post,registration.canonical);try{window.BhubondangaSyncContribution?.(post,[],registration)}catch(_){}toast(registration.canonical&&!registration.isNew?'সংরক্ষিত মূল কবিতাটি Home newsfeed-এ পুনঃপ্রকাশ হয়েছে; প্রথম সম্পাদনাকারীর তথ্য অপরিবর্তিত আছে।':'আপনার লেখা প্রকাশিত হয়েছে।');posts=storedPosts();visible=20;category='all';sort='forYou';document.getElementById('categoryFilter').value='all';document.getElementById('sortFilter').value='forYou';closeComposer();renderPosts();document.getElementById('postList')/* scroll intentionally preserved */}
-function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,title=postTitle.value.trim(),body=postBody.value.trim(),author=originalAuthor.value.trim();if(!type){toast('কবিতা অথবা প্রলাপ নির্বাচন করুন।');return null}if(type==='poem'&&!title){toast('কবিতার শিরোনাম লিখুন।');postTitle.focus({preventScroll:true});return null}if(!body){toast('আপনার লেখাটি লিখুন।');postBody.focus({preventScroll:true});return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');originalAuthor.focus({preventScroll:true});return null}const exact=!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:document.getElementById('cardStyle').value}}
+function buildPost(payload,status){const live=window.__BD_IDENTITY||{},name=live.author_name||currentName,user=live.author_username||currentUsername||'your-profile',avatar=live.author_avatar||currentAvatar||'',uid=live.author_id||'';return{id:'home-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),authorId:uid,type:payload.type,title:payload.title||({prolap:'ছোট কথার প্রলাপ',letter:'শিরোনামহীন চিঠি',recitation:'শিরোনামহীন আবৃত্তি',environment:'পরিবেশের কথা'}[payload.type]||'শিরোনামহীন সাহিত্যকর্ম'),body:payload.body,authorName:name,authorUsername:user,authorAvatar:avatar,originalAuthor:payload.originalAuthor||'',originalAuthorSlug:payload.originalAuthor?slug(payload.originalAuthor):'',contribution:Boolean(payload.originalAuthor),excludeFromAuthorTimeline:false,canonicalPoemId:payload.canonicalPoemId||'',canonicalRepost:Boolean(payload.canonicalPoemId),createdAt:new Date().toISOString(),likes:0,comments:0,status:status||'published',cardStyle:payload.cardStyle}}
+function publishPost(payload,flaggedTerms){const flagged=Boolean(flaggedTerms.length),post=buildPost(payload,flagged?'pending_review':'published');if(flagged){const pending=arr('bhubondangaPendingReviewPosts');pending.unshift(post);save('bhubondangaPendingReviewPosts',pending.slice(0,2000));const notice={id:'mod-'+Date.now(),postId:post.id,userId:currentUsername||'',userName:currentName,matchedTerms:flaggedTerms,status:'pending',post,createdAt:new Date().toISOString()};const userNotices=arr('bhubondangaNotifications');userNotices.unshift({...notice,type:'moderation',message:'বস, আপনার লেখাটি গ্রহণ করা হয়েছে। গালি-ডিটেক্টর একটু বিচলিত হওয়ায় এটি Admin ও Founder-এর পর্যালোচনায় গেছে। অনুমোদনের পর নিউজফিড ও প্রযোজ্য প্রোফাইল বিভাগে প্রকাশিত হবে।'});save('bhubondangaNotifications',userNotices.slice(0,1000));const adminQueue=arr('bhubondangaAdminModerationQueue');adminQueue.unshift(notice);save('bhubondangaAdminModerationQueue',adminQueue.slice(0,2000));const founderQueue=arr('bhubondangaFounderModerationQueue');founderQueue.unshift(notice);save('bhubondangaFounderModerationQueue',founderQueue.slice(0,2000));toast('লেখাটি Admin–Founder পর্যালোচনায় পাঠানো হয়েছে।');try{window.BhubondangaSyncContribution?.(post,flaggedTerms,null)}catch(_){}closeComposer();return}let registration={canonical:null,isNew:false};if(post.originalAuthor&&post.type==='poem'){registration=registerCanonicalPoem(post);if(registration.canonical){post.canonicalPoemId=registration.canonical.canonicalId;post.canonicalRepost=!registration.isNew;post.canonicalEditorName=registration.canonical.firstEditorName;post.canonicalEditedAt=registration.canonical.firstEditedAt;post.body=registration.canonical.body||post.body;post.title=registration.canonical.title||post.title}}const list=arr('bhubondangaHomeUserPosts');list.unshift(post);save('bhubondangaHomeUserPosts',list.slice(0,1000));const categoryKeys={poem:'bhubondangaPublishedPoems',prolap:'bhubondangaPublishedProlaps',letter:'bhubondangaLetterPosts',recitation:'bhubondangaPublishedRecitations',environment:'bhubondangaPublishedEnvironmentPosts'};const categoryKey=categoryKeys[post.type];if(categoryKey){const categoryList=arr(categoryKey).filter(x=>String(x.id)!==String(post.id));categoryList.unshift(post);save(categoryKey,categoryList.slice(0,1000))}if(registration.isNew)saveFirstContributionIndexes(post,registration.canonical);try{window.BhubondangaSyncContribution?.(post,[],registration)}catch(_){}toast(registration.canonical&&!registration.isNew?'সংরক্ষিত মূল কবিতাটি Home newsfeed-এ পুনঃপ্রকাশ হয়েছে; প্রথম সম্পাদনাকারীর তথ্য অপরিবর্তিত আছে।':'আপনার লেখা প্রকাশিত হয়েছে।');posts=storedPosts();visible=20;category='all';sort='forYou';document.getElementById('categoryFilter').value='all';document.getElementById('sortFilter').value='forYou';closeComposer();renderPosts();document.getElementById('postList')/* scroll intentionally preserved */}
+function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,title=postTitle.value.trim(),body=postBody.value.trim(),author=originalAuthor.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='poem'&&!title){toast('কবিতার শিরোনাম লিখুন।');postTitle.focus({preventScroll:true});return null}if(!body){toast('আপনার লেখাটি লিখুন।');postBody.focus({preventScroll:true});return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');originalAuthor.focus({preventScroll:true});return null}const exact=!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:document.getElementById('cardStyle').value}}
 composerForm.addEventListener('submit',async function(e){
  e.preventDefault();
  let live=null;try{live=await window.BhubondangaAuth?.current?.()}catch(_){}
@@ -1772,44 +1793,9 @@ html[data-theme="dark"] .composer-style-picker{background:linear-gradient(145deg
 <script id="bd-index-targeted-sidebar-composer-final-script-20260727">
 (function(){
   'use strict';
-  var D=document,H=D.documentElement;
-  var lastPointer=0;
+  var D=document;
   function q(s,c){return (c||D).querySelector(s)}
   function qa(s,c){return Array.prototype.slice.call((c||D).querySelectorAll(s))}
-  function reveal(el,display){if(!el)return;el.hidden=false;el.removeAttribute('hidden');el.style.removeProperty('display');if(display)el.style.display=display;el.style.visibility='visible';el.style.opacity='1';el.style.pointerEvents='auto'}
-  function hide(el){if(!el)return;el.hidden=true;el.setAttribute('hidden','');el.style.display='none';el.style.visibility='hidden';el.style.opacity='0';el.style.pointerEvents='none'}
-  function choicesOpen(){var c=q('#composerChoices');return !!c&&!c.hidden&&!c.hasAttribute('hidden')&&getComputedStyle(c).display!=='none'}
-  function formOpen(){var f=q('#composerForm');return !!f&&!f.hidden&&!f.hasAttribute('hidden')&&getComputedStyle(f).display!=='none'}
-  function showChoices(){var p=q('#composerPrompt'),c=q('#composerChoices'),n=q('#composerNote');reveal(c,'grid');reveal(n,'block');if(p)p.setAttribute('aria-expanded','true')}
-  function toggleChoices(){var p=q('#composerPrompt'),c=q('#composerChoices'),n=q('#composerNote');if(!c)return;if(!choicesOpen()){showChoices();return}if(!formOpen()){hide(c);hide(n);if(p)p.setAttribute('aria-expanded','false')}}
-  function openType(type){showChoices();var f=q('#composerForm');reveal(f,'block');var input=q('input[name="postType"][value="'+type+'"]');if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}syncStylePicker()}
-  function activatePointer(fn,e){lastPointer=Date.now();if(e){e.preventDefault();e.stopImmediatePropagation()}fn()}
-  function suppressSyntheticClick(e,fn){if(Date.now()-lastPointer<750){e.preventDefault();e.stopImmediatePropagation();return}e.preventDefault();e.stopImmediatePropagation();fn()}
-
-  function bindComposer(){
-    var avatar=q('#composerAvatar'),prompt=q('#composerPrompt');
-    if(avatar){avatar.setAttribute('role','button');avatar.setAttribute('tabindex','0');avatar.setAttribute('aria-label','লেখার অপশন খুলুন')}
-    D.addEventListener('pointerup',function(e){
-      var avatarHit=e.target.closest('#composerAvatar');
-      if(avatarHit){activatePointer(showChoices,e);return}
-      var promptHit=e.target.closest('#composerPrompt');
-      if(promptHit){activatePointer(toggleChoices,e);return}
-      var typeHit=e.target.closest('#composerChoices button[data-open-type]');
-      if(typeHit){activatePointer(function(){openType(typeHit.getAttribute('data-open-type')||'poem')},e)}
-    },true);
-    D.addEventListener('click',function(e){
-      var avatarHit=e.target.closest('#composerAvatar');
-      if(avatarHit){suppressSyntheticClick(e,showChoices);return}
-      var promptHit=e.target.closest('#composerPrompt');
-      if(promptHit){suppressSyntheticClick(e,toggleChoices);return}
-      var typeHit=e.target.closest('#composerChoices button[data-open-type]');
-      if(typeHit){suppressSyntheticClick(e,function(){openType(typeHit.getAttribute('data-open-type')||'poem')})}
-    },true);
-    D.addEventListener('keydown',function(e){
-      if((e.key==='Enter'||e.key===' ')&&e.target&&e.target.matches('#composerAvatar')){e.preventDefault();showChoices()}
-    },true);
-  }
-
   function syncStylePicker(){
     var select=q('#cardStyle');if(!select)return;
     qa('[data-card-style]').forEach(function(btn){var on=btn.getAttribute('data-card-style')===select.value;btn.classList.toggle('active',on);btn.setAttribute('aria-selected',on?'true':'false')});
@@ -1821,7 +1807,6 @@ html[data-theme="dark"] .composer-style-picker{background:linear-gradient(145deg
     var form=q('#composerForm');if(form)form.addEventListener('reset',function(){setTimeout(function(){select.value='pearl';syncStylePicker()},0)});
     syncStylePicker();
   }
-
   async function logoutNow(button){
     if(button){button.disabled=true;button.setAttribute('aria-busy','true')}
     try{if(window.BhubondangaAuth&&typeof window.BhubondangaAuth.signOut==='function')await window.BhubondangaAuth.signOut()}catch(_){ }
@@ -1831,8 +1816,12 @@ html[data-theme="dark"] .composer-style-picker{background:linear-gradient(145deg
     try{location.replace('login.html?logged_out=1&t='+Date.now())}catch(_){location.href='login.html'}
   }
   D.addEventListener('click',function(e){var b=e.target.closest('[data-logout]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();logoutNow(b)},true);
-
-  function init(){bindComposer();bindStylePicker();syncStylePicker()}
+  function init(){
+    var prompt=q('#composerPrompt'),avatar=q('#composerAvatar');
+    if(prompt){prompt.setAttribute('aria-expanded','false');prompt.style.pointerEvents='auto'}
+    if(avatar){avatar.setAttribute('role','button');avatar.setAttribute('tabindex','0');avatar.setAttribute('aria-label','লেখার অপশন খুলুন')}
+    bindStylePicker();syncStylePicker();
+  }
   if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
   addEventListener('pageshow',function(){setTimeout(syncStylePicker,60)});
 })();
