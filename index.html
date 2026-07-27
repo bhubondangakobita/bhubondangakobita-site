@@ -994,8 +994,28 @@ html[data-theme="dark"] .sidebar .contact-card,html[data-theme="dark"] .mobile-d
 @media (prefers-reduced-motion:reduce){.date-track,.track,.ticker-track{animation-duration:90s!important}.mobile-drawer,.drawer-backdrop{transition:none!important}}
 </style>
 
+
+<style id="bd-composer-click-stability-20260727">
+/* Single interaction layer for Safari, iPhone desktop-site mode and desktop browsers. */
+#composer{position:relative!important;isolation:isolate!important;pointer-events:auto!important}
+#composer::before,#composer::after{pointer-events:none!important}
+#composer .composer-top,#composerPrompt,#composerChoices,#composerNote,#composerForm,
+#composer button,#composer a,#composer input,#composer textarea,#composer select,#composer label{
+  position:relative!important;pointer-events:auto!important
+}
+#composerPrompt{
+  z-index:4!important;cursor:pointer!important;touch-action:manipulation!important;
+  -webkit-appearance:none!important;appearance:none!important;-webkit-tap-highlight-color:transparent!important
+}
+#composerChoices[hidden],#composerNote[hidden],#composerForm[hidden]{
+  display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important
+}
+#composerChoices:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important}
+#composerNote:not([hidden]),#composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important}
+</style>
+
 </head>
-<body class="bd9-shell-page" data-bd-family="public" data-build="index-sidebar-safety-moderation-v8" data-page="index">
+<body class="bd9-shell-page" data-bd-family="public" data-build="index-sidebar-safety-moderation-v9-composer-stable" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
 <symbol id="i-leaf" viewbox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"></path><path d="M4 20c3-6 7-9 13-12"></path></symbol>
 <symbol id="i-menu" viewbox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></symbol>
@@ -1328,7 +1348,34 @@ function syncQuickType(){const selected=document.querySelector('input[name="post
 function showComposerChoices(){composerChoices.hidden=false;composerNote.hidden=false;composerPrompt.setAttribute('aria-expanded','true')}
 function openComposer(type){showComposerChoices();composerForm.hidden=false;if(type){const input=document.querySelector('input[name="postType"][value="'+type+'"]');if(input){input.checked=true;updateComposerRules();syncQuickType()}}}
 function closeComposer(){composerForm.reset();clearCanonicalMatch();composerForm.hidden=true;composerChoices.hidden=true;composerNote.hidden=true;composerPrompt.setAttribute('aria-expanded','false');originalArea.hidden=true;moderationWarning.hidden=true;pendingPublish=null;document.getElementById('composerHint').textContent='লেখার ধরন নির্বাচন করুন। কবিতার শিরোনাম আবশ্যক।';syncQuickType()}
-composerPrompt.addEventListener('click',()=>{if(composerChoices.hidden)showComposerChoices();else if(composerForm.hidden){composerChoices.hidden=true;composerNote.hidden=true;composerPrompt.setAttribute('aria-expanded','false')}});document.querySelectorAll('[data-open-type]').forEach(button=>button.addEventListener('click',()=>openComposer(button.dataset.openType)));document.getElementById('cancelComposer').addEventListener('click',closeComposer);
+let composerLastTouch=0;
+function toggleComposerFromPrompt(event){
+  if(event){event.preventDefault();event.stopPropagation()}
+  if(composerChoices.hidden){showComposerChoices();return}
+  if(composerForm.hidden){
+    composerChoices.hidden=true;
+    composerNote.hidden=true;
+    composerPrompt.setAttribute('aria-expanded','false');
+  }
+}
+composerPrompt.addEventListener('touchend',event=>{
+  composerLastTouch=Date.now();
+  toggleComposerFromPrompt(event);
+},{passive:false});
+composerPrompt.addEventListener('click',event=>{
+  if(Date.now()-composerLastTouch<800){event.preventDefault();event.stopPropagation();return}
+  toggleComposerFromPrompt(event);
+});
+document.querySelectorAll('#composerChoices [data-open-type]').forEach(button=>{
+  let buttonLastTouch=0;
+  function activateType(event){event.preventDefault();event.stopPropagation();openComposer(button.dataset.openType)}
+  button.addEventListener('touchend',event=>{buttonLastTouch=Date.now();activateType(event)},{passive:false});
+  button.addEventListener('click',event=>{
+    if(Date.now()-buttonLastTouch<800){event.preventDefault();event.stopPropagation();return}
+    activateType(event);
+  });
+});
+document.getElementById('cancelComposer').addEventListener('click',closeComposer);
 const composerParams=new URLSearchParams(location.search);if(composerParams.get('mode')==='other-poet'&&composerParams.get('author')){const requestedAuthor=composerParams.get('author');if(knownPoetNames.includes(requestedAuthor)){showComposerChoices();openComposer('poem');ownWork.checked=false;originalArea.hidden=false;originalAuthor.value=requestedAuthor;updateComposerRules();syncQuickType();}}
 
 function updateComposerRules(){const type=document.querySelector('input[name="postType"]:checked')?.value;postTitle.placeholder=type==='poem'?'কবিতার শিরোনাম (আবশ্যক)':'প্রলাপের শিরোনাম (ঐচ্ছিক)';document.getElementById('composerHint').textContent=type==='poem'?'কবিতার শিরোনাম এবং মূল লেখা দিন।':'প্রলাপের লেখা দিন; শিরোনাম না দিলে স্বয়ংক্রিয় শিরোনাম হবে।'}
@@ -1502,193 +1549,5 @@ const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=docu
   addEventListener('orientationchange',()=>setTimeout(()=>{closeAll();enhanceAll()},160));
 })();
 </script>
-
-
-<style id="bd-safari-composer-fix">
-/* Safari/iPad desktop-mode interaction repair — visual design remains unchanged. */
-#composer{position:relative!important;isolation:isolate!important;z-index:90!important;pointer-events:auto!important}
-#composer::before,#composer::after{pointer-events:none!important}
-#composer .composer-top,#composerPrompt,#composerChoices,#composerNote,#composerForm,
-#composer button,#composer a,#composer input,#composer textarea,#composer select,#composer label{
-  position:relative!important;z-index:92!important;pointer-events:auto!important
-}
-#composerPrompt{-webkit-appearance:none!important;appearance:none!important;cursor:pointer!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;user-select:none!important;-webkit-user-select:none!important}
-#composerChoices[hidden],#composerNote[hidden],#composerForm[hidden]{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
-#composerChoices:not([hidden]){display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-#composerNote:not([hidden]),#composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-@media(min-width:861px){.layout,.center-col{overflow:visible!important}.center-col{position:relative!important;z-index:5!important}#composer{z-index:100!important}}
-</style>
-<script id="bd-safari-composer-fix-script">
-(function(){
-  'use strict';
-  var D=document, lastTouch=0;
-  function q(id){return D.getElementById(id)}
-  function show(el,display){if(!el)return;el.hidden=false;el.removeAttribute('hidden');el.style.display=display||'';el.style.visibility='visible';el.style.opacity='1';el.style.pointerEvents='auto'}
-  function hide(el){if(!el)return;el.hidden=true;el.setAttribute('hidden','');el.style.display='none';el.style.visibility='hidden';el.style.opacity='0';el.style.pointerEvents='none'}
-  function openChoices(){var p=q('composerPrompt'),c=q('composerChoices'),n=q('composerNote');if(!p||!c)return;show(c,'grid');show(n,'block');p.setAttribute('aria-expanded','true')}
-  function toggleChoices(){var p=q('composerPrompt'),c=q('composerChoices'),n=q('composerNote'),f=q('composerForm');if(!p||!c)return;
-    var closed=c.hidden||c.hasAttribute('hidden')||getComputedStyle(c).display==='none';
-    if(closed){openChoices();return}
-    var formClosed=!f||f.hidden||f.hasAttribute('hidden')||getComputedStyle(f).display==='none';
-    if(formClosed){hide(c);hide(n);p.setAttribute('aria-expanded','false')}
-  }
-  function openType(type){openChoices();var f=q('composerForm');show(f,'block');var i=D.querySelector('input[name="postType"][value="'+type+'"]');if(i){i.checked=true;i.dispatchEvent(new Event('change',{bubbles:true}))}try{if(typeof updateComposerRules==='function')updateComposerRules();if(typeof syncQuickType==='function')syncQuickType()}catch(e){}}
-  function safeActivate(fn,e){if(e){e.preventDefault();e.stopPropagation()}fn()}
-  function bind(){
-    var old=q('composerPrompt');if(!old||old.dataset.safariBound==='1')return;
-    var p=old.cloneNode(true);p.dataset.safariBound='1';old.parentNode.replaceChild(p,old);
-    p.addEventListener('touchend',function(e){lastTouch=Date.now();safeActivate(toggleChoices,e)},{passive:false});
-    p.addEventListener('click',function(e){if(Date.now()-lastTouch<700){e.preventDefault();e.stopPropagation();return}safeActivate(toggleChoices,e)},false);
-    D.querySelectorAll('#composerChoices [data-open-type]').forEach(function(oldBtn){
-      if(oldBtn.dataset.safariBound==='1')return;
-      var b=oldBtn.cloneNode(true);b.dataset.safariBound='1';oldBtn.parentNode.replaceChild(b,oldBtn);
-      var type=b.getAttribute('data-open-type')||'poem', touched=0;
-      b.addEventListener('touchend',function(e){touched=Date.now();safeActivate(function(){openType(type)},e)},{passive:false});
-      b.addEventListener('click',function(e){if(Date.now()-touched<700){e.preventDefault();e.stopPropagation();return}safeActivate(function(){openType(type)},e)},false);
-    });
-  }
-  function init(){bind();setTimeout(bind,120);setTimeout(bind,800)}
-  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
-  window.addEventListener('pageshow',function(){setTimeout(init,60)});
-})();
-</script>
-
-
-
-<style id="bd-desktop-composer-final-repair-20260727">
-/* Final targeted repair: desktop/Safari composer interaction only. */
-#composer,
-#composer .composer-top,
-#composerPrompt,
-#composerChoices,
-#composerNote,
-#composerForm{
-  pointer-events:auto!important;
-}
-#composer::before,#composer::after{pointer-events:none!important}
-
-@media (min-width:900px){
-  html,body{height:100%!important;overflow:hidden!important}
-  .layout{
-    height:calc(100dvh - var(--bd-top))!important;
-    max-height:calc(100dvh - var(--bd-top))!important;
-    overflow:hidden!important;
-  }
-  .center-col{
-    position:relative!important;
-    z-index:5!important;
-    height:100%!important;
-    max-height:100%!important;
-    min-height:0!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    -webkit-overflow-scrolling:touch!important;
-  }
-  #composer{
-    position:relative!important;
-    z-index:100!important;
-    isolation:isolate!important;
-    flex:none!important;
-  }
-  #composerPrompt{
-    position:relative!important;
-    z-index:103!important;
-    cursor:pointer!important;
-    touch-action:manipulation!important;
-    -webkit-user-select:none!important;
-    user-select:none!important;
-  }
-  #composerChoices:not([hidden]){display:grid!important}
-  #composerNote:not([hidden]),#composerForm:not([hidden]){display:block!important}
-}
-</style>
-<script id="bd-desktop-composer-final-repair-script-20260727">
-(function(){
-  'use strict';
-  var D=document;
-  var lastActivation=0;
-
-  function byId(id){return D.getElementById(id)}
-  function reveal(el,display){
-    if(!el)return;
-    el.hidden=false;
-    el.removeAttribute('hidden');
-    el.style.display=display||'';
-    el.style.visibility='visible';
-    el.style.opacity='1';
-    el.style.pointerEvents='auto';
-  }
-  function conceal(el){
-    if(!el)return;
-    el.hidden=true;
-    el.setAttribute('hidden','');
-    el.style.display='none';
-    el.style.visibility='hidden';
-    el.style.opacity='0';
-    el.style.pointerEvents='none';
-  }
-  function choicesClosed(){
-    var c=byId('composerChoices');
-    return !c||c.hidden||c.hasAttribute('hidden')||getComputedStyle(c).display==='none';
-  }
-  function formClosed(){
-    var f=byId('composerForm');
-    return !f||f.hidden||f.hasAttribute('hidden')||getComputedStyle(f).display==='none';
-  }
-  function openChoices(){
-    var p=byId('composerPrompt'),c=byId('composerChoices'),n=byId('composerNote');
-    reveal(c,'grid');
-    reveal(n,'block');
-    if(p)p.setAttribute('aria-expanded','true');
-  }
-  function toggleChoices(){
-    var p=byId('composerPrompt'),c=byId('composerChoices'),n=byId('composerNote');
-    if(choicesClosed()){openChoices();return}
-    if(formClosed()){
-      conceal(c);conceal(n);
-      if(p)p.setAttribute('aria-expanded','false');
-    }
-  }
-  function openType(type){
-    openChoices();
-    reveal(byId('composerForm'),'block');
-    var input=D.querySelector('input[name="postType"][value="'+type+'"]');
-    if(input){
-      input.checked=true;
-      input.dispatchEvent(new Event('change',{bubbles:true}));
-    }
-    D.querySelectorAll('#composerChoices [data-open-type]').forEach(function(btn){
-      btn.classList.toggle('active',btn.getAttribute('data-open-type')===type);
-    });
-    var title=byId('postTitle');
-    if(title)setTimeout(function(){try{title.focus({preventScroll:true})}catch(_){title.focus()}},30);
-  }
-  function activate(e){
-    var prompt=e.target.closest&&e.target.closest('#composerPrompt');
-    var typeBtn=e.target.closest&&e.target.closest('#composerChoices [data-open-type]');
-    if(!prompt&&!typeBtn)return;
-    e.preventDefault();
-    e.stopPropagation();
-    if(typeof e.stopImmediatePropagation==='function')e.stopImmediatePropagation();
-    if(typeBtn)openType(typeBtn.getAttribute('data-open-type')||'poem');
-    else toggleChoices();
-  }
-  D.addEventListener('pointerup',function(e){
-    if(!(e.target.closest&&e.target.closest('#composerPrompt,#composerChoices [data-open-type]')))return;
-    lastActivation=Date.now();
-    activate(e);
-  },true);
-  D.addEventListener('click',function(e){
-    if(!(e.target.closest&&e.target.closest('#composerPrompt,#composerChoices [data-open-type]')))return;
-    if(Date.now()-lastActivation<750){
-      e.preventDefault();e.stopPropagation();
-      if(typeof e.stopImmediatePropagation==='function')e.stopImmediatePropagation();
-      return;
-    }
-    activate(e);
-  },true);
-})();
-</script>
-
 </body>
 </html>
