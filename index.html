@@ -1571,6 +1571,12 @@ body.post-view-open{overflow:hidden!important}
 
 
 
+
+<style id="bd-profile-activity-media-index-20260729">
+.post-media{width:100%;max-height:560px;margin-top:10px;border:1px solid var(--border);border-radius:14px;object-fit:cover;background:var(--rainbow-soft);box-shadow:var(--shadow-soft)}
+.master-post-media{width:100%;max-height:70dvh;margin:0 0 20px;border:1px solid var(--border);border-radius:18px;object-fit:contain;background:rgba(20,31,55,.06)}
+@media(max-width:899px){.post-media{max-height:440px;border-radius:12px}.master-post-media{max-height:56dvh;border-radius:13px}}
+</style>
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -1878,10 +1884,12 @@ function storedPosts(){
       authorAvatar:x.author_avatar||x.authorAvatar||x.avatar_url||x.avatar||x.profileImage||'',
       createdAt:x.created_at||x.createdAt||x.publishedAt||x.updatedAt||new Date().toISOString(),
       likes:Number(x.likes_count??x.likes??x.baseLikes??0),
-      comments:Number(x.comments_count??x.comments??x.baseComments??0),
+      comments:Array.isArray(x.comments)?x.comments.length:Number(x.comments_count??x.comments??x.baseComments??0),
       status:x.status||'published',
       cardStyle:x.card_style||x.cardStyle||x.style||cardStyles[i%cardStyles.length],
       originalAuthor:x.original_author||x.originalAuthor||'',
+      media:x.media_url||x.mediaUrl||x.media||x.image_url||x.imageUrl||x.cover_url||x.coverUrl||'',
+      activityType:x.activityType||x.activity_type||'',
       demo:Boolean(x.demo),
       source
     });
@@ -1903,6 +1911,7 @@ function demoPosts(){const now=Date.now();return[
 let posts=storedPosts();if(!posts.length)posts=demoPosts();
 let visible=20,category='all',sort='forYou';
 document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
+window.addEventListener('storage',e=>{if(sourceKeys.includes(e.key)){posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()}});document.addEventListener('bd:home-feed-updated',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
 const likedKey='bhubondangaIndexLovedPosts',memoryKey='bhubondangaMemories',commentKey='bhubondangaIndexComments',likeCountKey='bhubondangaIndexLikeCounts',activityKey='bhubondangaPostActivity';
 function likesObject(){return obj(likeCountKey)}
 function activityObject(){return obj(activityKey)}
@@ -1912,7 +1921,7 @@ function filteredPosts(){let list=posts.slice();if(category!=='all')list=list.fi
 function formatDate(value){const d=new Date(value);if(Number.isNaN(d.getTime()))return'';return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(d)}
 function addParam(url,key,value){return url+(url.includes('?')?'&':'?')+encodeURIComponent(key)+'='+encodeURIComponent(value)}
 function renderComments(id){const box=document.querySelector('[data-comments-list="'+CSS.escape(String(id))+'"]');if(!box)return;const list=arr(commentKey).filter(x=>String(x.postId)===String(id));box.innerHTML=list.slice(-10).map(x=>'<div class="comment-item"><a href="'+esc(profileUrl(x.authorUsername||slug(x.author||'পাঠক')))+'">'+esc(x.author||'পাঠক')+'</a><br>'+esc(x.text)+'</div>').join('')}
-function authorAvatarMarkup(p){if(p.authorAvatar&&p.authorUsername!=='mahmud-sohel')return '<img src="'+esc(p.authorAvatar)+'" alt="'+esc(p.authorName)+'" onerror="this.remove();this.parentElement.innerHTML=\''+icon('user').replace(/'/g,"\\'")+'\'">';return icon(p.authorUsername==='mahmud-sohel'?'poem':'user')}
+function authorAvatarMarkup(p){if(p.authorAvatar)return '<img src="'+esc(p.authorAvatar)+'" alt="'+esc(p.authorName)+'" onerror="this.remove();this.parentElement.innerHTML=\''+icon('user').replace(/'/g,"\\'")+'\'">';return icon(p.authorUsername==='mahmud-sohel'?'poem':'user')}
 function liveIdentity(){return window.__BD_IDENTITY||{}}
 function isLoggedInNow(){const live=liveIdentity();return loggedIn||Boolean(window.__BD_LIVE_SESSION)||Boolean(live.author_id||live.author_username)}
 function canEdit(p){const live=liveIdentity(),liveUser=String(live.author_username||currentUsername||''),liveId=String(live.author_id||'');return isLoggedInNow()&&!p.demo&&(isFounder||String(p.authorUsername||'')===liveUser||(liveId&&String(p.authorId||'')===liveId))}
@@ -1931,6 +1940,7 @@ function renderPosts(){
       +'<a class="pill" href="'+esc(typeRoute(p.type,p.id,p.title))+'">'+esc(typeLabel(p.type))+'</a>'
       +'<h3 class="post-title"><a href="'+esc(url)+'" data-open-post="'+esc(p.id)+'">'+esc(p.title)+'</a></h3>'
       +'<div class="post-body collapsed" data-open-post="'+esc(p.id)+'">'+esc(p.body||'এই সাহিত্যকর্মের পূর্ণ লেখা দেখতে ক্লিক করুন।')+'</div>'
+      +(p.media?'<img class="post-media" src="'+esc(p.media)+'" alt="'+esc(p.title)+'" loading="lazy">':'')
       +(p.originalAuthor?'<a class="review-badge" style="margin-top:7px" href="'+esc(poetProfileRoute(p.originalAuthor))+'">মূল কবি: '+esc(p.originalAuthor)+'</a>':'')
       +'<a class="post-read-more" href="'+esc(url)+'" data-open-post="'+esc(p.id)+'">পূর্ণ লেখা পড়ুন →</a>'
       +(owner?'<span class="owner-hint">আপনার পোস্ট</span>':'')
@@ -1976,6 +1986,7 @@ function viewerMarkup(p){
   return '<div class="master-post-top"><div><span class="master-post-kicker">'+esc(typeLabel(p.type))+'</span><h2>'+esc(p.title)+'</h2></div><button class="master-post-close" type="button" data-close-post aria-label="বন্ধ করুন">×</button></div>'
     +'<div class="master-post-author"><span class="master-post-avatar">'+authorAvatarMarkup(p)+'</span><div><strong>'+esc(p.authorName)+'</strong><small>'+esc(formatDate(p.createdAt))+'</small></div></div>'
     +(p.originalAuthor?'<div class="master-post-original">মূল কবি/লেখক: '+esc(p.originalAuthor)+'</div>':'')
+    +(p.media?'<img class="master-post-media" src="'+esc(p.media)+'" alt="'+esc(p.title)+'">':'')
     +'<div class="master-post-body">'+esc(p.body||'পূর্ণ লেখা পাওয়া যায়নি।')+'</div>'
     +'<div class="master-post-actions"><a href="'+esc(categoryUrl)+'">এই বিভাগের পাতা</a><button type="button" data-view-action="share" data-id="'+esc(p.id)+'">'+icon('share')+' শেয়ার</button><button type="button" data-view-action="save" data-id="'+esc(p.id)+'">'+icon('bookmark')+' সেভ</button>'+(owner?'<button class="danger" type="button" data-view-action="delete" data-id="'+esc(p.id)+'">'+icon('x')+' হোম থেকে মুছুন</button>':'')+'</div>';
 }
