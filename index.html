@@ -1812,13 +1812,13 @@ function obj(k){try{const v=JSON.parse(safeGet(k)||'{}');return v&&typeof v==='o
 function save(k,v){safeSet(k,JSON.stringify(v))}
 function slug(v){return String(v||'').trim().toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-+|-+$/g,'')}
 function toast(message){const t=document.getElementById('toast');t.textContent=message;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2800)}
-function profileUrl(username){return ROUTES.profile+'?user='+encodeURIComponent(username||'your-profile')}
+function profileUrl(input){const d=input&&typeof input==='object'?input:{username:input};const username=String(d.authorUsername||d.author_username||d.username||d.slug||'').replace(/^@/,'').toLowerCase();const role=String(d.authorRole||d.author_role||d.role||'').toLowerCase();const name=String(d.authorName||d.author_name||d.name||'');if(role==='founder'||username==='mahmud-sohel'||name==='মাহমুদ সোহেল')return ROUTES.founderProfile;if(role==='admin')return'admin-profile.html';if(role==='poet')return'poet-profile.html?user='+encodeURIComponent(d.authorId||d.author_id||username||'member');if(role==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(username||name);return ROUTES.profile+'?user='+encodeURIComponent(d.authorId||d.author_id||username||'your-profile')}
 const currentUser=obj('bhubondangaCurrentUser');
 const loggedIn=currentUser.loggedIn===true||Boolean(currentUser.username||currentUser.slug);
 const currentUsername=currentUser.username||currentUser.slug||'';
 const currentName=currentUser.name||currentUser.displayName||'অতিথি পাঠক';
 const currentAvatar=currentUser.avatar||currentUser.profileImage||currentUser.photo||'';
-const currentProfileUrl=loggedIn?profileUrl(currentUsername||'your-profile'):'login.html';
+const currentProfileUrl=loggedIn?profileUrl(currentUser):'login.html';
 const isFounder=currentUser.role==='founder'||currentUsername==='mahmud-sohel'||currentUser.isFounder===true;
 function safeAvatar(path,name,username,extraClass){
   if(path&&username!=='mahmud-sohel')return '<span class="'+(extraClass||'')+'"><img src="'+esc(path)+'" alt="'+esc(name)+'" onerror="this.remove();this.parentElement.innerHTML=\''+icon('user').replace(/'/g,"\\'")+'\'"></span>';
@@ -1882,6 +1882,7 @@ function storedPosts(){
       authorName:x.author_name||x.authorName||x.display_name||x.displayAuthorName||x.author||x.postedByName||'ভুবনডাঙ্গার একজন লেখক',
       authorUsername:x.author_username||x.authorUsername||x.username||x.authorSlug||x.postedByUsername||slug(x.author_name||x.authorName||x.author||''),
       authorAvatar:x.author_avatar||x.authorAvatar||x.avatar_url||x.avatar||x.profileImage||'',
+      authorRole:x.author_role||x.authorRole||x.role||'',
       createdAt:x.created_at||x.createdAt||x.publishedAt||x.updatedAt||new Date().toISOString(),
       likes:Number(x.likes_count??x.likes??x.baseLikes??0),
       comments:Array.isArray(x.comments)?x.comments.length:Number(x.comments_count??x.comments??x.baseComments??0),
@@ -1936,7 +1937,7 @@ function renderPosts(){
   box.innerHTML=shown.map(p=>{
     const url=postViewUrl(p),isLoved=loved.includes(String(p.id)),isSaved=memories.some(x=>String(x.id)===String(p.id)),count=Number(likeCounts[p.id]??p.likes),owner=canEdit(p),badges=(p.authorUsername==='mahmud-sohel'?'<span class="founder-badge">প্রতিষ্ঠাতা</span>':'')+(p.status==='pending_review'||p.status==='published_flagged'?'<span class="review-badge">পর্যালোচনাধীন</span>':'')+(p.demo?'<span class="demo-badge">নমুনা</span>':'');
     return '<article class="glass post style-'+esc(p.cardStyle||'pearl')+'" data-post="'+esc(p.id)+'" data-post-card tabindex="0" aria-label="'+esc(p.title)+' পোস্ট খুলুন">'
-      +'<div class="post-head"><div class="author"><a class="author-avatar" href="'+esc(profileUrl(p.authorUsername||slug(p.authorName)))+'">'+authorAvatarMarkup(p)+'</a><div class="author-meta"><div class="author-name-row"><a href="'+esc(profileUrl(p.authorUsername||slug(p.authorName)))+'">'+esc(p.authorName)+'</a>'+badges+'</div><small>'+esc(formatDate(p.createdAt))+'</small></div></div><div class="three-dot"><button class="three-dot-btn" type="button" data-post-menu data-id="'+esc(p.id)+'" aria-haspopup="menu" aria-expanded="false" aria-label="পোস্টের অপশন">'+icon('more')+'</button></div></div>'
+      +'<div class="post-head"><div class="author"><a class="author-avatar" href="'+esc(profileUrl({authorUsername:p.authorUsername,authorName:p.authorName,authorRole:p.authorRole,authorId:p.authorId}))+'">'+authorAvatarMarkup(p)+'</a><div class="author-meta"><div class="author-name-row"><a href="'+esc(profileUrl({authorUsername:p.authorUsername,authorName:p.authorName,authorRole:p.authorRole,authorId:p.authorId}))+'">'+esc(p.authorName)+'</a>'+badges+'</div><small>'+esc(formatDate(p.createdAt))+'</small></div></div><div class="three-dot"><button class="three-dot-btn" type="button" data-post-menu data-id="'+esc(p.id)+'" aria-haspopup="menu" aria-expanded="false" aria-label="পোস্টের অপশন">'+icon('more')+'</button></div></div>'
       +'<a class="pill" href="'+esc(typeRoute(p.type,p.id,p.title))+'">'+esc(typeLabel(p.type))+'</a>'
       +'<h3 class="post-title"><a href="'+esc(url)+'" data-open-post="'+esc(p.id)+'">'+esc(p.title)+'</a></h3>'
       +'<div class="post-body collapsed" data-open-post="'+esc(p.id)+'">'+esc(p.body||'এই সাহিত্যকর্মের পূর্ণ লেখা দেখতে ক্লিক করুন।')+'</div>'
