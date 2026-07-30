@@ -5,9 +5,9 @@
 <meta content="#173153" name="theme-color"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" name="viewport">
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
+<meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -2946,5 +2946,16 @@ D.addEventListener('click',e=>{const notif=e.target.closest('#headerNotification
 function boot(){syncHeader();installMega();ensureOverlay();setTimeout(syncHeader,500);setTimeout(syncHeader,1600);D.addEventListener('bd:auth-ready',syncHeader)}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
-</script></body>
+</script><script id="bd-r10-index-identity">(()=>{'use strict';
+const D=document,URL='https://ihjiisysrwgxxkuywuhc.supabase.co',KEY='sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz';let c=null,session=null,me=null,myRoute='my-profile.html';
+try{c=window.supabaseClient||window.supabase?.createClient?.(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(_){}
+const parse=(k,s=localStorage)=>{try{return JSON.parse(s.getItem(k)||'null')}catch(_){return null}};
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+async function bootIdentity(){try{session=(await c?.auth?.getSession())?.data?.session||null}catch(_){}const u=session?.user||parse('bhubondangaCurrentUser')||parse('bhubondangaSessionUser',sessionStorage);if(!u||u.loggedIn===false){rewriteGuest();return}let p=null;try{const r=await c?.from('profiles').select('*').eq('id',u.id||u.uid).limit(1);p=r?.data?.[0]||null}catch(_){}me={...u,...p,name:p?.display_name||u?.user_metadata?.full_name||u?.user_metadata?.name||u?.name||u?.username||u?.email?.split('@')[0]||'আপনার প্রোফাইল',avatar:p?.avatar_url||u?.user_metadata?.avatar_url||u?.user_metadata?.avatar||u?.avatar||''};try{localStorage.setItem('bhubondangaCurrentUser',JSON.stringify({...parse('bhubondangaCurrentUser'),...me,loggedIn:true}));localStorage.setItem('bhubondangaMyProfileRoute',myRoute)}catch(_){}rewriteLogged();}
+function accountScopes(){return [...D.querySelectorAll('.account-card,[data-bd9-account],.bd-session-card,.bd-final-account,.bd-r6-auth-card,#rightMobileDrawer,#mobileDrawer')];}
+function rewriteLogged(){const name=me?.name||'আপনার প্রোফাইল',avatar=me?.avatar||'';const h=D.querySelector('#headerAvatar');if(h){h.href=myRoute;h.title=name;if(avatar)h.innerHTML='<img src="'+esc(avatar)+'" alt="'+esc(name)+'">'}for(const root of accountScopes()){root.querySelectorAll('a').forEach(a=>{const t=(a.textContent||'').trim();if(t==='প্রোফাইল'||t==='আপনার প্রোফাইল')a.href=myRoute;if(t==='সম্পাদনা'||t==='প্রোফাইল সম্পাদনা')a.href='edit-profile.html'});const strong=root.querySelector('h3,strong');if(strong&&/অতিথি|আপনার অ্যাকাউন্ট|mahmudsohel|ভুবনডাঙ্গার/.test(strong.textContent||''))strong.textContent=name;const img=root.querySelector('.account-avatar img,.bd9-avatar img,.bd-final-avatar img,.bd-r6-user-card img');if(img&&avatar)img.src=avatar}D.querySelectorAll('[data-bd9-personal-menu] a').forEach(a=>{if((a.textContent||'').includes('প্রোফাইল'))a.href=myRoute})}
+function rewriteGuest(){const h=D.querySelector('#headerAvatar');if(h)h.href='login.html?next=my-profile.html'}
+D.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;const text=(a.textContent||'').trim();if(me&&(text==='আপনার প্রোফাইল'||(text==='প্রোফাইল'&&a.closest('.account-card,[data-bd9-account],.bd-session-card,.bd-final-account,.bd-r6-auth-card')))){e.preventDefault();location.href=myRoute}},true);
+const start=()=>{bootIdentity();let n=0;const t=setInterval(()=>{me?rewriteLogged():rewriteGuest();if(++n>12)clearInterval(t)},350)};D.readyState==='loading'?D.addEventListener('DOMContentLoaded',start,{once:true}):start();
+})();</script></body>
 </html>
