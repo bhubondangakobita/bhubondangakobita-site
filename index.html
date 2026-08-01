@@ -3526,5 +3526,75 @@ html,body{width:100%!important;max-width:100%!important}
 }
 </style>
 
+
+
+<style id="bd-visible-issues-only-fix-20260801">
+/* Targeted correction only for the two visible problems:
+   1) desktop centre-column cards being vertically compressed/overlapped;
+   2) the recitation section showing an empty state despite available posts.
+   No header, navigation, palette, font, sidebar or established card design changes. */
+@media (min-width:900px){
+  body:not(.bdpx-route-active) .center-col{
+    display:flex!important;
+    flex-direction:column!important;
+    align-content:initial!important;
+    gap:11px!important;
+  }
+  body:not(.bdpx-route-active) .center-col > *{
+    flex:0 0 auto!important;
+    min-height:min-content!important;
+  }
+  body:not(.bdpx-route-active) .center-col > .composer,
+  body:not(.bdpx-route-active) .center-col > .humanitarian-strip,
+  body:not(.bdpx-route-active) .center-col > .feed-head{
+    height:auto!important;
+    max-height:none!important;
+    overflow:visible!important;
+  }
+  body:not(.bdpx-route-active) .center-col > .feed-head{
+    position:relative!important;
+    z-index:2!important;
+    margin:0!important;
+  }
+  body:not(.bdpx-route-active) .center-col > #postList{
+    position:relative!important;
+    z-index:1!important;
+    margin:0!important;
+  }
+}
+.bd-visible-recitation-page{width:min(940px,100%);margin:0 auto;padding-bottom:44px}
+.bd-visible-recitation-page .feed-head{height:auto!important;min-height:74px!important;overflow:visible!important;margin-bottom:11px!important}
+.bd-visible-recitation-page .post-list{display:grid!important;gap:10px!important}
+.bd-visible-recitation-page .post{height:auto!important;max-height:none!important;overflow:visible!important}
+.bd-visible-recitation-page .post-body{max-height:none!important;overflow:visible!important}
+.bd-visible-recitation-back{width:40px;height:40px;border:1px solid var(--border);border-radius:50%;display:grid;place-items:center;background:var(--surface-solid);color:var(--text);font-size:21px;box-shadow:var(--shadow-soft)}
+@media(max-width:899px){.bd-visible-recitation-page{width:100%}.bd-visible-recitation-page .feed-head{min-height:82px!important}}
+</style>
+<script id="bd-visible-issues-only-fix-20260801-js">
+(function(){
+'use strict';
+const D=document,W=window;
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const read=(k,f=[])=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(_){return f}};
+const bn='০১২৩৪৫৬৭৮৯',toBn=v=>String(v??0).replace(/\d/g,d=>bn[d]);
+const routeUrl=()=>{const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('section','recitation');return u.pathname+u.search};
+const postUrl=id=>{const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('post',id);return u.pathname+u.search};
+const profileUrl=id=>{const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('profile',id||'me');return u.pathname+u.search};
+function normalize(x,i){const raw=String(x.type||x.category||'').toLowerCase();if(!(raw.includes('recitation')||raw.includes('আবৃত্তি')))return null;return{id:String(x.id||x.postId||`recitation-${i}`),title:x.title||x.heading||'শিরোনামহীন আবৃত্তি',body:x.body||x.content||x.text||x.description||'',authorId:x.author_id||x.authorId||x.user_id||x.userId||x.author_username||x.authorUsername||'me',authorName:x.author_name||x.authorName||x.display_name||x.author||'ভুবনডাঙ্গার আবৃত্তিশিল্পী',authorAvatar:x.author_avatar||x.authorAvatar||x.avatar_url||x.avatar||'',createdAt:x.created_at||x.createdAt||x.publishedAt||new Date().toISOString(),likes:Number(x.likes_count??x.likes??0),comments:Number(x.comments_count??x.comments??0),style:x.card_style||x.cardStyle||x.style||'aqua'} }
+function rows(){const keys=['bhubondangaHomeUserPosts','bhubondangaRecitationPosts','bhubondangaPublishedRecitations','bhubondangaPublishedPosts','bhubondangaProfilePosts'];const map=new Map();keys.forEach(k=>(read(k,[])||[]).forEach((x,i)=>{const p=normalize(x,i);if(p&&!map.has(p.id))map.set(p.id,p)}));if(!map.size){map.set('bdpx-demo-post-3',{id:'bdpx-demo-post-3',title:'আমার স্বর, আমার পথ',body:'কবিতার প্রতিটি উচ্চারণে থাকে স্মৃতি, শ্বাস ও অনুভবের নিজস্ব ছন্দ। এই আবৃত্তিতে সেই পথের সামান্য অন্বেষণ।',authorId:'u-04',authorName:'নীলা সুলতানা',authorAvatar:'',createdAt:new Date().toISOString(),likes:37,comments:4,style:'aqua'})}return [...map.values()]}
+function date(v){try{return new Intl.DateTimeFormat('bn-BD',{day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch(_){return String(v||'')}}
+function avatar(p){if(p.authorAvatar)return `<img src="${esc(p.authorAvatar)}" alt="${esc(p.authorName)}">`;const ch=esc((p.authorName||'আ').trim().slice(0,1));return `<span style="font-size:18px;font-weight:800">${ch}</span>`}
+function card(p){return `<article class="glass post style-${esc(p.style)}" data-post="${esc(p.id)}" data-post-card><div class="post-head"><div class="author"><a class="author-avatar" href="${profileUrl(p.authorId)}" data-bdpx-profile-link="${esc(p.authorId)}">${avatar(p)}</a><div class="author-meta"><div class="author-name-row"><a href="${profileUrl(p.authorId)}" data-bdpx-profile-link="${esc(p.authorId)}"><strong>${esc(p.authorName)}</strong></a></div><small>${esc(date(p.createdAt))}</small></div></div><div class="three-dot"><button class="three-dot-btn" data-post-menu data-id="${esc(p.id)}" type="button">•••</button></div></div><span class="pill">আবৃত্তি</span><h3 class="post-title"><a href="${postUrl(p.id)}" data-open-post="${esc(p.id)}">${esc(p.title)}</a></h3><div class="post-body">${esc(p.body)}</div><a class="post-read-more" href="${postUrl(p.id)}" data-open-post="${esc(p.id)}">পূর্ণ আবৃত্তি দেখুন →</a><div class="post-footer"><div class="post-actions"><button class="action-btn" type="button">♡ <span>${toBn(p.likes)}</span></button><button class="action-btn" type="button">◌ <span>${toBn(p.comments)}</span></button><button class="action-btn" type="button">↗ <span>শেয়ার</span></button><button class="action-btn" type="button">▱ <span>সেভ</span></button></div></div></article>`}
+function isRoute(){const q=new URLSearchParams(location.search);return q.get('section')==='recitation'||/\/recitation(?:\.html)?$/i.test(location.pathname)}
+function root(){let r=D.getElementById('bdpxRouteRoot');if(!r){r=D.createElement('main');r.id='bdpxRouteRoot';r.className='bdpx-route-root';D.body.appendChild(r)}return r}
+function render(){if(!isRoute())return false;D.body.classList.add('bdpx-route-active');const data=rows();root().innerHTML=`<div class="bdpx-route-page"><div class="bd-visible-recitation-page"><div class="bdpx-route-toolbar"><button class="bd-visible-recitation-back" data-bd-visible-back type="button" aria-label="পেছনে যান">←</button><div><h2>আবৃত্তি</h2><small>প্রকাশিত অডিও, ভিডিও ও কণ্ঠের আবৃত্তি</small></div><a class="bdpx-icon-btn" href="${new URL(location.href).pathname}" aria-label="হোম">⌂</a></div><section class="glass feed-head"><div><h2>প্রকাশিত আবৃত্তি</h2><div class="sub">অডিও ও ভিডিও—দুই ধরনের আবৃত্তি একই বিভাগে সংরক্ষিত থাকবে।</div></div><div class="controls" style="display:flex!important"><select aria-label="আবৃত্তির ধরন"><option>সব</option><option>অডিও</option><option>ভিডিও</option></select><span class="pill">${toBn(data.length)}টি</span></div></section><section class="post-list">${data.map(card).join('')}</section></div></div>`;return true}
+function rewrite(){D.querySelectorAll('a[href="recitation.html"],a[href="./recitation.html"]').forEach(a=>a.setAttribute('href',routeUrl()))}
+D.addEventListener('click',e=>{const a=e.target.closest('a[href="recitation.html"],a[href="./recitation.html"]');if(a){e.preventDefault();history.pushState({bdSection:'recitation'},'',routeUrl());render();return}if(e.target.closest('[data-bd-visible-back]')){history.back()}},true);
+W.addEventListener('popstate',()=>setTimeout(()=>{if(!render())D.body.classList.remove('bdpx-route-active')},0));
+function init(){rewrite();setTimeout(rewrite,600);setTimeout(()=>{if(isRoute())render()},0)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
