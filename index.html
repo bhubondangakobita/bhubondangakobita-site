@@ -1,7 +1,72 @@
 <!DOCTYPE html>
 
-<html data-bd-master-lock="20260802-single-file-master-v4-facebook-post-profile" data-bd-recovery="r103" data-bd-single-file="20260727" data-bd-glass="pearl" data-bd-theme="light" data-theme="light" lang="bn">
+<html data-bd-master-lock="20260802-master-v5-separate-profile-midnight-inline-post" data-bd-recovery="r103" data-bd-single-file="20260727" data-bd-glass="pearl" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
+
+<style id="bd-v5-separate-profile-inline-post-20260802">
+/* Targeted V5 repair: separate profile pages + inline Facebook-style post expansion. */
+.master-post-shell,#masterPostShell,#bdpxRouteRoot.bdpx-route-active{display:none!important;visibility:hidden!important;pointer-events:none!important}
+body.post-view-open{overflow:inherit!important}
+[data-post-card],[data-post-id],.bd-live-post{cursor:pointer}
+[data-post-card] .post-body.bd-v5-expanded,[data-post-id] .post-body.bd-v5-expanded,.bd-live-post .post-body.bd-v5-expanded{display:block!important;max-height:none!important;overflow:visible!important;-webkit-line-clamp:unset!important;white-space:pre-line!important}
+[data-post-card] .post-body.bd-v5-expanded::after,[data-post-id] .post-body.bd-v5-expanded::after,.bd-live-post .post-body.bd-v5-expanded::after{display:none!important}
+.bd-v5-read-less{color:var(--primary)!important;font-weight:800!important}
+</style>
+<script id="bd-v5-separate-profile-inline-post-20260802-js">
+(function(){
+'use strict';
+const D=document,W=window;
+const q=(s,c=D)=>c.querySelector(s),qa=(s,c=D)=>Array.from(c.querySelectorAll(s));
+function idOf(card){return card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post-card')||''}
+function keyOf(el){
+ if(el?.dataset?.bdpxProfileLink)return el.dataset.bdpxProfileLink;
+ let href=el?.getAttribute?.('href')||'',u;try{u=new URL(href,location.href)}catch(_){u=null}
+ let k=u?.searchParams.get('profile')||u?.searchParams.get('user')||'';
+ if(!k){const card=el?.closest?.('[data-post],[data-post-id],[data-post-card]'),name=(el?.textContent||q('.author-name-row strong,.author-meta strong',card)?.textContent||'').trim();k=name.toLowerCase().replace(/[^\p{L}\p{N}]+/gu,'-').replace(/^-|-$/g,'')}
+ return decodeURIComponent(k||'member')
+}
+function profileHref(el){const k=keyOf(el),card=el.closest?.('[data-post],[data-post-id],[data-post-card]'),txt=((el.textContent||'')+' '+(card?.textContent||'')).toLowerCase();if(k==='mahmud-sohel'||k==='mahmudsohel5500'||txt.includes('মাহমুদ সোহেল')||txt.includes('founder'))return'founder-profile.html';if(txt.includes('admin'))return'admin-profile.html?user='+encodeURIComponent(k);return'profile.html?user='+encodeURIComponent(k)}
+function normalizeLinks(root=D){
+ const all=[];if(root?.nodeType===1&&root.matches?.('a'))all.push(root);all.push(...qa('a',root));
+ all.forEach(a=>{
+  const isAuthor=a.matches?.('[data-bdpx-profile-link],.author-avatar,.author-name-row a,.author-meta a,.comment-item a,.comment-bubble a')||a.closest?.('.author-name-row,.author-meta,.comment-item,.comment-bubble');
+  if(isAuthor){a.href=profileHref(a);a.removeAttribute('data-bd-single-route');a.dataset.bdExternalProfile='true';try{const people=JSON.parse(localStorage.getItem('bd_profile_people')||'[]'),key=keyOf(a),p=people.find(x=>x.id===key||x.username===key);if(p){const card=a.closest('[data-post],[data-post-id],[data-post-card]');const name=card?.querySelector('.author-name-row strong,.author-meta strong');if(name&&p.name)name.textContent=p.name;const av=card?.querySelector('.author-avatar');if(av&&p.avatar)av.innerHTML='<img src="'+p.avatar.replace(/"/g,'&quot;')+'" alt="'+(p.name||'')+'">'}}catch(_){}}
+ });
+}
+function bodyOf(card){return q('.post-body,.bdpx-post-body,.body,.prolap-text',card)}
+function readMoreOf(card){return q('.post-read-more,.readmore,[data-read-more],[data-more]',card)}
+function expand(card,force=true){
+ const body=bodyOf(card);if(!body)return;
+ const open=force||!body.classList.contains('bd-v5-expanded');
+ body.classList.toggle('bd-v5-expanded',open);body.classList.toggle('collapsed',!open);body.classList.toggle('expanded',open);body.style.maxHeight=open?'none':'';
+ const more=readMoreOf(card);if(more){more.textContent=open?'কম দেখুন ↑':'আরও দেখুন →';more.classList.toggle('bd-v5-read-less',open);more.removeAttribute('href')}
+ if(open&&card.id==='')card.id='post-'+idOf(card)
+}
+function toggleComments(card){const box=q('.comment-box,.comments,.bdpx-comments',card);if(box)box.classList.toggle('open')}
+function cleanOldRoute(){
+ const u=new URL(location.href),profile=u.searchParams.get('profile')||u.searchParams.get('user');
+ if(profile){const dest=(String(profile).includes('mahmud')?'founder-profile.html':'profile.html?user='+encodeURIComponent(profile));location.replace(dest);return true}
+ const post=u.searchParams.get('post');if(post){sessionStorage.setItem('bd_v5_expand_post',post);u.searchParams.delete('post');history.replaceState({},'',u.pathname+(u.searchParams.toString()?'?'+u.searchParams.toString():'')+u.hash)}return false
+}
+// Registered in HEAD before legacy route listeners, so this capture handler has priority.
+W.addEventListener('click',function(e){
+ const profile=e.target.closest?.('[data-bd-external-profile],[data-bdpx-profile-link],.author-avatar,.author-name-row a,.author-meta a,.comment-item a,.comment-bubble a');
+ if(profile){e.preventDefault();e.stopImmediatePropagation();location.href=profileHref(profile);return}
+ const card=e.target.closest?.('[data-post-card],[data-post-id],.bd-live-post,.post[data-post]');if(!card)return;
+ const comment=e.target.closest?.('[data-action="comment"],[data-comment],[data-bdpx-comment-route],.comment-action');
+ if(comment){e.preventDefault();e.stopImmediatePropagation();toggleComments(card);return}
+ const more=e.target.closest?.('.post-read-more,.readmore,[data-read-more],[data-more],.post-title a,[data-open-post],[data-expand-title]');
+ if(more){e.preventDefault();e.stopImmediatePropagation();const b=bodyOf(card);expand(card,!b?.classList.contains('bd-v5-expanded'));return}
+ if(e.target.closest?.('button,input,textarea,select,label,.post-actions,.actions,.reaction-picker,.post-menu,.three-dot,.dots,.pill,.tag,.comments,.comment-box'))return;
+ e.preventDefault();e.stopImmediatePropagation();expand(card,true)
+},true);
+W.addEventListener('keydown',function(e){const card=e.target.closest?.('[data-post-card],[data-post-id],.bd-live-post,.post[data-post]');if(card&&(e.key==='Enter'||e.key===' ')){e.preventDefault();e.stopImmediatePropagation();expand(card,true)}},true);
+D.addEventListener('click',function(e){const choice=e.target.closest?.('.composer-style-option,[data-style],[data-card-style],[data-color]');if(!choice)return;const composer=choice.closest?.('#composer,.composer,.bd-publish-sheet')||D;const ta=q('textarea',composer);if(!ta)return;let bg=getComputedStyle(choice).backgroundImage||getComputedStyle(choice).backgroundColor;if(bg&&bg!=='none')ta.style.background=bg},true);
+function init(){if(cleanOldRoute())return;normalizeLinks();new MutationObserver(ms=>ms.forEach(m=>{if(m.type==='attributes')normalizeLinks(m.target);m.addedNodes.forEach(n=>{if(n.nodeType===1)normalizeLinks(n)})})).observe(D.body,{childList:true,subtree:true,attributes:true,attributeFilter:['href']});const wanted=sessionStorage.getItem('bd_v5_expand_post');if(wanted){sessionStorage.removeItem('bd_v5_expand_post');setTimeout(()=>{const c=q(`[data-post="${CSS.escape(wanted)}"],[data-post-id="${CSS.escape(wanted)}"],[data-post-card="${CSS.escape(wanted)}"]`);if(c){expand(c,true);c.scrollIntoView({behavior:'smooth',block:'center'})}},350)}}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 <meta name="theme-color" content="#173153">
 <meta name="bd-master-lock" content="20260802-single-file-master-v4-facebook-post-profile; preserve existing design; targeted fixes only: reliable profile routing and Facebook-style full post page with continuous next-post reading; preserve all existing design">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
