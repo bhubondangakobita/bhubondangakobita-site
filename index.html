@@ -1562,7 +1562,12 @@ body.post-view-open{overflow:hidden!important}
 .master-post-media{width:100%;max-height:70dvh;margin:0 0 20px;border:1px solid var(--border);border-radius:18px;object-fit:contain;background:rgba(20,31,55,.06)}
 @media(max-width:899px){.post-media{max-height:440px;border-radius:12px}.master-post-media{max-height:56dvh;border-radius:13px}}
 </style>
-</meta></head>
+</meta>
+<style id="bd-final-index-media-css">
+.bd-index-media-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.bd-index-media-btn,.bd-index-media-remove{min-height:40px;padding:0 12px;border:1px solid var(--border);border-radius:11px;background:var(--surface-strong);color:var(--text-soft);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;cursor:pointer}.bd-index-media-btn:hover,.bd-index-media-remove:hover{border-color:var(--primary);color:var(--primary)}.bd-index-media-preview{margin-top:9px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-strong);padding:8px}.bd-index-media-preview img,.bd-index-media-preview video{display:block;width:100%;max-height:440px;object-fit:cover;border-radius:10px}.bd-index-media-preview audio{display:block;width:100%}.bd-index-media-preview .media-file-name{padding:8px;color:var(--text-soft);font-size:10px}.composer-media-render{margin-top:10px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-strong)}.composer-media-render img,.composer-media-render video{display:block;width:100%;max-height:520px;object-fit:cover}.composer-media-render audio{display:block;width:100%;padding:10px}.composer-media-caption{padding:7px 10px;color:var(--text-soft);font-size:10px}
+@media(max-width:760px){.bd-index-media-btn,.bd-index-media-remove{flex:1;min-width:30%;font-size:9px}.bd-index-media-preview img,.bd-index-media-preview video{max-height:330px}}
+</style>
+</head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
 <symbol id="i-leaf" viewbox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"></path><path d="M4 20c3-6 7-9 13-12"></path></symbol>
@@ -1718,6 +1723,14 @@ body.post-view-open{overflow:hidden!important}
 </div>
 </div>
 <textarea class="form-control" id="postBody" maxlength="12000" placeholder="আপনার লেখা লিখুন..."></textarea>
+<div class="bd-index-media-tools" id="bdIndexMediaTools" aria-label="মিডিয়া যোগ করুন">
+  <label class="bd-index-media-btn">🖼️ ছবি<input id="postImage" type="file" accept="image/*" hidden></label>
+  <label class="bd-index-media-btn">🎙️ অডিও<input id="postAudio" type="file" accept="audio/*" hidden></label>
+  <label class="bd-index-media-btn">🎬 ভিডিও<input id="postVideo" type="file" accept="video/*" hidden></label>
+  <button class="bd-index-media-remove" id="postMediaRemove" type="button" hidden>মিডিয়া সরান</button>
+</div>
+<div class="bd-index-media-preview" id="postMediaPreview" hidden></div>
+<input class="form-control" id="postMediaCaption" maxlength="500" placeholder="মিডিয়ার ক্যাপশন লিখুন…" type="text" hidden>
 <label class="ownership-row"><input checked="" id="ownWork" type="checkbox"/><span>এটি আমার নিজস্ব লেখা অথবা প্রকাশের প্রয়োজনীয় অনুমতি আমার আছে।</span></label>
 <div class="author-area" hidden="" id="originalAuthorArea">
 <p>অন্য কারও লেখা হলে মূল কবি/লেখকের নাম নির্বাচন বা লিখুন। পরিচিত কবির লেখা প্রকাশে মূল লেখকের নাম আবশ্যক।</p>
@@ -1872,7 +1885,9 @@ function storedPosts(){
       status:x.status||'published',
       cardStyle:x.card_style||x.cardStyle||x.style||cardStyles[i%cardStyles.length],
       originalAuthor:x.original_author||x.originalAuthor||'',
-      media:x.media_url||x.mediaUrl||x.media||x.image_url||x.imageUrl||x.cover_url||x.coverUrl||'',
+      media:x.media_url||x.mediaUrl||x.media_data||x.mediaData||x.media||x.image_url||x.imageUrl||x.cover_url||x.coverUrl||'',
+      mediaKind:x.media_kind||x.mediaKind||(x.audioUrl?'audio':x.videoUrl?'video':(x.media_url||x.mediaUrl||x.media_data||x.mediaData||x.media)?'image':''),
+      caption:x.caption||x.media_caption||x.mediaCaption||'',
       activityType:x.activityType||x.activity_type||'',
       demo:Boolean(x.demo),
       source
@@ -1882,16 +1897,16 @@ function storedPosts(){
   (Array.isArray(window.__BD_SUPABASE_POSTS)?window.__BD_SUPABASE_POSTS:[]).forEach((x,i)=>add(x,i,'supabase'));
   return Array.from(map.values());
 }
-function demoPosts(){const now=Date.now();return[
-  ['poem','বৃষ্টির পরে নীরবতা','বৃষ্টির শেষে জানালার কাঁচে যে অল্প আলো থেমে থাকে, সেখানে পুরোনো দিনের গন্ধ মিশে থাকে। শহর ঘুমিয়ে পড়লেও কিছু শব্দ মানুষের ভেতর জেগে থাকে।','সায়মা তারাসসুম','pearl'],
-  ['prolap','এক মুঠো শান্তি','সব উত্তর একদিনে পাওয়া যায় না। কখনো নিজের পাশে কিছুক্ষণ নীরবে বসে থাকাও বড় একটি উত্তর।','আরিফ হাসান','lavender'],
-  ['recitation','আমার স্বর, আমার পথ','কবিতার প্রতিটি উচ্চারণে থাকে স্মৃতি, শ্বাস ও অনুভবের নিজস্ব ছন্দ। শুনুন একটি নতুন আবৃত্তি।','নাজনীন তিথি','aqua'],
-  ['letter','নিজের কাছে ফেরার চিঠি','প্রিয় আমি, ক্লান্ত হলে থেমে যেয়ো—কিন্তু নিজের আলোকে ছোট করে দেখো না। তোমার পথ এখনো অনেক বাকি।','মেহরাব নীল','rose'],
-  ['environment','একটি গাছের ছায়ায়','একটি গাছ শুধু ছায়া দেয় না; সে শহরের বাতাস, পাখির আশ্রয় এবং আগামী প্রজন্মের জন্য রেখে যাওয়া নীরব প্রতিশ্রুতি।','তানিয়া রহমান','mint'],
-  ['discussion','কবিতা কি শুধু অনুভূতি?','কবিতা অনুভূতি থেকে জন্ম নেয়, কিন্তু ভাষা, নির্মাণ ও পাঠকের অভিজ্ঞতা তাকে পূর্ণতা দেয়। আপনার মতামত লিখুন।','রাশেদ কবির','silver'],
-  ['midnight','মধ্যরাতের জানালা','রাত যত গভীর হয়, মনের ভেতরের অপ্রকাশিত বাক্যগুলো তত স্পষ্ট হয়ে ওঠে। কিছু কথা শুধু নীরব রাতই বুঝতে পারে।','মাহমুদ সোহেল','aurora'],
-  ['poem','আলোর দিকে যাত্রা','ভাঙা পথের শেষে দাঁড়িয়ে দেখি—অন্ধকার কখনো শেষ কথা নয়। দূরে একটি ক্ষুদ্র আলোও পথ চিনিয়ে দিতে পারে।','ঈশিতা নওরীন','clear']
-].map((x,i)=>({id:'demo-'+(i+1),type:x[0],title:x[1],body:x[2],authorName:x[3],authorUsername:x[3]==='মাহমুদ সোহেল'?'mahmud-sohel':'demo-writer-'+(i+1),authorAvatar:'',createdAt:new Date(now-i*3600000).toISOString(),likes:27+i*4,comments:(i+2)%6,status:'published',cardStyle:x[4],demo:true}))}
+function demoPosts(){
+ const now=Date.now();
+ const names=['সায়মা তাসনিম','আরিফ হাসান','নাজনীন তিথি','মেহরাব নীল','তানিয়া রহমান','রাশেদ কবির','মাহমুদ সোহেল','ঈশিতা নওরীন','নুসরাত কবির','রাকিবুল হাসান','আদিবা রহমান','সাবির আহমেদ','ফারজানা মেঘ','সানজিদা নূর','মোরশেদ আলম','শামিমা আক্তার','তানভীর সাদাত','নাবিলা ইসলাম','তাহমিনা সুলতানা','সৌরভ দাস'];
+ const titles=['বৃষ্টির পরে নীরবতা','এক মুঠো শান্তি','আমার স্বর, আমার পথ','নিজের কাছে ফেরার চিঠি','একটি গাছের ছায়ায়','কবিতা কি শুধু অনুভূতি?','মধ্যরাতের জানালা','আলোর দিকে যাত্রা','নদীর কাছে প্রতিশ্রুতি','অপেক্ষার রং','শব্দের ভেতর বাড়ি','বৃষ্টির কাছে চিঠি','সবুজ শহরের স্বপ্ন','আবৃত্তির বিকেল','অন্ধকারে ছোট আলো','মানুষের পাশে মানুষ','পুরোনো বইয়ের গন্ধ','নীরবতারও ভাষা আছে','কুয়াশার ভেতর পথ','চাঁদের অসম্পূর্ণতা','মাটির কাছে ফিরে','একটি অনুচ্চারিত নাম','প্রকৃতির কাছে ঋণ','ভোরের আগে','পাখির ডানায় খবর','অক্ষরের জানালা','শহরের শেষ গাছ','মনের ডাকঘর','কণ্ঠে জেগে থাকা কবিতা','দূরের বন্ধুকে','নদী বাঁচানোর কথা','কবিতার নির্মাণ','এক কাপ চায়ের নীরবতা','মধ্যরাতের দ্বিতীয় দরজা','ফিরে আসার মানে','রৌদ্রের নিচে ছায়া','শিশিরের ছোট গল্প','মায়ের জন্য চার লাইন','বাতাসে ভাসা উচ্চারণ','নীল খামের চিঠি','প্লাস্টিকমুক্ত সকাল','পাঠকের সঙ্গে কথোপকথন','অল্প কথার গভীরতা','নক্ষত্রের নিচে প্রার্থনা','শেষ নয়, শুরু'];
+ const bodies=['বৃষ্টির শেষে জানালার কাঁচে যে অল্প আলো থেমে থাকে, সেখানে পুরোনো দিনের গন্ধ মিশে থাকে। শহর ঘুমিয়ে পড়লেও কিছু শব্দ মানুষের ভেতর জেগে থাকে।','সব উত্তর একদিনে পাওয়া যায় না। কখনো নিজের পাশে কিছুক্ষণ নীরবে বসে থাকাও বড় একটি উত্তর।','কবিতার প্রতিটি উচ্চারণে থাকে স্মৃতি, শ্বাস ও অনুভবের নিজস্ব ছন্দ।','প্রিয় আমি, ক্লান্ত হলে থেমে যেয়ো—কিন্তু নিজের আলোকে ছোট করে দেখো না।','একটি গাছ শুধু ছায়া দেয় না; সে শহরের বাতাস, পাখির আশ্রয় এবং আগামী প্রজন্মের জন্য নীরব প্রতিশ্রুতি।','কবিতা অনুভূতি থেকে জন্ম নেয়, কিন্তু ভাষা, নির্মাণ ও পাঠকের অভিজ্ঞতা তাকে পূর্ণতা দেয়।','রাত যত গভীর হয়, মনের ভেতরের অপ্রকাশিত বাক্যগুলো তত স্পষ্ট হয়ে ওঠে।','ভাঙা পথের শেষে দাঁড়িয়ে দেখি—অন্ধকার কখনো শেষ কথা নয়।'];
+ const types=['poem','prolap','recitation','letter','environment','discussion','midnight','poem'];
+ const styles=['pearl','lavender','aqua','rose','mint','silver','aurora','clear'];
+ return Array.from({length:45},(_,i)=>({id:'demo-'+(i+1),type:types[i%types.length],title:titles[i],body:bodies[i%bodies.length]+'\n\nএই ডেমো প্রকাশনাটি ভুবনডাঙ্গার সম্পূর্ণ ফিড পরীক্ষা করার জন্য রাখা হয়েছে।',authorName:names[i%names.length],authorUsername:names[i%names.length]==='মাহমুদ সোহেল'?'mahmud-sohel':'demo-writer-'+(i%names.length+1),authorAvatar:'',createdAt:new Date(now-i*3600000).toISOString(),likes:27+i*3,comments:(i+2)%9,status:'published',cardStyle:styles[i%styles.length],demo:true}));
+}
+
 let posts=storedPosts();if(!posts.length)posts=demoPosts();
 let visible=20,category='all',sort='forYou';
 document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
@@ -1910,6 +1925,7 @@ function liveIdentity(){return window.__BD_IDENTITY||{}}
 function isLoggedInNow(){const live=liveIdentity();return loggedIn||Boolean(window.__BD_LIVE_SESSION)||Boolean(live.author_id||live.author_username)}
 function canEdit(p){const live=liveIdentity(),liveUser=String(live.author_username||currentUsername||''),liveId=String(live.author_id||'');return isLoggedInNow()&&!p.demo&&(isFounder||String(p.authorUsername||'')===liveUser||(liveId&&String(p.authorId||'')===liveId))}
 function postViewUrl(p){const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('post',p.id);return u.href}
+function renderIndexMedia(p){if(!p.media)return'';const kind=String(p.mediaKind||'image').toLowerCase();if(kind==='audio')return'<div class="composer-media-render"><audio controls preload="metadata" src="'+esc(p.media)+'"></audio></div>';if(kind==='video')return'<div class="composer-media-render"><video controls playsinline preload="metadata" src="'+esc(p.media)+'"></video></div>';return'<div class="composer-media-render"><img src="'+esc(p.media)+'" alt="'+esc(p.title)+'" loading="lazy"></div>'}
 function renderPosts(){
   const list=filteredPosts(),shown=list.slice(0,visible),loved=arr(likedKey).map(String),memories=arr(memoryKey),likeCounts=likesObject(),box=document.getElementById('postList');
   closePostActionBoard();
@@ -1924,7 +1940,7 @@ function renderPosts(){
       +'<a class="pill" href="'+esc(typeRoute(p.type,p.id,p.title))+'">'+esc(typeLabel(p.type))+'</a>'
       +'<h3 class="post-title"><a href="'+esc(url)+'" data-open-post="'+esc(p.id)+'">'+esc(p.title)+'</a></h3>'
       +'<div class="post-body collapsed" data-open-post="'+esc(p.id)+'">'+esc(p.body||'এই সাহিত্যকর্মের পূর্ণ লেখা দেখতে ক্লিক করুন।')+'</div>'
-      +(p.media?'<img class="post-media" src="'+esc(p.media)+'" alt="'+esc(p.title)+'" loading="lazy">':'')+(p.caption?'<div class="bd-post-caption">'+esc(p.caption)+'</div>':'')
+      +renderIndexMedia(p)+(p.caption?'<div class="bd-post-caption">'+esc(p.caption)+'</div>':'')
       +(p.originalAuthor?'<a class="review-badge" style="margin-top:7px" href="'+esc(poetProfileRoute(p.originalAuthor))+'">মূল কবি: '+esc(p.originalAuthor)+'</a>':'')
       +'<a class="post-read-more" href="'+esc(url)+'" data-open-post="'+esc(p.id)+'">পূর্ণ লেখা পড়ুন →</a>'
       +(owner?'<span class="owner-hint">আপনার পোস্ট</span>':'')
@@ -2049,7 +2065,7 @@ postTitle.addEventListener('input',()=>{if(postTitle.dataset.canonicalId&&sugges
 function syncQuickType(){const selected=document.querySelector('input[name="postType"]:checked')?.value;document.querySelectorAll('[data-open-type]').forEach(button=>button.classList.toggle('active',button.dataset.openType===selected))}
 function showComposerChoices(){composerChoices.hidden=false;composerNote.hidden=false;composerPrompt.setAttribute('aria-expanded','true')}
 function openComposer(type){showComposerChoices();composerForm.hidden=false;if(type){const input=document.querySelector('input[name="postType"][value="'+type+'"]');if(input){input.checked=true;updateComposerRules();syncQuickType()}}}
-function closeComposer(){composerForm.reset();clearCanonicalMatch();composerForm.hidden=true;composerChoices.hidden=true;composerNote.hidden=true;composerPrompt.setAttribute('aria-expanded','false');originalArea.hidden=true;moderationWarning.hidden=true;pendingPublish=null;document.getElementById('composerHint').textContent='লেখার ধরন নির্বাচন করুন। কবিতার শিরোনাম আবশ্যক।';syncQuickType()}
+function closeComposer(){composerForm.reset();window.BDComposerMedia={kind:'',data:'',name:''};const mp=document.getElementById('postMediaPreview'),mc=document.getElementById('postMediaCaption'),mr=document.getElementById('postMediaRemove');if(mp){mp.hidden=true;mp.innerHTML=''}if(mc){mc.hidden=true;mc.value=''}if(mr)mr.hidden=true;clearCanonicalMatch();composerForm.hidden=true;composerChoices.hidden=true;composerNote.hidden=true;composerPrompt.setAttribute('aria-expanded','false');originalArea.hidden=true;moderationWarning.hidden=true;pendingPublish=null;document.getElementById('composerHint').textContent='লেখার ধরন নির্বাচন করুন। কবিতার শিরোনাম আবশ্যক।';syncQuickType()}
 function toggleComposerFromPrompt(event){
   if(event){event.preventDefault();event.stopPropagation()}
   if(composerChoices.hidden){showComposerChoices();return}
@@ -2082,9 +2098,9 @@ function findCanonicalPoem(author,title){const key=canonicalIdentity(author,titl
 function contributionRecord(post,canonical){return{postId:post.id,canonicalId:canonical.canonicalId,title:canonical.title,type:'poem',url:'poet-details.html?poet='+encodeURIComponent(canonical.poetName)+'&poem='+encodeURIComponent(canonical.canonicalId)+'#poem-reader',originalAuthor:canonical.poetName,originalAuthorSlug:canonical.poetSlug,contributorName:canonical.firstEditorName,contributorUsername:canonical.firstEditorUsername,createdAt:canonical.firstEditedAt,status:post.status}}
 function registerCanonicalPoem(post){if(post.type!=='poem'||!post.originalAuthor)return{canonical:null,isNew:false};const list=canonicalList(),key=canonicalIdentity(post.originalAuthor,post.title),existing=list.find(x=>(x.canonicalKey||canonicalIdentity(x.poetName||x.originalAuthor||'',x.title||x.poemTitle||''))===key);if(existing)return{canonical:existing,isNew:false};const canonical={canonicalId:'canonical-'+slug(post.originalAuthor)+'-'+Date.now(),canonicalKey:key,poetName:post.originalAuthor,poetSlug:slug(post.originalAuthor),title:post.title,normalizedTitle:normalizePoemTitle(post.title),body:post.body,firstEditorName:post.authorName,firstEditorUsername:post.authorUsername,firstEditedAt:post.createdAt,createdAt:post.createdAt,status:'published'};list.unshift(canonical);save(canonicalStoreKey,list.slice(0,5000));return{canonical,isNew:true}}
 function saveFirstContributionIndexes(post,canonical){if(!canonical)return;const record=contributionRecord(post,canonical),poetItems=arr('bhubondangaPoetContributions');if(!poetItems.some(x=>String(x.canonicalId||'')===String(canonical.canonicalId))){poetItems.unshift(record);save('bhubondangaPoetContributions',poetItems.slice(0,5000))}const edits=arr('bhubondangaUserEdits');if(!edits.some(x=>String(x.canonicalId||'')===String(canonical.canonicalId))){edits.unshift(record);save('bhubondangaUserEdits',edits.slice(0,5000))}}
-function buildPost(payload,status){const live=window.__BD_IDENTITY||{},name=live.author_name||currentName,user=live.author_username||currentUsername||'your-profile',avatar=live.author_avatar||currentAvatar||'',uid=live.author_id||'';return{id:'home-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),authorId:uid,type:payload.type,title:payload.title||({prolap:'ছোট কথার প্রলাপ',letter:'শিরোনামহীন চিঠি',recitation:'শিরোনামহীন আবৃত্তি',environment:'পরিবেশের কথা'}[payload.type]||'শিরোনামহীন সাহিত্যকর্ম'),body:payload.body,authorName:name,authorUsername:user,authorAvatar:avatar,originalAuthor:payload.originalAuthor||'',originalAuthorSlug:payload.originalAuthor?slug(payload.originalAuthor):'',contribution:Boolean(payload.originalAuthor),excludeFromAuthorTimeline:false,canonicalPoemId:payload.canonicalPoemId||'',canonicalRepost:Boolean(payload.canonicalPoemId),createdAt:new Date().toISOString(),likes:0,comments:0,status:status||'published',cardStyle:payload.cardStyle}}
+function buildPost(payload,status){const live=window.__BD_IDENTITY||{},name=live.author_name||currentName,user=live.author_username||currentUsername||'your-profile',avatar=live.author_avatar||currentAvatar||'',uid=live.author_id||'';return{id:'home-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),authorId:uid,type:payload.type,title:payload.title||({prolap:'ছোট কথার প্রলাপ',letter:'শিরোনামহীন চিঠি',recitation:'শিরোনামহীন আবৃত্তি',environment:'পরিবেশের কথা'}[payload.type]||'শিরোনামহীন সাহিত্যকর্ম'),body:payload.body,authorName:name,authorUsername:user,authorAvatar:avatar,originalAuthor:payload.originalAuthor||'',originalAuthorSlug:payload.originalAuthor?slug(payload.originalAuthor):'',contribution:Boolean(payload.originalAuthor),excludeFromAuthorTimeline:false,canonicalPoemId:payload.canonicalPoemId||'',canonicalRepost:Boolean(payload.canonicalPoemId),createdAt:new Date().toISOString(),likes:0,comments:0,status:status||'published',cardStyle:payload.cardStyle,media:payload.mediaData||'',mediaKind:payload.mediaKind||'',caption:payload.mediaCaption||''}}
 function publishPost(payload,flaggedTerms){const flagged=Boolean(flaggedTerms.length),post=buildPost(payload,flagged?'pending_review':'published');if(flagged){const pending=arr('bhubondangaPendingReviewPosts');pending.unshift(post);save('bhubondangaPendingReviewPosts',pending.slice(0,2000));const notice={id:'mod-'+Date.now(),postId:post.id,userId:currentUsername||'',userName:currentName,matchedTerms:flaggedTerms,status:'pending',post,createdAt:new Date().toISOString()};const userNotices=arr('bhubondangaNotifications');userNotices.unshift({...notice,type:'moderation',message:'বস, আপনার লেখাটি গ্রহণ করা হয়েছে। গালি-ডিটেক্টর একটু বিচলিত হওয়ায় এটি Admin ও Founder-এর পর্যালোচনায় গেছে। অনুমোদনের পর নিউজফিড ও প্রযোজ্য প্রোফাইল বিভাগে প্রকাশিত হবে।'});save('bhubondangaNotifications',userNotices.slice(0,1000));const adminQueue=arr('bhubondangaAdminModerationQueue');adminQueue.unshift(notice);save('bhubondangaAdminModerationQueue',adminQueue.slice(0,2000));const founderQueue=arr('bhubondangaFounderModerationQueue');founderQueue.unshift(notice);save('bhubondangaFounderModerationQueue',founderQueue.slice(0,2000));toast('লেখাটি Admin–Founder পর্যালোচনায় পাঠানো হয়েছে।');try{window.BhubondangaSyncContribution?.(post,flaggedTerms,null)}catch(_){}closeComposer();return}let registration={canonical:null,isNew:false};if(post.originalAuthor&&post.type==='poem'){registration=registerCanonicalPoem(post);if(registration.canonical){post.canonicalPoemId=registration.canonical.canonicalId;post.canonicalRepost=!registration.isNew;post.canonicalEditorName=registration.canonical.firstEditorName;post.canonicalEditedAt=registration.canonical.firstEditedAt;post.body=registration.canonical.body||post.body;post.title=registration.canonical.title||post.title}}const list=arr('bhubondangaHomeUserPosts');list.unshift(post);save('bhubondangaHomeUserPosts',list.slice(0,1000));const categoryKeys={poem:'bhubondangaPublishedPoems',prolap:'bhubondangaPublishedProlaps',letter:'bhubondangaLetterPosts',recitation:'bhubondangaPublishedRecitations',environment:'bhubondangaPublishedEnvironmentPosts'};const categoryKey=categoryKeys[post.type];if(categoryKey){const categoryList=arr(categoryKey).filter(x=>String(x.id)!==String(post.id));categoryList.unshift(post);save(categoryKey,categoryList.slice(0,1000))}if(registration.isNew)saveFirstContributionIndexes(post,registration.canonical);try{window.BhubondangaSyncContribution?.(post,[],registration)}catch(_){}toast(registration.canonical&&!registration.isNew?'সংরক্ষিত মূল কবিতাটি Home newsfeed-এ পুনঃপ্রকাশ হয়েছে; প্রথম সম্পাদনাকারীর তথ্য অপরিবর্তিত আছে।':'আপনার লেখা প্রকাশিত হয়েছে।');posts=storedPosts();visible=20;category='all';sort='forYou';document.getElementById('categoryFilter').value='all';document.getElementById('sortFilter').value='forYou';closeComposer();renderPosts();document.getElementById('postList')/* scroll intentionally preserved */}
-function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,title=postTitle.value.trim(),body=postBody.value.trim(),author=originalAuthor.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='poem'&&!title){toast('কবিতার শিরোনাম লিখুন।');postTitle.focus({preventScroll:true});return null}if(!body){toast('আপনার লেখাটি লিখুন।');postBody.focus({preventScroll:true});return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');originalAuthor.focus({preventScroll:true});return null}const exact=!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:document.getElementById('cardStyle').value}}
+function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,title=postTitle.value.trim(),body=postBody.value.trim(),author=originalAuthor.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='poem'&&!title){toast('কবিতার শিরোনাম লিখুন।');postTitle.focus({preventScroll:true});return null}if(!body){toast('আপনার লেখাটি লিখুন।');postBody.focus({preventScroll:true});return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');originalAuthor.focus({preventScroll:true});return null}const exact=!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:document.getElementById('cardStyle').value,mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
 composerForm.addEventListener('submit',async function(e){
  e.preventDefault();
  let live=null;try{live=await window.BhubondangaAuth?.current?.()}catch(_){}
@@ -2940,5 +2956,18 @@ D.addEventListener('click',e=>{const open=e.target.closest('[data-r6-open]');if(
 async function boot(){const s=await session();installAuth(s);installSuggest();ensureSearch();ensureSheets();setTimeout(()=>{installAuth(s);installSuggest()},1200)}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
-</script></body>
+</script>
+<script id="bd-final-index-media-js">
+(function(){
+'use strict';
+window.BDComposerMedia=window.BDComposerMedia||{kind:'',data:'',name:''};
+const $=(s,c=document)=>c.querySelector(s);
+function readFile(file,kind){return new Promise((resolve,reject)=>{const r=new FileReader();r.onerror=reject;r.onload=()=>resolve({kind,data:r.result,name:file.name});r.readAsDataURL(file)})}
+function renderPreview(){const p=$('#postMediaPreview'),c=$('#postMediaCaption'),r=$('#postMediaRemove'),m=window.BDComposerMedia;if(!p)return;if(!m.data){p.hidden=true;p.innerHTML='';if(c)c.hidden=true;if(r)r.hidden=true;return}p.hidden=false;if(c)c.hidden=false;if(r)r.hidden=false;p.innerHTML=m.kind==='audio'?'<audio controls src="'+m.data+'"></audio><div class="media-file-name">'+m.name+'</div>':m.kind==='video'?'<video controls playsinline src="'+m.data+'"></video><div class="media-file-name">'+m.name+'</div>':'<img src="'+m.data+'" alt="নির্বাচিত ছবি"><div class="media-file-name">'+m.name+'</div>'}
+async function select(input,kind){const f=input.files&&input.files[0];if(!f)return;try{window.BDComposerMedia=await readFile(f,kind);['postImage','postAudio','postVideo'].forEach(id=>{const el=$('#'+id);if(el&&el!==input)el.value=''});renderPreview()}catch(_){alert('মিডিয়া ফাইলটি পড়া যায়নি।')}}
+document.addEventListener('change',e=>{if(e.target.id==='postImage')select(e.target,'image');if(e.target.id==='postAudio')select(e.target,'audio');if(e.target.id==='postVideo')select(e.target,'video')},true);
+document.addEventListener('click',e=>{if(e.target.closest('#postMediaRemove')){e.preventDefault();window.BDComposerMedia={kind:'',data:'',name:''};['postImage','postAudio','postVideo'].forEach(id=>{const el=$('#'+id);if(el)el.value=''});renderPreview();return}const style=e.target.closest('[data-card-style]');if(style){const body=$('#postBody');if(body){const sw=getComputedStyle(style.querySelector('.style-swatch')||style);body.style.background=sw.backgroundImage&&sw.backgroundImage!=='none'?sw.backgroundImage:sw.backgroundColor;body.style.color='var(--text)'}}},true);
+})();
+</script>
+</body>
 </html>
