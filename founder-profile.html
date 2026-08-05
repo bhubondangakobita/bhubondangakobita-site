@@ -1,6 +1,172 @@
 <!DOCTYPE html>
 
-<html lang="bn"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/><meta content="#f8fbfd" name="theme-color"/><title>মাহমুদ সোহেল | ভুবনডাঙ্গার কবিতা</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><style>
+<html lang="bn"><head><style id="bd-click-rescue-v104-style">html.bd-click-rescue-v104 body{pointer-events:auto!important}
+html.bd-click-rescue-v104 button,html.bd-click-rescue-v104 a,html.bd-click-rescue-v104 [role="button"]{touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(115,92,220,.18)!important;cursor:pointer!important}
+html.bd-click-rescue-v104 .bd-rescue-pressed{transform:scale(.975)!important;filter:brightness(.97)!important;transition:transform .08s ease!important}
+html.bd-click-rescue-v104 #composer,html.bd-click-rescue-v104 #composerPrompt,html.bd-click-rescue-v104 #composerChoices,html.bd-click-rescue-v104 #composerForm{position:relative!important;z-index:5!important;pointer-events:auto!important}
+html.bd-click-rescue-v104 #composer::before,html.bd-click-rescue-v104 #composer::after{pointer-events:none!important}
+html.bd-click-rescue-v104 .bd-rescue-expanded{overflow:visible!important}
+html.bd-click-rescue-v104 .bd-rescue-expanded .post-body,html.bd-click-rescue-v104 .bd-rescue-expanded .bd-live-body,html.bd-click-rescue-v104 .bd-rescue-expanded .bd-r97-body,html.bd-click-rescue-v104 .bd-rescue-expanded .r99-body{max-height:none!important;height:auto!important;overflow:visible!important;-webkit-line-clamp:unset!important;display:block!important;opacity:1!important}
+html.bd-click-rescue-v104 .master-post-shell,html.bd-click-rescue-v104 .bd-r97-detail,html.bd-click-rescue-v104 #masterPostShell{display:none!important;visibility:hidden!important;pointer-events:none!important}
+html.bd-click-rescue-v104 input,html.bd-click-rescue-v104 textarea,html.bd-click-rescue-v104 select{font-size:max(16px,1rem)!important}
+</style><script id="bd-click-rescue-v104-script">(()=>{
+  'use strict';
+  if(window.__BD_CLICK_RESCUE_V104__) return;
+  window.__BD_CLICK_RESCUE_V104__=true;
+  const D=document,H=document.documentElement;
+  const $=(s,r=D)=>r.querySelector(s), $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+  const stop=e=>{e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();};
+  const show=(el,display='block')=>{if(!el)return;el.hidden=false;el.classList.add('open','show');el.style.setProperty('display',display,'important');el.style.setProperty('visibility','visible','important');el.style.setProperty('opacity','1','important');el.style.setProperty('pointer-events','auto','important');};
+  const hide=el=>{if(!el)return;el.classList.remove('open','show');el.style.removeProperty('display');el.style.removeProperty('visibility');el.style.removeProperty('opacity');el.style.removeProperty('pointer-events');};
+  const page=()=>((location.pathname.split('/').pop()||'index.html').split('?')[0].toLowerCase());
+
+  function drawerNodes(side){
+    const sels=side==='left'
+      ?['#leftDrawer','#mobileDrawer','#midnightLeftDrawer','[data-bd9-drawer="left"]']
+      :['#rightDrawer','#rightMobileDrawer','#midnightRightDrawer','[data-bd9-drawer="right"]'];
+    return sels.map(s=>$(s)).filter(Boolean);
+  }
+  function backdrops(){return ['#drawerBackdrop','#backdrop','.backdrop','.drawer-backdrop'].map(s=>$(s)).filter(Boolean)}
+  function openDrawer(side){
+    drawerNodes(side).forEach(el=>{
+      show(el,'block');
+      el.style.setProperty('transform','translate3d(0,0,0)','important');
+    });
+    backdrops().forEach(el=>show(el,'block'));
+    D.body?.classList.add('drawer-open');
+    D.body?.setAttribute('data-rescue-drawer',side);
+  }
+  function closeDrawers(){
+    $$('aside.drawer,.mobile-drawer,[data-bd9-drawer]').forEach(el=>{
+      el.classList.remove('open','show');
+      const right=el.classList.contains('right')||el.classList.contains('right-drawer')||el.getAttribute('data-bd9-drawer')==='right';
+      el.style.setProperty('transform',right?'translate3d(104%,0,0)':'translate3d(-104%,0,0)','important');
+      el.style.setProperty('pointer-events','none','important');
+    });
+    backdrops().forEach(el=>{el.classList.remove('open','show');el.style.setProperty('display','none','important');el.style.setProperty('pointer-events','none','important')});
+    D.body?.classList.remove('drawer-open');
+    D.body?.removeAttribute('data-rescue-drawer');
+  }
+  function setComposerType(type){
+    const map={poem:'#typePoem',prolap:'#typeProlap',letter:'#typeLetter',recitation:'#typeRecitation',environment:'#typeEnvironment'};
+    const input=$(map[type]||''); if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}
+  }
+  function openComposer(type){
+    const prompt=$('#composerPrompt'), choices=$('#composerChoices'), form=$('#composerForm');
+    if(!form)return;
+    setComposerType(type);
+    if(prompt)prompt.setAttribute('aria-expanded','true');
+    if(choices){choices.hidden=true;choices.style.setProperty('display','none','important')}
+    form.hidden=false;form.style.setProperty('display','block','important');form.style.setProperty('visibility','visible','important');form.style.setProperty('opacity','1','important');form.style.setProperty('pointer-events','auto','important');
+    const title=$('#postTitle');
+    if(title){
+      if(type==='letter')title.placeholder='চিঠির শিরোনাম লিখুন';
+      else if(type==='environment')title.placeholder='পরিবেশ বিষয়ক শিরোনাম লিখুন';
+      else title.placeholder='লেখার শিরোনাম';
+    }
+    setTimeout(()=>{form.scrollIntoView({behavior:'smooth',block:'start'});title?.focus({preventScroll:true})},20);
+  }
+  function openComposerPrompt(){
+    const p=page();
+    if(p.includes('letter'))return openComposer('letter');
+    if(p.includes('environment'))return openComposer('environment');
+    const choices=$('#composerChoices');
+    if(choices){choices.hidden=false;choices.style.setProperty('display','grid','important');choices.style.setProperty('visibility','visible','important');choices.style.setProperty('opacity','1','important');choices.style.setProperty('pointer-events','auto','important');$('#composerPrompt')?.setAttribute('aria-expanded','true');choices.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  }
+  function cancelComposer(){
+    const form=$('#composerForm'),choices=$('#composerChoices'),prompt=$('#composerPrompt');
+    if(form){form.hidden=true;form.style.setProperty('display','none','important')}
+    if(choices){choices.hidden=true;choices.style.setProperty('display','none','important')}
+    prompt?.setAttribute('aria-expanded','false');prompt?.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function chooseStyle(btn){
+    const value=btn.dataset.cardStyle||btn.dataset.r97StyleChoice||'';
+    $$('.composer-style-option,[data-card-style]').forEach(x=>{x.classList.toggle('active',x===btn);x.setAttribute('aria-selected',x===btn?'true':'false')});
+    const select=$('#cardStyle');if(select&&value){select.value=value;select.dispatchEvent(new Event('change',{bubbles:true}))}
+  }
+  function togglePost(card){
+    if(!card)return;
+    const expanded=card.classList.toggle('bd-rescue-expanded');
+    card.setAttribute('aria-expanded',expanded?'true':'false');
+    const bodies=card.querySelectorAll('.post-body,.bd-live-body,.bd-r97-body,.r99-body,[data-post-body]');
+    bodies.forEach(body=>{
+      if(expanded){body.style.setProperty('max-height','none','important');body.style.setProperty('height','auto','important');body.style.setProperty('overflow','visible','important');body.style.setProperty('-webkit-line-clamp','unset','important');body.style.setProperty('display','block','important')}
+      else{body.style.removeProperty('max-height');body.style.removeProperty('height');body.style.removeProperty('overflow');body.style.removeProperty('-webkit-line-clamp');body.style.removeProperty('display')}
+    });
+    const more=card.querySelector('.read-more,.post-read-more,[data-read-more],[data-open-post],[data-r99-open-post]');
+    if(more)more.textContent=expanded?'কম দেখুন ↑':'আরও দেখুন →';
+  }
+  function toggleComments(btn){
+    const card=btn.closest('[data-post-card],.post,.bd-live-post,.bd-r97-card,.r99-post');
+    const box=card?.querySelector('.comments,.comment-box,.bd-comments,[data-comments]');
+    if(box){const isOpen=box.classList.toggle('open');box.hidden=!isOpen;box.style.setProperty('display',isOpen?'block':'none','important');if(isOpen)box.querySelector('textarea,input')?.focus()}
+  }
+  function toggleProfileMenu(){
+    const menu=$('#profileMenu');if(!menu)return;
+    const opening=menu.classList.contains('hidden')||menu.hidden||getComputedStyle(menu).display==='none';
+    if(opening){menu.hidden=false;menu.classList.remove('hidden');menu.style.setProperty('display','grid','important');menu.style.setProperty('pointer-events','auto','important')}
+    else{menu.hidden=true;menu.classList.add('hidden');menu.style.setProperty('display','none','important')}
+  }
+  function profileMessage(){
+    const user=($('#profileUsername')?.textContent||new URLSearchParams(location.search).get('user')||'').trim().replace(/^@/,'');
+    location.href='messages.html'+(user?'?user='+encodeURIComponent(user):'');
+  }
+  function closePhoto(){
+    $$('.photo-viewer,.bd-photo-lightbox,.r99-viewer,[data-photo-viewer]').forEach(v=>{v.classList.remove('open','show');v.hidden=true;v.style.setProperty('display','none','important')});
+    D.body?.classList.remove('photo-open','locked');
+  }
+  function directNavigate(a,e){
+    const href=a.getAttribute('href')||'';
+    if(!href||href==='#'||href.startsWith('javascript:')||href.startsWith('mailto:')||href.startsWith('tel:'))return false;
+    if(a.target==='_blank')return false;
+    if(/^https?:/i.test(href)&&!href.startsWith(location.origin))return false;
+    stop(e);location.href=href;return true;
+  }
+
+  D.addEventListener('pointerdown',e=>{const b=e.target.closest('button,a,[role="button"]');if(b)b.classList.add('bd-rescue-pressed')},true);
+  D.addEventListener('pointerup',()=>$$('.bd-rescue-pressed').forEach(x=>x.classList.remove('bd-rescue-pressed')),true);
+  D.addEventListener('pointercancel',()=>$$('.bd-rescue-pressed').forEach(x=>x.classList.remove('bd-rescue-pressed')),true);
+
+  D.addEventListener('click',e=>{
+    const t=e.target;
+    if(t.closest('[data-left-edge],#leftEdgeMenu,.edge-menu-left,.edge.left,[data-bd9-handle="left"]')){stop(e);openDrawer('left');return}
+    if(t.closest('[data-right-edge],#rightEdgeMenu,.edge-menu-right,.edge.right,[data-bd9-handle="right"]')){stop(e);openDrawer('right');return}
+    if(t.closest('[data-close-drawer],[data-bd9-close],.drawer-close,.close-drawer')||t.matches('#drawerBackdrop,#backdrop,.backdrop,.drawer-backdrop')){stop(e);closeDrawers();return}
+    if(t.closest('#composerPrompt,.composer-prompt')){stop(e);openComposerPrompt();return}
+    const quick=t.closest('[data-open-type],.quick-type,.compose-type');
+    if(quick){
+      stop(e);let type=quick.dataset.openType||quick.dataset.type||'poem';if(type==='letters')type='letter';
+      if(page().includes('index')&&type==='letter'){location.href='letter.html#composer';return}
+      if(page().includes('index')&&type==='environment'){location.href='environment.html#composer';return}
+      openComposer(type);return;
+    }
+    const style=t.closest('[data-card-style],.composer-style-option');if(style){stop(e);chooseStyle(style);return}
+    if(t.closest('#cancelComposer,[data-cancel-composer]')){stop(e);cancelComposer();return}
+    if(t.closest('[data-profile-more]')){stop(e);toggleProfileMenu();return}
+    if(t.closest('[data-message]')){stop(e);profileMessage();return}
+    if(t.closest('[data-close-photo],.photo-viewer .close,.bd-photo-close,.r99-viewer-close')){stop(e);closePhoto();return}
+    const comment=t.closest('[data-comment],[data-live-comment],[data-action="comment"],.comment-action');if(comment){stop(e);toggleComments(comment);return}
+    const menu=t.closest('[data-post-menu],.post-menu-btn,.three-dot-btn');if(menu){stop(e);const card=menu.closest('.post,.bd-live-post,.bd-r97-card,.r99-post,[data-post-card]');const board=card?.querySelector('.post-menu,.post-action-board,[data-post-menu-board]');if(board){const open=getComputedStyle(board).display==='none'||board.hidden;board.hidden=!open;board.style.setProperty('display',open?'grid':'none','important')}return}
+    const more=t.closest('.read-more,.post-read-more,[data-read-more],[data-open-post],[data-r99-open-post],[data-r97-title]');if(more){stop(e);togglePost(more.closest('[data-post-card],.post,.bd-live-post,.bd-r97-card,.r99-post'));return}
+    const card=t.closest('[data-post-card],.post,.bd-live-post,.bd-r97-card,.r99-post');
+    if(card&&!t.closest('a,button,input,textarea,select,label,audio,video,img,[contenteditable="true"]')){stop(e);togglePost(card);return}
+    const a=t.closest('a[href]');if(a)directNavigate(a,e);
+  },true);
+
+  D.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawers();closePhoto();const m=$('#profileMenu');if(m){m.hidden=true;m.classList.add('hidden');m.style.setProperty('display','none','important')}}},true);
+  D.addEventListener('contextmenu',e=>e.preventDefault(),true);
+  D.addEventListener('dragstart',e=>{if(e.target.closest('img,a'))e.preventDefault()},true);
+  D.addEventListener('copy',e=>{if(!e.target.closest('input,textarea,[contenteditable="true"]'))e.preventDefault()},true);
+
+  function init(){
+    H.classList.add('bd-click-rescue-v104');
+    $$('button,a,[role="button"],input,textarea,select').forEach(x=>x.style.setProperty('pointer-events','auto','important'));
+    closeDrawers();
+    if(location.hash==='#composer'||location.hash.includes('composer'))setTimeout(openComposerPrompt,50);
+  }
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/><meta content="#f8fbfd" name="theme-color"/><title>মাহমুদ সোহেল | ভুবনডাঙ্গার কবিতা</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><style>
 :root{--bg:#eef3f8;--surface:#fff;--soft:#f7f8fc;--line:#dce2ed;--text:#17324f;--muted:#75839a;--primary:#7a70df;--primary2:#ba74d1;--pink:#d367ac;--green:#4d947a;--danger:#cc5b78;--shadow:0 12px 36px rgba(52,63,111,.10);--header:58px;--left:188px;--right:208px}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;max-width:100%;overflow-x:hidden}html{font-size:16px}body{font-family:"Noto Serif Bengali",system-ui,-apple-system,sans-serif;background:linear-gradient(145deg,#f8fbfd,#eef2f8 52%,#f8f3fa);color:var(--text)}button,input,textarea,select{font:inherit}button,a{touch-action:manipulation}a{color:inherit;text-decoration:none}button{cursor:pointer}.hidden{display:none!important}
 .appbar{position:fixed;inset:0 0 auto;z-index:900;height:var(--header);border-bottom:1px solid var(--line);background:rgba(255,255,255,.94);backdrop-filter:blur(18px)}.appbar-inner{height:100%;max-width:1600px;margin:auto;padding:0 16px;display:flex;align-items:center;gap:12px}.brand-mini{display:flex;align-items:center;gap:8px;font-weight:800}.brand-mini .leaf{width:38px;height:38px;border:1px solid #cae2d8;border-radius:13px;display:grid;place-items:center;background:#fff;font-size:24px}.brand-mini small{display:block;color:var(--muted);font-size:10px;font-weight:500}.bar-spacer{flex:1}.bar-btn{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--text);font-size:18px}.bar-search{width:min(360px,38vw);height:40px;padding:0 15px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--text);outline:none}.bar-search:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(122,112,223,.10)}
@@ -205,7 +371,6 @@ html[data-theme="dark"] .composer-prompt{
   border-color:rgba(191,207,255,.30)!important;
 }
 </style>
-
 <style id="bd-v101-profile-weight-fix">
 /* V10.1 — Softer Facebook-familiar profile typography; size preserved, excess bold removed. */
 .profile-app-title strong{font-weight:600!important;letter-spacing:0!important}
@@ -284,117 +449,9 @@ $('#bioText').addEventListener('dblclick',()=>{if(!OWNER)return;const el=$('#bio
 ['editZoom','editX','editY'].forEach(id=>$('#'+id).addEventListener('input',syncEditor));$('#editorFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{editData=r.result;$('#editorPreview').src=editData};r.readAsDataURL(f)});
 function buildSides(){const left=`<section class="side-card"><div class="side-title"><strong>আপন ভুবন</strong><small>ব্যক্তিগত কেন্দ্র</small></div><div class="side-list"><button class="side-link" data-side-panel="settings"><span class="side-icon">⚙</span>Settings</button><button class="side-link" data-side-panel="memories"><span class="side-icon">☆</span>Memories</button><button class="side-link" data-side-panel="saved"><span class="side-icon">▱</span>Saved</button><button class="side-link" data-side-panel="archive"><span class="side-icon">◫</span>Archive</button><button class="side-link" data-story-touch><span class="side-icon">✦</span>Story Touch</button></div></section><section class="side-card"><div class="side-title"><strong>প্রিয় কবি</strong></div><div class="side-list">${['জীবনানন্দ দাশ','কাজী নজরুল ইসলাম','রবীন্দ্রনাথ ঠাকুর','সুফিয়া কামাল'].map(x=>`<a class="side-link" href="profile.html?user=${encodeURIComponent(x)}"><span class="side-icon">✧</span>${x}</a>`).join('')}</div></section>`;const right=`<section class="side-card"><div class="side-title"><strong>সাহিত্যিক অবদান</strong></div><div class="side-list"><button class="side-link" data-tab="poem"><span class="side-icon">ক</span>মোট কবিতা: ${posts.filter(x=>x.type==='poem').length}</button><button class="side-link" data-tab="recitation"><span class="side-icon">◉</span>মোট আবৃত্তি: ${posts.filter(x=>x.type==='recitation').length}</button><button class="side-link" data-tab="edit"><span class="side-icon">✎</span>মোট সম্পাদনা: ${posts.filter(x=>x.type==='edit').length}</button><button class="side-link" data-side-panel="notifications"><span class="side-icon">♢</span>Notifications</button><button class="side-link" data-side-panel="messages"><span class="side-icon">▢</span>Messenger</button></div></section><section class="side-card"><div class="side-title"><strong>সক্রিয় বন্ধুরা</strong></div>${names.slice(0,5).map(n=>`<a class="mini-person" href="profile.html?user=${encodeURIComponent(n)}"><span class="mini-avatar">${n[0]}</span><span><strong>${n}</strong><small>এখন সক্রিয়</small></span><span class="online"></span></a>`).join('')}</section>`;$('#leftSide').innerHTML=left;$('#rightSide').innerHTML=right;$('#leftDrawerBody').innerHTML=left;$('#rightDrawerBody').innerHTML=right}
 applyProfile();buildSides();showTab('home');
-</script><script id="bd-profile-v8-integration">
-(function(){'use strict';
-const D=document,W=window;
-const URL='https://ihjiisysrwgxxkuywuhc.supabase.co';
-const KEY='sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz';
-const isUuid=v=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(v||''));
-const escV=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-let sb=null;try{sb=W.bdSupabase||W.supabaseClient||(W.supabase?.createClient?W.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null)}catch(_){sb=null}
-if(sb){W.bdSupabase=sb;W.supabaseClient=sb}
-function notice(text){let t=D.querySelector('.bd-action-toast');if(!t){t=D.createElement('div');t.className='bd-action-toast';D.body.appendChild(t)}t.textContent=text;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2500)}
-W.bdProfileToast=notice;
-function loading(on,text='প্রোফাইল প্রস্তুত হচ্ছে…'){let x=D.getElementById('bdProfileLoading');if(!x){x=D.createElement('div');x.id='bdProfileLoading';x.className='bd-profile-loading';x.innerHTML='<div><span class="bd-spinner"></span><span></span></div>';D.body.appendChild(x)}x.querySelector('div span:last-child').textContent=text;x.hidden=!on}
-D.addEventListener('pointerdown',e=>e.target.closest('button,a,[role="button"]')?.classList.add('bd-touching'),true);
-['pointerup','pointercancel','dragstart'].forEach(n=>D.addEventListener(n,e=>e.target.closest?.('button,a,[role="button"]')?.classList.remove('bd-touching'),true));
-D.addEventListener('contextmenu',e=>{if(!e.target.closest('input,textarea,[contenteditable="true"],.post-body,.bio-text'))e.preventDefault()},true);
-async function getSession(){if(!sb)return null;try{return (await sb.auth.getSession()).data.session||null}catch(_){return null}}
-async function getProfile(raw){if(!sb||!raw)return null;try{let q=sb.from('profiles').select('*');q=isUuid(raw)?q.eq('id',raw):q.eq('username',String(raw).replace(/^@/,'').toLowerCase());const r=await q.maybeSingle();return r.data||null}catch(_){return null}}
-function mapPost(x){return{id:x.id,type:x.type||x.category||'poem',title:x.title||'শিরোনামহীন',body:x.body||'',createdAt:x.created_at||new Date().toISOString(),likes:Number(x.likes_count||x.likes||0),comments:Number(x.comments_count||x.comments||0),privacy:x.visibility||'Public',pinned:!!x.is_pinned,template:x.card_style||'pearl',media:x.media_url?{url:x.media_url,caption:x.caption||x.title}:null}}
-async function loadDynamic(){
- if(!sb)return;
- const file=(location.pathname.split('/').pop()||'').toLowerCase();
- const q=new URLSearchParams(location.search);let raw=(q.get('user')||'').trim();
- const session=await getSession();
- if(!raw&&file==='profile.html')raw=session?.user?.id||'';
- if(file==='founder-profile.html'&&!raw){try{const r=await sb.from('user_roles').select('user_id').eq('role','founder').eq('active',true).limit(1).maybeSingle();raw=r.data?.user_id||''}catch(_){}}
- if(file==='admin-profile.html'&&!raw){raw=session?.user?.id||''}
- if(!raw)return;
- loading(true);
- const p=await getProfile(raw);
- if(!p){loading(false);return}
- try{
-   Object.assign(CONFIG,{id:p.id||CONFIG.id,name:p.display_name||p.full_name||CONFIG.name,username:'@'+String(p.username||CONFIG.username||'member').replace(/^@/,''),role:p.role||CONFIG.role,badge:(p.role==='founder'?'Founder':p.role==='admin'?'Admin':CONFIG.badge||''),bio:p.bio||CONFIG.bio});
-   state.bio=p.bio||state.bio; if(p.avatar_url)state.avatar=p.avatar_url;if(p.cover_url)state.cover=p.cover_url;
-   OWNER=!!(session?.user?.id&&String(session.user.id)===String(p.id));
-   window.__BD_TARGET_PROFILE_ID=p.id;window.__BD_TARGET_PROFILE_USERNAME=String(p.username||'').replace(/^@/,'');
-   const r=await sb.from('posts').select('*').eq('author_id',p.id).in('status',['published','published_flagged']).order('created_at',{ascending:false}).limit(100);
-   if(!r.error&&r.data?.length)posts=r.data.map(mapPost);
-   applyProfile();buildSides();showTab('home');
- }catch(err){console.warn('Profile loader:',err)}finally{loading(false)}
-}
-async function openMessage(){
- const id=window.__BD_TARGET_PROFILE_ID||CONFIG.id;const username=window.__BD_TARGET_PROFILE_USERNAME||String(CONFIG.username||'').replace(/^@/,'');
- const session=await getSession();
- if(!session?.user?.id){notice('বার্তা পাঠাতে আগে লগইন করুন');setTimeout(()=>location.href='login.html?redirect='+encodeURIComponent(location.href),700);return}
- if(String(session.user.id)===String(id)){notice('এটি আপনার নিজের প্রোফাইল');return}
- notice('কথোপকথন খোলা হচ্ছে…');
- const u=new URLSearchParams();u.set('user',id||username);if(username)u.set('username',username);u.set('from','profile');location.href='messages.html?'+u.toString();
-}
-D.addEventListener('click',e=>{const b=e.target.closest('[data-message],[data-profile-action="message"]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMessage()},true);
-D.addEventListener('click',e=>{const b=e.target.closest('[data-side-panel="messages"]');if(!b)return;e.preventDefault();location.href='messages.html'},true);
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',loadDynamic,{once:true});else loadDynamic();
-})();
 </script>
-<script id="bd-v9-profile-final">
-(()=>{'use strict';const D=document,W=window,$=s=>D.querySelector(s);
-function stop(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}
-function togglePost(card){if(!card)return;const y=W.scrollY;card.classList.toggle('expanded');const b=card.querySelector('.read-more');if(b)b.textContent=card.classList.contains('expanded')?'কম দেখুন ↑':'আরও দেখুন →';requestAnimationFrame(()=>W.scrollTo({top:y,behavior:'auto'}))}
-function closeViewer(fromHistory=false){const v=$('#photoViewer');if(!v||v.classList.contains('hidden'))return;v.classList.add('hidden');D.body.classList.remove('bd-photo-open');if(!fromHistory&&history.state?.bdProfilePhoto)history.back()}
-try{photoViewer=function(src,caption){const v=$('#photoViewer');$('#photoImage').src=src;$('#photoCaption').textContent=caption||'';v.classList.remove('hidden');D.body.classList.add('bd-photo-open');if(!history.state?.bdProfilePhoto)history.pushState({bdProfilePhoto:true},'')}}catch(_){}
-W.addEventListener('popstate',()=>{if($('#photoViewer')&&!$('#photoViewer').classList.contains('hidden'))closeViewer(true)});
-W.addEventListener('click',e=>{const t=e.target;
- if(t.closest('[data-close-photo]')){stop(e);closeViewer();return}
- if(t.id==='photoViewer'||(t.closest('.photo-stage')&&!t.closest('#photoImage'))){stop(e);closeViewer();return}
- const cover=t.closest('[data-cover-edit]');if(cover){stop(e);try{profileSheet('cover')}catch(_){try{openEditor('cover',false)}catch(__){}}return}
- const dots=t.closest('[data-post-menu]');if(dots){stop(e);try{postMenu(dots.dataset.postMenu,dots)}catch(_){}return}
- const pdots=t.closest('[data-profile-more]');if(pdots){stop(e);$('#profileMenu')?.classList.toggle('hidden');return}
- const media=t.closest('.post [data-photo],.post .post-media');if(media){stop(e);media.classList.toggle('media-open');return}
- const comments=t.closest('[data-comments]');if(comments){stop(e);comments.closest('.post')?.querySelector('.comments')?.classList.toggle('hidden');return}
- const toggle=t.closest('[data-toggle-post]');if(toggle){stop(e);togglePost(toggle.closest('.post'));return}
- const card=t.closest('.post');if(card&&!t.closest('button,a,input,textarea,select,audio,video,.comments,.post-menu')){stop(e);togglePost(card);return}
-},true);
-D.addEventListener('contextmenu',e=>e.preventDefault(),true);D.addEventListener('copy',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);D.addEventListener('cut',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);D.addEventListener('dragstart',e=>e.preventDefault(),true);D.addEventListener('selectstart',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);
-function dataUrlToFile(data,name){return fetch(data).then(r=>r.blob()).then(b=>new File([b],name,{type:b.type||'image/jpeg'}))}
-try{saveEditor=async function(){const caption=$('#editorCaption').value.trim(),z=Number($('#editZoom').value),x=Number($('#editX').value),y=Number($('#editY').value);let finalUrl=editData;const client=W.bdSupabase||W.supabaseClient;try{const ses=client?(await client.auth.getSession()).data.session:null;if(client&&ses?.user?.id&&String(editData||'').startsWith('data:')){toast('ছবি আপলোড হচ্ছে…');const file=await dataUrlToFile(editData,`${editTarget}-${Date.now()}.jpg`),path=`${ses.user.id}/${editTarget}-${Date.now()}.jpg`;const up=await client.storage.from('profile-media').upload(path,file,{contentType:file.type,upsert:true});if(up.error)throw up.error;finalUrl=client.storage.from('profile-media').getPublicUrl(path).data.publicUrl;const patch=editTarget==='avatar'?{avatar_url:finalUrl}:{cover_url:finalUrl};const u=await client.from('profiles').update(patch).eq('id',ses.user.id);if(u.error)throw u.error}}catch(err){toast('অনলাইন ছবি সংরক্ষণ হয়নি: '+(err.message||err)+' — লোকালভাবে রাখা হয়েছে')}editData=finalUrl;if(editTarget==='avatar'){state.avatar=finalUrl;state.avatarZoom=z;state.avatarX=x;state.avatarY=y;state.avatarCaption=caption}else{state.cover=finalUrl;state.coverZoom=z;state.coverX=x;state.coverY=y;state.coverCaption=caption}write(profileKey,state);addMediaEvent(editTarget,caption);$('#editorModal').classList.add('hidden');applyProfile();showTab('home');toast('ছবি ও ক্যাপশন সংরক্ষিত হয়েছে')}}catch(_){}
-function upgrade(){D.querySelectorAll('.comment-row').forEach(r=>{r.setAttribute('role','group')});const close=$('#photoViewer [data-close-photo]');if(close){close.textContent='×';close.setAttribute('aria-label','ছবি বন্ধ করুন')}}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',upgrade,{once:true});else upgrade();new MutationObserver(upgrade).observe(D.body,{childList:true,subtree:true});
-})();
-</script>
-<script id="bd-v10-profile-script">
-(()=>{'use strict';
-const D=document,$=s=>D.querySelector(s);
-const cameraSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.6 5.5 9 3.7h6l1.4 1.8H20a2 2 0 0 1 2 2v10.5a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7.5a2 2 0 0 1 2-2h3.6Zm4.4 3a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5Z" fill="currentColor"/></svg>';
-function fixHero(){
- const identity=$('.identity'),bio=$('.bio-box'),actions=$('.profile-actions');
- if(identity&&bio&&bio.parentElement!==identity)identity.insertBefore(bio,actions||null);
- const aw=$('.avatar-wrap');if(aw&&!aw.querySelector('.avatar-camera')){const b=D.createElement('button');b.type='button';b.className='avatar-camera';b.dataset.avatarEdit='';b.setAttribute('aria-label','প্রোফাইল ছবি পরিবর্তন');b.innerHTML=cameraSvg;aw.appendChild(b)}
- const c=$('#cover');if(c&&!c.querySelector('.cover-camera')){const b=D.createElement('button');b.type='button';b.className='cover-camera';b.dataset.coverEdit='';b.setAttribute('aria-label','কভার ছবি পরিবর্তন');b.innerHTML=cameraSvg;c.appendChild(b)}
- const v=$('#photoViewer');if(v&&!v.querySelector('.photo-global-close')){const b=D.createElement('button');b.type='button';b.className='photo-global-close';b.dataset.closePhoto='';b.setAttribute('aria-label','ছবি বন্ধ করুন');b.textContent='×';v.prepend(b)}
- const av=$('#avatarImg'),cv=$('#coverImg');
- if(av&&!av.dataset.bdFallback){av.dataset.bdFallback='1';av.addEventListener('error',()=>{try{av.src=avatarSvg()}catch(_){av.removeAttribute('src')}})}
- if(cv&&!cv.dataset.bdFallback){cv.dataset.bdFallback='1';cv.addEventListener('error',()=>{cv.removeAttribute('src')})}
- const n=$('#profileName');if(n&&!n.textContent.trim()&&typeof CONFIG!=='undefined')n.textContent=CONFIG.name||'ভুবনডাঙ্গার সদস্য';
- const u=$('#profileUsername');if(u&&!u.textContent.trim()&&typeof CONFIG!=='undefined')u.textContent=CONFIG.username||'';
-}
-function stop(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}
-const W=window;
-W.addEventListener('click',e=>{
- const t=e.target;
- if(t.closest('[data-avatar-edit]')){stop(e);try{profileSheet('avatar')}catch(_){try{openEditor('avatar',false)}catch(__){}}return}
- if(t.closest('[data-cover-edit]')){stop(e);try{profileSheet('cover')}catch(_){try{openEditor('cover',false)}catch(__){}}return}
- if(t.closest('[data-close-photo]')){stop(e);const v=$('#photoViewer');v?.classList.add('hidden');D.body.classList.remove('bd-photo-open');return}
-},true);
-D.addEventListener('keydown',e=>{if(e.key==='Escape'){const v=$('#photoViewer');if(v&&!v.classList.contains('hidden')){v.classList.add('hidden');D.body.classList.remove('bd-photo-open')}const m=$('#editorModal');if(m&&!m.classList.contains('hidden'))m.classList.add('hidden');const s=$('#sheet');if(s&&!s.classList.contains('hidden'))s.classList.add('hidden')}},true);
-D.addEventListener('contextmenu',e=>e.preventDefault(),true);
-D.addEventListener('copy',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);
-D.addEventListener('cut',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);
-D.addEventListener('selectstart',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',fixHero,{once:true});else fixHero();
-setTimeout(fixHero,500);setTimeout(fixHero,1600);
-})();
-</script>
+
+
 <style id="bd-v102-final-contrast-sidebar-fix">
 /* V10.2 — final cascade lock: readable text and working mobile sidebars. */
 html[data-theme="light"] body :is(
@@ -509,76 +566,5 @@ html[data-theme="dark"] body :is(#composerPrompt,.composer-prompt,[data-open-com
   :is(#mobileDrawer,#rightMobileDrawer,#leftDrawer,#rightDrawer) :is(button,a,input,select,textarea){pointer-events:auto!important;touch-action:manipulation!important}
 }
 </style>
-<script id="bd-v102-final-sidebar-runtime">
-(()=>{
-'use strict';
-const D=document,W=window;
-const one=s=>D.querySelector(s);
-const all=s=>Array.from(D.querySelectorAll(s));
-const SEL={
-  leftHandle:'#leftEdgeMenu,[data-left-edge],.edge-menu-left,.edge.left,[data-bd9-handle="left"]',
-  rightHandle:'#rightEdgeMenu,[data-right-edge],.edge-menu-right,.edge.right,[data-bd9-handle="right"]',
-  left:'#mobileDrawer,#leftDrawer,[data-bd9-drawer="left"]',
-  right:'#rightMobileDrawer,#rightDrawer,[data-bd9-drawer="right"]',
-  back:'#drawerBackdrop,#backdrop,.drawer-backdrop'
-};
-let pushed=false;
-function drawers(which){return all(which==='right'?SEL.right:SEL.left)}
-function backdrop(){return one(SEL.back)}
-function forceClose(fromHistory=false){
-  [...drawers('left'),...drawers('right')].forEach(x=>{
-    x.classList.remove('open','bd-force-open');
-    x.removeAttribute('data-bd-open');
-    x.style.removeProperty('transform');
-    x.style.removeProperty('pointer-events');
-  });
-  const b=backdrop();if(b){b.classList.remove('show','bd-force-show');b.style.removeProperty('opacity');b.style.removeProperty('pointer-events')}
-  D.body.classList.remove('locked','bd-drawer-open');
-  if(!fromHistory&&pushed&&history.state?.bdSidebar){pushed=false;history.back()}
-}
-function forceOpen(which){
-  const target=drawers(which)[0];if(!target)return;
-  [...drawers('left'),...drawers('right')].forEach(x=>{
-    const on=x===target;x.classList.toggle('open',on);x.classList.toggle('bd-force-open',on);
-    if(on){x.dataset.bdOpen='1';x.style.setProperty('transform','translate3d(0,0,0)','important');x.style.setProperty('pointer-events','auto','important')}
-    else{x.removeAttribute('data-bd-open');x.style.removeProperty('transform');x.style.removeProperty('pointer-events')}
-  });
-  const b=backdrop();if(b){b.classList.add('show','bd-force-show');b.style.setProperty('opacity','1','important');b.style.setProperty('pointer-events','auto','important')}
-  D.body.classList.add('locked','bd-drawer-open');
-  if(!history.state?.bdSidebar){history.pushState({...(history.state||{}),bdSidebar:which},'');pushed=true}
-}
-function isClose(t){return t.closest('[data-close-drawer],[data-bd9-close],.drawer-close,#closeDrawer,#closeRightDrawer')}
-function handlePointer(e){
-  const t=e.target;
-  if(t.closest(SEL.leftHandle)){e.preventDefault();e.stopPropagation();forceOpen('left');return}
-  if(t.closest(SEL.rightHandle)){e.preventDefault();e.stopPropagation();forceOpen('right');return}
-  if(isClose(t)||t===backdrop()){e.preventDefault();e.stopPropagation();forceClose();return}
-}
-W.addEventListener('pointerdown',handlePointer,true);
-W.addEventListener('popstate',()=>{if(D.body.classList.contains('bd-drawer-open')){pushed=false;forceClose(true)}});
-D.addEventListener('keydown',e=>{if(e.key==='Escape')forceClose()},true);
 
-function fallbackProfileSidebars(){
-  const l=one('#leftDrawerBody'),r=one('#rightDrawerBody');
-  const ls=one('#leftSide'),rs=one('#rightSide');
-  if(l&&!l.children.length&&ls?.innerHTML.trim())l.innerHTML=ls.innerHTML;
-  if(r&&!r.children.length&&rs?.innerHTML.trim())r.innerHTML=rs.innerHTML;
-  if(l&&!l.children.length)l.innerHTML='<section class="side-card"><div class="side-title"><strong>আপন ভুবন</strong></div><div class="side-list"><button class="side-link" data-story-touch>✦ Story Touch</button><button class="side-link" data-side-panel="messages">▢ Messenger</button><button class="side-link" data-side-panel="archive">◫ Archive</button><button class="side-link" data-side-panel="settings">⚙ Settings</button></div></section>';
-  if(r&&!r.children.length)r.innerHTML='<section class="side-card"><div class="side-title"><strong>প্রোফাইল</strong></div><div class="side-list"><button class="side-link" data-tab="home">হোম</button><button class="side-link" data-tab="poem">কবিতা</button><button class="side-link" data-tab="recitation">আবৃত্তি</button><button class="side-link" data-tab="letter">চিঠিপত্র</button><button class="side-link" data-tab="environment">পরিবেশ</button></div></section>';
-}
-function syncThemeText(){
-  const dark=D.documentElement.getAttribute('data-theme')==='dark';
-  D.documentElement.classList.toggle('bd-final-dark',dark);
-  all('#composerPrompt,.composer-prompt,[data-open-composer],#editorCaption,.caption-input,.caption-field').forEach(el=>{
-    el.style.setProperty('color',dark?'#ffffff':'#14243a','important');
-    el.style.setProperty('-webkit-text-fill-color',dark?'#ffffff':'#14243a','important');
-    el.style.setProperty('opacity','1','important');
-  });
-}
-function init(){fallbackProfileSidebars();syncThemeText()}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
-setTimeout(init,350);setTimeout(init,1200);setTimeout(init,2600);
-new MutationObserver(syncThemeText).observe(D.documentElement,{attributes:true,attributeFilter:['data-theme','data-r99-palette']});
-})();
-</script>
 </body></html>

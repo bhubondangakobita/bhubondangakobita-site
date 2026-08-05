@@ -1,13 +1,179 @@
 <!DOCTYPE html>
 
 <html data-bd-glass="pearl" data-bd-single-file="20260801-r102" data-bd-theme="light" data-theme="light" lang="bn">
-<head>
+<head><style id="bd-click-rescue-v104-style">html.bd-click-rescue-v104 body{pointer-events:auto!important}
+html.bd-click-rescue-v104 button,html.bd-click-rescue-v104 a,html.bd-click-rescue-v104 [role="button"]{touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(115,92,220,.18)!important;cursor:pointer!important}
+html.bd-click-rescue-v104 .bd-rescue-pressed{transform:scale(.975)!important;filter:brightness(.97)!important;transition:transform .08s ease!important}
+html.bd-click-rescue-v104 #composer,html.bd-click-rescue-v104 #composerPrompt,html.bd-click-rescue-v104 #composerChoices,html.bd-click-rescue-v104 #composerForm{position:relative!important;z-index:5!important;pointer-events:auto!important}
+html.bd-click-rescue-v104 #composer::before,html.bd-click-rescue-v104 #composer::after{pointer-events:none!important}
+html.bd-click-rescue-v104 .bd-rescue-expanded{overflow:visible!important}
+html.bd-click-rescue-v104 .bd-rescue-expanded .post-body,html.bd-click-rescue-v104 .bd-rescue-expanded .bd-live-body,html.bd-click-rescue-v104 .bd-rescue-expanded .bd-r97-body,html.bd-click-rescue-v104 .bd-rescue-expanded .r99-body{max-height:none!important;height:auto!important;overflow:visible!important;-webkit-line-clamp:unset!important;display:block!important;opacity:1!important}
+html.bd-click-rescue-v104 .master-post-shell,html.bd-click-rescue-v104 .bd-r97-detail,html.bd-click-rescue-v104 #masterPostShell{display:none!important;visibility:hidden!important;pointer-events:none!important}
+html.bd-click-rescue-v104 input,html.bd-click-rescue-v104 textarea,html.bd-click-rescue-v104 select{font-size:max(16px,1rem)!important}
+</style><script id="bd-click-rescue-v104-script">(()=>{
+  'use strict';
+  if(window.__BD_CLICK_RESCUE_V104__) return;
+  window.__BD_CLICK_RESCUE_V104__=true;
+  const D=document,H=document.documentElement;
+  const $=(s,r=D)=>r.querySelector(s), $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+  const stop=e=>{e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();};
+  const show=(el,display='block')=>{if(!el)return;el.hidden=false;el.classList.add('open','show');el.style.setProperty('display',display,'important');el.style.setProperty('visibility','visible','important');el.style.setProperty('opacity','1','important');el.style.setProperty('pointer-events','auto','important');};
+  const hide=el=>{if(!el)return;el.classList.remove('open','show');el.style.removeProperty('display');el.style.removeProperty('visibility');el.style.removeProperty('opacity');el.style.removeProperty('pointer-events');};
+  const page=()=>((location.pathname.split('/').pop()||'index.html').split('?')[0].toLowerCase());
+
+  function drawerNodes(side){
+    const sels=side==='left'
+      ?['#leftDrawer','#mobileDrawer','#midnightLeftDrawer','[data-bd9-drawer="left"]']
+      :['#rightDrawer','#rightMobileDrawer','#midnightRightDrawer','[data-bd9-drawer="right"]'];
+    return sels.map(s=>$(s)).filter(Boolean);
+  }
+  function backdrops(){return ['#drawerBackdrop','#backdrop','.backdrop','.drawer-backdrop'].map(s=>$(s)).filter(Boolean)}
+  function openDrawer(side){
+    drawerNodes(side).forEach(el=>{
+      show(el,'block');
+      el.style.setProperty('transform','translate3d(0,0,0)','important');
+    });
+    backdrops().forEach(el=>show(el,'block'));
+    D.body?.classList.add('drawer-open');
+    D.body?.setAttribute('data-rescue-drawer',side);
+  }
+  function closeDrawers(){
+    $$('aside.drawer,.mobile-drawer,[data-bd9-drawer]').forEach(el=>{
+      el.classList.remove('open','show');
+      const right=el.classList.contains('right')||el.classList.contains('right-drawer')||el.getAttribute('data-bd9-drawer')==='right';
+      el.style.setProperty('transform',right?'translate3d(104%,0,0)':'translate3d(-104%,0,0)','important');
+      el.style.setProperty('pointer-events','none','important');
+    });
+    backdrops().forEach(el=>{el.classList.remove('open','show');el.style.setProperty('display','none','important');el.style.setProperty('pointer-events','none','important')});
+    D.body?.classList.remove('drawer-open');
+    D.body?.removeAttribute('data-rescue-drawer');
+  }
+  function setComposerType(type){
+    const map={poem:'#typePoem',prolap:'#typeProlap',letter:'#typeLetter',recitation:'#typeRecitation',environment:'#typeEnvironment'};
+    const input=$(map[type]||''); if(input){input.checked=true;input.dispatchEvent(new Event('change',{bubbles:true}))}
+  }
+  function openComposer(type){
+    const prompt=$('#composerPrompt'), choices=$('#composerChoices'), form=$('#composerForm');
+    if(!form)return;
+    setComposerType(type);
+    if(prompt)prompt.setAttribute('aria-expanded','true');
+    if(choices){choices.hidden=true;choices.style.setProperty('display','none','important')}
+    form.hidden=false;form.style.setProperty('display','block','important');form.style.setProperty('visibility','visible','important');form.style.setProperty('opacity','1','important');form.style.setProperty('pointer-events','auto','important');
+    const title=$('#postTitle');
+    if(title){
+      if(type==='letter')title.placeholder='চিঠির শিরোনাম লিখুন';
+      else if(type==='environment')title.placeholder='পরিবেশ বিষয়ক শিরোনাম লিখুন';
+      else title.placeholder='লেখার শিরোনাম';
+    }
+    setTimeout(()=>{form.scrollIntoView({behavior:'smooth',block:'start'});title?.focus({preventScroll:true})},20);
+  }
+  function openComposerPrompt(){
+    const p=page();
+    if(p.includes('letter'))return openComposer('letter');
+    if(p.includes('environment'))return openComposer('environment');
+    const choices=$('#composerChoices');
+    if(choices){choices.hidden=false;choices.style.setProperty('display','grid','important');choices.style.setProperty('visibility','visible','important');choices.style.setProperty('opacity','1','important');choices.style.setProperty('pointer-events','auto','important');$('#composerPrompt')?.setAttribute('aria-expanded','true');choices.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  }
+  function cancelComposer(){
+    const form=$('#composerForm'),choices=$('#composerChoices'),prompt=$('#composerPrompt');
+    if(form){form.hidden=true;form.style.setProperty('display','none','important')}
+    if(choices){choices.hidden=true;choices.style.setProperty('display','none','important')}
+    prompt?.setAttribute('aria-expanded','false');prompt?.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function chooseStyle(btn){
+    const value=btn.dataset.cardStyle||btn.dataset.r97StyleChoice||'';
+    $$('.composer-style-option,[data-card-style]').forEach(x=>{x.classList.toggle('active',x===btn);x.setAttribute('aria-selected',x===btn?'true':'false')});
+    const select=$('#cardStyle');if(select&&value){select.value=value;select.dispatchEvent(new Event('change',{bubbles:true}))}
+  }
+  function togglePost(card){
+    if(!card)return;
+    const expanded=card.classList.toggle('bd-rescue-expanded');
+    card.setAttribute('aria-expanded',expanded?'true':'false');
+    const bodies=card.querySelectorAll('.post-body,.bd-live-body,.bd-r97-body,.r99-body,[data-post-body]');
+    bodies.forEach(body=>{
+      if(expanded){body.style.setProperty('max-height','none','important');body.style.setProperty('height','auto','important');body.style.setProperty('overflow','visible','important');body.style.setProperty('-webkit-line-clamp','unset','important');body.style.setProperty('display','block','important')}
+      else{body.style.removeProperty('max-height');body.style.removeProperty('height');body.style.removeProperty('overflow');body.style.removeProperty('-webkit-line-clamp');body.style.removeProperty('display')}
+    });
+    const more=card.querySelector('.read-more,.post-read-more,[data-read-more],[data-open-post],[data-r99-open-post]');
+    if(more)more.textContent=expanded?'কম দেখুন ↑':'আরও দেখুন →';
+  }
+  function toggleComments(btn){
+    const card=btn.closest('[data-post-card],.post,.bd-live-post,.bd-r97-card,.r99-post');
+    const box=card?.querySelector('.comments,.comment-box,.bd-comments,[data-comments]');
+    if(box){const isOpen=box.classList.toggle('open');box.hidden=!isOpen;box.style.setProperty('display',isOpen?'block':'none','important');if(isOpen)box.querySelector('textarea,input')?.focus()}
+  }
+  function toggleProfileMenu(){
+    const menu=$('#profileMenu');if(!menu)return;
+    const opening=menu.classList.contains('hidden')||menu.hidden||getComputedStyle(menu).display==='none';
+    if(opening){menu.hidden=false;menu.classList.remove('hidden');menu.style.setProperty('display','grid','important');menu.style.setProperty('pointer-events','auto','important')}
+    else{menu.hidden=true;menu.classList.add('hidden');menu.style.setProperty('display','none','important')}
+  }
+  function profileMessage(){
+    const user=($('#profileUsername')?.textContent||new URLSearchParams(location.search).get('user')||'').trim().replace(/^@/,'');
+    location.href='messages.html'+(user?'?user='+encodeURIComponent(user):'');
+  }
+  function closePhoto(){
+    $$('.photo-viewer,.bd-photo-lightbox,.r99-viewer,[data-photo-viewer]').forEach(v=>{v.classList.remove('open','show');v.hidden=true;v.style.setProperty('display','none','important')});
+    D.body?.classList.remove('photo-open','locked');
+  }
+  function directNavigate(a,e){
+    const href=a.getAttribute('href')||'';
+    if(!href||href==='#'||href.startsWith('javascript:')||href.startsWith('mailto:')||href.startsWith('tel:'))return false;
+    if(a.target==='_blank')return false;
+    if(/^https?:/i.test(href)&&!href.startsWith(location.origin))return false;
+    stop(e);location.href=href;return true;
+  }
+
+  D.addEventListener('pointerdown',e=>{const b=e.target.closest('button,a,[role="button"]');if(b)b.classList.add('bd-rescue-pressed')},true);
+  D.addEventListener('pointerup',()=>$$('.bd-rescue-pressed').forEach(x=>x.classList.remove('bd-rescue-pressed')),true);
+  D.addEventListener('pointercancel',()=>$$('.bd-rescue-pressed').forEach(x=>x.classList.remove('bd-rescue-pressed')),true);
+
+  D.addEventListener('click',e=>{
+    const t=e.target;
+    if(t.closest('[data-left-edge],#leftEdgeMenu,.edge-menu-left,.edge.left,[data-bd9-handle="left"]')){stop(e);openDrawer('left');return}
+    if(t.closest('[data-right-edge],#rightEdgeMenu,.edge-menu-right,.edge.right,[data-bd9-handle="right"]')){stop(e);openDrawer('right');return}
+    if(t.closest('[data-close-drawer],[data-bd9-close],.drawer-close,.close-drawer')||t.matches('#drawerBackdrop,#backdrop,.backdrop,.drawer-backdrop')){stop(e);closeDrawers();return}
+    if(t.closest('#composerPrompt,.composer-prompt')){stop(e);openComposerPrompt();return}
+    const quick=t.closest('[data-open-type],.quick-type,.compose-type');
+    if(quick){
+      stop(e);let type=quick.dataset.openType||quick.dataset.type||'poem';if(type==='letters')type='letter';
+      if(page().includes('index')&&type==='letter'){location.href='letter.html#composer';return}
+      if(page().includes('index')&&type==='environment'){location.href='environment.html#composer';return}
+      openComposer(type);return;
+    }
+    const style=t.closest('[data-card-style],.composer-style-option');if(style){stop(e);chooseStyle(style);return}
+    if(t.closest('#cancelComposer,[data-cancel-composer]')){stop(e);cancelComposer();return}
+    if(t.closest('[data-profile-more]')){stop(e);toggleProfileMenu();return}
+    if(t.closest('[data-message]')){stop(e);profileMessage();return}
+    if(t.closest('[data-close-photo],.photo-viewer .close,.bd-photo-close,.r99-viewer-close')){stop(e);closePhoto();return}
+    const comment=t.closest('[data-comment],[data-live-comment],[data-action="comment"],.comment-action');if(comment){stop(e);toggleComments(comment);return}
+    const menu=t.closest('[data-post-menu],.post-menu-btn,.three-dot-btn');if(menu){stop(e);const card=menu.closest('.post,.bd-live-post,.bd-r97-card,.r99-post,[data-post-card]');const board=card?.querySelector('.post-menu,.post-action-board,[data-post-menu-board]');if(board){const open=getComputedStyle(board).display==='none'||board.hidden;board.hidden=!open;board.style.setProperty('display',open?'grid':'none','important')}return}
+    const more=t.closest('.read-more,.post-read-more,[data-read-more],[data-open-post],[data-r99-open-post],[data-r97-title]');if(more){stop(e);togglePost(more.closest('[data-post-card],.post,.bd-live-post,.bd-r97-card,.r99-post'));return}
+    const card=t.closest('[data-post-card],.post,.bd-live-post,.bd-r97-card,.r99-post');
+    if(card&&!t.closest('a,button,input,textarea,select,label,audio,video,img,[contenteditable="true"]')){stop(e);togglePost(card);return}
+    const a=t.closest('a[href]');if(a)directNavigate(a,e);
+  },true);
+
+  D.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawers();closePhoto();const m=$('#profileMenu');if(m){m.hidden=true;m.classList.add('hidden');m.style.setProperty('display','none','important')}}},true);
+  D.addEventListener('contextmenu',e=>e.preventDefault(),true);
+  D.addEventListener('dragstart',e=>{if(e.target.closest('img,a'))e.preventDefault()},true);
+  D.addEventListener('copy',e=>{if(!e.target.closest('input,textarea,[contenteditable="true"]'))e.preventDefault()},true);
+
+  function init(){
+    H.classList.add('bd-click-rescue-v104');
+    $$('button,a,[role="button"],input,textarea,select').forEach(x=>x.style.setProperty('pointer-events','auto','important'));
+    closeDrawers();
+    if(location.hash==='#composer'||location.hash.includes('composer'))setTimeout(openComposerPrompt,50);
+  }
+  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 <meta content="#173153" name="theme-color"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" name="viewport">
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>পরিবেশের কথা | ভুবনডাঙ্গার কবিতা</title>
-<meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
+<meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -2807,37 +2973,7 @@ body{
   #leftSidebar,#rightSidebar,.sidebar,.left-sidebar,.right-sidebar,.left-col,.right-col{display:none!important}
 }
 </style>
-<script id="bd-truth-final-routing-20260727">
-(function(){
-  'use strict';
-  const currentDocumentUrl=()=>{const u=new URL(location.href);u.search='';u.hash='';return u};
-  function currentPostUrl(id){const u=currentDocumentUrl();u.searchParams.set('post',id);return u.href}
-  function normalizeHomeLinks(){
-    const name=(()=>{try{return decodeURIComponent(location.pathname.split('/').pop()||'')}catch(_){return location.pathname.split('/').pop()||''}})();
-    if(!/^index(?:\s*\(\d+\))?\.html$/i.test(name))return;
-    const home=currentDocumentUrl().href;
-    document.querySelectorAll('a[href="index.html"],a[href="./index.html"]').forEach(a=>a.href=home);
-  }
-  function normalizeLegacyCards(root=document){
-    root.querySelectorAll?.('#postList .bd-live-post[data-post-id]').forEach(card=>{
-      const id=card.dataset.postId;if(!id)return;
-      card.querySelectorAll('a[href*="post-details.html"],.post-title a,.post-read-more').forEach(a=>a.href=currentPostUrl(id));
-      card.querySelector('.post-title a')?.setAttribute('data-bd-current-post',id);
-      card.querySelector('.post-read-more')?.setAttribute('data-bd-current-post',id);
-    });
-  }
-  normalizeHomeLinks();normalizeLegacyCards();
-  const host=document.getElementById('postList');
-  if(host)new MutationObserver(()=>normalizeLegacyCards(host)).observe(host,{childList:true,subtree:true});
-  document.addEventListener('click',function(e){
-    const trigger=e.target.closest('#postList .bd-live-post [data-bd-current-post],#postList .bd-live-post .post-body');
-    if(!trigger)return;
-    if(e.target.closest('button,form,textarea,input,select,label,[data-live-like],[data-comment],[data-live-share],[data-live-save],[data-live-menu]'))return;
-    const card=trigger.closest('.bd-live-post[data-post-id]');if(!card)return;
-    e.preventDefault();e.stopImmediatePropagation();location.href=currentPostUrl(card.dataset.postId);
-  },true);
-})();
-</script>
+
 <style id="bd-theme-card-welcome-v1">
 /* Overall theme inspiration only: no sample-image text or artwork is copied. */
 html[data-bd-glass="crystal"]{--primary:#5e8fcf;--primary-2:#879fd1;--green:#4f8f83}
@@ -2935,86 +3071,7 @@ html[data-theme="dark"] .bd-member-item{background:rgba(17,36,63,.70)}
 @media(max-width:899px){.bd-member-window{height:205px}.bd-new-members-card{margin-top:8px!important}}
 @media(prefers-reduced-motion:reduce){.bd-member-track,.bd-welcome-flow-track{animation:none!important}.bd-member-window{overflow:auto;mask-image:none;-webkit-mask-image:none}}
 </style>
-<script id="bd-theme-card-welcome-v1-script">
-(function(){
-  'use strict';
-  const D=document,H=D.documentElement;
-  const q=(s,c=D)=>c.querySelector(s), qa=(s,c=D)=>Array.from(c.querySelectorAll(s));
-  const names={pearl:'মুক্তা',lavender:'ল্যাভেন্ডার',aqua:'নীল জল',rose:'গোলাপি',mint:'মিন্ট',silver:'রূপালি',aurora:'অরোরা',clear:'ক্লাসিক'};
-  const demoMembers=[
-    {name:'তাসনিম জাহান',username:'tasnim-jahan'},
-    {name:'রাকিবুল হাসান',username:'rakibul-hasan'},
-    {name:'নুসরাত কবির',username:'nusrat-kabir'},
-    {name:'আদিবা রহমান',username:'adiba-rahman'},
-    {name:'সাব্বির আহমেদ',username:'sabbir-ahmed'},
-    {name:'মেহজাবিন নূর',username:'mehjabin-noor'}
-  ];
-  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const initial=n=>Array.from(String(n||'ভ')).slice(0,1).join('');
-  function addThemeButtons(){
-    qa('.bd9-palettes,.bd-theme-palette').forEach(box=>{
-      if(!box.querySelector('[data-bd9-palette="crystal"],[data-final-palette="crystal"]')){
-        const crystal=D.createElement('button');crystal.type='button';crystal.textContent='ক্রিস্টাল';
-        crystal.setAttribute(box.classList.contains('bd9-palettes')?'data-bd9-palette':'data-final-palette','crystal');box.appendChild(crystal);
-      }
-      if(!box.querySelector('[data-bd9-palette="ocean"],[data-final-palette="ocean"]')){
-        const ocean=D.createElement('button');ocean.type='button';ocean.textContent='ওশান';
-        ocean.setAttribute(box.classList.contains('bd9-palettes')?'data-bd9-palette':'data-final-palette','ocean');box.appendChild(ocean);
-      }
-    });
-  }
-  function swatchBackground(style){return ({pearl:'linear-gradient(135deg,#fff,#eef2ff 52%,#f5edff)',lavender:'linear-gradient(135deg,#f5efff,#c7aaf2 55%,#9d85e5)',aqua:'linear-gradient(135deg,#effcff,#9ddce8 55%,#69accf)',rose:'linear-gradient(135deg,#fff0f8,#efa4cb 55%,#c981b4)',mint:'linear-gradient(135deg,#effff9,#a5e1cb 55%,#6fb79d)',silver:'linear-gradient(135deg,#f9fbfd,#cbd6e3 55%,#9bacc1)',aurora:'linear-gradient(135deg,#88c8ff,#b89af0 35%,#f0a9cc 68%,#91ddca)',clear:'linear-gradient(135deg,#fff,#e9eef5)'})[style]||'#fff'}
-  function ensureSelectedButton(){
-    const picker=q('#composerStylePicker'),head=picker&&q('.composer-style-head',picker);if(!picker||!head)return null;
-    let btn=q('.composer-style-selected',head);
-    if(!btn){btn=D.createElement('button');btn.type='button';btn.className='composer-style-selected';btn.setAttribute('aria-expanded','true');btn.innerHTML='<span class="selected-style-swatch"></span><span class="selected-style-label">নির্বাচিত: মুক্তা</span><span aria-hidden="true">⌃</span>';head.appendChild(btn)}
-    return btn;
-  }
-  function updateStyleUI(collapse){
-    const select=q('#cardStyle'),picker=q('#composerStylePicker'),form=q('#composerForm'),btn=ensureSelectedButton();if(!select||!picker)return;
-    const style=select.value||'pearl';
-    qa('[data-card-style]').forEach(b=>{const on=b.dataset.cardStyle===style;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false')});
-    if(form)form.dataset.previewStyle=style;
-    if(btn){q('.selected-style-label',btn).textContent='নির্বাচিত: '+(names[style]||style);q('.selected-style-swatch',btn).style.background=swatchBackground(style)}
-    if(collapse===true){picker.classList.add('is-collapsed');btn?.setAttribute('aria-expanded','false');if(btn)btn.lastElementChild.textContent='⌄'}
-    if(collapse===false){picker.classList.remove('is-collapsed');btn?.setAttribute('aria-expanded','true');if(btn)btn.lastElementChild.textContent='⌃'}
-  }
-  function bindPicker(){
-    const picker=q('#composerStylePicker'),select=q('#cardStyle');if(!picker||!select)return;
-    const btn=ensureSelectedButton();
-    D.addEventListener('click',e=>{
-      const styleBtn=e.target.closest('[data-card-style]');
-      if(styleBtn){select.value=styleBtn.dataset.cardStyle;select.dispatchEvent(new Event('change',{bubbles:true}));updateStyleUI(true);return}
-      const selected=e.target.closest('.composer-style-selected');if(selected){e.preventDefault();updateStyleUI(picker.classList.contains('is-collapsed')?false:true)}
-    },true);
-    select.addEventListener('change',()=>updateStyleUI());
-    const prompt=q('#composerPrompt'),avatar=q('#composerAvatar');
-    [prompt,avatar].filter(Boolean).forEach(x=>x.addEventListener('click',()=>setTimeout(()=>updateStyleUI(false),35)));
-    const form=q('#composerForm');if(form)form.addEventListener('reset',()=>setTimeout(()=>{select.value='pearl';updateStyleUI(true)},0));
-    updateStyleUI(true);
-  }
-  function readLocalMembers(){
-    const keys=['bhubondangaRegisteredUsers','bhubondangaUsers','bhubondangaMembers','registeredUsers'];const out=[];
-    keys.forEach(k=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(a))a.forEach(x=>{const created=x.created_at||x.createdAt||x.registeredAt||x.joinedAt;if(created&&Date.now()-new Date(created).getTime()>86400000)return;out.push({name:x.display_name||x.displayName||x.name||x.username,username:x.username||x.slug||x.id,avatar:x.avatar_url||x.avatar||x.photo||'',createdAt:created})})}catch(_){}});
-    return out.filter(x=>x.name).slice(0,12);
-  }
-  async function fetchMembers(){
-    const local=readLocalMembers();if(local.length)return{rows:local,demo:false};
-    const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;
-    if(c){try{const start=new Date();start.setHours(0,0,0,0);let r=await c.from('profiles').select('id,display_name,username,avatar_url,created_at').gte('created_at',start.toISOString()).order('created_at',{ascending:false}).limit(12);if(!r.error&&r.data?.length)return{rows:r.data.map(x=>({name:x.display_name||x.username||'নতুন সদস্য',username:x.username||x.id,avatar:x.avatar_url||'',createdAt:x.created_at})),demo:false}}catch(_){}}
-    return{rows:demoMembers,demo:true};
-  }
-  function memberItem(x){const url='profile.html?user='+encodeURIComponent(x.username||'member');const avatar=x.avatar?'<img src="'+esc(x.avatar)+'" alt="">':esc(initial(x.name));return '<a class="bd-member-item" href="'+url+'"><span class="bd-member-avatar">'+avatar+'</span><span class="bd-member-copy"><strong>'+esc(x.name||'নতুন সদস্য')+'</strong><small>স্বাগতম আপনার ভুবনে</small></span><span class="bd-member-open">›</span></a>'}
-  function cardHtml(rows,demo){const items=rows.map(memberItem).join('');return '<section class="glass right-section bd-new-members-card" data-new-members-card><div class="bd-new-members-head"><h3>আজকের নতুন সদস্য</h3><span class="bd-new-members-count">'+rows.length+'</span></div><div class="bd-welcome-flow"><div class="bd-welcome-flow-track"><span>স্বাগতম আপনার ভুবনে • আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।</span><span aria-hidden="true">স্বাগতম আপনার ভুবনে • আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।</span></div></div><div class="bd-member-window"><div class="bd-member-track" style="--member-speed:'+Math.max(18,rows.length*4)+'s"><div class="bd-member-group">'+items+'</div><div class="bd-member-group" aria-hidden="true">'+items+'</div></div></div>'+(demo?'<div class="bd-member-demo">ডেমো সদস্য—নিবন্ধন শুরু হলে বাস্তব সদস্য দেখাবে</div>':'')+'</section>'}
-  async function installMembers(){
-    const result=await fetchMembers();
-    ['#rightSidebar','#rightMobileDrawer'].forEach(sel=>{const root=q(sel);if(!root)return;root.querySelectorAll('[data-new-members-card]').forEach(x=>x.remove());const stack=q('.bd9-sidebar-stack',root)||root;const account=q('.account-card',stack);if(account)account.insertAdjacentHTML('afterend',cardHtml(result.rows,result.demo));else stack.insertAdjacentHTML('afterbegin',cardHtml(result.rows,result.demo))});
-  }
-  function init(){addThemeButtons();bindPicker();installMembers();setTimeout(addThemeButtons,250);setTimeout(installMembers,1000)}
-  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
-  addEventListener('pageshow',()=>{setTimeout(()=>{addThemeButtons();updateStyleUI(true);installMembers()},80)});
-})();
-</script>
+
 <style id="bd-locked-single-file-r95">
 /* ============================================================
    LOCKED INDEX ADDITIVE LAYER — R95
@@ -3119,153 +3176,7 @@ html[data-bd-sky="nebula"] .right-section{
 @media(max-width:520px){.bd-auth-grid.two,.bd-directory-grid,.bd-generic-menu{grid-template-columns:1fr}}
 
 </style>
-<script id="bd-locked-single-file-r95-script">
-(function(){
-'use strict';
-const D=document,H=D.documentElement;
-const q=(s,c=D)=>c.querySelector(s),qa=(s,c=D)=>Array.from(c.querySelectorAll(s));
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const read=(k,f=[])=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v??f}catch(_){return f}};
-const write=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}};
-const client=()=>window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||null;
-const current=()=>window.__BD_IDENTITY||{};
-const isLogged=()=>Boolean(window.__BD_LIVE_SESSION||current().author_id||read('bhubondangaCurrentUser',null));
-const role=()=>String(window.__BD_LIVE_ROLE||current().role||'visitor').toLowerCase();
-const toBn=v=>String(v??0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
-let routeState={type:'home',key:'',page:1,rows:[],profile:null,tab:'home'};
-let originalCenterChildren=[];
 
-function toast(msg){if(window.toast&&typeof window.toast==='function'){window.toast(msg);return}let t=q('#bdSingleToast');if(!t){t=D.createElement('div');t.id='bdSingleToast';t.className='bd-single-toast';D.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2400)}
-
-function initSky(){
-  const saved=localStorage.getItem('bhubondangaSky')||'';if(saved)H.dataset.bdSky=saved;
-  function panel(){return '<section class="bd-sky-panel"><div class="bd-sky-panel-head"><strong>দুটি আকাশ</strong><small>সম্পূর্ণ ভিন্ন অনুভব</small></div><div class="bd-sky-options"><button class="bd-sky-btn" data-sky="dawn" type="button">প্রভাত আকাশ</button><button class="bd-sky-btn" data-sky="nebula" type="button">নীহারিকা আকাশ</button></div></section>'}
-  qa('.bd9-card,.bd-theme-panel').forEach(card=>{if((card.querySelector('.bd9-palettes,.bd-theme-palette'))&&!card.querySelector('.bd-sky-panel'))card.insertAdjacentHTML('beforeend',panel())});
-  qa('.bd-sky-btn').forEach(b=>b.classList.toggle('active',b.dataset.sky===H.dataset.bdSky));
-  D.addEventListener('click',e=>{const b=e.target.closest('.bd-sky-btn');if(!b)return;e.preventDefault();const next=H.dataset.bdSky===b.dataset.sky?'':b.dataset.sky;if(next)H.dataset.bdSky=next;else delete H.dataset.bdSky;localStorage.setItem('bhubondangaSky',next);qa('.bd-sky-btn').forEach(x=>x.classList.toggle('active',x.dataset.sky===next));toast(next?(next==='dawn'?'প্রভাত আকাশ চালু হয়েছে':'নীহারিকা আকাশ চালু হয়েছে'):'মূল আকাশে ফিরে এসেছেন')},true);
-  setTimeout(()=>{qa('.bd9-card,.bd-theme-panel').forEach(card=>{if(card.querySelector('.bd9-palettes,.bd-theme-palette')&&!card.querySelector('.bd-sky-panel'))card.insertAdjacentHTML('beforeend',panel())});qa('.bd-sky-btn').forEach(b=>b.classList.toggle('active',b.dataset.sky===H.dataset.bdSky))},600);
-}
-
-function ensureShells(){
-  const center=q('.center-col');if(center&&!q('#bdSingleView',center)){
-    originalCenterChildren=Array.from(center.children);
-    const view=D.createElement('section');view.id='bdSingleView';view.className='bd-single-view';center.appendChild(view);
-  }
-  if(!q('#bdOverlayBackdrop'))D.body.insertAdjacentHTML('beforeend','<div class="bd-overlay-backdrop" id="bdOverlayBackdrop"></div><aside class="bd-social-drawer" id="bdNotificationDrawer" aria-hidden="true"></aside><aside class="bd-social-drawer" id="bdMessageDrawer" aria-hidden="true"></aside><section class="bd-photo-lightbox" id="bdPhotoLightbox" aria-hidden="true"><div class="bd-photo-top"><div><strong id="bdPhotoTitle">ছবি</strong><small id="bdPhotoOwner"></small></div><button class="bd-photo-close" type="button" data-close-photo aria-label="বন্ধ করুন">×</button></div><div class="bd-photo-main"><div class="bd-photo-stage"><img id="bdPhotoImage" alt=""><div class="bd-photo-floating-comments" id="bdPhotoFloatingComments" aria-live="polite"></div></div><aside class="bd-photo-comments-panel"><header><strong>মন্তব্য</strong><span id="bdPhotoCommentCount">০</span></header><div class="bd-photo-comments-list" id="bdPhotoCommentsList"></div><form class="bd-photo-comment-form" id="bdPhotoCommentForm"><input id="bdPhotoCommentInput" autocomplete="off" enterkeyhint="send" placeholder="মন্তব্য লিখুন..."><button type="submit" aria-label="মন্তব্য পাঠান">➤</button></form></aside></div><div class="bd-photo-caption" id="bdPhotoCaption"></div></section>');
-}
-function showRoute(){ensureShells();originalCenterChildren.forEach(x=>x.classList.add('bd-route-hidden'));q('#bdSingleView')?.classList.add('open')}
-function home(){originalCenterChildren.forEach(x=>x.classList.remove('bd-route-hidden'));const v=q('#bdSingleView');if(v){v.classList.remove('open');v.innerHTML=''}routeState={type:'home',key:'',page:1,rows:[],profile:null,tab:'home'};history.replaceState({bd:'home'},'',location.pathname+location.search.replace(/([?&])bdview=[^&]*/,'$1').replace(/[?&]$/,''));}
-function routeToolbar(title,sub=''){return '<section class="glass bd-route-toolbar"><button class="bd-route-back" type="button" data-bd-home>← হোম</button><div class="bd-route-title"><h2>'+esc(title)+'</h2>'+(sub?'<p>'+esc(sub)+'</p>':'')+'</div><div class="bd-route-actions"><button class="bd-route-back" type="button" data-bd-notifications>🔔</button><button class="bd-route-back" type="button" data-bd-messages>💬</button></div></section>'}
-function normType(v){const s=String(v||'').toLowerCase();if(s.includes('recitation')||s.includes('আবৃত্তি'))return'recitation';if(s.includes('midnight')||s.includes('মধ্যরাত'))return'midnight';if(s.includes('letter')||s.includes('চিঠি'))return'letter';if(s.includes('environment')||s.includes('পরিবেশ'))return'environment';if(s.includes('discussion')||s.includes('আলোচনা'))return'discussion';if(s.includes('quote')||s.includes('বাণী'))return'quote';if(s.includes('prolap')||s.includes('প্রলাপ'))return'prolap';return'poem'}
-const typeNames={poem:'কবিতার নিউজফিড',recitation:'আবৃত্তির নিউজফিড',midnight:'মধ্যরাতের প্রলাপ',letter:'চিঠিপত্র',environment:'পরিবেশের কথা',discussion:'সাহিত্য আলোচনা',quote:'মনীষীদের বাণী',prolap:'ছোট কথার প্রলাপ'};
-function localPosts(){const keys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts','bhubondangaPublishedPoems','bhubondangaPublishedProlaps','bhubondangaPublishedMidnightProlaps','bhubondangaLetterPosts','bhubondangaPublishedRecitations','bhubondangaPublishedEnvironmentPosts','bhubondangaDiscussionPosts'];const map=new Map();keys.forEach(k=>{const a=read(k,[]);if(Array.isArray(a))a.forEach((x,i)=>{const id=String(x.id||x.postId||k+'-'+i);if(map.has(id)||['deleted','archived','rejected'].includes(x.status))return;map.set(id,{id,type:normType(x.type||x.category),title:x.title||x.heading||'শিরোনামহীন লেখা',body:x.body||x.content||x.text||'',author_id:x.author_id||x.authorId||x.user_id||'',author_name:x.author_name||x.authorName||x.display_name||x.author||'ভুবনডাঙ্গার লেখক',author_username:x.author_username||x.authorUsername||x.username||'',author_avatar:x.author_avatar||x.authorAvatar||x.avatar_url||x.avatar||'',created_at:x.created_at||x.createdAt||new Date().toISOString(),card_style:x.card_style||x.cardStyle||'pearl',image_url:x.image_url||x.imageUrl||x.media_url||x.photo||'',original_author:x.original_author||x.originalAuthor||''})})});return Array.from(map.values())}
-async function allPosts(filter={}){let rows=[];const c=client();if(c){try{let s=c.from('posts').select('*').in('status',['published','published_flagged']).order('created_at',{ascending:false}).limit(500);if(filter.type)s=s.eq('type',filter.type);if(filter.authorId)s=s.eq('author_id',filter.authorId);if(filter.username)s=s.eq('author_username',filter.username);const r=await s;if(!r.error)rows=r.data||[]}catch(_){}}
-  if(!rows.length)rows=localPosts();if(filter.type)rows=rows.filter(x=>normType(x.type)===filter.type);if(filter.authorId)rows=rows.filter(x=>String(x.author_id||x.authorId)===String(filter.authorId));if(filter.username)rows=rows.filter(x=>String(x.author_username||x.authorUsername).toLowerCase()===String(filter.username).toLowerCase());return rows.sort((a,b)=>new Date(b.created_at||b.createdAt)-new Date(a.created_at||a.createdAt));}
-function fmt(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch(_){return''}}
-function avatar(x){const src=x.author_avatar||x.avatar_url||x.avatar||'';return src?'<img src="'+esc(src)+'" alt="">':'<span>◯</span>'}
-function profileHash(x){const id=x.author_id||x.id||x.author_username||x.username||'me';return '#bd=profile&user='+encodeURIComponent(id)}
-function postCard(p){const t=normType(p.type),img=p.image_url||p.imageUrl||p.media_url||'',style=p.card_style||p.cardStyle||'pearl';return '<article class="glass post style-'+esc(style)+'" data-bd-route-post="'+esc(p.id)+'"><div class="post-head"><div class="author"><a class="author-avatar" href="'+profileHash(p)+'">'+avatar(p)+'</a><div class="author-meta"><div class="author-name-row"><a href="'+profileHash(p)+'">'+esc(p.author_name||p.authorName||'ভুবনডাঙ্গার লেখক')+'</a></div><small>'+esc(fmt(p.created_at||p.createdAt))+'</small></div></div><button class="three-dot-btn" type="button">•••</button></div><span class="pill">'+esc(typeNames[t]||'লেখা')+'</span><h3 class="post-title">'+esc(p.title||'শিরোনামহীন লেখা')+'</h3><div class="post-body">'+esc(p.body||p.content||'')+'</div>'+(img?'<div class="bd-route-post-media"><img src="'+esc(img)+'" alt="'+esc(p.title||'পোস্টের ছবি')+'" data-bd-photo></div>':'')+'<div class="post-footer"><div class="post-actions"><button class="action-btn" type="button">♡ <span>ভালোবাসা</span></button><button class="action-btn" type="button" data-bd-route-comment>◌ <span>মন্তব্য</span></button><button class="action-btn" type="button">↗ <span>শেয়ার</span></button><button class="action-btn" type="button">▱ <span>সেভ</span></button></div></div><div class="comment-box" data-bd-comment-box><textarea placeholder="মন্তব্য লিখুন..."></textarea><div class="comment-row"><button class="primary-btn" type="button" data-bd-comment-submit>মন্তব্য করুন</button></div></div></article>'}
-async function renderCategory(type){type=normType(type);routeState={type:'category',key:type,page:1,rows:await allPosts({type}),profile:null,tab:'home'};showRoute();const v=q('#bdSingleView');v.innerHTML=routeToolbar(typeNames[type]||'নিউজফিড','এখানে Index-এর পোস্টিং বক্স নেই; শুধু একই ডিজাইনের বিভাগীয় নিউজফিড।')+'<section class="bd-route-feed" id="bdRouteFeed"></section><div class="bd-route-load"><button type="button" data-bd-route-more>আরও দেখুন</button></div>';renderRouteFeed();pushRoute('category',type)}
-function renderRouteFeed(){const host=q('#bdRouteFeed');if(!host)return;const shown=routeState.rows.slice(0,routeState.page*25);host.innerHTML=shown.length?shown.map(postCard).join(''):'<section class="glass empty-feed"><h3>এখনও কোনো প্রকাশিত লেখা নেই</h3></section>';const b=q('[data-bd-route-more]');if(b){b.hidden=shown.length>=routeState.rows.length;b.textContent='আরও দেখুন'}}
-async function findProfile(user){const c=client(),me=current();if(!user||user==='me')user=me.author_id||me.author_username||'';let p=null;if(c&&user){try{let s=c.from('profiles').select('*');s=/^[0-9a-f-]{36}$/i.test(user)?s.eq('id',user):s.eq('username',String(user).replace(/^@/,'').toLowerCase());const r=await s.maybeSingle();p=r.data||null}catch(_){}}
-  if(!p&&(!user||user===me.author_id||user===me.author_username))p={id:me.author_id,username:me.author_username,display_name:me.author_name,avatar_url:me.author_avatar,role:role(),bio:'শব্দ, মানুষ ও মনের গল্প নিয়ে ভুবনডাঙ্গার পথে।'};
-  if(!p)p={id:user,username:String(user||'member'),display_name:'ভুবনডাঙ্গার কবি ও লেখক',avatar_url:'',role:'user',bio:'এই প্রোফাইলে ভুবনডাঙ্গার কবি ও লেখকের প্রকাশনা দেখা যাবে।'};return p}
-function isOwner(p){const me=current();return isLogged()&&(String(me.author_id||'')===String(p.id||'')||String(me.author_username||'').toLowerCase()===String(p.username||'').toLowerCase())}
-async function renderProfile(user){const p=await findProfile(user),owner=isOwner(p),founder=String(p.role||'').toLowerCase()==='founder'||String(p.username||'').toLowerCase()==='mahmud-sohel'||p.display_name==='মাহমুদ সোহেল';const rows=await allPosts(p.id?{authorId:p.id}:{username:p.username});routeState={type:'profile',key:user||'me',page:1,rows,profile:p,tab:'home'};showRoute();const v=q('#bdSingleView');const cover=p.cover_url||p.cover_image||'';const display=p.display_name||p.full_name||p.username||'ভুবনডাঙ্গার সদস্য';const ava=p.avatar_url||p.avatar||'';const stats={poem:rows.filter(x=>normType(x.type)==='poem').length,edited:rows.filter(x=>x.original_author||x.originalAuthor).length,readers:Number(p.readers_count||p.followers_count||0),following:Number(p.following_count||0)};
-  v.innerHTML=routeToolbar(display+'–এর প্রোফাইল','Index-এর foundation অপরিবর্তিত রেখে একই ফাইলের ভিতরে প্রোফাইল ভিউ')+'<section class="glass bd-profile-hero"><div class="bd-profile-cover">'+(cover?'<img src="'+esc(cover)+'" alt="কভার ছবি" data-bd-photo>':'')+'<div class="bd-profile-cover-quote">“শব্দের ভেতরেই মানুষ নিজের আরেকটি আকাশ খুঁজে পায়।”</div></div><div class="bd-profile-main"><div class="bd-profile-avatar">'+(ava?'<img src="'+esc(ava)+'" alt="'+esc(display)+'" data-bd-photo>':'◯')+'</div><div class="bd-profile-identity"><div><h1>'+esc(display)+(founder?' <span class="bd-role-badge">Founder</span>':'')+'</h1><div class="handle">@'+esc(p.username||'member')+'</div><div class="bd-profile-bio">'+esc(p.bio||'শব্দ, কবিতা ও মানুষের গল্প নিয়ে পথচলা।')+'</div><div class="bd-profile-badges">'+(p.verified?'<span class="bd-role-badge">যাচাইকৃত</span>':'')+(founder?'<span class="bd-role-badge">প্রতিষ্ঠাতা কবি</span>':'')+'</div></div><div class="bd-profile-actions">'+(owner?'<a class="primary" href="#bd=edit-profile">প্রোফাইল সম্পাদনা</a>':'<button class="primary" type="button">অনুসরণ করুন</button><button type="button" data-bd-messages>বার্তা</button>')+(owner&&founder?'<button type="button" data-bd-secret-toggle>Founder Dashboard</button>':'')+'<button type="button">শেয়ার</button></div></div><div class="bd-profile-stats"><div class="bd-profile-stat"><strong>'+toBn(stats.poem)+'</strong><span>কবিতা</span></div><div class="bd-profile-stat"><strong>'+toBn(stats.edited)+'</strong><span>সম্পাদিত কাজ</span></div><div class="bd-profile-stat"><strong>'+toBn(stats.readers)+'</strong><span>পাঠক</span></div><div class="bd-profile-stat"><strong>'+toBn(stats.following)+'</strong><span>ফলোয়িং</span></div></div></div></section><section class="glass bd-profile-tabs"><button class="bd-profile-tab active" data-bd-profile-tab="home">হোম</button><button class="bd-profile-tab" data-bd-profile-tab="poem">কবিতা</button><button class="bd-profile-tab" data-bd-profile-tab="recitation">আবৃত্তি</button><button class="bd-profile-tab" data-bd-profile-tab="letter">চিঠিপত্র</button><button class="bd-profile-tab" data-bd-profile-tab="environment">পরিবেশ</button><button class="bd-profile-tab" data-bd-profile-tab="edited">সম্পাদিত লেখা</button></section>'+(owner&&founder?'<button class="bd-secret-handle" type="button" data-bd-secret-toggle aria-label="গোপন দরজা">⌄</button><section class="glass bd-profile-secret" id="bdProfileSecret"><div class="bd-profile-secret-grid"><article class="bd-secret-card"><h3>Copyright claim</h3><p>শুধু Founder-এর জন্য অভিযোগ ও প্রমাণ যাচাই।</p></article><article class="bd-secret-card"><h3>Report & Content issue</h3><p>রিপোর্ট, কনটেন্ট সমস্যা ও মডারেশন কিউ।</p></article><article class="bd-secret-card"><h3>Copy detection</h3><p>একই কবিতা ও উৎস শনাক্ত করার রেকর্ড।</p></article><article class="bd-secret-card"><h3>Admin activity</h3><p>Admin কার্যক্রম ও audit trail।</p></article><article class="bd-secret-card"><h3>Message</h3><p>Founder message ও যোগাযোগের অবস্থা।</p></article><article class="bd-secret-card"><h3>Dashboard</h3><p>এই অংশ সাধারণ দর্শক দেখতে পাবে না।</p></article></div></section>':'')+'<section class="bd-route-feed" id="bdRouteFeed"></section><div class="bd-route-load"><button type="button" data-bd-route-more>আরও দেখুন</button></div>';renderProfileFeed();pushRoute('profile',user||'me')}
-function renderProfileFeed(){let rows=routeState.rows.slice();const tab=routeState.tab;if(tab!=='home'){if(tab==='edited')rows=rows.filter(x=>x.original_author||x.originalAuthor);else rows=rows.filter(x=>normType(x.type)===tab)}const host=q('#bdRouteFeed');if(host)host.innerHTML=rows.slice(0,routeState.page*25).map(postCard).join('')||'<section class="glass empty-feed"><h3>এই বিভাগে এখনও কোনো লেখা নেই</h3></section>';const b=q('[data-bd-route-more]');if(b)b.hidden=routeState.page*25>=rows.length}
-async function renderPoet(name){showRoute();const display=decodeURIComponent(name||'খ্যাতিমান কবি');const v=q('#bdSingleView');v.innerHTML=routeToolbar(display,'সংরক্ষিত প্রখ্যাত/প্রয়াত কবির সম্মানজনক প্রোফাইল')+'<section class="glass bd-poet-bio"><h1>'+esc(display)+'</h1><p>এই প্রোফাইল সাধারণ সামাজিক অ্যাকাউন্ট নয়। এখানে কবির জীবনপরিচিতি, সংরক্ষিত কবিতার শিরোনাম এবং সম্পাদনা/সংযোজনকারীদের তালিকা থাকবে।</p></section><section class="bd-poet-columns"><article class="glass bd-poet-list"><h3>কবিতার শিরোনাম</h3><a href="#">নির্বাচিত কবিতা <span>›</span></a><a href="#">আরও একটি সংরক্ষিত কবিতা <span>›</span></a></article><article class="glass bd-poet-list"><h3>সম্পাদিত কাজ</h3><div class="bd-edited-row"><span>নির্বাচিত কবিতা</span><small>সম্পাদক: ভুবনডাঙ্গা সম্পাদক</small></div><div class="bd-edited-row"><span>সংযোজিত পাঠ</span><small>সম্পাদক: যাচাইকৃত সদস্য</small></div></article></section>';pushRoute('poet',display)}
-function pushRoute(type,key){const hash='#bd='+encodeURIComponent(type)+'&key='+encodeURIComponent(key||'');if(location.hash!==hash)history.pushState({bd:type,key},'',hash)}
-function parseHash(){if(!location.hash.startsWith('#bd='))return null;const s=new URLSearchParams(location.hash.slice(1));return{type:s.get('bd'),key:s.get('key')||s.get('user')||''}}
-async function handleHash(){const r=parseHash();if(!r){home();return}if(r.type==='category')await renderCategory(r.key);else if(r.type==='profile')await renderProfile(r.key);else if(r.type==='poet')await renderPoet(r.key);else if(r.type==='auth')await renderAuth(r.key);else if(r.type==='edit-profile')await renderEditProfile();else if(r.type==='writers')await renderWriters();else if(r.type==='generic')renderGeneric(r.key);else home()}
-
-async function notices(){let rows=read('bhubondangaNotifications',[]);const c=client(),me=current();if(c&&me.author_id){try{const r=await c.from('notifications').select('*').eq('user_id',me.author_id).order('created_at',{ascending:false}).limit(50);if(!r.error&&r.data?.length)rows=r.data}catch(_){}}return Array.isArray(rows)?rows:[]}
-async function openNotifications(){if(!isLogged()){location.href='login.html';return}ensureShells();const rows=await notices(),d=q('#bdNotificationDrawer');d.innerHTML='<div class="bd-drawer-title"><h2>নোটিফিকেশন</h2><button class="bd-drawer-close" type="button" data-close-social>×</button></div><div class="bd-notification-list">'+(rows.length?rows.map(x=>'<article class="bd-notice '+(x.read_at||x.read?'':'unread')+'"><span class="bd-notice-icon">🔔</span><div><strong>'+esc(x.title||x.type||'আপনার আপডেট')+'</strong><p>'+esc(x.message||x.body||'নতুন কার্যক্রম হয়েছে।')+'</p><time>'+esc(fmt(x.created_at||x.createdAt||Date.now()))+'</time></div></article>').join(''):'<article class="bd-notice"><span class="bd-notice-icon">✓</span><div><strong>নতুন কোনো নোটিফিকেশন নেই</strong><p>আপনার নতুন আপডেট এখানে দেখা যাবে।</p></div></article>')+'</div>';openSocial(d)}
-function conversations(){const a=read('bhubondangaConversations',[]);return Array.isArray(a)&&a.length?a:[{id:'founder',name:'মাহমুদ সোহেল',username:'mahmud-sohel',avatar:'',last:'ভুবনডাঙ্গায় স্বাগতম',messages:[]}]} 
-function openMessages(){if(!isLogged()){location.href='login.html';return}ensureShells();const list=conversations(),active=list[0],d=q('#bdMessageDrawer');d.innerHTML='<div class="bd-drawer-title"><h2>বার্তা</h2><button class="bd-drawer-close" type="button" data-close-social>×</button></div><section class="bd-messenger"><aside class="bd-conversations">'+list.map((x,i)=>'<button class="bd-conversation '+(i===0?'active':'')+'" type="button" data-conversation="'+esc(x.id)+'"><span class="bd-conv-avatar">'+(x.avatar?'<img src="'+esc(x.avatar)+'" alt="">':'◯')+'</span><span><strong>'+esc(x.name)+'</strong><small>'+esc(x.last||'বার্তা শুরু করুন')+'</small></span></button>').join('')+'</aside><section class="bd-thread"><header class="bd-thread-head"><div class="bd-thread-person"><span class="bd-conv-avatar">◯</span><div><strong>'+esc(active.name)+'</strong><small>Messenger-style private conversation</small></div></div><div class="bd-thread-actions"><button type="button" title="কল অনুরোধ" data-call-request>☎</button><button type="button" title="মিউট / ব্লক / ইগনোর" data-thread-settings>•••</button></div></header><div class="bd-thread-body" id="bdThreadBody">'+(active.messages||[]).map(m=>'<div class="bd-bubble '+(m.mine?'mine':'')+'">'+esc(m.text)+'</div>').join('')+'<div class="bd-call-card" hidden id="bdCallCard"><strong>কল অনুরোধ পাঠানো হয়েছে</strong><div class="status">অপর ব্যক্তি গ্রহণ না করা পর্যন্ত কোনো ringing বা connection শুরু হবে না।</div></div></div><form class="bd-thread-form" id="bdThreadForm"><textarea placeholder="বার্তা লিখুন..." aria-label="বার্তা লিখুন"></textarea><button type="submit">➤</button></form></section></section>';openSocial(d)}
-function openSocial(drawer){q('#bdNotificationDrawer')?.classList.remove('open');q('#bdMessageDrawer')?.classList.remove('open');q('#bdOverlayBackdrop')?.classList.add('open');drawer.classList.add('open');drawer.setAttribute('aria-hidden','false');D.body.classList.add('locked')}
-function closeSocial(){q('#bdNotificationDrawer')?.classList.remove('open');q('#bdMessageDrawer')?.classList.remove('open');q('#bdOverlayBackdrop')?.classList.remove('open');D.body.classList.remove('locked')}
-function sendCallRequest(){const card=q('#bdCallCard');if(card)card.hidden=false;const n=read('bhubondangaNotifications',[]);n.unshift({id:'call-'+Date.now(),type:'কল অনুরোধ',message:(current().author_name||'একজন সদস্য')+' কল করার অনুমতি চেয়েছেন। গ্রহণ করলে তবেই কল সংযোগ শুরু হবে।',createdAt:new Date().toISOString(),read:false});write('bhubondangaNotifications',n.slice(0,1000));toast('কল অনুরোধ পাঠানো হয়েছে—গ্রহণ না করা পর্যন্ত ringing হবে না')}
-function photoViewerRows(img){
-  const post=img.closest('.post,.r99-post,.bd-route-post,.bd-live-post');
-  const found=[];
-  (post?Array.from(post.querySelectorAll('.r99-comment,.comment,.comment-item,[data-comment]')):[]).slice(0,12).forEach(function(row){
-    const author=(row.querySelector('strong,b,.comment-author,.name')?.textContent||'পাঠক').trim();
-    let text=(row.querySelector('.r99-comment-bubble,.comment-text,.text,.body')?.textContent||row.textContent||'').trim();
-    if(author&&text.startsWith(author))text=text.slice(author.length).trim();
-    if(text)found.push({author:author,text:text});
-  });
-  if(!found.length){
-    found.push({author:'নুসরাত জাহান',text:'ছবিটা খুব সুন্দর—মনে ছুঁয়ে গেলো।'});
-    found.push({author:'নীলা রহমান',text:'এই মুহূর্তের অনুভূতিটা দারুণভাবে ধরা পড়েছে।'});
-    found.push({author:'মাহমুদ সোহেল',text:'আপনাদের অনুভূতিই এই ভুবনের প্রাণ। 🌿'});
-  }
-  return found;
-}
-function renderPhotoViewerComments(img){
-  const post=img.closest('.post,.r99-post,.bd-route-post,.bd-live-post');
-  const name=(post?.querySelector('.r99-author-name,.author-name,.author-name-row,.post-author strong')?.textContent||'ভুবনডাঙ্গার কবিতা').trim();
-  const title=(post?.querySelector('.r99-title,.post-title,h3')?.textContent||img.alt||'প্রোফাইল ছবি').trim();
-  const rows=photoViewerRows(img),list=q('#bdPhotoCommentsList'),float=q('#bdPhotoFloatingComments');
-  q('#bdPhotoTitle').textContent=title||'ছবি';q('#bdPhotoOwner').textContent=name?(' · '+name):'';
-  list.innerHTML='';float.innerHTML='';
-  rows.forEach(function(item,index){
-    const row=D.createElement('div');row.className='bd-photo-comment-row';
-    const avatar=D.createElement('span');avatar.className='bd-photo-comment-avatar';avatar.textContent=(item.author||'প').slice(0,1);
-    const bubble=D.createElement('div');bubble.className='bd-photo-comment-bubble';
-    const strong=D.createElement('strong');strong.textContent=item.author||'পাঠক';
-    const text=D.createElement('span');text.textContent=item.text||'';
-    bubble.append(strong,text);row.append(avatar,bubble);list.appendChild(row);
-    if(index<4){
-      const f=D.createElement('div');f.className='bd-photo-floating-bubble';f.style.setProperty('--bd-float-delay',(index*1.65)+'s');
-      const a=D.createElement('strong');a.textContent=item.author||'পাঠক';
-      const t=D.createElement('span');t.textContent=item.text||'';f.append(a,t);float.appendChild(f);
-    }
-  });
-  q('#bdPhotoCommentCount').textContent=String(rows.length).replace(/\d/g,function(d){return'০১২৩৪৫৬৭৮৯'[d]});
-}
-function openPhoto(img){ensureShells();const l=q('#bdPhotoLightbox'),photo=q('#bdPhotoImage');photo.src=img.currentSrc||img.src;photo.alt=img.alt||'ছবি';q('#bdPhotoCaption').textContent=img.alt||'';renderPhotoViewerComments(img);l.classList.add('open');l.setAttribute('aria-hidden','false');D.body.classList.add('locked')}
-function closePhoto(){q('#bdPhotoLightbox')?.classList.remove('open');q('#bdPhotoImage')?.removeAttribute('src');D.body.classList.remove('locked')}
-
-
-async function renderAuth(mode){
-  showRoute();mode=mode||'login';const v=q('#bdSingleView'),isReg=mode==='register',isForgot=mode==='forgot';
-  const title=isReg?'নতুন অ্যাকাউন্ট তৈরি করুন':isForgot?'পাসওয়ার্ড পুনরুদ্ধার':'লগইন করুন';
-  v.innerHTML=routeToolbar(title,'একই Locked Master ফাইলের ভিতরে নিরাপদ Supabase authentication')+'<section class="glass bd-auth-card"><h2>'+title+'</h2><p>'+(isReg?'ভুবনডাঙ্গায় আপনার নিজস্ব সাহিত্যিক ভুবন খুলুন।':isForgot?'ইমেইলে পাসওয়ার্ড পরিবর্তনের লিংক পাঠানো হবে।':'আপনার প্রোফাইল, লেখা, বার্তা ও নোটিফিকেশনে প্রবেশ করুন।')+'</p><form id="bdAuthForm" data-mode="'+mode+'"><div class="bd-auth-grid">'+(isReg?'<div class="bd-auth-grid two"><div class="bd-auth-field"><label>বাংলা নাম</label><input name="name" maxlength="80" required placeholder="আপনার নাম"></div><div class="bd-auth-field"><label>ইউজারনেম</label><input name="username" maxlength="40" required pattern="[A-Za-z0-9._-]+" placeholder="username"></div></div>':'')+'<div class="bd-auth-field"><label>ইমেইল</label><input name="email" type="email" required autocomplete="email" placeholder="name@example.com"></div>'+(!isForgot?'<div class="bd-auth-field"><label>পাসওয়ার্ড</label><input name="password" type="password" minlength="6" required autocomplete="'+(isReg?'new-password':'current-password')+'" placeholder="কমপক্ষে ৬ অক্ষর"></div>':'')+'<button class="bd-auth-submit" type="submit">'+(isReg?'অ্যাকাউন্ট তৈরি করুন':isForgot?'লিংক পাঠান':'লগইন')+'</button></div></form><div class="bd-auth-links">'+(!isReg&&!isForgot?'<a href="#bd=auth&key=register">নতুন অ্যাকাউন্ট</a><a href="#bd=auth&key=forgot">পাসওয়ার্ড ভুলে গেছেন?</a>':'<a href="#bd=auth&key=login">লগইনে ফিরুন</a>')+'</div></section>';pushRoute('auth',mode)
-}
-async function fileToData(file){return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
-async function uploadProfileFile(file,folder){if(!file)return'';const c=client(),me=current();if(c&&me.author_id&&c.storage){const ext=(file.name.split('.').pop()||'jpg').toLowerCase(),path=me.author_id+'/'+folder+'-'+Date.now()+'.'+ext;for(const bucket of ['profile-media','avatars']){try{const u=await c.storage.from(bucket).upload(path,file,{upsert:true,contentType:file.type||'image/jpeg'});if(!u.error){const pub=c.storage.from(bucket).getPublicUrl(path);if(pub.data?.publicUrl)return pub.data.publicUrl}}catch(_){}}}return await fileToData(file)}
-async function renderEditProfile(){if(!isLogged()){renderAuth('login');return}const p=await findProfile('me'),v=q('#bdSingleView');showRoute();v.innerHTML=routeToolbar('প্রোফাইল সম্পাদনা','নাম, ছবি, কভার ও পরিচিতি একই প্রোফাইল রেকর্ডে সংরক্ষণ হবে')+'<section class="glass bd-auth-card"><form id="bdEditProfileForm"><div class="bd-auth-grid two"><div><div class="bd-file-preview" id="bdAvatarPreview">'+(p.avatar_url?'<img src="'+esc(p.avatar_url)+'" alt="">':'◯')+'</div><div class="bd-auth-field"><label>প্রোফাইল ছবি</label><input name="avatarFile" type="file" accept="image/*"></div></div><div><div class="bd-file-preview cover" id="bdCoverPreview">'+(p.cover_url?'<img src="'+esc(p.cover_url)+'" alt="">':'কভার ছবি')+'</div><div class="bd-auth-field"><label>কভার ছবি</label><input name="coverFile" type="file" accept="image/*"></div></div></div><div class="bd-auth-grid two"><div class="bd-auth-field"><label>নাম</label><input name="display_name" required maxlength="80" value="'+esc(p.display_name||'')+'"></div><div class="bd-auth-field"><label>ইউজারনেম</label><input name="username" required maxlength="40" value="'+esc(p.username||'')+'"></div></div><div class="bd-auth-field"><label>জীবনপরিচিতি</label><textarea name="bio" maxlength="600">'+esc(p.bio||'')+'</textarea></div><div class="bd-auth-field"><label>অবস্থান</label><input name="location" maxlength="120" value="'+esc(p.location||'')+'"></div><button class="bd-auth-submit" type="submit">পরিবর্তন সংরক্ষণ করুন</button></form></section>';pushRoute('edit-profile','me');
-  const af=q('input[name="avatarFile"]'),cf=q('input[name="coverFile"]');af?.addEventListener('change',async()=>{if(af.files[0])q('#bdAvatarPreview').innerHTML='<img src="'+await fileToData(af.files[0])+'" alt="">'});cf?.addEventListener('change',async()=>{if(cf.files[0])q('#bdCoverPreview').innerHTML='<img src="'+await fileToData(cf.files[0])+'" alt="">'});
-}
-async function renderWriters(){showRoute();const c=client();let rows=[];if(c){try{const r=await c.from('profiles').select('id,display_name,username,avatar_url,bio,role').order('created_at',{ascending:false}).limit(100);if(!r.error)rows=r.data||[]}catch(_){}}if(!rows.length)rows=[{id:'mahmud-sohel',display_name:'মাহমুদ সোহেল',username:'mahmud-sohel',role:'founder'},{id:'member',display_name:'ভুবনডাঙ্গার কবি ও লেখক',username:'member',role:'user'}];q('#bdSingleView').innerHTML=routeToolbar('ভুবনডাঙ্গার লেখক','নাম বা ছবিতে চাপলে একই ফাইলের ভিতরে প্রোফাইল খুলবে')+'<section class="bd-directory-grid">'+rows.map(x=>'<a class="glass bd-writer-card" href="#bd=profile&user='+encodeURIComponent(x.id||x.username)+'"><span class="bd-conv-avatar">'+(x.avatar_url?'<img src="'+esc(x.avatar_url)+'" alt="">':'◯')+'</span><span><strong>'+esc(x.display_name||x.username)+'</strong><small>@'+esc(x.username||'member')+(String(x.role).toLowerCase()==='founder'?' • Founder':'')+'</small></span><span>›</span></a>').join('')+'</section>';pushRoute('writers','all')}
-function renderGeneric(key){if(!isLogged()&&['archive','memories','settings','dashboard'].includes(key)){renderAuth('login');return}showRoute();const titles={archive:'আপনার আর্কাইভ',memories:'সংরক্ষিত ও স্মৃতি',settings:'গোপনীয়তা ও সেটিংস',dashboard:'Founder Dashboard'};q('#bdSingleView').innerHTML=routeToolbar(titles[key]||'আপনার ভুবন','এই ব্যক্তিগত অংশ শুধু অনুমোদিত ব্যবহারকারী দেখতে পাবেন')+'<section class="glass bd-auth-card"><div class="bd-generic-menu">'+(key==='settings'?'<button type="button">প্রাইভেসি ও দৃশ্যমানতা</button><button type="button">ব্লকলিস্ট</button><button type="button">মিউট ও ইগনোর</button><button type="button">কল ও বার্তা অনুমতি</button>':key==='dashboard'?'<button type="button">Copyright claim</button><button type="button">Report</button><button type="button">Content issue</button><button type="button">Copy detection</button><button type="button">Admin activity</button><button type="button">Message</button>':'<button type="button">সংরক্ষিত লেখা</button><button type="button">ছবি ও মিডিয়া</button><button type="button">মন্তব্যের ইতিহাস</button><button type="button">পুনরুদ্ধার</button>')+'</div></section>';pushRoute('generic',key)}
-
-function mapHref(a){const raw=a.getAttribute('href')||'';if(!raw||raw.startsWith('http')||raw.startsWith('mailto:')||raw.startsWith('tel:')||raw.startsWith('javascript:'))return null;if(raw.startsWith('#bd='))return{kind:'hash',raw};const u=raw.split('?')[0].toLowerCase();const param=new URLSearchParams(raw.includes('?')?raw.split('?')[1]:'');if(u==='index.html'||u==='./'||u==='/')return{kind:'home'};if(['poem.html','today-poem.html'].includes(u))return{kind:'category',key:'poem'};if(['recitation.html','today-recitation.html'].includes(u))return{kind:'category',key:'recitation'};if(['madhyorater-prolap.html'].includes(u))return{kind:'category',key:'midnight'};if(['small-prolap.html','today-prolap.html'].includes(u))return{kind:'category',key:'prolap'};if(['letter.html','today-letter.html'].includes(u))return{kind:'category',key:'letter'};if(['environment.html'].includes(u))return{kind:'category',key:'environment'};if(['discussion.html'].includes(u))return{kind:'category',key:'discussion'};if(['famous-quotes.html'].includes(u))return{kind:'category',key:'quote'};if(['notifications.html'].includes(u))return{kind:'notifications'};if(['messages.html','inbox.html'].includes(u))return{kind:'messages'};if(['founder-profile.html','admin-profile.html','profile.html'].includes(u))return{kind:'profile',key:param.get('user')||(u==='founder-profile.html'?'mahmud-sohel':'me')};if(['poet-profile.html','famous-poet.html'].includes(u))return{kind:'poet',key:param.get('poet')||'খ্যাতিমান কবি'};if(u==='bhubondangar-lekhok.html')return{kind:'writers'};if(u==='login.html')return{kind:'auth',key:'login'};if(u==='register.html')return{kind:'auth',key:'register'};if(u==='forgot-password.html')return{kind:'auth',key:'forgot'};if(u==='edit-profile.html')return{kind:'edit-profile'};if(u==='archive.html')return{kind:'generic',key:'archive'};if(u==='memories.html')return{kind:'generic',key:'memories'};if(u==='settings.html')return{kind:'generic',key:'settings'};if(['founder-dashboard.html','admin-dashboard.html'].includes(u))return{kind:'generic',key:'dashboard'};return null}
-
-D.addEventListener('click',e=>{
-  const img=e.target.closest('img[data-bd-photo],.post img,.r99-media img,.r99-author-avatar img,.avatar img,.composer-avatar img,.author-avatar img,.account-avatar img,.bd-route-post-media img,.bd-profile-cover img,.bd-profile-avatar img');if(img){e.preventDefault();e.stopImmediatePropagation();openPhoto(img);return}
-  if(e.target.closest('[data-close-photo]')){e.preventDefault();closePhoto();return}
-  if(e.target.closest('[data-close-social]')||e.target.id==='bdOverlayBackdrop'){e.preventDefault();closeSocial();return}
-  if(e.target.closest('[data-bd-home]')){e.preventDefault();history.pushState({bd:'home'},'',location.pathname);home();return}
-  if(e.target.closest('[data-bd-notifications]')){e.preventDefault();openNotifications();return}
-  if(e.target.closest('[data-bd-messages]')){e.preventDefault();openMessages();return}
-  if(e.target.closest('[data-bd-route-more]')){e.preventDefault();routeState.page++;routeState.type==='profile'?renderProfileFeed():renderRouteFeed();return}
-  const tab=e.target.closest('[data-bd-profile-tab]');if(tab){e.preventDefault();routeState.tab=tab.dataset.bdProfileTab;routeState.page=1;qa('[data-bd-profile-tab]').forEach(x=>x.classList.toggle('active',x===tab));renderProfileFeed();return}
-  if(e.target.closest('[data-bd-secret-toggle]')){e.preventDefault();q('#bdProfileSecret')?.classList.toggle('open');return}
-  const c=e.target.closest('[data-bd-route-comment]');if(c){e.preventDefault();c.closest('.post')?.querySelector('[data-bd-comment-box]')?.classList.toggle('open');return}
-  if(e.target.closest('[data-bd-comment-submit]')){e.preventDefault();if(!isLogged()){toast('মন্তব্য করতে লগইন করুন');return}const box=e.target.closest('[data-bd-comment-box]'),ta=box?.querySelector('textarea');if(ta?.value.trim()){toast('মন্তব্য যোগ হয়েছে');ta.value=''}return}
-  if(e.target.closest('[data-call-request]')){e.preventDefault();sendCallRequest();return}
-  if(e.target.closest('[data-thread-settings]')){e.preventDefault();toast('মিউট, ইগনোর ও ব্লকলিস্ট নিয়ন্ত্রণ এই কথোপকথনের সেটিংসে থাকবে');return}
-  const a=e.target.closest('a');if(!a)return;const m=mapHref(a);if(!m)return;e.preventDefault();e.stopImmediatePropagation();if(m.kind==='home')home();if(m.kind==='category')renderCategory(m.key);if(m.kind==='notifications')openNotifications();if(m.kind==='messages')openMessages();if(m.kind==='profile')renderProfile(m.key);if(m.kind==='poet')renderPoet(m.key);if(m.kind==='writers')renderWriters();if(m.kind==='auth')renderAuth(m.key);if(m.kind==='edit-profile')renderEditProfile();if(m.kind==='generic')renderGeneric(m.key);if(m.kind==='hash'){history.pushState({},'',m.raw);handleHash()}
-},true);
-D.addEventListener('submit',async e=>{if(e.target.id==='bdAuthForm'){e.preventDefault();const f=e.target,mode=f.dataset.mode,c=client(),fd=new FormData(f);if(!c){toast('Supabase সংযোগ পাওয়া যায়নি');return}try{if(mode==='login'){const r=await c.auth.signInWithPassword({email:String(fd.get('email')).trim(),password:String(fd.get('password'))});if(r.error)throw r.error;toast('সফলভাবে লগইন হয়েছে')}else if(mode==='register'){const username=String(fd.get('username')).trim().replace(/^@/,'').toLowerCase(),name=String(fd.get('name')).trim();const r=await c.auth.signUp({email:String(fd.get('email')).trim(),password:String(fd.get('password')),options:{data:{full_name:name,name,username}}});if(r.error)throw r.error;if(r.data?.user){try{await c.from('profiles').upsert({id:r.data.user.id,display_name:name,username,role:'user',updated_at:new Date().toISOString()})}catch(_){}}toast('অ্যাকাউন্ট তৈরি হয়েছে—ইমেইল নিশ্চিত করুন')}else{const r=await c.auth.resetPasswordForEmail(String(fd.get('email')).trim(),{redirectTo:location.origin+location.pathname});if(r.error)throw r.error;toast('পাসওয়ার্ড পরিবর্তনের লিংক পাঠানো হয়েছে')}setTimeout(()=>home(),700)}catch(err){toast(err?.message||'কাজটি সম্পন্ন হয়নি')}return}if(e.target.id==='bdEditProfileForm'){e.preventDefault();const f=e.target,fd=new FormData(f),c=client(),me=current();if(!c||!me.author_id){toast('সেশন পাওয়া যায়নি');return}try{const avatar=await uploadProfileFile(f.elements.avatarFile.files[0],'avatar'),cover=await uploadProfileFile(f.elements.coverFile.files[0],'cover'),payload={id:me.author_id,display_name:String(fd.get('display_name')).trim(),username:String(fd.get('username')).trim().replace(/^@/,'').toLowerCase(),bio:String(fd.get('bio')||'').trim(),location:String(fd.get('location')||'').trim(),updated_at:new Date().toISOString()};if(avatar)payload.avatar_url=avatar;if(cover)payload.cover_url=cover;const r=await c.from('profiles').upsert(payload).select().single();if(r.error)throw r.error;try{await c.auth.updateUser({data:{full_name:payload.display_name,name:payload.display_name,username:payload.username,avatar_url:payload.avatar_url||me.author_avatar}})}catch(_){}toast('প্রোফাইল আপডেট হয়েছে');setTimeout(()=>renderProfile(me.author_id),500)}catch(err){toast(err?.message||'প্রোফাইল সংরক্ষণ করা যায়নি')}return}if(e.target.id==='bdThreadForm'){e.preventDefault();const ta=e.target.querySelector('textarea'),t=ta.value.trim();if(!t)return;const body=q('#bdThreadBody');body.insertAdjacentHTML('beforeend','<div class="bd-bubble mine">'+esc(t)+'</div>');ta.value='';body.scrollTop=body.scrollHeight;toast('বার্তা পাঠানো হয়েছে')}},true);
-D.addEventListener('keydown',e=>{if(e.key==='Escape'){closeSocial();closePhoto()}});
-addEventListener('popstate',handleHash);addEventListener('hashchange',handleHash);
-function boot(){ensureShells();initSky();const r=parseHash();if(r)handleHash()}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
 <style id="bd-r96-visible-masterpiece">
 /* ============================================================
    R96 VISIBLE MASTERPIECE LAYER
@@ -3470,79 +3381,7 @@ body.bd-r97-route-mode .layout{height:calc(100dvh - var(--header-h) - var(--nav-
 </section>
 </div>
 <div aria-hidden="true" class="bd-r97-detail" id="bdR97Detail"><div class="bd-r97-detail-shell"><button class="bd-r97-detail-close" data-r97-detail-close="" type="button">×</button><div class="bd-r97-detail-body" id="bdR97DetailBody"></div></div></div>
-<script id="bd-r97-five-options-script">
-(function(){
-'use strict';
-const D=document,H=D.documentElement,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const current=()=>window.__BD_IDENTITY||{};
-const client=()=>window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||null;
-const isLogged=()=>Boolean(window.__BD_LIVE_SESSION||current().author_id);
-const bn=n=>String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
-let mediaKind='image',mediaFile=null,mediaURL='';
-const roomMeta={
-  poem:{title:'কবিতার প্রকাশনা ঘর',desc:'কবিতা, ছবি ও ভিডিও একই জায়গা থেকে প্রকাশ করুন।',icon:'✒',prompt:'কবিতার শিরোনাম',body:'কবিতাটি লিখুন...'},
-  recitation:{title:'আবৃত্তির প্রকাশনা ঘর',desc:'অডিও, ভিডিও ও প্রচ্ছদ—তিনটিই যোগ করার পূর্ণ ব্যবস্থা।',icon:'🎙',prompt:'আবৃত্তির শিরোনাম',body:'আবৃত্তির পরিচিতি ও বর্ণনা লিখুন...'},
-  letter:{title:'চিঠিপত্রের প্রকাশনা ঘর',desc:'অন্তত নিজেকে একটি চিঠি লিখুন।',icon:'✉',prompt:'চিঠির বিষয় বা শিরোনাম',body:'প্রাপককে সম্বোধন করে চিঠিটি লিখুন...'},
-  environment:{title:'পরিবেশের প্রকাশনা ঘর',desc:'প্রকৃতি, গাছ, নদী ও পৃথিবীর জন্য আপনার কথা লিখুন।',icon:'🌿',prompt:'পরিবেশ বিষয়ক শিরোনাম',body:'পরিবেশের কথা লিখুন...'}
-};
-const demos={
-  poem:['মায়ের হাতের গন্ধ','বৃষ্টির পরের নীরবতা','নীল জানালার কাছে','একটি অসমাপ্ত বিকেল','পথের শেষে আলো','শব্দের ভেতরে নদী','মেঘের কাছে চিঠি','ফিরে আসার গান','নিশির নরম পাতা','স্বপ্নের উঠোন','মাটির ঘ্রাণ','তোমার নামে সকাল','অপেক্ষার শহর','জোনাকির সংসার','সন্ধ্যার সিঁড়ি','আলোর ভেতর মানুষ','নদীর পাড়ে নাম','চোখের নীল খাতা','বকুল ঝরা পথ','শেষ পাতার কবিতা'],
-  recitation:['বৃষ্টির পরে নীরবতা','আমার স্বর, আমার পথ','নদীর কাছে উচ্চারণ','রাত্রির কণ্ঠস্বর','শব্দের পালক','মায়ের জন্য আবৃত্তি','বাংলার মাটি','দূরের ট্রেনের বাঁশি','একটি কণ্ঠের ভোর','জোনাকির কবিতা','শহরের নীরব পাঠ','চিঠির ভেতর কণ্ঠ','পথের গান','মেঘের উচ্চারণ','বকুলের সুবাস','জীবনের ছন্দ','আকাশের দিকে','নদীর ওপার','ফিরে আসা শব্দ','শেষ রাতের আবৃত্তি'],
-  letter:['নিজেকে লেখা প্রথম চিঠি','মায়ের কাছে চিঠি','হারানো বন্ধুর কাছে','ভবিষ্যতের আমাকে','নদীর উদ্দেশে','একটি অপ্রেরিত চিঠি','বাবার জন্য কয়েকটি কথা','ছোটবেলার বাড়িতে','আমার শহরের কাছে','প্রিয় কবিকে','একটি শূন্য খামে','বৃষ্টিকে লেখা','অপেক্ষমান মানুষের কাছে','আমার সন্তানের জন্য','ভোরের কাছে চিঠি','দেশের মাটিকে','হারানো সময়ের কাছে','নীরবতার কাছে','স্বপ্নের ঠিকানায়','শেষ চিঠি নয়'],
-  environment:['পাখিদের জন্য এক বাটি জল','নদী বাঁচলে শহর বাঁচে','একটি গাছের আবেদন','প্লাস্টিকমুক্ত সকাল','মাটির প্রতি দায়','সবুজ ছাদের স্বপ্ন','বৃষ্টির জল ধরে রাখি','নদীর পাড় রক্ষা করি','পাখির বাসা ফিরিয়ে দিই','বন ও মানুষের বন্ধুত্ব','পরিষ্কার বাতাসের অধিকার','একটি গ্রামের সবুজ পরিকল্পনা','সমুদ্রকে বাঁচাই','শিশুদের পরিবেশ শিক্ষা','গাছ কাটার আগে ভাবুন','জলাভূমির কথা','নগর বাগান','বর্জ্য আলাদা করি','প্রকৃতির সঙ্গে উৎসব','আগামী প্রজন্মের পৃথিবী']
-};
-function toast(msg){if(typeof window.toast==='function')return window.toast(msg);let t=$('#bdR97Toast');if(!t){t=D.createElement('div');t.id='bdR97Toast';Object.assign(t.style,{position:'fixed',left:'50%',bottom:'92px',transform:'translateX(-50%)',zIndex:65000,padding:'11px 16px',borderRadius:'999px',background:'#07152c',color:'#fff',border:'1px solid rgba(125,145,255,.3)',boxShadow:'0 18px 50px rgba(0,0,0,.4)'});D.body.appendChild(t)}t.textContent=msg;t.style.opacity='1';clearTimeout(t._x);t._x=setTimeout(()=>t.style.opacity='0',2400)}
-function goRoom(type){location.hash='#bd=category&key='+encodeURIComponent(type)}
-function isRoute(){return !!$('#bdSingleView.open .bd-route-feed,#bdSingleView.open .bd-profile-hero,#bdSingleView.open .bd-auth-card')}
-function routeMode(){D.body.classList.toggle('bd-r97-route-mode',isRoute())}
-function normalizeFounder(root=D){$$('a,strong,.author-name-row,.post-author b',root).forEach(n=>{if(n.childElementCount===0&&n.textContent.trim()==='mahmudsohel5500')n.textContent='মাহমুদ সোহেল'})}
-function theme(value){H.dataset.r97Style=value;localStorage.setItem('bd-r97-style',value);$$('[data-r97-style-choice]').forEach(b=>b.classList.toggle('active',b.dataset.r97StyleChoice===value))}
-function studio(open){const el=$('#bdR97Studio');el.classList.toggle('open',open);el.setAttribute('aria-hidden',String(!open))}
-function addHomeMedia(){const composer=$('#composer');if(!composer||$('.bd-r97-home-media',composer))return;const choices=$('#composerChoices',composer)||$('.composer-top',composer);const box=D.createElement('div');box.className='bd-r97-home-media';box.innerHTML='<button type="button" data-r97-home-media="image">▧ ছবি পোস্ট</button><button type="button" data-r97-home-media="video">▷ ভিডিও পোস্ট</button>';(choices||composer).insertAdjacentElement('afterend',box)}
-function openMedia(kind){mediaKind=kind;mediaFile=null;if(mediaURL)URL.revokeObjectURL(mediaURL);mediaURL='';$('#bdR97MediaTitle').textContent=kind==='video'?'ভিডিও প্রকাশ করুন':'ছবি প্রকাশ করুন';const input=$('#bdR97MediaFile');input.accept=kind==='video'?'video/*':'image/*';input.value='';$('#bdR97MediaPreview').textContent='এখানে চাপ দিয়ে '+(kind==='video'?'ভিডিও':'ছবি')+' নির্বাচন করুন';$('#bdR97MediaSheet').classList.add('open');$('#bdR97MediaSheet').setAttribute('aria-hidden','false');setTimeout(()=>input.click(),100)}
-function closeMedia(){if(mediaURL)URL.revokeObjectURL(mediaURL);mediaURL='';mediaFile=null;$('#bdR97MediaSheet').classList.remove('open');$('#bdR97MediaSheet').setAttribute('aria-hidden','true')}
-function previewMedia(file){mediaFile=file;if(mediaURL)URL.revokeObjectURL(mediaURL);mediaURL=URL.createObjectURL(file);$('#bdR97MediaPreview').innerHTML=mediaKind==='video'?'<video src="'+mediaURL+'" controls playsinline></video>':'<img src="'+mediaURL+'" alt="নির্বাচিত ছবি">'}
-async function upload(file,prefix){if(!file||!isLogged()||!client())return'';const ext=(file.name.split('.').pop()||'bin').toLowerCase(),id=current().author_id,path=id+'/'+prefix+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext;const up=await client().storage.from('post-media').upload(path,file,{contentType:file.type||'application/octet-stream'});if(up.error)throw up.error;return client().storage.from('post-media').getPublicUrl(path).data.publicUrl||''}
-async function insertPost(payload){const c=client(),id=current().author_id;if(c&&id){const row={id:'post-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),author_id:id,author_username:current().author_username||'',author_name:current().author_name||'ভুবনডাঙ্গার সদস্য',author_avatar:current().author_avatar||'',type:payload.type,category:payload.category,title:payload.title||'শিরোনামহীন',body:payload.body||'',visibility:'public',status:'published',card_style:localStorage.getItem('bd-r97-style')||'nebula',media_url:payload.media_url||'',media_type:payload.media_type||'',caption:payload.caption||'',metadata:payload.metadata||{}};const r=await c.from('posts').insert(row);if(r.error)throw r.error;return row}const list=JSON.parse(localStorage.getItem('bd-r97-local-posts')||'[]');const row={id:'local-'+Date.now(),author_name:'মাহমুদ সোহেল',author_username:'mahmud-sohel',type:payload.type,title:payload.title,body:payload.body,media_url:payload.media_url||mediaURL,media_type:payload.media_type||mediaFile?.type||'',caption:payload.caption||'',metadata:payload.metadata||{},created_at:new Date().toISOString()};list.unshift(row);localStorage.setItem('bd-r97-local-posts',JSON.stringify(list.slice(0,100)));return row}
-async function publishHomeMedia(){if(!mediaFile){toast('আগে মিডিয়া নির্বাচন করুন');return}const title=$('#bdR97MediaPostTitle').value.trim()||(mediaKind==='video'?'নতুন ভিডিও':'নতুন ছবি'),caption=$('#bdR97MediaCaption').value.trim();try{const url=await upload(mediaFile,mediaKind);await insertPost({type:'post',category:mediaKind==='video'?'ভিডিও':'ছবি',title,body:caption,media_url:url,media_type:mediaFile.type,caption});toast('ইন্ডেক্স ও প্রোফাইল নিউজফিডে প্রকাশ হয়েছে');closeMedia();setTimeout(()=>location.reload(),650)}catch(e){toast(e.message||'প্রকাশ করা যায়নি')}}
-function roomFromTitle(){const t=$('#bdSingleView .bd-route-title h2')?.textContent||'';if(t.includes('আবৃত্তি'))return'recitation';if(t.includes('চিঠিপত্র'))return'letter';if(t.includes('পরিবেশ'))return'environment';if(t.includes('কবিতা'))return'poem';return''}
-function uploadBox(name,icon,label,sub,accept){return '<label class="bd-r97-upload"><input name="'+name+'" type="file" accept="'+accept+'"><span><strong>'+icon+' '+label+'</strong><small>'+sub+'</small></span></label>'}
-function roomComposer(room){const m=roomMeta[room];let uploads=uploadBox('image','▧','ছবি/প্রচ্ছদ','JPG, PNG বা WEBP','image/*')+uploadBox('video','▷','ভিডিও','MP4, MOV বা WebM','video/*');if(room==='recitation')uploads=uploadBox('audio','◉','অডিও আবৃত্তি','MP3, M4A বা WAV','audio/*')+uploads;return '<section class="bd-r97-room-composer" data-r97-room="'+room+'"><div class="bd-r97-room-head"><span class="bd-r97-room-icon">'+m.icon+'</span><div><h2>'+m.title+'</h2><p>'+m.desc+'</p></div></div><form class="bd-r97-room-form" data-r97-room-form="'+room+'"><div class="bd-r97-room-grid"><div class="bd-r97-room-field full"><label>'+m.prompt+'</label><input name="title" required placeholder="'+m.prompt+'"></div>'+(room==='letter'?'<div class="bd-r97-room-field full"><label>প্রাপক</label><input name="recipient" placeholder="প্রিয় মানুষ, নিজেকে, ভবিষ্যতের আমাকে..."></div>':'')+'<div class="bd-r97-room-field full"><label>মূল লেখা / বর্ণনা</label><textarea name="body" required placeholder="'+m.body+'"></textarea></div><div class="bd-r97-upload-grid">'+uploads+'</div><div class="bd-r97-room-field full"><label>মিডিয়া ক্যাপশন</label><input name="caption" placeholder="ছবি, অডিও বা ভিডিওর ক্যাপশন"></div><button class="bd-r97-room-submit" type="submit">প্রকাশ করুন</button></div></form></section>'}
-function art(room,i){const colors={poem:['#141a3b','#d36b87','#ffcb8b'],recitation:['#081c33','#556cff','#d05cff'],letter:['#251525','#b15c8a','#f6c895'],environment:['#06241c','#26a87d','#b9e58b']}[room]||['#10172c','#6d70ff','#ca5cff'];const label={poem:'কবিতা',recitation:'আবৃত্তি',letter:'চিঠিপত্র',environment:'পরিবেশ'}[room];const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="'+colors[0]+'"/><stop offset=".58" stop-color="'+colors[1]+'"/><stop offset="1" stop-color="'+colors[2]+'"/></linearGradient><filter id="b"><feGaussianBlur stdDeviation="18"/></filter></defs><rect width="1200" height="680" fill="url(#g)"/><circle cx="'+(200+i*37%800)+'" cy="170" r="105" fill="#fff" opacity=".12" filter="url(#b)"/><path d="M0 500 C220 390 410 560 610 455 C830 340 970 510 1200 390 V680 H0Z" fill="#020713" opacity=".75"/><g fill="#fff" opacity=".87" font-family="sans-serif"><text x="70" y="95" font-size="34">ভুবনডাঙ্গার কবিতা</text><text x="70" y="145" font-size="22">'+label+' • ডেমো '+bn(i+1)+'</text></g></svg>';return'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg)}
-function bars(){return Array.from({length:34},(_,n)=>'<i style="--n:'+n+'"></i>').join('')}
-function demoCard(room,i){const title=demos[room][i],name=i%5===0?'মাহমুদ সোহেল':['সায়মা তারাসসুম','নীলা রহমান','আরিফুল হক','সামিয়া ইসলাম'][i%4],body=room==='letter'?'প্রিয় মানুষ,\nকিছু কথা বলা হয়ে ওঠে না। তাই শব্দের কাছে রেখে দিলাম এই চিঠি—যেন কোনো এক নরম বিকেলে তুমি পড়ে বুঝতে পারো।':room==='environment'?'পৃথিবীর প্রতি আমাদের ছোট ছোট দায়িত্বই আগামী দিনের বড় নিরাপত্তা। আজ একটি গাছ, একটি পাখির জন্য জল এবং একটি পরিষ্কার পথের প্রতিশ্রুতি রাখি।':room==='recitation'?'কণ্ঠে যখন কবিতার শ্বাস জেগে ওঠে, শব্দ শুধু শোনা যায় না—অনুভব করা যায়। এই আবৃত্তিটি সেই নীরব অনুভূতির জন্য।':'বৃষ্টি শেষে জানালার কাঁচে\nএকটি অল্প শহর থেকে যায়;\nমেঘ সরে গেলে দেখি—\nআমার ভেতরেই জেগে আছে আরেকটি আকাশ।';const media=i%3===1?'<div class="bd-r97-art"><img src="'+art(room,i)+'" alt="'+esc(title)+'" data-bd-photo></div>':'';const wave=room==='recitation'&&i%2===0?'<div class="bd-r97-wave"><button class="bd-r97-play" type="button" data-r97-demo-play>▶</button><div class="bd-r97-bars">'+bars()+'</div><time>০২:'+(i%2?'৪৮':'৩৬')+'</time></div>':'';return '<article class="bd-r97-card" data-r97-demo-post="'+room+'-'+i+'"><header class="bd-r97-author"><div class="bd-r97-author-main"><a class="bd-r97-avatar" href="#bd=profile&user='+(name==='মাহমুদ সোহেল'?'mahmud-sohel':'member-'+i)+'">'+(name==='মাহমুদ সোহেল'?'মা':name.slice(0,1))+'</a><div><a href="#bd=profile&user='+(name==='মাহমুদ সোহেল'?'mahmud-sohel':'member-'+i)+'">'+name+'</a><small>'+bn((i%11)+1)+' ঘণ্টা আগে · সর্বজনীন</small></div></div><button class="bd-r97-dots" type="button">•••</button></header><span class="bd-r97-category">'+roomMeta[room].title.replace(' প্রকাশনা ঘর','')+'</span><h3 class="bd-r97-title"><button type="button" data-r97-title>'+title+'</button></h3><div class="bd-r97-body">'+body+'</div>'+media+wave+'<div class="bd-r97-counts"><span>💙 💜 ✨ '+bn(1200+i*17)+'</span><span>'+bn(18+i)+' মন্তব্য · '+bn(4+i%12)+' শেয়ার</span></div><div class="bd-r97-actions"><button type="button" data-r97-like>♡ <span>লাইক</span></button><button type="button" data-r97-comment-toggle>◌ <span>মন্তব্য</span></button><button type="button">↗ <span>শেয়ার</span></button><button type="button">▱ <span>সংরক্ষণ</span></button></div><section class="bd-r97-comments"><div class="bd-r97-comment-sort">সবচেয়ে প্রাসঙ্গিক ▾</div><div class="bd-r97-comment"><span class="bd-r97-avatar">নু</span><div><div class="bd-r97-comment-bubble"><strong>নুসরাত জাহান</strong>কী সুন্দরভাবে লিখেছেন! মনে ছুঁয়ে গেলো 💙</div><div class="bd-r97-comment-meta">১ ঘণ্টা আগে　লাইক　রিপ্লাই</div></div></div><div class="bd-r97-comment bd-r97-reply"><span class="bd-r97-avatar">মা</span><div><div class="bd-r97-comment-bubble"><strong>মাহমুদ সোহেল ✓</strong>ধন্যবাদ নুসরাত জাহান, আপনার অনুভূতিটাই পাওয়া। 🌿</div><div class="bd-r97-comment-meta">৫৮ মিনিট আগে　লাইক　রিপ্লাই</div></div></div><form class="bd-r97-comment-form"><span class="bd-r97-avatar">মা</span><input name="comment" autocomplete="off" enterkeyhint="send" placeholder="মন্তব্য লিখুন..."><button type="submit">➤</button></form></section></article>'}
-function renderDemos(room){const host=$('#bdRouteFeed');if(!host)return;host.innerHTML='<section class="bd-r97-demo-feed"><div class="bd-r97-demo-head"><h3>'+roomMeta[room].title+'—ডেমো নিউজফিড</h3><span>২০টি পূর্ণ ডেমো পোস্ট ও মন্তব্য</span></div>'+demos[room].map((_,i)=>demoCard(room,i)).join('')+'</section>';const more=$('[data-bd-route-more]');if(more)more.hidden=true}
-function enhanceRoute(){routeMode();normalizeFounder();const room=roomFromTitle();const view=$('#bdSingleView');if(!room||!view)return;let composer=$('.bd-r97-room-composer',view);if(!composer){const feed=$('#bdRouteFeed',view);if(feed){feed.insertAdjacentHTML('beforebegin',roomComposer(room));composer=$('.bd-r97-room-composer',view)}}if(!$('#bdRouteFeed .bd-r97-demo-feed',view))renderDemos(room)}
-async function publishRoom(form){const room=form.dataset.r97RoomForm,fd=new FormData(form),title=String(fd.get('title')||'').trim(),body=String(fd.get('body')||'').trim();if(!title||!body){toast('শিরোনাম ও মূল লেখা দিন');return}const audio=fd.get('audio'),video=fd.get('video'),image=fd.get('image');try{const urls={};if(audio?.size)urls.audio_url=await upload(audio,room+'-audio');if(video?.size)urls.video_url=await upload(video,room+'-video');if(image?.size)urls.cover_url=await upload(image,room+'-cover');const primary=urls.audio_url?{url:urls.audio_url,type:audio.type}:urls.video_url?{url:urls.video_url,type:video.type}:urls.cover_url?{url:urls.cover_url,type:image.type}:{url:'',type:''};await insertPost({type:room,category:roomMeta[room].title.replace(' প্রকাশনা ঘর',''),title,body:(room==='letter'&&fd.get('recipient')?'প্রাপক: '+fd.get('recipient')+'\n\n':'')+body,media_url:primary.url,media_type:primary.type,caption:String(fd.get('caption')||'').trim(),metadata:urls});toast('প্রকাশনা সফল হয়েছে');form.reset();renderDemos(room)}catch(e){toast(e.message||'প্রকাশ করা যায়নি')}}
-function openDetail(btn){const card=btn.closest('.bd-r97-card');if(!card)return;const clone=card.cloneNode(true);clone.querySelectorAll('[id]').forEach(x=>x.removeAttribute('id'));$('#bdR97DetailBody').innerHTML='';$('#bdR97DetailBody').appendChild(clone);$('#bdR97Detail').classList.add('open');$('#bdR97Detail').setAttribute('aria-hidden','false')}
-function closeDetail(){$('#bdR97Detail').classList.remove('open');$('#bdR97Detail').setAttribute('aria-hidden','true');$('#bdR97DetailBody').innerHTML=''}
-function modernMessenger(){const actions=$$('.bd-thread-actions');actions.forEach(a=>{if(a.dataset.r97Done)return;a.dataset.r97Done='1';a.innerHTML='<button type="button" data-r97-call="voice" title="ভয়েস কল অনুরোধ" aria-label="ভয়েস কল অনুরোধ">◉</button><button type="button" data-r97-call="video" title="ভিডিও কল অনুরোধ" aria-label="ভিডিও কল অনুরোধ">▣</button><button type="button" data-thread-settings title="বার্তা সেটিংস" aria-label="বার্তা সেটিংস">⚙</button>'})}
-function callRequest(kind,btn){const thread=btn.closest('.bd-thread')||$('#bdMessageDrawer'),body=$('.bd-thread-body',thread)||$('#bdThreadBody');if(!body)return;body.insertAdjacentHTML('beforeend','<div class="bd-r97-call-panel"><strong>'+(kind==='video'?'ভিডিও':'ভয়েস')+' কল অনুরোধ পাঠানো হয়েছে</strong><div>অপর ব্যক্তি গ্রহণ না করা পর্যন্ত কোনো রিং হবে না। অনুমতি গ্রহণের পর ২৪ ঘণ্টা সক্রিয় থাকবে।</div><div class="actions"><button type="button" class="accept" data-r97-accept-call>ডেমো: গ্রহণ করুন</button><button type="button">বাতিল</button></div></div>');body.scrollTop=body.scrollHeight}
-function boot(){theme(localStorage.getItem('bd-r97-style')||'nebula');addHomeMedia();enhanceRoute();modernMessenger();normalizeFounder();const observer=new MutationObserver(()=>{addHomeMedia();enhanceRoute();modernMessenger();normalizeFounder()});observer.observe(D.body,{subtree:true,childList:true})}
-D.addEventListener('click',e=>{
- const studioBtn=e.target.closest('[data-r97-studio]');if(studioBtn){e.preventDefault();studio(true);return}
- if(e.target.closest('[data-r97-studio-close]')||e.target.id==='bdR97Studio'){if(e.target.id==='bdR97Studio'||e.target.closest('[data-r97-studio-close]'))studio(false);return}
- const style=e.target.closest('[data-r97-style-choice]');if(style){theme(style.dataset.r97StyleChoice);return}
- const homeMedia=e.target.closest('[data-r97-home-media]');if(homeMedia){e.preventDefault();openMedia(homeMedia.dataset.r97HomeMedia);return}
- if(e.target.closest('[data-r97-media-cancel]')){closeMedia();return}
- if(e.target.closest('[data-r97-media-publish]')){publishHomeMedia();return}
- const quick=e.target.closest('[data-open-type],[data-type]');if(quick){const raw=quick.dataset.openType||quick.dataset.type,type=raw==='letters'?'letter':raw;if(['recitation','letter','environment'].includes(type)){e.preventDefault();e.stopImmediatePropagation();goRoom(type);return}}
- const routeLink=e.target.closest('a[href*="recitation.html"],a[href*="letter.html"],a[href*="environment.html"]');if(routeLink){const href=routeLink.getAttribute('href')||'',type=href.includes('recitation')?'recitation':href.includes('letter')?'letter':'environment';e.preventDefault();e.stopImmediatePropagation();goRoom(type);return}
- const titleBtn=e.target.closest('[data-r97-title]');if(titleBtn){openDetail(titleBtn);return}
- if(e.target.closest('[data-r97-detail-close]')||e.target.id==='bdR97Detail'){if(e.target.id==='bdR97Detail'||e.target.closest('[data-r97-detail-close]'))closeDetail();return}
- const like=e.target.closest('[data-r97-like]');if(like){like.classList.toggle('active');like.innerHTML=like.classList.contains('active')?'♥ <span>লাইক হয়েছে</span>':'♡ <span>লাইক</span>';return}
- const comment=e.target.closest('[data-r97-comment-toggle]');if(comment){const box=comment.closest('.bd-r97-card')?.querySelector('.bd-r97-comments');box?.scrollIntoView({behavior:'smooth',block:'nearest'});box?.querySelector('input')?.focus({preventScroll:true});return}
- const play=e.target.closest('[data-r97-demo-play]');if(play){play.textContent=play.textContent.trim()==='▶'?'❚❚':'▶';return}
- const call=e.target.closest('[data-r97-call]');if(call){callRequest(call.dataset.r97Call,call);return}
- if(e.target.closest('[data-r97-accept-call]')){const card=e.target.closest('.bd-r97-call-panel');card.innerHTML='<strong>কল অনুমতি গ্রহণ করা হয়েছে</strong><div>এখন ২৪ ঘণ্টার মধ্যে কল করলে রিং হবে।</div>';return}
-},true);
-D.addEventListener('change',e=>{if(e.target.id==='bdR97MediaFile'&&e.target.files[0])previewMedia(e.target.files[0]);if(e.target.matches('input[name="postType"]')){const type=e.target.value==='letters'?'letter':e.target.value;if(['recitation','letter','environment'].includes(type)){e.preventDefault();goRoom(type)}}});
-D.addEventListener('click',e=>{if(e.target.id==='bdR97MediaPreview')$('#bdR97MediaFile').click()});
-D.addEventListener('submit',e=>{const room=e.target.closest('[data-r97-room-form]');if(room){e.preventDefault();publishRoom(room);return}const c=e.target.closest('.bd-r97-comment-form');if(c){e.preventDefault();const input=c.querySelector('input'),value=input.value.trim();if(!value)return;c.insertAdjacentHTML('beforebegin','<div class="bd-r97-comment"><span class="bd-r97-avatar">আ</span><div><div class="bd-r97-comment-bubble"><strong>আপনি</strong>'+esc(value)+'</div><div class="bd-r97-comment-meta">এইমাত্র　লাইক　রিপ্লাই</div></div></div>');input.value='';toast('মন্তব্য যোগ হয়েছে')}},true);
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
+
 <div class="r98-sheet-backdrop" id="r98Backdrop"></div>
 <section aria-hidden="true" class="r98-sheet" id="r98FeedSheet">
 <div class="r98-sheet-head"><h2>নিউজফিডে কী দেখতে চান?</h2><button class="r98-sheet-close" data-r98-close="" type="button">×</button></div>
@@ -3560,67 +3399,7 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 <div class="r98-directory-list" id="r98DirectoryList"></div>
 </section>
 <div class="r98-simple-toast" id="r98Toast"></div>
-<script id="r98-app">
-(function(){
-'use strict';
-const D=document,H=D.documentElement,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
-const VARIANT="current";
-H.dataset.r98Variant=VARIANT;H.removeAttribute('data-r96-style');
-const POETS=["অক্ষয়কুমার বড়াল", "অজিত দত্ত", "অতুলপ্রসাদ সেন", "অমিয় চক্রবর্তী", "অচিন্ত্যকুমার সেনগুপ্ত", "অরুণ মিত্র", "আবদুল কাদির", "আবদুল মান্নান সৈয়দ", "আবু জাফর ওবায়দুল্লাহ", "আবুল হাসান", "আবু হেনা মোস্তফা কামাল", "আল মাহমুদ", "আলাউদ্দিন আল আজাদ", "আলাওল", "আসাদ চৌধুরী", "আহসান হাবীব", "ইসমাইল হোসেন সিরাজী", "ঈশ্বরচন্দ্র গুপ্ত", "ওমর আলী", "কাহ্নপা", "কাজী নজরুল ইসলাম", "কাজী কাদের নেওয়াজ", "কায়কোবাদ", "কামাল চৌধুরী", "কামিনী রায়", "কালিদাস রায়", "কাশীরাম দাস", "কৃত্তিবাস ওঝা", "খান মোহাম্মদ ফারাবী", "গগন হরকরা", "গিরীন্দ্রমোহিনী দাসী", "গোবিন্দচন্দ্র দাস", "গোলাম মোস্তফা", "ঘনরাম চক্রবর্তী", "চন্দ্রাবতী", "চণ্ডীদাস", "জগদীশ গুপ্ত", "জসীম উদ্দীন", "জয়দেব", "জয় গোস্বামী", "জীবনানন্দ দাশ", "জ্ঞান দাস", "জিল্লুর রহমান সিদ্দিকী", "তরু দত্ত", "ত্রিদিব মিত্র", "দিলওয়ার", "দেবেন্দ্রনাথ সেন", "দৌলত কাজী", "দ্বিজেন্দ্রনাথ ঠাকুর", "দ্বিজেন্দ্রলাল রায়", "নবীনচন্দ্র সেন", "নির্মলেন্দু গুণ", "প্রেমেন্দ্র মিত্র", "ফজল শাহাবুদ্দীন", "ফররুখ আহমদ", "ফালগুনী রায়", "বন্দে আলী মিয়া", "বড়ু চণ্ডীদাস", "বিদ্যাপতি", "বিষ্ণু দে", "বিহারীলাল চক্রবর্তী", "বুদ্ধদেব বসু", "বেলাল চৌধুরী", "বিনয় মজুমদার", "ভারতচন্দ্র রায়গুণাকর", "মলয় রায়চৌধুরী", "মাইকেল মধুসূদন দত্ত", "মাহমুদা খাতুন সিদ্দিকা", "মুকুন্দ দাস", "মুকুন্দরাম চক্রবর্তী", "মুহম্মদ নুরুল হুদা", "মোহাম্মদ সাদিক", "মোহিতলাল মজুমদার", "মহাদেব সাহা", "যতীন্দ্রনাথ সেনগুপ্ত", "যতীন্দ্রমোহন বাগচী", "রজনীকান্ত সেন", "রফিক আজাদ", "রবীন্দ্রনাথ ঠাকুর", "রঙ্গলাল বন্দ্যোপাধ্যায়", "রাধারমণ দত্ত", "রামপ্রসাদ সেন", "রুদ্র মুহম্মদ শহীদুল্লাহ", "লালন শাহ", "শক্তি চট্টোপাধ্যায়", "শঙ্খ ঘোষ", "শহীদ কাদরী", "শামসুর রাহমান", "শাহ আবদুল করিম", "শাহ মুহম্মদ সগীর", "সত্যেন্দ্রনাথ দত্ত", "সমর সেন", "সিকান্দার আবু জাফর", "সুকান্ত ভট্টাচার্য", "সুকুমার রায়", "হেলাল হাফিজ", "হাসন রাজা", "হাসান হাফিজুর রহমান", "হুমায়ুন আজাদ", "হেমচন্দ্র বন্দ্যোপাধ্যায়"];
-const QUOTES=[{"name": "রবীন্দ্রনাথ ঠাকুর", "text": "নিজেকে জানার মধ্য দিয়েই মানুষের সত্যিকারের পথচলা শুরু হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "কাজী নজরুল ইসলাম", "text": "অন্ধকারকে দোষারোপ না করে একটি আলো জ্বালানোই উত্তম।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "লালন শাহ", "text": "ভয়কে জয় করার প্রথম ধাপ হলো সত্যকে স্বীকার করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ঈশ্বরচন্দ্র বিদ্যাসাগর", "text": "শিক্ষা মানুষকে শুধু তথ্য দেয় না, স্বাধীনভাবে ভাবতে শেখায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "বেগম রোকেয়া", "text": "মানুষের প্রতি সম্মানই সভ্যতার সবচেয়ে সহজ পরিচয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জীবনানন্দ দাশ", "text": "যে স্বপ্ন মানুষকে কাজে নামায়, সেই স্বপ্নই ভবিষ্যৎ বদলায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সুকান্ত ভট্টাচার্য", "text": "ব্যর্থতা শেষ নয়; ঠিকভাবে দেখলে এটি নতুন পথের নির্দেশনা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জসীম উদ্দীন", "text": "সহানুভূতি ছাড়া জ্ঞান অসম্পূর্ণ থেকে যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মাইকেল মধুসূদন দত্ত", "text": "সময়ের মূল্য বোঝা মানে নিজের জীবনের মূল্য বোঝা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "বঙ্কিমচন্দ্র চট্টোপাধ্যায়", "text": "সাহস মানে ভয় না থাকা নয়, ভয়ের মধ্যেও সঠিক কাজটি করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "শরৎচন্দ্র চট্টোপাধ্যায়", "text": "প্রশ্ন করতে শেখা জ্ঞানের দরজা খুলে দেয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "স্বামী বিবেকানন্দ", "text": "ছোট একটি ভালো কাজও দূরের মানুষের জীবনে আলো ফেলতে পারে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মহাত্মা গান্ধী", "text": "স্বাধীনতা তখনই অর্থবহ, যখন তার সঙ্গে দায়িত্ব থাকে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "নেলসন ম্যান্ডেলা", "text": "শান্তি বাইরে খোঁজার আগে নিজের ভেতরে গড়ে তুলতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মার্টিন লুথার কিং জুনিয়র", "text": "সত্যের পথ কখনো সহজ না হলেও দীর্ঘস্থায়ী হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "আব্রাহাম লিংকন", "text": "ভালোবাসা মানুষের ভাষা, যা অনুবাদ ছাড়াই বোঝা যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "হেলেন কেলার", "text": "কল্পনা অসম্ভবকে সম্ভব করার প্রথম নকশা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মাদার তেরেসা", "text": "শুধু সফল হওয়া নয়, অর্থপূর্ণ হওয়াই জীবনের বড় অর্জন।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "এ পি জে আবদুল কালাম", "text": "যে মানুষ শোনে, সে অনেক সময় বক্তার চেয়েও বেশি শেখে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "আলবার্ট আইনস্টাইন", "text": "আগামীকাল বদলাতে হলে আজকের একটি সিদ্ধান্ত বদলাতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "আইজ্যাক নিউটন", "text": "নিজেকে জানার মধ্য দিয়েই মানুষের সত্যিকারের পথচলা শুরু হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মারি কুরি", "text": "অন্ধকারকে দোষারোপ না করে একটি আলো জ্বালানোই উত্তম।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "নিকোলা টেসলা", "text": "ভয়কে জয় করার প্রথম ধাপ হলো সত্যকে স্বীকার করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "স্টিফেন হকিং", "text": "শিক্ষা মানুষকে শুধু তথ্য দেয় না, স্বাধীনভাবে ভাবতে শেখায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "চার্লস ডারউইন", "text": "মানুষের প্রতি সম্মানই সভ্যতার সবচেয়ে সহজ পরিচয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "গ্যালিলিও গ্যালিলি", "text": "যে স্বপ্ন মানুষকে কাজে নামায়, সেই স্বপ্নই ভবিষ্যৎ বদলায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "লিওনার্দো দা ভিঞ্চি", "text": "ব্যর্থতা শেষ নয়; ঠিকভাবে দেখলে এটি নতুন পথের নির্দেশনা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সক্রেটিস", "text": "সহানুভূতি ছাড়া জ্ঞান অসম্পূর্ণ থেকে যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "প্লেটো", "text": "সময়ের মূল্য বোঝা মানে নিজের জীবনের মূল্য বোঝা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "এরিস্টটল", "text": "সাহস মানে ভয় না থাকা নয়, ভয়ের মধ্যেও সঠিক কাজটি করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "কনফুসিয়াস", "text": "প্রশ্ন করতে শেখা জ্ঞানের দরজা খুলে দেয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "লাও ৎসু", "text": "ছোট একটি ভালো কাজও দূরের মানুষের জীবনে আলো ফেলতে পারে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "রুমি", "text": "স্বাধীনতা তখনই অর্থবহ, যখন তার সঙ্গে দায়িত্ব থাকে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "খলিল জিবরান", "text": "শান্তি বাইরে খোঁজার আগে নিজের ভেতরে গড়ে তুলতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ওমর খৈয়াম", "text": "সত্যের পথ কখনো সহজ না হলেও দীর্ঘস্থায়ী হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "হাফিজ", "text": "ভালোবাসা মানুষের ভাষা, যা অনুবাদ ছাড়াই বোঝা যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সাদি শিরাজি", "text": "কল্পনা অসম্ভবকে সম্ভব করার প্রথম নকশা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ফিরদৌসি", "text": "শুধু সফল হওয়া নয়, অর্থপূর্ণ হওয়াই জীবনের বড় অর্জন।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ইবনে সিনা", "text": "যে মানুষ শোনে, সে অনেক সময় বক্তার চেয়েও বেশি শেখে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ইবনে খালদুন", "text": "আগামীকাল বদলাতে হলে আজকের একটি সিদ্ধান্ত বদলাতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "আল-ফারাবি", "text": "নিজেকে জানার মধ্য দিয়েই মানুষের সত্যিকারের পথচলা শুরু হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "আল-বিরুনি", "text": "অন্ধকারকে দোষারোপ না করে একটি আলো জ্বালানোই উত্তম।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "রেনে দেকার্ত", "text": "ভয়কে জয় করার প্রথম ধাপ হলো সত্যকে স্বীকার করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "বার্ট্রান্ড রাসেল", "text": "শিক্ষা মানুষকে শুধু তথ্য দেয় না, স্বাধীনভাবে ভাবতে শেখায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ফ্রিডরিখ নীটশে", "text": "মানুষের প্রতি সম্মানই সভ্যতার সবচেয়ে সহজ পরিচয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ইমানুয়েল কান্ট", "text": "যে স্বপ্ন মানুষকে কাজে নামায়, সেই স্বপ্নই ভবিষ্যৎ বদলায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জন লক", "text": "ব্যর্থতা শেষ নয়; ঠিকভাবে দেখলে এটি নতুন পথের নির্দেশনা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জ্যঁ-জাক রুশো", "text": "সহানুভূতি ছাড়া জ্ঞান অসম্পূর্ণ থেকে যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ভলতেয়ার", "text": "সময়ের মূল্য বোঝা মানে নিজের জীবনের মূল্য বোঝা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ফ্রান্সিস বেকন", "text": "সাহস মানে ভয় না থাকা নয়, ভয়ের মধ্যেও সঠিক কাজটি করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "উইলিয়াম শেক্সপিয়র", "text": "প্রশ্ন করতে শেখা জ্ঞানের দরজা খুলে দেয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "লিও টলস্টয়", "text": "ছোট একটি ভালো কাজও দূরের মানুষের জীবনে আলো ফেলতে পারে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ফিওদর দস্তয়েভস্কি", "text": "স্বাধীনতা তখনই অর্থবহ, যখন তার সঙ্গে দায়িত্ব থাকে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ভিক্টর হুগো", "text": "শান্তি বাইরে খোঁজার আগে নিজের ভেতরে গড়ে তুলতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "চার্লস ডিকেন্স", "text": "সত্যের পথ কখনো সহজ না হলেও দীর্ঘস্থায়ী হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মার্ক টোয়েন", "text": "ভালোবাসা মানুষের ভাষা, যা অনুবাদ ছাড়াই বোঝা যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "অস্কার ওয়াইল্ড", "text": "কল্পনা অসম্ভবকে সম্ভব করার প্রথম নকশা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জর্জ বার্নার্ড শ", "text": "শুধু সফল হওয়া নয়, অর্থপূর্ণ হওয়াই জীবনের বড় অর্জন।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ভার্জিনিয়া উলফ", "text": "যে মানুষ শোনে, সে অনেক সময় বক্তার চেয়েও বেশি শেখে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জেন অস্টেন", "text": "আগামীকাল বদলাতে হলে আজকের একটি সিদ্ধান্ত বদলাতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "পাবলো নেরুদা", "text": "নিজেকে জানার মধ্য দিয়েই মানুষের সত্যিকারের পথচলা শুরু হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "গ্যাব্রিয়েল গার্সিয়া মার্কেস", "text": "অন্ধকারকে দোষারোপ না করে একটি আলো জ্বালানোই উত্তম।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "হোর্হে লুইস বোর্হেস", "text": "ভয়কে জয় করার প্রথম ধাপ হলো সত্যকে স্বীকার করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "আর্নেস্ট হেমিংওয়ে", "text": "শিক্ষা মানুষকে শুধু তথ্য দেয় না, স্বাধীনভাবে ভাবতে শেখায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "হারুকি মুরাকামি", "text": "মানুষের প্রতি সম্মানই সভ্যতার সবচেয়ে সহজ পরিচয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ফ্রান্ৎস কাফকা", "text": "যে স্বপ্ন মানুষকে কাজে নামায়, সেই স্বপ্নই ভবিষ্যৎ বদলায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "আলবেয়ার কামু", "text": "ব্যর্থতা শেষ নয়; ঠিকভাবে দেখলে এটি নতুন পথের নির্দেশনা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জ্যঁ-পল সার্ত্র", "text": "সহানুভূতি ছাড়া জ্ঞান অসম্পূর্ণ থেকে যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সিমোন দ্য বোভোয়ার", "text": "সময়ের মূল্য বোঝা মানে নিজের জীবনের মূল্য বোঝা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মায়া অ্যাঞ্জেলু", "text": "সাহস মানে ভয় না থাকা নয়, ভয়ের মধ্যেও সঠিক কাজটি করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "টনি মরিসন", "text": "প্রশ্ন করতে শেখা জ্ঞানের দরজা খুলে দেয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "পাওলো কোয়েলহো", "text": "ছোট একটি ভালো কাজও দূরের মানুষের জীবনে আলো ফেলতে পারে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "অ্যান ফ্র্যাঙ্ক", "text": "স্বাধীনতা তখনই অর্থবহ, যখন তার সঙ্গে দায়িত্ব থাকে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মালালা ইউসুফজাই", "text": "শান্তি বাইরে খোঁজার আগে নিজের ভেতরে গড়ে তুলতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ডেসমন্ড টুটু", "text": "সত্যের পথ কখনো সহজ না হলেও দীর্ঘস্থায়ী হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "দালাই লামা", "text": "ভালোবাসা মানুষের ভাষা, যা অনুবাদ ছাড়াই বোঝা যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "থিচ নাট হান", "text": "কল্পনা অসম্ভবকে সম্ভব করার প্রথম নকশা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "রোজা পার্কস", "text": "শুধু সফল হওয়া নয়, অর্থপূর্ণ হওয়াই জীবনের বড় অর্জন।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "মুহাম্মদ আলী", "text": "যে মানুষ শোনে, সে অনেক সময় বক্তার চেয়েও বেশি শেখে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "পেলে", "text": "আগামীকাল বদলাতে হলে আজকের একটি সিদ্ধান্ত বদলাতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ডিয়েগো ম্যারাডোনা", "text": "নিজেকে জানার মধ্য দিয়েই মানুষের সত্যিকারের পথচলা শুরু হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "রজার ফেদেরার", "text": "অন্ধকারকে দোষারোপ না করে একটি আলো জ্বালানোই উত্তম।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সেরেনা উইলিয়ামস", "text": "ভয়কে জয় করার প্রথম ধাপ হলো সত্যকে স্বীকার করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "উসাইন বোল্ট", "text": "শিক্ষা মানুষকে শুধু তথ্য দেয় না, স্বাধীনভাবে ভাবতে শেখায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "স্টিভ জবস", "text": "মানুষের প্রতি সম্মানই সভ্যতার সবচেয়ে সহজ পরিচয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "বিল গেটস", "text": "যে স্বপ্ন মানুষকে কাজে নামায়, সেই স্বপ্নই ভবিষ্যৎ বদলায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সত্য নাদেলা", "text": "ব্যর্থতা শেষ নয়; ঠিকভাবে দেখলে এটি নতুন পথের নির্দেশনা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ইলন মাস্ক", "text": "সহানুভূতি ছাড়া জ্ঞান অসম্পূর্ণ থেকে যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ওয়ারেন বাফেট", "text": "সময়ের মূল্য বোঝা মানে নিজের জীবনের মূল্য বোঝা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "হেনরি ফোর্ড", "text": "সাহস মানে ভয় না থাকা নয়, ভয়ের মধ্যেও সঠিক কাজটি করা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ওয়াল্ট ডিজনি", "text": "প্রশ্ন করতে শেখা জ্ঞানের দরজা খুলে দেয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "চার্লি চ্যাপলিন", "text": "ছোট একটি ভালো কাজও দূরের মানুষের জীবনে আলো ফেলতে পারে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সত্যজিৎ রায়", "text": "স্বাধীনতা তখনই অর্থবহ, যখন তার সঙ্গে দায়িত্ব থাকে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "ঋত্বিক ঘটক", "text": "শান্তি বাইরে খোঁজার আগে নিজের ভেতরে গড়ে তুলতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "জহির রায়হান", "text": "সত্যের পথ কখনো সহজ না হলেও দীর্ঘস্থায়ী হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "হুমায়ূন আহমেদ", "text": "ভালোবাসা মানুষের ভাষা, যা অনুবাদ ছাড়াই বোঝা যায়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সেলিনা হোসেন", "text": "কল্পনা অসম্ভবকে সম্ভব করার প্রথম নকশা।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "শামসুর রাহমান", "text": "শুধু সফল হওয়া নয়, অর্থপূর্ণ হওয়াই জীবনের বড় অর্জন।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "সুফিয়া কামাল", "text": "যে মানুষ শোনে, সে অনেক সময় বক্তার চেয়েও বেশি শেখে।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}, {"name": "হাসন রাজা", "text": "আগামীকাল বদলাতে হলে আজকের একটি সিদ্ধান্ত বদলাতে হয়।", "note": "সংক্ষিপ্ত ভাবানুবাদ"}];
-const FEEDS=[["all", "সব লেখা", "⌂"], ["poem", "কবিতা", "🖋️"], ["prolap", "ছোট কথার প্রলাপ", "☁"], ["midnight", "মধ্যরাতের প্রলাপ", "☾"], ["letter", "চিঠিপত্র", "✉️"], ["recitation", "আবৃত্তি", "🎙️"], ["environment", "পরিবেশ", "🌱"], ["discussion", "সাহিত্য আলোচনা", "💬"]];
-const state={dir:'poets',query:'',writers:[],members:[]};
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const bnSort=(a,b)=>String(a||'').localeCompare(String(b||''),'bn',{sensitivity:'base'});
-function toast(msg){const e=$('#r98Toast');if(!e)return;e.textContent=msg;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2200)}
-function backdrop(open){$('#r98Backdrop')?.classList.toggle('open',open);D.body.classList.toggle('locked',open)}
-function openFeedSheet(){const e=$('#r98FeedSheet');e?.classList.add('open');e?.setAttribute('aria-hidden','false');$('#r98FeedSelect')?.setAttribute('aria-expanded','true');backdrop(true)}
-function closeFeedSheet(){const e=$('#r98FeedSheet');e?.classList.remove('open');e?.setAttribute('aria-hidden','true');$('#r98FeedSelect')?.setAttribute('aria-expanded','false');if(!$('#r98Directory')?.classList.contains('open'))backdrop(false)}
-function openDirectory(tab='poets'){state.dir=tab;$$('[data-r98-dir]').forEach(x=>x.classList.toggle('active',x.dataset.r98Dir===tab));renderDirectory();const e=$('#r98Directory');e?.classList.add('open');e?.setAttribute('aria-hidden','false');backdrop(true);setTimeout(()=>$('#r98DirectorySearch')?.focus({preventScroll:true}),100)}
-function closeDirectory(){const e=$('#r98Directory');e?.classList.remove('open');e?.setAttribute('aria-hidden','true');if(!$('#r98FeedSheet')?.classList.contains('open'))backdrop(false)}
-function profileLink(x){const role=String(x.role||'').toLowerCase(),u=x.username||x.id||'member';return role==='founder'||/mahmud[-_.]?sohel|mahmudsohel5500/i.test(u)?'#bd=profile&user='+encodeURIComponent(x.id||u):'#bd=profile&user='+encodeURIComponent(x.id||u)}
-function initials(n){return String(n||'ভুবনডাঙ্গা').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('')}
-function directoryRows(){
- if(state.dir==='poets')return POETS.map((name,i)=>({kind:'poet',name,sub:'সংরক্ষিত কবি প্রোফাইল • বর্ণানুক্রম '+(i+1),href:'#bd=poet&name='+encodeURIComponent(name)}));
- if(state.dir==='quotes')return QUOTES.slice().sort((a,b)=>bnSort(a.name,b.name)).map((q,i)=>({kind:'quote',name:q.name,sub:q.text,note:q.note,href:'#bd=category&key=quote&author='+encodeURIComponent(q.name)}));
- const rows=(state.dir==='members'?state.members:state.writers).slice().sort((a,b)=>bnSort(a.display_name||a.username,b.display_name||b.username));
- return rows.map(x=>({kind:'writer',name:x.display_name||x.full_name||x.username||'নতুন সদস্য',sub:'@'+(x.username||'member')+(String(x.role).toLowerCase()==='founder'?' • Founder':''),avatar:x.avatar_url||'',href:profileLink(x)}));
-}
-function renderDirectory(){const host=$('#r98DirectoryList');if(!host)return;const q=state.query.trim().toLocaleLowerCase('bn');let rows=directoryRows();if(q)rows=rows.filter(x=>(x.name+' '+x.sub).toLocaleLowerCase('bn').includes(q));host.innerHTML=rows.length?rows.map(x=>'<a class="r98-directory-item" href="'+esc(x.href)+'"><span class="r98-dir-avatar">'+(x.avatar?'<img src="'+esc(x.avatar)+'" alt="">':esc(initials(x.name)))+'</span><span><strong>'+esc(x.name)+'</strong><small>'+esc(x.sub)+'</small>'+(x.note?'<small>'+esc(x.note)+'</small>':'')+'</span><span>›</span></a>').join(''):'<div class="r98-directory-empty">কোনো ফল পাওয়া যায়নি।</div>'}
-async function loadProfiles(){let rows=[];try{const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;if(c){const r=await c.from('profiles').select('id,display_name,full_name,username,avatar_url,role,created_at').limit(1000);if(!r.error)rows=r.data||[]}}catch(e){}
- if(!rows.length)rows=[
- {id:'mahmud-sohel',display_name:'মাহমুদ সোহেল',username:'mahmud-sohel',role:'founder'},
- {id:'adiba-rahman',display_name:'আদিবা রহমান',username:'adiba.rahman',role:'user'},
- {id:'ariful-haque',display_name:'আরিফুল হক',username:'ariful.haque',role:'user'},
- {id:'nila-rahman',display_name:'নীলা রহমান',username:'nila.rahman',role:'user'},
- {id:'samiya-islam',display_name:'সামিয়া ইসলাম',username:'samiya.islam',role:'user'},
- {id:'sayma-tasnim',display_name:'সায়মা তারাসসুম',username:'sayma.tasnim',role:'user'}];
- state.writers=rows.slice().sort((a,b)=>bnSort(a.display_name||a.username,b.display_name||b.username));
- state.members=rows.slice().sort((a,b)=>bnSort(a.display_name||a.username,b.display_name||b.username));
- if($('#r98Directory')?.classList.contains('open'))renderDirectory();
-}
-function installFeedPicker(){const head=$('.feed-head');if(!head||$('#r98FeedSelect'))return;const btn=D.createElement('button');btn.id='r98FeedSelect';btn.type='button';btn.className='r98-feed-select';btn.setAttribute('aria-expanded','false');btn.innerHTML='<span><small>একটাই নিউজফিড</small><b id="r98FeedLabel">সব লেখা</b></span><span class="arrow">⌄</span>';head.appendChild(btn);btn.addEventListener('click',openFeedSheet);
- const options=$('#r98FeedOptions');options.innerHTML=FEEDS.map(x=>'<button class="r98-feed-option '+(x[0]==='all'?'active':'')+'" type="button" data-r98-feed="'+x[0]+'"><i>'+x[2]+'</i><span>'+x[1]+'</span></button>').join('');
-}
-function chooseFeed(value){const meta=FEEDS.find(x=>x[0]===value)||FEEDS[0];$('#r98FeedLabel').textContent=meta[1];$$('[data-r98-feed]').forEach(x=>x.classList.toggle('active',x.dataset.r98Feed===value));const sel=$('#categoryFilter');if(sel){sel.value=value;sel.dispatchEvent(new Event('change',{bubbles:true}))}closeFeedSheet();window.scrollTo({top:Math.max(0,$('.feed-head')?.offsetTop-170||0),behavior:'smooth'});toast(meta[1]+' দেখানো হচ্ছে')}
-function mapHref(href){href=String(href||'').toLowerCase();if(href.includes('famous-poet'))return{dir:'poets'};if(href.includes('famous-quote'))return{dir:'quotes'};if(href.includes('bhubondangar-lekhok')||href.includes('authors.html'))return{dir:'writers'};if(href.includes('recitation'))return{feed:'recitation'};if(href.includes('madhyorater')||href.includes('midnight'))return{feed:'midnight'};if(href.includes('letter'))return{feed:'letter'};if(href.includes('environment'))return{feed:'environment'};if(href.includes('discussion'))return{feed:'discussion'};if(href.includes('prolap'))return{feed:'prolap'};if(href.includes('poem'))return{feed:'poem'};return null}
-function interceptLinks(){D.addEventListener('click',e=>{
- const dir=e.target.closest('[data-r98-directory]');if(dir){e.preventDefault();openDirectory(dir.dataset.r98Directory||'poets');return}
- const f=e.target.closest('[data-r98-feed]');if(f){e.preventDefault();chooseFeed(f.dataset.r98Feed);return}
- const a=e.target.closest('a[href]');if(!a)return;const m=mapHref(a.getAttribute('href'));if(!m)return;e.preventDefault();e.stopImmediatePropagation();if(m.dir)openDirectory(m.dir);else chooseFeed(m.feed);
- },true)}
-function tagDirectoryLinks(){$$('a[href*="famous-poet"]').forEach(x=>x.dataset.r98Directory='poets');$$('a[href*="famous-quote"]').forEach(x=>x.dataset.r98Directory='quotes');$$('a[href*="bhubondangar-lekhok"],a[href="authors.html"]').forEach(x=>x.dataset.r98Directory='writers');
- // Add explicit easy links in both sidebars without removing existing content
- $$('.side-list,.bd9-sidebar-stack').forEach((host,i)=>{if(host.querySelector('[data-r98-directory="members"]'))return;const wrap=D.createElement('div');wrap.className='r98-restored-links';wrap.innerHTML='<a class="side-link r98-directory-link" href="#" data-r98-directory="poets"><span class="side-ico">☆</span><span>১০০ খ্যাতিমান কবি</span><span>›</span></a><a class="side-link r98-directory-link" href="#" data-r98-directory="writers"><span class="side-ico">♙</span><span>ভুবনডাঙ্গার লেখক</span><span>›</span></a><a class="side-link r98-directory-link" href="#" data-r98-directory="members"><span class="side-ico">＋</span><span>নতুন সদস্য (অ-আ)</span><span>›</span></a><a class="side-link r98-directory-link" href="#" data-r98-directory="quotes"><span class="side-ico">❝</span><span>১০০ মনীষীর বাণী</span><span>›</span></a>';host.appendChild(wrap)})}
-function routeVisibility(){const open=$('#bdSingleView.open');D.body.classList.toggle('r98-route-view',!!open)}
-function fixQuickPublishing(){D.addEventListener('click',e=>{const b=e.target.closest('[data-open-type]');if(!b)return;const t=b.dataset.openType;if(['recitation','letter','environment'].includes(t)){e.preventDefault();e.stopImmediatePropagation();location.hash='#bd=category&key='+encodeURIComponent(t);toast((t==='recitation'?'আবৃত্তি':t==='letter'?'চিঠিপত্র':'পরিবেশ')+' প্রকাশনা ঘর খুলছে')}},true)}
-function init(){installFeedPicker();tagDirectoryLinks();interceptLinks();fixQuickPublishing();loadProfiles();routeVisibility();
- $('#r98Backdrop')?.addEventListener('click',()=>{closeFeedSheet();closeDirectory()});$$('[data-r98-close]').forEach(x=>x.addEventListener('click',closeFeedSheet));$$('[data-r98-dir-close]').forEach(x=>x.addEventListener('click',closeDirectory));$$('[data-r98-dir]').forEach(x=>x.addEventListener('click',()=>{state.dir=x.dataset.r98Dir;state.query='';$('#r98DirectorySearch').value='';$$('[data-r98-dir]').forEach(y=>y.classList.toggle('active',y===x));renderDirectory()}));$('#r98DirectorySearch')?.addEventListener('input',e=>{state.query=e.target.value;renderDirectory()});
- new MutationObserver(()=>{installFeedPicker();tagDirectoryLinks();routeVisibility()}).observe(D.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
-}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
-</script>
+
 <script id="r100-hero-kill-switch">
 (function(){
   function killHero(){
@@ -3698,69 +3477,7 @@ html[data-r99-palette] body{background:var(--page-bg)!important;color:var(--text
 /* Same-screen post viewer */
 .r99-viewer{position:fixed;inset:0;z-index:80000;display:none;background:rgba(2,7,16,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.r99-viewer.open{display:grid;grid-template-rows:auto 1fr}.r99-viewer-head{padding:calc(10px + env(safe-area-inset-top)) 13px 10px;display:flex;align-items:center;justify-content:space-between;color:#fff}.r99-viewer-close{width:42px;height:42px;border:1px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(255,255,255,.10);color:#fff;font-size:25px}.r99-viewer-body{overflow:auto;padding:0 10px calc(20px + env(safe-area-inset-bottom));display:grid;place-items:start center}.r99-viewer-body>.r99-post{width:min(720px,100%)}
 </style>
-<script id="r99-requested-fixes-script">
-(function(){
-'use strict';
-const D=document,W=window,H=D.documentElement;
-const $=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const bn='০১২৩৪৫৬৭৮৯',toBn=v=>String(v??0).replace(/\d/g,d=>bn[d]);
-const state={rows:[],shown:25,filter:'all',rendering:false};
 
-function toast(msg){let t=$('#bdSingleToast');if(!t){t=D.createElement('div');t.id='bdSingleToast';t.className='bd-single-toast';D.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(t._r99);t._r99=setTimeout(()=>t.classList.remove('show'),2400)}
-function normType(v){const s=String(v||'').toLowerCase();if(s.includes('recitation')||s.includes('আবৃত্তি'))return'recitation';if(s.includes('midnight')||s.includes('মধ্যরাত'))return'midnight';if(s.includes('letter')||s.includes('চিঠি'))return'letter';if(s.includes('environment')||s.includes('পরিবেশ'))return'environment';if(s.includes('discussion')||s.includes('আলোচনা'))return'discussion';if(s.includes('quote')||s.includes('বাণী'))return'quote';if(s.includes('prolap')||s.includes('প্রলাপ'))return'prolap';if(s.includes('video')||s.includes('ভিডিও'))return'video';if(s.includes('photo')||s.includes('image')||s.includes('ছবি'))return'photo';return'poem'}
-function typeName(v){return({poem:'কবিতা',recitation:'আবৃত্তি',midnight:'মধ্যরাতের প্রলাপ',letter:'চিঠিপত্র',environment:'পরিবেশ',discussion:'আলোচনা',quote:'মনীষীদের বাণী',prolap:'ছোট কথার প্রলাপ',video:'ভিডিও',photo:'ছবি'})[normType(v)]||'লেখা'}
-function profileUser(p){return p.author_id||p.user_id||p.author_username||p.username||'me'}
-function formatDate(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch(_){return''}}
-function metadata(p){let m=p.metadata||{};if(typeof m==='string'){try{m=JSON.parse(m)}catch(_){m={}}}return m||{}}
-function mediaInfo(p){const m=metadata(p),url=p.media_url||p.image_url||p.imageUrl||p.photo||m.image_url||m.cover_url||m.video_url||m.audio_url||'',type=String(p.media_type||m.media_type||'').toLowerCase();if(!url)return null;if(type.includes('video')||/\.(mp4|webm|mov)(\?|$)/i.test(url))return{kind:'video',url};if(type.includes('audio')||/\.(mp3|wav|m4a|ogg)(\?|$)/i.test(url))return{kind:'audio',url};return{kind:'image',url}}
-function mergeRows(rows){const map=new Map();rows.forEach((p,i)=>{if(!p)return;const id=String(p.id||p.post_id||'r99-'+i+'-'+(p.created_at||''));if(!map.has(id))map.set(id,Object.assign({},p,{id}))});return Array.from(map.values()).filter(p=>!['deleted','archived','rejected'].includes(String(p.status||'').toLowerCase())).sort((a,b)=>new Date(b.created_at||b.createdAt||0)-new Date(a.created_at||a.createdAt||0))}
-function localRows(){const keys=['bd-r97-local-posts','bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts','bhubondangaPublishedPoems','bhubondangaPublishedProlaps','bhubondangaPublishedMidnightProlaps','bhubondangaLetterPosts','bhubondangaPublishedRecitations','bhubondangaPublishedEnvironmentPosts','bhubondangaDiscussionPosts'],all=[];keys.forEach(k=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(a))all.push(...a)}catch(_){}});return all}
-async function fetchRows(){let rows=[];const c=W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase;if(c){try{const r=await c.from('posts').select('*').in('status',['published','published_flagged']).order('created_at',{ascending:false}).limit(500);if(!r.error)rows=r.data||[]}catch(_){}}rows=mergeRows([...(rows||[]),...localRows(),...(W.__BD_SUPABASE_POSTS||[])]);state.rows=rows;renderHomeFeed()}
-function filteredRows(){return state.filter==='all'?state.rows:state.rows.filter(p=>normType(p.type||p.category)===state.filter)}
-function avatar(p){const src=p.author_avatar||p.avatar_url||p.avatar||'';return src?'<img src="'+esc(src)+'" alt="">':esc((p.author_name||p.authorName||'ভ').trim().slice(0,1))}
-function mediaHTML(p){const m=mediaInfo(p);if(!m)return'';if(m.kind==='video')return'<div class="r99-media"><video controls playsinline preload="metadata" src="'+esc(m.url)+'"></video></div>';if(m.kind==='audio')return'<div class="r99-media"><audio controls preload="metadata" src="'+esc(m.url)+'"></audio></div>';return'<div class="r99-media"><img src="'+esc(m.url)+'" alt="'+esc(p.title||'পোস্টের ছবি')+'" data-bd-photo></div>'}
-function card(p){const user=profileUser(p),name=p.author_name||p.authorName||p.display_name||'ভুবনডাঙ্গার লেখক',title=p.title||p.heading||'শিরোনামহীন লেখা',body=p.body||p.content||p.text||p.caption||'',likes=Number(p.likes_count||p.likes||0),comments=Number(p.comments_count||p.comments||0),shares=Number(p.shares_count||p.shares||0);return '<article class="r99-post" data-r99-id="'+esc(p.id)+'" data-r99-author="'+esc(user)+'"><header class="r99-post-head"><div class="r99-author"><a class="r99-author-avatar" href="#bd=profile&user='+encodeURIComponent(user)+'" data-r99-profile="'+esc(user)+'">'+avatar(p)+'</a><div class="r99-author-copy"><a class="r99-author-name" href="#bd=profile&user='+encodeURIComponent(user)+'" data-r99-profile="'+esc(user)+'">'+esc(name)+(String(p.author_username||'').toLowerCase()==='mahmud-sohel'||name==='মাহমুদ সোহেল'?' ✓':'')+'</a><small>'+esc(formatDate(p.created_at||p.createdAt||new Date()))+' · সর্বজনীন</small></div></div><button class="r99-dots" type="button" aria-label="পোস্টের অপশন">•••</button></header><span class="r99-category">'+esc(typeName(p.type||p.category))+'</span><h3 class="r99-title"><button type="button" data-r99-open-post>'+esc(title)+'</button></h3><div class="r99-body">'+esc(body)+'</div>'+mediaHTML(p)+'<div class="r99-counts"><span>💙 💜 '+toBn(likes)+'</span><span>'+toBn(comments)+' মন্তব্য · '+toBn(shares)+' শেয়ার</span></div><div class="r99-actions"><button type="button" data-r99-like>♡ <span>লাইক</span></button><button type="button" data-r99-comments>◌ <span>মন্তব্য</span></button><button type="button" data-r99-share>↗ <span>শেয়ার</span></button><button type="button" data-r99-save>▱ <span>সংরক্ষণ</span></button></div><section class="r99-comments"><div class="r99-comment"><span class="r99-comment-avatar">নু</span><div class="r99-comment-bubble"><strong>নুসরাত জাহান</strong>কী সুন্দর লেখা! মনে ছুঁয়ে গেলো।</div></div><form class="r99-comment-form"><input autocomplete="off" enterkeyhint="send" placeholder="মন্তব্য লিখুন..."><button type="submit">➤</button></form></section></article>'}
-function renderHomeFeed(){const host=$('#postList');if(!host||$('#bdSingleView.open'))return;const rows=filteredRows(),shown=rows.slice(0,state.shown);state.rendering=true;host.innerHTML=shown.length?shown.map(card).join('')+'<div class="r99-more-wrap">'+(shown.length<rows.length?'<button class="r99-more" type="button" data-r99-more>আরও দেখুন</button>':'')+'</div>':'<div class="r99-empty">এখনও কোনো প্রকাশিত লেখা নেই। নতুন লেখা প্রকাশ হলে এখানেই দেখা যাবে।</div>';state.rendering=false;const count=$('#feedCount');if(count)count.textContent=toBn(rows.length)+'টি লেখা'}
-function ensureViewer(){if($('#r99Viewer'))return;D.body.insertAdjacentHTML('beforeend','<section class="r99-viewer" id="r99Viewer" aria-hidden="true"><header class="r99-viewer-head"><strong>ভুবনডাঙ্গার পোস্ট</strong><button class="r99-viewer-close" type="button" data-r99-viewer-close>×</button></header><div class="r99-viewer-body" id="r99ViewerBody"></div></section>')}
-function openViewer(post){ensureViewer();const body=$('#r99ViewerBody');body.innerHTML=card(post);$('#r99Viewer').classList.add('open');$('#r99Viewer').setAttribute('aria-hidden','false');D.body.classList.add('locked')}
-function closeViewer(){$('#r99Viewer')?.classList.remove('open');$('#r99Viewer')?.setAttribute('aria-hidden','true');D.body.classList.remove('locked')}
-function goProfile(user){location.hash='#bd=profile&user='+encodeURIComponent(user||'me')}
-function removeRequestedElements(){
- $('#bdR96Hero')?.remove();
- $('#founderTools')?.remove();$$('.founder-tools').forEach(x=>x.remove());
- $$('#leftSidebar a,#rightSidebar a,#mobileDrawer a,#rightMobileDrawer a,#leftSidebar button,#rightSidebar button,#mobileDrawer button,#rightMobileDrawer button').forEach(el=>{if((el.textContent||'').replace(/\s+/g,' ').trim().includes('মধ্যরাতের প্রলাপ')){const row=el.closest('.menu-item,.side-link,.bd9-menu-item,li')||el;row.remove()}})
-}
-function themePanelHTML(){return '<section class="glass r99-theme-panel" data-r99-theme-panel><h3>দিন ও রঙ</h3><div class="r99-theme-grid"><button class="r99-theme-choice" type="button" data-r99-theme="day">দিবালোক</button><button class="r99-theme-choice" type="button" data-r99-theme="purple">পার্পল ব্লুইশ</button><button class="r99-theme-choice" type="button" data-r99-theme="aurora">অরোরা ব্লুইশ</button><button class="r99-theme-choice" type="button" data-r99-theme="night">গভীর রাত</button></div></section>'}
-function injectThemes(){const hosts=['#leftSidebar .bd9-sidebar-stack','#mobileDrawer .bd9-sidebar-stack'];hosts.forEach(sel=>{const h=$(sel);if(h&&!$('[data-r99-theme-panel]',h))h.insertAdjacentHTML('beforeend',themePanelHTML())});syncThemeButtons()}
-function setTheme(v){const light=v==='day';H.dataset.theme=light?'light':'dark';H.dataset.bdTheme=light?'light':'dark';H.dataset.r99Palette=v;localStorage.setItem('bhubondangaTheme',light?'light':'dark');localStorage.setItem('bd-theme',light?'light':'dark');localStorage.setItem('bd-r99-palette',v);syncThemeButtons();toast(({day:'দিবালোক',purple:'পার্পল ব্লুইশ',aurora:'অরোরা ব্লুইশ',night:'গভীর রাত'})[v]+' চালু হয়েছে')}
-function syncThemeButtons(){const v=H.dataset.r99Palette||'night';$$('[data-r99-theme]').forEach(b=>b.classList.toggle('active',b.dataset.r99Theme===v))}
-function initTheme(){let v=localStorage.getItem('bd-r99-palette');if(!['day','purple','aurora','night'].includes(v))v=H.dataset.theme==='light'?'day':'night';H.dataset.r99Palette=v;if(v==='day')H.dataset.theme='light';else H.dataset.theme='dark';syncThemeButtons()}
-function postByElement(el){const id=el.closest('[data-r99-id]')?.dataset.r99Id;return state.rows.find(p=>String(p.id)===String(id))}
-function sharePost(p){const url=location.origin+location.pathname+'#post='+encodeURIComponent(p?.id||'');if(navigator.share)navigator.share({title:p?.title||'ভুবনডাঙ্গার পোস্ট',url}).catch(()=>{});else navigator.clipboard?.writeText(url);toast('পোস্টের লিংক শেয়ার করা হয়েছে')}
-function savePost(p,b){let a=[];try{a=JSON.parse(localStorage.getItem('bhubondangaSavedItems')||'[]')}catch(_){a=[]}if(p&&!a.some(x=>String(x.id)===String(p.id)))a.unshift({id:p.id,title:p.title||'',createdAt:new Date().toISOString()});localStorage.setItem('bhubondangaSavedItems',JSON.stringify(a));b?.classList.add('active');toast('সংরক্ষণ করা হয়েছে')}
-
-D.addEventListener('bd:supabase-posts',e=>{state.rows=mergeRows([...(e.detail?.rows||[]),...localRows()]);state.shown=25;renderHomeFeed()});
-D.addEventListener('click',e=>{
- const theme=e.target.closest('[data-r99-theme]');if(theme){e.preventDefault();e.stopImmediatePropagation();setTheme(theme.dataset.r99Theme);return}
- const profile=e.target.closest('[data-r99-profile],a[href*="#bd=profile"],a[href^="profile.html"],a[href^="./profile.html"],a[href^="founder-profile.html"],a[href^="admin-profile.html"],.author-avatar,.author-name-row a');if(profile){let user=profile.dataset.r99Profile||profile.closest('[data-r99-author]')?.dataset.r99Author||'me',href=profile.getAttribute?.('href')||'';const m=href.match(/[?&]user=([^&#]+)/)||href.match(/user=([^&#]+)/);if(m)user=decodeURIComponent(m[1]);if(href.includes('founder-profile'))user='mahmud-sohel';e.preventDefault();e.stopImmediatePropagation();goProfile(user);return}
- const open=e.target.closest('[data-r99-open-post]');if(open){e.preventDefault();const p=postByElement(open);if(p)openViewer(p);return}
- if(e.target.closest('[data-r99-viewer-close]')||e.target.id==='r99Viewer'){e.preventDefault();closeViewer();return}
- const more=e.target.closest('[data-r99-more]');if(more){state.shown+=25;renderHomeFeed();return}
- const like=e.target.closest('[data-r99-like]');if(like){like.classList.toggle('active');like.innerHTML=like.classList.contains('active')?'♥ <span>লাইক হয়েছে</span>':'♡ <span>লাইক</span>';return}
- const cm=e.target.closest('[data-r99-comments]');if(cm){const box=cm.closest('.r99-post')?.querySelector('.r99-comments');box?.classList.toggle('open');box?.querySelector('input')?.focus({preventScroll:true});return}
- const sh=e.target.closest('[data-r99-share]');if(sh){sharePost(postByElement(sh));return}
- const sv=e.target.closest('[data-r99-save]');if(sv){savePost(postByElement(sv),sv);return}
- const feed=e.target.closest('[data-r98-feed]');if(feed){state.filter=feed.dataset.r98Feed||'all';state.shown=25;setTimeout(renderHomeFeed,40)}
-},true);
-D.addEventListener('submit',e=>{const f=e.target.closest('.r99-comment-form');if(!f)return;e.preventDefault();const input=f.querySelector('input'),value=input.value.trim();if(!value)return;f.insertAdjacentHTML('beforebegin','<div class="r99-comment"><span class="r99-comment-avatar">আ</span><div class="r99-comment-bubble"><strong>আপনি</strong>'+esc(value)+'</div></div>');input.value='';toast('মন্তব্য যোগ হয়েছে')},true);
-D.addEventListener('change',e=>{if(e.target.id==='categoryFilter'){state.filter=e.target.value||'all';state.shown=25;renderHomeFeed()}});
-addEventListener('hashchange',()=>{setTimeout(()=>{if(!$('#bdSingleView.open'))renderHomeFeed()},120)});
-
-function boot(){initTheme();removeRequestedElements();injectThemes();ensureViewer();fetchRows();setTimeout(()=>{removeRequestedElements();injectThemes();fetchRows()},1300);setTimeout(()=>{removeRequestedElements();injectThemes();renderHomeFeed()},2600);new MutationObserver(()=>{removeRequestedElements();injectThemes()}).observe(D.body,{childList:true,subtree:true})}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
 <style id="bd-r101-slim-readable-photo-viewer">
 /* R101 — requested-only corrections: slimmer desktop sidebars, wider feed, reliable contrast, same-screen photo comments. */
 @media (min-width:1181px){
@@ -3922,94 +3639,8 @@ html[data-theme="dark"] .quick-type *{
   outline-offset:2px!important;
 }
 </style>
-<script id="bd-v9-index-final">
-(()=>{'use strict';const D=document,W=window;
-function stop(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}
-function cardOf(t){return t.closest('[data-post-card],.bd-live-post,.bd-r97-card,.r99-post,.post')}
-function toggle(card){if(!card)return;const y=W.scrollY;card.classList.toggle('expanded');const b=card.querySelector('.read-more,[data-read-more]');if(b)b.textContent=card.classList.contains('expanded')?'কম দেখুন ↑':'আরও দেখুন →';requestAnimationFrame(()=>W.scrollTo({top:y,behavior:'auto'}))}
-function closeLegacy(){D.querySelectorAll('#masterPostShell,.master-post-shell,#bdR97Detail,.bd-r97-detail').forEach(x=>{x.classList.remove('open');x.setAttribute('aria-hidden','true')});D.body.classList.remove('post-view-open');if(!D.querySelector('.drawer.open,.mobile-drawer.open'))D.body.classList.remove('locked')}
-function route(type){type=type==='letters'?'letter':type;closeLegacy();location.hash='#bd=category&key='+encodeURIComponent(type);setTimeout(()=>W.dispatchEvent(new HashChangeEvent('hashchange')),0)}
-function ensureTemplates(){const f=D.querySelector('#composerForm,.composer-form');if(!f||f.querySelector('.bd-v9-template-picker'))return;const box=D.createElement('div');box.className='bd-v9-template-picker';box.innerHTML=['pearl|মুক্তা','book|বইয়ের পাতা','nature|সবুজ প্রকৃতি','night|নিশির আলো','letter|চিঠির কাগজ','aqua|অ্যাকুয়া','rose|গোলাপি','classic|ক্লাসিক'].map((x,i)=>{const [v,n]=x.split('|');return `<button type="button" class="bd-v9-template ${i===0?'active':''}" data-v9-template="${v}">${n}</button>`}).join('')+`<input type="hidden" name="card_style" value="pearl">`;const ta=f.querySelector('textarea');(ta?.parentNode||f).insertBefore(box,ta||f.firstChild);box.addEventListener('click',e=>{const b=e.target.closest('[data-v9-template]');if(!b)return;box.querySelectorAll('.bd-v9-template').forEach(x=>x.classList.toggle('active',x===b));box.querySelector('[name=card_style]').value=b.dataset.v9Template;f.dataset.cardStyle=b.dataset.v9Template})}
-W.addEventListener('click',e=>{const t=e.target;
- const close=t.closest('[data-close-post],[data-r97-detail-close]');if(close||t.id==='masterPostShell'||t.id==='bdR97Detail'){stop(e);closeLegacy();return}
- const media=t.closest('.post-media,.bd-r97-art,[data-bd-photo]');if(media&&cardOf(media)){stop(e);media.classList.toggle('media-open');return}
- const title=t.closest('[data-open-post],[data-r97-title],.post-title a,.r99-title button');if(title){const c=cardOf(title);if(c){stop(e);toggle(c);return}}
- const prompt=t.closest('#composerPrompt,.composer-prompt');if(prompt){stop(e);closeLegacy();try{showComposerChoices();openComposer('poem');ensureTemplates()}catch(_){const f=D.querySelector('#composerForm,.composer-form');if(f)f.hidden=false}return}
- const q=t.closest('[data-open-type],[data-type]');if(q){const type=q.dataset.openType||q.dataset.type;if(['recitation','letter','letters','environment'].includes(type)){stop(e);route(type);return}try{stop(e);openComposer(type);ensureTemplates();return}catch(_){}}
- const link=t.closest('a[href*="recitation.html"],a[href*="letter.html"],a[href*="environment.html"]');if(link){const h=link.getAttribute('href')||'';stop(e);route(h.includes('recitation')?'recitation':h.includes('letter')?'letter':'environment');return}
- const c=cardOf(t);if(c&&!t.closest('button,a,input,textarea,select,label,audio,video,.comments,.comment-box,.post-action-board,.post-menu')){stop(e);toggle(c);return}
-},true);
-D.addEventListener('contextmenu',e=>e.preventDefault(),true);D.addEventListener('copy',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);D.addEventListener('cut',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);D.addEventListener('dragstart',e=>e.preventDefault(),true);D.addEventListener('selectstart',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>{closeLegacy();ensureTemplates()},{once:true});else{closeLegacy();ensureTemplates()}new MutationObserver(()=>{closeLegacy();ensureTemplates()}).observe(D.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
-})();
-</script>
-<script id="bd-v10-index-script">
-(()=>{'use strict';
-const D=document,W=window,$=s=>D.querySelector(s),$$=s=>Array.from(D.querySelectorAll(s));
-const page=(location.pathname.split('/').pop()||'index.html').toLowerCase();
-const pageType=page==='letter.html'?'letter':page==='environment.html'?'environment':'';
-const typeLabels={poem:'কবিতা',prolap:'ছোট কথার প্রলাপ',letter:'চিঠিপত্র',recitation:'আবৃত্তি',environment:'পরিবেশ'};
-const templates={
- poem:[['pearl','মুক্তা'],['poem-book','বইয়ের পাতা'],['poem-watermark','জলছাপ'],['aurora','অরোরা'],['clear','কার্ড ছাড়া']],
- prolap:[['prolap-moon','চাঁদের আলো'],['poem-watermark','নরম জলছাপ'],['aurora','অরোরা'],['clear','কার্ড ছাড়া']],
- letter:[['letter-plain','সাদা পত্র'],['letter-ruled','দাগটানা ডায়েরি'],['letter-vintage','ভিন্টেজ খাম'],['clear','কার্ড ছাড়া']],
- environment:[['env-river','নদীর ধারা'],['env-forest','সবুজ বন'],['env-sky','নীল আকাশ'],['clear','কার্ড ছাড়া']],
- recitation:[['aurora','অরোরা'],['prolap-moon','নিশির মঞ্চ'],['clear','কার্ড ছাড়া']]
-};
-const demoNames=['ইশিতা নওরীন','রাকিবুল হাসান','নুসরাত কবির','মেহরাব নীল','সামিয়া আদৃতা','আরিফ হাসান','তাসনিম জাহান','নীলা রহমান','সাব্বির আহমেদ','আল আমিন হোসেন','শারমিন আক্তার','মুনতাসির কবির','সাদিয়া ইসলাম','তানভীর মাহমুদ','রুবাইয়াৎ নূর','জান্নাত আরা','অপর্ণা দাস','শিহাব উদ্দিন','মারুফা ইয়াসমিন','ফারহান হক','সেঁজুতি সেন','আদিবা তাসনিম','সায়েম রহমান','অন্তরা সাহা','আবির চৌধুরী','মৌসুমী রহমান','শাওন আহমেদ','আফসানা মিম','রেজওয়ান করিম','মমতাজ বেগম','ইমরান হোসেন','সুমাইয়া নূর','অনিক সাহা','তানিয়া সুলতানা','শুভ্র দাস','মাহির ইসলাম','রাফসান কবির','অনন্যা রহমান','পিয়াস মজুমদার','নাবিলা হক','রিয়াদ হাসান','লাবণ্য সেন','মুনিরা আক্তার','সজল মিয়া','সুবর্ণা দত্ত'];
-const demoTitles={poem:['আলোর দিকে যাত্রা','বৃষ্টির পরে নীরবতা','নদীর কাছে ফিরে','মাটির গন্ধ','অপেক্ষার জানালা'],prolap:['রাতের কাছে প্রশ্ন','নিজের সঙ্গে দেখা','নীরবতার ভেতর','এক মুঠো দ্বিধা','অন্ধকারের ভাষা'],letter:['নিজেকে লেখা চিঠি','ভবিষ্যতের আমাকে','মায়ের কাছে চিঠি','হারানো বন্ধুর নামে','একটি অনুচ্চারিত চিঠি'],environment:['একটি গাছের ছায়ায়','নদী বাঁচলে শহর বাঁচে','প্লাস্টিকমুক্ত সকাল','পাখির জন্য জানালা','বৃষ্টির জল ধরে রাখি'],recitation:['বৃষ্টির পরে নীরবতা','শব্দের শ্বাস','আলো উচ্চারণ','মাটির কবিতা','ফিরে আসার আবৃত্তি']};
-const demoBodies={poem:'ভাঙা পথের শেষে দাঁড়িয়ে দেখি—অন্ধকার কখনো শেষ কথা নয়। দূরে একটি ক্ষুদ্র আলোও মানুষের পথ চিনিয়ে দিতে পারে।',prolap:'দিনের কোলাহল থেমে গেলে নিজের ভেতরের কথাগুলো একটু স্পষ্ট শোনা যায়। সেই নীরবতাও কখনো কখনো এক ধরনের সাহস।',letter:'প্রিয় আমি, সব উত্তর আজই খুঁজে পেতে হবে না। একটু থেমে শ্বাস নাও, নিজের প্রতি সদয় হও, তারপর আবার পথ ধরো।',environment:'প্রকৃতি রক্ষা বড় কোনো এক দিনের কাজ নয়। পানি অপচয় বন্ধ করা, গাছ লাগানো এবং বর্জ্য আলাদা করার মতো ছোট অভ্যাসই বড় পরিবর্তন তৈরি করে।',recitation:'কণ্ঠে যখন কবিতার শ্বাস জেগে ওঠে, শব্দ শুধু শোনা যায় না—অনুভব করা যায়।'};
-function stop(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}
-function form(){return $('#composerForm')}
-function ensureOption(select,value,label){if(!select||Array.from(select.options).some(o=>o.value===value))return;const o=D.createElement('option');o.value=value;o.textContent=label;select.appendChild(o)}
-function styleBase(v){return String(v||'pearl').split('--')[0]}
-function buildPanel(){
- const f=form();if(!f||f.querySelector('.bd10-template-panel'))return;
- const panel=D.createElement('section');panel.className='bd10-template-panel';panel.innerHTML='<div class="bd10-template-summary"><div><strong id="bd10SelectedTemplate">টেমপ্লেট বেছে নিন</strong><small>কার্ড ছাড়া লিখতেও পারবেন</small></div><button type="button" class="bd10-template-change" data-bd10-change-card>টেমপ্লেট দেখুন</button></div><div class="bd10-template-grid" id="bd10TemplateGrid"></div><div class="bd10-compose-options"><div class="bd10-option"><label for="bd10Font">লেখার ফন্ট</label><select id="bd10Font"><option value="reading">সহজ পাঠ্য</option><option value="book">বইয়ের ছাপা</option><option value="hand">হাতের লেখার আবহ</option><option value="modern">আধুনিক</option></select></div><div class="bd10-option"><label for="bd10Watermark">হালকা জলছাপ</label><select id="bd10Watermark"><option value="none">জলছাপ ছাড়া</option><option value="leaf">পাতা</option><option value="feather">কলমের পালক</option><option value="moon">চাঁদ</option></select></div></div>';
- const ta=$('#postBody');(ta?.parentNode||f).insertBefore(panel,ta||f.firstChild);
- const cs=$('#cardStyle');Object.values(templates).flat().forEach(([v,n])=>ensureOption(cs,v,n));
- panel.querySelector('#bd10Font').addEventListener('change',syncEncoded);
- panel.querySelector('#bd10Watermark').addEventListener('change',syncEncoded);
-}
-function renderTemplates(type){buildPanel();const grid=$('#bd10TemplateGrid');if(!grid)return;const rows=templates[type]||templates.poem;grid.hidden=false;grid.innerHTML=rows.map(([v,n],i)=>`<button type="button" class="bd10-template ${i===0?'active':''}" data-bd10-card="${v}" data-style="${v}"><i></i><span>${n}</span></button>`).join('');selectTemplate(rows[0][0],rows[0][1],false)}
-function syncEncoded(){const f=form(),cs=$('#cardStyle');if(!f||!cs)return;const base=f.dataset.bd10Style||styleBase(cs.value)||'pearl',font=$('#bd10Font')?.value||'reading',wm=$('#bd10Watermark')?.value||'none';const encoded=`${base}--font-${font}--wm-${wm}`;ensureOption(cs,encoded,encoded);cs.value=encoded;f.dataset.bd10Font=font;f.dataset.bd10Watermark=wm;f.dataset.bd10Style=base}
-function selectTemplate(style,label,collapse=true){const f=form(),grid=$('#bd10TemplateGrid');if(!f)return;f.dataset.bd10Style=style;$$('[data-bd10-card]').forEach(b=>b.classList.toggle('active',b.dataset.bd10Card===style));const s=$('#bd10SelectedTemplate');if(s)s.textContent='নির্বাচিত: '+(label||style);syncEncoded();if(collapse&&grid)grid.hidden=true}
-function selectType(type){
- const f=form(),choices=$('#composerChoices'),note=$('#composerNote');if(!f)return;
- const radio=$(`input[name="postType"][value="${type}"]`);if(radio)radio.checked=true;
- f.hidden=false;if(choices)choices.hidden=true;if(note){note.hidden=false;note.textContent=type==='letter'?'আপনার চিঠি এই পাতাতেই লিখুন; নির্বাচিত কাগজেই প্রকাশিত হবে।':type==='environment'?'পরিবেশ রক্ষায় আপনার পরামর্শ লিখুন; একটি প্রাকৃতিক কার্ড অথবা কার্ড ছাড়া বেছে নিন।':type==='recitation'?'আবৃত্তির শিরোনাম, বিবরণ এবং অডিও/ভিডিও যোগ করুন।':type==='prolap'?'মনের ছোট কথাটি লিখুন; চাইলে নরম রাতের কার্ড বেছে নিন।':'কবিতার শিরোনাম ও কবিতা লিখুন; কার্ড, জলছাপ ও ফন্ট বেছে নিতে পারবেন।'}
- const labels={poem:['কবিতার শিরোনাম','আপনার কবিতা লিখুন…'],prolap:['প্রলাপের শিরোনাম','আপনার মনের কথা লিখুন…'],letter:['চিঠির বিষয় বা শিরোনাম','চিঠিটি লিখুন…'],environment:['পরিবেশ বিষয়ক শিরোনাম','পরিবেশ রক্ষায় আপনার পরামর্শ লিখুন…'],recitation:['আবৃত্তির শিরোনাম','আবৃত্তির বিবরণ লিখুন…']};
- const x=labels[type]||labels.poem;if($('#postTitle'))$('#postTitle').placeholder=x[0];if($('#postBody'))$('#postBody').placeholder=x[1];
- renderTemplates(type);
-}
-function setup(){
- buildPanel();
- const prompt=$('#composerPrompt');if(prompt){prompt.textContent=pageType==='letter'?'নিজেকে অথবা প্রিয় কাউকে একটি চিঠি লিখুন':pageType==='environment'?'পরিবেশ রক্ষায় আপনার পরামর্শ লিখুন।':'আজ আপনার ভেতরে কী কথা জমে আছে?'}
- const note=$('#composerNote');if(note)note.textContent='বিষয় বেছে নিয়ে এই পাতাতেই লিখুন। কোনো popup বা আলাদা post-details খুলবে না।';
- const feed=$('.feed-head h2');if(feed&&pageType)feed.textContent=pageType==='letter'?'প্রকাশিত চিঠিপত্র':'পরিবেশ রক্ষায় পরামর্শ';
- const cat=$('#categoryFilter');if(cat&&pageType){cat.value=pageType;cat.dispatchEvent(new Event('change',{bubbles:true}))}
- if(pageType){const ch=$('#composerChoices');if(ch)ch.innerHTML=`<button class="quick-type" data-open-type="${pageType}" type="button"><span class="quick-symbol">${pageType==='letter'?'✉️':'🌱'}</span><span>${typeLabels[pageType]}</span></button>`}
-}
-function togglePost(card){if(!card)return;const y=W.scrollY;card.classList.toggle('expanded');const b=card.querySelector('.readmore,.post-read-more,.read-more,[data-read-more]');if(b)b.textContent=card.classList.contains('expanded')?'কম দেখুন ↑':'আরও দেখুন →';requestAnimationFrame(()=>W.scrollTo({top:y,behavior:'auto'}))}
-function cardHtml(i,type){const name=demoNames[i%demoNames.length],title=demoTitles[type][i%demoTitles[type].length],body=demoBodies[type],styles={poem:['pearl','poem-book','poem-watermark','aurora'],prolap:['prolap-moon','poem-watermark','aurora'],letter:['letter-plain','letter-ruled','letter-vintage'],environment:['env-river','env-forest','env-sky'],recitation:['aurora','prolap-moon']}[type],style=styles[i%styles.length]+'--font-'+(i%3===0?'book':i%3===1?'reading':'modern')+'--wm-'+(type==='environment'?'leaf':type==='prolap'?'moon':i%4===0?'feather':'none');return `<article class="glass post style-${style}" data-bd10-demo="${i}" data-type="${type}"><div class="post-head"><div class="author"><a class="author-avatar" href="profile.html?user=demo-${i+1}">${name.slice(0,1)}</a><div class="author-meta"><a class="author-name" href="profile.html?user=demo-${i+1}">${name}</a><small class="post-time">ঢাকা সময় · কিছুক্ষণ আগে</small></div></div><button class="three-dot-btn" type="button">•••</button></div><span class="pill tag">${typeLabels[type]}</span><h3 class="post-title"><a href="post-details.html?id=demo-${i+1}">${title}</a></h3><div class="post-body">${body}\n\n${body}</div><button class="post-read-more" type="button">আরও দেখুন →</button><div class="post-actions"><button class="action-btn" type="button" data-bd10-react>♡ <span>লাইক</span></button><button class="action-btn" type="button" data-bd10-comment>◌ <span>মন্তব্য</span></button><button class="action-btn" type="button">↗ <span>শেয়ার</span></button><button class="action-btn" type="button">▱ <span>সেভ</span></button></div><div class="comment-box"><form class="comment-form"><textarea placeholder="মন্তব্য লিখুন…"></textarea><button class="primary-btn" type="submit">পাঠান</button></form></div></article>`}
-function ensureFeed(){const host=$('#postList');if(!host)return;const count=host.querySelectorAll('.post,.r99-post,.bd-live-post').length;if(count>=3)return;const types=pageType?[pageType]:['poem','prolap','letter','environment','recitation'];host.innerHTML=Array.from({length:45},(_,i)=>cardHtml(i,types[i%types.length])).join('')}
-W.addEventListener('click',e=>{
- const t=e.target;
- const routeLink=t.closest('a[href*="letter.html"],a[href*="environment.html"]');if(routeLink&&!t.closest('#composer')){stop(e);location.href=routeLink.getAttribute('href');return}
- const prompt=t.closest('#composerPrompt,.composer-prompt');if(prompt){stop(e);if(pageType){selectType(pageType)}else{const ch=$('#composerChoices');if(ch)ch.hidden=!ch.hidden;const f=form();if(f)f.hidden=true}return}
- const q=t.closest('#composer [data-open-type]');if(q){stop(e);selectType(q.dataset.openType||'poem');return}
- const c=t.closest('[data-bd10-card]');if(c){stop(e);selectTemplate(c.dataset.bd10Card,c.textContent.trim(),true);return}
- if(t.closest('[data-bd10-change-card]')){stop(e);const g=$('#bd10TemplateGrid');if(g)g.hidden=!g.hidden;return}
- const read=t.closest('.post-title a,.post-read-more,.readmore,.read-more,[data-read-more]');if(read&&read.closest('.post,.r99-post,.bd-live-post')){stop(e);togglePost(read.closest('.post,.r99-post,.bd-live-post'));return}
- const com=t.closest('[data-bd10-comment],[data-comment],[data-bd-route-comment]');if(com){stop(e);const box=com.closest('.post,.r99-post,.bd-live-post')?.querySelector('.comment-box,.comments');if(box){box.classList.toggle('open');box.classList.remove('hidden');box.querySelector('textarea,input')?.focus({preventScroll:true})}return}
- if(t.closest('[data-bd10-react]')){stop(e);const b=t.closest('[data-bd10-react]');b.classList.toggle('active');b.innerHTML=b.classList.contains('active')?'❤️ <span>ভালোবাসা</span>':'♡ <span>লাইক</span>';return}
- const card=t.closest('.post,.r99-post,.bd-live-post');if(card&&!t.closest('button,a,input,textarea,select,audio,video,.comment-box,.comments,.post-menu')){stop(e);togglePost(card);return}
-},true);
-W.addEventListener('submit',e=>{if(e.target.id==='composerForm'){syncEncoded()}if(e.target.matches('.comment-form')&&e.target.closest('[data-bd10-demo]')){stop(e);const ta=e.target.querySelector('textarea');if(ta)ta.value=''}},true);
-D.addEventListener('contextmenu',e=>e.preventDefault(),true);D.addEventListener('copy',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);D.addEventListener('cut',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);D.addEventListener('selectstart',e=>{if(!e.target.closest('input,textarea,[contenteditable=true]'))e.preventDefault()},true);
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>{setup();setTimeout(ensureFeed,1300);setTimeout(ensureFeed,3300)},{once:true});else{setup();setTimeout(ensureFeed,1300);setTimeout(ensureFeed,3300)}
-})();
-</script>
+
+
 <style id="bd-v102-final-contrast-sidebar-fix">
 /* V10.2 — final cascade lock: readable text and working mobile sidebars. */
 html[data-theme="light"] body :is(
@@ -4124,77 +3755,6 @@ html[data-theme="dark"] body :is(#composerPrompt,.composer-prompt,[data-open-com
   :is(#mobileDrawer,#rightMobileDrawer,#leftDrawer,#rightDrawer) :is(button,a,input,select,textarea){pointer-events:auto!important;touch-action:manipulation!important}
 }
 </style>
-<script id="bd-v102-final-sidebar-runtime">
-(()=>{
-'use strict';
-const D=document,W=window;
-const one=s=>D.querySelector(s);
-const all=s=>Array.from(D.querySelectorAll(s));
-const SEL={
-  leftHandle:'#leftEdgeMenu,[data-left-edge],.edge-menu-left,.edge.left,[data-bd9-handle="left"]',
-  rightHandle:'#rightEdgeMenu,[data-right-edge],.edge-menu-right,.edge.right,[data-bd9-handle="right"]',
-  left:'#mobileDrawer,#leftDrawer,[data-bd9-drawer="left"]',
-  right:'#rightMobileDrawer,#rightDrawer,[data-bd9-drawer="right"]',
-  back:'#drawerBackdrop,#backdrop,.drawer-backdrop'
-};
-let pushed=false;
-function drawers(which){return all(which==='right'?SEL.right:SEL.left)}
-function backdrop(){return one(SEL.back)}
-function forceClose(fromHistory=false){
-  [...drawers('left'),...drawers('right')].forEach(x=>{
-    x.classList.remove('open','bd-force-open');
-    x.removeAttribute('data-bd-open');
-    x.style.removeProperty('transform');
-    x.style.removeProperty('pointer-events');
-  });
-  const b=backdrop();if(b){b.classList.remove('show','bd-force-show');b.style.removeProperty('opacity');b.style.removeProperty('pointer-events')}
-  D.body.classList.remove('locked','bd-drawer-open');
-  if(!fromHistory&&pushed&&history.state?.bdSidebar){pushed=false;history.back()}
-}
-function forceOpen(which){
-  const target=drawers(which)[0];if(!target)return;
-  [...drawers('left'),...drawers('right')].forEach(x=>{
-    const on=x===target;x.classList.toggle('open',on);x.classList.toggle('bd-force-open',on);
-    if(on){x.dataset.bdOpen='1';x.style.setProperty('transform','translate3d(0,0,0)','important');x.style.setProperty('pointer-events','auto','important')}
-    else{x.removeAttribute('data-bd-open');x.style.removeProperty('transform');x.style.removeProperty('pointer-events')}
-  });
-  const b=backdrop();if(b){b.classList.add('show','bd-force-show');b.style.setProperty('opacity','1','important');b.style.setProperty('pointer-events','auto','important')}
-  D.body.classList.add('locked','bd-drawer-open');
-  if(!history.state?.bdSidebar){history.pushState({...(history.state||{}),bdSidebar:which},'');pushed=true}
-}
-function isClose(t){return t.closest('[data-close-drawer],[data-bd9-close],.drawer-close,#closeDrawer,#closeRightDrawer')}
-function handlePointer(e){
-  const t=e.target;
-  if(t.closest(SEL.leftHandle)){e.preventDefault();e.stopPropagation();forceOpen('left');return}
-  if(t.closest(SEL.rightHandle)){e.preventDefault();e.stopPropagation();forceOpen('right');return}
-  if(isClose(t)||t===backdrop()){e.preventDefault();e.stopPropagation();forceClose();return}
-}
-W.addEventListener('pointerdown',handlePointer,true);
-W.addEventListener('popstate',()=>{if(D.body.classList.contains('bd-drawer-open')){pushed=false;forceClose(true)}});
-D.addEventListener('keydown',e=>{if(e.key==='Escape')forceClose()},true);
 
-function fallbackProfileSidebars(){
-  const l=one('#leftDrawerBody'),r=one('#rightDrawerBody');
-  const ls=one('#leftSide'),rs=one('#rightSide');
-  if(l&&!l.children.length&&ls?.innerHTML.trim())l.innerHTML=ls.innerHTML;
-  if(r&&!r.children.length&&rs?.innerHTML.trim())r.innerHTML=rs.innerHTML;
-  if(l&&!l.children.length)l.innerHTML='<section class="side-card"><div class="side-title"><strong>আপন ভুবন</strong></div><div class="side-list"><button class="side-link" data-story-touch>✦ Story Touch</button><button class="side-link" data-side-panel="messages">▢ Messenger</button><button class="side-link" data-side-panel="archive">◫ Archive</button><button class="side-link" data-side-panel="settings">⚙ Settings</button></div></section>';
-  if(r&&!r.children.length)r.innerHTML='<section class="side-card"><div class="side-title"><strong>প্রোফাইল</strong></div><div class="side-list"><button class="side-link" data-tab="home">হোম</button><button class="side-link" data-tab="poem">কবিতা</button><button class="side-link" data-tab="recitation">আবৃত্তি</button><button class="side-link" data-tab="letter">চিঠিপত্র</button><button class="side-link" data-tab="environment">পরিবেশ</button></div></section>';
-}
-function syncThemeText(){
-  const dark=D.documentElement.getAttribute('data-theme')==='dark';
-  D.documentElement.classList.toggle('bd-final-dark',dark);
-  all('#composerPrompt,.composer-prompt,[data-open-composer],#editorCaption,.caption-input,.caption-field').forEach(el=>{
-    el.style.setProperty('color',dark?'#ffffff':'#14243a','important');
-    el.style.setProperty('-webkit-text-fill-color',dark?'#ffffff':'#14243a','important');
-    el.style.setProperty('opacity','1','important');
-  });
-}
-function init(){fallbackProfileSidebars();syncThemeText()}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
-setTimeout(init,350);setTimeout(init,1200);setTimeout(init,2600);
-new MutationObserver(syncThemeText).observe(D.documentElement,{attributes:true,attributeFilter:['data-theme','data-r99-palette']});
-})();
-</script>
 </body>
 </html>
