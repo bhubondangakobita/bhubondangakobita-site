@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html data-theme="light" lang="bn"><head><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
-<script src="supabase-config.js" data-bd-master-dependency></script>
-<script src="supabase-auth.js" data-bd-master-dependency></script>
-<script src="supabase-data.js" data-bd-master-dependency></script>
-<script src="profanity.js" data-bd-master-dependency></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><title>প্রোফাইল সম্পাদনা | ভুবনডাঙ্গার কবিতা</title><meta content="ভুবনডাঙ্গার কবিতায় প্রোফাইল সম্পাদনা।" name="description"/><style>
+<script src="supabase-config.js?v=6.7.1" data-bd-master-dependency></script>
+<script src="supabase-auth.js?v=6.7.1" data-bd-master-dependency></script>
+<script src="supabase-data.js?v=6.7.1" data-bd-master-dependency></script>
+<script src="profanity.js?v=6.7.1" data-bd-master-dependency></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/><title>প্রোফাইল সম্পাদনা | ভুবনডাঙ্গার কবিতা</title><meta content="ভুবনডাঙ্গার কবিতায় প্রোফাইল সম্পাদনা।" name="description"/><style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -287,7 +287,7 @@ html[data-theme="dark"] .quick-type{background:linear-gradient(145deg,rgba(20,40
 .favorite-active{border-color:rgba(169,131,80,.30)!important}.favorite-star{color:var(--gold)}
 @media(max-width:1120px){.item-grid{grid-template-columns:1fr}.profile-editor{grid-template-columns:1fr}.preview-card{position:static}}
 @media(max-width:860px){.page-main{gap:8px}.page-hero{padding:14px}.page-hero h1{font-size:21px}.page-controls{grid-template-columns:1fr}.item-grid{grid-template-columns:1fr}.item-card{padding:11px}.profile-editor{display:block}.preview-card{margin-top:9px}.form-grid2,.upload-row{grid-template-columns:1fr}.fixed-action-menu{width:min(220px,calc(100vw - 24px))}.poet-cover{min-height:150px}.poet-cover h1{font-size:24px}}
-</style><script>window.SUPABASE_URL='https://ihjiisysrwgxxkuywuhc.supabase.co';window.SUPABASE_KEY='sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz';</script><link rel="stylesheet" href="bhubondanga-master-v6.css" data-bd-master-v6>
+</style><script>window.SUPABASE_URL='https://ihjiisysrwgxxkuywuhc.supabase.co';window.SUPABASE_KEY='sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz';</script><link rel="stylesheet" href="bhubondanga-master-v6.css?v=6.7.1" data-bd-master-v6>
 </head><body data-master="bhubondanga-index-standard-v3"><svg aria-hidden="true" class="svg-sprite" focusable="false">
 <symbol id="i-leaf" viewbox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"></path><path d="M4 20c3-6 7-9 13-12"></path></symbol>
 <symbol id="i-menu" viewbox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></symbol>
@@ -363,5 +363,5 @@ async function upload(file,kind){if(!file)return current[kind+'_url']||'';const 
 D.addEventListener('change',e=>{if(e.target.id==='profilePhoto')avatarFile=e.target.files?.[0]||null;if(e.target.id==='coverPhoto')coverFile=e.target.files?.[0]||null},true);
 D.addEventListener('submit',async e=>{if(e.target.id!=='profileForm')return;e.preventDefault();e.stopImmediatePropagation();const btn=e.target.querySelector('[type="submit"]');if(btn){btn.disabled=true;btn.textContent='সংরক্ষণ হচ্ছে…'}try{const username=norm($('#username').value)||('member-'+session.user.id.slice(0,8)),avatar_url=await upload(avatarFile,'avatar'),cover_url=await upload(coverFile,'cover'),data={id:session.user.id,username,display_name:$('#name').value.trim(),role_label:$('#role').value.trim(),location:$('#location').value.trim(),bio:$('#bio').value.trim(),facebook:$('#facebook').value.trim(),website:$('#website').value.trim(),visibility:$('#visibility').value,member_type:$('#memberType').value,avatar_url,cover_url,updated_at:new Date().toISOString()};const r=await c.from('profiles').upsert(data,{onConflict:'id'}).select().single();if(r.error)throw r.error;try{await c.auth.updateUser({data:{full_name:data.display_name,username:data.username,avatar_url:data.avatar_url,cover_url:data.cover_url,bio:data.bio,location:data.location}})}catch(_){}localStorage.setItem('bhubondangaProfile:'+session.user.id,JSON.stringify(data));localStorage.setItem('bhubondangaProfile',JSON.stringify({...data,name:data.display_name,avatar:data.avatar_url,cover:data.cover_url,role:data.role_label}));localStorage.setItem('bhubondangaCurrentUser',JSON.stringify({...parse('bhubondangaCurrentUser'),...data,name:data.display_name,avatar:data.avatar_url,cover:data.cover_url,loggedIn:true}));toast('আপনার নিজের প্রোফাইল সংরক্ষণ হয়েছে।');setTimeout(()=>location.replace('my-profile.html'),600)}catch(err){console.error(err);toast(err?.message?.includes('duplicate')?'এই ইউজারনেমটি অন্য কেউ ব্যবহার করছেন।':'প্রোফাইল সংরক্ষণ হয়নি—আবার চেষ্টা করুন।')}finally{if(btn){btn.disabled=false;btn.textContent='পরিবর্তন সংরক্ষণ'}}},true);
 D.readyState==='loading'?D.addEventListener('DOMContentLoaded',load,{once:true}):load();
-})();</script><script src="bhubondanga-master-v6.js" defer data-bd-master-v6></script>
+})();</script><script src="bhubondanga-master-v6.js?v=6.7.1" defer data-bd-master-v6></script>
 </body></html>

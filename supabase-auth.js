@@ -1,4 +1,4 @@
-/* ভুবনডাঙ্গার কবিতা — Supabase Auth bridge v4 */
+/* ভুবনডাঙ্গার কবিতা — Supabase Auth bridge v6.7.1 */
 (function (window) {
   'use strict';
   if (window.BhubondangaAuth) return;
@@ -46,6 +46,34 @@
     const [role, profile] = await Promise.all([getRole(user.id), getProfile(user.id)]);
     return saveBridge(bridgeUser(user, role, profile));
   }
+
+  let sessionPromise = null;
+  async function session() {
+    if (sessionPromise) return sessionPromise;
+    sessionPromise = (async () => {
+      try {
+        let result = await client.auth.getSession();
+        let current = result.data?.session || null;
+        if (!current) {
+          await new Promise(resolve => setTimeout(resolve, 180));
+          result = await client.auth.getSession();
+          current = result.data?.session || null;
+        }
+        if (!current) {
+          try {
+            const refreshed = await client.auth.refreshSession();
+            current = refreshed.data?.session || null;
+          } catch (_) {}
+        }
+        if (current?.user) await syncUser(current.user);
+        return current;
+      } finally {
+        setTimeout(() => { sessionPromise = null; }, 250);
+      }
+    })();
+    return sessionPromise;
+  }
+
   async function signIn(email, password) {
     const result = await client.auth.signInWithPassword({ email: String(email || '').trim(), password });
     if (result.error) throw result.error;
@@ -82,6 +110,9 @@
     }
     return info;
   }
-  client.auth.onAuthStateChange((_event, session) => { syncUser(session?.user || null).catch(() => {}); });
-  window.BhubondangaAuth = Object.freeze({ client, cleanUsername, getProfile, getRole, syncUser, signIn, signUp, signOut, current, resetPassword, requireRole });
+  client.auth.onAuthStateChange((event, nextSession) => {
+    if (event === 'SIGNED_OUT') syncUser(null).catch(() => {});
+    else if (nextSession?.user) syncUser(nextSession.user).catch(() => {});
+  });
+  window.BhubondangaAuth = Object.freeze({ client, cleanUsername, getProfile, getRole, syncUser, session, signIn, signUp, signOut, current, resetPassword, requireRole });
 })(window);
