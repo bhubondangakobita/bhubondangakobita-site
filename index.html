@@ -2,7 +2,7 @@
 
 <html data-bd-glass="pearl" data-bd-single-file="20260727" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
-<!-- BHUBONDANGA FIX VERSION: V8.9.2 GUEST LOGIN / CARD + FONT / TOUCH HOTFIX / TITLE SYNC / DIGITAL REACTION -->
+<!-- BHUBONDANGA FIX VERSION: V8.9.4 REGISTRATION-READY / DARK WHITE-SURFACE TEXT / SINGLE CARD CHOOSER / REACTION ANCHOR -->
 <meta content="#173153" name="theme-color"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <meta charset="utf-8">
@@ -1625,6 +1625,168 @@ html[data-theme="dark"] .post-body,html[data-theme="dark"] .bd-live-post .post-b
 @media(max-width:820px){.post-title,.bd-live-post .post-title{font-size:18px!important;line-height:1.5!important}.post-body,.bd-live-post .post-body,.prolap-text{font-size:15px!important;line-height:1.9!important}}
 </style>
 
+
+<style id="bd-v894-dark-card-reaction-fix">
+/* ==========================================================================
+   V8.9.4 — requested-only visual fixes.
+   1) Remove the duplicated upper "লেখার কার্ড" plate.
+   2) Keep the original lower glass-card chooser as the one and only chooser.
+   3) In dark mode, any intentionally white composer/font surface uses dark text.
+   4) Anchor the reaction tray directly above the Like row instead of letting it
+      float into the middle of the post on mobile browsers.
+   ========================================================================== */
+
+/* The V8.9.2 injected duplicate card plate must never be shown. */
+#bdV892CardFirst,
+.bd-v892-card-first{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+
+/* The original lower chooser stays authoritative and compact. */
+#composerStylePicker{
+  display:block!important;
+}
+.composer-style-grid{
+  align-items:stretch!important;
+}
+.composer-style-option{
+  min-width:0!important;
+}
+
+/* DARK MODE:
+   The prompt is deliberately a light/white writing surface, therefore the
+   writing/placeholder text must be dark instead of inheriting dark-theme white. */
+html[data-theme="dark"] #composerPrompt,
+html[data-theme="dark"] .composer-prompt{
+  background:rgba(252,253,255,.98)!important;
+  color:#172238!important;
+  border-color:rgba(73,88,118,.20)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 7px 18px rgba(0,0,0,.12)!important;
+}
+html[data-theme="dark"] #composerPrompt::placeholder,
+html[data-theme="dark"] .composer-prompt::placeholder{
+  color:#586579!important;
+  opacity:1!important;
+}
+
+/* The light font panel must also read as a real light surface in dark mode. */
+html[data-theme="dark"] .bd-font-toolbar{
+  background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(245,244,251,.98))!important;
+  color:#172238!important;
+  border-color:rgba(72,84,117,.18)!important;
+  box-shadow:inset 0 1px 0 #fff,0 7px 18px rgba(0,0,0,.10)!important;
+}
+html[data-theme="dark"] .bd-font-toolbar-title,
+html[data-theme="dark"] .bd-font-hint{
+  color:#26344a!important;
+}
+html[data-theme="dark"] .bd-font-toolbar select{
+  background:#fff!important;
+  color:#111827!important;
+  border-color:#cfd6e3!important;
+}
+html[data-theme="dark"] .bd-font-toolbar select option{
+  background:#fff!important;
+  color:#111827!important;
+}
+
+/* If a light/cream card choice is visible inside the lower selector,
+   its label should remain dark/readable in dark mode. */
+html[data-theme="dark"] .composer-style-option[data-card-style="cream"],
+html[data-theme="dark"] .composer-style-option[data-card-style="pearl"]{
+  color:#e9effa!important;
+}
+
+/* Reaction tray:
+   The old mobile rule used position:fixed, which can land in the middle of a
+   post on Safari/Chrome because of visual viewport/browser chrome changes.
+   Keep it attached to its own post footer, Facebook-style. */
+.post,
+.bd-live-post{
+  overflow:visible!important;
+}
+.post::after,
+.bd-live-post::after{
+  right:8px!important;
+}
+.post-footer{
+  position:relative!important;
+  overflow:visible!important;
+  z-index:40!important;
+}
+.post-actions{
+  position:relative!important;
+  z-index:41!important;
+}
+
+.bd-index-reaction-picker{
+  position:absolute!important;
+  left:6px!important;
+  right:auto!important;
+  top:auto!important;
+  bottom:calc(100% + 8px)!important;
+  transform:none!important;
+  z-index:9999!important;
+  max-width:calc(100vw - 40px)!important;
+  padding:6px 7px!important;
+  gap:3px!important;
+  flex-wrap:nowrap!important;
+  background:rgba(255,255,255,.985)!important;
+  border:1px solid rgba(76,91,122,.16)!important;
+  box-shadow:0 10px 26px rgba(17,27,51,.22),0 2px 7px rgba(17,27,51,.10)!important;
+  backdrop-filter:blur(18px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+}
+
+.bd-index-reaction-picker button{
+  flex:0 0 36px!important;
+  width:36px!important;
+  height:36px!important;
+}
+.bd-index-reaction-picker .bd-rx{
+  width:32px!important;
+  height:32px!important;
+}
+.bd-index-reaction-picker .bd-rx svg{
+  width:32px!important;
+  height:32px!important;
+  display:block!important;
+}
+
+@media(max-width:520px){
+  .bd-index-reaction-picker{
+    position:absolute!important;
+    left:4px!important;
+    right:auto!important;
+    top:auto!important;
+    bottom:calc(100% + 7px)!important;
+    transform:none!important;
+    width:auto!important;
+    max-width:calc(100vw - 46px)!important;
+    padding:5px 6px!important;
+    gap:2px!important;
+  }
+  .bd-index-reaction-picker button{
+    flex-basis:34px!important;
+    width:34px!important;
+    height:34px!important;
+  }
+  .bd-index-reaction-picker .bd-rx,
+  .bd-index-reaction-picker .bd-rx svg{
+    width:30px!important;
+    height:30px!important;
+  }
+}
+
+/* Keep the opened reaction tray visually above the following card too. */
+.post:has(.bd-index-reaction-picker.open),
+.bd-live-post:has(.bd-index-reaction-picker.open){
+  z-index:90!important;
+}
+</style>
+
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -1772,7 +1934,7 @@ html[data-theme="dark"] .post-body,html[data-theme="dark"] .bd-live-post .post-b
 <div aria-label="লেখার গ্লাস কার্ড নির্বাচন করুন" class="composer-style-picker" id="composerStylePicker">
 <div class="composer-style-head"><strong>লেখার গ্লাস কার্ড</strong><small>লিখতে শুরু করলে আপনার পছন্দের কার্ডটি নির্বাচন করুন</small></div>
 <div aria-label="গ্লাস কার্ডের ধরন" class="composer-style-grid" role="listbox">
-<button aria-selected="false" class="composer-style-card" data-card-style="cream" role="option" type="button"><span class="style-swatch style-cream"></span><b>ক্রিম</b></button><button aria-selected="true" class="composer-style-option active" data-card-style="pearl" role="option" type="button"><span class="style-swatch"></span><span>মুক্তা</span></button>
+<button aria-selected="false" class="composer-style-option" data-card-style="cream" role="option" type="button"><span class="style-swatch style-cream"></span><b>ক্রিম</b></button><button aria-selected="true" class="composer-style-option active" data-card-style="pearl" role="option" type="button"><span class="style-swatch"></span><span>মুক্তা</span></button>
 <button aria-selected="false" class="composer-style-option" data-card-style="lavender" role="option" type="button"><span class="style-swatch"></span><span>ল্যাভেন্ডার</span></button>
 <button aria-selected="false" class="composer-style-option" data-card-style="aqua" role="option" type="button"><span class="style-swatch"></span><span>নীল জল</span></button>
 <button aria-selected="false" class="composer-style-option" data-card-style="rose" role="option" type="button"><span class="style-swatch"></span><span>গোলাপি</span></button>
