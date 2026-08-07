@@ -2,6 +2,7 @@
 
 <html data-bd-glass="pearl" data-bd-single-file="20260727" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
+<!-- BHUBONDANGA FIX VERSION: V8 FONT / COPY LOCK / REACTION -->
 <meta content="#173153" name="theme-color"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <meta charset="utf-8">
@@ -1567,6 +1568,28 @@ body.post-view-open{overflow:hidden!important}
 .bd-index-media-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.bd-index-media-btn,.bd-index-media-remove{min-height:40px;padding:0 12px;border:1px solid var(--border);border-radius:11px;background:var(--surface-strong);color:var(--text-soft);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;cursor:pointer}.bd-index-media-btn:hover,.bd-index-media-remove:hover{border-color:var(--primary);color:var(--primary)}.bd-index-media-preview{margin-top:9px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-strong);padding:8px}.bd-index-media-preview img,.bd-index-media-preview video{display:block;width:100%;max-height:440px;object-fit:cover;border-radius:10px}.bd-index-media-preview audio{display:block;width:100%}.bd-index-media-preview .media-file-name{padding:8px;color:var(--text-soft);font-size:10px}.composer-media-render{margin-top:10px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-strong)}.composer-media-render img,.composer-media-render video{display:block;width:100%;max-height:520px;object-fit:cover}.composer-media-render audio{display:block;width:100%;padding:10px}.composer-media-caption{padding:7px 10px;color:var(--text-soft);font-size:10px}
 @media(max-width:760px){.bd-index-media-btn,.bd-index-media-remove{flex:1;min-width:30%;font-size:9px}.bd-index-media-preview img,.bd-index-media-preview video{max-height:330px}}
 </style>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Tiro+Bangla:ital@0;1&display=swap');
+/* BHUBONDANGA V8 — font chooser, copy protection, Facebook-style reactions */
+:root{--bd-selected-font:'Noto Serif Bengali',Georgia,serif}
+body,button,input,textarea,select,.post-title,.brand-copy h1{font-family:var(--bd-selected-font)!important}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea,select,[contenteditable="true"]{-webkit-user-select:text!important;user-select:text!important;-webkit-touch-callout:default}
+img{-webkit-user-drag:none;user-drag:none}
+[data-action="copy"]{display:none!important}
+.bd-font-row{grid-template-columns:31px minmax(0,1fr)!important;align-items:center!important}
+.bd-font-row .bd-font-copy{min-width:0;display:grid;gap:3px}
+.bd-font-row .bd-font-copy strong{font-size:10.5px}
+.bd-font-select{width:100%;min-height:31px;padding:3px 7px;border:1px solid var(--border);border-radius:8px;outline:none;background:var(--surface-strong);color:var(--text);font-size:9px}
+.post-footer{position:relative}
+.bd-index-reaction-picker{position:absolute;left:2px;bottom:43px;z-index:120;display:none;align-items:center;gap:3px;padding:6px 8px;border:1px solid var(--border);border-radius:999px;background:var(--surface-solid);box-shadow:var(--shadow)}
+.bd-index-reaction-picker.open{display:flex}
+.bd-index-reaction-picker button{width:36px;height:36px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;background:transparent;font-size:23px;line-height:1;transition:transform .14s ease}
+.bd-index-reaction-picker button:hover{transform:translateY(-6px) scale(1.18)}
+.bd-react-emoji{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:17px;line-height:1}
+@media(max-width:520px){.bd-index-reaction-picker{position:fixed;left:50%;bottom:calc(74px + env(safe-area-inset-bottom));transform:translateX(-50%);max-width:calc(100vw - 20px)}.bd-index-reaction-picker button{width:34px;height:34px;font-size:22px}}
+</style>
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -3039,5 +3062,66 @@ monthly();
 </script>
 <style id="bd-index-v16-css">.bd-stage-selecting .bd-index-write-field{display:none!important}.bd-stage-selecting #composerStylePicker{display:block!important}.bd-write-ready #composerStylePicker{display:none!important}.master-post-shell{display:none!important}</style>
 
+
+<script>
+/* BHUBONDANGA V8 — selected font + no-copy UI + reliable multi-reactions */
+(() => {
+  'use strict';
+  const q=(s,c=document)=>c.querySelector(s),qa=(s,c=document)=>[...c.querySelectorAll(s)];
+
+  /* Font chooser */
+  const FONT_KEY='bhubondanga-selected-font-v8';
+  const safeGet=k=>{try{return localStorage.getItem(k)}catch(_){return null}},safeSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
+  const FONTS={
+    serif:"'Noto Serif Bengali',Georgia,serif",
+    sans:"'Noto Sans Bengali',system-ui,sans-serif",
+    hind:"'Hind Siliguri','Noto Sans Bengali',sans-serif",
+    tiro:"'Tiro Bangla','Noto Serif Bengali',serif"
+  };
+  function applyFont(key){const selected=FONTS[key]?key:'serif';document.documentElement.style.setProperty('--bd-selected-font',FONTS[selected]);safeSet(FONT_KEY,selected);qa('.bd-font-select').forEach(s=>s.value=selected)}
+  function chooserMarkup(){const label=document.createElement('label');label.className='menu-item bd-font-row';label.innerHTML='<span class="menu-icon">অ</span><span class="bd-font-copy"><strong>লেখার ফন্ট</strong><select class="bd-font-select" aria-label="ফন্ট নির্বাচন করুন"><option value="serif">নোটো সেরিফ বাংলা</option><option value="sans">নোটো স্যান্স বাংলা</option><option value="hind">হিন্দ সিলিগুড়ি</option><option value="tiro">তীরো বাংলা</option></select></span>';label.querySelector('select').addEventListener('change',e=>applyFont(e.target.value));return label}
+  function mountChoosers(){qa('.menu-list').forEach(list=>{if(!q('.bd-font-row',list))list.appendChild(chooserMarkup())});applyFont(safeGet(FONT_KEY)||'serif')}
+  applyFont(safeGet(FONT_KEY)||'serif');
+
+  /* Browser-level copy/context controls requested by the site owner. */
+  ['contextmenu','copy','cut','dragstart'].forEach(type=>document.addEventListener(type,e=>{if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;e.preventDefault();e.stopPropagation()},true));
+  document.addEventListener('selectstart',e=>{if(!e.target.closest('input,textarea,select,[contenteditable="true"]'))e.preventDefault()},true);
+  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['c','x','u'].includes(String(e.key).toLowerCase())&&!e.target.closest('input,textarea,select,[contenteditable="true"]')){e.preventDefault();e.stopPropagation()}},true);
+
+  /* Multi-reaction layer. It syncs with Supabase when available and falls back
+     locally instead of showing a permission error or doing nothing. */
+  const REACTIONS={like:['👍','লাইক'],love:['❤️','ভালোবাসা'],care:['🥰','যত্ন'],haha:['😂','হাহা'],wow:['😮','বিস্ময়'],sad:['😢','দুঃখ'],angry:['😡','রাগ']};
+  const STORE='bhubondanga-index-reactions-v8';
+  const cache=new Map();
+  let realUserId='',localUserId=safeGet('bd-v8-reaction-user');
+  if(!localUserId){localUserId='local-'+Math.random().toString(36).slice(2)+Date.now().toString(36);safeSet('bd-v8-reaction-user',localUserId)}
+  const userKey=()=>realUserId||localUserId;
+  const isUuid=v=>/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(v||''));
+  function client(){return window.BhubondangaAuth?.client||window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||null}
+  async function resolveUser(){try{const c=client();if(!c?.auth?.getSession)return;const r=await c.auth.getSession();realUserId=r?.data?.session?.user?.id||''}catch(_){}}
+  function readStore(){try{return JSON.parse(safeGet(STORE)||'{}')||{}}catch(_){return{}}}
+  function writeStore(v){safeSet(STORE,JSON.stringify(v))}
+  function localRows(id){const all=readStore(),map=all[String(id)]||{};return Object.entries(map).map(([user_id,reaction])=>({user_id,reaction}))}
+  function saveLocal(id,type){const all=readStore(),pid=String(id),uid=userKey();all[pid]=all[pid]||{};if(all[pid][uid]===type)delete all[pid][uid];else all[pid][uid]=type;if(!Object.keys(all[pid]).length)delete all[pid];writeStore(all);return localRows(pid)}
+  function bn(n){return new Intl.NumberFormat('bn-BD').format(Math.max(0,Number(n)||0))}
+  function parseCount(v){const map={'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};const raw=String(v||'').replace(/[০-৯]/g,d=>map[d]).replace(/[^0-9]/g,'');return parseInt(raw,10)||0}
+  function pickerHtml(){return '<div class="bd-index-reaction-picker" role="menu">'+Object.entries(REACTIONS).map(([k,v])=>`<button type="button" data-bd-index-pick="${k}" title="${v[1]}" aria-label="${v[1]}">${v[0]}</button>`).join('')+'</div>'}
+  function render(card,rows,server=false){if(!card)return;rows=Array.isArray(rows)?rows:[];const button=q('[data-action="bd-react"]',card);if(!button)return;const mine=rows.find(r=>String(r.user_id)===String(userKey()));const base=Number(card.dataset.bdReactionBase||0);const total=server?rows.length:base+rows.length;button.classList.toggle('active',!!mine);button.dataset.current=mine?.reaction||'';button.title=mine?REACTIONS[mine.reaction]?.[1]||'লাইক':'লাইক';button.innerHTML=`<span class="action-icon bd-react-emoji">${mine?REACTIONS[mine.reaction]?.[0]||'👍':'👍'}</span><span>${bn(total)}</span>`}
+  async function fetchServer(id){const c=client();if(!c||!isUuid(id))return null;try{const r=await c.rpc('get_post_social',{target_post:String(id)});if(r.error)throw r.error;const data=Array.isArray(r.data)?r.data[0]:r.data;return Array.isArray(data?.reactions)?data.reactions:[]}catch(_){return null}}
+  async function sync(card){const id=card?.dataset.post;if(!id)return;const local=localRows(id);render(card,local,false);const remote=await fetchServer(id);if(remote){cache.set(String(id),remote);render(card,remote,true)}}
+  async function toggle(card,type){const id=card?.dataset.post;if(!id)return;let rows=cache.get(String(id))||localRows(id),uid=userKey(),mine=rows.find(r=>String(r.user_id)===String(uid));rows=rows.filter(r=>String(r.user_id)!==String(uid));if(mine?.reaction!==type)rows.push({user_id:uid,reaction:type});cache.set(String(id),rows);render(card,rows,cache.has(String(id))&&isUuid(id));const c=client();if(c&&realUserId&&isUuid(id)){try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:type});if(r.error)throw r.error;const remote=await fetchServer(id);if(remote){cache.set(String(id),remote);render(card,remote,true);return}}catch(_){}}
+    const local=saveLocal(id,type);cache.set(String(id),local);render(card,local,false)
+  }
+  function enhance(card){if(!card||card.dataset.bdIndexReactionV8)return;const old=q('[data-action="love"]',card);if(!old)return;card.dataset.bdIndexReactionV8='1';const oldCount=parseCount(old.textContent||'');card.dataset.bdReactionBase=String(old.classList.contains('active')?Math.max(0,oldCount-1):oldCount);old.dataset.action='bd-react';const footer=q('.post-footer',card);if(footer&&!q('.bd-index-reaction-picker',footer))footer.insertAdjacentHTML('afterbegin',pickerHtml());const picker=q('.bd-index-reaction-picker',card);if(matchMedia('(hover:hover) and (pointer:fine)').matches&&picker){let t;old.addEventListener('mouseenter',()=>{clearTimeout(t);qa('.bd-index-reaction-picker.open').forEach(x=>x!==picker&&x.classList.remove('open'));picker.classList.add('open')});old.addEventListener('mouseleave',()=>t=setTimeout(()=>picker.classList.remove('open'),180));picker.addEventListener('mouseenter',()=>clearTimeout(t));picker.addEventListener('mouseleave',()=>t=setTimeout(()=>picker.classList.remove('open'),180))}let timer;old.addEventListener('pointerdown',()=>timer=setTimeout(()=>picker?.classList.add('open'),420));['pointerup','pointerleave','pointercancel'].forEach(ev=>old.addEventListener(ev,()=>clearTimeout(timer)));sync(card)}
+  function enhanceAll(){mountChoosers();qa('[data-post-card][data-post]').forEach(enhance)}
+  document.addEventListener('click',e=>{
+    const pick=e.target.closest('[data-bd-index-pick]'),main=e.target.closest('[data-action="bd-react"]');if(!pick&&!main)return;e.preventDefault();e.stopImmediatePropagation();const card=e.target.closest('[data-post-card]'),picker=q('.bd-index-reaction-picker',card);if(pick){picker?.classList.remove('open');toggle(card,pick.dataset.bdIndexPick)}else{toggle(card,main.dataset.current||'like')}
+  },true);
+  document.addEventListener('click',e=>{if(!e.target.closest('.bd-index-reaction-picker')&&!e.target.closest('[data-action="bd-react"]'))qa('.bd-index-reaction-picker.open').forEach(x=>x.classList.remove('open'))},true);
+  const observer=new MutationObserver(enhanceAll);observer.observe(document.body,{childList:true,subtree:true});
+  const start=async()=>{await resolveUser();enhanceAll()};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
+</script>
 </body>
 </html>
