@@ -4,10 +4,6 @@
 <head>
 <meta content="#173153" name="theme-color"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
-<script src="supabase-config.js?v=6.7.1" data-bd-master-dependency></script>
-<script src="supabase-auth.js?v=6.7.1" data-bd-master-dependency></script>
-<script src="supabase-data.js?v=6.7.1" data-bd-master-dependency></script>
-<script src="profanity.js?v=6.7.1" data-bd-master-dependency></script>
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
@@ -1571,7 +1567,6 @@ body.post-view-open{overflow:hidden!important}
 .bd-index-media-tools{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.bd-index-media-btn,.bd-index-media-remove{min-height:40px;padding:0 12px;border:1px solid var(--border);border-radius:11px;background:var(--surface-strong);color:var(--text-soft);display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;cursor:pointer}.bd-index-media-btn:hover,.bd-index-media-remove:hover{border-color:var(--primary);color:var(--primary)}.bd-index-media-preview{margin-top:9px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-strong);padding:8px}.bd-index-media-preview img,.bd-index-media-preview video{display:block;width:100%;max-height:440px;object-fit:cover;border-radius:10px}.bd-index-media-preview audio{display:block;width:100%}.bd-index-media-preview .media-file-name{padding:8px;color:var(--text-soft);font-size:10px}.composer-media-render{margin-top:10px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface-strong)}.composer-media-render img,.composer-media-render video{display:block;width:100%;max-height:520px;object-fit:cover}.composer-media-render audio{display:block;width:100%;padding:10px}.composer-media-caption{padding:7px 10px;color:var(--text-soft);font-size:10px}
 @media(max-width:760px){.bd-index-media-btn,.bd-index-media-remove{flex:1;min-width:30%;font-size:9px}.bd-index-media-preview img,.bd-index-media-preview video{max-height:330px}}
 </style>
-<link rel="stylesheet" href="bhubondanga-master-v6.css?v=6.7.1" data-bd-master-v6>
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -1900,7 +1895,6 @@ function storedPosts(){
   }
   sourceKeys.forEach(key=>arr(key).forEach((x,i)=>add(x,i,key)));
   (Array.isArray(window.__BD_SUPABASE_POSTS)?window.__BD_SUPABASE_POSTS:[]).forEach((x,i)=>add(x,i,'supabase'));
-  (Array.isArray(window.__BD_PROMO_POSTS)?window.__BD_PROMO_POSTS:[]).forEach((x,i)=>add(x,i,'promo'));
   return Array.from(map.values());
 }
 function demoPosts(){
@@ -1982,7 +1976,7 @@ async function deletePostFromHome(p){
   if(p.source==='supabase'){
     try{
       const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;
-      if(c){const r=await c.from('posts').update({status:'archived',updated_at:new Date().toISOString()}).eq('id',p.id);if(r.error)throw r.error}
+      if(c){let r=await c.from('posts').delete().eq('id',p.id);if(r.error)r=await c.from('posts').update({status:'deleted'}).eq('id',p.id);if(r.error)throw r.error}
     }catch(err){console.warn('Delete sync:',err?.message||err);toast('হোম থেকে সরানো হয়েছে; অনলাইন সিঙ্ক পরে আবার চেষ্টা করবে।')}
   }
   posts=posts.filter(x=>String(x.id)!==String(p.id));closePostActionBoard();closePostViewer(false);renderPosts();toast('পোস্টটি হোম থেকে সরিয়ে আর্কাইভে রাখা হয়েছে।');
@@ -3045,6 +3039,5 @@ monthly();
 </script>
 <style id="bd-index-v16-css">.bd-stage-selecting .bd-index-write-field{display:none!important}.bd-stage-selecting #composerStylePicker{display:block!important}.bd-write-ready #composerStylePicker{display:none!important}.master-post-shell{display:none!important}</style>
 
-<script src="bhubondanga-master-v6.js?v=6.7.1" defer data-bd-master-v6></script>
 </body>
 </html>
