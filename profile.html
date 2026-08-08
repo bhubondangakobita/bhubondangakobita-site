@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="bn" data-page-role="user">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
@@ -820,13 +823,14 @@ function renderProfileMenu(){
 function renderProfile(){const p=state.target||{},name=profileName(p),role=forcedRole(p);p.roleResolved=role;$('#profileName').textContent=name;$('#location').textContent=p.location||(role==='founder'?'কুমিল্লা, বাংলাদেশ':'বাংলাদেশ');$('#location').classList.add('clickable');$('#bio').textContent=p.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।';$('#roleBadge').textContent=roleText(role);$('#roleBadge').classList.toggle('admin',role==='admin');$('#verified').hidden=!(p.verified||role==='founder'||role==='admin');const avatar=profileAvatar(p),cover=profileCover(p);renderImage($('#avatarMain'),avatar,initials(name));renderCover(cover,p);$$('[data-avatar-mini]').forEach(x=>renderImage(x,avatar,initials(name)));$$('[data-mini-name],[data-right-name]').forEach(x=>{x.textContent=name;if(x.matches('a'))x.href=profileRoute({id:p.id,username:p.username,display_name:name,role})});$$('[data-mini-role],[data-right-role]').forEach(x=>x.textContent=roleBn(role));$('[data-mini-email]').textContent=p.username?'@'+p.username:'প্রোফাইল';renderActions()}
 function renderActions(){
   const h=$('#profileActions');if(!h)return;
+  h.classList.remove('bd-v842-visitor','bd-v841-visitor-actions');
   const role=forcedRole(state.target),owner=!!state.owner;
   const targetId=state.target?.id||'';
   if(owner){
     const dash=role==='founder'?'founder-dashboard.html':role==='admin'?'admin-dashboard.html':'edit-profile.html';
     h.innerHTML='<button class="action primary'+(role==='admin'?' blue':'')+'" type="button" data-click="edit-profile">✎ প্রোফাইল সম্পাদনা</button><a class="action" href="'+dash+'">▥ ড্যাশবোর্ড</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }else{
-    h.classList.add('bd-v841-visitor-actions');h.innerHTML='<button class="action primary" type="button" data-click="follow">＋ '+(state.followed?'অনুসরণ করছেন':'অনুসরণ করুন')+'</button><button class="action" type="button" data-click="followers">👥 ফলোয়ার্স</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">💬 বার্তা পাঠান</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
+    h.classList.add('bd-v842-visitor','bd-v841-visitor-actions');h.innerHTML='<button class="action primary" type="button" data-click="follow">＋ '+(state.followed?'অনুসরণ করছেন':'অনুসরণ করুন')+'</button><button class="action" type="button" data-click="followers">👥 ফলোয়ার্স</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">💬 বার্তা পাঠান</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }
   document.body.classList.toggle('is-owner',owner);
   const cover=$('#cover'),avatar=$('#avatarMain'),avatarEdit=$('#avatarEdit'),coverHint=$('#coverHint'),bio=$('#bio'),bioHint=$('#bioHint'),composer=$('#composer');
@@ -966,7 +970,14 @@ async function boot(){
     let resolved=await getRole(state.target.id,state.target);if(PAGE_ROLE==='founder')resolved='founder';else if(PAGE_ROLE==='admin')resolved='admin';state.target.roleResolved=resolved;
     let myRole='user';if(state.me)myRole=await getRole(state.me.id,await fetchProfileById(state.me.id));
     const q=new URLSearchParams(location.search),localPreview=location.protocol==='file:';
-    state.owner=!!(state.me&&((state.target.id&&state.me.id===state.target.id)||(!state.target.id&&state.target.username&&String(state.target.username).toLowerCase()===String(state.me.user_metadata?.username||'').toLowerCase())));
+    {
+      const requested=q.get('user')||q.get('id')||'';
+      const myId=String(state.me?.id||''),targetId=String(state.target?.id||'');
+      const myUser=String(state.me?.user_metadata?.username||state.me?.user_metadata?.slug||state.me?.email?.split('@')[0]||'').replace(/^@/,'').toLowerCase();
+      const targetUser=String(state.target?.username||'').replace(/^@/,'').toLowerCase();
+      state.owner=!!(state.me&&((myId&&targetId&&myId===targetId)||(myUser&&targetUser&&myUser===targetUser)));
+      if(requested&&!((myId&&targetId&&myId===targetId)||(myUser&&targetUser&&myUser===targetUser)))state.owner=false;
+    }
     if(PAGE_ROLE==='founder'&&state.me&&myRole==='founder')state.owner=true;
     if(PAGE_ROLE==='admin'&&state.me&&myRole==='admin'&&(!q.get('user')||state.target.id===state.me.id))state.owner=true;
     if(q.get('view')==='visitor')state.owner=false;
@@ -1363,7 +1374,12 @@ function notify(s){try{if(typeof toast==='function')return toast(s)}catch{};}
 function targetHref(){try{return profileRoute({id:state.target?.id,username:state.target?.username,display_name:profileName(state.target),role:state.target?.roleResolved||state.target?.role})}catch{return'profile.html'}}
 function wireTargetLinks(){const href=targetHref();qa('[data-target-profile-link]').forEach(a=>a.href=href);qa('.account .avatar44').forEach(a=>{a.style.cursor='pointer';a.onclick=()=>location.href=href});qa('.welcome [data-right-name]').forEach(a=>a.href=href)}
 /* Generic-member target correction: requested member is never replaced with logged-in member. */
-async function enforceRequestedProfile(){try{if(typeof PAGE_ROLE==='undefined'||PAGE_ROLE!=='user')return;const u=new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id');if(!u)return;let found=null;try{found=await fetchProfileTarget(u)}catch{};if(found){state.target=found;state.target.roleResolved=await getRole(found.id,found);state.owner=!!(state.me&&String(state.me.id)===String(found.id));renderProfile();await loadPosts();syncDrawers();wireTargetLinks();return}const key=String(u).replace(/^@/,'').toLowerCase(),demo={'samia-islam':{display_name:'সামিয়া ইসলাম',username:'samia-islam',location:'বাংলাদেশ',bio:'কবিতা, অনুভব ও সৃজনশীলতার সঙ্গে পথ চলি।',role:'user'},'nila-rahman':{display_name:'নীলা রহমান',username:'nila-rahman',location:'বাংলাদেশ',bio:'সাহিত্য ও বন্ধুত্বের ভুবনে পথ চলি।',role:'user'}}[key];state.target={id:'',username:key,display_name:demo?.display_name||key,location:demo?.location||'বাংলাদেশ',bio:demo?.bio||'এই সদস্যের প্রোফাইল তথ্য এখনও সম্পূর্ণ হয়নি।',role:'user',roleResolved:'user'};state.owner=false;renderProfile();await loadPosts();syncDrawers();wireTargetLinks()}catch(e){console.warn('Requested profile scope:',e)}}
+async function enforceRequestedProfile(){try{if(typeof PAGE_ROLE==='undefined'||PAGE_ROLE!=='user')return;const u=new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id');if(!u)return;let found=null;try{found=await fetchProfileTarget(u)}catch{};if(found){state.target=found;state.target.roleResolved=await getRole(found.id,found);{
+      const myId=String(state.me?.id||''),targetId=String(found?.id||'');
+      const myUser=String(state.me?.user_metadata?.username||state.me?.user_metadata?.slug||state.me?.email?.split('@')[0]||'').replace(/^@/,'').toLowerCase();
+      const targetUser=String(found?.username||'').replace(/^@/,'').toLowerCase();
+      state.owner=!!(state.me&&((myId&&targetId&&myId===targetId)||(myUser&&targetUser&&myUser===targetUser)));
+    }renderProfile();await loadPosts();syncDrawers();wireTargetLinks();return}const key=String(u).replace(/^@/,'').toLowerCase(),demo={'samia-islam':{display_name:'সামিয়া ইসলাম',username:'samia-islam',location:'বাংলাদেশ',bio:'কবিতা, অনুভব ও সৃজনশীলতার সঙ্গে পথ চলি।',role:'user'},'nila-rahman':{display_name:'নীলা রহমান',username:'nila-rahman',location:'বাংলাদেশ',bio:'সাহিত্য ও বন্ধুত্বের ভুবনে পথ চলি।',role:'user'}}[key];state.target={id:'',username:key,display_name:demo?.display_name||key,location:demo?.location||'বাংলাদেশ',bio:demo?.bio||'এই সদস্যের প্রোফাইল তথ্য এখনও সম্পূর্ণ হয়নি।',role:'user',roleResolved:'user'};state.owner=false;renderProfile();await loadPosts();syncDrawers();wireTargetLinks()}catch(e){console.warn('Requested profile scope:',e)}}
 /* Close either mobile sidebar by tapping the visible empty backdrop/outside strip. */
 W.addEventListener('pointerdown',e=>{const open=D.querySelector('.drawer.open');if(!open)return;if(e.target.closest('.drawer,.edge,[data-click="drawer-left"]'))return;try{closeDrawers()}catch{}},true);
 /* Story Touch drawer */
@@ -1583,6 +1599,209 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
   .actions.bd-v841-visitor-actions .more{width:40px!important}
 }
 </style>
+
+
+<style id="bd-v842-final-profile-fix">
+/* V8.42 — functional-only: correct owner/visitor state, full mobile action width, native colourful reactions. */
+@media(max-width:720px){
+  #profileActions.actions{
+    width:calc(100% + 152px)!important;
+    max-width:none!important;
+    margin-left:-152px!important;
+  }
+  #profileActions.actions:not(.bd-v842-visitor){
+    display:grid!important;
+    grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) 48px!important;
+    gap:8px!important;
+  }
+  #profileActions.actions.bd-v842-visitor{
+    display:grid!important;
+    grid-template-columns:minmax(0,1.06fr) minmax(0,.90fr) minmax(0,1.10fr) 44px!important;
+    gap:6px!important;
+  }
+  #profileActions.actions .action{
+    grid-column:auto!important;
+    min-width:0!important;
+    width:auto!important;
+    padding-left:6px!important;
+    padding-right:6px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  #profileActions.actions.bd-v842-visitor .action{font-size:9.6px!important}
+  #profileActions.actions .action.more{width:44px!important;padding:0!important}
+}
+@media(max-width:430px){
+  #profileActions.actions{
+    width:calc(100% + 146px)!important;
+    margin-left:-146px!important;
+  }
+  #profileActions.actions:not(.bd-v842-visitor){
+    grid-template-columns:minmax(0,1.24fr) minmax(0,1fr) 44px!important;
+    gap:7px!important;
+  }
+  #profileActions.actions.bd-v842-visitor{
+    grid-template-columns:minmax(0,1.08fr) minmax(0,.88fr) minmax(0,1.02fr) 40px!important;
+    gap:4px!important;
+  }
+  #profileActions.actions.bd-v842-visitor .action{font-size:8.8px!important;padding-left:3px!important;padding-right:3px!important}
+  #profileActions.actions .action.more{width:40px!important}
+}
+
+/* Remove the broken raster reaction sprites and use native high-quality colour emoji. */
+#bd31ReactionTray .bd31-r,
+.bd31-stack .bd31-r,
+.bd31-main-reaction .bd31-r,
+.bd31-reactor .bd31-r{
+  background-image:none!important;
+  background-color:transparent!important;
+  color:initial!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-weight:400!important;
+  line-height:1!important;
+  text-indent:0!important;
+  filter:none!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+}
+#bd31ReactionTray .bd31-r::before,#bd31ReactionTray .bd31-r::after,
+.bd31-stack .bd31-r::before,.bd31-stack .bd31-r::after,
+.bd31-main-reaction .bd31-r::before,.bd31-main-reaction .bd31-r::after,
+.bd31-reactor .bd31-r::before,.bd31-reactor .bd31-r::after{
+  display:none!important;
+  content:none!important;
+}
+#bd31ReactionTray{
+  background:#fff!important;
+  border:1px solid rgba(50,55,75,.14)!important;
+  border-radius:999px!important;
+  box-shadow:0 5px 17px rgba(20,26,48,.18),0 1px 3px rgba(20,26,48,.08)!important;
+  padding:5px 7px!important;
+  gap:1px!important;
+  overflow:visible!important;
+}
+#bd31ReactionTray button{width:44px!important;height:44px!important}
+#bd31ReactionTray .bd31-r{width:42px!important;height:42px!important;min-width:42px!important;font-size:35px!important;display:grid!important;place-items:center!important}
+#bd31ReactionTray button:hover .bd31-r{transform:translateY(-5px) scale(1.08)!important}
+#bd31ReactionTray button:active .bd31-r{transform:scale(.94)!important}
+#bd31ReactionTray [data-bd31-tray-pick="care"]{display:none!important}
+.bd31-main-reaction>.bd31-r,.bd31-main-reaction>.bd31-r.bd31-mini{
+  width:22px!important;height:22px!important;min-width:22px!important;font-size:18px!important;display:grid!important;place-items:center!important
+}
+.bd31-stack .bd31-r.bd31-mini{
+  width:20px!important;height:20px!important;min-width:20px!important;font-size:16px!important;
+  border:1.5px solid #fff!important;border-radius:50%!important;background:#fff!important
+}
+.bd31-reactor .bd31-r.bd31-mini{font-size:18px!important;width:22px!important;height:22px!important}
+@media(max-width:430px){
+  #bd31ReactionTray{max-width:calc(100vw - 14px)!important;padding:4px 6px!important}
+  #bd31ReactionTray button{width:40px!important;height:40px!important}
+  #bd31ReactionTray .bd31-r{width:38px!important;height:38px!important;min-width:38px!important;font-size:32px!important}
+}
+
+/* Visitor must never see owner-only composer/edit affordances. */
+body.bd-v842-visitor #composer,
+body.bd-v842-visitor #avatarEdit,
+body.bd-v842-visitor #coverHint,
+body.bd-v842-visitor #inlineProfileEditor{display:none!important}
+body.bd-v842-visitor #avatarMain,
+body.bd-v842-visitor #cover,
+body.bd-v842-visitor #bio{cursor:default!important}
+</style>
+
+
+<script id="bd-v842-identity-reaction-fix">
+(function(){
+'use strict';
+const D=document,W=window;
+if(W.__BD_V842_FINAL__)return;W.__BD_V842_FINAL__=true;
+
+const norm=v=>String(v||'').trim().replace(/^@/,'').toLowerCase();
+function requestedRef(){
+  const q=new URLSearchParams(location.search);
+  return q.get('user')||q.get('id')||'';
+}
+function currentUsername(){
+  const u=state?.me;
+  return norm(u?.user_metadata?.username||u?.user_metadata?.slug||u?.email?.split('@')[0]||'');
+}
+function exactOwner(){
+  const q=new URLSearchParams(location.search), requested=requestedRef();
+  if(q.get('view')==='visitor')return false;
+  if(typeof PAGE_ROLE!=='undefined'&&PAGE_ROLE==='founder'){
+    const mr=norm(state?.me?.user_metadata?.role),tr=norm(state?.target?.roleResolved||state?.target?.role);
+    return !!state?.me && (mr==='founder'||tr==='founder'&&String(state?.me?.id||'')===String(state?.target?.id||''));
+  }
+  if(typeof PAGE_ROLE!=='undefined'&&PAGE_ROLE==='admin'){
+    return !!state?.me && !!state?.target?.id && String(state.me.id)===String(state.target.id);
+  }
+  if(!state?.me)return false;
+  const myId=String(state.me.id||''),targetId=String(state?.target?.id||'');
+  const myUser=currentUsername(),targetUser=norm(state?.target?.username||'');
+  if(requested){
+    /* A requested member page is visitor view unless we can positively prove it is the signed-in user. */
+    return !!((myId&&targetId&&myId===targetId)||(myUser&&targetUser&&myUser===targetUser));
+  }
+  /* profile.html without ?user= means the signed-in user's own profile. */
+  return !!((myId&&targetId&&myId===targetId)||(myUser&&targetUser&&myUser===targetUser));
+}
+function reconcileOwnerUI(force=false){
+  if(typeof state==='undefined'||!state.target)return;
+  const owner=exactOwner();
+  if(force||state.owner!==owner){
+    state.owner=owner;
+  }
+  const h=D.getElementById('profileActions');
+  if(h){
+    h.classList.toggle('bd-v842-visitor',!owner);
+    h.classList.toggle('bd-v841-visitor-actions',!owner);
+  }
+  D.body.classList.toggle('bd-v842-visitor',!owner);
+  D.body.classList.toggle('is-owner',owner);
+  try{renderActions()}catch(_){}
+}
+const emoji={like:'👍',love:'❤️',care:'🥰',haha:'😂',wow:'😮',sad:'😢',angry:'😡'};
+function repairEmoji(root=D){
+  root.querySelectorAll?.('.bd31-r').forEach(el=>{
+    const key=[...el.classList].find(x=>Object.prototype.hasOwnProperty.call(emoji,x));
+    if(key&&el.textContent!==emoji[key])el.textContent=emoji[key];
+  });
+}
+function repairTray(){
+  const tray=D.getElementById('bd31ReactionTray');
+  if(tray){
+    tray.querySelectorAll('[data-bd31-tray-pick]').forEach(b=>{
+      const k=b.dataset.bd31TrayPick;
+      const r=b.querySelector('.bd31-r');
+      if(r&&emoji[k])r.textContent=emoji[k];
+    });
+  }
+  repairEmoji();
+}
+const mo=new MutationObserver(ms=>{
+  for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)repairEmoji(n);
+});
+mo.observe(D.documentElement,{subtree:true,childList:true});
+
+D.addEventListener('click',e=>{
+  if(e.target.closest('[data-bd31-react-main]'))setTimeout(repairTray,0);
+},true);
+
+W.addEventListener('bd:supabase-ready',()=>setTimeout(()=>reconcileOwnerUI(true),250));
+D.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>reconcileOwnerUI(true),120);
+  setTimeout(()=>reconcileOwnerUI(true),700);
+  setTimeout(()=>reconcileOwnerUI(true),1600);
+  setTimeout(repairTray,300);
+});
+if(D.readyState!=='loading'){
+  setTimeout(()=>reconcileOwnerUI(true),120);
+  setTimeout(()=>reconcileOwnerUI(true),700);
+  setTimeout(repairTray,300);
+}
+})();
+</script>
 
 </body>
 </html>
