@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.31-lock30-functional">
+<meta name="bhubondanga-build" content="V8.32-lock31-mobile-reaction-tab">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
@@ -478,6 +478,97 @@ body.copy-protected input,body.copy-protected textarea,body.copy-protected selec
   .profile-card .badge{bottom:-12px!important;min-width:100px!important;height:30px!important}
 }
 </style>
+
+<style id="bd-v832-facebook-soft-reaction-fix">
+/* V8.32 — functional visual correction only: softer Facebook-familiar reactions. */
+.bd31-r{
+  box-shadow:none!important;
+  filter:none!important;
+  background:transparent!important;
+}
+/* Like + Love keep the familiar circular reaction language, but softer and cleaner. */
+.bd31-r.like,.bd31-r.love{
+  position:relative!important;
+  color:transparent!important;
+  font-size:0!important;
+}
+.bd31-r.like{background:#4d9af2!important}
+.bd31-r.love{background:#f4516d!important}
+.bd31-r.like::before,.bd31-r.love::before{
+  content:"";
+  width:58%;height:58%;
+  background:#fff;
+  display:block;
+}
+.bd31-r.like::before{
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9.3 21H5.4c-1.4 0-2.4-1-2.4-2.3v-7.2c0-1.3 1-2.3 2.4-2.3h3.1l2.4-5.3c.5-1.2 2-1.7 3.1-1 1 .6 1.5 1.7 1.2 2.9l-.6 2.4H19c1.8 0 3.1 1.7 2.6 3.4l-2.1 7c-.4 1.4-1.7 2.4-3.2 2.4h-7Z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9.3 21H5.4c-1.4 0-2.4-1-2.4-2.3v-7.2c0-1.3 1-2.3 2.4-2.3h3.1l2.4-5.3c.5-1.2 2-1.7 3.1-1 1 .6 1.5 1.7 1.2 2.9l-.6 2.4H19c1.8 0 3.1 1.7 2.6 3.4l-2.1 7c-.4 1.4-1.7 2.4-3.2 2.4h-7Z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.bd31-r.love::before{
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 21s-8.3-4.8-8.3-11.3A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.3 3.1C20.3 16.2 12 21 12 21Z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M12 21s-8.3-4.8-8.3-11.3A4.7 4.7 0 0 1 12 6.6a4.7 4.7 0 0 1 8.3 3.1C20.3 16.2 12 21 12 21Z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+/* Yellow/orange face reactions use the native emoji art without a second dark circle behind it. */
+.bd31-r.care,.bd31-r.haha,.bd31-r.wow,.bd31-r.sad,.bd31-r.angry{
+  background:transparent!important;
+  filter:saturate(.96)!important;
+}
+#bd31ReactionTray{
+  padding:5px 8px!important;
+  gap:2px!important;
+  border:1px solid rgba(80,85,110,.12)!important;
+  background:rgba(255,255,255,.985)!important;
+  box-shadow:0 7px 22px rgba(20,28,55,.15),0 1px 4px rgba(20,28,55,.06)!important;
+}
+#bd31ReactionTray button{width:39px!important;height:39px!important}
+#bd31ReactionTray .bd31-r{width:37px!important;height:37px!important;font-size:27px!important}
+#bd31ReactionTray button:hover .bd31-r{transform:translateY(-4px) scale(1.08)!important}
+#bd31ReactionTray button:active .bd31-r{transform:scale(.96)!important}
+/* Selected reaction in the action row must remain small; never float over the post. */
+.bd31-main-reaction{width:23px!important;height:23px!important;overflow:visible!important}
+.bd31-main-reaction .bd31-r.bd31-mini{
+  width:22px!important;height:22px!important;min-width:22px!important;
+  font-size:18px!important;margin:0!important;
+  filter:none!important;box-shadow:none!important;
+}
+.bd31-main-reaction .bd31-r.like::before,.bd31-main-reaction .bd31-r.love::before{width:57%!important;height:57%!important}
+/* Reaction-count stack stays compact like Facebook. */
+.bd31-stack .bd31-mini{width:19px!important;height:19px!important;min-width:19px!important;font-size:14px!important;border:1.5px solid #fff!important}
+.bd31-stack .bd31-mini.like::before,.bd31-stack .bd31-mini.love::before{width:56%!important;height:56%!important}
+@media(max-width:899px){
+  #bd31ReactionTray{max-width:calc(100vw - 20px)!important;padding:5px 7px!important}
+  #bd31ReactionTray button{width:37px!important;height:37px!important}
+  #bd31ReactionTray .bd31-r{width:35px!important;height:35px!important;font-size:25px!important}
+  .bd31-main-reaction .bd31-r.bd31-mini{width:21px!important;height:21px!important;min-width:21px!important;font-size:17px!important}
+}
+</style>
+
+<style id="bd-v832-mobile-fullwidth-tabs-fix">
+/* V8.32 — mobile only: the category bar is thinner and spans the same full width as the profile card. */
+@media(max-width:960px){
+  .center>.tabs{
+    width:calc(100% + 26px)!important;
+    height:51px!important;
+    min-height:51px!important;
+    margin:6px -13px 0!important;
+    padding:0 9px!important;
+    border-radius:0 0 18px 18px!important;
+    box-shadow:0 9px 24px rgba(69,63,146,.075),inset 0 1px 0 rgba(255,255,255,.96)!important;
+  }
+  .center>.tabs .tab,.center>.tabs .tab-more-btn{height:51px!important;min-height:51px!important}
+  .center>.tabs .tab.active:after{height:3px!important}
+}
+@media(max-width:430px){
+  .center>.tabs{
+    width:calc(100% + 18px)!important;
+    margin-left:-9px!important;
+    margin-right:-9px!important;
+    padding-left:7px!important;
+    padding-right:7px!important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
