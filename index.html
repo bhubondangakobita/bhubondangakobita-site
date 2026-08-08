@@ -344,7 +344,7 @@ html[data-theme="dark"] .quick-type{background:linear-gradient(145deg,rgba(22,43
 html[data-theme="dark"] .humanitarian-mini{background:linear-gradient(135deg,rgba(16,36,55,.96),rgba(18,52,48,.91),rgba(17,31,55,.94))}
 @media(max-width:860px){.humanitarian-mini{grid-template-columns:46px minmax(0,1fr);padding:10px}.humanitarian-mini .humanitarian-actions{grid-column:1/-1}.quick-type{min-height:66px}}
 
-/* V8.24 — modern inline reactions, reaction-member list, comments, comment-like + reply */
+/* V8.25 — modern inline reactions, reaction-member list, comments, comment-like + reply */
 .bd24-social-ready .post-summary{display:none!important}
 .bd24-social{border-top:1px solid rgba(93,91,155,.12);margin-top:10px;padding-top:7px;position:relative}
 .bd24-social-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px 7px;color:#738098;font-size:11px}
@@ -1693,6 +1693,44 @@ body.locked{overflow-y:auto!important}
 /* Clicking titles/bodies/comments never triggers page-centering or scale transforms. */
 [data-post-card],.post,.bd-live-post,.comment-box,.bd-v814-comment-preview{transform:none!important;scroll-margin:0!important}
 </style>
+
+<style id="bd-v825-social-lock">
+/* V8.25 LOCKED DELTA — vivid Facebook-familiar reactions + stable inline comments only */
+.bd24-picker{
+  padding:7px 8px!important;gap:4px!important;border-radius:999px!important;
+  background:rgba(255,255,255,.985)!important;border:1px solid rgba(55,65,110,.12)!important;
+  box-shadow:0 14px 38px rgba(18,26,61,.24),0 2px 8px rgba(18,26,61,.08)!important;
+  overflow:visible!important
+}
+.bd24-picker.open{animation:bd25ReactionPop .18s cubic-bezier(.2,.86,.27,1.18)!important}
+@keyframes bd25ReactionPop{0%{opacity:0;transform:translateY(8px) scale(.88)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.bd24-pick{width:43px!important;height:43px!important;overflow:visible!important;isolation:isolate}
+.bd24-pick:hover,.bd24-pick:focus-visible{transform:translateY(-9px) scale(1.20)!important;z-index:4}
+.bd24-face{
+  width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  font-size:27px;line-height:1;filter:saturate(1.32) contrast(1.05) drop-shadow(0 3px 3px rgba(22,29,64,.20));
+  transform:translateZ(0);transition:transform .13s ease,filter .13s ease
+}
+.bd24-pick:hover .bd24-face{filter:saturate(1.5) contrast(1.06) drop-shadow(0 5px 5px rgba(22,29,64,.22))}
+.bd24-face-like{background:linear-gradient(145deg,#4c99ff,#1267e9);box-shadow:inset 0 1px 1px rgba(255,255,255,.55)}
+.bd24-face-love{background:linear-gradient(145deg,#ff6079,#ea243f)}
+.bd24-face-care{background:linear-gradient(145deg,#ffd95c,#f6ad1d)}
+.bd24-face-haha,.bd24-face-wow,.bd24-face-sad{background:linear-gradient(145deg,#ffe066,#f4b522)}
+.bd24-face-angry{background:linear-gradient(145deg,#ff8260,#df3a2d)}
+.bd24-main-icon .bd24-face{width:22px;height:22px;font-size:15px;box-shadow:none;filter:saturate(1.3) contrast(1.05)}
+.bd24-reactor-type .bd24-face{width:26px;height:26px;font-size:18px}
+.bd24-comment-bubble{background:#f0f2f5!important;border-radius:18px!important;padding:8px 12px!important;color:#1c2738!important}
+.bd24-comment-meta{padding-left:11px!important;gap:13px!important}
+.bd24-comment-form input,.bd24-reply-form input{font-size:16px!important;min-height:42px!important;background:#f0f2f5!important;border-color:transparent!important;scroll-margin:0!important}
+.bd24-comment-form input:focus,.bd24-reply-form input:focus{background:#fff!important;border-color:rgba(45,103,232,.18)!important;box-shadow:0 0 0 2px rgba(45,103,232,.07)!important}
+@media(max-width:720px){
+  .bd24-picker{left:0!important;gap:2px!important;padding:6px!important;max-width:calc(100vw - 20px)!important}
+  .bd24-pick{width:39px!important;height:39px!important}
+  .bd24-face{width:37px;height:37px;font-size:25px}
+}
+</style>
+
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -3259,7 +3297,7 @@ monthly();
 function bdCopyProtectionEnabled(){
   const keys=['bhubondanga_copy_protection','bd-copy-protection','bd_copy_protection','copyProtection','copy_protection'];
   for(const key of keys){const raw=localStorage.getItem(key);if(raw==null)continue;const v=String(raw).trim().toLowerCase();if(['0','false','off','no','disabled'].includes(v))return false;if(['1','true','on','yes','enabled'].includes(v))return true;try{const j=JSON.parse(raw);if(typeof j==='boolean')return j;if(j&&typeof j.enabled==='boolean')return j.enabled}catch{}}
-  return true;
+  return false;
 }
 window.bdCopyProtectionEnabled=bdCopyProtectionEnabled;
 function bdApplyCopyProtection(){document.body?.classList.toggle('copy-protected',bdCopyProtectionEnabled())}
@@ -3523,7 +3561,7 @@ const E=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt
 const bad=['মাদারচোদ','মাদার চোদ','চুদ','চোদ','বাল','শুয়োরের বাচ্চা','হারামজাদা','হারামজাদি','খানকি','বেশ্যা','fuck','fucking','motherfucker','bitch','asshole'];
 const R={like:['লাইক','👍','#2f7cf4'],love:['ভালোবাসি','❤','#f34d68'],care:['কেয়ার','🥰','#f7b52e'],haha:['হাহা','😂','#f5b62b'],wow:['ওয়াও','😮','#f5b62b'],sad:['দুঃখিত','😢','#f5b62b'],angry:['রাগান্বিত','😡','#e25b32']};
 const client=()=>W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null;
-function svg(t,size=36){const x=R[t]||R.like;return `<svg class="bd24-reaction-svg" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="${x[2]}"/><text x="20" y="26" text-anchor="middle" font-size="20">${x[1]}</text></svg>`}
+function svg(t,size=36){const x=R[t]||R.like,emoji=(t==='love'?'❤️':t==='care'?'🥰':t==='haha'?'😂':t==='wow'?'😮':t==='sad'?'😢':t==='angry'?'😡':'👍');return `<span class="bd24-face bd24-face-${t}" role="img" aria-label="${x[0]}">${emoji}</span>`}
 function profileHref(p={}){const id=p.id||p.user_id||p.author_id||'',u=String(p.username||p.author_username||'').replace(/^@/,'').toLowerCase(),role=String(p.role||p.author_role||'').toLowerCase(),name=String(p.display_name||p.author_name||p.name||'');if(role==='founder'||u==='mahmud-sohel'||name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);return'profile.html?user='+encodeURIComponent(id||u)}
 async function session(){try{return (await client()?.auth?.getSession?.()).data?.session||null}catch{return null}}
 async function myProfile(){const s=await session();if(!s?.user)return null;let p={id:s.user.id,username:s.user.user_metadata?.username||'',display_name:s.user.user_metadata?.full_name||s.user.user_metadata?.name||s.user.email?.split('@')[0]||'সদস্য',avatar_url:s.user.user_metadata?.avatar_url||'',role:s.user.user_metadata?.role||''};try{const r=await client().from('profiles').select('id,username,display_name,avatar_url,role').eq('id',s.user.id).maybeSingle();if(!r.error&&r.data)p={...p,...r.data}}catch{}return p}
@@ -3569,6 +3607,28 @@ if(shareB){await share(shareB.dataset.bd24Share);return}if(saveB){save(saveB.dat
 D.addEventListener('submit',async e=>{const f=e.target.closest('[data-bd24-comment-form],[data-bd24-reply-form]');if(!f)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const input=f.querySelector('input'),body=input?.value.trim();if(!body)return;const card=f.closest('[data-bd24-ready="1"]'),pid=postId(card),parent=f.dataset.bd24ReplyForm||'';try{await insertComment(pid,body,parent);input.value='';const panel=card.querySelector('[data-bd24-comments-panel]');panel.classList.add('open');await loadComments(card,pid,true);await refreshPost(card,pid)}catch(err){if(err?.message!=='login')alert(err?.message||'মন্তব্য করা যায়নি')}},true);
 D.addEventListener('pointerdown',e=>{if(!e.target.closest('.bd24-react-host'))D.querySelectorAll('.bd24-picker.open').forEach(x=>x.classList.remove('open'))},{passive:true});
 decorateAll();const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){decorate(n);decorateAll(n)}});mo.observe(D.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
+
+<script id="bd-v825-comment-stability">
+(function(){
+'use strict';
+let anchorY=0, armed=false;
+function isInlineComment(el){return !!el?.matches?.('.bd24-comment-form input,.bd24-reply-form input,.comment-form input')}
+document.addEventListener('pointerdown',e=>{if(isInlineComment(e.target)){anchorY=window.scrollY;armed=true}},true);
+document.addEventListener('touchstart',e=>{if(isInlineComment(e.target)){anchorY=window.scrollY;armed=true}},{capture:true,passive:true});
+document.addEventListener('focusin',e=>{if(!armed||!isInlineComment(e.target))return;const y=anchorY;requestAnimationFrame(()=>window.scrollTo(0,y));setTimeout(()=>window.scrollTo(0,y),70);setTimeout(()=>{armed=false},180)},true);
+})();
+</script>
+
+
+<script id="bd-v825-copy-setting-sync">
+(function(){
+'use strict';
+/* Copy protection is OFF unless the shared Settings value explicitly turns it ON. */
+if(localStorage.getItem('bhubondanga_copy_protection')===null){localStorage.setItem('bhubondanga_copy_protection','false')}
+try{if(typeof bdApplyCopyProtection==='function')bdApplyCopyProtection()}catch{}
 })();
 </script>
 
