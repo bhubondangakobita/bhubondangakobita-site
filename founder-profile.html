@@ -5,8 +5,45 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>ফাউন্ডার প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.37-lock36-mobile-fullwidth">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
+<meta name="bhubondanga-build" content="V8.39-lock38-supabase-boot-fix">
+<script id="bd-supabase-sdk-loader">
+(function(){
+  "use strict";
+  if (window.__BD_SUPABASE_LOADER_STARTED__) return;
+  window.__BD_SUPABASE_LOADER_STARTED__ = true;
+
+  function ready(){
+    window.__BD_SUPABASE_SDK_READY__ = true;
+    window.dispatchEvent(new Event("bd:supabase-sdk-ready"));
+  }
+  function failed(){
+    window.__BD_SUPABASE_SDK_FAILED__ = true;
+    window.dispatchEvent(new Event("bd:supabase-sdk-failed"));
+  }
+  function load(src, fallback){
+    var s = document.createElement("script");
+    s.src = src;
+    s.async = true;
+    s.crossOrigin = "anonymous";
+    s.onload = ready;
+    s.onerror = function(){
+      try { s.remove(); } catch(_){}
+      if (fallback) load(fallback, "");
+      else failed();
+    };
+    document.head.appendChild(s);
+  }
+
+  /* Supabase's documented browser CDN, with their documented unpkg alternative. */
+  load(
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+    "https://unpkg.com/@supabase/supabase-js@2"
+  );
+})();
+</script>
+<style id="bd-supabase-boot-visibility">
+html,body{visibility:visible!important;opacity:1!important}
+</style>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}html,body{min-height:100%;width:100%}
@@ -758,8 +795,19 @@ html,body{max-width:100%;overflow-x:hidden!important}
 const PAGE_ROLE='founder';
 const SUPABASE_URL='https://ihjiisysrwgxxkuywuhc.supabase.co';
 const SUPABASE_KEY='sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz';
-const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
-window.bdSupabase=window.bdSupabase||sb;window.supabaseClient=window.supabaseClient||sb;
+let sb=null;
+function bdInitProfileSupabase(){
+  if(sb)return sb;
+  try{
+    if(window.supabase&&typeof window.supabase.createClient==='function'){
+      sb=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||
+        window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+      window.bdSupabase=sb;window.supabaseClient=sb;window.bhubondangaSupabase=sb;
+    }
+  }catch(e){console.warn('Supabase init:',e)}
+  return sb;
+}
+bdInitProfileSupabase();
 const $=(s,c=document)=>c.querySelector(s), $$=(s,c=document)=>Array.from(c.querySelectorAll(s));
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const slug=v=>String(v||'').trim().toLowerCase().replace(/[\s_]+/g,'-').replace(/[^\p{L}\p{N}-]+/gu,'').replace(/-+/g,'-').replace(/^-|-$/g,'');
@@ -984,9 +1032,12 @@ function renderSafeInitialState(){
   }catch(e){console.error(e)}
 }
 renderSafeInitialState();
+let bdProfileBindingsInstalled=false;
 async function boot(){
   try{
-    bind();setStatus('Supabase সংযোগ হচ্ছে…');
+    bdInitProfileSupabase();
+    if(!bdProfileBindingsInstalled){bind();bdProfileBindingsInstalled=true}
+    setStatus(sb?'Supabase সংযোগ হচ্ছে…':'প্রোফাইল প্রস্তুত — Supabase লোড হচ্ছে…');
     state.session=await getSession();state.me=state.session?.user||null;
     state.target=await resolveTarget();
     if(!state.target){const requested=new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id')||'';state.target={id:(PAGE_ROLE==='user'?'':state.me?.id)||'',display_name:PAGE_ROLE==='founder'?'মাহমুদ সোহেল':PAGE_ROLE==='admin'?'ভুবনডাঙ্গা অ্যাডমিন':(requested?requested:'ভুবনডাঙ্গার সদস্য'),username:PAGE_ROLE==='user'?String(requested).replace(/^@/,''):'member',bio:'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।',location:PAGE_ROLE==='founder'?'কুমিল্লা, বাংলাদেশ':'বাংলাদেশ',role:PAGE_ROLE==='user'?'user':PAGE_ROLE}}
@@ -1008,6 +1059,8 @@ async function boot(){
     try{renderActions();setStatus('প্রোফাইল প্রস্তুত — Supabase সংযোগ পুনরায় চেষ্টা করুন')}catch(_){ }
   }
 }
+window.addEventListener('bd:supabase-sdk-ready',()=>{bdInitProfileSupabase();boot()});
+window.addEventListener('bd:supabase-sdk-failed',()=>{try{setStatus('প্রোফাইল প্রস্তুত — Supabase SDK নেটওয়ার্কে পাওয়া যায়নি')}catch(_){}});
 boot();
 </script>
 
