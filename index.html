@@ -1710,6 +1710,94 @@ body.locked{overflow-y:auto!important}
 @media(max-width:720px){.bd24-picker{left:0!important;gap:2px!important;padding:6px!important;max-width:calc(100vw - 20px)!important}.bd24-pick{width:39px!important;height:39px!important}.bd24-face{width:37px;height:37px;font-size:25px}}
 </style>
 
+
+<style id="bd-v827-lock24-reaction-menu-fix">
+/* V8.27: V8.24 visual/layout lock. Only requested interaction fixes. */
+/* Profile picture must always sit above the cover; cover never paints over it. */
+.profile-card .cover{position:relative!important;z-index:1!important;isolation:isolate!important}
+.profile-card .hero-info{position:relative!important;z-index:3!important;overflow:visible!important}
+.profile-card .avatar-wrap{z-index:25!important;isolation:isolate!important}
+.profile-card .avatar-main,.profile-card .badge,.profile-card .avatar-edit{position:relative;z-index:26!important}
+
+/* Three-dot menus open directly downward in normal document flow and remain fully clickable. */
+.profile-popover{position:static!important;width:min(250px,100%)!important;margin:8px 0 0 auto!important;transform:none!important;max-height:320px!important;overflow:auto!important;z-index:120!important}
+.post-menu-panel{position:static!important;width:min(230px,88%)!important;margin:7px 0 8px auto!important;transform:none!important;max-height:330px!important;overflow:auto!important;z-index:120!important}
+.profile-popover[hidden],.post-menu-panel[hidden]{display:none!important}
+.profile-popover:not([hidden]),.post-menu-panel:not([hidden]){display:grid!important;gap:3px!important;animation:bd827MenuDown .14s ease-out!important}
+@keyframes bd827MenuDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.profile-popover button,.profile-popover a,.post-menu-panel button,.post-menu-panel a{pointer-events:auto!important;touch-action:manipulation!important}
+
+/* Facebook-familiar vivid reaction tray matching the supplied reference. */
+.bd24-react-host,.react-wrap{position:relative!important;isolation:isolate!important}
+.bd24-picker,.picker{
+  position:absolute!important;left:0!important;bottom:48px!important;z-index:1000!important;
+  align-items:center!important;gap:4px!important;padding:7px 9px!important;border:0!important;
+  border-radius:999px!important;background:#fff!important;
+  box-shadow:0 8px 24px rgba(26,34,62,.23),0 2px 7px rgba(26,34,62,.12)!important;
+  white-space:nowrap!important;overflow:visible!important;transform-origin:20px 100%!important;
+}
+.bd24-picker.open,.picker.open{animation:bd827ReactUp .17s cubic-bezier(.2,.9,.3,1.15)!important}
+@keyframes bd827ReactUp{0%{opacity:0;transform:translateY(9px) scale(.9)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.bd24-pick,.picker button{
+  width:44px!important;height:44px!important;min-width:44px!important;padding:0!important;border:0!important;
+  border-radius:50%!important;background:transparent!important;display:grid!important;place-items:center!important;
+  overflow:visible!important;transition:transform .13s cubic-bezier(.2,.8,.2,1),filter .13s ease!important;
+  touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+}
+.bd24-pick:hover,.bd24-pick:focus-visible,.picker button:hover,.picker button:focus-visible{transform:translateY(-8px) scale(1.2)!important;z-index:4!important}
+.bd24-face{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;border-radius:50%!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:29px!important;line-height:1!important;filter:saturate(1.6) contrast(1.06) drop-shadow(0 3px 3px rgba(25,30,54,.22))!important}
+.bd24-face-like{background:linear-gradient(145deg,#48a4ff,#0872ec)!important}
+.bd24-face-love{background:linear-gradient(145deg,#ff5872,#ec1742)!important}
+.bd24-face-care,.bd24-face-haha,.bd24-face-wow,.bd24-face-sad{background:linear-gradient(145deg,#ffe873,#f8b61d)!important}
+.bd24-face-angry{background:linear-gradient(145deg,#ff8756,#e33a22)!important}
+.bd24-main-icon .bd24-face{width:23px!important;height:23px!important;font-size:16px!important;filter:saturate(1.5) contrast(1.05)!important}
+.bd24-reactor-type .bd24-face{width:27px!important;height:27px!important;font-size:19px!important}
+
+/* Reaction total is clearly clickable and the member list stays inline in the post. */
+.bd24-social-summary button[data-bd24-reactors]{display:inline-flex!important;align-items:center!important;gap:6px!important;min-height:30px!important;padding:3px 7px!important;border-radius:999px!important;color:#53657f!important;font-weight:700!important}
+.bd24-social-summary button[data-bd24-reactors]::before{content:"👍  ❤  😆";font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:14px;letter-spacing:-4px;padding-right:4px}
+.bd24-social-summary button[data-bd24-reactors]:hover{background:#f2f3f7!important;text-decoration:none!important}
+.bd24-inline-panel{position:relative!important;z-index:5!important;background:#f7f8fb!important;border:1px solid rgba(90,100,140,.11)!important;border-radius:14px!important;box-shadow:none!important}
+.bd24-reactor{min-height:43px!important}
+.bd24-reactor-name{font-size:12px!important}
+
+/* Comments remain Facebook-style inline. No auto zoom / no script-driven jump. */
+.bd24-comments-panel{position:relative!important;z-index:3!important}
+.bd24-comment-form input,.bd24-reply-form input,.comment-form input,.comment-form textarea{font-size:16px!important;-webkit-text-size-adjust:100%!important}
+.bd24-comment-form input:focus,.bd24-reply-form input:focus,.comment-form input:focus,.comment-form textarea:focus{scroll-margin:0!important}
+.bd24-comment-bubble{background:#f0f2f5!important;border-radius:18px!important;padding:9px 12px!important}
+.bd24-comment-meta{padding-left:10px!important}
+
+/* Keep author/profile links visibly interactive without changing the locked geometry. */
+.author-avatar,.author-meta a,.post-author a,.bd24-reactor,.bd24-comment-avatar,.bd24-comment-bubble>a{pointer-events:auto!important;cursor:pointer!important}
+
+/* Index desktop geometry remains frozen: both sidebars stay, only center feed scrolls. */
+@media(min-width:900px){
+  body{overflow:hidden!important}
+  .shell,.desktop-layout{height:100dvh!important;overflow:hidden!important}
+  .rail,.sidebar,.left-sidebar,.right-sidebar{height:100dvh!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+  .center,.center-col,.center-column{height:100dvh!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+}
+@media(max-width:899px){
+  .bd24-picker,.picker{left:0!important;bottom:47px!important;max-width:calc(100vw - 34px)!important;overflow-x:auto!important;overflow-y:visible!important;transform:none!important}
+  .bd24-picker.open,.picker.open{animation:bd827ReactUp .17s cubic-bezier(.2,.9,.3,1.15)!important}
+  .bd24-pick,.picker button{width:41px!important;height:41px!important;min-width:41px!important}
+  .bd24-face{width:39px!important;height:39px!important;font-size:27px!important}
+}
+</style>
+
+
+<style id="bd-v828-index-post-edit-privacy-css">
+/* V8.28 — LOCK24: owner post edit/caption/privacy boards only */
+#bd28IndexEditor,#bd28IndexPrivacy{position:fixed;z-index:2147483002;width:min(330px,calc(100vw - 24px));max-height:min(72vh,560px);overflow:auto;padding:11px;border:1px solid rgba(93,91,155,.16);border-radius:14px;background:rgba(255,255,255,.99);box-shadow:0 18px 48px rgba(36,39,82,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+#bd28IndexEditor[hidden],#bd28IndexPrivacy[hidden]{display:none!important}
+#bd28IndexEditor h4,#bd28IndexPrivacy h4{margin:0 0 9px;color:#243855;font-size:12px;font-weight:800}
+#bd28IndexEditor input,#bd28IndexEditor textarea,#bd28IndexEditor select{width:100%;margin-bottom:8px;padding:10px 11px;border:1px solid rgba(93,91,155,.16);border-radius:10px;background:#fff;color:#263751;font:inherit;font-size:16px!important;outline:0}
+#bd28IndexEditor textarea{min-height:128px;resize:vertical;line-height:1.75}
+.bd28-index-actions{display:flex;justify-content:flex-end;gap:7px}.bd28-index-actions button{min-height:36px;padding:0 13px;border:1px solid rgba(93,91,155,.13);border-radius:9px;background:#fff;color:#34465f;font-size:10px;font-weight:800}.bd28-index-actions .save{border:0;background:linear-gradient(135deg,#6f43ed,#326fe8);color:#fff}
+.bd28-index-privacy-list{display:grid;gap:4px}.bd28-index-privacy{width:100%;min-height:52px;padding:7px 9px;border:0;border-radius:11px;background:transparent;color:#263751;display:grid;grid-template-columns:34px 1fr 24px;gap:9px;align-items:center;text-align:left}.bd28-index-privacy:hover{background:#f2efff}.bd28-index-privacy.selected{background:#f7f5ff}.bd28-index-picon{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid rgba(93,91,155,.12);font-size:16px}.bd28-index-pcopy b{display:block;font-size:11px}.bd28-index-pcopy small{display:block;margin-top:2px;color:#7e899b;font-size:8.5px}.bd28-index-radio{width:20px;height:20px;border:2px solid #79818d;border-radius:50%;display:grid;place-items:center}.bd28-index-privacy.selected .bd28-index-radio{border-color:#176df5}.bd28-index-privacy.selected .bd28-index-radio:after{content:"";width:10px;height:10px;border-radius:50%;background:#176df5}
+</style>
+
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -2033,6 +2121,7 @@ function storedPosts(){
       media:x.media_url||x.mediaUrl||x.media_data||x.mediaData||x.media||x.image_url||x.imageUrl||x.cover_url||x.coverUrl||'',
       mediaKind:x.media_kind||x.mediaKind||(x.audioUrl?'audio':x.videoUrl?'video':(x.media_url||x.mediaUrl||x.media_data||x.mediaData||x.media)?'image':''),
       caption:x.caption||x.media_caption||x.mediaCaption||'',
+      visibility:x.visibility||x.privacy||'public',
       activityType:x.activityType||x.activity_type||'',
       demo:Boolean(x.demo),
       source
@@ -2061,7 +2150,7 @@ function likesObject(){return obj(likeCountKey)}
 function activityObject(){return obj(activityKey)}
 function touchActivity(id,weight){const a=activityObject();a[id]={time:Date.now(),weight:Number((a[id]&&a[id].weight)||0)+Number(weight||1)};save(activityKey,a)}
 function algorithmScore(p){const likes=Number(likesObject()[p.id]??p.likes),comments=Number(p.comments||0),ageHours=Math.max(1,(Date.now()-(new Date(p.createdAt).getTime()||Date.now()))/3600000),activity=activityObject()[p.id]||{};return likes*1.3+comments*2.4+Number(activity.weight||0)*8+Math.max(0,72-ageHours)*.32+(activity.time?Math.max(0,36-(Date.now()-activity.time)/3600000)*1.7:0)}
-function filteredPosts(){let list=posts.slice();if(category!=='all')list=list.filter(p=>p.type===category);const likeCounts=likesObject();list.sort((a,b)=>{if(sort==='forYou')return algorithmScore(b)-algorithmScore(a);if(sort==='popular')return Number(likeCounts[b.id]??b.likes)-Number(likeCounts[a.id]??a.likes);const at=new Date(a.createdAt).getTime()||0,bt=new Date(b.createdAt).getTime()||0;return sort==='oldest'?at-bt:bt-at});return list}
+function filteredPosts(){let list=posts.slice().filter(p=>String(p.visibility||'public')!=='only_me'||canEdit(p));if(category!=='all')list=list.filter(p=>p.type===category);const likeCounts=likesObject();list.sort((a,b)=>{if(sort==='forYou')return algorithmScore(b)-algorithmScore(a);if(sort==='popular')return Number(likeCounts[b.id]??b.likes)-Number(likeCounts[a.id]??a.likes);const at=new Date(a.createdAt).getTime()||0,bt=new Date(b.createdAt).getTime()||0;return sort==='oldest'?at-bt:bt-at});return list}
 function formatDate(value){const d=new Date(value);if(Number.isNaN(d.getTime()))return'';return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(d)}
 function addParam(url,key,value){return url+(url.includes('?')?'&':'?')+encodeURIComponent(key)+'='+encodeURIComponent(value)}
 function renderComments(id){const box=document.querySelector('[data-comments-list="'+CSS.escape(String(id))+'"]');if(!box)return;const list=arr(commentKey).filter(x=>String(x.postId)===String(id));box.innerHTML=list.slice(-10).map(x=>'<div class="comment-item"><a href="'+esc(profileUrl(x.authorUsername||slug(x.author||'পাঠক')))+'">'+esc(x.author||'পাঠক')+'</a><br>'+esc(x.text)+'</div>').join('')}
@@ -2105,7 +2194,7 @@ const postActionBoard=document.getElementById('postActionBoard');let activePostM
 function closePostActionBoard(){if(!postActionBoard)return;postActionBoard.classList.remove('open');postActionBoard.setAttribute('aria-hidden','true');postActionBoard.innerHTML='';activePostMenuId='';document.querySelectorAll('[data-post-menu][aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'))}
 function openPostActionBoard(button,p){
   const memories=arr(memoryKey),saved=memories.some(x=>String(x.id)===String(p.id)),owner=canEdit(p);
-  const edit=owner?'<button type="button" data-action="edit" data-id="'+esc(p.id)+'">'+icon('edit')+'সম্পাদনা/ব্যবস্থাপনা</button>':'';
+  const edit=owner?'<button type="button" data-action="edit-inline" data-id="'+esc(p.id)+'">'+icon('edit')+'পোস্ট সম্পাদনা</button><button type="button" data-action="caption-inline" data-id="'+esc(p.id)+'">'+icon('edit')+'ক্যাপশন পরিবর্তন</button><button type="button" data-action="privacy-inline" data-id="'+esc(p.id)+'">'+icon('user')+'প্রাইভেসি পরিবর্তন</button>':'';
   const remove=owner?'<button class="danger-action" type="button" data-action="delete" data-id="'+esc(p.id)+'">'+icon('x')+'হোম থেকে মুছুন</button>':'';
   postActionBoard.innerHTML='<button type="button" data-action="open" data-id="'+esc(p.id)+'">'+icon('poem')+'পূর্ণ পোস্ট খুলুন</button><button type="button" data-action="copy" data-id="'+esc(p.id)+'">'+icon('link')+'লিংক কপি করুন</button><button type="button" data-action="save" data-id="'+esc(p.id)+'">'+icon('bookmark')+(saved?'সেভ থেকে সরান':'সেভ করুন')+'</button><a class="report-action" href="complaint.html?post='+encodeURIComponent(p.id)+'">'+icon('flag')+'রিপোর্ট করুন</a>'+edit+remove;
   postActionBoard.classList.add('open');postActionBoard.setAttribute('aria-hidden','false');button.setAttribute('aria-expanded','true');activePostMenuId=String(p.id);
@@ -2182,7 +2271,7 @@ function handlePostAction(action){
 }
 document.getElementById('postList').addEventListener('click',function(e){
   const menuButton=e.target.closest('[data-post-menu]');if(menuButton){e.preventDefault();e.stopPropagation();const p=findPost(menuButton.dataset.id);if(!p)return;if(activePostMenuId===String(p.id)&&postActionBoard.classList.contains('open'))closePostActionBoard();else{closePostActionBoard();openPostActionBoard(menuButton,p)}return}
-  const action=e.target.closest('[data-action]');if(action){e.preventDefault();handlePostAction(action);return}
+  const action=e.target.closest('[data-action]');if(action&&!action.matches('[data-action=\"bd-react\"],[data-action=\"bd-react-v814\"],[data-action=\"bd-comment-v814\"],[data-action=\"bd-submit-comment-v814\"]')){e.preventDefault();handlePostAction(action);return}
   const opener=e.target.closest('[data-open-post]');if(opener){e.preventDefault();const p=findPost(opener.dataset.openPost);if(p)openPostViewer(p);return}
   const card=e.target.closest('[data-post-card]');if(card&&!e.target.closest('a,button,textarea,input,select,label')){const p=findPost(card.dataset.post);if(p)openPostViewer(p)}
 });
@@ -3599,5 +3688,87 @@ decorateAll();const mo=new MutationObserver(ms=>{for(const m of ms)for(const n o
 })();
 </script>
 
+
+<script id="bd-v827-index-three-dot-down">
+(function(){
+'use strict';
+/* Keep the existing V8.24 action board but always open it downward from the three-dot button. */
+try{
+  if(typeof openPostActionBoard==='function'){
+    const oldBuild=openPostActionBoard;
+    openPostActionBoard=function(button,p){
+      oldBuild(button,p);
+      try{
+        const board=document.getElementById('postActionBoard');
+        if(!board||!button)return;
+        const r=button.getBoundingClientRect();
+        const w=Math.min(230,window.innerWidth-24);
+        const left=Math.min(window.innerWidth-w-12,Math.max(12,r.right-w));
+        const top=Math.max(8,r.bottom+7);
+        board.style.width=w+'px';board.style.left=left+'px';board.style.top=top+'px';
+        board.style.maxHeight=Math.max(120,window.innerHeight-top-12)+'px';board.style.overflowY='auto';
+      }catch(_e){}
+    };
+  }
+}catch(_e){}
+/* Reaction, comment, profile and three-dot controls must never open the post itself. */
+document.addEventListener('click',function(e){
+  if(e.target.closest('.bd24-social,[data-post-menu],#postActionBoard,.author-avatar,.author-meta a'))e.stopPropagation();
+},false);
+})();
+</script>
+
+
+<script id="bd-v828-index-post-edit-privacy-js">
+(function(){
+'use strict';
+const P={public:['🌐','পাবলিক','সবাই পোস্টটি দেখতে পারবেন'],friends:['👥','বন্ধুরা','আপনার বন্ধুদের জন্য'],close_friends:['⭐','ঘনিষ্ঠ বন্ধুরা','ঘনিষ্ঠ বন্ধু তালিকার জন্য'],only_me:['🔒','শুধু আমি','শুধু আপনি দেখতে পারবেন']};
+const TYPE={poem:'কবিতা',recitation:'আবৃত্তি',prolap:'ছোট কথার প্রলাপ',midnight:'মধ্যরাতের প্রলাপ',letter:'চিঠিপত্র',letters:'চিঠিপত্র',environment:'পরিবেশ',humanitarian:'মানবিক আবেদন',discussion:'আলোচনা',children:'শিশুতোষ'};
+let editBoard,privacyBoard,activeId='';
+function ensure(){
+ if(!editBoard){editBoard=document.createElement('section');editBoard.id='bd28IndexEditor';editBoard.hidden=true;document.body.appendChild(editBoard)}
+ if(!privacyBoard){privacyBoard=document.createElement('section');privacyBoard.id='bd28IndexPrivacy';privacyBoard.hidden=true;document.body.appendChild(privacyBoard)}
+}
+function close(){ensure();editBoard.hidden=true;privacyBoard.hidden=true;activeId=''}
+function pos(board){const a=document.getElementById('postActionBoard');const r=a?.getBoundingClientRect();const w=Math.min(330,innerWidth-24);board.style.width=w+'px';let left=r?Math.min(innerWidth-w-12,Math.max(12,r.left)):12;let top=r?Math.min(innerHeight-12, r.bottom+6):80;board.style.left=left+'px';board.style.top=top+'px';requestAnimationFrame(()=>{const h=board.offsetHeight;if(top+h>innerHeight-10){board.style.top=Math.max(10,innerHeight-h-10)+'px'}})}
+function syncLocal(id,patch){try{sourceKeys.forEach(k=>{const a=arr(k);let changed=false;const n=a.map(x=>{const xid=String(x?.id||x?.postId||x?.sourceId||'');if(xid!==String(id))return x;changed=true;return {...x,...patch,updatedAt:new Date().toISOString(),updated_at:new Date().toISOString()}});if(changed)save(k,n)})}catch{}}
+async function db(id,patch){const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;if(!c)return false;try{const r=await c.from('posts').update({...patch,updated_at:new Date().toISOString()}).eq('id',id);return !r.error}catch{return false}}
+function openEdit(id,captionOnly=false){ensure();const p=findPost(id);if(!p||!canEdit(p))return;closePostActionBoard();privacyBoard.hidden=true;activeId=String(id);const types=Object.entries(TYPE).filter(([k])=>k!=='midnight'||isFounder).map(([k,v])=>`<option value="${k}" ${String(p.type)===k?'selected':''}>${v}</option>`).join('');editBoard.innerHTML=captionOnly?`<h4>ক্যাপশন পরিবর্তন</h4><textarea data-v28-caption maxlength="500" placeholder="ছবি/ভিডিওর ক্যাপশন লিখুন…">${esc(p.caption||'')}</textarea><div class="bd28-index-actions"><button type="button" data-v28-close>বাতিল</button><button class="save" type="button" data-v28-save-caption>সংরক্ষণ</button></div>`:`<h4>পোস্ট সম্পাদনা</h4><select data-v28-type>${types}</select><input data-v28-title maxlength="240" value="${esc(p.title||'')}"><textarea data-v28-body maxlength="50000">${esc(p.body||'')}</textarea><div class="bd28-index-actions"><button type="button" data-v28-close>বাতিল</button><button class="save" type="button" data-v28-save-edit>সংরক্ষণ</button></div>`;editBoard.hidden=false;pos(editBoard)}
+function openPrivacy(id){ensure();const p=findPost(id);if(!p||!canEdit(p))return;closePostActionBoard();editBoard.hidden=true;activeId=String(id);const current=String(p.visibility||'public');privacyBoard.dataset.value=current;privacyBoard.innerHTML=`<h4>কে এই পোস্টটি দেখতে পারবে?</h4><div class="bd28-index-privacy-list">${Object.entries(P).map(([k,a])=>`<button type="button" class="bd28-index-privacy ${current===k?'selected':''}" data-v28-p="${k}"><span class="bd28-index-picon">${a[0]}</span><span class="bd28-index-pcopy"><b>${a[1]}</b><small>${a[2]}</small></span><span class="bd28-index-radio"></span></button>`).join('')}</div><div class="bd28-index-actions"><button type="button" data-v28-close>বাতিল</button><button class="save" type="button" data-v28-save-privacy>সম্পন্ন</button></div>`;privacyBoard.hidden=false;pos(privacyBoard)}
+async function saveEdit(){const p=findPost(activeId);if(!p)return;const type=editBoard.querySelector('[data-v28-type]').value,title=editBoard.querySelector('[data-v28-title]').value.trim(),body=editBoard.querySelector('[data-v28-body]').value.trim();if(!title||!body){toast('শিরোনাম ও লেখা খালি রাখা যাবে না।');return}const patch={type,category:TYPE[type]||typeLabel(type),title,body};const ok=await db(activeId,patch);Object.assign(p,{type,title,body});syncLocal(activeId,{...patch,content:body});close();renderPosts();toast(ok?'পোস্ট সম্পাদনা সংরক্ষণ হয়েছে।':'পোস্ট এই ডিভাইসে সংরক্ষণ হয়েছে।')}
+async function saveCaption(){const p=findPost(activeId);if(!p)return;const caption=editBoard.querySelector('[data-v28-caption]').value.trim();let ok=false;const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;if(c){try{let r=await c.from('posts').update({caption,media_caption:caption,updated_at:new Date().toISOString()}).eq('id',activeId);if(!r.error)ok=true}catch{}if(!ok)try{let r=await c.from('posts').update({media_caption:caption,updated_at:new Date().toISOString()}).eq('id',activeId);if(!r.error)ok=true}catch{}}
+p.caption=caption;syncLocal(activeId,{caption,media_caption:caption});close();renderPosts();toast(ok?'ক্যাপশন সংরক্ষণ হয়েছে।':'ক্যাপশন এই ডিভাইসে সংরক্ষণ হয়েছে।')}
+async function savePrivacy(){const p=findPost(activeId);if(!p)return;const value=privacyBoard.dataset.value||'public';let ok=false;const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase;if(c){const stamp=new Date().toISOString();try{let r=await c.from('posts').update({visibility:value,privacy:value,updated_at:stamp}).eq('id',activeId);if(!r.error)ok=true}catch{}if(!ok)try{let r=await c.from('posts').update({visibility:value,updated_at:stamp}).eq('id',activeId);if(!r.error)ok=true}catch{}if(!ok)try{let r=await c.from('posts').update({privacy:value,updated_at:stamp}).eq('id',activeId);if(!r.error)ok=true}catch{}}
+p.visibility=value;syncLocal(activeId,{visibility:value,privacy:value});close();renderPosts();toast(ok?'পোস্টের প্রাইভেসি পরিবর্তন হয়েছে।':'প্রাইভেসি এই ডিভাইসে সংরক্ষণ হয়েছে।')}
+document.addEventListener('click',async e=>{
+ const a=e.target.closest('#postActionBoard [data-action="edit-inline"],#postActionBoard [data-action="caption-inline"],#postActionBoard [data-action="privacy-inline"]');
+ if(a){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(a.dataset.action==='edit-inline')openEdit(a.dataset.id,false);else if(a.dataset.action==='caption-inline')openEdit(a.dataset.id,true);else openPrivacy(a.dataset.id);return}
+ const choice=e.target.closest('[data-v28-p]');if(choice){e.preventDefault();e.stopPropagation();privacyBoard.dataset.value=choice.dataset.v28P;privacyBoard.querySelectorAll('[data-v28-p]').forEach(x=>x.classList.toggle('selected',x===choice));return}
+ if(e.target.closest('[data-v28-close]')){e.preventDefault();close();return}
+ if(e.target.closest('[data-v28-save-edit]')){e.preventDefault();await saveEdit();return}
+ if(e.target.closest('[data-v28-save-caption]')){e.preventDefault();await saveCaption();return}
+ if(e.target.closest('[data-v28-save-privacy]')){e.preventDefault();await savePrivacy();return}
+ if(!e.target.closest('#bd28IndexEditor,#bd28IndexPrivacy,#postActionBoard,[data-post-menu]'))close();
+},true);
+['pointerdown','touchstart'].forEach(t=>document.addEventListener(t,e=>{if(e.target.closest('#bd28IndexEditor,#bd28IndexPrivacy'))e.stopPropagation()},{passive:true,capture:true}));
+window.addEventListener('resize',close,{passive:true});
+ensure();
+})();
+</script>
+
+
+<style id="bd-v829-index-social-fix-css">
+/* V8.29 — LOCK28 interaction-only fix: social taps never expand/open the post. */
+[data-action="bd-react"],[data-action="bd-react-v814"],.bd-v814-picker,.bd-v814-picker button,.bd-index-reaction-picker,.bd-index-reaction-picker button,[data-v814-reactors],[data-v814-comments-count]{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+.bd-v814-picker button:active,.bd-index-reaction-picker button:active{transform:none!important}
+.author-avatar,.author-meta a,.bd-v814-reactor,.bd-member-item{pointer-events:auto!important;cursor:pointer!important}
+</style>
+<script id="bd-v829-index-social-guard">
+(function(){
+'use strict';
+/* Block pointer/touch events from reaching post-open code without canceling the later click handler that performs the reaction. */
+['pointerdown','pointerup','touchstart','touchend'].forEach(type=>document.addEventListener(type,function(e){if(e.target.closest('[data-action="bd-react"],[data-action="bd-react-v814"],.bd-v814-picker,.bd-index-reaction-picker,[data-v814-reactors],[data-v814-comments-count]'))e.stopPropagation()},{capture:true,passive:true}));
+})();
+</script>
 </body>
 </html>

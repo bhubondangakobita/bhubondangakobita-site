@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.26-lock24-selective-fixes">
+<meta name="bhubondanga-build" content="V8.29-lock28-social-fix">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
@@ -340,6 +340,104 @@ body.copy-protected input,body.copy-protected textarea,body.copy-protected selec
 }
 </style>
 
+
+<style id="bd-v827-lock24-reaction-menu-fix">
+/* V8.27: V8.24 visual/layout lock. Only requested interaction fixes. */
+/* Profile picture must always sit above the cover; cover never paints over it. */
+.profile-card .cover{position:relative!important;z-index:1!important;isolation:isolate!important}
+.profile-card .hero-info{position:relative!important;z-index:3!important;overflow:visible!important}
+.profile-card .avatar-wrap{z-index:25!important;isolation:isolate!important}
+.profile-card .avatar-main,.profile-card .badge,.profile-card .avatar-edit{position:relative;z-index:26!important}
+
+/* Three-dot menus open directly downward in normal document flow and remain fully clickable. */
+.profile-popover{position:static!important;width:min(250px,100%)!important;margin:8px 0 0 auto!important;transform:none!important;max-height:320px!important;overflow:auto!important;z-index:120!important}
+.post-menu-panel{position:static!important;width:min(230px,88%)!important;margin:7px 0 8px auto!important;transform:none!important;max-height:330px!important;overflow:auto!important;z-index:120!important}
+.profile-popover[hidden],.post-menu-panel[hidden]{display:none!important}
+.profile-popover:not([hidden]),.post-menu-panel:not([hidden]){display:grid!important;gap:3px!important;animation:bd827MenuDown .14s ease-out!important}
+@keyframes bd827MenuDown{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.profile-popover button,.profile-popover a,.post-menu-panel button,.post-menu-panel a{pointer-events:auto!important;touch-action:manipulation!important}
+
+/* Facebook-familiar vivid reaction tray matching the supplied reference. */
+.bd24-react-host,.react-wrap{position:relative!important;isolation:isolate!important}
+.bd24-picker,.picker{
+  position:absolute!important;left:0!important;bottom:48px!important;z-index:1000!important;
+  align-items:center!important;gap:4px!important;padding:7px 9px!important;border:0!important;
+  border-radius:999px!important;background:#fff!important;
+  box-shadow:0 8px 24px rgba(26,34,62,.23),0 2px 7px rgba(26,34,62,.12)!important;
+  white-space:nowrap!important;overflow:visible!important;transform-origin:20px 100%!important;
+}
+.bd24-picker.open,.picker.open{animation:bd827ReactUp .17s cubic-bezier(.2,.9,.3,1.15)!important}
+@keyframes bd827ReactUp{0%{opacity:0;transform:translateY(9px) scale(.9)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.bd24-pick,.picker button{
+  width:44px!important;height:44px!important;min-width:44px!important;padding:0!important;border:0!important;
+  border-radius:50%!important;background:transparent!important;display:grid!important;place-items:center!important;
+  overflow:visible!important;transition:transform .13s cubic-bezier(.2,.8,.2,1),filter .13s ease!important;
+  touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+}
+.bd24-pick:hover,.bd24-pick:focus-visible,.picker button:hover,.picker button:focus-visible{transform:translateY(-8px) scale(1.2)!important;z-index:4!important}
+.bd24-face{width:42px!important;height:42px!important;display:grid!important;place-items:center!important;border-radius:50%!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:29px!important;line-height:1!important;filter:saturate(1.6) contrast(1.06) drop-shadow(0 3px 3px rgba(25,30,54,.22))!important}
+.bd24-face-like{background:linear-gradient(145deg,#48a4ff,#0872ec)!important}
+.bd24-face-love{background:linear-gradient(145deg,#ff5872,#ec1742)!important}
+.bd24-face-care,.bd24-face-haha,.bd24-face-wow,.bd24-face-sad{background:linear-gradient(145deg,#ffe873,#f8b61d)!important}
+.bd24-face-angry{background:linear-gradient(145deg,#ff8756,#e33a22)!important}
+.bd24-main-icon .bd24-face{width:23px!important;height:23px!important;font-size:16px!important;filter:saturate(1.5) contrast(1.05)!important}
+.bd24-reactor-type .bd24-face{width:27px!important;height:27px!important;font-size:19px!important}
+
+/* Reaction total is clearly clickable and the member list stays inline in the post. */
+.bd24-social-summary button[data-bd24-reactors]{display:inline-flex!important;align-items:center!important;gap:6px!important;min-height:30px!important;padding:3px 7px!important;border-radius:999px!important;color:#53657f!important;font-weight:700!important}
+.bd24-social-summary button[data-bd24-reactors]::before{content:"👍  ❤  😆";font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:14px;letter-spacing:-4px;padding-right:4px}
+.bd24-social-summary button[data-bd24-reactors]:hover{background:#f2f3f7!important;text-decoration:none!important}
+.bd24-inline-panel{position:relative!important;z-index:5!important;background:#f7f8fb!important;border:1px solid rgba(90,100,140,.11)!important;border-radius:14px!important;box-shadow:none!important}
+.bd24-reactor{min-height:43px!important}
+.bd24-reactor-name{font-size:12px!important}
+
+/* Comments remain Facebook-style inline. No auto zoom / no script-driven jump. */
+.bd24-comments-panel{position:relative!important;z-index:3!important}
+.bd24-comment-form input,.bd24-reply-form input,.comment-form input,.comment-form textarea{font-size:16px!important;-webkit-text-size-adjust:100%!important}
+.bd24-comment-form input:focus,.bd24-reply-form input:focus,.comment-form input:focus,.comment-form textarea:focus{scroll-margin:0!important}
+.bd24-comment-bubble{background:#f0f2f5!important;border-radius:18px!important;padding:9px 12px!important}
+.bd24-comment-meta{padding-left:10px!important}
+
+/* Keep author/profile links visibly interactive without changing the locked geometry. */
+.author-avatar,.author-meta a,.post-author a,.bd24-reactor,.bd24-comment-avatar,.bd24-comment-bubble>a{pointer-events:auto!important;cursor:pointer!important}
+
+/* Index desktop geometry remains frozen: both sidebars stay, only center feed scrolls. */
+@media(min-width:900px){
+  body{overflow:hidden!important}
+  .shell,.desktop-layout{height:100dvh!important;overflow:hidden!important}
+  .rail,.sidebar,.left-sidebar,.right-sidebar{height:100dvh!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+  .center,.center-col,.center-column{height:100dvh!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+}
+@media(max-width:899px){
+  .bd24-picker,.picker{left:0!important;bottom:47px!important;max-width:calc(100vw - 34px)!important;overflow-x:auto!important;overflow-y:visible!important;transform:none!important}
+  .bd24-picker.open,.picker.open{animation:bd827ReactUp .17s cubic-bezier(.2,.9,.3,1.15)!important}
+  .bd24-pick,.picker button{width:41px!important;height:41px!important;min-width:41px!important}
+  .bd24-face{width:39px!important;height:39px!important;font-size:27px!important}
+}
+</style>
+
+
+<style id="bd-v828-post-edit-privacy-css">
+/* V8.28 — LOCK24: post edit/caption/privacy only; no layout redesign */
+.bd28-inline-editor,.bd28-privacy-editor{margin:8px 0 10px;padding:11px;border:1px solid rgba(93,91,155,.14);border-radius:14px;background:rgba(250,250,255,.98);box-shadow:0 10px 25px rgba(61,58,116,.08)}
+.bd28-inline-editor h4,.bd28-privacy-editor h4{margin:0 0 9px;color:#243855;font-size:12px;font-weight:800}
+.bd28-edit-grid{display:grid;grid-template-columns:150px 1fr;gap:8px}
+.bd28-inline-editor input,.bd28-inline-editor textarea,.bd28-inline-editor select{width:100%;margin:0 0 8px;padding:10px 11px;border:1px solid rgba(93,91,155,.16);border-radius:10px;background:#fff;color:#263751;outline:0;font:inherit;font-size:16px!important}
+.bd28-inline-editor textarea{min-height:126px;resize:vertical;line-height:1.75}
+.bd28-editor-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:2px}
+.bd28-editor-actions button{min-height:36px;padding:0 13px;border:1px solid rgba(93,91,155,.13);border-radius:9px;background:#fff;color:#34465f;font-size:10px;font-weight:800}
+.bd28-editor-actions .save{border:0;background:linear-gradient(135deg,#6f43ed,#326fe8);color:#fff}
+.bd28-privacy-list{display:grid;gap:4px}
+.bd28-privacy-option{width:100%;min-height:50px;padding:7px 9px;border:0;border-radius:11px;background:transparent;color:#263751;display:grid;grid-template-columns:34px 1fr 24px;gap:9px;align-items:center;text-align:left}
+.bd28-privacy-option:hover{background:#f2efff}
+.bd28-privacy-icon{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#fff;border:1px solid rgba(93,91,155,.12);font-size:16px}
+.bd28-privacy-copy b{display:block;font-size:11px}.bd28-privacy-copy small{display:block;margin-top:2px;color:#7e899b;font-size:8.5px;line-height:1.4}
+.bd28-radio{width:20px;height:20px;border:2px solid #79818d;border-radius:50%;display:grid;place-items:center}.bd28-privacy-option.selected .bd28-radio{border-color:#176df5}.bd28-privacy-option.selected .bd28-radio:after{content:"";width:10px;height:10px;border-radius:50%;background:#176df5}
+.bd28-privacy-current{margin:0 0 8px;color:#6e7b90;font-size:9px}
+.post-menu-panel [data-post-option="edit"],.post-menu-panel [data-post-option="privacy"],.post-menu-panel [data-post-option="caption"]{font-weight:800}
+@media(max-width:720px){.bd28-edit-grid{grid-template-columns:1fr}.bd28-inline-editor,.bd28-privacy-editor{margin-left:0;margin-right:0;padding:10px}.bd28-privacy-option{min-height:52px}}
+</style>
+
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
@@ -364,7 +462,7 @@ body.copy-protected input,body.copy-protected textarea,body.copy-protected selec
       <button type="button" data-tab="archive"><span class="nicon">▦</span>আর্কাইভ</button>
       <a href="settings.html"><span class="nicon">⚙</span>সেটিংস</a>
     </nav>
-    <div class="account"><div class="avatar44" data-avatar-mini>ভূ</div><div><strong data-mini-name>ভুবনডাঙ্গা</strong><span class="mini-role" data-mini-role>সদস্য</span><small data-mini-email>প্রোফাইল</small></div><span>›</span></div>
+    <div class="account"><div class="avatar44" data-avatar-mini>ভূ</div><div><a class="bd29-profile-name-link" data-mini-name data-target-profile-link href="#">ভুবনডাঙ্গা</a><span class="mini-role" data-mini-role>সদস্য</span><small data-mini-email>প্রোফাইল</small></div><span>›</span></div>
   </section></aside>
 
   <main class="center" id="center">
@@ -420,7 +518,7 @@ body.copy-protected input,body.copy-protected textarea,body.copy-protected selec
   </main>
 
   <aside class="rail" id="rightRail">
-    <section class="right-card welcome glass"><small>স্বাগতম,</small><strong data-right-name>ভুবনডাঙ্গা</strong><span class="mini-role" data-right-role>সদস্য</span><div class="leafbox">🌿</div></section>
+    <section class="right-card welcome glass"><small>স্বাগতম,</small><a class="bd29-profile-name-link" data-right-name data-target-profile-link href="#">ভুবনডাঙ্গা</a><span class="mini-role" data-right-role>সদস্য</span><div class="leafbox">🌿</div></section>
     <section class="right-card glass"><h3 class="side-title">সক্রিয় পরিচিতি</h3><div class="stats"><button class="stat" type="button" data-click="followers"><span>♙</span><small>ফলোয়ার</small><b id="followersCount">০</b></button><button class="stat" type="button" data-click="following"><span>♧</span><small>ফলোয়িং</small><b id="followingCount">০</b></button><button class="stat" type="button" data-click="friends"><span>♙♙</span><small>বন্ধু</small><b id="friendsCount">০</b></button><button class="stat" type="button" data-click="posts"><span>▤</span><small>পোস্ট</small><b id="postsCount">০</b></button></div></section>
     <section class="right-card glass"><h3 class="side-title">সক্রিয় বন্ধু</h3><div class="friend-row" id="friendRow"><div class="friend">ভূ</div><div class="friend">ক</div><div class="friend">সা</div><div class="friend">ন</div><button class="more-friend" type="button" data-click="friends">+৩২</button></div><button class="wide" type="button" data-click="friends">সব দেখুন</button></section>
     <section class="right-card glass"><h3 class="side-title" style="color:#2b83c7">সম্পাদিত কাজের চার্ট</h3><div class="progress-list"><div class="prow"><span>কবিতা</span><div class="track"><div class="fill p1"></div></div><b id="chartPoem">০</b></div><div class="prow"><span>আবৃত্তি</span><div class="track"><div class="fill p2"></div></div><b id="chartRec">০</b></div><div class="prow"><span>চিঠিপত্র</span><div class="track"><div class="fill p3"></div></div><b id="chartLetter">০</b></div><div class="prow"><span>প্রকাশনা</span><div class="track"><div class="fill p4"></div></div><b id="chartRate">0%</b></div></div><div class="donut-row"><div class="donut"></div><div><small style="color:#9aa2b1">মোট সম্পন্ন</small><strong style="display:block;font-family:Arial;font-size:20px" id="completion">0%</strong></div></div></section>
@@ -546,7 +644,7 @@ function renderProfileMenu(){
     h.innerHTML='<button type="button" data-profile-option="copy">⧉ প্রোফাইল লিংক কপি</button><button type="button" data-profile-option="share">↗ শেয়ার</button><button type="button" data-profile-option="report">⚑ রিপোর্ট</button>';
   }
 }
-function renderProfile(){const p=state.target||{},name=profileName(p),role=forcedRole(p);p.roleResolved=role;$('#profileName').textContent=name;$('#location').textContent=p.location||(role==='founder'?'কুমিল্লা, বাংলাদেশ':'বাংলাদেশ');$('#location').classList.add('clickable');$('#bio').textContent=p.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।';$('#roleBadge').textContent=roleText(role);$('#roleBadge').classList.toggle('admin',role==='admin');$('#verified').hidden=!(p.verified||role==='founder'||role==='admin');const avatar=profileAvatar(p),cover=profileCover(p);renderImage($('#avatarMain'),avatar,initials(name));renderCover(cover,p);$$('[data-avatar-mini]').forEach(x=>renderImage(x,avatar,initials(name)));$$('[data-mini-name],[data-right-name]').forEach(x=>x.textContent=name);$$('[data-mini-role],[data-right-role]').forEach(x=>x.textContent=roleBn(role));$('[data-mini-email]').textContent=p.username?'@'+p.username:'প্রোফাইল';renderActions()}
+function renderProfile(){const p=state.target||{},name=profileName(p),role=forcedRole(p);p.roleResolved=role;$('#profileName').textContent=name;$('#location').textContent=p.location||(role==='founder'?'কুমিল্লা, বাংলাদেশ':'বাংলাদেশ');$('#location').classList.add('clickable');$('#bio').textContent=p.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।';$('#roleBadge').textContent=roleText(role);$('#roleBadge').classList.toggle('admin',role==='admin');$('#verified').hidden=!(p.verified||role==='founder'||role==='admin');const avatar=profileAvatar(p),cover=profileCover(p);renderImage($('#avatarMain'),avatar,initials(name));renderCover(cover,p);$$('[data-avatar-mini]').forEach(x=>renderImage(x,avatar,initials(name)));$$('[data-mini-name],[data-right-name]').forEach(x=>{x.textContent=name;if(x.matches('a'))x.href=profileRoute({id:p.id,username:p.username,display_name:name,role})});$$('[data-mini-role],[data-right-role]').forEach(x=>x.textContent=roleBn(role));$('[data-mini-email]').textContent=p.username?'@'+p.username:'প্রোফাইল';renderActions()}
 function renderActions(){
   const h=$('#profileActions');if(!h)return;
   const role=forcedRole(state.target),owner=!!state.owner;
@@ -572,9 +670,9 @@ async function loadFollowState(){if(!sb||!state.me||!state.target||state.owner)r
 async function toggleFollow(){if(!state.me){toast('অনুসরণ করতে লগইন করুন');return}if(state.owner)return;try{if(state.followed){const r=await sb.from('follows').delete().eq('follower_id',state.me.id).eq('following_id',state.target.id);if(r.error)throw r.error;state.followed=false}else{const r=await sb.from('follows').insert({follower_id:state.me.id,following_id:state.target.id});if(r.error)throw r.error;state.followed=true}renderActions();await loadStats();toast(state.followed?'অনুসরণ করা হয়েছে':'অনুসরণ বাতিল করা হয়েছে')}catch(e){toast(e.message||'অনুসরণ আপডেট হয়নি')}}
 async function loadPoets(){const names=new Map();try{if(sb){const [a,b]=await Promise.all([sb.from('poets').select('id,slug,display_name').order('display_name').limit(500),sb.from('famous_poets').select('id,slug,display_name,name').order('display_name').limit(500)]);for(const r of [a,b])if(!r.error)(r.data||[]).forEach(x=>{const n=x.display_name||x.name;if(n)names.set(slug(n),{...x,display_name:n})})}}catch{}state.poets=[...names.values()];$('#poetDirectory').innerHTML=state.poets.map(x=>'<option value="'+esc(x.display_name)+'"></option>').join('')}
 function normalizePost(x){return{id:String(x.id||x.postId||''),author_id:x.author_id||x.authorId||'',author_username:x.author_username||x.authorUsername||'',author_name:x.author_name||x.authorName||'ভুবনডাঙ্গার সদস্য',author_avatar:x.author_avatar||x.authorAvatar||'',author_role:x.author_role||x.authorRole||'',type:x.type||'poem',category:x.category||typeLabels[x.type]||'প্রকাশনা',title:x.title||'শিরোনামহীন সাহিত্যকর্ম',body:x.body||x.content||'',original_author:x.original_author||x.originalAuthor||'',media_url:x.media_url||x.media||'',media_type:x.media_type||x.media_kind||x.mediaKind||'',caption:x.caption||x.media_caption||'',status:x.status||'published',visibility:x.visibility||x.privacy||'public',likes_count:Number(x.likes_count||x.likes||0),comments_count:Number(x.comments_count||x.comments||0),created_at:x.created_at||x.createdAt||new Date().toISOString()}}
-async function loadPosts(){let rows=[];if(sb&&state.target?.id){try{let q=sb.from('posts').select('*').eq('author_id',state.target.id).order('created_at',{ascending:false}).limit(200);if(!state.owner)q=q.in('status',['published','published_flagged']);const r=await q;if(!r.error)rows=(r.data||[]).map(normalizePost)}catch{}}if(!rows.length){const all=[...localArr('bhubondangaHomeUserPosts'),...localArr('bhubondangaPublishedPosts'),...localArr('bhubondangaProfilePosts')].map(normalizePost);const seen=new Set();rows=all.filter(x=>{if(!x.id||seen.has(x.id))return false;seen.add(x.id);if(state.target?.id&&x.author_id&&x.author_id!==state.target.id)return false;return true}).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))}state.posts=rows;renderContent();loadStats()}
+async function loadPosts(){let rows=[];if(sb&&state.target?.id){try{let q=sb.from('posts').select('*').eq('author_id',state.target.id).order('created_at',{ascending:false}).limit(200);if(!state.owner)q=q.in('status',['published','published_flagged']);const r=await q;if(!r.error)rows=(r.data||[]).map(normalizePost)}catch{}}if(!rows.length){const all=[...localArr('bhubondangaHomeUserPosts'),...localArr('bhubondangaPublishedPosts'),...localArr('bhubondangaProfilePosts')].map(normalizePost);const seen=new Set();rows=all.filter(x=>{if(!x.id||seen.has(x.id))return false;seen.add(x.id);if(state.target?.id&&x.author_id&&x.author_id!==state.target.id)return false;return true}).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))}if(!state.owner)rows=rows.filter(p=>String(p.visibility||p.privacy||'public')!=='only_me');state.posts=rows;renderContent();loadStats()}
 function mediaHtml(p){if(!p.media_url)return'';const t=String(p.media_type||'');if(t.includes('audio')||p.type==='recitation'&&/\.(mp3|wav|m4a|aac|ogg)(\?|$)/i.test(p.media_url))return'<div class="post-media"><audio controls preload="metadata" src="'+esc(p.media_url)+'"></audio></div>';if(t.includes('video')||/\.(mp4|webm|mov)(\?|$)/i.test(p.media_url))return'<div class="post-media"><video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video></div>';return'<div class="post-media"><img loading="lazy" src="'+esc(p.media_url)+'" alt="'+esc(p.caption||p.title)+'"></div>'}
-function postCard(p){const role=String(p.author_role||state.target?.roleResolved||'user').toLowerCase(),authorRoute=profileRoute({id:p.author_id,role}),badge=(role==='founder'?'<span class="mini-role">প্রতিষ্ঠাতা</span>':role==='admin'?'<span class="mini-role" style="background:#2488e9">অ্যাডমিন</span>':''),poet=p.original_author?'<a class="tag" href="poet-profile.html?poet='+encodeURIComponent(slug(p.original_author))+'">মূল কবি: '+esc(p.original_author)+'</a>':'';const menu=state.owner?'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↗ পোস্ট খুলুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="caption">✎ ক্যাপশন লিখুন/সংশোধন</button><button type="button" data-post-option="archive">▦ আর্কাইভ</button><button class="danger" type="button" data-post-option="delete">⌫ মুছুন</button></div>':'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↗ পোস্ট খুলুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="report">⚑ রিপোর্ট</button></div>';return '<article class="post glass" data-post="'+esc(p.id)+'"><div class="post-head"><div class="author"><a class="avatar44" href="'+esc(authorRoute)+'">'+(p.author_avatar?'<img src="'+esc(p.author_avatar)+'" alt="">':esc(initials(p.author_name)))+'</a><div class="author-meta"><strong><a href="'+esc(authorRoute)+'">'+esc(p.author_name)+'</a>'+badge+'</strong><small>'+esc(formatDate(p.created_at))+'</small></div></div><button class="dots" type="button" data-click="post-menu" aria-label="পোস্ট অপশন">•••</button></div>'+menu+'<a class="tag" href="'+esc(typeRoute(p))+'">'+esc(typeLabels[p.type]||p.category||'প্রকাশনা')+'</a>'+poet+'<h3 class="post-title"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a></h3><div class="post-body" data-expand>'+esc(p.body)+'</div>'+mediaHtml(p)+(p.caption?'<div class="post-caption">'+esc(p.caption)+'</div>':'')+'<div class="post-summary"><button class="reactors" type="button" data-reactors="'+esc(p.id)+'">প্রতিক্রিয়া দেখুন</button><span>'+bn(p.comments_count)+' মন্তব্য</span></div><div class="post-actions"><div class="react-wrap"><button class="social-btn" type="button" data-react="'+esc(p.id)+'">👍 লাইক</button><div class="picker" data-picker="'+esc(p.id)+'"><button data-pick="like" title="লাইক">👍</button><button data-pick="love" title="ভালোবাসি">❤️</button><button data-pick="care" title="কেয়ার">🥰</button><button data-pick="haha" title="হাহা">😂</button><button data-pick="wow" title="ওয়াও">😮</button><button data-pick="sad" title="দুঃখিত">😢</button><button data-pick="angry" title="রাগান্বিত">😡</button></div></div><button class="social-btn" type="button" data-comment="'+esc(p.id)+'">◯ মন্তব্য</button><button class="social-btn" type="button" data-share="'+esc(p.id)+'">↗ শেয়ার</button><button class="social-btn" type="button" data-save="'+esc(p.id)+'">▣ সেভ</button></div><div class="comments"><div class="comment-list" data-comment-list="'+esc(p.id)+'"></div><form class="comment-form" data-comment-form="'+esc(p.id)+'"><input maxlength="1200" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></article>'}
+function postCard(p){const role=String(p.author_role||state.target?.roleResolved||'user').toLowerCase(),authorRoute=profileRoute({id:p.author_id,role}),badge=(role==='founder'?'<span class="mini-role">প্রতিষ্ঠাতা</span>':role==='admin'?'<span class="mini-role" style="background:#2488e9">অ্যাডমিন</span>':''),poet=p.original_author?'<a class="tag" href="poet-profile.html?poet='+encodeURIComponent(slug(p.original_author))+'">মূল কবি: '+esc(p.original_author)+'</a>':'';const menu=state.owner?'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↗ পোস্ট খুলুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="edit">✎ পোস্ট সম্পাদনা</button><button type="button" data-post-option="caption">▧ ক্যাপশন পরিবর্তন</button><button type="button" data-post-option="privacy">◉ প্রাইভেসি পরিবর্তন</button><button type="button" data-post-option="archive">▦ আর্কাইভ</button><button class="danger" type="button" data-post-option="delete">⌫ মুছুন</button></div>':'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↗ পোস্ট খুলুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="report">⚑ রিপোর্ট</button></div>';return '<article class="post glass" data-post="'+esc(p.id)+'"><div class="post-head"><div class="author"><a class="avatar44" href="'+esc(authorRoute)+'">'+(p.author_avatar?'<img src="'+esc(p.author_avatar)+'" alt="">':esc(initials(p.author_name)))+'</a><div class="author-meta"><strong><a href="'+esc(authorRoute)+'">'+esc(p.author_name)+'</a>'+badge+'</strong><small>'+esc(formatDate(p.created_at))+'</small></div></div><button class="dots" type="button" data-click="post-menu" aria-label="পোস্ট অপশন">•••</button></div>'+menu+'<a class="tag" href="'+esc(typeRoute(p))+'">'+esc(typeLabels[p.type]||p.category||'প্রকাশনা')+'</a>'+poet+'<h3 class="post-title"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a></h3><div class="post-body" data-expand>'+esc(p.body)+'</div>'+mediaHtml(p)+(p.caption?'<div class="post-caption">'+esc(p.caption)+'</div>':'')+'<div class="post-summary"><button class="reactors" type="button" data-reactors="'+esc(p.id)+'">প্রতিক্রিয়া দেখুন</button><span>'+bn(p.comments_count)+' মন্তব্য</span></div><div class="post-actions"><div class="react-wrap"><button class="social-btn" type="button" data-react="'+esc(p.id)+'">👍 লাইক</button><div class="picker" data-picker="'+esc(p.id)+'"><button data-pick="like" title="লাইক">👍</button><button data-pick="love" title="ভালোবাসি">❤️</button><button data-pick="care" title="কেয়ার">🥰</button><button data-pick="haha" title="হাহা">😂</button><button data-pick="wow" title="ওয়াও">😮</button><button data-pick="sad" title="দুঃখিত">😢</button><button data-pick="angry" title="রাগান্বিত">😡</button></div></div><button class="social-btn" type="button" data-comment="'+esc(p.id)+'">◯ মন্তব্য</button><button class="social-btn" type="button" data-share="'+esc(p.id)+'">↗ শেয়ার</button><button class="social-btn" type="button" data-save="'+esc(p.id)+'">▣ সেভ</button></div><div class="comments"><div class="comment-list" data-comment-list="'+esc(p.id)+'"></div><form class="comment-form" data-comment-form="'+esc(p.id)+'"><input maxlength="1200" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></article>'}
 function renderContent(){const feed=$('#feed'),archive=$('#archiveList');$$('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===state.tab));if(state.tab==='home'){feed.hidden=false;archive.hidden=true;feed.innerHTML=state.posts.slice(0,45).map(postCard).join('')||'<section class="post glass">এখনও কোনো পোস্ট নেই।</section>';return}const type=state.tab;const list=state.posts.filter(p=>p.type===type);feed.hidden=true;archive.hidden=false;archive.innerHTML='<h3 style="padding:8px 2px 4px;font-family:Noto Serif Bengali,serif">'+esc(typeLabels[type]||'শিরোনাম')+'</h3>'+list.slice(0,20).map(p=>'<div class="archive-item"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a><small>'+esc(formatDate(p.created_at))+'</small></div>').join('')+(list.length?'<button class="wide" type="button" data-click="more-archive">আরও দেখুন</button>':'<div style="padding:18px 2px;color:#8d96a5">এখনও কোনো লেখা নেই।</div>')}
 async function loadStats(){const posts=state.posts,poem=posts.filter(p=>p.type==='poem').length,rec=posts.filter(p=>p.type==='recitation').length,letter=posts.filter(p=>p.type==='letter').length;$('#postsCount').textContent=bn(posts.length);$('#chartPoem').textContent=bn(poem);$('#chartRec').textContent=bn(rec);$('#chartLetter').textContent=bn(letter);$('#metricPosts').textContent=bn(posts.length);$('#metricLikes').textContent=bn(posts.reduce((a,p)=>a+p.likes_count,0));$('#metricComments').textContent=bn(posts.reduce((a,p)=>a+p.comments_count,0));const rate=Math.min(99,posts.length?Math.round((poem+rec+letter)/Math.max(1,posts.length)*100):0);$('#chartRate').textContent=rate+'%';$('#completion').textContent=rate+'%';if(sb&&state.target?.id){try{const [f1,f2]=await Promise.all([sb.from('follows').select('*',{count:'exact',head:true}).eq('following_id',state.target.id),sb.from('follows').select('*',{count:'exact',head:true}).eq('follower_id',state.target.id)]);$('#followersCount').textContent=bn(f1.count||0);$('#followingCount').textContent=bn(f2.count||0);$('#friendsCount').textContent=bn(Math.min(f1.count||0,f2.count||0))}catch{}}}
 function writeCrosspost(p){const keys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts',...(typeKeys[p.type]||[])];keys.forEach(k=>pushUnique(k,p));if(p.originalAuthor){const rec={postId:p.id,title:p.title,type:p.type,url:'poet-profile.html?poet='+encodeURIComponent(slug(p.originalAuthor)),originalAuthor:p.originalAuthor,originalAuthorSlug:slug(p.originalAuthor),contributorName:p.authorName,contributorUsername:p.authorUsername,createdAt:p.createdAt,status:p.status};pushUnique('bhubondangaPoetContributions',rec);if(p.type==='poem'){const canon={canonicalId:'canonical-'+slug(p.originalAuthor)+'-'+Date.now(),poetName:p.originalAuthor,poetSlug:slug(p.originalAuthor),title:p.title,body:p.body,firstEditorName:p.authorName,firstEditorUsername:p.authorUsername,firstEditedAt:p.createdAt,createdAt:p.createdAt,status:'published'};const list=localArr('bhubondangaCanonicalPoems');if(!list.some(x=>slug(x.poetName||x.originalAuthor)===slug(p.originalAuthor)&&slug(x.title)===slug(p.title))){list.unshift(canon);localSave('bhubondangaCanonicalPoems',list.slice(0,5000))}}}}
@@ -630,6 +728,7 @@ $('#editCoverInline')?.addEventListener('click',()=>$('#coverInput').click());
 $('#closeInlineEditor')?.addEventListener('click',()=>$('#inlineProfileEditor').hidden=true);
 $('#saveInlineProfile')?.addEventListener('click',saveInlineProfile);
 document.addEventListener('click',async e=>{
+ if(e.target.closest('.bd24-social'))return;
  const pOpt=e.target.closest('[data-profile-option]');if(pOpt){e.stopPropagation();const op=pOpt.dataset.profileOption;if(op==='copy')await copyText(location.href,'প্রোফাইল লিংক কপি হয়েছে');else if(op==='share'){if(navigator.share){try{await navigator.share({title:profileName(state.target),url:location.href})}catch{}}else await copyText(location.href,'প্রোফাইল লিংক কপি হয়েছে')}else if(op==='archive'){state.tab='archive';handleTab('archive');$('#profileMenu').hidden=true}else if(op==='report')toast('রিপোর্ট অপশন নির্বাচন করা হয়েছে');return}
  const postOpt=e.target.closest('[data-post-option]');if(postOpt){e.stopPropagation();await handlePostOption(postOpt);closePopovers();return}
  const x=e.target.closest('[data-click]');
@@ -725,11 +824,11 @@ function picker(pid){return `<div class="bd24-picker" data-bd24-picker="${E(pid)
 function socialHtml(pid){return `<div class="bd24-social" data-bd24-social="${E(pid)}"><div class="bd24-social-summary"><button type="button" data-bd24-reactors="${E(pid)}"><span data-bd24-react-count>০</span> জন প্রতিক্রিয়া</button><button type="button" data-bd24-comments-toggle="${E(pid)}"><span data-bd24-comment-count>০</span> মন্তব্য</button></div><div class="bd24-actions"><div class="bd24-react-host"><button class="bd24-action" type="button" data-bd24-react="${E(pid)}"><span class="bd24-main-icon">${svg('like',21)}</span><span data-bd24-react-label>লাইক</span></button>${picker(pid)}</div><button class="bd24-action" type="button" data-bd24-comments-toggle="${E(pid)}"><span>💬</span><span>মন্তব্য</span></button><button class="bd24-action" type="button" data-bd24-share="${E(pid)}"><span>↗</span><span>শেয়ার</span></button><button class="bd24-action" type="button" data-bd24-save="${E(pid)}"><span>🔖</span><span>সেভ</span></button></div><div class="bd24-inline-panel" data-bd24-reactor-panel="${E(pid)}"><div class="bd24-reactor-list"></div></div><div class="bd24-comments-panel" data-bd24-comments-panel="${E(pid)}"><div class="bd24-comment-list"></div><button class="bd24-comments-more" type="button" data-bd24-more-comments="${E(pid)}" hidden>আরও মন্তব্য দেখুন</button><form class="bd24-comment-form" data-bd24-comment-form="${E(pid)}"><input autocomplete="off" maxlength="1200" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></div>`}
 function decorate(card){if(!card||card.dataset.bd24Ready==='1')return;const pid=postId(card);if(!pid)return;card.dataset.bd24Ready='1';card.classList.add('bd24-social-ready');card.querySelectorAll('.post-summary,.comments,.comment-box').forEach(x=>x.style.display='none');let old=card.querySelector('.post-actions');if(old){const wrap=old.closest('.post-footer');if(wrap&&wrap.querySelectorAll('.post-actions').length===1)wrap.outerHTML=socialHtml(pid);else old.outerHTML=socialHtml(pid)}else card.insertAdjacentHTML('beforeend',socialHtml(pid));refreshPost(card,pid)}
 function decorateAll(root=D){root.querySelectorAll?.('article.post,article.bd-live-post,article[data-post-id],article[data-post],.post-card[data-post-id],.post-card[data-post]').forEach(decorate)}
-async function reactionRows(pid){const c=client();if(c){try{const r=await c.from('post_reactions').select('user_id,reaction').eq('post_id',pid).limit(200);if(!r.error)return r.data||[]}catch{}}return localReactions(pid)}
+async function reactionRows(pid){const c=client();if(c){try{const r=await c.rpc('get_post_social',{target_post:String(pid)});if(!r.error){const d=Array.isArray(r.data)?r.data[0]:r.data;if(Array.isArray(d?.reactions))return d.reactions}}catch{}try{const r=await c.from('reactions').select('user_id,reaction').eq('post_id',pid).limit(200);if(!r.error)return r.data||[]}catch{}try{const r=await c.from('post_reactions').select('user_id,reaction').eq('post_id',pid).limit(200);if(!r.error)return r.data||[]}catch{}}return localReactions(pid)}
 async function commentRows(pid){const c=client();let rows=[];if(c){try{const r=await c.from('comments').select('*').eq('post_id',pid).eq('status','published').order('created_at',{ascending:true}).limit(100);if(!r.error)rows=r.data||[]}catch{}}const local=localComments(pid);const seen=new Set(rows.map(x=>String(x.id)));local.forEach(x=>{if(!seen.has(String(x.id)))rows.push(x)});return rows}
 async function refreshPost(card,pid){const [rr,cc,s]=await Promise.all([reactionRows(pid),commentRows(pid),session()]);const rc=card.querySelector('[data-bd24-react-count]'),ccount=card.querySelector('[data-bd24-comment-count]');if(rc)rc.textContent=toBn(rr.length);if(ccount)ccount.textContent=toBn(cc.filter(x=>!parentId(x)).length);if(s?.user){const mine=rr.find(x=>String(x.user_id)===String(s.user.id));const b=card.querySelector('[data-bd24-react]');if(b&&mine){b.classList.add('selected');b.querySelector('.bd24-main-icon').innerHTML=svg(mine.reaction||'like',21);b.querySelector('[data-bd24-react-label]').textContent=(R[mine.reaction]||R.like)[0]}}}
 function toBn(n){return String(Number(n)||0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])}
-async function togglePostReaction(pid,type){const c=client(),s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}let ok=false;if(c){try{const r=await c.rpc('toggle_post_reaction',{target_post:String(pid),chosen_reaction:type});if(!r.error)ok=true}catch{}if(!ok){try{const cur=await c.from('post_reactions').select('*').eq('post_id',pid).eq('user_id',s.user.id).maybeSingle();if(cur.data){let r;if(cur.data.reaction===type)r=await c.from('post_reactions').delete().eq('post_id',pid).eq('user_id',s.user.id);else r=await c.from('post_reactions').update({reaction:type}).eq('post_id',pid).eq('user_id',s.user.id);if(!r.error)ok=true}else{const r=await c.from('post_reactions').insert({post_id:pid,user_id:s.user.id,reaction:type});if(!r.error)ok=true}}catch{}}}
+async function togglePostReaction(pid,type){const c=client(),s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}let ok=false;if(c){try{const r=await c.rpc('toggle_post_reaction',{target_post:String(pid),chosen_reaction:type});if(!r.error)ok=true}catch{}if(!ok){for(const table of ['reactions','post_reactions']){try{const cur=await c.from(table).select('*').eq('post_id',pid).eq('user_id',s.user.id).maybeSingle();if(cur.data){let r;if(cur.data.reaction===type)r=await c.from(table).delete().eq('post_id',pid).eq('user_id',s.user.id);else r=await c.from(table).update({reaction:type}).eq('post_id',pid).eq('user_id',s.user.id);if(!r.error){ok=true;break}}else{const r=await c.from(table).insert({post_id:pid,user_id:s.user.id,reaction:type});if(!r.error){ok=true;break}}}catch{}}}}
 if(!ok){let a=localReactions(pid).filter(x=>String(x.user_id)!==String(s.user.id));const old=localReactions(pid).find(x=>String(x.user_id)===String(s.user.id));if(!old||old.reaction!==type)a.push({user_id:s.user.id,reaction:type});localSet('bd24-reactions-'+pid,a)}
 const card=[...D.querySelectorAll('[data-bd24-ready="1"]')].find(x=>postId(x)===String(pid));if(card)await refreshPost(card,pid)}
 async function showReactors(card,pid){const panel=card.querySelector('[data-bd24-reactor-panel]'),list=panel.querySelector('.bd24-reactor-list');panel.classList.toggle('open');if(!panel.classList.contains('open'))return;const rr=await reactionRows(pid);if(!rr.length){list.innerHTML='<div class="bd24-empty">এখনও কোনো প্রতিক্রিয়া নেই।</div>';return}let profiles={};const ids=[...new Set(rr.map(x=>x.user_id).filter(Boolean))];const c=client();if(c&&ids.length){try{const r=await c.from('profiles').select('id,username,display_name,avatar_url,role').in('id',ids);if(!r.error)(r.data||[]).forEach(p=>profiles[p.id]=p)}catch{}}
@@ -828,5 +927,137 @@ document.addEventListener('click',async e=>{
 })();
 </script>
 
+
+<script id="bd-v827-menu-click-lock">
+(function(){
+'use strict';
+/* Prevent card/post click handlers from swallowing profile/post three-dot actions. */
+document.addEventListener('click',function(e){
+  const more=e.target.closest('[data-click="more"]');
+  if(more){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const m=document.getElementById('profileMenu');if(!m)return;document.querySelectorAll('.post-menu-panel').forEach(x=>x.hidden=true);m.hidden=!m.hidden;return}
+  const pm=e.target.closest('[data-click="post-menu"]');
+  if(pm){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=pm.closest('.post');const panel=card?.querySelector('.post-menu-panel');if(!panel)return;document.querySelectorAll('.post-menu-panel').forEach(x=>{if(x!==panel)x.hidden=true});const profile=document.getElementById('profileMenu');if(profile)profile.hidden=true;panel.hidden=!panel.hidden;pm.classList.toggle('menu-open',!panel.hidden);return}
+  if(e.target.closest('.profile-popover,.post-menu-panel')){e.stopPropagation();return}
+},true);
+/* Never let a reaction/comment control bubble into a post-opening handler. */
+document.addEventListener('click',function(e){
+  if(e.target.closest('.bd24-social,.picker,.bd24-picker,.post-menu-panel,.profile-popover'))e.stopPropagation();
+},false);
+})();
+</script>
+
+
+<script id="bd-v828-post-edit-privacy-js">
+(function(){
+'use strict';
+const V28_TYPES={poem:'কবিতা',recitation:'আবৃত্তি',prolap:'ছোট কথার প্রলাপ',letter:'চিঠিপত্র',environment:'পরিবেশ',humanitarian:'মানবিক আবেদন',discussion:'আলোচনা',children:'শিশুতোষ',midnight:'মধ্যরাতের প্রলাপ'};
+const V28_PRIVACY={public:['🌐','পাবলিক','সবাই পোস্টটি দেখতে পারবেন'],friends:['👥','বন্ধুরা','আপনার বন্ধুদের জন্য'],close_friends:['⭐','ঘনিষ্ঠ বন্ধুরা','ঘনিষ্ঠ বন্ধু তালিকার জন্য'],only_me:['🔒','শুধু আমি','শুধু আপনি দেখতে পারবেন']};
+function v28msg(t){try{if(typeof msg==='function')return msg(t);if(typeof toast==='function')return toast(t)}catch{} alert(t)}
+function v28close(){document.querySelectorAll('.bd28-inline-editor,.bd28-privacy-editor').forEach(x=>x.remove())}
+function v28post(card){try{return typeof currentPost==='function'?currentPost(card):null}catch{return null}}
+function v28esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function v28localUpdate(id,patch){
+  const keys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaProfilePosts'];
+  keys.forEach(k=>{try{const a=JSON.parse(localStorage.getItem(k)||'[]');if(!Array.isArray(a))return;let changed=false;const n=a.map(x=>{const xid=String(x?.id||x?.postId||'');if(xid!==String(id))return x;changed=true;return {...x,...patch,updatedAt:new Date().toISOString(),updated_at:new Date().toISOString()}});if(changed)localStorage.setItem(k,JSON.stringify(n))}catch{}});
+}
+async function v28dbUpdate(id,patch){
+  if(typeof sb==='undefined'||!sb||!state?.me?.id)return false;
+  const stamp=new Date().toISOString();
+  try{const r=await sb.from('posts').update({...patch,updated_at:stamp}).eq('id',id).eq('author_id',state.me.id);if(!r.error)return true}catch{}
+  return false;
+}
+function v28host(card){return card?.querySelector('.post-menu-panel')||card?.querySelector('.post-head')||card}
+function v28openEdit(card){
+  if(!card||!state?.owner)return;v28close();const p=v28post(card);if(!p)return;
+  const box=document.createElement('div');box.className='bd28-inline-editor';
+  const options=Object.entries(V28_TYPES).filter(([k])=>k!=='midnight'||String(state?.target?.roleResolved||state?.target?.role||'').toLowerCase()==='founder').map(([k,v])=>`<option value="${k}" ${String(p.type)===k?'selected':''}>${v}</option>`).join('');
+  box.innerHTML=`<h4>পোস্ট সম্পাদনা</h4><div class="bd28-edit-grid"><select data-v28-type>${options}</select><input data-v28-title maxlength="240" aria-label="শিরোনাম"></div><textarea data-v28-body maxlength="50000" aria-label="পোস্টের লেখা"></textarea><div class="bd28-editor-actions"><button type="button" data-v28-cancel>বাতিল</button><button class="save" type="button" data-v28-save-edit>সংরক্ষণ</button></div>`;
+  box.querySelector('[data-v28-title]').value=p.title||'';box.querySelector('[data-v28-body]').value=p.body||'';
+  v28host(card).insertAdjacentElement('afterend',box);
+}
+function v28openPrivacy(card){
+  if(!card||!state?.owner)return;v28close();const p=v28post(card);if(!p)return;const current=String(p.visibility||p.privacy||'public');
+  const box=document.createElement('div');box.className='bd28-privacy-editor';box.dataset.value=current;
+  box.innerHTML=`<h4>কে এই পোস্টটি দেখতে পারবে?</h4><div class="bd28-privacy-current">প্রাইভেসি পরিবর্তন করলে একই Post ID-এর Index ও Profile view-তেও সেটি প্রযোজ্য হবে।</div><div class="bd28-privacy-list">${Object.entries(V28_PRIVACY).map(([k,a])=>`<button type="button" class="bd28-privacy-option ${current===k?'selected':''}" data-v28-privacy="${k}"><span class="bd28-privacy-icon">${a[0]}</span><span class="bd28-privacy-copy"><b>${a[1]}</b><small>${a[2]}</small></span><span class="bd28-radio"></span></button>`).join('')}</div><div class="bd28-editor-actions"><button type="button" data-v28-cancel>বাতিল</button><button class="save" type="button" data-v28-save-privacy>সম্পন্ন</button></div>`;
+  v28host(card).insertAdjacentElement('afterend',box);
+}
+async function v28saveEdit(card,box){
+  const p=v28post(card),id=card?.dataset?.post;if(!p||!id)return;const type=box.querySelector('[data-v28-type]')?.value||p.type,title=box.querySelector('[data-v28-title]')?.value.trim()||'',body=box.querySelector('[data-v28-body]')?.value.trim()||'';
+  if(!title||!body){v28msg('শিরোনাম ও লেখা খালি রাখা যাবে না');return}
+  const patch={type,category:V28_TYPES[type]||p.category||'প্রকাশনা',title,body};const ok=await v28dbUpdate(id,patch);Object.assign(p,patch);v28localUpdate(id,{type,category:patch.category,title,body,content:body});
+  const tag=card.querySelector('.tag');if(tag&&!tag.textContent.includes('মূল কবি'))tag.textContent=patch.category;const t=card.querySelector('.post-title a,.post-title');if(t)t.textContent=title;const b=card.querySelector('.post-body');if(b)b.textContent=body;box.remove();v28msg(ok?'পোস্ট সম্পাদনা সংরক্ষণ হয়েছে':'পোস্ট এই ডিভাইসে সংরক্ষণ হয়েছে');
+}
+async function v28savePrivacy(card,box){
+  const p=v28post(card),id=card?.dataset?.post;if(!p||!id)return;const value=box.dataset.value||'public';let ok=false;
+  if(typeof sb!=='undefined'&&sb&&state?.me?.id){const stamp=new Date().toISOString();try{let r=await sb.from('posts').update({visibility:value,privacy:value,updated_at:stamp}).eq('id',id).eq('author_id',state.me.id);if(!r.error)ok=true}catch{}if(!ok)try{let r=await sb.from('posts').update({visibility:value,updated_at:stamp}).eq('id',id).eq('author_id',state.me.id);if(!r.error)ok=true}catch{}if(!ok)try{let r=await sb.from('posts').update({privacy:value,updated_at:stamp}).eq('id',id).eq('author_id',state.me.id);if(!r.error)ok=true}catch{}}
+  p.visibility=value;p.privacy=value;v28localUpdate(id,{visibility:value,privacy:value});box.remove();v28msg(ok?'পোস্টের প্রাইভেসি পরিবর্তন হয়েছে':'প্রাইভেসি এই ডিভাইসে সংরক্ষণ হয়েছে');
+}
+document.addEventListener('click',async function(e){
+  const edit=e.target.closest('[data-post-option="edit"]'),privacy=e.target.closest('[data-post-option="privacy"]');
+  if(edit||privacy){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=(edit||privacy).closest('.post');document.querySelectorAll('.post-menu-panel').forEach(x=>x.hidden=true);if(edit)v28openEdit(card);else v28openPrivacy(card);return}
+  const choice=e.target.closest('[data-v28-privacy]');if(choice){e.preventDefault();e.stopPropagation();const box=choice.closest('.bd28-privacy-editor');box.dataset.value=choice.dataset.v28Privacy;box.querySelectorAll('[data-v28-privacy]').forEach(x=>x.classList.toggle('selected',x===choice));return}
+  const cancel=e.target.closest('[data-v28-cancel]');if(cancel){e.preventDefault();e.stopPropagation();cancel.closest('.bd28-inline-editor,.bd28-privacy-editor')?.remove();return}
+  const saveEdit=e.target.closest('[data-v28-save-edit]');if(saveEdit){e.preventDefault();e.stopPropagation();const box=saveEdit.closest('.bd28-inline-editor'),card=box?.closest('.post');if(card)await v28saveEdit(card,box);return}
+  const savePrivacy=e.target.closest('[data-v28-save-privacy]');if(savePrivacy){e.preventDefault();e.stopPropagation();const box=savePrivacy.closest('.bd28-privacy-editor'),card=box?.closest('.post');if(card)await v28savePrivacy(card,box);return}
+},true);
+['pointerdown','touchstart'].forEach(type=>document.addEventListener(type,e=>{if(e.target.closest('.bd28-inline-editor,.bd28-privacy-editor'))e.stopPropagation()},{passive:true,capture:true}));
+})();
+</script>
+
+
+<style id="bd-v829-social-fix-css">
+/* V8.29 — locked visual baseline; interaction-only fixes */
+.bd24-social,.bd24-social button,.bd24-picker,.bd24-picker button,.bd-v814-picker,.bd-v814-picker button,.bd-index-reaction-picker,.bd-index-reaction-picker button{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+.bd24-social button:active,.bd24-picker button:active,.bd-v814-picker button:active,.bd-index-reaction-picker button:active{transform:none!important}
+.bd29-profile-name-link{color:inherit!important;text-decoration:none!important;font-weight:800!important;cursor:pointer!important}
+.bd29-profile-name-link:hover{text-decoration:underline!important}
+.bd29-story-panel{margin-top:10px;padding:10px;border:1px solid rgba(93,91,155,.12);border-radius:14px;background:linear-gradient(145deg,#fff,#f7f5ff);box-shadow:0 8px 22px rgba(60,57,119,.08)}
+.bd29-story-panel[hidden]{display:none!important}
+.bd29-story-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.bd29-story-head a{font-size:10px;font-weight:800;color:#263c5d;text-decoration:none}
+.bd29-story-head button{width:29px;height:29px;border:1px solid rgba(93,91,155,.12);border-radius:50%;background:#fff;color:#30415f}
+.bd29-story-preview{min-height:118px;border-radius:13px;overflow:hidden;display:grid;align-content:end;padding:12px;background:radial-gradient(circle at 74% 24%,rgba(255,245,204,.95) 0 10px,rgba(255,245,204,.24) 11px 27px,transparent 28px),linear-gradient(145deg,#5636b4,#9f58dd 58%,#e793c8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.bd29-story-preview strong{font-family:'Noto Serif Bengali',serif;font-size:13px}.bd29-story-preview small{margin-top:4px;font-size:8px;opacity:.85}
+</style>
+
+<script id="bd-v829-story-and-name-fix">
+(function(){
+'use strict';
+function targetHref(){
+  try{
+    if(typeof profileRoute==='function'&&window.state?.target)return profileRoute({id:state.target.id,role:state.target.roleResolved||state.target.role,username:state.target.username,display_name:state.target.display_name});
+  }catch(_){}
+  const q=new URLSearchParams(location.search),id=q.get('user')||q.get('id')||'';
+  if(/founder-profile\.html/i.test(location.pathname))return 'founder-profile.html';
+  if(/admin-profile\.html/i.test(location.pathname))return 'admin-profile.html'+(id?'?user='+encodeURIComponent(id):'');
+  return 'profile.html'+(id?'?user='+encodeURIComponent(id):'');
+}
+function syncNameLinks(root=document){
+  root.querySelectorAll('[data-target-profile-link]').forEach(a=>{a.href=targetHref()});
+}
+function storyPanelFor(button){
+  const card=button.closest('.right-card');if(!card)return null;
+  let panel=card.querySelector('.bd29-story-panel');
+  if(!panel){
+    panel=document.createElement('div');panel.className='bd29-story-panel';panel.hidden=true;
+    const name=(window.state?.target&&(state.target.display_name||state.target.name))||document.getElementById('profileName')?.textContent||'ভুবনডাঙ্গার সদস্য';
+    panel.innerHTML='<div class="bd29-story-head"><a data-target-profile-link href="#"></a><button type="button" data-bd29-story-close aria-label="বন্ধ করুন">×</button></div><button type="button" class="bd29-story-preview" data-bd29-story-open><strong>দিনের শেষে কিছু কথা…</strong><small>সাম্প্রতিক স্টোরি</small></button>';
+    panel.querySelector('a').textContent=name;
+    const wide=card.querySelector('[data-click="story-touch"]');card.insertBefore(panel,wide||null);syncNameLinks(panel);
+  }
+  return panel;
+}
+document.addEventListener('click',function(e){
+  const story=e.target.closest('[data-click="story-touch"]');
+  if(story){e.preventDefault();e.stopPropagation();const panel=storyPanelFor(story);if(panel)panel.hidden=!panel.hidden;return}
+  const close=e.target.closest('[data-bd29-story-close]');
+  if(close){e.preventDefault();e.stopPropagation();close.closest('.bd29-story-panel').hidden=true;return}
+  const open=e.target.closest('[data-bd29-story-open]');
+  if(open){e.preventDefault();e.stopPropagation();const panel=open.closest('.bd29-story-panel');panel.classList.toggle('viewing');return}
+},true);
+const observer=new MutationObserver(()=>syncNameLinks());observer.observe(document.documentElement,{subtree:true,childList:true});
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>syncNameLinks(),{once:true});else syncNameLinks();
+})();
+</script>
 </body>
 </html>
