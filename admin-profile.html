@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>অ্যাডমিন প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.36-lock35-profile-open-media-side">
+<meta name="bhubondanga-build" content="V8.37-lock36-mobile-fullwidth">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
@@ -1377,7 +1377,7 @@ function bd35Sheet(){let back=D.getElementById('bd35CommentBackdrop'),sheet=D.ge
 function bd35Close(){const x=bd35Sheet();x.back.classList.remove('open');x.sheet.classList.remove('open');D.body.classList.remove('bd35-comment-open');x.sheet.__card=null}
 async function bd35CommentNode(x,rows){const p=authorOf(x),likes=await commentLikes(x.id),s=await session(),active=!!s?.user&&likes.some(v=>String(v.user_id)===String(s.user.id)),replies=rows.filter(r=>String(parentId(r))===String(x.id)),replyHtml=[];for(const r of replies)replyHtml.push(await bd35CommentNode(r,[]));return `<article class="bd35-comment-row" data-bd35-comment-id="${esc(x.id)}"><a class="bd35-comment-avatar" href="${esc(profileHref(p))}">${p.avatar_url?`<img src="${esc(p.avatar_url)}" alt="">`:esc((p.display_name||'স').slice(0,1))}</a><div><a class="bd35-comment-author" href="${esc(profileHref(p))}">${esc(p.display_name||'সদস্য')}</a><div class="bd35-comment-text">${esc(x.body||'')}</div><div class="bd35-comment-meta"><button class="${active?'active':''}" type="button" data-bd35-like="${esc(x.id)}">লাইক${likes.length?' · '+bn(likes.length):''}</button><button type="button" data-bd35-reply="${esc(x.id)}">রিপ্লাই</button></div>${replyHtml.length?`<div class="bd35-comment-replies">${replyHtml.join('')}</div>`:''}<form class="bd35-reply-form" data-parent="${esc(x.id)}"><input maxlength="1200" placeholder="রিপ্লাই লিখুন…"><button type="submit">➤</button></form></div></article>`}
 async function bd35Render(){const {sheet}=bd35Sheet(),card=sheet.__card;if(!card)return;const id=pid(card),rows=await commentRows(id),roots=rows.filter(x=>!parentId(x)),host=sheet.querySelector('.bd35-comment-scroll'),out=[];for(const x of roots)out.push(await bd35CommentNode(x,rows));host.innerHTML=out.join('')||'<div class="bd35-comment-empty">এখনও কোনো মন্তব্য নেই। প্রথম মন্তব্যটি লিখুন।</div>';requestAnimationFrame(()=>{host.scrollTop=host.scrollHeight})}
-async function bd35Open(card){const {back,sheet}=bd35Sheet();sheet.__card=card;back.classList.add('open');sheet.classList.add('open');D.body.classList.add('bd35-comment-open');await bd35Render();setTimeout(()=>sheet.querySelector('.bd35-comment-composer input')?.focus({preventScroll:true}),120)}
+async function bd35Open(card){const {back,sheet}=bd35Sheet();sheet.__card=card;back.classList.add('open');sheet.classList.add('open');D.body.classList.add('bd35-comment-open');await bd35Render();setTimeout(()=>sheet.querySelector('.bd35-comment-composer input')?.focus({preventScroll:true}),120)};W.__bd35Open=bd35Open;
 async function bd35SheetClick(e){const sheet=e.currentTarget,card=sheet.__card;if(!card)return;const like=e.target.closest('[data-bd35-like]'),reply=e.target.closest('[data-bd35-reply]');if(like){e.preventDefault();await toggleCLike(like.dataset.bd35Like);await bd35Render();return}if(reply){e.preventDefault();const row=reply.closest('.bd35-comment-row'),form=row?.querySelector(':scope > div > .bd35-reply-form');if(form){form.classList.toggle('open');if(form.classList.contains('open'))setTimeout(()=>form.querySelector('input')?.focus({preventScroll:true}),30)}return}}
 async function bd35SheetSubmit(e){const sheet=e.currentTarget,card=sheet.__card;if(!card)return;const f=e.target;if(!f.matches('.bd35-comment-composer,.bd35-reply-form'))return;e.preventDefault();const input=f.querySelector('input'),body=input?.value.trim();if(!body)return;try{await insertComment(pid(card),body,f.dataset.parent||'');input.value='';await bd35Render();await refresh(card)}catch(err){if(err?.message!=='login')alert(err?.message||'মন্তব্য করা যায়নি')}}
 
@@ -1884,6 +1884,233 @@ try{cleanBuildText(D.body)}catch{}
 
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>{ensureVisibleProfile();setTimeout(ensureVisibleProfile,350);setTimeout(ensureVisibleProfile,1200)},{once:true});
 else{ensureVisibleProfile();setTimeout(ensureVisibleProfile,350);setTimeout(ensureVisibleProfile,1200)}
+})();
+</script>
+
+
+<style id="bd-v837-mobile-fullwidth-right-gap-fix">
+/* V8.37 — LOCK36: mobile width correction only; visual design and behavior stay locked. */
+@media (max-width:960px){
+  html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  .shell{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important}
+  .center{width:100%!important;max-width:100%!important;margin:0!important;padding-left:0!important;padding-right:0!important;overflow-x:hidden!important}
+  .center>.profile-card,
+  .center>.tabs,
+  .center>.composer,
+  .center>.feed,
+  .center>.archive{
+    box-sizing:border-box!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+  .center>.feed>.post,
+  .center>.feed>.post-card,
+  .center>.feed>article{
+    box-sizing:border-box!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+}
+@media (max-width:430px){
+  .center{padding-left:0!important;padding-right:0!important}
+  .center>.profile-card,.center>.tabs,.center>.composer,.center>.feed,.center>.archive{width:100%!important;max-width:100%!important;margin-inline:0!important}
+}
+</style>
+
+
+<style id="bd-v838-final-profile-reaction-comment-fix">
+/* V8.38 — repair only: profile navigation, reaction artwork, mobile comments, viewport fitting. */
+:root{
+  --bd38-like:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2230%22%20fill%3D%22%231877F2%22%2F%3E%0A%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M25%2050H15c-2%200-3.5-1.5-3.5-3.5v-20c0-2%201.5-3.5%203.5-3.5h10v27Zm5-27c3-4%205-9%205-14%200-2%201-3%202.7-3%204.7%200%207.3%204.2%206.2%209.3L42.5%2022H51c4.4%200%207.4%204.1%206.2%208.3l-4.1%2014.2A7.4%207.4%200%200%201%2046%2050H29V25.5c0-1%20.3-1.8%201-2.5Z%22%2F%3E%0A%3C%2Fsvg%3E");
+  --bd38-love:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2230%22%20fill%3D%22%23F55368%22%2F%3E%0A%3Cpath%20fill%3D%22%23fff%22%20d%3D%22M32%2049%2015.8%2033.6C7.5%2025.7%2012.8%2013%2022.4%2013c4.2%200%207.5%202.3%209.6%205.2%202.1-2.9%205.4-5.2%209.6-5.2%209.6%200%2014.9%2012.7%206.6%2020.6L32%2049Z%22%2F%3E%0A%3C%2Fsvg%3E");
+  --bd38-haha:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2230%22%20fill%3D%22%23F7B928%22%2F%3E%0A%3Cpath%20d%3D%22M15%2023c4-5%208-5%2012%200M37%2023c4-5%208-5%2012%200%22%20fill%3D%22none%22%20stroke%3D%22%235B3B19%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M15%2034c4%2015%2030%2015%2034%200H15Z%22%20fill%3D%22%234A2B20%22%2F%3E%0A%3Cpath%20d%3D%22M22%2043c6%205%2014%205%2020%200%22%20fill%3D%22none%22%20stroke%3D%22%23F66B6B%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3C%2Fsvg%3E");
+  --bd38-wow:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2230%22%20fill%3D%22%23F7B928%22%2F%3E%0A%3Ccircle%20cx%3D%2221%22%20cy%3D%2224%22%20r%3D%224%22%20fill%3D%22%235B3B19%22%2F%3E%3Ccircle%20cx%3D%2243%22%20cy%3D%2224%22%20r%3D%224%22%20fill%3D%22%235B3B19%22%2F%3E%0A%3Cellipse%20cx%3D%2232%22%20cy%3D%2242%22%20rx%3D%228%22%20ry%3D%2210%22%20fill%3D%22%235B3B19%22%2F%3E%0A%3Cpath%20d%3D%22M15%2017c3-3%207-4%2011-3M38%2014c4-1%208%200%2011%203%22%20fill%3D%22none%22%20stroke%3D%22%238A5A28%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3C%2Fsvg%3E");
+  --bd38-sad:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2230%22%20fill%3D%22%23F7B928%22%2F%3E%0A%3Cpath%20d%3D%22M17%2022c3-3%207-4%2011-2M36%2020c4-2%208-1%2011%202%22%20fill%3D%22none%22%20stroke%3D%22%236B421F%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Ccircle%20cx%3D%2222%22%20cy%3D%2228%22%20r%3D%223.2%22%20fill%3D%22%235B3B19%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2228%22%20r%3D%223.2%22%20fill%3D%22%235B3B19%22%2F%3E%0A%3Cpath%20d%3D%22M23%2047c5-6%2013-6%2018%200%22%20fill%3D%22none%22%20stroke%3D%22%235B3B19%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Cpath%20d%3D%22M49%2031c6%208%205%2014%200%2017-5-3-6-9%200-17Z%22%20fill%3D%22%2336A9E8%22%2F%3E%0A%3C%2Fsvg%3E");
+  --bd38-angry:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%0A%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2230%22%20fill%3D%22%23F36C3D%22%2F%3E%0A%3Cpath%20d%3D%22M15%2018%2027%2023M49%2018%2037%2023%22%20fill%3D%22none%22%20stroke%3D%22%236B261B%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Ccircle%20cx%3D%2222%22%20cy%3D%2229%22%20r%3D%223.4%22%20fill%3D%22%234E211C%22%2F%3E%3Ccircle%20cx%3D%2242%22%20cy%3D%2229%22%20r%3D%223.4%22%20fill%3D%22%234E211C%22%2F%3E%0A%3Cpath%20d%3D%22M22%2046c6-6%2014-6%2020%200%22%20fill%3D%22none%22%20stroke%3D%22%234E211C%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+html,body{max-width:100%!important;overflow-x:hidden!important}
+img,video,canvas,svg{max-width:100%}
+
+/* Clean professional six-reaction set. This overrides all historical sprite crops. */
+.bd31-r,.bd35-react-sprite{
+  display:inline-block!important;
+  background-color:transparent!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  background-size:contain!important;
+  border:0!important;
+  border-radius:50%!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
+  box-shadow:none!important;
+  filter:drop-shadow(0 1.5px 2px rgba(0,0,0,.12))!important;
+}
+.bd31-r.like,.bd35-react-sprite.like{background-image:var(--bd38-like)!important}
+.bd31-r.love,.bd31-r.care,.bd35-react-sprite.love{background-image:var(--bd38-love)!important}
+.bd31-r.haha,.bd35-react-sprite.haha{background-image:var(--bd38-haha)!important}
+.bd31-r.wow,.bd35-react-sprite.wow{background-image:var(--bd38-wow)!important}
+.bd31-r.sad,.bd35-react-sprite.sad{background-image:var(--bd38-sad)!important}
+.bd31-r.angry,.bd35-react-sprite.angry{background-image:var(--bd38-angry)!important}
+
+#bd31ReactionTray{
+  display:none!important;
+  position:fixed!important;
+  z-index:2147483000!important;
+  align-items:center!important;
+  gap:3px!important;
+  width:auto!important;
+  max-width:calc(100vw - 18px)!important;
+  padding:6px 8px!important;
+  border:1px solid rgba(0,0,0,.10)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.99)!important;
+  box-shadow:0 7px 22px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.08)!important;
+  backdrop-filter:blur(14px)!important;
+  -webkit-backdrop-filter:blur(14px)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none!important;
+  overflow:visible!important;
+  pointer-events:auto!important;
+}
+#bd31ReactionTray.open{display:flex!important;animation:bd38ReactUp .15s cubic-bezier(.2,.82,.25,1)!important}
+@keyframes bd38ReactUp{from{opacity:0;transform:translateY(6px) scale(.96)}to{opacity:1;transform:none}}
+#bd31ReactionTray button{
+  width:42px!important;height:42px!important;min-width:42px!important;
+  padding:1px!important;border:0!important;background:transparent!important;
+  display:grid!important;place-items:center!important;overflow:visible!important;
+  transition:transform .13s ease!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+#bd31ReactionTray button .bd31-r{width:40px!important;height:40px!important;min-width:40px!important}
+#bd31ReactionTray button:active{transform:translateY(-2px) scale(1.06)!important}
+@media(hover:hover) and (pointer:fine){#bd31ReactionTray button:hover{transform:translateY(-7px) scale(1.16)!important}}
+.bd31-r.bd31-mini{width:19px!important;height:19px!important;min-width:19px!important}
+.bd31-main-reaction>.bd31-r,.bd31-main-reaction>.bd31-r.bd31-mini{width:23px!important;height:23px!important;min-width:23px!important}
+.bd31-stack{display:inline-flex!important;align-items:center!important}
+.bd31-stack .bd31-r{margin-left:-4px!important;border:2px solid #fff!important}
+.bd31-stack .bd31-r:first-child{margin-left:0!important}
+.bd31-action{color:#65676b!important;background:transparent!important;box-shadow:none!important}
+.bd31-action:hover{background:#f0f2f5!important}
+.bd31-action.selected{color:#0866ff!important}
+.bd31-action.selected[data-current="love"]{color:#e9425e!important}
+.bd31-action.selected[data-current="haha"],
+.bd31-action.selected[data-current="wow"],
+.bd31-action.selected[data-current="sad"],
+.bd31-action.selected[data-current="angry"]{color:#d88700!important}
+
+/* Facebook-like bottom comment surface on phones/tablets. */
+@media(max-width:960px){
+  #bd35CommentBackdrop{display:block!important;position:fixed!important;inset:0!important;z-index:2147483001!important;background:rgba(0,0,0,.34)!important}
+  #bd35CommentBackdrop:not(.open){opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+  #bd35CommentBackdrop.open{opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+  #bd35CommentSheet{
+    display:flex!important;
+    position:fixed!important;left:0!important;right:0!important;bottom:0!important;
+    width:100%!important;max-width:100%!important;height:min(94dvh,900px)!important;
+    z-index:2147483002!important;border-radius:18px 18px 0 0!important;
+    background:#fff!important;color:#1c1e21!important;
+    box-shadow:0 -15px 48px rgba(0,0,0,.26)!important;
+    overflow:hidden!important;
+  }
+  #bd35CommentSheet:not(.open){transform:translateY(105%)!important;visibility:hidden!important;pointer-events:none!important}
+  #bd35CommentSheet.open{transform:translateY(0)!important;visibility:visible!important;pointer-events:auto!important}
+  .bd35-comment-head{background:#fff!important;border-bottom:1px solid #e4e6eb!important;min-height:55px!important}
+  .bd35-comment-scroll{background:#fff!important;padding:12px 12px 86px!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+  .bd35-comment-row{grid-template-columns:38px minmax(0,1fr)!important;gap:9px!important;margin-bottom:14px!important}
+  .bd35-comment-author{font-size:13.5px!important}
+  .bd35-comment-text{font-size:15px!important;line-height:1.55!important}
+  .bd35-comment-meta{font-size:11.5px!important;gap:14px!important}
+  .bd35-comment-composer{position:absolute!important;left:0!important;right:0!important;bottom:0!important;background:rgba(255,255,255,.985)!important;border-top:1px solid #e4e6eb!important}
+  .bd35-comment-composer input,.bd35-reply-form input{font-size:16px!important;background:#f0f2f5!important}
+  body.bd35-comment-open{overflow:hidden!important;overscroll-behavior:none!important}
+}
+
+/* Mobile index must occupy the device width; no partial/half profile or feed column. */
+@media(max-width:960px){
+  main.layout,.layout,.shell,.center-col,.center,.page-main,.main-content{
+    box-sizing:border-box!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    margin-left:0!important;margin-right:0!important;
+  }
+  main.layout,.layout{display:block!important;padding-left:8px!important;padding-right:8px!important}
+  .left-col,.right-col,.rail{display:none!important}
+  .center-col,.center{overflow-x:hidden!important}
+  #postList,.post-list,.feed{width:100%!important;max-width:100%!important}
+  #postList>article,.post-list>article,.feed>article,.post,.post-card{width:100%!important;max-width:100%!important;min-width:0!important}
+}
+
+/* Profile pages stay full-width on mobile, while desktop lock remains untouched. */
+@media(max-width:960px){
+  .shell{display:block!important;padding:0!important}
+  .center{padding-left:0!important;padding-right:0!important}
+  .center>.profile-card,.center>.tabs,.center>.composer,.center>.feed,.center>.archive{
+    width:100%!important;max-width:100%!important;margin-inline:0!important;
+  }
+}
+</style>
+
+<script id="bd-v838-final-profile-comment-guard">
+(function(){
+'use strict';
+if(window.__BD_V838_FINAL__) return;
+window.__BD_V838_FINAL__=true;
+const D=document,W=window;
+
+function closeDrawersBeforeNavigate(){
+  D.querySelectorAll('.drawer.open,.mobile-drawer.open,#mobileDrawer.open,#rightMobileDrawer.open,#leftDrawer.open,#rightDrawer.open')
+    .forEach(x=>x.classList.remove('open'));
+  D.querySelectorAll('.drawer-backdrop.open,.backdrop.open,#drawerBackdrop.open').forEach(x=>x.classList.remove('open'));
+  D.body.classList.remove('drawer-open');
+}
+function wireProfileLinks(root=D){
+  const sel='a.author-avatar,a[href*="profile.html"],.author-meta a[href*="profile"],.post-author a[href*="profile"],.bd31-reactor[href*="profile"],.bd35-comment-avatar[href*="profile"],.bd35-comment-author[href*="profile"]';
+  root.querySelectorAll?.(sel).forEach(a=>{
+    if(a.dataset.bd38ProfileNav==='1') return;
+    a.dataset.bd38ProfileNav='1';
+    a.addEventListener('click',function(e){
+      if(e.button && e.button!==0) return;
+      if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey) return;
+      const href=this.getAttribute('href');
+      if(!href) return;
+      e.preventDefault();
+      e.stopPropagation();
+      closeDrawersBeforeNavigate();
+      W.location.assign(href);
+    });
+  });
+}
+wireProfileLinks();
+new MutationObserver(ms=>{
+  for(const m of ms) for(const n of m.addedNodes) if(n.nodeType===1) wireProfileLinks(n);
+}).observe(D.documentElement,{childList:true,subtree:true});
+
+/* The existing social engine owns Supabase reads/writes. This only guarantees its mobile sheet opens. */
+W.addEventListener('pointerup',function(e){
+  const b=e.target.closest?.('[data-bd31-comments],[data-bd31-comment-summary]');
+  if(!b || W.innerWidth>960) return;
+  const card=b.closest('[data-bd31-ready="1"]');
+  if(!card) return;
+  setTimeout(()=>{
+    const sheet=D.getElementById('bd35CommentSheet');
+    if(sheet?.classList.contains('open')) return;
+    try{ if(typeof W.__bd35Open==='function') W.__bd35Open(card); }catch(_){}
+  },30);
+},true);
+
+/* Remove stray build text if an older build emitted literal \n on screen. */
+function clean(root){
+  for(const n of [...root.childNodes]){
+    if(n.nodeType===3 && /^\s*\\n(?:\\n)*\s*$/.test(n.nodeValue||'')) n.remove();
+    else if(n.nodeType===1) clean(n);
+  }
+}
+try{clean(D.body)}catch(_){}
 })();
 </script>
 
