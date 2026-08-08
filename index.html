@@ -832,7 +832,7 @@ const canonicalFile=()=>{let n='index.html';try{n=decodeURIComponent(location.pa
 const roleOf=u=>String(u?.app_metadata?.role||u?.user_metadata?.role||'user').toLowerCase();
 function toast(msg){let t=$('#bdSingleToast');if(!t){t=D.createElement('div');t.id='bdSingleToast';t.className='bd-single-toast';D.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2600)}
 function legacyUser(){const a=safe('bhubondangaCurrentUser'),b=safe('bhubondangaSessionUser',null,sessionStorage),u=a||b;return u&&u.loggedIn!==false?u:null}
-function profileUrl(data={}){const role=String(data.role||'').toLowerCase(),name=String(data.author_name||data.display_name||data.name||''),username=String(data.author_username||data.username||data.slug||'').toLowerCase();if(role==='founder'||username==='mahmud-sohel'||name==='মাহমুদ সোহেল'||(state.founderId&&String(data.author_id||data.id)===String(state.founderId)))return'founder-profile.html';if(role==='admin')return'admin-profile.html';return'profile.html?user='+encodeURIComponent(data.author_id||data.id||username||'me')}
+function profileUrl(data={}){const role=String(data.role||'').toLowerCase(),name=String(data.author_name||data.display_name||data.name||''),username=String(data.author_username||data.username||data.slug||'').replace(/^@/,'').toLowerCase(),ref=data.author_id||data.user_id||username||data.id||'me';if(role==='founder'||username==='mahmud-sohel'||name==='মাহমুদ সোহেল'||(state.founderId&&String(data.author_id||data.user_id||'')===String(state.founderId)))return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(ref);return'profile.html?user='+encodeURIComponent(ref)}
 async function getRole(uid,user){let role=roleOf(user);if(client&&uid){try{const r=await client.from('user_roles').select('role,active').eq('user_id',uid).eq('active',true).maybeSingle();if(r.data?.role)role=String(r.data.role).toLowerCase()}catch(_){}}return role||'user'}
 async function getProfile(uid){if(!uid||!client)return null;try{const r=await client.from('profiles').select('*').eq('id',uid).maybeSingle();return r.data||null}catch(_){return null}}
 async function founderId(){if(state.founderId)return state.founderId;if(!client)return null;try{const r=await client.from('user_roles').select('user_id').eq('role','founder').eq('active',true).limit(1).maybeSingle();state.founderId=r.data?.user_id||null}catch(_){state.founderId=null}return state.founderId}
@@ -2199,7 +2199,7 @@ function obj(k){try{const v=JSON.parse(safeGet(k)||'{}');return v&&typeof v==='o
 function save(k,v){safeSet(k,JSON.stringify(v))}
 function slug(v){return String(v||'').trim().toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{M}\p{N}]+/gu,'-').replace(/^-+|-+$/g,'')}
 function toast(message){const t=document.getElementById('toast');t.textContent=message;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2800)}
-function profileUrl(input){const p=(input&&typeof input==='object')?input:{authorUsername:input};const u=String(p.authorUsername||p.author_username||p.username||p.slug||'').replace(/^@/,'').toLowerCase(),r=String(p.role||p.authorRole||p.author_role||'').toLowerCase(),n=String(p.authorName||p.author_name||p.name||p.display_name||''),id=p.authorId||p.author_id||p.id||'';if(r==='founder'||u==='mahmud-sohel'||n==='মাহমুদ সোহেল')return'founder-profile.html';if(r==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);if(r==='poet')return'poet-profile.html?user='+encodeURIComponent(id||u||'member');if(r==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(u||n);return'profile.html?user='+encodeURIComponent(id||u||'member')}
+function profileUrl(input){const p=(input&&typeof input==='object')?input:{authorUsername:input};const u=String(p.authorUsername||p.author_username||p.username||p.slug||'').replace(/^@/,'').toLowerCase(),r=String(p.role||p.authorRole||p.author_role||'').toLowerCase(),n=String(p.authorName||p.author_name||p.name||p.display_name||''),id=p.authorId||p.author_id||p.user_id||u||p.id||'';if(r==='founder'||u==='mahmud-sohel'||n==='মাহমুদ সোহেল')return'founder-profile.html';if(r==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);if(r==='poet')return'poet-profile.html?user='+encodeURIComponent(id||u||'member');if(r==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(u||n);return'profile.html?user='+encodeURIComponent(id||u||'member')}
 const currentUser=obj('bhubondangaCurrentUser');
 const loggedIn=currentUser.loggedIn===true||Boolean(currentUser.username||currentUser.slug);
 const currentUsername=currentUser.username||currentUser.slug||'';
@@ -3397,7 +3397,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 function readJSON(k,f=null){try{return JSON.parse(localStorage.getItem(k)||'null')??f}catch(_){return f}}
 function fallbackSession(){const keys=['bhubondangaCurrentUser','currentUser','bdCurrentUser','bhubondangaUser'];for(const k of keys){const v=readJSON(k);if(v?.id||v?.email||v?.username)return{user:v}}return null}
 function roleOf(u){return String(u?.role||u?.user_metadata?.role||readJSON('bhubondangaUserRole','')||'member').toLowerCase()}
-function profileUrl(u){const r=roleOf(u),id=u?.id||u?.username||u?.user_metadata?.username||'me';if(r==='founder')return'founder-profile.html';if(r==='admin')return'admin-profile.html';if(r==='poet')return'poet-profile.html?user='+encodeURIComponent(id);if(r==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(id);return'profile.html?user='+encodeURIComponent(id)}
+function profileUrl(u){const r=roleOf(u),id=u?.username||u?.user_metadata?.username||u?.id||'me';if(r==='founder')return'founder-profile.html';if(r==='admin')return'admin-profile.html';if(r==='poet')return'poet-profile.html?user='+encodeURIComponent(id);if(r==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(id);return'profile.html?user='+encodeURIComponent(id)}
 function authMarkup(session){const u=session?.user;if(!u)return `<section class="bd9-card bd-r6-auth-card" data-r6-auth data-r6-state="guest"><div class="bd-r6-auth-title"><span>🌿</span><b>আপন ভুবনে প্রবেশ</b></div><p class="bd-r6-auth-copy">লেখা প্রকাশ, মন্তব্য, বার্তা ও নিজের সাহিত্যিক ভুবন সংরক্ষণ করতে লগইন করুন।</p><div class="bd-r6-auth-actions"><a class="primary" href="login.html">লগইন</a><a href="register.html">নিবন্ধন</a></div></section>`;
  const meta=u.user_metadata||{},name=meta.display_name||meta.full_name||u.display_name||u.name||u.username||u.email?.split('@')[0]||'সদস্য',avatar=meta.avatar_url||meta.picture||u.avatar_url||u.avatar||'',url=profileUrl(u);return `<section class="bd9-card bd-r6-auth-card" data-r6-auth data-r6-state="user"><div class="bd-r6-user-card">${avatar?`<img src="${esc(avatar)}" alt="">`:`<div class="bd-r6-user-avatar">🌿</div>`}<span><strong>${esc(name)}</strong><small>${esc(roleOf(u))} · আপনার ব্যক্তিগত ভুবন</small></span><div class="bd-r6-user-links"><a href="${url}">প্রোফাইল</a><a href="#" data-r6-open="notifications">নোটিফিকেশন</a><a href="#" data-r6-open="messages">ইনবক্স</a></div></div></section>`}
 async function session(){let s=fallbackSession();try{const c=window.supabaseClient||window.sb||window.supabase?.createClient&&window.__BD_SUPABASE;if(c?.auth?.getSession){const r=await c.auth.getSession();if(r?.data?.session)s=r.data.session}}catch(_){}return s}
@@ -3464,7 +3464,7 @@ function set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catc
 function list(k){const v=get(k,[]);return Array.isArray(v)?v:[]}
 function put(k,item,limit=1500){const a=list(k).filter(x=>String(x.id||x.postId)!==String(item.id||item.postId));a.unshift(item);set(k,a.slice(0,limit));return a}
 function identity(){let u=W.__BD_IDENTITY||get('bhubondangaCurrentUser',{})||{};return{authorId:u.author_id||u.id||'',authorName:u.author_name||u.name||u.displayName||'অতিথি পাঠক',authorUsername:u.author_username||u.username||u.slug||'guest',authorAvatar:u.author_avatar||u.avatar||u.profileImage||u.photo||'',role:u.role||''}}
-function profileUrl(input){const p=(input&&typeof input==='object')?input:{authorUsername:input};const u=String(p.authorUsername||p.author_username||p.username||p.slug||'').replace(/^@/,'').toLowerCase(),r=String(p.role||p.authorRole||p.author_role||'').toLowerCase(),n=String(p.authorName||p.author_name||p.name||p.display_name||''),id=p.authorId||p.author_id||p.id||'';if(r==='founder'||u==='mahmud-sohel'||n==='মাহমুদ সোহেল')return'founder-profile.html';if(r==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);if(r==='poet')return'poet-profile.html?user='+encodeURIComponent(id||u||'member');if(r==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(u||n);return'profile.html?user='+encodeURIComponent(id||u||'member')}
+function profileUrl(input){const p=(input&&typeof input==='object')?input:{authorUsername:input};const u=String(p.authorUsername||p.author_username||p.username||p.slug||'').replace(/^@/,'').toLowerCase(),r=String(p.role||p.authorRole||p.author_role||'').toLowerCase(),n=String(p.authorName||p.author_name||p.name||p.display_name||''),id=p.authorId||p.author_id||p.user_id||u||p.id||'';if(r==='founder'||u==='mahmud-sohel'||n==='মাহমুদ সোহেল')return'founder-profile.html';if(r==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);if(r==='poet')return'poet-profile.html?user='+encodeURIComponent(id||u||'member');if(r==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(u||n);return'profile.html?user='+encodeURIComponent(id||u||'member')}
 const bad=['শালা','শালী','হারামজাদা','হারামজাদী','খানকি','মাগী','বেশ্যা','চোদা','চুদি','চুদ','বাল','গুদ','মাদারচোদ','বাঞ্চোদ','বোকাচোদা'];
 function norm(v){return String(v||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim()}
 function scan(v){const s=norm(v),compact=s.replace(/\s/g,''),tok=s.split(' ');return [...new Set(bad.filter(t=>tok.includes(norm(t))||(norm(t).length>=5&&compact.includes(norm(t)))))]}
@@ -4490,6 +4490,50 @@ function clean(root){
   }
 }
 try{clean(D.body)}catch(_){}
+})();
+</script>
+
+
+<style id="bd-v841-index-final-safeguards">
+html,body{max-width:100%!important;overflow-x:hidden!important}
+html[data-theme="dark"],html[data-bd-theme="dark"]{
+  --text:#f7f9ff!important;--text-soft:#e2e8f7!important;--muted:#bdc8dc!important;
+  --surface:#111b36!important;--surface-strong:#182546!important;--border:rgba(196,207,240,.22)!important;--line:rgba(196,207,240,.20)!important
+}
+html[data-theme="dark"] body,html[data-bd-theme="dark"] body{
+  color:#f7f9ff!important;
+  background:radial-gradient(circle at 12% 12%,rgba(102,91,230,.27),transparent 28%),radial-gradient(circle at 88% 8%,rgba(59,136,232,.22),transparent 28%),linear-gradient(145deg,#071126,#101a3b 48%,#24174b 100%)!important
+}
+html[data-theme="dark"] .glass,html[data-theme="dark"] .post,html[data-theme="dark"] .card,
+html[data-bd-theme="dark"] .glass,html[data-bd-theme="dark"] .post,html[data-bd-theme="dark"] .card{
+  color:#f7f9ff!important;background:linear-gradient(145deg,rgba(28,39,72,.96),rgba(22,31,64,.94))!important;border-color:rgba(191,204,242,.20)!important
+}
+html[data-theme="dark"] .post-body,html[data-theme="dark"] .post-title,html[data-theme="dark"] .author-meta a,html[data-theme="dark"] .author-meta strong,
+html[data-bd-theme="dark"] .post-body,html[data-bd-theme="dark"] .post-title,html[data-bd-theme="dark"] .author-meta a,html[data-bd-theme="dark"] .author-meta strong{color:#f7f9ff!important}
+html[data-theme="dark"] small,html[data-theme="dark"] .post-meta,html[data-bd-theme="dark"] small,html[data-bd-theme="dark"] .post-meta{color:#c6d0e4!important}
+html[data-theme="dark"] input,html[data-theme="dark"] textarea,html[data-theme="dark"] select,
+html[data-bd-theme="dark"] input,html[data-bd-theme="dark"] textarea,html[data-bd-theme="dark"] select{color:#f7f9ff!important;background:#16213f!important;border-color:rgba(196,207,240,.24)!important}
+@media(max-width:899px){
+  main.layout,.layout{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding-left:7px!important;padding-right:7px!important;grid-template-columns:minmax(0,1fr)!important}
+  #leftSidebar,#rightSidebar{display:none!important}
+  .center-col{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important}
+  #postList,.feed,.post-list{width:100%!important;max-width:100%!important;min-width:0!important}
+  #postList>.post,#postList>article,.feed>.post,.post-list>.post{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important}
+}
+</style>
+<script id="bd-v841-index-profile-navigation">
+(function(){
+'use strict';
+if(window.__BD_V841_PROFILE_NAV__)return;window.__BD_V841_PROFILE_NAV__=true;
+document.addEventListener('click',function(e){
+  const a=e.target.closest('a[href]');if(!a)return;
+  const raw=a.getAttribute('href')||'';
+  if(!/(^|\/)(profile|founder-profile|admin-profile)\.html(?:[?#]|$)/i.test(raw))return;
+  if(e.button&&e.button!==0)return;if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;
+  e.preventDefault();e.stopImmediatePropagation();
+  document.body.classList.remove('locked','drawer-open');
+  location.assign(a.href)
+},true)
 })();
 </script>
 
