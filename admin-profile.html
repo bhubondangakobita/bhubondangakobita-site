@@ -6,44 +6,9 @@
 <meta name="theme-color" content="#f5f4ff">
 <title>অ্যাডমিন প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
 <meta name="bhubondanga-build" content="V8.39-lock38-supabase-boot-fix">
-<script id="bd-supabase-sdk-loader">
-(function(){
-  "use strict";
-  if (window.__BD_SUPABASE_LOADER_STARTED__) return;
-  window.__BD_SUPABASE_LOADER_STARTED__ = true;
-
-  function ready(){
-    window.__BD_SUPABASE_SDK_READY__ = true;
-    window.dispatchEvent(new Event("bd:supabase-sdk-ready"));
-  }
-  function failed(){
-    window.__BD_SUPABASE_SDK_FAILED__ = true;
-    window.dispatchEvent(new Event("bd:supabase-sdk-failed"));
-  }
-  function load(src, fallback){
-    var s = document.createElement("script");
-    s.src = src;
-    s.async = true;
-    s.crossOrigin = "anonymous";
-    s.onload = ready;
-    s.onerror = function(){
-      try { s.remove(); } catch(_){}
-      if (fallback) load(fallback, "");
-      else failed();
-    };
-    document.head.appendChild(s);
-  }
-
-  /* Supabase's documented browser CDN, with their documented unpkg alternative. */
-  load(
-    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
-    "https://unpkg.com/@supabase/supabase-js@2"
-  );
-})();
-</script>
-<style id="bd-supabase-boot-visibility">
-html,body{visibility:visible!important;opacity:1!important}
-</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"></script>
+<style id="bd-supabase-boot-visibility">html,body{visibility:visible!important;opacity:1!important}</style>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}html,body{min-height:100%;width:100%}
@@ -831,7 +796,7 @@ async function getSession(){if(!sb)return null;try{return (await sb.auth.getSess
 async function getRole(uid,profile){if(!uid)return String(profile?.role||'user');try{const r=await sb.from('user_roles').select('role,active').eq('user_id',uid).eq('active',true);if(!r.error&&r.data?.length){if(r.data.some(x=>x.role==='founder'))return'founder';if(r.data.some(x=>x.role==='admin'))return'admin'} }catch{}return String(profile?.role||'user')}
 async function fetchProfileById(id){if(!sb||!id)return null;try{const r=await sb.from('profiles').select('*').eq('id',id).maybeSingle();if(!r.error&&r.data)return r.data}catch{}return null}
 async function fetchProfileTarget(ref){if(!sb||!ref)return null;const raw=String(ref).trim();if(!raw)return null;if(/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(raw)){const byId=await fetchProfileById(raw);if(byId)return byId}const username=raw.replace(/^@/,'').toLowerCase();try{let r=await sb.from('profiles').select('*').eq('username',username).maybeSingle();if(!r.error&&r.data)return r.data}catch{}try{const r=await sb.from('profiles').select('*').ilike('display_name',raw).limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}return null}
-async function resolveTarget(){const q=new URLSearchParams(location.search),requested=q.get('user')||q.get('id');if(PAGE_ROLE==='user'){const ref=requested||state.session?.user?.id;if(!ref)return null;return await fetchProfileTarget(ref)}if(PAGE_ROLE==='founder'){try{const r=await sb.rpc('get_founder_profile');const d=Array.isArray(r.data)?r.data[0]:r.data;if(!r.error&&d)return d}catch{}try{const r=await sb.from('profiles').select('*').eq('role','founder').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='founder')return p}return null}if(PAGE_ROLE==='admin'){if(requested){const p=await fetchProfileTarget(requested);if(p&&(await getRole(p.id,p))==='admin')return p}try{const r=await sb.from('profiles').select('*').eq('role','admin').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='admin')return p}return null}}
+async function resolveTarget(){const q=new URLSearchParams(location.search),requested=q.get('user')||q.get('id');if(PAGE_ROLE==='user'){const legacy=window.bdLegacyProfileUser?.()||null;const ref=requested||state.session?.user?.id||legacy?.id||legacy?.uid||legacy?.username||legacy?.slug;if(!ref)return null;let found=await fetchProfileTarget(ref);if(found)return found;if(!requested&&state.session?.user){const u=state.session.user;return{id:u.id,username:u.user_metadata?.username||u.email?.split('@')[0]||'',display_name:u.user_metadata?.full_name||u.user_metadata?.name||u.email?.split('@')[0]||'ভুবনডাঙ্গার সদস্য',avatar_url:u.user_metadata?.avatar_url||u.user_metadata?.avatar||'',cover_url:u.user_metadata?.cover_url||'',bio:u.user_metadata?.bio||'',location:u.user_metadata?.location||'বাংলাদেশ',role:u.user_metadata?.role||'user'}}if(!requested&&legacy){return{id:legacy.id||legacy.uid||'',username:legacy.username||legacy.slug||'',display_name:legacy.name||legacy.displayName||legacy.full_name||legacy.username||'ভুবনডাঙ্গার সদস্য',avatar_url:legacy.avatar||legacy.profileImage||legacy.photo||'',cover_url:legacy.cover||legacy.cover_url||'',bio:legacy.bio||'',location:legacy.location||'বাংলাদেশ',role:legacy.role||'user'}}return null}if(PAGE_ROLE==='founder'){try{const r=await sb.rpc('get_founder_profile');const d=Array.isArray(r.data)?r.data[0]:r.data;if(!r.error&&d)return d}catch{}try{const r=await sb.from('profiles').select('*').eq('role','founder').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='founder')return p}return null}if(PAGE_ROLE==='admin'){if(requested){const p=await fetchProfileTarget(requested);if(p&&(await getRole(p.id,p))==='admin')return p}try{const r=await sb.from('profiles').select('*').eq('role','admin').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='admin')return p}return null}}
 function profileName(p){return p?.display_name||p?.full_name||p?.name||p?.username||'ভুবনডাঙ্গার সদস্য'}
 function profileAvatar(p){return p?.avatar_url||p?.avatar||p?.photo_url||''}
 function profileCover(p){return p?.cover_url||p?.cover||''}
@@ -927,7 +892,7 @@ function renderActions(){
     const dash=role==='founder'?'founder-dashboard.html':role==='admin'?'admin-dashboard.html':'edit-profile.html';
     h.innerHTML='<button class="action primary'+(role==='admin'?' blue':'')+'" type="button" data-click="edit-profile">✎ প্রোফাইল সম্পাদনা</button><a class="action" href="'+dash+'">▥ ড্যাশবোর্ড</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }else{
-    h.innerHTML='<button class="action primary" type="button" data-click="follow">＋ '+(state.followed?'অনুসরণ করছেন':'অনুসরণ করুন')+'</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">💬 বার্তা পাঠান</a><button class="action" type="button" data-click="followers">👥 ফলোয়ার্স</button><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
+    h.innerHTML='<button class="action primary" type="button" data-click="follow">＋ '+(state.followed?'অনুসরণ করছেন':'অনুসরণ করুন')+'</button><button class="action" type="button" data-click="followers">👥 ফলোয়ার্স</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">💬 বার্তা পাঠান</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }
   document.body.classList.toggle('is-owner',owner);
   const cover=$('#cover'),avatar=$('#avatarMain'),avatarEdit=$('#avatarEdit'),coverHint=$('#coverHint'),bio=$('#bio'),bioHint=$('#bioHint'),composer=$('#composer');
@@ -1040,7 +1005,7 @@ async function boot(){
     setStatus(sb?'Supabase সংযোগ হচ্ছে…':'প্রোফাইল প্রস্তুত — Supabase লোড হচ্ছে…');
     state.session=await getSession();state.me=state.session?.user||null;
     state.target=await resolveTarget();
-    if(!state.target){const requested=new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id')||'';state.target={id:(PAGE_ROLE==='user'?'':state.me?.id)||'',display_name:PAGE_ROLE==='founder'?'মাহমুদ সোহেল':PAGE_ROLE==='admin'?'ভুবনডাঙ্গা অ্যাডমিন':(requested?requested:'ভুবনডাঙ্গার সদস্য'),username:PAGE_ROLE==='user'?String(requested).replace(/^@/,''):'member',bio:'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।',location:PAGE_ROLE==='founder'?'কুমিল্লা, বাংলাদেশ':'বাংলাদেশ',role:PAGE_ROLE==='user'?'user':PAGE_ROLE}}
+    if(!state.target){const requested=new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id')||'',legacy=window.bdLegacyProfileUser?.()||null;state.target={id:(PAGE_ROLE==='user'?(state.me?.id||legacy?.id||legacy?.uid||''):state.me?.id)||'',display_name:PAGE_ROLE==='founder'?'মাহমুদ সোহেল':PAGE_ROLE==='admin'?'ভুবনডাঙ্গা অ্যাডমিন':(requested||legacy?.name||legacy?.displayName||legacy?.username||'ভুবনডাঙ্গার সদস্য'),username:PAGE_ROLE==='user'?String(requested||legacy?.username||legacy?.slug||'').replace(/^@/,''):'member',avatar_url:legacy?.avatar||legacy?.profileImage||legacy?.photo||'',cover_url:legacy?.cover||legacy?.cover_url||'',bio:legacy?.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।',location:PAGE_ROLE==='founder'?'কুমিল্লা, বাংলাদেশ':(legacy?.location||'বাংলাদেশ'),role:PAGE_ROLE==='user'?(legacy?.role||'user'):PAGE_ROLE}}
     let resolved=await getRole(state.target.id,state.target);if(PAGE_ROLE==='founder')resolved='founder';else if(PAGE_ROLE==='admin')resolved='admin';state.target.roleResolved=resolved;
     let myRole='user';if(state.me)myRole=await getRole(state.me.id,await fetchProfileById(state.me.id));
     const q=new URLSearchParams(location.search),localPreview=location.protocol==='file:';
@@ -2164,6 +2129,53 @@ function clean(root){
   }
 }
 try{clean(D.body)}catch(_){}
+})();
+</script>
+
+
+<style id="bd-v840-profile-action-row">
+@media(max-width:720px){
+  .actions{
+    display:grid!important;
+    grid-template-columns:minmax(0,1.15fr) minmax(0,.88fr) minmax(0,1.12fr) 42px!important;
+    gap:6px!important;
+    align-items:stretch!important;
+  }
+  .actions .action{
+    grid-column:auto!important;
+    min-width:0!important;
+    padding:0 5px!important;
+    font-size:9px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+  }
+  .actions .action[data-click="follow"]{order:1!important}
+  .actions .action[data-click="followers"]{order:2!important}
+  .actions a[href*="messages"]{order:3!important}
+  .actions .action.more{order:4!important;width:42px!important;padding:0!important}
+}
+@media(max-width:350px){
+  .actions{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr) minmax(0,1fr) 38px!important;gap:4px!important}
+  .actions .action{font-size:8.2px!important;padding:0 3px!important}
+  .actions .action.more{width:38px!important}
+}
+</style>
+<script id="bd-v840-profile-session-fallback">
+(function(){
+'use strict';
+window.bdLegacyProfileUser=function(){
+  const keys=['bhubondangaCurrentUser','bhubondangaSessionUser','bhubondangaAuthSession'];
+  for(const key of keys){
+    try{
+      const raw=localStorage.getItem(key);
+      if(!raw)continue;
+      const v=JSON.parse(raw);
+      if(v&&typeof v==='object'&&(v.id||v.uid||v.username||v.slug||v.email))return v;
+    }catch(_){}
+  }
+  return null;
+};
 })();
 </script>
 
