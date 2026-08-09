@@ -6831,5 +6831,71 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 })();
 </script>
 
+
+
+<!-- BHUBONDANGA V8.75 TARGETED ONLY — V8.74 MASTER LOCK preserved.
+     Scope: dark-mode post three-dot/touch hit-testing only. No other UI/data/Supabase behaviour changed. -->
+<style id="bd-v875-dark-three-dot-only-css">
+/* Dark mode must not allow decorative/glass layers to intercept the post menu button or its detached menu. */
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .post,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList [data-post-card]{
+  isolation:isolate!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .post::before,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .post::after,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList [data-post-card]::before,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList [data-post-card]::after{
+  pointer-events:none!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .three-dot{
+  position:relative!important;z-index:2147480000!important;pointer-events:auto!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList [data-post-menu],
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .three-dot-btn{
+  position:relative!important;z-index:2147480100!important;pointer-events:auto!important;
+  touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList [data-post-menu]::before,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList [data-post-menu]::after{
+  pointer-events:none!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postActionBoard.open{
+  display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+  position:fixed!important;z-index:2147483600!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postActionBoard.open button,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postActionBoard.open a{
+  position:relative!important;z-index:2!important;pointer-events:auto!important;touch-action:manipulation!important;
+}
+</style>
+<script id="bd-v875-dark-three-dot-only-js">
+(()=>{'use strict';
+const D=document,W=window;
+function dark(){const h=D.documentElement;return h.dataset.theme==='dark'||h.dataset.bdTheme==='dark'}
+/* Recovery only: the existing V8.74 menu remains the source of truth. If Safari dark-mode loses the synthetic click,
+   replay one normal click after pointer release, but only when the existing board did not open. */
+W.addEventListener('pointerup',e=>{
+  if(!dark())return;
+  const b=e.target.closest?.('#postList [data-post-menu]');
+  if(!b)return;
+  const id=String(b.dataset.id||'');
+  setTimeout(()=>{
+    const board=D.getElementById('postActionBoard');
+    const already=board?.classList.contains('open')&&b.getAttribute('aria-expanded')==='true';
+    if(already)return;
+    if(b.dataset.bd875Replay==='1')return;
+    b.dataset.bd875Replay='1';
+    try{b.click()}finally{setTimeout(()=>delete b.dataset.bd875Replay,180)}
+  },90);
+},true);
+/* Keep the detached board above dark glass after it opens; no menu contents/actions are replaced. */
+const board=D.getElementById('postActionBoard');
+if(board)new MutationObserver(()=>{
+  if(!dark()||!board.classList.contains('open'))return;
+  board.style.setProperty('pointer-events','auto','important');
+  board.style.setProperty('z-index','2147483600','important');
+}).observe(board,{attributes:true,attributeFilter:['class'],childList:true});
+})();
+</script>
 </body>
 </html>
