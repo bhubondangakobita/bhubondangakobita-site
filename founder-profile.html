@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>ফাউন্ডার প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.54-profile-interaction-lock-20260809">
+<meta name="bhubondanga-build" content="V8.62-stable-social-live-font-template-20260809">
 <script id="bd-supabase-nonblocking-loader">
 (function(){
   "use strict";
@@ -1463,29 +1463,21 @@ function openTray(button,card){const t=ensureTray(),r=button.getBoundingClientRe
 W.__bd45OpenReactionTray=openTray;W.__bd45CloseReactionTray=closeTray;
 function bd47ScrollSnapshot(card){
   const anchor=card?.querySelector?.('[data-bd31-react-main]')||card;
-  const nodes=[];let n=card,primary=null;
-  while(n&&n!==D.documentElement){
-    try{
-      const vertical=n.scrollHeight>n.clientHeight+2;
-      const horizontal=n.scrollWidth>n.clientWidth+2;
-      if(vertical||horizontal){nodes.push([n,n.scrollTop,n.scrollLeft]);if(!primary&&vertical)primary=n}
-    }catch(_){}
-    n=n.parentElement;
-  }
-  if(!primary){const se=D.scrollingElement||D.documentElement;try{if(se&&se.scrollHeight>se.clientHeight+2)primary=se}catch(_){}}
-  let top=0;try{top=anchor?.getBoundingClientRect?.().top||0}catch(_){}
-  return{nodes,primary,anchor,top};
+  const scroller=card?.closest?.('.center-col,.center,.main-content,.page-main')||D.scrollingElement||D.documentElement;
+  let top=0,scrollTop=0;
+  try{top=anchor?.getBoundingClientRect?.().top||0}catch(_){}
+  try{scrollTop=(scroller===D.scrollingElement||scroller===D.documentElement||scroller===D.body)?(W.scrollY||0):(scroller?.scrollTop||0)}catch(_){}
+  return{anchor,scroller,top,scrollTop};
 }
 function bd47RestoreScroll(snap){
-  if(!snap)return;
-  const apply=()=>{
-    const p=snap.primary;
-    if(p?.isConnected&&snap.anchor?.isConnected){
-      try{const now=snap.anchor.getBoundingClientRect().top,delta=now-snap.top;if(Math.abs(delta)>.5)p.scrollTop+=delta}catch(_){}
-    }
-    for(const row of snap.nodes||[]){const n=row[0];if(!n?.isConnected||n===p)continue;try{if(Math.abs(n.scrollLeft-row[2])>1)n.scrollLeft=row[2]}catch(_){}}
-  };
-  apply();requestAnimationFrame(()=>{apply();requestAnimationFrame(apply)});
+  if(!snap||!snap.anchor?.isConnected)return;
+  try{
+    const now=snap.anchor.getBoundingClientRect().top,delta=now-snap.top;
+    if(Math.abs(delta)<=0.75)return;
+    const sc=snap.scroller;
+    if(sc===D.scrollingElement||sc===D.documentElement||sc===D.body)W.scrollBy(0,delta);
+    else if(sc?.isConnected)sc.scrollTop=(sc.scrollTop||0)+delta;
+  }catch(_){}
 }
 async function showReactors(card){const id=pid(card),panel=card.querySelector('[data-bd31-reactor-panel]'),list=panel.querySelector('.bd31-reactor-list');panel.hidden=!panel.hidden;if(panel.hidden)return;const rr=await reactionRows(id);if(!rr.length){list.innerHTML='<div class="bd31-empty">এখনও কোনো প্রতিক্রিয়া নেই।</div>';return}const ids=[...new Set(rr.map(x=>x.user_id).filter(Boolean))],pm=await profiles(ids);list.innerHTML=rr.map(x=>{const p=pm[x.user_id]||{id:x.user_id,display_name:'ভুবনডাঙ্গার সদস্য'};return `<a class="bd31-reactor" href="${esc(profileHref(p))}"><span class="bd31-reactor-avatar">${p.avatar_url?`<img src="${esc(p.avatar_url)}" alt="">`:esc((p.display_name||'স').slice(0,1))}</span><span><strong>${esc(p.display_name||p.username||'সদস্য')}</strong><small>${p.username?'@'+esc(p.username):'প্রোফাইল দেখুন'}</small></span>${rIcon(x.reaction||'like',true)}</a>`}).join('')}
 function authorOf(x){return{id:x.author_id||x.user_id,username:x.author_username||x.username,display_name:x.author_name||x.display_name||'সদস্য',avatar_url:x.author_avatar||x.avatar_url||'',role:x.author_role||x.role||''}}
@@ -1505,8 +1497,8 @@ W.addEventListener('click',async e=>{
   const main=e.target.closest('[data-bd31-react-main]'),pick=e.target.closest('[data-bd31-tray-pick]'),rs=e.target.closest('[data-bd31-react-summary]'),cs=e.target.closest('[data-bd31-comments],[data-bd31-comment-summary]'),sh=e.target.closest('[data-bd31-share]'),more=e.target.closest('[data-bd31-more]'),cl=e.target.closest('[data-bd31-comment-like]'),reply=e.target.closest('[data-bd31-reply]'),viewReplies=e.target.closest('[data-bd54-view-replies]');
   if(!(main||pick||rs||cs||sh||more||cl||reply||viewReplies))return;
   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  if(main){const card=main.closest('[data-bd31-ready="1"]');if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}const snap=bd47ScrollSnapshot(card),id=pid(card);if(id){await toggleReaction(id,'like');await refresh(card)}bd47RestoreScroll(snap);return}
-  if(pick){const t=ensureTray(),card=t.__card,id=t.dataset.pid,type=pick.dataset.bd31TrayPick,snap=bd47ScrollSnapshot(card);closeTray();if(card&&id){await toggleReaction(id,type);await refresh(card)}bd47RestoreScroll(snap);return}
+  if(main){const card=main.closest('[data-bd31-ready="1"]');if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}const snap=bd47ScrollSnapshot(card),id=pid(card);try{main.blur?.()}catch(_){}if(id){await toggleReaction(id,'like');await refresh(card)}bd47RestoreScroll(snap);return}
+  if(pick){const t=ensureTray(),card=t.__card,id=t.dataset.pid,type=pick.dataset.bd31TrayPick,snap=bd47ScrollSnapshot(card);closeTray();try{pick.blur?.()}catch(_){}if(card&&id){await toggleReaction(id,type);await refresh(card)}bd47RestoreScroll(snap);return}
   if(rs){const card=rs.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await showReactors(card);bd47RestoreScroll(snap);return}
   if(cs){const card=cs.closest('[data-bd31-ready="1"]');if(!card)return;const snap=bd47ScrollSnapshot(card),p=card.querySelector('[data-bd31-comment-panel]');if(p){p.hidden=!p.hidden;if(!p.hidden)await renderComments(card,false)}bd47RestoreScroll(snap);return}
   if(sh){await share(sh.dataset.bd31Share);return}
@@ -2346,7 +2338,7 @@ D.addEventListener('click',async e=>{const del=e.target.closest('[data-post-opti
 .bd58-tool-title{font-size:10px;font-weight:850;color:var(--primary,#6550d7)}.bd58-font-hint{grid-column:1/-1;color:var(--muted,#8991a3);font-size:8px}
 .bd58-font-chips{display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap}
 .bd58-font-chip{width:31px;height:31px;padding:0;border:1px solid rgba(85,99,151,.16);border-radius:9px;background:rgba(255,255,255,.88);box-shadow:0 4px 11px rgba(49,61,108,.07);font-size:17px;font-weight:700;line-height:1;cursor:pointer}
-.bd58-font-chip[data-bd58-font="subha"]{font-family:"BD Subha Typewriter","Noto Serif Bengali",serif;color:#18815d}.bd58-font-chip[data-bd58-font="masud"]{font-family:"BD Masud Nandonik","Noto Serif Bengali",serif;color:#ce4051}.bd58-font-chip[data-bd58-font="kobiguru"]{font-family:"BD Kobiguru","Noto Serif Bengali",serif;color:#744fd1}.bd58-font-chip[data-bd58-font="bornomala"]{font-family:"BD Bornomala","Noto Serif Bengali",serif;color:#2674bf}.bd58-font-chip[data-bd58-font="jannati"]{font-family:"BD Nill Jannati","Noto Serif Bengali",serif;color:#ad7818}
+.bd58-font-chip[data-bd58-font="subha"]{font-family:"BD Subha Typewriter","Kohinoor Bangla","Noto Sans Bengali",sans-serif;color:#18815d}.bd58-font-chip[data-bd58-font="masud"]{font-family:"BD Masud Nandonik","Bangla Sangam MN","Noto Serif Bengali",serif;color:#ce4051}.bd58-font-chip[data-bd58-font="kobiguru"]{font-family:"BD Kobiguru","Noto Serif Bengali","Bangla Sangam MN",serif;color:#744fd1}.bd58-font-chip[data-bd58-font="bornomala"]{font-family:"BD Bornomala","Noto Sans Bengali","Kohinoor Bangla",sans-serif;color:#2674bf}.bd58-font-chip[data-bd58-font="jannati"]{font-family:"BD Nill Jannati","Kohinoor Bangla","Noto Serif Bengali",serif;color:#ad7818}
 .bd58-font-chip.active{outline:2px solid rgba(112,78,220,.26);outline-offset:2px;background:#fff;transform:translateY(-1px)}
 .bd58-template-picker{margin-top:8px;padding:8px 9px;border:1px solid rgba(101,110,159,.12);border-radius:13px;background:rgba(255,255,255,.42)}
 .bd58-template-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:7px}.bd58-template-head strong{font-size:10px;color:var(--primary,#6550d7)}.bd58-template-head small{font-size:7.8px;color:var(--muted,#8991a3);text-align:right}
@@ -2369,23 +2361,30 @@ D.addEventListener('click',async e=>{const del=e.target.closest('[data-post-opti
 .post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{margin-top:8px!important;min-height:150px!important;padding:46px 38px 44px!important;border:1px solid rgba(106,103,161,.12)!important;border-radius:16px!important;background-color:#fbfbff!important;background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;color:#17314a!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
 .post[class*="style-tpl1-"] .post-body,.bd-live-post[class*="style-tpl1-"] .post-body{background-image:url("assets/templates/template-01.jpg")!important}.post[class*="style-tpl2-"] .post-body,.bd-live-post[class*="style-tpl2-"] .post-body{background-image:url("assets/templates/template-02.jpg")!important}.post[class*="style-tpl3-"] .post-body,.bd-live-post[class*="style-tpl3-"] .post-body{background-image:url("assets/templates/template-03.jpg")!important}.post[class*="style-tpl4-"] .post-body,.bd-live-post[class*="style-tpl4-"] .post-body{background-image:url("assets/templates/template-04.jpg")!important}.post[class*="style-tpl5-"] .post-body,.bd-live-post[class*="style-tpl5-"] .post-body{background-image:url("assets/templates/template-05.jpg")!important}.post[class*="style-tpl6-"] .post-body,.bd-live-post[class*="style-tpl6-"] .post-body{background-image:url("assets/templates/template-06.jpg")!important}.post[class*="style-tpl7-"] .post-body,.bd-live-post[class*="style-tpl7-"] .post-body{background-image:url("assets/templates/template-07.jpg")!important}.post[class*="style-tpl8-"] .post-body,.bd-live-post[class*="style-tpl8-"] .post-body{background-image:url("assets/templates/template-08.jpg")!important}
 /* per-post font persistence via existing card_style field */
-.post[class*="-fsubha"] .post-title,.post[class*="-fsubha"] .post-body,.bd-live-post[class*="-fsubha"] .post-title,.bd-live-post[class*="-fsubha"] .post-body{font-family:"BD Subha Typewriter","Noto Serif Bengali",serif!important}.post[class*="-fmasud"] .post-title,.post[class*="-fmasud"] .post-body,.bd-live-post[class*="-fmasud"] .post-title,.bd-live-post[class*="-fmasud"] .post-body{font-family:"BD Masud Nandonik","Noto Serif Bengali",serif!important}.post[class*="-fkobiguru"] .post-title,.post[class*="-fkobiguru"] .post-body,.bd-live-post[class*="-fkobiguru"] .post-title,.bd-live-post[class*="-fkobiguru"] .post-body{font-family:"BD Kobiguru","Noto Serif Bengali",serif!important}.post[class*="-fbornomala"] .post-title,.post[class*="-fbornomala"] .post-body,.bd-live-post[class*="-fbornomala"] .post-title,.bd-live-post[class*="-fbornomala"] .post-body{font-family:"BD Bornomala","Noto Serif Bengali",serif!important}.post[class*="-fjannati"] .post-title,.post[class*="-fjannati"] .post-body,.bd-live-post[class*="-fjannati"] .post-title,.bd-live-post[class*="-fjannati"] .post-body{font-family:"BD Nill Jannati","Noto Serif Bengali",serif!important}
+.post[class*="-fsubha"] .post-title,.post[class*="-fsubha"] .post-body,.bd-live-post[class*="-fsubha"] .post-title,.bd-live-post[class*="-fsubha"] .post-body{font-family:"BD Subha Typewriter","Kohinoor Bangla","Noto Sans Bengali",sans-serif!important}.post[class*="-fmasud"] .post-title,.post[class*="-fmasud"] .post-body,.bd-live-post[class*="-fmasud"] .post-title,.bd-live-post[class*="-fmasud"] .post-body{font-family:"BD Masud Nandonik","Bangla Sangam MN","Noto Serif Bengali",serif!important}.post[class*="-fkobiguru"] .post-title,.post[class*="-fkobiguru"] .post-body,.bd-live-post[class*="-fkobiguru"] .post-title,.bd-live-post[class*="-fkobiguru"] .post-body{font-family:"BD Kobiguru","Noto Serif Bengali","Bangla Sangam MN",serif!important}.post[class*="-fbornomala"] .post-title,.post[class*="-fbornomala"] .post-body,.bd-live-post[class*="-fbornomala"] .post-title,.bd-live-post[class*="-fbornomala"] .post-body{font-family:"BD Bornomala","Noto Sans Bengali","Kohinoor Bangla",sans-serif!important}.post[class*="-fjannati"] .post-title,.post[class*="-fjannati"] .post-body,.bd-live-post[class*="-fjannati"] .post-title,.bd-live-post[class*="-fjannati"] .post-body{font-family:"BD Nill Jannati","Kohinoor Bangla","Noto Serif Bengali",serif!important}
 html[data-theme="dark"] .bd58-font-toolbar,html[data-theme="dark"] .bd58-template-picker{background:rgba(52,31,57,.74);border-color:rgba(206,176,222,.14)}html[data-theme="dark"] .bd58-template-head strong,html[data-theme="dark"] .bd58-tool-title{color:#f2dcff}html[data-theme="dark"] .bd58-template-head small,html[data-theme="dark"] .bd58-font-hint{color:#d6c8dc}html[data-theme="dark"] .bd58-font-chip{background:rgba(55,35,62,.9);border-color:rgba(210,180,226,.16)}
 html[data-theme="dark"] .post[class*="style-tpl"] .post-body,html[data-theme="dark"] .bd-live-post[class*="style-tpl"] .post-body{color:#17314a!important}
 @media(max-width:520px){.bd58-font-toolbar{grid-template-columns:1fr;padding:7px 8px}.bd58-tool-title{text-align:center}.bd58-font-hint{text-align:center}.bd58-font-chips{gap:8px}.bd58-template-head{display:block;text-align:center}.bd58-template-head small{display:block;margin-top:2px;text-align:center}.bd58-template-chip{flex-basis:62px;width:62px;height:35px}.bd58-template-strip{padding-bottom:3px}#composerForm[data-bd58-template]:not([data-bd58-template="none"]) #postBody,#bdPublishForm[data-bd58-template]:not([data-bd58-template="none"]) #bdPublishBody,.post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{padding:35px 26px 36px!important;min-height:135px!important;border-radius:14px!important}}
 </style>
 <script id="bd-v858-font-template-system-js">
 (()=>{'use strict';
- const D=document,FONT_KEY='bhubondanga-v858-font',F={subha:'"BD Subha Typewriter","Noto Serif Bengali",serif',masud:'"BD Masud Nandonik","Noto Serif Bengali",serif',kobiguru:'"BD Kobiguru","Noto Serif Bengali",serif',bornomala:'"BD Bornomala","Noto Serif Bengali",serif',jannati:'"BD Nill Jannati","Noto Serif Bengali",serif'};
+ const D=document,FONT_KEY='bhubondanga-v858-font';
+ const F={subha:'"BD Subha Typewriter","Kohinoor Bangla","Noto Sans Bengali",sans-serif',masud:'"BD Masud Nandonik","Bangla Sangam MN","Noto Serif Bengali",serif',kobiguru:'"BD Kobiguru","Noto Serif Bengali","Bangla Sangam MN",serif',bornomala:'"BD Bornomala","Noto Sans Bengali","Kohinoor Bangla",sans-serif',jannati:'"BD Nill Jannati","Kohinoor Bangla","Noto Serif Bengali",serif'};
  const validFont=v=>F[v]?v:'subha',validTpl=v=>/^tpl[1-8]$/.test(v)?v:'none';
+ const form=()=>D.getElementById('composerForm'),sel=()=>D.getElementById('profileCardStyle');
  const getFont=()=>{try{return validFont(localStorage.getItem(FONT_KEY)||'subha')}catch(_){return'subha'}};
- const getTpl=()=>validTpl(D.getElementById('profileCardStyle')?.value||'none');
- function applyFont(v){v=validFont(v);try{localStorage.setItem(FONT_KEY,v)}catch(_){};const form=D.getElementById('composerForm');if(form){form.dataset.bd58Font=v;form.style.setProperty('--bd58-compose-font',F[v])}D.querySelectorAll('[data-bd58-font]').forEach(b=>b.classList.toggle('active',b.dataset.bd58Font===v));return v}
- function applyTpl(v){v=validTpl(v);const s=D.getElementById('profileCardStyle');if(s)s.value=v;const form=D.getElementById('composerForm');if(form)form.dataset.bd58Template=v;D.querySelectorAll('[data-bd58-template]').forEach(b=>{const on=b.dataset.bd58Template===v;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false')});resize();return v}
- function resize(){const el=D.getElementById('postBody');if(!el)return;if(getTpl()!=='none'){el.style.height='auto';el.style.height=Math.max(145,el.scrollHeight)+'px'}else{el.style.height='';el.style.overflow=''}}
- D.addEventListener('click',e=>{const f=e.target.closest('[data-bd58-font]');if(f){e.preventDefault();e.stopPropagation();applyFont(f.dataset.bd58Font);return}const t=e.target.closest('[data-bd58-template]');if(t){e.preventDefault();e.stopPropagation();applyTpl(t.dataset.bd58Template);return}},true);
- D.addEventListener('input',e=>{if(e.target?.id==='postBody')resize()},true);D.addEventListener('reset',e=>{if(e.target?.id==='composerForm')setTimeout(()=>applyTpl('none'),0)},true);
- window.BD58ComposeStyle=()=>`${getTpl()==='none'?'plain':getTpl()}-f${getFont()}`;
+ const getTpl=()=>validTpl(form()?.dataset?.bd58Template||sel()?.value||'none');
+ const getLiveFont=()=>validFont(form()?.dataset?.bd58Font||getFont());
+ function applyFont(v){v=validFont(v);try{localStorage.setItem(FONT_KEY,v)}catch(_){};const f=form();if(f){f.dataset.bd58Font=v;f.style.setProperty('--bd58-compose-font',F[v]);f.querySelectorAll('#postTitle,#postBody').forEach(el=>{el.style.fontFamily=F[v]})}D.querySelectorAll('[data-bd58-font]').forEach(b=>{const on=b.dataset.bd58Font===v;b.classList.toggle('active',on);b.setAttribute('aria-pressed',on?'true':'false')});return v}
+ function applyTpl(v){v=validTpl(v);const s=sel();if(s&&[...s.options].some(o=>o.value===v)){s.value=v;s.dispatchEvent(new Event('change',{bubbles:true}))}const f=form();if(f)f.dataset.bd58Template=v;D.querySelectorAll('[data-bd58-template]').forEach(b=>{const on=b.dataset.bd58Template===v;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false');b.setAttribute('aria-pressed',on?'true':'false')});resize();return v}
+ function resize(){const el=D.getElementById('postBody');if(!el)return;if(getTpl()!=='none'){el.style.height='auto';el.style.height=Math.max(145,el.scrollHeight)+'px';el.style.overflow='hidden'}else{el.style.height='';el.style.overflow=''}}
+ let lastChoice=0;
+ function choose(e){const f=e.target.closest?.('[data-bd58-font]'),t=e.target.closest?.('[data-bd58-template]');if(!(f||t))return;e.preventDefault();e.stopPropagation();lastChoice=Date.now();if(f)applyFont(f.dataset.bd58Font);else applyTpl(t.dataset.bd58Template)}
+ D.addEventListener('pointerup',choose,true);
+ D.addEventListener('click',e=>{if(!e.target.closest?.('[data-bd58-font],[data-bd58-template]'))return;e.preventDefault();e.stopPropagation();if(Date.now()-lastChoice>450)choose(e)},true);
+ D.addEventListener('input',e=>{if(e.target?.id==='postBody')resize()},true);
+ D.addEventListener('reset',e=>{if(e.target?.id==='composerForm')setTimeout(()=>{applyTpl('none');applyFont(getFont())},0)},true);
+ window.BD58ComposeStyle=()=>`${getTpl()==='none'?'plain':getTpl()}-f${getLiveFont()}`;
  function boot(){applyFont(getFont());applyTpl('none');resize()}if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
@@ -2448,5 +2447,13 @@ html[data-theme="dark"] .bd59-side-quote{background:linear-gradient(90deg,rgba(1
   window.addEventListener('load',function(){fixSelfLinks();setTimeout(fixSelfLinks,500);setTimeout(fixSelfLinks,1500)},{once:true});
 })();
 </script>
+
+<style id="bd-v862-final-interaction-css">
+/* V8.62: functional-only stability. */
+.bd58-font-chip,.bd58-template-chip{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;animation:none!important;transition:border-color .12s ease,box-shadow .12s ease,background .12s ease!important}
+.bd58-font-chip.active,.bd58-template-chip.active{transform:none!important}
+.bd31-social,.bd31-summary,.bd31-actions,.bd31-action,#bd31ReactionTray{animation:none!important;transition:none!important}
+[data-bd31-react-main],[data-bd31-tray-pick]{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+</style>
 </body>
 </html>
