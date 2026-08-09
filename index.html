@@ -830,7 +830,7 @@ function bdInitIndexSupabase(){
   return client;
 }
 bdInitIndexSupabase();
-let state={session:null,role:'visitor',profile:null,founderId:null,feedBusy:false,channel:null};let bdPublisherImageData='',bdPublisherImageFile=null;
+let state={session:null,role:'visitor',profile:null,founderId:null,feedBusy:false,feedQueued:false,channel:null,realtimeTimer:0};let bdPublisherImageData='',bdPublisherImageFile=null;
 const $=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const safe=(k,f=null,store=localStorage)=>{try{const v=store.getItem(k);return v?JSON.parse(v):f}catch(_){return f}};
@@ -874,7 +874,9 @@ function card(p,midnight=false){const founder=String(p.author_role||'').toLowerC
 async function pageFilter(){const f=canonicalFile(),o={limit:40,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
 function targetFor(f){if(f==='index.html')return $('#postList');if(['today-poem.html','today-prolap.html','environment.html'].includes(f))return $('#feedList');if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))return $('#content');if(f==='madhyorater-prolap.html')return $('#prolapFeed');return null}
 async function loadFeed(){
-  if(!client||state.feedBusy)return;
+  if(!client)return;
+  if(state.feedBusy){state.feedQueued=true;return;}
+  state.feedQueued=false;
   const f=canonicalFile(),opt=await pageFilter();
   if(!opt)return;
   const host=targetFor(f);
@@ -897,9 +899,9 @@ async function loadFeed(){
     if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))host.innerHTML='<section class="glass section-head"><div><h2>প্রকাশিত লেখা</h2><small>Supabase থেকে সরাসরি হালনাগাদ</small></div></section><section class="post-list">'+html+'</section>';
     else host.innerHTML=html;
     const count=$('#feedCount');if(count)count.textContent=bnNum(rows.length)+'টি লেখা';
-  }catch(e){console.warn('Bhubondanga feed:',e?.message||e)}finally{state.feedBusy=false}
+  }catch(e){console.warn('Bhubondanga feed:',e?.message||e)}finally{state.feedBusy=false;if(state.feedQueued){state.feedQueued=false;setTimeout(loadFeed,45)}}
 }
-function realtime(){if(!client||state.channel)return;try{state.channel=client.channel('bd-live-'+canonicalFile()).on('postgres_changes',{event:'*',schema:'public',table:'posts'},()=>loadFeed()).subscribe()}catch(_){}}
+function realtime(){if(!client||state.channel)return;try{state.channel=client.channel('bd-live-'+canonicalFile()).on('postgres_changes',{event:'*',schema:'public',table:'posts'},()=>{clearTimeout(state.realtimeTimer);state.realtimeTimer=setTimeout(loadFeed,70)}).subscribe()}catch(_){}}
 async function submitComment(form){if(!state.session){location.href='login.html?next='+encodeURIComponent(location.href);return}const ta=form.querySelector('textarea'),body=ta?.value.trim();if(!body)return;const who=identity(),postId=form.dataset.postId||form.closest('[data-post-id]')?.dataset.postId;if(!postId)return;const bad=flagged(body);if(bad){toast('আপত্তিকর/গালিগালাজের শব্দ পাওয়া গেছে। মন্তব্য সংশোধন না করা পর্যন্ত জমা হবে না।');return}const payload={id:'comment-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),post_id:postId,author_id:state.session.user.id,author_username:who.author_username,author_name:who.author_name,body,status:'published'};const r=await client.from('comments').insert(payload);if(r.error)throw r.error;ta.value='';const list=form.parentElement.querySelector('.comment-list');if(list)list.insertAdjacentHTML('beforeend','<div class="comment comment-item"><a href="'+profileUrl(who)+'">'+esc(who.author_name)+'</a> — '+esc(body)+'</div>');toast('মন্তব্য যোগ হয়েছে')}
 D.addEventListener('click',async e=>{if(e.target.closest('#bdPublishImageRemove')){e.preventDefault();bdPublisherImageData='';bdPublisherImageFile=null;const ed=$('#bdPublishImageEditor'),rm=$('#bdPublishImageRemove'),inp=$('#bdPublishImage'),im=$('#bdPublishImagePreview');if(ed)ed.hidden=true;if(rm)rm.hidden=true;if(inp)inp.value='';if(im)im.removeAttribute('src');return}const close=e.target.closest('#bdPublishClose,#bdPublishCancel')||e.target.id==='bdPublishBackdrop';if(close){e.preventDefault();closePublisher();return}const typeBtn=e.target.closest('.compose-type');if(typeBtn){e.preventDefault();e.stopImmediatePropagation();openPublisher(typeBtn.dataset.type||typeBtn.textContent);return}const prompt=e.target.closest('#composerPrompt,.composer-prompt');if(prompt&&!$('#composerForm')){e.preventDefault();e.stopImmediatePropagation();openPublisher('poem');return}const c=e.target.closest('.bd-live-post [data-comment]');if(c){e.preventDefault();const box=c.closest('.bd-live-post').querySelector('.comments,.comment-box');box?.classList.toggle('open');return}if(e.target.closest('[data-live-share]')){const post=e.target.closest('.bd-live-post'),url=location.origin+location.pathname.replace(/[^/]+$/,'post-details.html')+'?id='+encodeURIComponent(post?.dataset.postId||'');if(navigator.share)await navigator.share({title:D.title,url}).catch(()=>{});else await navigator.clipboard?.writeText(url);toast('লিঙ্ক শেয়ার করা হয়েছে');return}if(e.target.closest('[data-live-save]')){const id=e.target.closest('.bd-live-post')?.dataset.postId,a=safe('bhubondangaSavedItems',[]);if(id&&!a.some(x=>x.id===id)){a.unshift({id,url:'post-details.html?id='+id,createdAt:new Date().toISOString()});localStorage.setItem('bhubondangaSavedItems',JSON.stringify(a))}toast('স্মৃতিতে রাখা হয়েছে');return}if(e.target.closest('[data-live-like]')){e.target.closest('[data-live-like]').classList.toggle('active');return}},true);
 D.addEventListener('change',async e=>{if(e.target.id!=='bdPublishImage')return;const file=e.target.files?.[0];if(!file)return;bdPublisherImageFile=file;bdPublisherImageData=await bdCompressPublisherImage(file);const ed=$('#bdPublishImageEditor'),im=$('#bdPublishImagePreview'),rm=$('#bdPublishImageRemove');if(im)im.src=bdPublisherImageData;if(ed)ed.hidden=false;if(rm)rm.hidden=false});
@@ -913,7 +915,7 @@ async function boot(){
   themeInit();drawers();dates();
   if(!W.__BD_DATE_TIMER__)W.__BD_DATE_TIMER__=setInterval(dates,60000);
   await resolveAuth();
-  setTimeout(loadFeed,180);setTimeout(loadFeed,1100);realtime();
+  setTimeout(loadFeed,140);setTimeout(()=>{if(!Array.isArray(W.__BD_SUPABASE_POSTS)||!W.__BD_SUPABASE_POSTS.length)loadFeed()},1100);realtime();
   if(client?.auth?.onAuthStateChange&&!bdIndexAuthListenerInstalled){
     bdIndexAuthListenerInstalled=true;
     client.auth.onAuthStateChange(async(_e,s)=>{state.session=s;await resolveAuth();await loadFeed()});
@@ -2497,8 +2499,12 @@ function demoPosts(){
 
 let posts=storedPosts();if(!posts.length)posts=demoPosts();
 let visible=20,category='all',sort='forYou';
-document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
-window.addEventListener('storage',e=>{if(sourceKeys.includes(e.key)){posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()}});document.addEventListener('bd:home-feed-updated',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
+function bd77FeedScroller(){return innerWidth>=900?(document.querySelector('.center-col')||document.scrollingElement):document.scrollingElement}
+function bd77CaptureFeedAnchor(){const sc=bd77FeedScroller(),cards=Array.from(document.querySelectorAll('#postList [data-post-card]'));let chosen=null;for(const c of cards){const r=c.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight){chosen=c;break}}return{sc,id:String(chosen?.dataset.post||chosen?.dataset.postId||''),top:chosen?chosen.getBoundingClientRect().top:0,scroll:Number(sc?.scrollTop||0)}}
+function bd77RestoreFeedAnchor(a){if(!a)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{const sc=bd77FeedScroller();if(a.id){const c=document.querySelector(`#postList [data-post="${CSS.escape(a.id)}"],#postList [data-post-id="${CSS.escape(a.id)}"]`);if(c){const d=c.getBoundingClientRect().top-a.top;if(Math.abs(d)>.5){if(innerWidth>=900&&sc)sc.scrollTop+=d;else window.scrollBy(0,d)}return}}if(sc&&Number.isFinite(a.scroll))sc.scrollTop=Math.min(a.scroll,Math.max(0,sc.scrollHeight-sc.clientHeight))}))}
+function bd77StableFeedRender(){const a=bd77CaptureFeedAnchor();renderPosts();bd77RestoreFeedAnchor(a)}
+document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();bd77StableFeedRender();openRequestedPost()});
+window.addEventListener('storage',e=>{if(sourceKeys.includes(e.key)){posts=storedPosts();if(!posts.length)posts=demoPosts();bd77StableFeedRender();openRequestedPost()}});document.addEventListener('bd:home-feed-updated',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();bd77StableFeedRender();openRequestedPost()});
 const likedKey='bhubondangaIndexLovedPosts',memoryKey='bhubondangaMemories',commentKey='bhubondangaIndexComments',likeCountKey='bhubondangaIndexLikeCounts',activityKey='bhubondangaPostActivity';
 function likesObject(){return obj(likeCountKey)}
 function activityObject(){return obj(activityKey)}
@@ -6707,12 +6713,16 @@ async function deletePost(id){const p=rawPost(id);if(!p||!isOwner(p))return;if(!
 async function sharePost(id){const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('post',id);try{if(navigator.share)await navigator.share({title:'ভুবনডাঙ্গার কবিতা',url:u.href});else await navigator.clipboard?.writeText(u.href)}catch{}}
 async function copyPost(id){const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('post',id);try{await navigator.clipboard?.writeText(u.href);notice('লিংক কপি হয়েছে।')}catch{notice('লিংক কপি করা যায়নি।')}}
 function savePost(id){const p=rawPost(id)||{id};let a=readArray('bhubondangaSavedItems');if(a.some(x=>String(x.id)===String(id)))a=a.filter(x=>String(x.id)!==String(id));else a.unshift({id,title:postField(p,'title'),url:'index.html?post='+encodeURIComponent(id),createdAt:new Date().toISOString()});writeArray('bhubondangaSavedItems',a.slice(0,1000));notice('সেভ করা হয়েছে।')}
-W.addEventListener('click',e=>{
- const dot=e.target.closest?.('#postList [data-post-menu]');if(dot){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMenu(dot);return}
- const a=e.target.closest?.('#postActionBoard [data-bd76-action]');if(a){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const k=a.dataset.bd76Action,id=a.dataset.id;if(k==='edit')openEditor(id,false);else if(k==='caption')openEditor(id,true);else if(k==='privacy')openPrivacy(id);else if(k==='archive')archivePost(id);else if(k==='private')privatePost(id);else if(k==='delete')deletePost(id);else if(k==='share'){closeMenu();sharePost(id)}else if(k==='copy'){closeMenu();copyPost(id)}else if(k==='save'){closeMenu();savePost(id)}return}
- const pc=e.target.closest?.('[data-bd76-privacy]');if(pc){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();privacy.dataset.value=pc.dataset.bd76Privacy;$$('[data-bd76-privacy]',privacy).forEach(x=>x.classList.toggle('selected',x===pc));return}
- const ctl=e.target.closest?.('[data-bd76-close],[data-bd76-save-edit],[data-bd76-save-caption],[data-bd76-save-privacy]');if(ctl){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(ctl.hasAttribute('data-bd76-close'))closePanels();else if(ctl.hasAttribute('data-bd76-save-edit'))saveEdit();else if(ctl.hasAttribute('data-bd76-save-caption'))saveCaption();else savePrivacy();return}
-},true);
+function bd77MenuControl(e){
+ const dot=e.target.closest?.('#postList [data-post-menu]');if(dot){W.__BD77_MENU_GUARD__=Date.now();e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMenu(dot);return true}
+ const a=e.target.closest?.('#postActionBoard [data-bd76-action]');if(a){W.__BD77_MENU_GUARD__=Date.now();e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const k=a.dataset.bd76Action,id=a.dataset.id;if(k==='edit')openEditor(id,false);else if(k==='caption')openEditor(id,true);else if(k==='privacy')openPrivacy(id);else if(k==='archive')archivePost(id);else if(k==='private')privatePost(id);else if(k==='delete')deletePost(id);else if(k==='share'){closeMenu();sharePost(id)}else if(k==='copy'){closeMenu();copyPost(id)}else if(k==='save'){closeMenu();savePost(id)}return true}
+ const pc=e.target.closest?.('[data-bd76-privacy]');if(pc){W.__BD77_MENU_GUARD__=Date.now();e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();privacy.dataset.value=pc.dataset.bd76Privacy;$$('[data-bd76-privacy]',privacy).forEach(x=>x.classList.toggle('selected',x===pc));return true}
+ const ctl=e.target.closest?.('[data-bd76-close],[data-bd76-save-edit],[data-bd76-save-caption],[data-bd76-save-privacy]');if(ctl){W.__BD77_MENU_GUARD__=Date.now();e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(ctl.hasAttribute('data-bd76-close'))closePanels();else if(ctl.hasAttribute('data-bd76-save-edit'))saveEdit();else if(ctl.hasAttribute('data-bd76-save-caption'))saveCaption();else savePrivacy();return true}
+ return false
+}
+W.addEventListener('pointerup',e=>{bd77MenuControl(e)},true);
+W.addEventListener('contextmenu',e=>{const dot=e.target.closest?.('#postList [data-post-menu]');if(!dot)return;W.__BD77_MENU_GUARD__=Date.now();e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMenu(dot)},true);
+W.addEventListener('click',e=>{if(Date.now()-Number(W.__BD77_MENU_GUARD__||0)>700)return;if(e.target.closest?.('#postList [data-post-menu],#postActionBoard [data-bd76-action],[data-bd76-privacy],[data-bd76-close],[data-bd76-save-edit],[data-bd76-save-caption],[data-bd76-save-privacy]')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}},true);
 
 /* ----- Same-card expand/collapse, never master-post modal/page ----- */
 function collapse(card){if(!card)return;card.classList.remove('bd76-inline-open','bd-inline-expanded','bd63-expanded','expanded');const b=$('.post-body',card);if(b)b.classList.add('collapsed');const m=$('.post-read-more,.readmore',card);if(m)m.textContent='পূর্ণ লেখা পড়ুন →'}
@@ -6772,7 +6782,7 @@ const io=('IntersectionObserver' in W)?new IntersectionObserver((entries)=>{
 function watchCards(){decorateCards();if(io)$$('#postList [data-post-card]').forEach(c=>{if(!c.dataset.bd76Watch){c.dataset.bd76Watch='1';io.observe(c)}})}
 async function buildSignals(){const c=db(),cards=$$('#postList [data-post-card]'),ids=cards.map(pid).filter(Boolean);if(!c||!ids.length)return;let mutual=new Set(),me=uid();if(me)try{const [a,b]=await Promise.all([c.from('follows').select('following_id').eq('follower_id',me).limit(1500),c.from('follows').select('follower_id').eq('following_id',me).limit(1500)]);if(!a.error&&!b.error){const f=new Set((a.data||[]).map(x=>String(x.following_id)));mutual=new Set((b.data||[]).map(x=>String(x.follower_id)).filter(x=>f.has(x)))}}catch{}let rows=[];try{const r=await c.from('comments').select('post_id,author_id,created_at,status').in('post_id',ids).order('created_at',{ascending:false}).limit(1200);if(!r.error)rows=(r.data||[]).filter(x=>!x.status||x.status==='published')}catch{}const now=Date.now(),sig={};ids.forEach(id=>sig[id]={recent:0,mutual:0});for(const r of rows){const id=String(r.post_id||'');if(!sig[id])continue;const age=(now-(new Date(r.created_at).getTime()||now))/36e5;if(age<=72)sig[id].recent+=Math.max(.15,1-age/96);if(r.author_id&&mutual.has(String(r.author_id))&&age<=48)sig[id].mutual+=Math.max(.2,1-age/60)}writeJSON(SIGNALS,sig);rankHome()}
 function scrollNearTop(){const center=$('.center-col');return innerWidth>=900?(Number(center?.scrollTop||0)<120):(Number(W.scrollY||D.scrollingElement?.scrollTop||0)<120)}
-function rankHome(){const cat=$('#categoryFilter'),sort=$('#sortFilter');if(cat&&cat.value!=='all')return;if(sort&&sort.value!=='forYou')return;if(!scrollNearTop())return;const host=$('#postList'),cards=$$('#postList [data-post-card]');if(cards.length<2)return;const taste=readJSON(TASTE,{types:{},authors:{}}),sig=readJSON(SIGNALS,{}),map=rawPosts(),now=Date.now();const score=c=>{const p=map.get(pid(c))||{},created=new Date(postField(p,'created_at','createdAt')||c.dataset.bd76Created||0).getTime()||0,age=Math.max(0,(now-created)/36e5),ty=c.dataset.bd76Type||String(postField(p,'type')||''),au=c.dataset.bd76Author||String(postField(p,'author_id','authorId','author_username','authorUsername')||''),s=sig[pid(c)]||{};return Math.max(0,120-age)*.42+Math.min(40,Number(postField(p,'likes','likes_count')||0))*.35+Number(s.recent||0)*8+Number(s.mutual||0)*18+Number(taste.types?.[ty]||0)*.9+Number(taste.authors?.[au]||0)*.65};cards.sort((a,b)=>score(b)-score(a)||(new Date(b.dataset.bd76Created).getTime()||0)-(new Date(a.dataset.bd76Created).getTime()||0)).forEach(c=>host.appendChild(c))}
+function rankHome(){const cat=$('#categoryFilter'),sort=$('#sortFilter');if(cat&&cat.value!=='all')return;if(sort&&sort.value!=='forYou')return;if(!scrollNearTop()||W.__BD77_SCROLLING__)return;const host=$('#postList'),cards=$$('#postList [data-post-card]');if(cards.length<2)return;const taste=readJSON(TASTE,{types:{},authors:{}}),sig=readJSON(SIGNALS,{}),map=rawPosts(),now=Date.now();const score=c=>{const p=map.get(pid(c))||{},created=new Date(postField(p,'created_at','createdAt')||c.dataset.bd76Created||0).getTime()||0,age=Math.max(0,(now-created)/36e5),ty=c.dataset.bd76Type||String(postField(p,'type')||''),au=c.dataset.bd76Author||String(postField(p,'author_id','authorId','author_username','authorUsername')||''),s=sig[pid(c)]||{};return Math.max(0,120-age)*.42+Math.min(40,Number(postField(p,'likes','likes_count')||0))*.35+Number(s.recent||0)*8+Number(s.mutual||0)*18+Number(taste.types?.[ty]||0)*.9+Number(taste.authors?.[au]||0)*.65};cards.sort((a,b)=>score(b)-score(a)||(new Date(b.dataset.bd76Created).getTime()||0)-(new Date(a.dataset.bd76Created).getTime()||0)).forEach(c=>host.appendChild(c))}
 W.addEventListener('pointerup',e=>{if(!e.target.closest?.('[data-bd31-react-main],[data-bd64-pick],[data-bd31-tray-pick]'))return;const card=e.target.closest?.('[data-post-card]')||$('#bd64ReactionTray')?.__card||$('#bd31ReactionTray')?.__card;if(!card)return;const taste=readJSON(TASTE,{types:{},authors:{}}),ty=card.dataset.bd76Type||'',au=card.dataset.bd76Author||'';if(ty)taste.types[ty]=Math.min(120,Number(taste.types[ty]||0)+4);if(au)taste.authors[au]=Math.min(120,Number(taste.authors[au]||0)+2);writeJSON(TASTE,taste)},true);
 function forceCategoryNewest(){const cat=$('#categoryFilter'),sort=$('#sortFilter');if(!cat||!sort)return;if(cat.value!=='all'&&sort.value!=='newest'){sort.value='newest';sort.dispatchEvent(new Event('change',{bubbles:true}));return}if(cat.value==='all'&&sort.value==='newest'&&sort.dataset.bd76Forced==='1'){sort.value='forYou';delete sort.dataset.bd76Forced;sort.dispatchEvent(new Event('change',{bubbles:true}))}}
 D.addEventListener('change',e=>{if(e.target?.id==='categoryFilter'){const sort=$('#sortFilter');if(sort&&e.target.value!=='all'){sort.dataset.bd76Forced='1';if(sort.value!=='newest'){sort.value='newest';sort.dispatchEvent(new Event('change',{bubbles:true}))}}else if(sort&&sort.dataset.bd76Forced==='1'){delete sort.dataset.bd76Forced;if(sort.value!=='forYou'){sort.value='forYou';sort.dispatchEvent(new Event('change',{bubbles:true}))}}setTimeout(()=>{watchCards();rankHome()},100)}if(e.target?.id==='sortFilter')setTimeout(()=>{watchCards();rankHome()},100)},true);
@@ -6786,5 +6796,291 @@ function boot(){prepareFonts();const c=$('#composer');if(c&&composerAuthed()&&!c
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
+
+<!-- BHUBONDANGA V8.77 TARGETED STABILITY PATCH — baseline: exact V8.76 master lock.
+     Scope only: feed scroll/realtime stability, reliable three-dot hit path, same-page video open with sound. -->
+<style id="bd-v877-targeted-stability-css">
+#postList{display:grid!important;grid-auto-flow:row!important;grid-auto-rows:max-content!important;align-content:start!important;min-height:0!important;overflow-anchor:auto!important}
+#postList>[data-post-card],#postList>article.post,#postList>.bd-live-post{height:auto!important;min-height:0!important;align-self:start!important;visibility:visible!important;opacity:1!important;transform:none!important}
+#postList>[data-post-card][hidden],#postList>article.post[hidden],#postList>.bd-live-post[hidden]{display:none!important}
+.center-col,.center,.main-content,.page-main{scroll-behavior:auto!important}
+#postActionBoard.open,#postActionBoard.open *{pointer-events:auto!important}
+#postList video{cursor:pointer!important;touch-action:manipulation!important}
+</style>
+<script id="bd-v877-targeted-stability-js">
+(()=>{'use strict';
+const D=document,W=window,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
+/* Ranking may happen at load/idle, never while a reader is scrolling. */
+let scrollTimer=0;function markScroll(){W.__BD77_SCROLLING__=true;clearTimeout(scrollTimer);scrollTimer=setTimeout(()=>{W.__BD77_SCROLLING__=false},260)}
+W.addEventListener('scroll',markScroll,{capture:true,passive:true});$('.center-col')?.addEventListener('scroll',markScroll,{passive:true});
+/* Keep video cards inert in the feed; a deliberate tap opens the existing same-page Reels viewer. */
+let vp=null;
+W.addEventListener('pointerdown',e=>{const v=e.target.closest?.('#postList video');if(!v)return;vp={v,x:e.clientX||0,y:e.clientY||0,id:e.pointerId,t:performance.now()}},true);
+W.addEventListener('pointermove',e=>{if(!vp||vp.id!==e.pointerId)return;if(Math.hypot((e.clientX||0)-vp.x,(e.clientY||0)-vp.y)>12)vp=null},true);
+W.addEventListener('pointerup',e=>{if(!vp||vp.id!==e.pointerId)return;const cur=vp;vp=null;const v=cur.v,card=v.closest('[data-post],[data-post-id]'),id=String(card?.dataset.post||card?.dataset.postId||'');if(!id||!W.BhubondangaVideoReels?.open)return;W.__BD77_VIDEO_GUARD__=Date.now();e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{v.pause();v.autoplay=false;v.muted=false}catch{};W.BhubondangaVideoReels.open(id);const rv=D.querySelector(`#bd45Reels [data-reel="${CSS.escape(id)}"] video`);if(rv){try{rv.muted=false;rv.defaultMuted=false;rv.volume=1;rv.removeAttribute('muted');const p=rv.play();if(p?.catch)p.catch(()=>{})}catch{}}},true);
+W.addEventListener('pointercancel',()=>{vp=null},true);
+W.addEventListener('click',e=>{if(Date.now()-Number(W.__BD77_VIDEO_GUARD__||0)>700)return;if(e.target.closest?.('#postList video')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}},true);
+function prepVideos(root=D){$$('#postList video',root).forEach(v=>{v.autoplay=false;v.removeAttribute('autoplay');try{if(!v.paused)v.pause()}catch{}})}
+const mo=new MutationObserver(ms=>{let added=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1){added=true;prepVideos(n)}if(added)requestAnimationFrame(()=>prepVideos())});
+const host=$('#postList');if(host)mo.observe(host,{childList:true,subtree:true});prepVideos();
+})();
+</script>
+
+
+<!-- BHUBONDANGA V8.78 TARGETED MASTER-LOCK PATCH
+     Baseline: exact V8.77 master lock.
+     Scope only: compact profile/cover activity posts, stable reaction/feed state,
+     usable mobile More menu, slimmer desktop rails, inline photo/video expansion. -->
+<style id="bd-v878-targeted-master-lock-css">
+/* 1) Facebook-like compact profile/cover activity posts. */
+#postList [data-post-card].bd878-profile-update > .pill,
+#postList [data-post-card].bd878-profile-update > .post-title,
+#postList [data-post-card].bd878-profile-update > .post-body,
+#postList [data-post-card].bd878-profile-update > .post-read-more{display:none!important}
+#postList [data-post-card].bd878-profile-update .bd878-activity-line{
+  display:block!important;margin-top:1px!important;max-width:100%!important;
+  color:var(--muted,#728096)!important;font-size:9.5px!important;font-weight:500!important;
+  line-height:1.35!important;opacity:.72!important;text-shadow:0 1px 0 rgba(255,255,255,.32)!important
+}
+#postList [data-post-card].bd878-profile-update .bd-post-caption.bd878-user-caption{
+  display:block!important;margin:8px 2px 10px!important;padding:0!important;border:0!important;
+  background:transparent!important;color:var(--text,#17324f)!important;font-size:14px!important;
+  font-weight:500!important;line-height:1.75!important;text-align:left!important;box-shadow:none!important
+}
+html[data-theme="dark"] #postList [data-post-card].bd878-profile-update .bd878-activity-line,
+body.dark #postList [data-post-card].bd878-profile-update .bd878-activity-line{color:rgba(235,243,255,.72)!important;text-shadow:none!important}
+html[data-theme="dark"] #postList [data-post-card].bd878-profile-update .bd-post-caption.bd878-user-caption,
+body.dark #postList [data-post-card].bd878-profile-update .bd-post-caption.bd878-user-caption{color:#fff!important}
+
+/* 2) Reaction summary and action artwork stay the same size and never alter card geometry. */
+#postList [data-bd31-react-summary]{min-width:0!important;min-height:22px!important;height:22px!important;align-items:center!important;gap:6px!important;white-space:nowrap!important}
+#postList .bd878-react-stack{display:inline-flex!important;align-items:center!important;min-width:22px!important;height:20px!important;padding-left:1px!important}
+#postList .bd878-react-face{width:20px!important;height:20px!important;min-width:20px!important;display:grid!important;place-items:center!important;margin-left:-4px!important;border:2px solid var(--surface,#fff)!important;border-radius:50%!important;background:var(--surface,#fff)!important;overflow:hidden!important;box-sizing:border-box!important}
+#postList .bd878-react-face:first-child{margin-left:0!important}
+#postList .bd878-react-face img{width:17px!important;height:17px!important;min-width:17px!important;max-width:17px!important;display:block!important;object-fit:contain!important}
+#postList .bd31-summary{min-height:28px!important;height:28px!important;contain:layout!important}
+#postList .bd31-main-reaction{width:24px!important;height:24px!important;min-width:24px!important;flex:0 0 24px!important}
+#postList .bd31-main-reaction img{width:22px!important;height:22px!important;object-fit:contain!important}
+
+/* 3) Mobile More menu: no blur layer above it, all controls remain clickable. */
+.bd48-more-backdrop{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+#mobileMoreMenu.bd48-open{
+  z-index:2147482500!important;pointer-events:auto!important;filter:none!important;
+  -webkit-filter:none!important;backdrop-filter:blur(22px)!important;-webkit-backdrop-filter:blur(22px)!important
+}
+#mobileMoreMenu.bd48-open *{pointer-events:auto!important}
+
+/* 4) Desktop rails stay slim at real 100% browser zoom. */
+@media (min-width:1130px){
+  .layout{grid-template-columns:178px minmax(0,1fr) 188px!important;gap:9px!important;padding-left:9px!important;padding-right:9px!important}
+  .left-col,.right-col{min-width:0!important;max-width:none!important}
+}
+@media (min-width:1440px){.layout{grid-template-columns:184px minmax(0,1fr) 194px!important}}
+@media (min-width:1800px){.layout{grid-template-columns:190px minmax(0,1fr) 202px!important}}
+
+/* 5) Photo/video tap opens downward inside the same post. */
+#postList .composer-media-render{position:relative!important}
+#postList .composer-media-render > img,
+#postList .composer-media-render > video{display:block!important}
+#postList .bd878-media-hit{
+  position:absolute!important;z-index:7!important;inset:0!important;width:100%!important;height:100%!important;
+  margin:0!important;padding:0!important;border:0!important;border-radius:inherit!important;background:transparent!important;
+  cursor:zoom-in!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important
+}
+#postList .bd878-media-detail{
+  width:100%!important;margin:9px 0 5px!important;padding:10px!important;border:1px solid rgba(114,112,190,.16)!important;
+  border-radius:16px!important;background:rgba(255,255,255,.72)!important;box-shadow:0 10px 30px rgba(43,54,95,.08)!important;
+  display:grid!important;gap:9px!important;overflow:hidden!important;scroll-margin-top:90px!important
+}
+html[data-theme="dark"] #postList .bd878-media-detail,
+body.dark #postList .bd878-media-detail{background:rgba(8,18,42,.84)!important;border-color:rgba(131,113,255,.30)!important;box-shadow:0 14px 36px rgba(0,0,0,.24)!important}
+#postList .bd878-media-detail video{width:100%!important;max-height:78dvh!important;border-radius:13px!important;background:#000!important;object-fit:contain!important;display:block!important}
+#postList .bd878-zoom-stage{width:100%!important;max-height:78dvh!important;overflow:hidden!important;border-radius:13px!important;background:rgba(7,18,42,.96)!important;display:grid!important;place-items:center!important;touch-action:pan-y!important;overscroll-behavior:contain!important}
+#postList .bd878-zoom-stage img{width:100%!important;height:auto!important;max-height:78dvh!important;object-fit:contain!important;display:block!important;transform:scale(var(--bd878-scale,1))!important;transform-origin:center center!important;transition:transform .12s ease!important;will-change:transform!important}
+#postList .bd878-media-close{justify-self:start!important;min-height:34px!important;padding:5px 10px!important;border:1px solid rgba(102,111,160,.18)!important;border-radius:999px!important;background:rgba(255,255,255,.86)!important;color:#30445f!important;font:inherit!important;font-size:10px!important;font-weight:700!important}
+html[data-theme="dark"] #postList .bd878-media-close,body.dark #postList .bd878-media-close{background:rgba(255,255,255,.10)!important;color:#fff!important;border-color:rgba(255,255,255,.18)!important}
+#postList .bd878-media-comment-form{display:grid!important;grid-template-columns:minmax(0,1fr) 44px!important;gap:7px!important;align-items:center!important}
+#postList .bd878-media-comment-form input{width:100%!important;min-width:0!important;height:44px!important;padding:0 14px!important;border:1px solid rgba(105,115,165,.20)!important;border-radius:999px!important;background:rgba(255,255,255,.92)!important;color:#17324f!important;font:inherit!important;font-size:16px!important;outline:none!important}
+#postList .bd878-media-comment-form button{width:44px!important;height:44px!important;border:0!important;border-radius:50%!important;background:linear-gradient(135deg,#704cf6,#5579ff)!important;color:#fff!important;font-size:18px!important;display:grid!important;place-items:center!important}
+html[data-theme="dark"] #postList .bd878-media-comment-form input,body.dark #postList .bd878-media-comment-form input{background:rgba(3,13,36,.92)!important;color:#fff!important;border-color:rgba(142,122,255,.34)!important}
+</style>
+<script id="bd-v878-targeted-master-lock-js">
+(()=>{'use strict';
+const D=document,W=window,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
+
+/* ---------- Never rebuild the whole feed for a social-counter-only realtime update. ---------- */
+function postSig(rows){
+  if(!Array.isArray(rows))return'';
+  const take=x=>({
+    id:String(x?.id??''),type:String(x?.type??x?.category??''),title:String(x?.title??''),
+    body:String(x?.body??x?.content??x?.text??''),author_id:String(x?.author_id??''),
+    author_username:String(x?.author_username??''),author_name:String(x?.author_name??''),
+    author_avatar:String(x?.author_avatar??x?.avatar_url??''),author_role:String(x?.author_role??''),
+    status:String(x?.status??''),visibility:String(x?.visibility??x?.privacy??''),
+    created_at:String(x?.created_at??''),media_url:String(x?.media_url??x?.media??''),
+    media_type:String(x?.media_type??x?.media_kind??''),caption:String(x?.caption??x?.media_caption??''),
+    card_style:String(x?.card_style??''),original_author:String(x?.original_author??''),
+    activity_type:String(x?.activity_type??x?.activityType??'')
+  });
+  return JSON.stringify(rows.map(take).sort((a,b)=>a.id.localeCompare(b.id)));
+}
+let lastPostSig=postSig(Array.isArray(W.__BD_SUPABASE_POSTS)?W.__BD_SUPABASE_POSTS:[]);
+D.addEventListener('bd:supabase-posts',e=>{
+  const rows=e?.detail?.rows;if(!Array.isArray(rows))return;
+  const next=postSig(rows);
+  if(lastPostSig&&next===lastPostSig){
+    /* Likes/comments/updated_at changed only. Social engines update in place; feed geometry must not repaint. */
+    e.stopImmediatePropagation();return;
+  }
+  lastPostSig=next;
+},true);
+
+/* Keep the reader's position protected for a meaningful time after actual scrolling/touching. */
+let readTimer=0;function readerBusy(){W.__BD77_SCROLLING__=true;clearTimeout(readTimer);readTimer=setTimeout(()=>{W.__BD77_SCROLLING__=false},1300)}
+W.addEventListener('scroll',readerBusy,{capture:true,passive:true});
+W.addEventListener('touchmove',readerBusy,{capture:true,passive:true});
+W.addEventListener('wheel',readerBusy,{capture:true,passive:true});
+
+/* ---------- Profile/cover update cards: compact Facebook-like activity line, no fake কবিতা label. ---------- */
+const PROFILE_UPDATE_RE=/(কভার\s*(ছবি|ফটো)|প্রোফাইল\s*(ছবি|ফটো)|cover\s*(photo|picture)|profile\s*(photo|picture))/i;
+const CHANGE_RE=/(পরিবর্তন|পরিবর্তন করেছেন|যোগ করেছেন|changed|updated|change)/i;
+const SYS_CAPTION_RE=/^(কভার\s*(ছবি|ফটো)|প্রোফাইল\s*(ছবি|ফটো)|নতুন\s*(কভার|প্রোফাইল)\s*(ছবি|ফটো)\s*(যোগ|পরিবর্তন).*|cover\s*(photo|picture)|profile\s*(photo|picture))\s*[।.!]?$/i;
+function updateKind(card){
+  const t=String($('.post-title',card)?.textContent||'').trim(),b=String($('.post-body',card)?.textContent||'').trim(),all=t+' '+b;
+  if(!PROFILE_UPDATE_RE.test(all)||!CHANGE_RE.test(all))return'';
+  return /(কভার|cover)/i.test(all)?'cover':'profile';
+}
+function decorateProfileUpdate(card){
+  if(!card||!card.matches?.('[data-post-card]'))return;
+  const kind=updateKind(card);if(!kind)return;
+  card.classList.add('bd878-profile-update');
+  const meta=$('.author-meta',card),row=$('.author-name-row',card);
+  if(meta&&!$('.bd878-activity-line',meta)){
+    const line=D.createElement('span');line.className='bd878-activity-line';
+    line.textContent=kind==='cover'?'কভার ছবি পরিবর্তন করেছেন':'প্রোফাইল ছবি পরিবর্তন করেছেন';
+    (row||meta.firstChild)?.insertAdjacentElement?.('afterend',line)||meta.prepend(line);
+  }
+  const cap=$('.bd-post-caption',card),media=$('.composer-media-render,.post-media',card);
+  if(cap){
+    const txt=String(cap.textContent||'').trim();
+    if(!txt||SYS_CAPTION_RE.test(txt)){cap.remove();}
+    else{
+      cap.classList.add('bd878-user-caption');
+      if(media&&cap.nextElementSibling!==media)media.insertAdjacentElement('beforebegin',cap);
+    }
+  }
+}
+
+/* ---------- Reaction artwork: permanently block V8.70's alternate painter and use one modern renderer. ---------- */
+const LABEL={like:'পছন্দ',love:'ভালোবাসা',care:'যত্ন',haha:'হাহা',wow:'ওয়াও',sad:'দুঃখ',angry:'রাগ'};
+const FALLBACK={like:'👍',love:'❤️',care:'🥰',haha:'😂',wow:'😮',sad:'😢',angry:'😡'};
+function reactFace(type){
+  type=FALLBACK[type]?type:'like';const src=W.BD52_REACTION_SRC?.[type];
+  return '<span class="bd878-react-face" aria-label="'+(LABEL[type]||type)+'">'+(src?'<img src="'+src+'" alt="" draggable="false">':FALLBACK[type])+'</span>';
+}
+function bn(n){return String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])}
+function lockReaction(card){
+  if(!card||!card.matches?.('[data-post-card],[data-bd31-ready="1"]'))return;
+  if(card.getAttribute('data-bd870-reaction-busy')!=='1')card.setAttribute('data-bd870-reaction-busy','1');
+  const rows=card.__bd31Rows?.reactions;if(!Array.isArray(rows))return;
+  const sum=$('[data-bd31-react-summary]',card),main=$('[data-bd31-react-main]',card);if(!sum)return;
+  if(!rows.length){sum.hidden=true;sum.innerHTML='';return}
+  const counts={};rows.forEach(r=>{const t=FALLBACK[r?.reaction]?r.reaction:'like';counts[t]=(counts[t]||0)+1});
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t])=>t),sig=top.join('|')+'|'+rows.length;
+  if(sum.dataset.bd878Sig!==sig||!$('.bd878-react-stack',sum)){
+    sum.dataset.bd878Sig=sig;sum.hidden=false;
+    sum.innerHTML='<span class="bd878-react-stack">'+top.map(reactFace).join('')+'</span><span>'+bn(rows.length)+' জন প্রতিক্রিয়া</span>';
+  }
+  if(main){
+    const mine=String(main.dataset.current||'');const holder=$('.bd31-main-reaction',main);
+    if(mine&&holder){const src=W.BD52_REACTION_SRC?.[mine],img=$('img',holder);if(src&&String(img?.src||'')!==String(src))holder.innerHTML='<span class="bd64-icon"><img src="'+src+'" alt="" draggable="false"></span>'}
+  }
+}
+
+/* ---------- Mobile More menu: move it out of the nav stacking context and remove the blocking blur. ---------- */
+function fixMoreMenu(){
+  const menu=$('#mobileMoreMenu');if(menu&&menu.parentElement!==D.body)D.body.appendChild(menu);
+  $$('.bd48-more-backdrop').forEach(x=>{x.classList.remove('show','open');x.setAttribute('aria-hidden','true')});
+  if(menu){
+    const mo=new MutationObserver(()=>{if(menu.classList.contains('bd48-open')){D.body.classList.remove('locked');$$('.bd48-more-backdrop').forEach(x=>x.classList.remove('show','open'))}});
+    mo.observe(menu,{attributes:true,attributeFilter:['class']});
+  }
+}
+
+/* ---------- Inline media expansion. Disable all older full-screen/reels openers. ---------- */
+try{if(W.BhubondangaVideoReels)W.BhubondangaVideoReels.open=null}catch{}
+function postId(card){return String(card?.dataset?.post||card?.dataset?.postId||'')}
+function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null}
+function toast(msg){if(W.bdV7Toast)return W.bdV7Toast(msg);const t=D.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;z-index:2147483647;left:50%;bottom:26px;transform:translateX(-50%);padding:10px 14px;border-radius:999px;background:#17324f;color:white;font:600 12px system-ui';D.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function mediaSrc(el){return String(el?.currentSrc||el?.src||el?.getAttribute?.('src')||'')}
+function closeMedia(card){const d=$(':scope > .bd878-media-detail',card);if(d){$('video',d)?.pause?.();d.remove()}const hit=$('.bd878-media-hit',card);if(hit)hit.setAttribute('aria-expanded','false')}
+function mediaCommentHTML(id){return '<form class="bd878-media-comment-form" data-bd878-media-comment="'+String(id).replace(/["&<>]/g,'')+'"><input maxlength="1200" autocomplete="off" placeholder="মন্তব্য লিখুন…" aria-label="মন্তব্য লিখুন"><button type="submit" aria-label="মন্তব্য পাঠান">➤</button></form>'}
+function openMedia(hit){
+  const wrap=hit.closest('.composer-media-render'),card=hit.closest('[data-post-card],[data-post],[data-post-id]');if(!wrap||!card)return;
+  const old=$(':scope > .bd878-media-detail',card);if(old){closeMedia(card);return}
+  const source=$(':scope > video,:scope > img',wrap);if(!source)return;const src=mediaSrc(source);if(!src)return;
+  const d=D.createElement('section');d.className='bd878-media-detail';d.setAttribute('aria-label',source.tagName==='VIDEO'?'ভিডিও বিস্তারিত':'ছবি বিস্তারিত');
+  if(source.tagName==='VIDEO')d.innerHTML='<video controls playsinline preload="auto" src="'+src.replace(/"/g,'&quot;')+'"></video><button class="bd878-media-close" type="button">কম দেখুন ↑</button>'+mediaCommentHTML(postId(card));
+  else d.innerHTML='<div class="bd878-zoom-stage"><img src="'+src.replace(/"/g,'&quot;')+'" alt=""></div><button class="bd878-media-close" type="button">কম দেখুন ↑</button>'+mediaCommentHTML(postId(card));
+  wrap.insertAdjacentElement('afterend',d);hit.setAttribute('aria-expanded','true');
+  if(source.tagName==='VIDEO'){
+    try{source.pause()}catch{}const v=$('video',d);if(v)try{v.muted=false;v.defaultMuted=false;v.volume=1;v.removeAttribute('muted');const p=v.play();if(p?.catch)p.catch(()=>{})}catch{}
+  }
+  requestAnimationFrame(()=>d.scrollIntoView({block:'nearest',behavior:'auto'}));
+}
+function decorateMedia(card){
+  if(!card)return;$$('.composer-media-render',card).forEach(wrap=>{
+    if(wrap.closest('.bd878-media-detail'))return;const source=$(':scope > video,:scope > img',wrap);if(!source)return;
+    let hit=$(':scope > .bd878-media-hit',wrap);if(!hit){hit=D.createElement('button');hit.type='button';hit.className='bd878-media-hit';hit.setAttribute('aria-expanded','false');hit.setAttribute('aria-label',source.tagName==='VIDEO'?'ভিডিও খুলুন':'ছবি বড় করে দেখুন');wrap.appendChild(hit)}
+  })
+}
+
+/* Stop the legacy document-level video opener while keeping native controls functional in our inline detail. */
+W.addEventListener('click',e=>{if(e.target.closest?.('.bd878-media-detail video')){e.stopPropagation();e.stopImmediatePropagation()}},true);
+D.addEventListener('click',e=>{
+  const hit=e.target.closest?.('.bd878-media-hit');if(hit){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMedia(hit);return}
+  const close=e.target.closest?.('.bd878-media-close');if(close){e.preventDefault();e.stopPropagation();closeMedia(close.closest('[data-post-card],[data-post],[data-post-id]'));return}
+},true);
+
+D.addEventListener('submit',async e=>{
+  const form=e.target.closest?.('[data-bd878-media-comment]');if(!form)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  const c=client();if(!c){toast('মন্তব্যের সংযোগ পাওয়া যায়নি।');return}
+  const s=(await c.auth.getSession().catch(()=>({data:{}})))?.data?.session;if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}
+  const input=$('input',form),body=String(input?.value||'').trim();if(!body)return;
+  const bad=W.BhubondangaModerationScan?.(body)||[];if(bad.length){toast('আপত্তিকর/গালিগালাজের শব্দ পাওয়া গেছে। মন্তব্য সংশোধন না করা পর্যন্ত জমা হবে না।');return}
+  const who=W.__BD_IDENTITY||{},id=String(form.dataset.bd878MediaComment||''),payload={id:'comment-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),post_id:id,author_id:s.user.id,author_username:who.author_username||s.user.user_metadata?.username||'',author_name:who.author_name||s.user.user_metadata?.full_name||s.user.user_metadata?.name||s.user.email?.split('@')[0]||'সদস্য',body,status:'published'};
+  try{const r=await c.from('comments').insert(payload);if(r.error)throw r.error;input.value='';toast('মন্তব্য যোগ হয়েছে।')}catch(err){toast(err?.message||'মন্তব্য যোগ করা যায়নি।')}
+},true);
+
+/* Two-finger pinch zoom for the inline image detail. */
+function dist(a,b){return Math.hypot((a.clientX-b.clientX),(a.clientY-b.clientY))}
+D.addEventListener('touchstart',e=>{const st=e.target.closest?.('.bd878-zoom-stage');if(!st||e.touches.length!==2)return;st.__bd878Start=dist(e.touches[0],e.touches[1]);st.__bd878Base=Number(st.__bd878Scale||1)}, {capture:true,passive:true});
+D.addEventListener('touchmove',e=>{const st=e.target.closest?.('.bd878-zoom-stage');if(!st||e.touches.length!==2||!st.__bd878Start)return;e.preventDefault();const next=Math.max(1,Math.min(4,st.__bd878Base*(dist(e.touches[0],e.touches[1])/st.__bd878Start)));st.__bd878Scale=next;st.style.setProperty('--bd878-scale',String(next))},{capture:true,passive:false});
+D.addEventListener('touchend',e=>{const st=e.target.closest?.('.bd878-zoom-stage');if(st&&e.touches.length<2)st.__bd878Start=0},{capture:true,passive:true});
+D.addEventListener('dblclick',e=>{const st=e.target.closest?.('.bd878-zoom-stage');if(st){st.__bd878Scale=1;st.style.setProperty('--bd878-scale','1')}},true);
+
+/* ---------- One conservative scan: decorate only; never rerender post cards. ---------- */
+function scan(root=D){
+  const cards=[];if(root.matches?.('[data-post-card]'))cards.push(root);$$('[data-post-card]',root).forEach(c=>cards.push(c));
+  cards.forEach(card=>{decorateProfileUpdate(card);decorateMedia(card);lockReaction(card)});
+}
+let scanTimer=0;const postHost=$('#postList');
+const mo=new MutationObserver(ms=>{
+  let needs=false;for(const m of ms){
+    const card=m.target?.nodeType===1?m.target.closest?.('[data-post-card]'):null;
+    if(card){
+      if(m.type==='attributes'&&m.attributeName==='data-bd870-reaction-busy'&&card.getAttribute('data-bd870-reaction-busy')!=='1')card.setAttribute('data-bd870-reaction-busy','1');
+      if(m.target?.closest?.('[data-bd31-react-summary],.bd31-main-reaction'))lockReaction(card);
+    }
+    for(const n of m.addedNodes||[])if(n.nodeType===1)needs=true;
+  }
+  if(needs){clearTimeout(scanTimer);scanTimer=setTimeout(()=>scan(),45)}
+});
+if(postHost)mo.observe(postHost,{subtree:true,childList:true,attributes:true,attributeFilter:['data-bd870-reaction-busy']});
+function boot(){fixMoreMenu();scan();setTimeout(scan,180);setTimeout(scan,700);setTimeout(scan,1600)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 </html>
