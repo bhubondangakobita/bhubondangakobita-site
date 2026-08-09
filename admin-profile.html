@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>অ্যাডমিন প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.62-stable-social-live-font-template-20260809">
+<meta name="bhubondanga-build" content="V8.79-profile-index-parity-targeted-20260810">
 <script id="bd-supabase-nonblocking-loader">
 (function(){
   "use strict";
@@ -2783,5 +2783,127 @@ const mo=new MutationObserver(()=>{const old=D.getElementById('bd31ReactionTray'
 <style id="bd-v865-final-template-visibility">
 .bd58-template-chip[data-bd58-template^="tpl"]{background-color:#fff!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important}
 </style>
+
+<!-- BHUBONDANGA PROFILE V8.79 TARGETED PARITY PATCH
+     Baseline: user's uploaded current profile file. Existing owner/visitor/Supabase/cross-post logic is preserved.
+     Scope: inline owner editor, cover drag polish, sidebar theme shortcut, Story Touch polish,
+     composer card centering, stable reactions/comments, compact profile-media activity posts. -->
+<style id="bd-v879-profile-targeted-css">
+/* Existing layout is locked. Only requested interaction surfaces below. */
+#coverHint{display:none!important}
+.cover.cover-editing{touch-action:none!important;cursor:grab!important}
+.cover.cover-editing:active{cursor:grabbing!important}
+#coverAdjust{justify-content:flex-end!important;gap:7px!important;padding:7px 9px!important}
+#coverAdjust>strong{display:none!important}
+#coverAdjust button{pointer-events:auto!important;touch-action:manipulation!important}
+
+/* Profile edit opens directly under the profile card, not as a separate/full-screen page. */
+html.bd52-profile-edit-open,body.bd52-profile-edit-open{overflow:inherit!important;position:static!important;height:auto!important}
+#inlineProfileEditor:not([hidden]){
+  position:relative!important;inset:auto!important;width:100%!important;height:auto!important;max-width:none!important;max-height:none!important;
+  z-index:40!important;overflow:visible!important;overscroll-behavior:auto!important;margin:12px 0 0!important;
+  padding:15px!important;border:1px solid rgba(111,86,190,.15)!important;border-radius:18px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(247,245,255,.92))!important;
+  box-shadow:0 13px 32px rgba(61,58,116,.09)!important
+}
+#inlineProfileEditor h3{position:static!important;margin:0 0 12px!important;padding:0!important;background:transparent!important;font-size:16px!important}
+#inlineProfileEditor .inline-edit-grid{grid-template-columns:1fr 1fr!important;max-width:none!important;margin:0!important;gap:9px!important}
+#inlineProfileEditor .inline-edit-media,#inlineProfileEditor .inline-edit-actions{max-width:none!important;margin:10px 0 0!important;position:static!important;padding:0!important;background:transparent!important}
+@media(max-width:720px){#inlineProfileEditor .inline-edit-grid{grid-template-columns:1fr!important}}
+html[data-theme="dark"] #inlineProfileEditor{background:linear-gradient(145deg,rgba(8,31,70,.97),rgba(38,20,82,.95))!important;border-color:rgba(156,171,235,.18)!important;color:#fff!important}
+html[data-theme="dark"] #inlineProfileEditor .inline-edit-field{background:rgba(7,24,58,.92)!important;color:#fff!important;border-color:rgba(156,171,235,.20)!important}
+
+/* Sidebar theme shortcut follows the already-present dark-mode CSS. */
+[data-bd79-theme]{pointer-events:auto!important;touch-action:manipulation!important}
+[data-bd79-theme] .nicon{font-size:16px!important}
+
+/* Composer/card parity with Index: template text is centered and remains readable. */
+#composerForm[data-bd65-template]:not([data-bd65-template="none"]) #postBody,
+#composerForm[data-card-preview] #postBody{display:grid!important;place-content:center!important;text-align:center!important;white-space:pre-wrap!important}
+.post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{display:grid!important;place-content:center!important;text-align:center!important;white-space:pre-wrap!important}
+.bd58-font-chip,.bd58-template-chip{pointer-events:auto!important;touch-action:manipulation!important}
+
+/* Same modern inline social surface as the index; never allow reaction geometry to reflow the card. */
+.bd31-social,.bd24-social{contain:layout!important}
+.bd31-summary,.bd24-social-summary{min-height:30px!important}
+.bd31-action,.bd24-action,[data-bd31-react-main],[data-bd31-comments],[data-bd31-share]{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+.bd31-c-bubble,.bd24-comment-bubble{background:#f0f2f5!important;border-radius:18px!important;color:#1d2d45!important}
+.bd31-comment-form input,.bd31-reply-form input,.bd24-comment-form input,.bd24-reply-form input,.comment-form input{font-size:16px!important;-webkit-text-size-adjust:100%!important}
+html[data-theme="dark"] .bd31-c-bubble,html[data-theme="dark"] .bd24-comment-bubble{background:linear-gradient(145deg,rgba(17,43,94,.96),rgba(54,28,112,.94))!important;color:#fff!important}
+
+/* Profile/cover update posts: Facebook-familiar compact activity line, no duplicate category/title/body. */
+.profile-update-post.bd79-activity > .tag,
+.profile-update-post.bd79-activity > .post-title,
+.profile-update-post.bd79-activity > .post-body{display:none!important}
+.profile-update-post .bd79-activity-line{display:block;margin-top:2px;color:#7d8798;font-size:9.5px;line-height:1.4;opacity:.76}
+.profile-update-post .post-caption.bd79-user-caption{margin:8px 1px 9px!important;padding:0!important;border:0!important;background:transparent!important;font-size:13.5px!important;line-height:1.7!important;color:#31445f!important}
+html[data-theme="dark"] .profile-update-post .bd79-activity-line{color:#c2cceb!important}
+html[data-theme="dark"] .profile-update-post .post-caption.bd79-user-caption{color:#fff!important}
+
+/* Story reaction burst is visual-only; the stored reaction remains one per user. */
+.bd79-story-burst{position:fixed;z-index:2147483600;width:28px;height:28px;display:grid;place-items:center;pointer-events:none;font:24px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;animation:bd79Burst .82s cubic-bezier(.2,.76,.2,1) forwards}
+@keyframes bd79Burst{0%{opacity:0;transform:translate(0,0) scale(.55)}12%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1.12) rotate(var(--rot))}}
+
+/* Clickability safety: existing menus/drawers stay usable without redesign. */
+.profile-popover,.post-menu-panel,.drawer,#bd31StoryDrawer{pointer-events:auto!important}
+.profile-popover button,.profile-popover a,.post-menu-panel button,.post-menu-panel a,.drawer button,.drawer a,#bd31StoryDrawer button,#bd31StoryDrawer a{pointer-events:auto!important;touch-action:manipulation!important}
+</style>
+<script id="bd-v879-profile-targeted-js">
+(()=>{'use strict';
+const D=document,W=window,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
+
+/* Keep the already-built owner/visitor actions untouched. Move the existing editor only after its own opener populates it. */
+function placeEditor(){
+  const p=$('#inlineProfileEditor'),card=$('.profile-card'),tabs=$('#tabs');if(!p||p.hidden||!card)return;
+  if(p.parentElement!==card.parentElement){card.insertAdjacentElement('afterend',p)}
+  else if(p.previousElementSibling!==card){card.insertAdjacentElement('afterend',p)}
+  if(tabs&&p.nextElementSibling!==tabs&&tabs.parentElement===p.parentElement)p.insertAdjacentElement('afterend',tabs);
+  D.documentElement.classList.remove('bd52-profile-edit-open');D.body.classList.remove('bd52-profile-edit-open');
+}
+W.addEventListener('click',e=>{if(e.target.closest?.('[data-click="edit-profile"],[data-profile-option="edit-profile"]')){setTimeout(placeEditor,0);setTimeout(placeEditor,80)}},false);
+
+/* Add one theme shortcut to desktop sidebar and the mobile left drawer. No backend/state changes. */
+function getTheme(){return D.documentElement.getAttribute('data-theme')==='dark'?'dark':'light'}
+function applyTheme(t){t=t==='dark'?'dark':'light';D.documentElement.setAttribute('data-theme',t);D.documentElement.setAttribute('data-bd-theme',t);try{localStorage.setItem('bhubondangaTheme',t);localStorage.setItem('bd-theme',t)}catch{};$$('[data-bd79-theme-label]').forEach(x=>x.textContent=t==='dark'?'লাইট মোড':'ডার্ক মোড')}
+function themeBtn(){const b=D.createElement('button');b.type='button';b.dataset.bd79Theme='1';b.innerHTML='<span class="nicon">◐</span><span data-bd79-theme-label>'+(getTheme()==='dark'?'লাইট মোড':'ডার্ক মোড')+'</span>';return b}
+function installThemeShortcuts(){
+  const nav=$('.rail.left .nav,.left-col .nav,.side .nav');if(nav&&!$('[data-bd79-theme]',nav)){const b=themeBtn();nav.appendChild(b)}
+  const drawer=$('#leftDrawerBody');if(drawer&&!$('[data-bd79-theme]',drawer)){const b=themeBtn();b.style.cssText='width:100%;min-height:44px;margin:8px 0;border:1px solid rgba(100,100,160,.14);border-radius:12px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px';drawer.appendChild(b)}
+}
+D.addEventListener('click',e=>{const b=e.target.closest?.('[data-bd79-theme]');if(!b)return;e.preventDefault();e.stopPropagation();applyTheme(getTheme()==='dark'?'light':'dark')},true);
+try{const saved=localStorage.getItem('bhubondangaTheme')||localStorage.getItem('bd-theme');if(saved)applyTheme(saved)}catch{}
+
+/* Cover draft already supports pointer dragging; this prevents incidental cover-click from reopening file selection while dragging. */
+let coverMoved=false,coverDown=null;
+D.addEventListener('pointerdown',e=>{const c=e.target.closest?.('#cover.cover-editing');if(!c)return;coverDown={id:e.pointerId,x:e.clientX,y:e.clientY};coverMoved=false},true);
+D.addEventListener('pointermove',e=>{if(!coverDown||coverDown.id!==e.pointerId)return;if(Math.hypot(e.clientX-coverDown.x,e.clientY-coverDown.y)>5)coverMoved=true},true);
+D.addEventListener('pointerup',e=>{if(!coverDown||coverDown.id!==e.pointerId)return;if(coverMoved){e.preventDefault();e.stopPropagation()}coverDown=null;setTimeout(()=>coverMoved=false,60)},true);
+
+/* Reaction/comment stability: preserve the exact visible post position around existing async social handlers. */
+let snap=null,timer=0;
+function scrollerFor(el){let n=el;while(n&&n!==D.body){const cs=getComputedStyle(n);if(/auto|scroll|overlay/.test(cs.overflowY||'')&&n.scrollHeight>n.clientHeight+2)return n;n=n.parentElement}return D.scrollingElement||D.documentElement}
+function takeSnap(el){const card=el?.closest?.('article.post,.bd-live-post,[data-bd31-ready="1"]');if(!card)return null;const sc=scrollerFor(card);return{card,sc,top:card.getBoundingClientRect().top,st:sc===D.scrollingElement?W.scrollY:sc.scrollTop}}
+function restore(s){if(!s?.card?.isConnected)return;const now=s.card.getBoundingClientRect().top,delta=now-s.top;if(Math.abs(delta)>.75){if(s.sc===D.scrollingElement||s.sc===D.documentElement||s.sc===D.body)W.scrollBy(0,delta);else s.sc.scrollTop+=delta}}
+D.addEventListener('pointerdown',e=>{if(e.target.closest?.('[data-bd31-react-main],[data-bd31-tray-pick],[data-bd24-react],[data-bd24-pick],[data-react],[data-pick],[data-bd31-comments],[data-bd31-comment-summary]'))snap=takeSnap(e.target)},true);
+D.addEventListener('pointerup',e=>{if(!snap)return;const s=snap;snap=null;clearTimeout(timer);[0,70,180,420].forEach(ms=>setTimeout(()=>restore(s),ms))},true);
+
+/* Compact profile/cover activity cards after the existing renderer has finished. */
+function decorateActivity(root=D){$$('.profile-update-post',root).forEach(card=>{if(card.dataset.bd79Activity==='1')return;card.dataset.bd79Activity='1';card.classList.add('bd79-activity');const title=$('.post-title',card)?.textContent?.trim()||'';const meta=$('.author-meta',card);if(meta&&!$('.bd79-activity-line',meta)){const s=D.createElement('span');s.className='bd79-activity-line';s.textContent=/কভার/.test(title)?'কভার ছবি পরিবর্তন করেছেন':'প্রোফাইল ছবি পরিবর্তন করেছেন';meta.appendChild(s)}const cap=$('.post-caption',card);if(cap){cap.classList.add('bd79-user-caption');const media=$('.post-media',card);if(media&&cap.previousElementSibling!==media)media.insertAdjacentElement('beforebegin',cap)}})}
+
+/* Story train: roughly two seconds per story and manual swipe remains available. */
+function tuneStory(){const t=$('#bd31StoryTrack');if(!t)return;const unique=Math.max(1,Math.floor(t.children.length/2));t.style.animationDuration=Math.max(10,unique*2)+'s';const flow=t.parentElement;if(flow){flow.style.overflowX='auto';flow.style.scrollbarWidth='none';flow.style.webkitOverflowScrolling='touch';flow.style.touchAction='pan-x'}}
+function burst(btn){const emo=btn.textContent.trim()||'❤️',r=btn.getBoundingClientRect();for(let i=0;i<12;i++){const s=D.createElement('span');s.className='bd79-story-burst';s.textContent=emo;s.style.left=(r.left+r.width/2-14)+'px';s.style.top=(r.top+r.height/2-14)+'px';const a=(Math.PI*2*i/12)+(Math.random()-.5)*.35,d=42+Math.random()*56;s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');s.style.setProperty('--rot',((-70+Math.random()*140)|0)+'deg');D.body.appendChild(s);setTimeout(()=>s.remove(),900)}}
+D.addEventListener('click',e=>{const b=e.target.closest?.('[data-bd31-story-react]');if(b)burst(b)},false);
+
+/* Keep side drawers dismissible by blank/backdrop tap. */
+D.addEventListener('pointerdown',e=>{if(e.target.id==='backdrop'||e.target.id==='bd31StoryBackdrop'){try{e.target.click()}catch{}}},false);
+
+function scan(root=D){installThemeShortcuts();decorateActivity(root);tuneStory()}
+let mt=0;const mo=new MutationObserver(ms=>{let need=false;for(const m of ms)if(m.addedNodes?.length){need=true;break}if(need){clearTimeout(mt);mt=setTimeout(()=>scan(),50)}});mo.observe(D.documentElement,{subtree:true,childList:true});
+function boot(){scan();setTimeout(scan,180);setTimeout(scan,800)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 </html>
