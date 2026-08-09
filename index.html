@@ -5698,5 +5698,177 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 })();
 </script>
 
+
+
+<style id="bd-v864-reaction-stability-lock">
+/* V8.64 — one reaction surface only. Old trays are disabled so they cannot flash, resize or jump the feed. */
+#bd31ReactionTray,#bdV814ReactionTray,.bd-index-reaction-picker,.bd-v814-picker{display:none!important;visibility:hidden!important;pointer-events:none!important}
+#bd64ReactionTray{
+  position:fixed!important;
+  z-index:2147483646!important;
+  left:0;top:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  box-sizing:border-box;
+  padding:5px 7px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid rgba(25,32,55,.12);
+  box-shadow:0 10px 28px rgba(15,20,42,.22);
+  transform:none!important;
+  animation:none!important;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  contain:layout paint style;
+}
+#bd64ReactionTray.open{display:flex!important}
+#bd64ReactionTray button{
+  flex:0 0 35px!important;
+  width:35px!important;height:35px!important;min-width:35px!important;min-height:35px!important;
+  display:grid!important;place-items:center!important;
+  padding:0!important;margin:0!important;border:0!important;border-radius:50%!important;background:transparent!important;
+  box-shadow:none!important;transform:none!important;animation:none!important;overflow:visible!important;
+  touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+}
+#bd64ReactionTray .bd64-icon{width:33px!important;height:33px!important;min-width:33px!important;max-width:33px!important;display:grid!important;place-items:center!important;overflow:hidden!important}
+#bd64ReactionTray .bd64-icon img{width:33px!important;height:33px!important;min-width:33px!important;max-width:33px!important;object-fit:contain!important;display:block!important}
+#bd64ReactionTray .bd31-r{width:33px!important;height:33px!important;min-width:33px!important;max-width:33px!important;display:block!important;background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important}
+#bd64ReactionTray button:active .bd64-icon{transform:scale(.93)!important}
+
+/* Selected reaction inside the post stays small. It can never become a full-width artwork. */
+.bd31-main-reaction{width:24px!important;height:24px!important;min-width:24px!important;max-width:24px!important;flex:0 0 24px!important;display:grid!important;place-items:center!important;overflow:hidden!important;contain:size layout paint!important}
+.bd31-main-reaction .bd31-r,.bd31-main-reaction .bd52-reaction-img,.bd31-main-reaction img,.bd31-main-reaction svg{width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important;object-fit:contain!important;display:block!important}
+.bd31-stack .bd31-r,.bd31-stack .bd52-reaction-img,.bd31-stack img{width:18px!important;height:18px!important;min-width:18px!important;max-width:18px!important;object-fit:contain!important}
+.bd31-reactor .bd31-r,.bd31-reactor .bd52-reaction-img,.bd31-reactor img{width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important;object-fit:contain!important}
+.bd31-social,.bd31-actions,.bd31-action,.bd31-summary,[data-bd31-react-main],[data-bd31-react-summary]{animation:none!important;transform:none!important;transition-property:color,background-color,border-color!important;-webkit-tap-highlight-color:transparent!important}
+/* Reserve the social summary line so the first reaction cannot push the card and move the viewport. */
+.bd31-summary{min-height:26px!important;box-sizing:border-box!important}
+.bd31-summary [data-bd31-react-summary][hidden]{display:inline-flex!important;visibility:hidden!important;pointer-events:none!important}
+
+@media(max-width:430px){
+ #bd64ReactionTray{gap:2px!important;padding:4px 6px!important;max-width:286px!important}
+ #bd64ReactionTray button{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;flex-basis:36px!important}
+ #bd64ReactionTray .bd64-icon,#bd64ReactionTray .bd64-icon img,#bd64ReactionTray .bd31-r{width:32px!important;height:32px!important;min-width:32px!important;max-width:32px!important}
+}
+</style>
+
+
+<style id="bd-v864-index-exact-compact-tray">
+/* Index: the user's supplied exact seven-reaction reference, compact instead of full-card sized. */
+#bd64ReactionTray.bd64-exact-reference{
+  width:min(286px,calc(100vw - 24px))!important;
+  height:auto!important;
+  aspect-ratio:1023/166!important;
+  padding:0!important;gap:0!important;
+  display:none;
+  border:0!important;
+  background-color:transparent!important;
+  background-image:var(--bd50-reaction-tray)!important;
+  background-size:100% 100%!important;
+  background-repeat:no-repeat!important;
+  background-position:center!important;
+  overflow:hidden!important;
+}
+#bd64ReactionTray.bd64-exact-reference.open{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important}
+#bd64ReactionTray.bd64-exact-reference button{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;flex:auto!important;border-radius:0!important}
+#bd64ReactionTray.bd64-exact-reference button .bd64-icon{display:none!important}
+@media(min-width:900px){#bd64ReactionTray.bd64-exact-reference{width:326px!important}}
+</style>
+
+
+<script id="bd-v864-reaction-engine">
+(()=>{'use strict';
+if(window.__BD_V864_REACTION__)return;window.__BD_V864_REACTION__=true;
+const D=document,W=window;
+const TYPES=['like','love','care','sad','haha','wow','angry'];
+const LABEL={like:'লাইক',love:'ভালোবাসা',care:'যত্ন',sad:'দুঃখিত',haha:'হাহা',wow:'ওয়াও',angry:'রাগান্বিত'};
+const FALLBACK={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};
+const q=(s,r=D)=>r?.querySelector?.(s)||null;
+function cardOf(n){return n?.closest?.('[data-bd31-ready="1"],[data-post-card],article.post,.bd-live-post,.post-card')||null}
+function postId(card){return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'').trim()}
+function getClient(){try{return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||((typeof sb!=='undefined')?sb:null)||null}catch{return null}}
+async function getSession(){const c=getClient();if(!c)return null;try{return (await c.auth.getSession()).data?.session||null}catch{return null}}
+function getMine(card){return String(q('[data-bd31-react-main]',card)?.dataset?.current||'')}
+function icon(type){
+ const src=W.BD52_REACTION_SRC?.[type];
+ if(src)return `<span class="bd64-icon"><img src="${src}" alt="" draggable="false"></span>`;
+ return `<span class="bd64-icon"><span class="bd31-r ${type} bd31-mini" aria-hidden="true"></span></span>`;
+}
+function tray(){
+ let t=D.getElementById('bd64ReactionTray');if(t)return t;
+ t=D.createElement('div');t.id='bd64ReactionTray';t.setAttribute('role','menu');
+ if(getComputedStyle(D.documentElement).getPropertyValue('--bd50-reaction-tray').trim())t.classList.add('bd64-exact-reference');
+ t.innerHTML=TYPES.map(type=>`<button type="button" data-bd64-pick="${type}" aria-label="${LABEL[type]}" title="${LABEL[type]}">${icon(type)}</button>`).join('');
+ D.body.appendChild(t);return t;
+}
+function closeTray(){const t=tray();t.classList.remove('open');t.__card=null;t.__button=null}
+function openTray(btn){const card=cardOf(btn);if(!card)return;const t=tray(),r=btn.getBoundingClientRect();t.__card=card;t.__button=btn;t.classList.add('open');
+ requestAnimationFrame(()=>{const w=t.offsetWidth||286,h=t.offsetHeight||47;let left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+8);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'})
+}
+function setMain(card,type,remove=false){
+ const main=q('[data-bd31-react-main]',card);if(!main)return;
+ const next=remove?'':type;main.dataset.current=next;main.classList.toggle('selected',!!next);main.classList.toggle('active',!!next);
+ const holder=q('.bd31-main-reaction',main);if(holder){if(next)holder.innerHTML=icon(next);else if(holder.dataset.bd64Neutral)holder.innerHTML=holder.dataset.bd64Neutral;}
+ const lab=q('[data-bd31-label]',main);if(lab)lab.textContent=next?LABEL[next]:'লাইক';
+}
+function rememberNeutral(main){const holder=q('.bd31-main-reaction',main);if(holder&&!holder.dataset.bd64Neutral)holder.dataset.bd64Neutral=holder.innerHTML}
+function bumpCount(card,oldType,newType,remove){
+ const sum=q('[data-bd31-react-summary]',card);if(!sum)return;
+ let n=Number(card.dataset.bd64Count||'');
+ if(!Number.isFinite(n))n=0;
+ if(!card.dataset.bd64CountInit){const m=(sum.textContent||'').match(/[০-৯0-9]+/);if(m){n=Number(m[0].replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)))||0}card.dataset.bd64CountInit='1'}
+ if(!oldType&&!remove)n++;else if(oldType&&remove)n=Math.max(0,n-1);
+ card.dataset.bd64Count=String(n);
+ if(n>0){sum.hidden=false;sum.style.visibility='visible';const text=[...sum.querySelectorAll('span')].pop();if(text)text.textContent=String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])+' জন প্রতিক্রিয়া';else sum.textContent=String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])+' জন প্রতিক্রিয়া'}
+ else{sum.hidden=true;sum.style.visibility='hidden'}
+}
+async function persist(card,type,remove,previous){
+ const id=postId(card),c=getClient(),s=await getSession();if(!id)return;
+ if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}
+ let ok=false;
+ if(c){
+  try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(type)});if(!r.error)ok=true}catch{}
+  if(!ok)for(const table of ['post_reactions','reactions']){
+   try{const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;
+    if(remove){r=cur.data?await c.from(table).delete().eq('post_id',id).eq('user_id',s.user.id):{error:null};}
+    else if(cur.data)r=await c.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);
+    else r=await c.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});
+    if(!r?.error){ok=true;break}
+   }catch{}
+  }
+ }
+ if(!ok)try{const k='bd31-react-'+id;let a=JSON.parse(localStorage.getItem(k)||'[]');if(!Array.isArray(a))a=[];a=a.filter(x=>String(x?.user_id)!==String(s.user.id));if(!remove)a.push({user_id:s.user.id,reaction:type});localStorage.setItem(k,JSON.stringify(a))}catch{}
+}
+function apply(card,type,fromTray){
+ if(!card||!TYPES.includes(type))return;const main=q('[data-bd31-react-main]',card);if(!main)return;rememberNeutral(main);
+ const prev=getMine(card);if(fromTray&&prev===type){closeTray();return}const remove=!fromTray&&prev==='like'&&type==='like';
+ setMain(card,type,remove);bumpCount(card,prev,type,remove);closeTray();
+ /* Persist after the visual state is already set. No refresh(), no scrollTo(), no rerender. */
+ persist(card,type,remove,prev).catch(()=>{});
+}
+let press=null;
+function stop(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}
+W.addEventListener('pointerdown',e=>{
+ const main=e.target.closest?.('[data-bd31-react-main]');if(!main)return;
+ e.stopPropagation();e.stopImmediatePropagation();
+ if(e.pointerType==='mouse')return;
+ press={main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,t:setTimeout(()=>{if(!press||press.id!==e.pointerId)return;press.held=true;openTray(main)},320)};
+},{capture:true});
+W.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot(e.clientX-press.x,e.clientY-press.y)>12){clearTimeout(press.t);press=null}},{capture:true,passive:true});
+W.addEventListener('pointerup',e=>{if(!press||press.id!==e.pointerId)return;const p=press;clearTimeout(p.t);press=null;if(p.held){stop(e);p.main.dataset.bd64SkipClick='1';setTimeout(()=>delete p.main.dataset.bd64SkipClick,500)}},{capture:true});
+W.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId){clearTimeout(press.t);press=null}},{capture:true});
+W.addEventListener('click',e=>{
+ const pick=e.target.closest?.('[data-bd64-pick]');if(pick){stop(e);const t=tray(),card=t.__card,type=pick.dataset.bd64Pick;if(card)apply(card,type,true);return}
+ const main=e.target.closest?.('[data-bd31-react-main]');if(main){stop(e);if(main.dataset.bd64SkipClick){delete main.dataset.bd64SkipClick;return}apply(cardOf(main),'like',false);return}
+ if(!e.target.closest?.('#bd64ReactionTray'))closeTray();
+},{capture:true});
+W.addEventListener('contextmenu',e=>{if(e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray'))stop(e)},{capture:true});
+/* Keep old document-level reaction systems from opening a second tray after mutations. */
+const mo=new MutationObserver(()=>{const old=D.getElementById('bd31ReactionTray');if(old){old.classList.remove('open');old.style.display='none'}});mo.observe(D.documentElement,{childList:true,subtree:true});
+})();
+</script>
+
 </body>
 </html>
