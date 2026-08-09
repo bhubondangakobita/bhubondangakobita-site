@@ -15,7 +15,7 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.62-stable-social-live-font-template-20260809">
+<meta name="bhubondanga-build" content="V8.69-index-public-auth-moderation-identity-20260809">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
@@ -838,10 +838,10 @@ const bn='০১২৩৪৫৬৭৮৯',bnNum=v=>String(v).replace(/\d/g,d=>bn
 const canonicalFile=()=>{let n='index.html';try{n=decodeURIComponent(location.pathname.split('/').pop()||'index.html')}catch(_){n=location.pathname.split('/').pop()||'index.html'}return n.toLowerCase().replace(/\s*\(\d+\)(?=\.html$)/i,'').replace(/\s+/g,'').replace(/\.html\.html$/,'.html').trim()};
 const roleOf=u=>String(u?.app_metadata?.role||u?.user_metadata?.role||'user').toLowerCase();
 function toast(msg){let t=$('#bdSingleToast');if(!t){t=D.createElement('div');t.id='bdSingleToast';t.className='bd-single-toast';D.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),2600)}
-function legacyUser(){const a=safe('bhubondangaCurrentUser'),b=safe('bhubondangaSessionUser',null,sessionStorage),u=a||b;return u&&u.loggedIn!==false?u:null}
+function legacyUser(){const a=safe('bhubondangaCurrentUser'),b=safe('bhubondangaSessionUser',null,sessionStorage),u=a||b;return u&&u.loggedIn===true&&Boolean(u.id||u.uid||u.email||u.username||u.slug)?u:null}
 function profileUrl(data={}){const role=String(data.role||'').toLowerCase(),name=String(data.author_name||data.display_name||data.name||''),username=String(data.author_username||data.username||data.slug||'').replace(/^@/,'').toLowerCase(),ref=data.author_id||data.user_id||username||data.id||'me';if(role==='founder'||username==='mahmud-sohel'||name==='মাহমুদ সোহেল'||(state.founderId&&String(data.author_id||data.user_id||'')===String(state.founderId)))return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(ref);return'profile.html?v=842&user='+encodeURIComponent(ref)}
 async function getRole(uid,user){let role=roleOf(user);if(client&&uid){try{const r=await client.from('user_roles').select('role,active').eq('user_id',uid).eq('active',true).maybeSingle();if(r.data?.role)role=String(r.data.role).toLowerCase()}catch(_){}}return role||'user'}
-async function getProfile(uid){if(!uid||!client)return null;try{const r=await client.from('profiles').select('*').eq('id',uid).maybeSingle();return r.data||null}catch(_){return null}}
+async function getProfile(uid){if(!uid||!client)return null;const meta=state.session?.user?.user_metadata||{},uname=String(meta.username||meta.user_name||meta.slug||'').replace(/^@/,'').toLowerCase();for(const q of [{col:'id',val:uid},{col:'user_id',val:uid},...(uname?[{col:'username',val:uname}]:[])]){try{const r=await client.from('profiles').select('*').eq(q.col,q.val).maybeSingle();if(!r.error&&r.data)return r.data}catch(_){}}return null}
 async function founderId(){if(state.founderId)return state.founderId;if(!client)return null;try{const r=await client.from('user_roles').select('user_id').eq('role','founder').eq('active',true).limit(1).maybeSingle();state.founderId=r.data?.user_id||null}catch(_){state.founderId=null}return state.founderId}
 function identity(){const u=state.session?.user,l=legacyUser(),p=state.profile||{};const founder=state.role==='founder';const username=String(p.username||p.slug||u?.user_metadata?.username||u?.user_metadata?.slug||l?.username||l?.slug||u?.email?.split('@')[0]||'member').replace(/^@/,'').toLowerCase();const display=p.display_name||p.full_name||p.name||u?.user_metadata?.full_name||u?.user_metadata?.display_name||u?.user_metadata?.name||l?.name||l?.displayName||p.username||u?.user_metadata?.username||u?.email?.split('@')[0]||'ভুবনডাঙ্গার সদস্য';return{author_id:u?.id||l?.id||l?.uid||'',author_username:founder?'mahmud-sohel':username,author_name:founder?'মাহমুদ সোহেল':display,author_avatar:p.avatar_url||p.avatar||p.photo_url||u?.user_metadata?.avatar_url||u?.user_metadata?.avatar||l?.avatar||l?.photo||'',role:state.role}}
 async function current(){return{user:state.session?.user||null,session:state.session,role:state.role,profile:state.profile,legacyUser:state.session?Object.assign({id:state.session.user.id,email:state.session.user.email,loggedIn:true},identity()):legacyUser()}}
@@ -2397,9 +2397,9 @@ function slug(v){return String(v||'').trim().toLocaleLowerCase('bn-BD').replace(
 function toast(message){const t=document.getElementById('toast');t.textContent=message;t.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.style.display='none',2800)}
 function profileUrl(input){const p=(input&&typeof input==='object')?input:{authorUsername:input};const u=String(p.authorUsername||p.author_username||p.username||p.slug||'').replace(/^@/,'').toLowerCase(),r=String(p.role||p.authorRole||p.author_role||'').toLowerCase(),n=String(p.authorName||p.author_name||p.name||p.display_name||''),id=p.authorId||p.author_id||p.user_id||u||p.id||'';if(r==='founder'||u==='mahmud-sohel'||n==='মাহমুদ সোহেল')return'founder-profile.html';if(r==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);if(r==='poet')return'poet-profile.html?user='+encodeURIComponent(id||u||'member');if(r==='famous')return'famous-poet-profile.html?poet='+encodeURIComponent(u||n);return'profile.html?v=842&user='+encodeURIComponent(id||u||'member')}
 const currentUser=obj('bhubondangaCurrentUser');
-const loggedIn=currentUser.loggedIn===true||Boolean(currentUser.username||currentUser.slug);
+const loggedIn=currentUser.loggedIn===true&&Boolean(currentUser.id||currentUser.uid||currentUser.email||currentUser.username||currentUser.slug);
 const currentUsername=currentUser.username||currentUser.slug||'';
-const currentName=currentUser.name||currentUser.displayName||'অতিথি পাঠক';
+const currentName=currentUser.name||currentUser.displayName||currentUser.full_name||currentUser.username||currentUser.slug||'অতিথি পাঠক';
 const currentAvatar=currentUser.avatar||currentUser.profileImage||currentUser.photo||'';
 const currentProfileUrl=loggedIn?profileUrl(currentUser):'login.html';
 const isFounder=currentUser.role==='founder'||currentUsername==='mahmud-sohel'||currentUser.isFounder===true;
@@ -2504,13 +2504,13 @@ function likesObject(){return obj(likeCountKey)}
 function activityObject(){return obj(activityKey)}
 function touchActivity(id,weight){const a=activityObject();a[id]={time:Date.now(),weight:Number((a[id]&&a[id].weight)||0)+Number(weight||1)};save(activityKey,a)}
 function algorithmScore(p){const likes=Number(likesObject()[p.id]??p.likes),comments=Number(p.comments||0),ageHours=Math.max(1,(Date.now()-(new Date(p.createdAt).getTime()||Date.now()))/3600000),activity=activityObject()[p.id]||{};return likes*1.3+comments*2.4+Number(activity.weight||0)*8+Math.max(0,72-ageHours)*.32+(activity.time?Math.max(0,36-(Date.now()-activity.time)/3600000)*1.7:0)}
-function filteredPosts(){let list=posts.slice().filter(p=>String(p.visibility||'public')!=='only_me'||canEdit(p));if(category!=='all')list=list.filter(p=>p.type===category);const likeCounts=likesObject();list.sort((a,b)=>{if(sort==='forYou')return algorithmScore(b)-algorithmScore(a);if(sort==='popular')return Number(likeCounts[b.id]??b.likes)-Number(likeCounts[a.id]??a.likes);const at=new Date(a.createdAt).getTime()||0,bt=new Date(b.createdAt).getTime()||0;return sort==='oldest'?at-bt:bt-at});return list}
+function filteredPosts(){let list=posts.slice();if(category!=='all')list=list.filter(p=>p.type===category);const likeCounts=likesObject();list.sort((a,b)=>{if(sort==='forYou')return algorithmScore(b)-algorithmScore(a);if(sort==='popular')return Number(likeCounts[b.id]??b.likes)-Number(likeCounts[a.id]??a.likes);const at=new Date(a.createdAt).getTime()||0,bt=new Date(b.createdAt).getTime()||0;return sort==='oldest'?at-bt:bt-at});return list}
 function formatDate(value){const d=new Date(value);if(Number.isNaN(d.getTime()))return'';return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(d)}
 function addParam(url,key,value){return url+(url.includes('?')?'&':'?')+encodeURIComponent(key)+'='+encodeURIComponent(value)}
 function renderComments(id){const box=document.querySelector('[data-comments-list="'+CSS.escape(String(id))+'"]');if(!box)return;const list=arr(commentKey).filter(x=>String(x.postId)===String(id));box.innerHTML=list.slice(-10).map(x=>'<div class="comment-item"><a href="'+esc(profileUrl(x.authorUsername||slug(x.author||'পাঠক')))+'">'+esc(x.author||'পাঠক')+'</a><br>'+esc(x.text)+'</div>').join('')}
 function authorAvatarMarkup(p){if(p.authorAvatar)return '<img src="'+esc(p.authorAvatar)+'" alt="'+esc(p.authorName)+'" onerror="this.remove();this.parentElement.innerHTML=\''+icon('user').replace(/'/g,"\\'")+'\'">';return icon(p.authorUsername==='mahmud-sohel'?'poem':'user')}
 function liveIdentity(){return window.__BD_IDENTITY||{}}
-function isLoggedInNow(){const live=liveIdentity();return loggedIn||Boolean(window.__BD_LIVE_SESSION)||Boolean(live.author_id||live.author_username)}
+function isLoggedInNow(){return Boolean(window.__BD_LIVE_SESSION?.user)||loggedIn}
 function canEdit(p){const live=liveIdentity(),liveUser=String(live.author_username||currentUsername||''),liveId=String(live.author_id||'');return isLoggedInNow()&&!p.demo&&(isFounder||String(p.authorUsername||'')===liveUser||(liveId&&String(p.authorId||'')===liveId))}
 function postViewUrl(p){const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('post',p.id);return u.href}
 function renderIndexMedia(p){if(!p.media)return'';const kind=String(p.mediaKind||'image').toLowerCase();if(kind==='audio')return'<div class="composer-media-render"><audio controls preload="metadata" src="'+esc(p.media)+'"></audio></div>';if(kind==='video')return'<div class="composer-media-render"><video controls playsinline preload="metadata" src="'+esc(p.media)+'"></video></div>';return'<div class="composer-media-render"><img src="'+esc(p.media)+'" alt="'+esc(p.title)+'" loading="lazy"></div>'}
@@ -2740,6 +2740,7 @@ function showNewPostFirst(post){
   });
 }
 async function publishPost(payload,flaggedTerms){
+  flaggedTerms=scanModeration(String(payload?.title||'')+' '+String(payload?.body||''));
   const flagged=Boolean(flaggedTerms.length),post=buildPost(payload,flagged?'pending_review':'published');
   if(flagged){
     const pending=arr('bhubondangaPendingReviewPosts').filter(x=>String(x.id)!==String(post.id));pending.unshift(post);save('bhubondangaPendingReviewPosts',pending.slice(0,2000));
@@ -2769,10 +2770,25 @@ async function publishPost(payload,flaggedTerms){
   else toast('লেখাটি এই ডিভাইসে ফিডের ওপরে দেখানো হয়েছে; অনলাইন সংরক্ষণ পুনরায় চেষ্টা হবে।');
 }
 function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,title=postTitle.value.trim(),body=postBody.value.trim(),author=originalAuthor.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='poem'&&!title){toast('কবিতার শিরোনাম লিখুন।');return null}if(!body){toast('আপনার লেখাটি লিখুন।');return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');;return null}const exact=!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:(window.BD58ComposeStyle?window.BD58ComposeStyle('index'):document.getElementById('cardStyle').value),mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
+async function bdVerifiedComposerAuth(){
+  let live=null;try{live=await window.BhubondangaAuth?.current?.()}catch(_){}
+  const session=live?.session?.user?live.session:(window.__BD_LIVE_SESSION?.user?window.__BD_LIVE_SESSION:null);
+  if(!session?.user)return null;
+  const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||null,uid=session.user.id,meta=session.user.user_metadata||{};
+  let p=live?.profile||null;
+  if(c&&!p){for(const q of [{col:'id',val:uid},{col:'user_id',val:uid},...(meta.username?[{col:'username',val:String(meta.username).replace(/^@/,'').toLowerCase()}]:[])]){try{const r=await c.from('profiles').select('*').eq(q.col,q.val).maybeSingle();if(!r.error&&r.data){p=r.data;break}}catch(_){}}}
+  const username=String(p?.username||p?.slug||meta.username||meta.user_name||session.user.email?.split('@')[0]||uid).replace(/^@/,'').toLowerCase();
+  const name=p?.display_name||p?.full_name||p?.name||meta.full_name||meta.display_name||meta.name||username;
+  const role=String(live?.role||p?.role||meta.role||'user').toLowerCase();
+  const ident={author_id:uid,author_username:role==='founder'?'mahmud-sohel':username,author_name:role==='founder'?'মাহমুদ সোহেল':name,author_avatar:p?.avatar_url||p?.avatar||p?.photo_url||meta.avatar_url||meta.picture||'',role};
+  window.__BD_IDENTITY=ident;window.__BD_LIVE_SESSION=session;window.__BD_LIVE_ROLE=role;
+  try{document.dispatchEvent(new CustomEvent('bd:auth-ready',{detail:{session,identity:ident,role,profile:p}}))}catch(_){}
+  return{session,identity:ident,profile:p,role};
+}
 composerForm.addEventListener('submit',async function(e){
  e.preventDefault();
- let live=null;try{live=await window.BhubondangaAuth?.current?.()}catch(_){}
- if(!loggedIn&&!live?.session&&!window.__BD_IDENTITY?.author_id){toast('লেখা প্রকাশ করতে লগইন করুন।');setTimeout(()=>location.href='login.html',900);return}
+ const verified=await bdVerifiedComposerAuth();
+ if(!verified?.session?.user){toast('লেখা প্রকাশ করতে আগে লগইন করুন।');setTimeout(()=>location.href='login.html?next='+encodeURIComponent(location.href),900);return}
  const payload=validatePayload();if(!payload)return;
  const terms=scanModeration(payload.title+' '+payload.body);
  if(terms.length){await publishPost(payload,terms);return}
@@ -2814,7 +2830,7 @@ const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=docu
   'use strict';
   const D=document;
   function syncAuthChrome(){
-    const live=window.__BD_IDENTITY||{},logged=Boolean(window.__BD_LIVE_SESSION)||Boolean(live.author_id||live.author_username);D.body.classList.toggle('is-authenticated',logged);D.body.classList.toggle('is-visitor',!logged);
+    const live=window.__BD_IDENTITY||{},logged=Boolean(window.__BD_LIVE_SESSION?.user);D.body.classList.toggle('is-authenticated',logged);D.body.classList.toggle('is-visitor',!logged);
     const n=D.getElementById('headerNotifications'),m=D.getElementById('headerMessages'),a=D.getElementById('headerAvatar');
     if(n)n.hidden=!logged;if(m)m.hidden=!logged;
     if(a){if(logged){a.classList.remove('header-login-state');a.href=(live.role==='founder'||live.author_username==='mahmud-sohel')?'founder-profile.html':'profile.html?v=842&user='+encodeURIComponent(live.author_id||live.author_username||'me');a.title=live.author_name||'আপনার প্রোফাইল';a.innerHTML=live.author_avatar?'<img src="'+String(live.author_avatar).replace(/"/g,'&quot;')+'" alt="">':'<svg class="icon"><use href="#i-user"></use></svg>'}else{a.classList.add('header-login-state');a.href='login.html';a.title='লগইন করুন';a.textContent='লগইন'}}
@@ -6017,6 +6033,219 @@ D.addEventListener('input',e=>{if(e.target?.id==='postBody'){templateGuard();if(
 D.addEventListener('click',e=>{if(e.target.closest?.('[data-bd58-template]'))setTimeout(()=>{templateGuard();if(!isTemplate())normalFit()},0);if(innerWidth>=900&&e.target.closest?.('#composerPrompt,#composerChoices [data-open-type]'))setTimeout(()=>syncAuth({session:window.__BD_LIVE_SESSION}),0)},true);
 addEventListener('resize',()=>requestAnimationFrame(normalFit),{passive:true});
 function boot(){syncAuth({session:window.__BD_LIVE_SESSION});normalFit()}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+
+
+<!-- BHUBONDANGA V8.68 TARGETED REPAIR — 2026-08-09
+     STRICT SCOPE: desktop composer stays fully open for authenticated users;
+     long posts remain inline tap-to-expand/tap-to-collapse with no popup;
+     comment/reply writing is locked unless a real Supabase session exists. -->
+<style id="bd-v868-targeted-only-css">
+/* 1) Desktop writing area: legacy card-stage classes may no longer collapse the authenticated composer. */
+@media (min-width:900px){
+  #composer[data-bd68-desktop-open="1"]{overflow:visible!important}
+  #composer[data-bd68-desktop-open="1"] #composerChoices{
+    display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+  }
+  #composer[data-bd68-desktop-open="1"] #composerNote{
+    display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+  }
+  #composer[data-bd68-desktop-open="1"] #composerForm{
+    display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+    height:auto!important;max-height:none!important;overflow:visible!important
+  }
+  #composer[data-bd68-desktop-open="1"] #composerForm .composer-grid{
+    display:grid!important;visibility:visible!important;opacity:1!important
+  }
+  #composer[data-bd68-desktop-open="1"] #postTitle,
+  #composer[data-bd68-desktop-open="1"] #bd58TemplatePicker,
+  #composer[data-bd68-desktop-open="1"] #postBody{
+    display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+  }
+  #composer[data-bd68-desktop-open="1"] #bdIndexMediaTools{display:flex!important;visibility:visible!important;opacity:1!important}
+  #composer[data-bd68-desktop-open="1"] .ownership-row{display:flex!important;visibility:visible!important;opacity:1!important}
+  #composer[data-bd68-desktop-open="1"] .composer-actions{display:flex!important;visibility:visible!important;opacity:1!important}
+  #composer[data-bd68-desktop-open="1"] #postBody{
+    min-height:280px!important;max-height:min(68dvh,760px)!important;
+    resize:none!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important
+  }
+  #composer[data-bd68-desktop-open="1"] #composerForm.bd-stage-selecting .bd-index-write-field{
+    visibility:visible!important;opacity:1!important;pointer-events:auto!important
+  }
+}
+/* 2) No post popup/viewer. Full text always stays inside the original feed card. */
+#masterPostShell,#bd45PostViewer,.master-post-shell,.bd45-post-shell{
+  display:none!important;visibility:hidden!important;pointer-events:none!important
+}
+.post.bd68-long-post .post-body.collapsed,.bd-live-post.bd68-long-post .post-body.collapsed{
+  display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:7!important;
+  overflow:hidden!important;max-height:13.4em!important
+}
+.post.bd63-expanded .post-body,.bd-live-post.bd63-expanded .post-body,
+.post.expanded .post-body,.bd-live-post.expanded .post-body{
+  display:block!important;-webkit-line-clamp:unset!important;max-height:none!important;overflow:visible!important
+}
+/* 3) Guests may read comments, but the writing controls are unavailable until login. */
+[data-bd68-comment-locked="1"] input,[data-bd68-comment-locked="1"] textarea,
+[data-bd68-comment-locked="1"] button[type="submit"]{
+  cursor:not-allowed!important;opacity:.66!important
+}
+</style>
+<script id="bd-v868-targeted-only-js">
+(()=>{'use strict';
+const D=document,W=window;
+let logged=!!W.__BD_LIVE_SESSION?.user;
+const commentFormSelector='.bd31-comment-form,.bd31-reply-form,.bd35-comment-composer,.bd24-comment-form,.bd24-reply-form,.comment-form';
+function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null}
+function isDesktop(){return W.innerWidth>=900}
+function fitBody(){
+  if(!isDesktop())return;
+  const form=D.getElementById('composerForm'),el=D.getElementById('postBody');
+  if(!form||!el)return;
+  const templ=/^tpl[1-8]$/.test(form.dataset.bd65Template||'');
+  if(templ)return; // Existing fixed-card/template guard owns template height.
+  const min=280,max=Math.max(min,Math.min(W.innerHeight*.68,760));
+  el.style.height='auto';
+  const wanted=Math.max(min,el.scrollHeight);
+  el.style.height=Math.min(wanted,max)+'px';
+  el.style.overflowY=wanted>max?'auto':'hidden';
+}
+function forceDesktopComposer(){
+  if(!isDesktop()||!logged)return;
+  const composer=D.getElementById('composer'),form=D.getElementById('composerForm'),choices=D.getElementById('composerChoices'),note=D.getElementById('composerNote'),prompt=D.getElementById('composerPrompt');
+  if(!composer||!form)return;
+  if(composer.hidden)composer.hidden=false;
+  if(composer.dataset.bd68DesktopOpen!=='1')composer.dataset.bd68DesktopOpen='1';
+  if(form.hidden)form.hidden=false;
+  if(form.classList.contains('bd-stage-selecting'))form.classList.remove('bd-stage-selecting');
+  if(form.classList.contains('bd-write-ready'))form.classList.remove('bd-write-ready');
+  if(choices?.hidden)choices.hidden=false;
+  if(note?.hidden)note.hidden=false;
+  prompt?.setAttribute('aria-expanded','true');
+  if(!D.querySelector('input[name="postType"]:checked')){
+    const poem=D.getElementById('typePoem');
+    if(poem){poem.checked=true;poem.dispatchEvent(new Event('change',{bubbles:true}))}
+  }
+  requestAnimationFrame(fitBody);
+}
+async function refreshSession(){
+  try{
+    const c=client(),s=c?.auth?.getSession?((await c.auth.getSession()).data?.session||null):null;
+    logged=!!s?.user;
+  }catch(_){logged=!!W.__BD_LIVE_SESSION?.user}
+  if(logged)forceDesktopComposer();
+  syncCommentAuth();
+}
+function markLongPosts(root=D){
+  root.querySelectorAll?.('article.post,article.bd-live-post,.post-card').forEach(card=>{
+    const body=card.querySelector?.('.post-body');if(!body)return;
+    const text=(body.textContent||'').trim(),long=text.length>420||text.split(/\n/).length>7;
+    if(!long)return;
+    card.classList.add('bd68-long-post');
+    if(!card.classList.contains('bd63-expanded')&&!card.classList.contains('expanded')&&!card.classList.contains('bd-inline-expanded'))body.classList.add('collapsed');
+  });
+}
+function syncCommentAuth(root=D){
+  root.querySelectorAll?.(commentFormSelector).forEach(form=>{
+    const controls=form.querySelectorAll('input,textarea,button[type="submit"]');
+    if(!logged){
+      form.dataset.bd68CommentLocked='1';
+      controls.forEach(c=>{
+        if(c.dataset.bd68AuthLock!=='1'){
+          c.dataset.bd68AuthLock='1';
+          c.dataset.bd68WasDisabled=c.disabled?'1':'0';
+          if('placeholder' in c)c.dataset.bd68Placeholder=c.getAttribute('placeholder')||'';
+        }
+        c.disabled=true;
+        if('placeholder' in c)c.setAttribute('placeholder','মন্তব্য করতে লগইন করুন');
+      });
+    }else if(form.dataset.bd68CommentLocked==='1'){
+      delete form.dataset.bd68CommentLocked;
+      controls.forEach(c=>{
+        if(c.dataset.bd68AuthLock==='1'){
+          if(c.dataset.bd68WasDisabled!=='1')c.disabled=false;
+          if('placeholder' in c&&c.dataset.bd68Placeholder!==undefined)c.setAttribute('placeholder',c.dataset.bd68Placeholder);
+          delete c.dataset.bd68AuthLock;delete c.dataset.bd68WasDisabled;delete c.dataset.bd68Placeholder;
+        }
+      });
+    }
+  });
+}
+/* Desktop prompt is an OPEN control only. Legacy toggle code is not allowed to collapse it again. */
+D.addEventListener('click',e=>{
+  if(!isDesktop()||!logged||!e.target.closest?.('#composerPrompt'))return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();forceDesktopComposer();
+},true);
+D.addEventListener('input',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitBody)},true);
+D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitBody)},true);
+D.addEventListener('submit',e=>{
+  const form=e.target.closest?.(commentFormSelector);if(!form||logged)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  location.href='login.html?next='+encodeURIComponent(location.href);
+},true);
+D.addEventListener('bd:auth-ready',e=>{
+  logged=!!e.detail?.session?.user;
+  if(logged)forceDesktopComposer();
+  syncCommentAuth();
+});
+W.addEventListener('resize',()=>{if(logged)forceDesktopComposer();requestAnimationFrame(fitBody)},{passive:true});
+const mo=new MutationObserver(ms=>{
+  let composerChanged=false;
+  for(const m of ms){
+    if(m.type==='attributes'&&(m.target?.id==='composerForm'||m.target?.id==='composerChoices'||m.target?.id==='composerNote'||m.target?.id==='composer'))composerChanged=true;
+    for(const n of m.addedNodes||[])if(n.nodeType===1){markLongPosts(n);syncCommentAuth(n)}
+  }
+  if(composerChanged&&logged&&isDesktop())requestAnimationFrame(forceDesktopComposer);
+});
+function boot(){
+  markLongPosts();syncCommentAuth();
+  const composer=D.getElementById('composer');if(composer)mo.observe(composer,{subtree:true,attributes:true,attributeFilter:['hidden','class']});
+  mo.observe(D.body,{childList:true,subtree:true});
+  refreshSession();setTimeout(refreshSession,450);setTimeout(refreshSession,1300);
+}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+
+<!-- BHUBONDANGA V8.69 TARGETED AUTH / PUBLIC INDEX / MODERATION LOCK — 2026-08-09
+     Scope only: authenticated identity, logged-in-only posting/comments, public Index feed,
+     desktop composer unlock, exact moderation route, visible reaction/member summary. -->
+<style id="bd-v869-targeted-only-css">
+@media(min-width:900px){
+  body.bd869-authenticated #composer{display:block!important;visibility:visible!important;opacity:1!important;overflow:visible!important}
+  body.bd869-authenticated #composerChoices{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd869-authenticated #composerNote{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd869-authenticated #composerForm{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;max-height:none!important;overflow:visible!important}
+  body.bd869-authenticated #composerForm .bd-index-write-field{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd869-authenticated #composerForm .composer-grid{display:grid!important}
+  body.bd869-authenticated #composerForm .composer-actions,body.bd869-authenticated #composerForm .ownership-row{display:flex!important}
+  body.bd869-authenticated #postBody{display:block!important;min-height:300px!important;max-height:min(70dvh,780px)!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;resize:none!important;overscroll-behavior:contain!important}
+}
+body.bd869-guest #composer{display:none!important}
+.bd31-summary{display:flex!important;align-items:center!important;justify-content:space-between!important;visibility:visible!important;opacity:1!important}
+[data-bd31-react-summary]:not([hidden]){display:inline-flex!important;align-items:center!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;cursor:pointer!important}
+.bd31-reactor-panel:not([hidden]){display:block!important}
+</style>
+<script id="bd-v869-targeted-only-js">
+(()=>{'use strict';
+const D=document,W=window;let realSession=null;
+function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null}
+function fit(){if(innerWidth<900)return;const f=D.getElementById('composerForm'),el=D.getElementById('postBody');if(!f||!el||!realSession?.user)return;if(/^tpl[1-8]$/.test(f.dataset.bd65Template||''))return;const min=300,max=Math.max(min,Math.min(innerHeight*.70,780));el.style.height='auto';const wanted=Math.max(min,el.scrollHeight);el.style.height=Math.min(wanted,max)+'px';el.style.overflowY=wanted>max?'auto':'hidden'}
+function apply(){const ok=!!realSession?.user;D.body.classList.toggle('bd869-authenticated',ok);D.body.classList.toggle('bd869-guest',!ok);const comp=D.getElementById('composer');if(comp)comp.hidden=!ok;if(!ok)return;const f=D.getElementById('composerForm'),ch=D.getElementById('composerChoices'),n=D.getElementById('composerNote');if(f){f.hidden=false;f.classList.remove('bd-stage-selecting','bd-write-ready')}if(ch)ch.hidden=false;if(n)n.hidden=false;requestAnimationFrame(fit)}
+async function read(){try{realSession=(await client()?.auth?.getSession?.()).data?.session||null}catch(_){realSession=null}W.__BD_LIVE_SESSION=realSession;apply();lockComments()}
+function lockComments(root=D){const ok=!!realSession?.user;root.querySelectorAll?.('.comment-box textarea,.comment-box input,.comment-box [data-action="bd-submit-comment-v814"],.bd31-comment-form input,.bd31-comment-form button[type="submit"],.bd31-reply-form input,.bd31-reply-form button[type="submit"],.bd24-comment-form input,.bd24-comment-form button[type="submit"],.bd24-reply-form input,.bd24-reply-form button[type="submit"]').forEach(el=>{el.disabled=!ok;if('placeholder' in el){if(!el.dataset.bd869Placeholder)el.dataset.bd869Placeholder=el.getAttribute('placeholder')||'';el.setAttribute('placeholder',ok?el.dataset.bd869Placeholder:'মন্তব্য করতে লগইন করুন')}})}
+D.addEventListener('input',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);
+D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);
+D.addEventListener('click',e=>{if(realSession?.user)return;const x=e.target.closest?.('#composerPrompt,#composerChoices button,#composerForm button,[data-action="bd-comment-v814"],[data-action="bd-submit-comment-v814"],[data-bd31-comments],.bd31-comment-form button[type="submit"],.bd31-reply-form button[type="submit"]');if(!x)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();location.href='login.html?next='+encodeURIComponent(location.href)},true);
+D.addEventListener('submit',e=>{if(realSession?.user)return;if(e.target?.matches?.('#composerForm,#bdPublishForm,.bd31-comment-form,.bd31-reply-form,.bd24-comment-form,.bd24-reply-form,.comment-form')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();location.href='login.html?next='+encodeURIComponent(location.href)}},true);
+D.addEventListener('bd:auth-ready',e=>{realSession=e.detail?.session?.user?e.detail.session:realSession;apply();lockComments()});
+const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)lockComments(n)});mo.observe(D.body,{childList:true,subtree:true});
+addEventListener('resize',()=>requestAnimationFrame(fit),{passive:true});
+function boot(){read();setTimeout(read,400);setTimeout(read,1200);try{client()?.auth?.onAuthStateChange?.((_e,s)=>{realSession=s||null;W.__BD_LIVE_SESSION=realSession;apply();lockComments()})}catch(_){}}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
