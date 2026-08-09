@@ -6673,5 +6673,163 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 })();
 </script>
 
+
+<!-- BHUBONDANGA V8.74 TARGETED ONLY: mobile composer write reveal + working owner post menu + inline post toggle + title colour fallback. V8.73 master baseline preserved. -->
+<style id="bd-v874-targeted-only-css">
+/* 1) Mobile/desktop staged composer: after font/title choice, the real writing area must be visible. */
+#composer[data-bd71-stage="write"] #composerForm{
+  display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
+#composer[data-bd71-stage="write"] #composerForm[hidden]{display:block!important}
+#composer[data-bd71-stage="write"] .composer-grid,
+#composer[data-bd71-stage="write"] #postTitle,
+#composer[data-bd71-stage="write"] #postBody,
+#composer[data-bd71-stage="write"] .composer-media-tools,
+#composer[data-bd71-stage="write"] .ownership-row,
+#composer[data-bd71-stage="write"] .composer-actions{
+  visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
+#composer[data-bd71-stage="write"] .composer-grid{display:grid!important}
+#composer[data-bd71-stage="write"] #postTitle,
+#composer[data-bd71-stage="write"] #postBody{display:block!important}
+#composer[data-bd71-stage="write"] #bd58TemplatePicker,
+#composer[data-bd71-stage="write"] #composerStylePicker{display:none!important}
+#composer[data-bd71-stage="write"] #postBody{
+  min-height:190px!important;max-height:min(56dvh,620px)!important;overflow-y:auto!important;resize:vertical!important;
+  overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important
+}
+@media(max-width:899px){
+  #composer[data-bd71-stage="write"] #postBody{min-height:220px!important;max-height:58dvh!important}
+}
+
+/* 2) Five identity chips keep their real font references when the assets exist; title colour always remains visible as fallback. */
+#composerForm[data-bd73-font="bornomala"] #postTitle{color:#16815c!important}
+#composerForm[data-bd73-font="kaium"] #postTitle{color:#d54858!important}
+#composerForm[data-bd73-font="kobiguru"] #postTitle{color:#7650d5!important}
+#composerForm[data-bd73-font="mamun"] #postTitle{color:#2879c4!important}
+#composerForm[data-bd73-font="ruposhi"] #postTitle{color:#a97819!important}
+.post[class*="-fbornomala"] .post-title,.post[class*="-fbornomala"] .post-title a{color:#16815c!important}
+.post[class*="-fkaium"] .post-title,.post[class*="-fkaium"] .post-title a{color:#d54858!important}
+.post[class*="-fkobiguru"] .post-title,.post[class*="-fkobiguru"] .post-title a{color:#7650d5!important}
+.post[class*="-fmamun"] .post-title,.post[class*="-fmamun"] .post-title a{color:#2879c4!important}
+.post[class*="-fruposhi"] .post-title,.post[class*="-fruposhi"] .post-title a{color:#a97819!important}
+
+/* 3) Owner post menu actions and editors are detached above every glass layer and remain clickable on Safari/mobile. */
+#postActionBoard .bd74-owner-action{pointer-events:auto!important;touch-action:manipulation!important}
+#bd74IndexEditor,#bd74IndexPrivacy{
+  position:fixed;z-index:2147483600;width:min(360px,calc(100vw - 24px));max-height:min(78dvh,620px);overflow:auto;
+  padding:12px;border:1px solid rgba(93,91,155,.18);border-radius:15px;
+  background:rgba(255,255,255,.995);color:#263751;box-shadow:0 22px 60px rgba(28,34,74,.28);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)
+}
+html[data-theme="dark"] #bd74IndexEditor,html[data-theme="dark"] #bd74IndexPrivacy{background:rgba(14,28,52,.995);color:#f2f6ff;border-color:rgba(173,184,245,.22)}
+#bd74IndexEditor[hidden],#bd74IndexPrivacy[hidden]{display:none!important}
+#bd74IndexEditor h4,#bd74IndexPrivacy h4{margin:0 0 10px;font-size:14px;color:inherit}
+#bd74IndexEditor input,#bd74IndexEditor textarea,#bd74IndexEditor select{
+  width:100%;margin:0 0 8px;padding:10px 11px;border:1px solid rgba(93,91,155,.18);border-radius:10px;
+  background:#fff;color:#263751;font:inherit;font-size:16px!important;outline:0
+}
+html[data-theme="dark"] #bd74IndexEditor input,html[data-theme="dark"] #bd74IndexEditor textarea,html[data-theme="dark"] #bd74IndexEditor select{background:#0e223c;color:#f2f6ff;border-color:rgba(173,184,245,.20)}
+#bd74IndexEditor textarea{min-height:150px;line-height:1.8;resize:vertical}
+.bd74-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:7px}.bd74-actions button{min-height:39px;padding:0 12px;border:1px solid rgba(93,91,155,.18);border-radius:10px;background:transparent;color:inherit;font-weight:800}.bd74-actions .save{border:0;background:linear-gradient(135deg,#688bf0,#8f75ec);color:#fff}
+.bd74-privacy-list{display:grid;gap:6px}.bd74-privacy{width:100%;min-height:54px;padding:7px 9px;border:1px solid rgba(93,91,155,.14);border-radius:11px;display:grid;grid-template-columns:34px minmax(0,1fr) 20px;align-items:center;gap:8px;background:transparent;color:inherit;text-align:left}.bd74-privacy.selected{border-color:#7a7fdc;background:rgba(122,127,220,.08)}.bd74-privacy b,.bd74-privacy small{display:block}.bd74-privacy small{opacity:.68;font-size:9px}.bd74-radio{width:16px;height:16px;border:2px solid rgba(90,103,151,.38);border-radius:50%}.bd74-privacy.selected .bd74-radio{border:5px solid #7a7fdc}
+
+/* 4) In-place long-post state. No modal, popup or route is used by this toggle. */
+#postList .post.bd74-inline-open .post-body,#postList .bd-live-post.bd74-inline-open .post-body{
+  display:block!important;max-height:none!important;overflow:visible!important;-webkit-line-clamp:unset!important
+}
+#postList .post.bd74-inline-open .post-body::after,#postList .bd-live-post.bd74-inline-open .post-body::after{display:none!important}
+</style>
+<script id="bd-v874-targeted-only-js">
+(()=>{'use strict';
+const D=document,W=window,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));
+const TITLE_COLOR={bornomala:'#16815c',kaium:'#d54858',kobiguru:'#7650d5',mamun:'#2879c4',ruposhi:'#a97819'};
+const TYPE_LABEL={poem:'কবিতা',recitation:'আবৃত্তি',prolap:'ছোট কথার প্রলাপ',midnight:'মধ্যরাতের প্রলাপ',letter:'চিঠিপত্র',letters:'চিঠিপত্র',environment:'পরিবেশ',humanitarian:'মানবিক আবেদন',discussion:'আলোচনা',children:'শিশুতোষ'};
+const PRIV={public:['🌐','পাবলিক','সবাই পোস্টটি দেখতে পারবেন'],friends:['👥','বন্ধুরা','আপনার বন্ধুদের জন্য'],close_friends:['⭐','ঘনিষ্ঠ বন্ধুরা','ঘনিষ্ঠ বন্ধু তালিকার জন্য'],only_me:['🔒','শুধু আমি','শুধু আপনি দেখতে পারবেন']};
+
+function notice(msg){try{if(typeof toast==='function'){toast(msg);return}}catch{};try{W.bdV7Toast?.(msg)}catch{};if(!W.bdV7Toast)console.info(msg)}
+function postById(id){try{return typeof findPost==='function'?findPost(id):null}catch{return null}}
+function editable(p){try{return !!(p&&typeof canEdit==='function'&&canEdit(p))}catch{return false}}
+function dbClient(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null}
+function hideActionBoard(){try{if(typeof closePostActionBoard==='function')closePostActionBoard()}catch{} }
+function rerender(){try{if(typeof renderPosts==='function')renderPosts()}catch{} }
+function localPatch(id,patch){
+  const stamp=new Date().toISOString();
+  try{if(typeof sourceKeys!=='undefined'&&typeof arr==='function'&&typeof save==='function')sourceKeys.forEach(k=>{const a=arr(k);let changed=false;const n=a.map(x=>{const xid=String(x?.id||x?.postId||x?.sourceId||'');if(xid!==String(id))return x;changed=true;return {...x,...patch,updatedAt:stamp,updated_at:stamp}});if(changed)save(k,n)})}catch{}
+  const p=postById(id);if(p)Object.assign(p,patch);
+}
+function localRemove(id){
+  try{if(typeof sourceKeys!=='undefined'&&typeof arr==='function'&&typeof save==='function')sourceKeys.forEach(k=>{const a=arr(k),n=a.filter(x=>String(x?.id||x?.postId||x?.sourceId||'')!==String(id));if(n.length!==a.length)save(k,n)})}catch{}
+  try{if(typeof posts!=='undefined')posts=posts.filter(x=>String(x?.id)!==String(id))}catch{}
+}
+async function updateDb(id,variants){const c=dbClient();if(!c)return false;for(const patch of variants){try{const r=await c.from('posts').update({...patch,updated_at:new Date().toISOString()}).eq('id',id);if(!r.error)return true}catch{}}return false}
+
+/* Mobile fix: V8.73 intentionally renamed data-bd58-font -> data-bd73-font; restore the stage transition explicitly. */
+function revealWriteStage(chip){
+  const c=$('#composer'),f=$('#composerForm'),title=$('#postTitle'),body=$('#postBody');if(!c||!f)return;
+  const key=chip?.dataset?.bd73Font||f.dataset.bd73Font||'bornomala';
+  try{W.BD73ApplyFont?.(key)}catch{}
+  f.dataset.bd73Font=key;
+  if(title)title.style.setProperty('color',TITLE_COLOR[key]||'','important');
+  c.dataset.bd71Stage='write';c.classList.remove('bd-stage-selecting');c.classList.add('bd-write-ready');
+  f.hidden=false;f.removeAttribute('hidden');f.style.setProperty('display','block','important');f.style.setProperty('visibility','visible','important');f.style.setProperty('opacity','1','important');
+  const grid=$('.composer-grid',f),tpl=$('#bd58TemplatePicker'),style=$('#composerStylePicker');
+  if(grid)grid.style.setProperty('display','grid','important');if(tpl)tpl.style.setProperty('display','none','important');if(style)style.style.setProperty('display','none','important');
+  for(const el of [title,body])if(el){el.hidden=false;el.removeAttribute('hidden');el.style.setProperty('display','block','important');el.style.setProperty('visibility','visible','important');el.style.setProperty('opacity','1','important')}
+  setTimeout(()=>{try{body?.focus({preventScroll:true})}catch{body?.focus()}},40);
+}
+W.addEventListener('pointerdown',e=>{const chip=e.target.closest?.('#bd58FontToolbar [data-bd73-font]');if(!chip)return;const c=$('#composer');if(c?.dataset?.bd71Stage==='font'||c?.dataset?.bd71Stage==='template'||c?.dataset?.bd71Stage==='write'){revealWriteStage(chip)}},true);
+
+/* Keep selected title colour visible even when the custom font asset is unavailable. */
+new MutationObserver(()=>{const f=$('#composerForm'),t=$('#postTitle');if(f&&t){const k=f.dataset.bd73Font;t.style.setProperty('color',TITLE_COLOR[k]||'','important')}}).observe(D.body,{subtree:true,attributes:true,attributeFilter:['data-bd73-font']});
+
+/* Inline expand/collapse: override the current stable viewer with a true toggle. */
+function collapseCard(card){if(!card)return false;card.classList.remove('bd74-inline-open','bd-inline-expanded','bd63-expanded','expanded');delete card.dataset.bdInlineOpen;const body=$('.post-body',card);if(body){body.classList.add('collapsed');body.style.maxHeight=''}const more=$('.post-read-more,.readmore',card);if(more)more.textContent='পূর্ণ লেখা পড়ুন →';return true}
+function expandCard(card){if(!card)return false;card.classList.add('bd74-inline-open','bd-inline-expanded','bd63-expanded','expanded');card.dataset.bdInlineOpen='1';const body=$('.post-body',card);if(body){body.classList.remove('collapsed');body.style.maxHeight='none'}const more=$('.post-read-more,.readmore',card);if(more)more.textContent='কম দেখুন ↑';return true}
+function toggleCard(card){if(!card)return false;const body=$('.post-body',card),open=card.classList.contains('bd74-inline-open')||card.classList.contains('bd-inline-expanded')||card.classList.contains('bd63-expanded')||card.classList.contains('expanded')||(body&&!body.classList.contains('collapsed'));return open?collapseCard(card):expandCard(card)}
+W.BDStablePostViewer=W.BDStablePostViewer||{};W.BDStablePostViewer.open=(card)=>toggleCard(card);W.BDStablePostViewer.close=(card)=>collapseCard(card||$('#postList .bd74-inline-open,#postList .bd-inline-expanded,#postList .bd63-expanded'));
+W.openPostViewer=(p)=>{const id=String(p?.id||''),card=D.querySelector(`#postList [data-post="${CSS.escape(id)}"],#postList [data-post-id="${CSS.escape(id)}"]`);return toggleCard(card)};
+
+/* Three-dot owner menu: retain current menu and add the two missing owner operations. */
+function augmentMenu(){const board=$('#postActionBoard');if(!board?.classList.contains('open'))return;const marker=$('[data-action="edit-inline"],[data-action="caption-inline"]',board);if(!marker)return;const id=marker.dataset.id||'';board.querySelectorAll('button').forEach(b=>b.classList.add('bd74-owner-action'));
+  if(!board.querySelector('[data-action="archive-inline"]')){const b=D.createElement('button');b.type='button';b.className='bd74-owner-action';b.dataset.action='archive-inline';b.dataset.id=id;b.textContent='◫ আর্কাইভে নিন';const del=board.querySelector('[data-action="delete"]');board.insertBefore(b,del||null)}
+  if(!board.querySelector('[data-action="private-inline"]')){const b=D.createElement('button');b.type='button';b.className='bd74-owner-action';b.dataset.action='private-inline';b.dataset.id=id;b.textContent='🔒 প্রাইভেট করুন';const del=board.querySelector('[data-action="delete"]');board.insertBefore(b,del||null)}
+  const del=board.querySelector('[data-action="delete"]');if(del){del.classList.add('bd74-owner-action');del.innerHTML='✕ মুছে ফেলুন'}
+}
+const menuObserver=new MutationObserver(()=>augmentMenu());const menuBoard=$('#postActionBoard');if(menuBoard)menuObserver.observe(menuBoard,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+
+let editor=null,privacy=null,activeId='';
+function ensurePanels(){
+  if(!editor){editor=D.createElement('section');editor.id='bd74IndexEditor';editor.hidden=true;D.body.appendChild(editor)}
+  if(!privacy){privacy=D.createElement('section');privacy.id='bd74IndexPrivacy';privacy.hidden=true;D.body.appendChild(privacy)}
+}
+function closePanels(){ensurePanels();editor.hidden=true;privacy.hidden=true;activeId=''}
+function place(board){const anchor=$('#postActionBoard'),r=anchor?.getBoundingClientRect(),w=Math.min(360,innerWidth-24);board.style.width=w+'px';let left=r?Math.min(innerWidth-w-12,Math.max(12,r.left)):12,top=r?Math.min(innerHeight-12,r.bottom+6):74;board.style.left=left+'px';board.style.top=top+'px';requestAnimationFrame(()=>{const h=board.offsetHeight;if(top+h>innerHeight-10)board.style.top=Math.max(10,innerHeight-h-10)+'px'})}
+function openEditor(id,captionOnly){ensurePanels();const p=postById(id);if(!p||!editable(p)){notice('এই পোস্ট সম্পাদনার অনুমতি নেই।');return}hideActionBoard();privacy.hidden=true;activeId=String(id);
+  if(captionOnly){editor.innerHTML=`<h4>ক্যাপশন পরিবর্তন</h4><textarea data-bd74-caption maxlength="500" placeholder="ছবি/ভিডিওর ক্যাপশন লিখুন…">${String(p.caption||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea><div class="bd74-actions"><button type="button" data-bd74-close>বাতিল</button><button class="save" type="button" data-bd74-save-caption>সংরক্ষণ</button></div>`}
+  else{const options=Object.entries(TYPE_LABEL).filter(([k])=>k!=='midnight'||String(p.authorRole||'')==='founder'||String(p.authorUsername||'')==='mahmud-sohel').map(([k,v])=>`<option value="${k}" ${String(p.type)===k?'selected':''}>${v}</option>`).join('');editor.innerHTML=`<h4>পোস্ট সম্পাদনা</h4><select data-bd74-type>${options}</select><input data-bd74-title maxlength="240"><textarea data-bd74-body maxlength="50000"></textarea><div class="bd74-actions"><button type="button" data-bd74-close>বাতিল</button><button class="save" type="button" data-bd74-save-edit>সংরক্ষণ</button></div>`;editor.querySelector('[data-bd74-title]').value=p.title||'';editor.querySelector('[data-bd74-body]').value=p.body||''}
+  editor.hidden=false;place(editor)
+}
+function openPrivacy(id){ensurePanels();const p=postById(id);if(!p||!editable(p)){notice('এই পোস্টের প্রাইভেসি পরিবর্তনের অনুমতি নেই।');return}hideActionBoard();editor.hidden=true;activeId=String(id);const current=String(p.visibility||p.privacy||'public');privacy.dataset.value=current;privacy.innerHTML=`<h4>কে এই পোস্টটি দেখতে পারবে?</h4><div class="bd74-privacy-list">${Object.entries(PRIV).map(([k,a])=>`<button type="button" class="bd74-privacy ${current===k?'selected':''}" data-bd74-privacy="${k}"><span>${a[0]}</span><span><b>${a[1]}</b><small>${a[2]}</small></span><span class="bd74-radio"></span></button>`).join('')}</div><div class="bd74-actions"><button type="button" data-bd74-close>বাতিল</button><button class="save" type="button" data-bd74-save-privacy>সম্পন্ন</button></div>`;privacy.hidden=false;place(privacy)}
+async function saveEdit(){const p=postById(activeId);if(!p)return;const type=editor.querySelector('[data-bd74-type]').value,title=editor.querySelector('[data-bd74-title]').value.trim(),body=editor.querySelector('[data-bd74-body]').value.trim();if(!title||!body){notice('শিরোনাম ও লেখা খালি রাখা যাবে না।');return}const patch={type,category:TYPE_LABEL[type]||type,title,body};const ok=await updateDb(activeId,[patch]);localPatch(activeId,{...patch,content:body});closePanels();rerender();notice(ok?'পোস্ট সম্পাদনা সংরক্ষণ হয়েছে।':'পোস্ট এই ডিভাইসে সংরক্ষণ হয়েছে।')}
+async function saveCaption(){const p=postById(activeId);if(!p)return;const caption=editor.querySelector('[data-bd74-caption]').value.trim(),ok=await updateDb(activeId,[{caption,media_caption:caption},{media_caption:caption},{caption}]);localPatch(activeId,{caption,media_caption:caption});closePanels();rerender();notice(ok?'ক্যাপশন সংরক্ষণ হয়েছে।':'ক্যাপশন এই ডিভাইসে সংরক্ষণ হয়েছে।')}
+async function savePrivacy(value){const p=postById(activeId);if(!p)return;value=value||privacy.dataset.value||'public';const ok=await updateDb(activeId,[{visibility:value,privacy:value},{visibility:value},{privacy:value}]);localPatch(activeId,{visibility:value,privacy:value});closePanels();rerender();notice(ok?'পোস্টের প্রাইভেসি পরিবর্তন হয়েছে।':'প্রাইভেসি এই ডিভাইসে সংরক্ষণ হয়েছে।')}
+async function archivePost(id){const p=postById(id);if(!p||!editable(p))return;if(!confirm('পোস্টটি আর্কাইভে নিতে চান?'))return;const ok=await updateDb(id,[{status:'archived'}]);try{if(typeof arr==='function'&&typeof save==='function'){const a=arr('bhubondangaArchivePosts');a.unshift({...p,status:'archived',archivedAt:new Date().toISOString()});save('bhubondangaArchivePosts',a.slice(0,2000))}}catch{}localRemove(id);hideActionBoard();rerender();notice(ok?'পোস্ট আর্কাইভে নেওয়া হয়েছে।':'পোস্ট এই ডিভাইসে আর্কাইভ করা হয়েছে।')}
+async function privatePost(id){const p=postById(id);if(!p||!editable(p))return;if(!confirm('পোস্টটি শুধু আপনার জন্য প্রাইভেট করবেন?'))return;const ok=await updateDb(id,[{visibility:'only_me',privacy:'only_me'},{visibility:'only_me'},{privacy:'only_me'}]);localPatch(id,{visibility:'only_me',privacy:'only_me'});hideActionBoard();rerender();notice(ok?'পোস্টটি প্রাইভেট হয়েছে।':'প্রাইভেসি এই ডিভাইসে সংরক্ষণ হয়েছে।')}
+async function deletePost(id){const p=postById(id);if(!p||!editable(p))return;if(!confirm('পোস্টটি স্থায়ীভাবে মুছে ফেলতে চান?'))return;let ok=false,c=dbClient();if(c)try{const r=await c.from('posts').delete().eq('id',id);ok=!r.error}catch{}if(!ok)ok=await updateDb(id,[{status:'deleted'}]);localRemove(id);hideActionBoard();rerender();notice(ok?'পোস্ট মুছে ফেলা হয়েছে।':'পোস্ট এই ডিভাইস থেকে সরানো হয়েছে।')}
+
+/* Window capture runs before older document click interceptors, so every menu item actually works. */
+let swallowUntil=0;
+W.addEventListener('pointerdown',e=>{const a=e.target.closest?.('#postActionBoard [data-action]');if(!a)return;const kind=a.dataset.action,id=a.dataset.id;if(!['edit-inline','caption-inline','privacy-inline','archive-inline','private-inline','delete'].includes(kind))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();swallowUntil=Date.now()+700;if(kind==='edit-inline')openEditor(id,false);else if(kind==='caption-inline')openEditor(id,true);else if(kind==='privacy-inline')openPrivacy(id);else if(kind==='archive-inline')archivePost(id);else if(kind==='private-inline')privatePost(id);else if(kind==='delete')deletePost(id)},true);
+W.addEventListener('click',e=>{if(Date.now()<swallowUntil&&e.target.closest?.('#postActionBoard')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}},true);
+
+W.addEventListener('pointerdown',e=>{const choice=e.target.closest?.('[data-bd74-privacy]');if(choice){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();privacy.dataset.value=choice.dataset.bd74Privacy;$$('[data-bd74-privacy]',privacy).forEach(x=>x.classList.toggle('selected',x===choice));return}const btn=e.target.closest?.('[data-bd74-close],[data-bd74-save-edit],[data-bd74-save-caption],[data-bd74-save-privacy]');if(!btn)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(btn.hasAttribute('data-bd74-close'))closePanels();else if(btn.hasAttribute('data-bd74-save-edit'))saveEdit();else if(btn.hasAttribute('data-bd74-save-caption'))saveCaption();else if(btn.hasAttribute('data-bd74-save-privacy'))savePrivacy()},true);
+W.addEventListener('click',e=>{if(e.target.closest?.('#bd74IndexEditor,#bd74IndexPrivacy')){e.stopPropagation();e.stopImmediatePropagation()}},true);
+
+function boot(){augmentMenu();const f=$('#composerForm');if(f&&f.dataset.bd73Font&&$('#postTitle'))$('#postTitle').style.setProperty('color',TITLE_COLOR[f.dataset.bd73Font]||'','important')}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 </html>
