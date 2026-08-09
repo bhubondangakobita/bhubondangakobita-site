@@ -6250,5 +6250,124 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 })();
 </script>
 
+
+<!-- BHUBONDANGA V8.70 TARGETED MASTER-LOCK UPDATE — 2026-08-09
+Scope only: desktop composer hard-unlock, 4:5/10-line template limit, collapsed reply lists,
+all-comments-on-count-click, top-3 reaction summary, same-page reels video tap.
+No Supabase schema/RLS/backend changes. -->
+<style id="bd-v870-targeted-master-lock-css">
+/* 1) Desktop writer: hard unlock the existing fields without changing the approved layout. */
+@media(min-width:900px){
+  body.bd870-auth #composer,
+  body.bd870-auth #composer[hidden]{display:block!important;visibility:visible!important;opacity:1!important;overflow:visible!important}
+  body.bd870-auth #composerChoices,
+  body.bd870-auth #composerChoices[hidden]{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd870-auth #composerNote,
+  body.bd870-auth #composerNote[hidden]{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd870-auth #composerForm,
+  body.bd870-auth #composerForm[hidden],
+  body.bd870-auth #composerForm.bd-stage-selecting,
+  body.bd870-auth #composerForm.bd-write-ready{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:visible!important}
+  body.bd870-auth #composerForm .bd-index-write-field,
+  body.bd870-auth #composerForm.bd-stage-selecting .bd-index-write-field,
+  body.bd870-auth #composerForm.bd-write-ready .bd-index-write-field{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd870-auth #composerForm .composer-grid,
+  body.bd870-auth #composerForm.bd-stage-selecting .composer-grid{display:grid!important;width:100%!important}
+  body.bd870-auth #composerForm #bd58TemplatePicker,
+  body.bd870-auth #composerForm .bd-index-media-tools,
+  body.bd870-auth #composerForm .bd-index-media-preview,
+  body.bd870-auth #composerForm #postMediaCaption,
+  body.bd870-auth #composerForm .author-area,
+  body.bd870-auth #composerForm .moderation-warning{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd870-auth #composerForm .composer-actions,
+  body.bd870-auth #composerForm .ownership-row,
+  body.bd870-auth #composerForm .founder-tools{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  body.bd870-auth #composerForm[data-bd65-template="none"] #postBody,
+  body.bd870-auth #composerForm:not([data-bd65-template]) #postBody{display:block!important;width:100%!important;min-height:340px!important;height:340px;max-height:min(72dvh,820px)!important;overflow-y:hidden!important;resize:none!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;box-sizing:border-box!important}
+}
+/* 2) Small quote/template card is a fixed Facebook-photo-like 4:5 frame. */
+#composerForm[data-bd65-template^="tpl"] #postBody{
+  display:block!important;
+  width:min(100%,680px)!important;
+  max-width:680px!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:10px auto 0!important;
+  overflow:hidden!important;
+  resize:none!important;
+  padding:15% 11%!important;
+  text-align:center!important;
+  line-height:1.68!important;
+  font-size:clamp(15px,1.2vw,18px)!important;
+  background-position:center!important;
+  background-size:100% 100%!important;
+  background-repeat:no-repeat!important;
+  color:#111d2b!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:899px){
+  #composerForm[data-bd65-template^="tpl"] #postBody{width:100%!important;max-width:none!important;padding:15% 10%!important;font-size:15px!important}
+}
+/* Replies stay folded until their reply-count link is pressed. */
+.bd31-replies[hidden],.bd35-comment-replies[hidden]{display:none!important}
+.bd870-reply-count{border:0!important;background:transparent!important;color:#6b64c9!important;padding:2px 8px!important;margin:3px 0 5px!important;font:800 10px/1.5 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;cursor:pointer!important;text-align:left!important}
+.bd870-reply-count:hover{text-decoration:underline!important}
+html[data-theme="dark"] .bd870-reply-count{color:#b9b4ff!important}
+/* Guaranteed visible top-three reaction faces; most-used reaction is first. */
+.bd870-react-stack{display:inline-flex!important;align-items:center!important;padding-left:1px!important;min-width:0!important}
+.bd870-react-face{width:21px!important;height:21px!important;min-width:21px!important;margin-left:-4px!important;border:1.5px solid var(--surface-solid,#fff)!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#fff!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:17px!important;line-height:1!important;box-shadow:0 1px 3px rgba(0,0,0,.10)!important}
+.bd870-react-face:first-child{margin-left:0!important}
+html[data-theme="dark"] .bd870-react-face{border-color:#101b35!important;background:#101b35!important}
+[data-bd31-react-summary]{display:inline-flex!important;align-items:center!important;gap:6px!important;min-width:0!important}
+</style>
+<script id="bd-v870-targeted-master-lock-js">
+(()=>{'use strict';
+const D=document,W=window;let session=null,forcing=false;
+const q=(s,r=D)=>r.querySelector(s),qa=(s,r=D)=>Array.from(r.querySelectorAll(s));
+const bn=n=>String(Number(n)||0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
+const client=()=>W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null;
+const isDesktop=()=>innerWidth>=900;
+function toast(msg){try{if(typeof W.toast==='function')return W.toast(msg)}catch{}let t=q('#bdSingleToast');if(t){t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}}
+function normalTemplate(form){return !/^tpl[1-8]$/.test(form?.dataset?.bd65Template||'none')}
+function setTemplateFrame(){const f=q('#composerForm'),b=q('#postBody');if(!f||!b||normalTemplate(f))return;const width=Math.max(240,b.getBoundingClientRect().width||b.clientWidth||480);b.style.setProperty('height',Math.round(width*1.25)+'px','important');b.style.setProperty('overflow-y','hidden','important')}
+function measureLines(el){if(!el)return 0;const cs=getComputedStyle(el),lh=parseFloat(cs.lineHeight)||28,pl=parseFloat(cs.paddingLeft)||0,pr=parseFloat(cs.paddingRight)||0;const m=D.createElement('div');m.style.cssText='position:fixed;left:-100000px;top:0;visibility:hidden;pointer-events:none;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;';m.style.width=Math.max(40,(el.getBoundingClientRect().width||el.clientWidth||400)-pl-pr)+'px';for(const p of ['fontFamily','fontSize','fontWeight','fontStyle','letterSpacing','wordSpacing','lineHeight'])m.style[p]=cs[p];m.textContent=el.value||' ';D.body.appendChild(m);const h=m.getBoundingClientRect().height;m.remove();const visual=Math.max(1,Math.ceil(h/lh));const explicit=(el.value||'').split('\n').length;return Math.max(visual,explicit)}
+function toNormalIfOverflow(){const f=q('#composerForm'),b=q('#postBody');if(!f||!b||normalTemplate(f))return false;setTemplateFrame();if(measureLines(b)<=10)return false;try{W.BD65ApplyTemplate?.('none','index')}catch{}f.dataset.bd65Template='none';f.dataset.bd58Template='none';const s=q('#cardStyle');if(s)s.value='none';qa('[data-bd58-template]',f).forEach(x=>{const on=x.dataset.bd58Template==='none';x.classList.toggle('active',on);x.setAttribute('aria-selected',on?'true':'false')});b.style.removeProperty('height');b.style.removeProperty('overflow-y');toast('১০ লাইনের বেশি হওয়ায় লেখাটি সাধারণ কার্ডে নেওয়া হয়েছে।');requestAnimationFrame(fitNormal);return true}
+function fitNormal(){if(!isDesktop()||!session?.user)return;const f=q('#composerForm'),b=q('#postBody');if(!f||!b)return;if(!normalTemplate(f)){setTemplateFrame();return}const min=340,max=Math.max(min,Math.min(innerHeight*.72,820));b.style.setProperty('display','block','important');b.style.setProperty('width','100%','important');b.style.setProperty('min-height',min+'px','important');b.style.setProperty('max-height',max+'px','important');b.style.setProperty('height','auto','important');const wanted=Math.max(min,b.scrollHeight);b.style.setProperty('height',Math.min(wanted,max)+'px','important');b.style.setProperty('overflow-y',wanted>max?'auto':'hidden','important')}
+function forceDesktopComposer(){if(forcing||!session?.user||!isDesktop())return;forcing=true;try{const c=q('#composer'),f=q('#composerForm'),ch=q('#composerChoices'),n=q('#composerNote');if(c){c.hidden=false;c.removeAttribute('hidden')}if(ch){ch.hidden=false;ch.removeAttribute('hidden')}if(n){n.hidden=false;n.removeAttribute('hidden')}if(f){f.hidden=false;f.removeAttribute('hidden');f.classList.remove('bd-stage-selecting');qa('.bd-index-write-field',f).forEach(x=>{x.hidden=false;x.removeAttribute('hidden');x.style.removeProperty('display');x.style.removeProperty('visibility');x.style.removeProperty('opacity')});const grid=q('.composer-grid',f);if(grid)grid.style.setProperty('display','grid','important');const acts=q('.composer-actions',f);if(acts)acts.style.setProperty('display','flex','important');const own=q('.ownership-row',f);if(own)own.style.setProperty('display','flex','important')}requestAnimationFrame(()=>{if(toNormalIfOverflow())return;fitNormal()})}finally{forcing=false}}
+async function refreshAuth(){try{session=(await client()?.auth?.getSession?.()).data?.session||null}catch{session=W.__BD_LIVE_SESSION||null}D.body.classList.toggle('bd870-auth',!!session?.user);if(session?.user)forceDesktopComposer()}
+/* Desktop prompt and category choices may open the form, but may never collapse it again. */
+W.addEventListener('click',e=>{if(!isDesktop()||!session?.user)return;if(e.target.closest?.('#composerPrompt,#composerChoices button,[data-open-type]'))setTimeout(forceDesktopComposer,0)},true);
+D.addEventListener('input',e=>{if(e.target?.id!=='postBody')return;if(toNormalIfOverflow())return;requestAnimationFrame(fitNormal)},true);
+D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(()=>{setTemplateFrame();fitNormal()})},true);
+W.addEventListener('resize',()=>requestAnimationFrame(()=>{forceDesktopComposer();setTemplateFrame();fitNormal()}),{passive:true});
+/* Guard submit too: a 4:5 template can never be published past 10 visual lines. */
+W.addEventListener('submit',e=>{if(e.target?.id==='composerForm')toNormalIfOverflow()},true);
+/* When a template is selected, immediately apply the 4:5 frame and validate current text. */
+W.addEventListener('pointerup',e=>{if(!e.target.closest?.('[data-bd58-template]'))return;setTimeout(()=>{setTemplateFrame();toNormalIfOverflow()},0)},true);
+
+/* Comment UX: count-link opens the complete root-comment list; replies remain folded. */
+function enhanceReplyGroups(root=D){
+  qa('.bd31-replies,.bd35-comment-replies',root).forEach(group=>{if(group.dataset.bd870Ready==='1')return;group.dataset.bd870Ready='1';const count=group.querySelectorAll(':scope > .bd31-comment,:scope > .bd35-comment-row').length||group.children.length;if(!count)return;group.hidden=true;const btn=D.createElement('button');btn.type='button';btn.className='bd870-reply-count';btn.dataset.bd870Replies='1';btn.textContent=bn(count)+'টি রিপ্লাই দেখুন';btn.dataset.bd870Label=btn.textContent;group.insertAdjacentElement('beforebegin',btn)});
+  qa('[data-bd31-comment-summary]',root).forEach(btn=>{const card=btn.closest('[data-bd31-ready="1"]');const rows=card?.__bd31Rows?.comments||[];const roots=rows.filter(x=>!(x.parent_id||x.parent_comment_id||x.reply_to));if(roots.length)btn.textContent=bn(roots.length)+' জন মন্তব্য করেছেন'});
+}
+D.addEventListener('click',e=>{const b=e.target.closest?.('[data-bd870-replies]');if(!b)return;e.preventDefault();e.stopPropagation();const g=b.nextElementSibling;if(!g)return;g.hidden=!g.hidden;b.textContent=g.hidden?b.dataset.bd870Label||(b.dataset.bd870Label=b.textContent):'রিপ্লাইগুলো লুকান'},false);
+/* Existing BD31 engine first opens two comments; count-link immediately expands to all. */
+W.addEventListener('pointerup',e=>{const s=e.target.closest?.('[data-bd31-comment-summary]');if(!s)return;const card=s.closest('[data-bd31-ready="1"]');[120,320,720].forEach(ms=>setTimeout(()=>{const more=card?.querySelector('[data-bd31-more]');if(more&&!more.hidden)more.click();setTimeout(()=>enhanceReplyGroups(card||D),50)},ms))},true);
+
+/* Reaction summary: maximum three reaction types, most-used first, always visible artwork. */
+const RE={like:'👍',love:'❤️',care:'🥰',haha:'😂',wow:'😮',sad:'😢',angry:'😡'};
+async function rowsFor(card){const id=String(card?.dataset?.post||card?.dataset?.postId||'');if(!id)return[];const cached=card.__bd31Rows?.reactions;if(Array.isArray(cached)&&cached.length)return cached;const c=client();if(c)for(const table of ['post_reactions','reactions'])try{const r=await c.from(table).select('reaction,user_id').eq('post_id',id).limit(250);if(!r.error)return r.data||[]}catch{}return[]}
+async function paintReactionSummary(card){if(!card||card.dataset.bd870ReactionBusy==='1')return;card.dataset.bd870ReactionBusy='1';try{const sum=q('[data-bd31-react-summary]',card);if(!sum)return;const rows=await rowsFor(card);if(!rows.length){sum.hidden=true;return}const counts={};for(const r of rows){const t=RE[r.reaction]?r.reaction:'like';counts[t]=(counts[t]||0)+1}const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t])=>t);sum.hidden=false;sum.innerHTML='<span class="bd870-react-stack">'+top.map(t=>'<span class="bd870-react-face" aria-label="'+t+'">'+RE[t]+'</span>').join('')+'</span><span>'+bn(rows.length)+' জন প্রতিক্রিয়া</span>'}finally{delete card.dataset.bd870ReactionBusy}}
+function scan(root=D){qa('[data-bd31-ready="1"]',root).forEach(card=>{enhanceReplyGroups(card);paintReactionSummary(card)});enhanceReplyGroups(root)}
+W.addEventListener('pointerup',e=>{if(e.target.closest?.('[data-bd31-react-main],[data-bd31-tray-pick]')){const card=e.target.closest?.('[data-bd31-ready="1"]')||q('#bd31ReactionTray')?.__card;setTimeout(()=>paintReactionSummary(card),220)}},true);
+
+/* Video: same-page full-screen reels viewer; vertical swipe shows other posted videos. */
+W.addEventListener('click',e=>{const v=e.target.closest?.('#postList article video,#postList .post video,#postList .bd-live-post video');if(!v)return;const card=v.closest('[data-post],[data-post-id]');const id=card?.dataset?.post||card?.dataset?.postId;if(!id||!W.BhubondangaVideoReels?.open)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{v.pause()}catch{}W.BhubondangaVideoReels.open(id)},true);
+
+const mo=new MutationObserver(ms=>{let comp=false;for(const m of ms){if(m.type==='attributes'&&(m.target?.id==='composer'||m.target?.id==='composerForm'||m.target?.id==='composerChoices'||m.target?.id==='composerNote'))comp=true;for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n)}if(comp&&session?.user&&isDesktop())requestAnimationFrame(forceDesktopComposer)});
+function boot(){scan();refreshAuth();setTimeout(refreshAuth,350);setTimeout(refreshAuth,1100);const c=q('#composer');if(c)mo.observe(c,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','style','data-bd65-template']});mo.observe(D.body,{childList:true,subtree:true});try{client()?.auth?.onAuthStateChange?.((_e,s)=>{session=s||null;D.body.classList.toggle('bd870-auth',!!session?.user);if(session?.user)forceDesktopComposer()})}catch{}setInterval(()=>{scan();if(session?.user&&isDesktop())forceDesktopComposer()},2200)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
 </body>
 </html>
