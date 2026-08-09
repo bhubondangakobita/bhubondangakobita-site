@@ -5696,9 +5696,9 @@ D.addEventListener('click',e=>{
   const pick=e.target.closest('[data-bd31-tray-pick],[data-bd-index-pick],[data-v814-pick],[data-pick]');
   if(pick&&cardOf(pick)!==pick.closest('.bd58-template-strip')){const type=pick.dataset.bd31TrayPick||pick.dataset.bdIndexPick||pick.dataset.v814Pick||pick.dataset.pick;if(LABEL[type]){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();applyReaction(pick,type,true);return}}
   const main=e.target.closest('[data-bd31-react-main]');if(main){if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();applyReaction(main,'like',false);return}
-  const dot=e.target.closest('.post .dots,.bd-live-post .three-dot-btn,[data-post-card] [data-post-menu]');if(dot){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=cardOf(dot),panel=q('.post-menu-panel',card)||q('.post-menu:not(button)',card)||q('.post-action-board',card);if(panel){const opening=('hidden'in panel)?panel.hidden:!panel.classList.contains('open');closeMenus(panel);if('hidden'in panel)panel.hidden=!opening;panel.classList.toggle('open',opening);dot.setAttribute('aria-expanded',opening?'true':'false')}else{try{dot.click?.()}catch{}}return}
+  const dot=e.target.closest('.post .dots,.bd-live-post .three-dot-btn:not([data-post-menu])');if(dot){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=cardOf(dot),panel=q('.post-menu-panel',card)||q('.post-menu:not(button)',card)||q('.post-action-board',card);if(panel){const opening=('hidden'in panel)?panel.hidden:!panel.classList.contains('open');closeMenus(panel);if('hidden'in panel)panel.hidden=!opening;panel.classList.toggle('open',opening);dot.setAttribute('aria-expanded',opening?'true':'false')}else{try{dot.click?.()}catch{}}return}
   const title=e.target.closest('.post-title a,.post-read-more,.readmore');if(title){const card=cardOf(title);if(card){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggleInline(card,false);return}}
-  const media=e.target.closest('article.post .post-media img,article.post img.post-media,article.post .post-media video,article.post video.post-media,.bd-live-post .post-media img,.bd-live-post img.post-media,.bd-live-post .post-media video,.bd-live-post video.post-media');if(media){const card=cardOf(media);if(card){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggleInline(card,true);if(media.tagName==='VIDEO'){media.controls=true;media.playsInline=true;try{media.paused?media.play().catch(()=>{}):null}catch{}}return}}
+  const media=e.target.closest('article.post .post-media img,article.post img.post-media,article.post .post-media video,article.post video.post-media,article.post .composer-media-render video,.bd-live-post .post-media img,.bd-live-post img.post-media,.bd-live-post .post-media video,.bd-live-post video.post-media,.bd-live-post .composer-media-render video');if(media){const card=cardOf(media);if(card){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggleInline(card,true);if(media.tagName==='VIDEO'){media.controls=true;media.playsInline=true;try{media.paused?media.play().catch(()=>{}):null}catch{}}return}}
   const card=cardOf(e.target);if(card&&!e.target.closest('button,a,input,textarea,select,label,audio,video,[contenteditable],.bd31-social,.comments,.comment-box,.post-menu-panel,.post-menu,.post-action-board')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggleInline(card,false);return}
 },true);
 D.addEventListener('pointerup',e=>{if(e.target.closest('#bd31ReactionTray,[data-bd31-react-main]')){try{e.target.blur?.()}catch{}}},true);
@@ -5886,5 +5886,62 @@ const mo=new MutationObserver(()=>{const old=D.getElementById('bd31ReactionTray'
 <style id="bd-v865-final-template-visibility">
 .bd58-template-chip[data-bd58-template^="tpl"]{background-color:#fff!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important}
 </style>
+
+
+<!-- BHUBONDANGA TARGETED INDEX REPAIR — 2026-08-09
+     Scope locked to: desktop composer unlock, writing-box auto-growth/internal scroll,
+     post three-dot click restoration, and tap-to-open/play posted video. -->
+<style id="bd-v866-requested-composer-only-css">
+/* Requested only: give the existing writing field real room without changing any other Index layout. */
+#postBody{
+  resize:none!important;
+  overflow-y:hidden;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch;
+  transition:height .14s ease!important;
+  scroll-behavior:smooth;
+}
+@media(min-width:900px){
+  #composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+  #postBody{min-height:220px!important;max-height:min(60dvh,640px)!important}
+}
+@media(max-width:899px){
+  #postBody{min-height:145px!important;max-height:min(52dvh,520px)!important}
+}
+</style>
+<script id="bd-v866-requested-composer-only-js">
+(()=>{'use strict';
+const D=document;
+function maxBodyHeight(){return innerWidth>=900?Math.min(innerHeight*.60,640):Math.min(innerHeight*.52,520)}
+function fitWritingBox(){
+  const el=D.getElementById('postBody');if(!el)return;
+  const min=innerWidth>=900?220:145,max=Math.max(min,maxBodyHeight());
+  el.style.height='auto';
+  const wanted=Math.max(min,el.scrollHeight);
+  el.style.height=Math.min(wanted,max)+'px';
+  el.style.overflowY=wanted>max?'auto':'hidden';
+}
+function unlockDesktopComposer(){
+  if(innerWidth<900)return;
+  const form=D.getElementById('composerForm'),choices=D.getElementById('composerChoices'),note=D.getElementById('composerNote'),prompt=D.getElementById('composerPrompt');
+  if(form)form.hidden=false;
+  if(choices)choices.hidden=false;
+  if(note)note.hidden=false;
+  if(prompt)prompt.setAttribute('aria-expanded','true');
+  requestAnimationFrame(fitWritingBox);
+}
+D.addEventListener('input',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitWritingBox)},true);
+D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitWritingBox)},true);
+addEventListener('resize',()=>requestAnimationFrame(fitWritingBox),{passive:true});
+/* Keep wheel/trackpad movement inside the writing field once it has reached its maximum height. */
+D.addEventListener('wheel',e=>{
+  const el=e.target?.closest?.('#postBody');if(!el||el.scrollHeight<=el.clientHeight+1)return;
+  const down=e.deltaY>0,atTop=el.scrollTop<=0,atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-1;
+  if((down&&!atBottom)||(!down&&!atTop))e.stopPropagation();
+},{passive:true,capture:true});
+function boot(){unlockDesktopComposer();fitWritingBox()}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
 </body>
 </html>
