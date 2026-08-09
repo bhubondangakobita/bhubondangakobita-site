@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.41-v833-profile-restore-current-index">
+<meta name="bhubondanga-build" content="V8.43-final-20260809-profile-lock">
 <script id="bd-supabase-nonblocking-loader">
 (function(){
   "use strict";
@@ -820,7 +820,7 @@ function renderProfileMenu(){
     h.innerHTML='<button type="button" data-profile-option="copy">⧉ প্রোফাইল লিংক কপি</button><button type="button" data-profile-option="share">↗ শেয়ার</button><button type="button" data-profile-option="report">⚑ রিপোর্ট</button>';
   }
 }
-function renderProfile(){const p=state.target||{},name=profileName(p),role=forcedRole(p);p.roleResolved=role;$('#profileName').textContent=name;$('#location').textContent=p.location||(role==='founder'?'কুমিল্লা, বাংলাদেশ':'বাংলাদেশ');$('#location').classList.add('clickable');$('#bio').textContent=p.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।';$('#roleBadge').textContent=roleText(role);$('#roleBadge').classList.toggle('admin',role==='admin');$('#verified').hidden=!(p.verified||role==='founder'||role==='admin');const avatar=profileAvatar(p),cover=profileCover(p);renderImage($('#avatarMain'),avatar,initials(name));renderCover(cover,p);$$('[data-avatar-mini]').forEach(x=>renderImage(x,avatar,initials(name)));$$('[data-mini-name],[data-right-name]').forEach(x=>{x.textContent=name;if(x.matches('a'))x.href=profileRoute({id:p.id,username:p.username,display_name:name,role})});$$('[data-mini-role],[data-right-role]').forEach(x=>x.textContent=roleBn(role));$('[data-mini-email]').textContent=p.username?'@'+p.username:'প্রোফাইল';renderActions()}
+function renderProfile(){const p=state.target||{},name=profileName(p),role=forcedRole(p);p.roleResolved=role;$('#profileName').textContent=name;$('#location').textContent=p.location||(role==='founder'?'কুমিল্লা, বাংলাদেশ':'বাংলাদেশ');$('#location').classList.add('clickable');$('#bio').textContent=p.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।';$('#roleBadge').textContent=roleText(role);$('#roleBadge').classList.toggle('admin',role==='admin');$('#roleBadge').classList.toggle('founder',role==='founder');$('#verified').hidden=!(p.verified||role==='founder'||role==='admin');const avatar=profileAvatar(p),cover=profileCover(p);renderImage($('#avatarMain'),avatar,initials(name));renderCover(cover,p);$$('[data-avatar-mini]').forEach(x=>renderImage(x,avatar,initials(name)));$$('[data-mini-name],[data-right-name]').forEach(x=>{x.textContent=name;if(x.matches('a'))x.href=profileRoute({id:p.id,username:p.username,display_name:name,role})});$$('[data-mini-role],[data-right-role]').forEach(x=>x.textContent=roleBn(role));$('[data-mini-email]').textContent=p.username?'@'+p.username:'প্রোফাইল';renderActions()}
 function renderActions(){
   const h=$('#profileActions');if(!h)return;
   h.classList.remove('bd-v842-visitor','bd-v841-visitor-actions');
@@ -830,7 +830,7 @@ function renderActions(){
     const dash=role==='founder'?'founder-dashboard.html':role==='admin'?'admin-dashboard.html':'edit-profile.html';
     h.innerHTML='<button class="action primary'+(role==='admin'?' blue':'')+'" type="button" data-click="edit-profile">✎ প্রোফাইল সম্পাদনা</button><a class="action" href="'+dash+'">▥ ড্যাশবোর্ড</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }else{
-    h.classList.add('bd-v842-visitor','bd-v841-visitor-actions');h.innerHTML='<button class="action primary" type="button" data-click="follow">＋ '+(state.followed?'অনুসরণ করছেন':'অনুসরণ করুন')+'</button><button class="action" type="button" data-click="followers">👥 ফলোয়ার্স</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">💬 বার্তা পাঠান</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
+    h.classList.add('bd-v842-visitor','bd-v841-visitor-actions');h.innerHTML='<button class="action primary" type="button" data-click="follow">＋ '+(state.followed?'অনুসরণ করছেন':'অনুসরণ করুন')+'</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">💬 বার্তা পাঠান</a><button class="action" type="button" data-click="followers">👥 ফলোয়ার্স</button><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }
   document.body.classList.toggle('is-owner',owner);
   const cover=$('#cover'),avatar=$('#avatarMain'),avatarEdit=$('#avatarEdit'),coverHint=$('#coverHint'),bio=$('#bio'),bioHint=$('#bioHint'),composer=$('#composer');
@@ -1602,6 +1602,29 @@ html,body{max-width:100%!important;overflow-x:hidden!important}
 
 
 <style id="bd-v842-final-profile-fix">
+/* V8.43 requested visual lock — folded into the existing final profile rules. */
+#profileActions .action[data-click="follow"]{
+  background:#050607!important;
+  color:#fff!important;
+  border-color:#050607!important;
+  box-shadow:0 9px 22px rgba(5,6,7,.22)!important;
+  text-shadow:0 1px 0 rgba(0,0,0,.18)!important;
+}
+#profileActions .action[data-click="follow"]:hover{background:#111315!important;color:#fff!important}
+#profileActions .action[data-click="follow"]:focus-visible{outline:3px solid rgba(30,117,86,.28)!important;outline-offset:2px!important}
+#roleBadge.founder{
+  min-width:86px!important;
+  height:24px!important;
+  padding:0 11px!important;
+  border-radius:999px!important;
+  background:linear-gradient(135deg,#7441f3,#a349ef)!important;
+  color:#fff!important;
+  font-size:9.5px!important;
+  letter-spacing:.45px!important;
+  box-shadow:0 7px 16px rgba(115,60,235,.22)!important;
+}
+html[data-page-role="founder"] #profileName{color:#0b573d!important}
+@media(max-width:430px){#roleBadge.founder{min-width:82px!important;height:23px!important;padding:0 10px!important;font-size:9px!important}}
 /* V8.42 — functional-only: correct owner/visitor state, full mobile action width, native colourful reactions. */
 @media(max-width:720px){
   #profileActions.actions{

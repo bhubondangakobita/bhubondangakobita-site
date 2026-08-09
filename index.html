@@ -3723,9 +3723,9 @@ window.BhubondangaProductionUpload=uploadFileExact;
 // Content protection: protect published content while preserving form editing.
 D.addEventListener('contextmenu',e=>{if(!bdCopyProtectionEnabled())return;if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;e.preventDefault()},true);
 D.addEventListener('selectstart',e=>{if(!bdCopyProtectionEnabled())return;if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;e.preventDefault()},true);
-D.addEventListener('copy',e=>{e.preventDefault()},true);
-D.addEventListener('cut',e=>{e.preventDefault()},true);
-D.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['c','x'].includes(String(e.key).toLowerCase())){e.preventDefault();e.stopPropagation()}},true);
+D.addEventListener('copy',e=>{if(!bdCopyProtectionEnabled())return;e.preventDefault()},true);
+D.addEventListener('cut',e=>{if(!bdCopyProtectionEnabled())return;e.preventDefault()},true);
+D.addEventListener('keydown',e=>{if(!bdCopyProtectionEnabled())return;if((e.ctrlKey||e.metaKey)&&['c','x'].includes(String(e.key).toLowerCase())){e.preventDefault();e.stopPropagation()}},true);
 
 // Hard profanity blocker before post/comment submission.
 D.addEventListener('submit',e=>{
