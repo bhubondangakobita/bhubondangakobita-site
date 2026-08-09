@@ -856,7 +856,7 @@ function authUI(){const logged=!!state.session,who=identity(),privateNames=['mes
 async function resolveAuth(){let session=null;if(client){try{session=(await client.auth.getSession()).data?.session||null}catch(_){session=null}}state.session=session;if(session){state.role=await getRole(session.user.id,session.user);state.profile=await getProfile(session.user.id)}else{const l=legacyUser();state.role=String(l?.role||'visitor').toLowerCase();state.profile=l?{id:l.id||l.uid,username:l.username||l.slug,display_name:l.name||l.displayName,avatar_url:l.avatar||l.photo}:null}await founderId();try{W.__BD_IDENTITY=identity();W.__BD_LIVE_SESSION=state.session;W.__BD_LIVE_ROLE=state.role;D.dispatchEvent(new CustomEvent('bd:auth-ready',{detail:{session:state.session,identity:W.__BD_IDENTITY,role:state.role}}))}catch(_){}authUI();return state}
 function typeLabel(type){return({poem:'কবিতা',prolap:'ছোট কথার প্রলাপ',recitation:'আবৃত্তি',environment:'পরিবেশের কথা',letters:'চিঠিপত্র',children:'শিশুতোষ',midnight:'মধ্যরাতের প্রলাপ',song:'গান',songs:'গান'})[type]||'কবিতা'}
 function normalizeType(raw){const s=String(raw||'poem').toLowerCase();if(s.includes('midnight')||s.includes('মধ্যরাত'))return'midnight';if(s.includes('song')||s.includes('গান'))return'song';if(s.includes('prolap')||s.includes('প্রলাপ'))return'prolap';if(s.includes('recitation')||s.includes('আবৃত্তি'))return'recitation';if(s.includes('environment')||s.includes('পরিবেশ'))return'environment';if(s.includes('letter')||s.includes('চিঠি'))return'letters';if(s.includes('children')||s.includes('শিশু'))return'children';return'poem'}
-const blocked=['শালা','শালী','হারামজাদা','হারামজাদী','হারামির বাচ্চা','শুয়োর','শুয়োর','শুয়োরের বাচ্চা','শুয়োরের বাচ্চা','কুত্তা','খানকি','খানকির পোলা','খানকির ছেলে','মাগী','বেশ্যা','চোদা','চুদি','চুদ','চোদন','চোদাচুদি','মাদারচোদ','মাদারচোদা','বাঞ্চোদ','বাইঞ্চদ','বোকাচোদা','বাল','গুদ'];
+const blocked=["শালা","শালী","হারামজাদা","হারামজাদী","হারামির বাচ্চা","শুয়োর","শুয়োর","শুয়ার","শুয়ার","শুয়োরের বাচ্চা","শুয়োরের বাচ্চা","শুয়ারের বাচ্চা","শুয়ারের বাচ্চা","কুত্তা","খানকি","খানকির পোলা","খানকির ছেলে","মাগী","বেশ্যা","চোদা","চুদি","চুদ","চোদন","চোদা চুদি","চোদাচুদি","মাদারচোদ","মাদারচোদা","বাঞ্চোদ","বাইঞ্চদ","বোকাচোদা","বাল","গুদ"];
 function normalizeBlockedText(value){return String(value||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim()}
 function exactBlockedTerms(value){const words=normalizeBlockedText(value).split(' ').filter(Boolean),found=[];for(const term of blocked){const tw=normalizeBlockedText(term).split(' ').filter(Boolean);if(!tw.length)continue;let hit=false;for(let i=0;i<=words.length-tw.length&&!hit;i++){hit=tw.every((w,j)=>words[i+j]===w)}if(hit)found.push(term)}return[...new Set(found)]}
 function flagged(text){return exactBlockedTerms(text).length>0}
@@ -864,7 +864,7 @@ W.BHUBONDANGA_BLOCKED_TERMS=blocked.slice();W.BhubondangaModerationScan=exactBlo
 
 async function bdCompressPublisherImage(file,max=1800,q=.86){return new Promise((resolve,reject)=>{const r=new FileReader();r.onerror=reject;r.onload=()=>{const im=new Image();im.onerror=reject;im.onload=()=>{const scale=Math.min(1,max/Math.max(im.width,im.height)),c=D.createElement('canvas');c.width=Math.max(1,Math.round(im.width*scale));c.height=Math.max(1,Math.round(im.height*scale));const x=c.getContext('2d');x.drawImage(im,0,0,c.width,c.height);resolve(c.toDataURL('image/jpeg',q))};im.src=r.result};r.readAsDataURL(file)})}
 async function bdPreparePublisherMedia(){if(!bdPublisherImageFile)return bdPublisherImageData||'';const fallback=bdPublisherImageData||await bdCompressPublisherImage(bdPublisherImageFile);if(!client||!state.session?.user)return fallback;try{const ext=(bdPublisherImageFile.name.split('.').pop()||'jpg').replace(/[^a-z0-9]/gi,'').toLowerCase()||'jpg',path=state.session.user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;const up=await client.storage.from('post-media').upload(path,bdPublisherImageFile,{cacheControl:'3600',upsert:false,contentType:bdPublisherImageFile.type||'image/jpeg'});if(up.error)throw up.error;const pub=client.storage.from('post-media').getPublicUrl(path);return pub.data?.publicUrl||fallback}catch(_){return fallback}}
-function ensurePublisher(){if($('#bdPublishSheet'))return;const host=$('#composer')||D.body;host.insertAdjacentHTML('beforeend','<div class="bd-publish-backdrop" id="bdPublishBackdrop"></div><section class="bd-publish-sheet" id="bdPublishSheet" aria-hidden="true"><div class="bd-publish-grab"></div><div class="bd-publish-head"><h2>লেখা প্রকাশ করুন</h2><button class="bd-publish-close" id="bdPublishClose" type="button" aria-label="বন্ধ করুন">×</button></div><form id="bdPublishForm"><div class="bd-publish-grid"><select class="bd-publish-field" id="bdPublishType"></select><select class="bd-publish-field" id="bdPublishStyle"><option value="pearl">মুক্তা গ্লাস</option><option value="lavender">ল্যাভেন্ডার</option><option value="aqua">অ্যাকুয়া</option><option value="rose">রোজ</option><option value="mint">মিন্ট</option><option value="silver">সিলভার</option><option value="aurora">অরোরা</option></select></div><input class="bd-publish-field" id="bdPublishTitle" required maxlength="240" placeholder="লেখার শিরোনাম"><textarea class="bd-publish-field" id="bdPublishBody" required maxlength="50000" placeholder="আপনার লেখা লিখুন..."></textarea><input class="bd-publish-field" id="bdPublishOriginal" maxlength="180" placeholder="মূল কবি/লেখকের নাম (প্রযোজ্য হলে)"><div class="bd-publish-media-tools"><label class="bd-publish-media-button">▧ ছবি যোগ করুন<input id="bdPublishImage" type="file" accept="image/*" hidden></label><button id="bdPublishImageRemove" type="button" hidden>ছবি সরান</button></div><div class="bd-publish-image-editor" id="bdPublishImageEditor" hidden><img id="bdPublishImagePreview" alt="নির্বাচিত ছবি"><input class="bd-publish-field" id="bdPublishCaption" maxlength="500" placeholder="ছবির নিচে ক্যাপশন লিখুন..."></div><div class="bd-publish-warning" id="bdPublishWarning"><strong>সতর্কতা:</strong> লেখায় আপত্তিকর ভাষা শনাক্ত হয়েছে। সম্পাদনা করতে পারেন; অপরিবর্তিত প্রকাশ করলে পর্যালোচনার জন্য চিহ্নিত হবে।</div><div class="bd-publish-row"><small>পোস্টটি Supabase-এ সংরক্ষিত হয়ে হোম, বিভাগ ও প্রোফাইলে একই রেকর্ড থেকে দেখা যাবে।</small><div class="bd-publish-actions"><button class="bd-publish-cancel" id="bdPublishCancel" type="button">বাতিল</button><button class="bd-publish-submit" type="submit">প্রকাশ করুন</button></div></div></form></section>');}
+function ensurePublisher(){if($('#bdPublishSheet'))return;const host=$('#composer')||D.body;host.insertAdjacentHTML('beforeend','<div class="bd-publish-backdrop" id="bdPublishBackdrop"></div><section class="bd-publish-sheet" id="bdPublishSheet" aria-hidden="true"><div class="bd-publish-grab"></div><div class="bd-publish-head"><h2>লেখা প্রকাশ করুন</h2><button class="bd-publish-close" id="bdPublishClose" type="button" aria-label="বন্ধ করুন">×</button></div><form id="bdPublishForm"><div class="bd-publish-grid"><select class="bd-publish-field" id="bdPublishType"></select><select class="bd-publish-field" id="bdPublishStyle" hidden><option value="none" selected>সাধারণ</option><option value="tpl1">Template 1</option><option value="tpl2">Template 2</option><option value="tpl3">Template 3</option><option value="tpl4">Template 4</option><option value="tpl5">Template 5</option><option value="tpl6">Template 6</option><option value="tpl7">Template 7</option><option value="tpl8">Template 8</option></select></div><input class="bd-publish-field" id="bdPublishTitle" required maxlength="240" placeholder="লেখার শিরোনাম"><textarea class="bd-publish-field" id="bdPublishBody" required maxlength="50000" placeholder="আপনার লেখা লিখুন..."></textarea><input class="bd-publish-field" id="bdPublishOriginal" maxlength="180" placeholder="মূল কবি/লেখকের নাম (প্রযোজ্য হলে)"><div class="bd-publish-media-tools"><label class="bd-publish-media-button">▧ ছবি যোগ করুন<input id="bdPublishImage" type="file" accept="image/*" hidden></label><button id="bdPublishImageRemove" type="button" hidden>ছবি সরান</button></div><div class="bd-publish-image-editor" id="bdPublishImageEditor" hidden><img id="bdPublishImagePreview" alt="নির্বাচিত ছবি"><input class="bd-publish-field" id="bdPublishCaption" maxlength="500" placeholder="ছবির নিচে ক্যাপশন লিখুন..."></div><div class="bd-publish-warning" id="bdPublishWarning"><strong>সতর্কতা:</strong> লেখায় আপত্তিকর ভাষা শনাক্ত হয়েছে। সম্পাদনা করতে পারেন; অপরিবর্তিত প্রকাশ করলে পর্যালোচনার জন্য চিহ্নিত হবে।</div><div class="bd-publish-row"><small>পোস্টটি Supabase-এ সংরক্ষিত হয়ে হোম, বিভাগ ও প্রোফাইলে একই রেকর্ড থেকে দেখা যাবে।</small><div class="bd-publish-actions"><button class="bd-publish-cancel" id="bdPublishCancel" type="button">বাতিল</button><button class="bd-publish-submit" type="submit">প্রকাশ করুন</button></div></div></form></section>');}
 function openPublisher(type='poem'){if(!state.session){location.href='login.html?next='+encodeURIComponent(location.href);return}type=normalizeType(type);if(['midnight','song'].includes(type)&&state.role!=='founder'){toast('এই বিভাগে প্রকাশের অনুমতি নেই');return}ensurePublisher();bdPublisherImageData='';bdPublisherImageFile=null;const ed=$('#bdPublishImageEditor'),rm=$('#bdPublishImageRemove'),inp=$('#bdPublishImage');if(ed)ed.hidden=true;if(rm)rm.hidden=true;if(inp)inp.value='';const types=[['poem','কবিতা'],['prolap','ছোট কথার প্রলাপ'],['recitation','আবৃত্তি'],['environment','পরিবেশের কথা'],['letters','চিঠিপত্র'],['children','শিশুতোষ']];if(state.role==='founder')types.push(['midnight','মধ্যরাতের প্রলাপ'],['song','গান']);$('#bdPublishType').innerHTML=types.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('');$('#bdPublishType').value=type;$('#bdPublishSheet').classList.add('open');$('#bdPublishSheet').setAttribute('aria-hidden','false')}
 function closePublisher(){const b=$('#bdPublishBackdrop'),s=$('#bdPublishSheet');b?.classList.remove('open');s?.classList.remove('open');s?.setAttribute('aria-hidden','true');bdPublisherImageData='';bdPublisherImageFile=null}
 async function publishFrom(values){if(!state.session)throw new Error('প্রকাশের আগে লগইন করুন');const who=identity(),type=normalizeType(values.type),terms=exactBlockedTerms(values.title+' '+values.body),bad=terms.length>0,payload={id:'post-'+Date.now()+'-'+Math.random().toString(36).slice(2,9),author_id:state.session.user.id,author_username:who.author_username,author_name:who.author_name,author_avatar:who.author_avatar||'',type,category:typeLabel(type),title:values.title.trim(),body:values.body.trim(),original_author:(values.original||'').trim(),status:bad?'pending_review':'published',card_style:values.style||'pearl',media_url:values.media_url||'',caption:(values.caption||'').trim(),likes_count:0,comments_count:0};if(!payload.title||!payload.body)throw new Error('শিরোনাম ও লেখা পূরণ করুন');await W.BhubondangaData.createPost(payload);if(bad){const post={...payload,authorId:payload.author_id,authorName:payload.author_name,authorUsername:payload.author_username,createdAt:new Date().toISOString()};const notice={id:'mod-'+Date.now(),postId:payload.id,userId:payload.author_id,userName:payload.author_name,matchedTerms:terms,status:'pending',post,createdAt:new Date().toISOString()};for(const k of ['bhubondangaAdminModerationQueue','bhubondangaFounderModerationQueue']){try{const a=JSON.parse(localStorage.getItem(k)||'[]').filter(x=>String(x.postId||x.post?.id)!==String(payload.id));a.unshift(notice);localStorage.setItem(k,JSON.stringify(a.slice(0,2000)))}catch{}}try{const a=JSON.parse(localStorage.getItem('bhubondangaNotifications')||'[]');a.unshift({...notice,type:'moderation',message:"বস, আপনার কবিতাটা অত্যন্ত সুন্দর, কিন্তু আমি তো গালি ডিটেক্টর—গালি দেখলেই আমার মাথা খারাপ হয়ে যায়! 😄 তাই আপনার পোস্টটা ফাউন্ডার এবং অ্যাডমিনের ড্যাশবোর্ডে পাঠিয়ে দিচ্ছি। তারা যদি হজম করতে পারেন, তাহলে অতি শীঘ্রই আপনার প্রোফাইল এবং ইনডেক্সে পোস্ট হয়ে যাবে।",read:false});localStorage.setItem('bhubondangaNotifications',JSON.stringify(a.slice(0,1000)))}catch{}try{await client.from('moderation_queue').insert({post_id:payload.id,submitted_by:payload.author_id,matched_terms:terms,status:'pending'})}catch{}try{for(const row of [{recipient_id:payload.author_id,actor_id:payload.author_id,type:'moderation',title:"বস, আপনার কবিতাটা অত্যন্ত সুন্দর, কিন্তু আমি তো গালি ডিটেক্টর—গালি দেখলেই আমার মাথা খারাপ হয়ে যায়! 😄 তাই আপনার পোস্টটা ফাউন্ডার এবং অ্যাডমিনের ড্যাশবোর্ডে পাঠিয়ে দিচ্ছি। তারা যদি হজম করতে পারেন, তাহলে অতি শীঘ্রই আপনার প্রোফাইল এবং ইনডেক্সে পোস্ট হয়ে যাবে।",created_at:new Date().toISOString()},{user_id:payload.author_id,actor_id:payload.author_id,type:'moderation',title:"বস, আপনার কবিতাটা অত্যন্ত সুন্দর, কিন্তু আমি তো গালি ডিটেক্টর—গালি দেখলেই আমার মাথা খারাপ হয়ে যায়! 😄 তাই আপনার পোস্টটা ফাউন্ডার এবং অ্যাডমিনের ড্যাশবোর্ডে পাঠিয়ে দিচ্ছি। তারা যদি হজম করতে পারেন, তাহলে অতি শীঘ্রই আপনার প্রোফাইল এবং ইনডেক্সে পোস্ট হয়ে যাবে।",created_at:new Date().toISOString()}]){const r=await client.from('notifications').insert(row);if(!r.error)break}}catch{}}return payload}
@@ -904,7 +904,7 @@ async function submitComment(form){if(!state.session){location.href='login.html?
 D.addEventListener('click',async e=>{if(e.target.closest('#bdPublishImageRemove')){e.preventDefault();bdPublisherImageData='';bdPublisherImageFile=null;const ed=$('#bdPublishImageEditor'),rm=$('#bdPublishImageRemove'),inp=$('#bdPublishImage'),im=$('#bdPublishImagePreview');if(ed)ed.hidden=true;if(rm)rm.hidden=true;if(inp)inp.value='';if(im)im.removeAttribute('src');return}const close=e.target.closest('#bdPublishClose,#bdPublishCancel')||e.target.id==='bdPublishBackdrop';if(close){e.preventDefault();closePublisher();return}const typeBtn=e.target.closest('.compose-type');if(typeBtn){e.preventDefault();e.stopImmediatePropagation();openPublisher(typeBtn.dataset.type||typeBtn.textContent);return}const prompt=e.target.closest('#composerPrompt,.composer-prompt');if(prompt&&!$('#composerForm')){e.preventDefault();e.stopImmediatePropagation();openPublisher('poem');return}const c=e.target.closest('.bd-live-post [data-comment]');if(c){e.preventDefault();const box=c.closest('.bd-live-post').querySelector('.comments,.comment-box');box?.classList.toggle('open');return}if(e.target.closest('[data-live-share]')){const post=e.target.closest('.bd-live-post'),url=location.origin+location.pathname.replace(/[^/]+$/,'post-details.html')+'?id='+encodeURIComponent(post?.dataset.postId||'');if(navigator.share)await navigator.share({title:D.title,url}).catch(()=>{});else await navigator.clipboard?.writeText(url);toast('লিঙ্ক শেয়ার করা হয়েছে');return}if(e.target.closest('[data-live-save]')){const id=e.target.closest('.bd-live-post')?.dataset.postId,a=safe('bhubondangaSavedItems',[]);if(id&&!a.some(x=>x.id===id)){a.unshift({id,url:'post-details.html?id='+id,createdAt:new Date().toISOString()});localStorage.setItem('bhubondangaSavedItems',JSON.stringify(a))}toast('স্মৃতিতে রাখা হয়েছে');return}if(e.target.closest('[data-live-like]')){e.target.closest('[data-live-like]').classList.toggle('active');return}},true);
 D.addEventListener('change',async e=>{if(e.target.id!=='bdPublishImage')return;const file=e.target.files?.[0];if(!file)return;bdPublisherImageFile=file;bdPublisherImageData=await bdCompressPublisherImage(file);const ed=$('#bdPublishImageEditor'),im=$('#bdPublishImagePreview'),rm=$('#bdPublishImageRemove');if(im)im.src=bdPublisherImageData;if(ed)ed.hidden=false;if(rm)rm.hidden=false});
 D.addEventListener('input',e=>{if(e.target.matches('#bdPublishTitle,#bdPublishBody')){$('#bdPublishWarning')?.classList.toggle('show',flagged(($('#bdPublishTitle')?.value||'')+' '+($('#bdPublishBody')?.value||'')))}});
-D.addEventListener('submit',async e=>{const f=e.target;if(f.id==='bdPublishForm'){e.preventDefault();e.stopImmediatePropagation();try{const media=await bdPreparePublisherMedia();const created=await publishFrom({type:$('#bdPublishType').value,style:$('#bdPublishStyle').value,title:$('#bdPublishTitle').value,body:$('#bdPublishBody').value,original:$('#bdPublishOriginal').value,media_url:media,caption:$('#bdPublishCaption')?.value||''});toast(created?.status==='pending_review'?'বস, আপনার কবিতাটা অত্যন্ত সুন্দর, কিন্তু আমি তো গালি ডিটেক্টর—গালি দেখলেই আমার মাথা খারাপ হয়ে যায়! 😄 তাই আপনার পোস্টটা ফাউন্ডার এবং অ্যাডমিনের ড্যাশবোর্ডে পাঠিয়ে দিচ্ছি। তারা যদি হজম করতে পারেন, তাহলে অতি শীঘ্রই আপনার প্রোফাইল এবং ইনডেক্সে পোস্ট হয়ে যাবে।':'লেখাটি সফলভাবে প্রকাশিত হয়েছে');f.reset();closePublisher();const sf=document.getElementById('sortFilter');if(sf){sf.value='newest';sf.dispatchEvent(new Event('change',{bubbles:true}))}await loadFeed();}catch(err){toast(err?.message||'প্রকাশ করা যায়নি')}return}if(f.id==='composerForm'){return}if(f.matches('.bd-live-post .comment-form')){e.preventDefault();e.stopImmediatePropagation();try{await submitComment(f)}catch(err){toast(err?.message||'মন্তব্য পাঠানো যায়নি')}return}},true);
+D.addEventListener('submit',async e=>{const f=e.target;if(f.id==='bdPublishForm'){e.preventDefault();e.stopImmediatePropagation();try{const media=await bdPreparePublisherMedia();const created=await publishFrom({type:$('#bdPublishType').value,style:(window.BD58ComposeStyle?window.BD58ComposeStyle('publisher'):$('#bdPublishStyle').value),title:$('#bdPublishTitle').value,body:$('#bdPublishBody').value,original:$('#bdPublishOriginal').value,media_url:media,caption:$('#bdPublishCaption')?.value||''});toast(created?.status==='pending_review'?'বস, আপনার কবিতাটা অত্যন্ত সুন্দর, কিন্তু আমি তো গালি ডিটেক্টর—গালি দেখলেই আমার মাথা খারাপ হয়ে যায়! 😄 তাই আপনার পোস্টটা ফাউন্ডার এবং অ্যাডমিনের ড্যাশবোর্ডে পাঠিয়ে দিচ্ছি। তারা যদি হজম করতে পারেন, তাহলে অতি শীঘ্রই আপনার প্রোফাইল এবং ইনডেক্সে পোস্ট হয়ে যাবে।':'লেখাটি সফলভাবে প্রকাশিত হয়েছে');f.reset();closePublisher();const sf=document.getElementById('sortFilter');if(sf){sf.value='newest';sf.dispatchEvent(new Event('change',{bubbles:true}))}await loadFeed();}catch(err){toast(err?.message||'প্রকাশ করা যায়নি')}return}if(f.id==='composerForm'){return}if(f.matches('.bd-live-post .comment-form')){e.preventDefault();e.stopImmediatePropagation();try{await submitComment(f)}catch(err){toast(err?.message||'মন্তব্য পাঠানো যায়নি')}return}},true);
 function themeInit(){const t=localStorage.getItem('bhubondangaTheme')||localStorage.getItem('bd-theme');if(t)H.dataset.theme=t;D.addEventListener('click',e=>{const b=e.target.closest('[data-theme-trigger],#themeToggle,#themeButton');if(!b)return;const next=H.dataset.theme==='dark'?'light':'dark';H.dataset.theme=next;localStorage.setItem('bhubondangaTheme',next)})}
 function drawers(){const back=$('#drawerBackdrop,#backdrop,#midnightDrawerBackdrop'),left=$('#mobileDrawer,#leftDrawer,#midnightLeftDrawer'),right=$('#rightMobileDrawer,#rightDrawer,#midnightRightDrawer');function open(which){const d=which==='right'?right:left;if(!d)return;left?.classList.remove('open');right?.classList.remove('open');d.classList.add('open');back?.classList.add('show');D.body.classList.add('locked')}function close(){left?.classList.remove('open');right?.classList.remove('open');back?.classList.remove('show');D.body.classList.remove('locked')}D.addEventListener('click',e=>{if(e.target.closest('#leftEdgeMenu,.edge-menu-left,.edge.left,#midnightLeftEdge,[data-open-left]')){e.preventDefault();open('left')}else if(e.target.closest('#rightEdgeMenu,.edge-menu-right,.edge.right,#midnightRightEdge,[data-open-right]')){e.preventDefault();open('right')}else if(e.target===back||e.target.closest('[data-close],#closeDrawer,#closeRightDrawer,.drawer-close'))close()},true)}
 let bdIndexAuthListenerInstalled=false;
@@ -1967,6 +1967,207 @@ html[data-theme="dark"] .bd31-action{color:#d3dcef!important}html[data-theme="da
 @media(max-width:1120px){html,body{max-width:100%;overflow-x:hidden!important}.layout{max-width:100%!important}}
 </style>
 
+
+<style id="bd-v861-dark-readable-author-font-lock">
+/* V8.61 — requested-only polish on the locked V8.60 Index.
+   1) Keep author avatar/name separated and fully readable.
+   2) “লেখার ফন্ট” is centered and dark green.
+   3) In dark mode, pale writing/post surfaces use dark readable text.
+   4) Font chips stay colorful, crisp and glassy in dark mode. */
+
+/* Author identity: never let the circular avatar squeeze/cover the name. */
+#postList .post-head.author,
+#postList .bd-live-post .post-head.author{
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+#postList .post-head.author > .author,
+#postList .bd-live-post .post-head.author > .author{
+  display:grid!important;
+  grid-template-columns:44px minmax(0,1fr)!important;
+  align-items:start!important;
+  column-gap:10px!important;
+  row-gap:0!important;
+  flex:1 1 auto!important;
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+#postList .post-head.author > .author > .author-avatar,
+#postList .bd-live-post .post-head.author > .author > .author-avatar{
+  grid-column:1!important;
+  grid-row:1 / span 2!important;
+  width:44px!important;
+  height:44px!important;
+  min-width:44px!important;
+  max-width:44px!important;
+  flex:none!important;
+  aspect-ratio:1/1!important;
+  border-radius:50%!important;
+  overflow:hidden!important;
+  margin:0!important;
+  padding:0!important;
+  position:relative!important;
+  z-index:1!important;
+}
+#postList .post-head.author > .author > .author-avatar::before,
+#postList .post-head.author > .author > .author-avatar::after{display:none!important;content:none!important}
+#postList .post-head.author > .author > .author-avatar img{
+  width:100%!important;
+  height:100%!important;
+  min-width:100%!important;
+  max-width:none!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  border-radius:50%!important;
+  display:block!important;
+}
+#postList .post-head.author > .author > .author-meta{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-width:0!important;
+  width:100%!important;
+  margin:0!important;
+  padding:1px 0 0!important;
+  position:relative!important;
+  z-index:3!important;
+  overflow:visible!important;
+}
+#postList .author-name-row{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:5px!important;
+  min-width:0!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+#postList .author-name-row a,
+#postList .author-name-row strong{
+  display:inline-block!important;
+  position:relative!important;
+  z-index:4!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+#postList .author-meta small{
+  display:block!important;
+  margin:2px 0 0!important;
+  padding:0!important;
+  white-space:normal!important;
+  overflow:visible!important;
+}
+
+/* Font title stays exactly above the five letters and uses the requested classy dark green. */
+.bd58-font-toolbar{align-items:center!important;text-align:center!important}
+.bd58-tool-title{
+  display:block!important;
+  width:100%!important;
+  text-align:center!important;
+  color:#145f43!important;
+  -webkit-text-fill-color:#145f43!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+}
+
+/* Dark mode: preserve the dark Aurora shell, but use light mist content surfaces + black/dark text. */
+html[data-theme="dark"] .composer,
+html[data-bd-theme="dark"] .composer{
+  background:radial-gradient(circle at 92% 2%,rgba(169,126,214,.16),transparent 34%),radial-gradient(circle at 4% 100%,rgba(105,170,176,.13),transparent 34%),linear-gradient(145deg,rgba(246,244,250,.97),rgba(232,229,241,.96))!important;
+  border-color:rgba(133,111,157,.20)!important;
+  box-shadow:0 15px 36px rgba(5,4,16,.25),inset 0 1px 0 rgba(255,255,255,.9)!important;
+  color:#111827!important;
+}
+html[data-theme="dark"] .composer :is(.composer-prompt,.composer-note,.bd58-tool-title,.bd58-font-hint),
+html[data-bd-theme="dark"] .composer :is(.composer-prompt,.composer-note,.bd58-tool-title,.bd58-font-hint){
+  color:#182235!important;
+  -webkit-text-fill-color:currentColor!important;
+  opacity:1!important;
+}
+html[data-theme="dark"] .composer .composer-prompt,
+html[data-bd-theme="dark"] .composer .composer-prompt{
+  background:rgba(255,255,255,.90)!important;
+  border-color:rgba(96,105,135,.20)!important;
+  color:#687184!important;
+}
+html[data-theme="dark"] .bd58-font-toolbar,
+html[data-bd-theme="dark"] .bd58-font-toolbar{
+  background:linear-gradient(145deg,rgba(250,249,252,.96),rgba(232,229,239,.95))!important;
+  border-color:rgba(109,99,135,.18)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.94)!important;
+}
+html[data-theme="dark"] .bd58-tool-title,
+html[data-bd-theme="dark"] .bd58-tool-title{
+  color:#145f43!important;
+  -webkit-text-fill-color:#145f43!important;
+}
+html[data-theme="dark"] .bd58-font-hint,
+html[data-bd-theme="dark"] .bd58-font-hint{
+  color:#5f6676!important;
+  -webkit-text-fill-color:#5f6676!important;
+}
+html[data-theme="dark"] .bd58-font-chip,
+html[data-bd-theme="dark"] .bd58-font-chip{
+  background:linear-gradient(145deg,#ffffff,#eef0f5)!important;
+  border-color:rgba(64,76,112,.20)!important;
+  box-shadow:0 5px 13px rgba(24,27,49,.13),inset 0 1px 0 rgba(255,255,255,.98)!important;
+  -webkit-text-fill-color:currentColor!important;
+}
+html[data-theme="dark"] .bd58-font-chip[data-bd58-font="subha"],html[data-bd-theme="dark"] .bd58-font-chip[data-bd58-font="subha"]{color:#116548!important}
+html[data-theme="dark"] .bd58-font-chip[data-bd58-font="masud"],html[data-bd-theme="dark"] .bd58-font-chip[data-bd58-font="masud"]{color:#b9293e!important}
+html[data-theme="dark"] .bd58-font-chip[data-bd58-font="kobiguru"],html[data-bd-theme="dark"] .bd58-font-chip[data-bd58-font="kobiguru"]{color:#6240bd!important}
+html[data-theme="dark"] .bd58-font-chip[data-bd58-font="bornomala"],html[data-bd-theme="dark"] .bd58-font-chip[data-bd58-font="bornomala"]{color:#1763aa!important}
+html[data-theme="dark"] .bd58-font-chip[data-bd58-font="jannati"],html[data-bd-theme="dark"] .bd58-font-chip[data-bd58-font="jannati"]{color:#946210!important}
+html[data-theme="dark"] .bd58-font-chip.active,
+html[data-bd-theme="dark"] .bd58-font-chip.active{
+  background:#fff!important;
+  outline:2px solid rgba(20,95,67,.34)!important;
+  outline-offset:2px!important;
+  box-shadow:0 7px 16px rgba(20,95,67,.16),inset 0 1px 0 #fff!important;
+}
+
+/* Posts in dark mode: light mist card + dark ink, while the page around them remains Aurora-dark. */
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .post:not([class*="style-tpl"]),
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd-live-post:not([class*="style-tpl"]){
+  background:radial-gradient(circle at 96% 0,rgba(158,116,197,.12),transparent 34%),radial-gradient(circle at 0 100%,rgba(126,168,164,.10),transparent 34%),linear-gradient(145deg,rgba(242,240,247,.97),rgba(218,216,229,.96))!important;
+  border-color:rgba(123,105,145,.18)!important;
+  color:#111827!important;
+  box-shadow:0 16px 38px rgba(4,3,14,.26),inset 0 1px 0 rgba(255,255,255,.83)!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .post:not([class*="style-tpl"]) :is(.post-title,.post-title a,.post-body,.bd-post-caption,.author-name-row,.author-name-row a,.author-meta,.author-meta a,.author-meta strong,.post-read-more,.bd31-action,.bd31-summary,.bd31-summary button),
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd-live-post:not([class*="style-tpl"]) :is(.post-title,.post-title a,.post-body,.bd-post-caption,.author-name-row,.author-name-row a,.author-meta,.author-meta a,.author-meta strong,.post-read-more,.bd31-action,.bd31-summary,.bd31-summary button){
+  color:#101827!important;
+  -webkit-text-fill-color:#101827!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .post:not([class*="style-tpl"]) :is(.author-meta small,.bd-post-time,.post-summary),
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd-live-post:not([class*="style-tpl"]) :is(.author-meta small,.bd-post-time,.post-summary){
+  color:#596273!important;
+  -webkit-text-fill-color:#596273!important;
+}
+
+@media(max-width:520px){
+  #postList .post-head.author > .author,
+  #postList .bd-live-post .post-head.author > .author{grid-template-columns:42px minmax(0,1fr)!important;column-gap:9px!important}
+  #postList .post-head.author > .author > .author-avatar,
+  #postList .bd-live-post .post-head.author > .author > .author-avatar{width:42px!important;height:42px!important;min-width:42px!important;max-width:42px!important}
+  .bd58-tool-title{font-size:10.5px!important}
+  .bd58-font-chip{width:30px!important;height:30px!important;font-size:16px!important}
+}
+</style>
+
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -2087,8 +2288,7 @@ html[data-theme="dark"] .bd31-action{color:#d3dcef!important}html[data-theme="da
 <div class="composer-avatar" id="composerAvatar"><svg class="icon"><use href="#i-user"></use></svg></div>
 <button class="composer-prompt" id="composerPrompt" type="button">আজ আপনার ভেতরে কী কথা জমে আছে?</button>
 </div>
-<div class="bd-font-toolbar" id="bdFontToolbar"><span class="bd-font-toolbar-title">লেখার ফন্ট</span><div class="bd47-font-chips" role="group" aria-label="বাংলা লেখার ফন্ট"><button class="bd47-font-chip" data-font="book" type="button" aria-label="বইয়ের বাংলা ফন্ট">অ</button><button class="bd47-font-chip" data-font="tiro" type="button" aria-label="তীরো বাংলা ফন্ট">আ</button><button class="bd47-font-chip" data-font="hind" type="button" aria-label="হিন্দ সিলিগুড়ি ফন্ট">ক</button><button class="bd47-font-chip" data-font="sans" type="button" aria-label="পরিষ্কার বাংলা ফন্ট">খ</button><button class="bd47-font-chip" data-font="ruposhi" type="button" aria-label="রূপসী বাংলা ফন্ট">ম</button></div><select id="bdVisibleFontSelect" aria-label="লেখার ফন্ট নির্বাচন করুন"><option value="book">বইয়ের ফন্ট</option><option value="ruposhi">রূপসী বাংলা</option><option value="tiro">তীরো বাংলা</option><option value="hind">হিন্দ সিলিগুড়ি</option><option value="sans">পরিষ্কার বাংলা</option></select><span class="bd-font-hint">লেখা ও কার্ডে প্রয়োগ হবে</span></div>
-
+<div class="bd58-font-toolbar" id="bd58FontToolbar"><span class="bd58-tool-title">লেখার ফন্ট</span><div class="bd58-font-chips" role="group" aria-label="বাংলা লেখার ফন্ট"><button class="bd58-font-chip" data-bd58-font="subha" type="button" title="Subha Typewriter Unicode" aria-label="Subha Typewriter Unicode">অ</button><button class="bd58-font-chip" data-bd58-font="masud" type="button" title="BL Masud Nandonik Unicode" aria-label="BL Masud Nandonik Unicode">আ</button><button class="bd58-font-chip" data-bd58-font="kobiguru" type="button" title="Kobiguru Unicode" aria-label="Kobiguru Unicode">ক</button><button class="bd58-font-chip" data-bd58-font="bornomala" type="button" title="Bornomala Regular Unicode" aria-label="Bornomala Regular Unicode">খ</button><button class="bd58-font-chip" data-bd58-font="jannati" type="button" title="Nill Jannati Matra Unicode" aria-label="Nill Jannati Matra Unicode">ম</button></div><span class="bd58-font-hint">সিলেক্ট করলে লেখার ঘরেই দেখা যাবে</span></div>
 <div aria-label="প্রকাশনার ধরন নির্বাচন করুন" class="composer-quick-types" hidden="" id="composerChoices">
 <button class="quick-type" data-open-type="poem" type="button"><span aria-hidden="true" class="quick-symbol write-modern">🖋️</span><span>কবিতা</span></button>
 <button class="quick-type" data-open-type="prolap" type="button"><span aria-hidden="true" class="quick-symbol prolap-symbol">☾</span><span>প্রলাপ</span></button>
@@ -2107,23 +2307,8 @@ html[data-theme="dark"] .bd31-action{color:#d3dcef!important}html[data-theme="da
 </div>
 <div class="composer-grid">
 <input class="form-control" id="postTitle" maxlength="160" placeholder="লেখার শিরোনাম" type="text"/><div class="canonical-poem-suggestion" hidden="" id="canonicalPoemSuggestion"><strong id="canonicalSuggestionTitle"></strong><p id="canonicalSuggestionText"></p><div class="canonical-poem-suggestion-meta" id="canonicalSuggestionMeta"></div><div class="canonical-poem-suggestion-actions"><button class="use" id="useCanonicalPoem" type="button">এই সংরক্ষিত কবিতাটি ব্যবহার করুন</button><button id="dismissCanonicalPoem" type="button">এখন নয়</button></div><div class="canonical-poem-locked" hidden="" id="canonicalLockedNote">এই পোস্টটি মূল সংরক্ষিত কবিতার পুনঃপ্রকাশ হবে; প্রথম সম্পাদনাকারীর তথ্য অপরিবর্তিত থাকবে।</div></div>
-<select aria-label="কার্ডের ধরন" class="form-control" id="cardStyle">
-<option value="pearl">Pearl Mist</option><option value="lavender">Lavender Bloom</option><option value="aqua">Aqua Crystal</option><option value="rose">Rose Dusk</option><option value="mint">Mint Dew</option><option value="silver">Silver Frost</option><option value="aurora">Soft Aurora</option><option value="clear">Classic Clear</option><option value="quote-glass">Quote Glass</option><option value="quote-aurora">Quote Aurora</option><option value="quote-emerald">Quote Emerald</option>
-</select>
-</div>
-<div aria-label="লেখার গ্লাস কার্ড নির্বাচন করুন" class="composer-style-picker" id="composerStylePicker">
-<div class="composer-style-head"><strong>লেখার গ্লাস কার্ড</strong><small>লিখতে শুরু করলে আপনার পছন্দের কার্ডটি নির্বাচন করুন</small></div>
-<div aria-label="গ্লাস কার্ডের ধরন" class="composer-style-grid" role="listbox">
-<button aria-selected="true" class="composer-style-option active" data-card-style="pearl" role="option" type="button"><span class="style-swatch"></span><span>মুক্তা</span></button>
-<button aria-selected="false" class="composer-style-option" data-card-style="lavender" role="option" type="button"><span class="style-swatch"></span><span>ল্যাভেন্ডার</span></button>
-<button aria-selected="false" class="composer-style-option" data-card-style="aqua" role="option" type="button"><span class="style-swatch"></span><span>নীল জল</span></button>
-<button aria-selected="false" class="composer-style-option" data-card-style="rose" role="option" type="button"><span class="style-swatch"></span><span>গোলাপি</span></button>
-<button aria-selected="false" class="composer-style-option" data-card-style="mint" role="option" type="button"><span class="style-swatch"></span><span>মিন্ট</span></button>
-<button aria-selected="false" class="composer-style-option" data-card-style="silver" role="option" type="button"><span class="style-swatch"></span><span>রূপালি</span></button>
-<button aria-selected="false" class="composer-style-option" data-card-style="aurora" role="option" type="button"><span class="style-swatch"></span><span>অরোরা</span></button>
-<button aria-selected="false" class="composer-style-option" data-card-style="clear" role="option" type="button"><span class="style-swatch"></span><span>ক্লাসিক</span></button><button aria-selected="false" class="composer-style-option" data-card-style="quote-glass" role="option" type="button"><span class="style-swatch"></span><span>“ কোট গ্লাস ”</span></button><button aria-selected="false" class="composer-style-option" data-card-style="quote-aurora" role="option" type="button"><span class="style-swatch"></span><span>“ কোট অরোরা ”</span></button><button aria-selected="false" class="composer-style-option" data-card-style="quote-emerald" role="option" type="button"><span class="style-swatch"></span><span>“ কোট সবুজ ”</span></button>
-</div>
-</div>
+<select aria-label="লেখার টেমপ্লেট" id="cardStyle" hidden><option value="none" selected>সাধারণ</option><option value="tpl1">Template 1</option><option value="tpl2">Template 2</option><option value="tpl3">Template 3</option><option value="tpl4">Template 4</option><option value="tpl5">Template 5</option><option value="tpl6">Template 6</option><option value="tpl7">Template 7</option><option value="tpl8">Template 8</option></select></div>
+<div class="bd58-template-picker" id="bd58TemplatePicker"><div class="bd58-template-head"><strong>লেখার টেমপ্লেট</strong><small>ছোট লেখা/কোটের জন্য। বড় কবিতায় “সাধারণ” রাখুন।</small></div><div class="bd58-template-strip" role="listbox" aria-label="লেখার টেমপ্লেট নির্বাচন করুন"><button class="bd58-template-chip active bd58-template-none" type="button" data-bd58-template="none" aria-selected="true"><span>সাধারণ</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl1" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-01.jpg')" aria-label="টেমপ্লেট 1"><span>1</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl2" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-02.jpg')" aria-label="টেমপ্লেট 2"><span>2</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl3" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-03.jpg')" aria-label="টেমপ্লেট 3"><span>3</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl4" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-04.jpg')" aria-label="টেমপ্লেট 4"><span>4</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl5" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-05.jpg')" aria-label="টেমপ্লেট 5"><span>5</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl6" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-06.jpg')" aria-label="টেমপ্লেট 6"><span>6</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl7" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-07.jpg')" aria-label="টেমপ্লেট 7"><span>7</span></button><button class="bd58-template-chip" type="button" data-bd58-template="tpl8" aria-selected="false" style="--bd58-thumb:url('assets/templates/template-08.jpg')" aria-label="টেমপ্লেট 8"><span>8</span></button></div></div>
 <textarea class="form-control" id="postBody" maxlength="12000" placeholder="আপনার লেখা লিখুন..."></textarea>
 <div class="bd-index-media-tools" id="bdIndexMediaTools" aria-label="মিডিয়া যোগ করুন">
   <label class="bd-index-media-btn">🖼️ ছবি<input id="postImage" type="file" accept="image/*" hidden></label>
@@ -2583,7 +2768,7 @@ async function publishPost(payload,flaggedTerms){
   if(synced.ok)toast(registration.canonical&&!registration.isNew?'মূল সংরক্ষিত কবিতাটি পুনঃপ্রকাশ হয়েছে এবং এখন ফিডের ওপরে আছে।':'লেখাটি প্রকাশিত হয়েছে এবং এখন নিউজফিডের ওপরে আছে।');
   else toast('লেখাটি এই ডিভাইসে ফিডের ওপরে দেখানো হয়েছে; অনলাইন সংরক্ষণ পুনরায় চেষ্টা হবে।');
 }
-function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,title=postTitle.value.trim(),body=postBody.value.trim(),author=originalAuthor.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='poem'&&!title){toast('কবিতার শিরোনাম লিখুন।');return null}if(!body){toast('আপনার লেখাটি লিখুন।');return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');;return null}const exact=!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:document.getElementById('cardStyle').value,mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
+function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,title=postTitle.value.trim(),body=postBody.value.trim(),author=originalAuthor.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='poem'&&!title){toast('কবিতার শিরোনাম লিখুন।');return null}if(!body){toast('আপনার লেখাটি লিখুন।');return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');;return null}const exact=!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:(window.BD58ComposeStyle?window.BD58ComposeStyle('index'):document.getElementById('cardStyle').value),mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
 composerForm.addEventListener('submit',async function(e){
  e.preventDefault();
  let live=null;try{live=await window.BhubondangaAuth?.current?.()}catch(_){}
@@ -5187,7 +5372,7 @@ html[data-theme="dark"] #mobileMoreMenu.bd48-open>button:not(.bd48-more-close){
 </style>
 <script id="bd-v852-index-final-lock-js">
 (()=>{'use strict';
-const TERMS=['শালা','শালী','হারামজাদা','হারামজাদী','হারামির বাচ্চা','শুয়োর','শুয়োর','শুয়োরের বাচ্চা','শুয়োরের বাচ্চা','কুত্তা','খানকি','খানকির পোলা','খানকির ছেলে','মাগী','বেশ্যা','চোদা','চুদি','চুদ','চোদন','চোদাচুদি','মাদারচোদ','মাদারচোদা','বাঞ্চোদ','বাইঞ্চদ','বোকাচোদা','বাল','গুদ'];
+const TERMS=["শালা","শালী","হারামজাদা","হারামজাদী","হারামির বাচ্চা","শুয়োর","শুয়োর","শুয়ার","শুয়ার","শুয়োরের বাচ্চা","শুয়োরের বাচ্চা","শুয়ারের বাচ্চা","শুয়ারের বাচ্চা","কুত্তা","খানকি","খানকির পোলা","খানকির ছেলে","মাগী","বেশ্যা","চোদা","চুদি","চুদ","চোদন","চোদা চুদি","চোদাচুদি","মাদারচোদ","মাদারচোদা","বাঞ্চোদ","বাইঞ্চদ","বোকাচোদা","বাল","গুদ"];
 const norm=v=>String(v||'').normalize('NFKC').replace(/[​-‍﻿]/g,'').toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim();
 const exact=v=>{const words=norm(v).split(' ').filter(Boolean),out=[];for(const term of TERMS){const t=norm(term).split(' ').filter(Boolean);for(let i=0;i<=words.length-t.length;i++){if(t.every((w,j)=>words[i+j]===w)){out.push(term);break}}}return [...new Set(out)]};
 window.BHUBONDANGA_BLOCKED_TERMS=TERMS.slice();window.BhubondangaModerationScan=exact;
@@ -5203,6 +5388,199 @@ if(window.BDStablePostViewer){window.BDStablePostViewer.open=(card)=>{if(!card)r
 #masterPostShell,.bd45-post-shell{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .bd-inline-expanded .post-body,.expanded .post-body{max-height:none!important;overflow:visible!important;-webkit-line-clamp:unset!important}
 </style>
+
+
+<style id="bd-v857-index-polish-css">
+/* V8.57 — requested-only: live template preview, compact exact reaction tray, round avatars,
+   browny-purple Aurora dark mode, slimmer humanitarian notice, desktop fixed sidebars/center scroll. */
+#bdPublishBody,#bdPublishTitle{transition:background .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease!important}
+#bdPublishForm[data-card-preview="pearl"] #bdPublishBody,#bdPublishForm[data-card-preview="pearl"] #bdPublishTitle{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(244,246,255,.92))!important}
+#bdPublishForm[data-card-preview="lavender"] #bdPublishBody,#bdPublishForm[data-card-preview="lavender"] #bdPublishTitle{background:radial-gradient(circle at 90% 0,rgba(157,117,238,.16),transparent 36%),linear-gradient(145deg,#fff,#f2edff)!important}
+#bdPublishForm[data-card-preview="aqua"] #bdPublishBody,#bdPublishForm[data-card-preview="aqua"] #bdPublishTitle{background:radial-gradient(circle at 10% 0,rgba(72,191,211,.17),transparent 36%),linear-gradient(145deg,#fbffff,#eaf9fb)!important}
+#bdPublishForm[data-card-preview="rose"] #bdPublishBody,#bdPublishForm[data-card-preview="rose"] #bdPublishTitle{background:radial-gradient(circle at 92% 0,rgba(220,111,161,.15),transparent 34%),linear-gradient(145deg,#fff,#fff0f6)!important}
+#bdPublishForm[data-card-preview="mint"] #bdPublishBody,#bdPublishForm[data-card-preview="mint"] #bdPublishTitle{background:radial-gradient(circle at 88% 0,rgba(45,170,125,.14),transparent 35%),linear-gradient(145deg,#fbfffd,#ecfaf4)!important}
+#bdPublishForm[data-card-preview="silver"] #bdPublishBody,#bdPublishForm[data-card-preview="silver"] #bdPublishTitle{background:linear-gradient(145deg,#fff,#eef1f6)!important}
+#bdPublishForm[data-card-preview="aurora"] #bdPublishBody,#bdPublishForm[data-card-preview="aurora"] #bdPublishTitle{background:radial-gradient(circle at 8% 0,rgba(70,151,229,.18),transparent 35%),radial-gradient(circle at 96% 2%,rgba(155,83,225,.18),transparent 38%),linear-gradient(145deg,#fbfdff,#f4edff)!important;border-color:rgba(119,83,218,.26)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 22px rgba(83,70,155,.08)!important}
+
+/* Exact supplied artwork remains the tray background, but it is a compact floating pill, never post media. */
+#bd31ReactionTray{position:fixed!important;z-index:2147483600!important;width:min(356px,calc(100vw - 20px))!important;height:auto!important;aspect-ratio:1023/166!important;max-width:none!important;padding:0!important;margin:0!important;gap:0!important;border:0!important;border-radius:999px!important;overflow:hidden!important;background-color:transparent!important;background-image:var(--bd50-reaction-tray)!important;background-size:100% 100%!important;background-repeat:no-repeat!important;background-position:center!important;box-shadow:0 10px 28px rgba(20,24,45,.20)!important;contain:layout paint style!important}
+#bd31ReactionTray.open{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;align-items:stretch!important;justify-items:stretch!important}
+#bd31ReactionTray [data-bd31-tray-pick]{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;padding:0!important;margin:0!important;background:transparent!important;border:0!important}
+#bd31ReactionTray [data-bd31-tray-pick]>.bd31-r{display:none!important}
+.bd31-main-reaction .bd31-r{width:26px!important;height:26px!important;min-width:26px!important;max-width:26px!important}
+.bd31-stack .bd31-r,.bd31-stack .bd31-mini{width:18px!important;height:18px!important;min-width:18px!important;max-width:18px!important}
+.bd31-reactor .bd31-r{width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important}
+.bd31-action{gap:5px!important}
+@media(max-width:390px){#bd31ReactionTray{width:calc(100vw - 18px)!important}.bd31-main-reaction .bd31-r{width:24px!important;height:24px!important;min-width:24px!important}}
+
+/* Author/profile photos are true circles and cannot be squeezed by flex/grid. */
+.post .author-avatar,.bd-live-post .author-avatar,.prolap-author .author-avatar{width:44px!important;height:44px!important;min-width:44px!important;max-width:44px!important;flex:0 0 44px!important;aspect-ratio:1/1!important;border-radius:50%!important;overflow:hidden!important;display:block!important;background:transparent!important}
+.post .author-avatar img,.bd-live-post .author-avatar img,.prolap-author .author-avatar img{width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;aspect-ratio:1/1!important;object-fit:cover!important;object-position:center!important;border-radius:50%!important;display:block!important}
+
+/* Browny-purple Aurora dark mode: warm plum/brown depth, violet aurora, high-contrast text. */
+html[data-theme="dark"] body{background:radial-gradient(circle at 9% 0,rgba(143,76,68,.34),transparent 30%),radial-gradient(circle at 88% 7%,rgba(113,60,158,.42),transparent 34%),radial-gradient(circle at 48% 92%,rgba(92,49,112,.28),transparent 38%),linear-gradient(155deg,#160f1c 0%,#23152d 46%,#1a1326 100%)!important;color:#fbf8ff!important}
+html[data-theme="dark"] .site-header,html[data-theme="dark"] .date-bar,html[data-theme="dark"] .topnav{background:linear-gradient(100deg,rgba(32,18,29,.96),rgba(53,28,57,.95),rgba(48,24,66,.96))!important;border-color:rgba(214,177,220,.13)!important}
+html[data-theme="dark"] .glass,html[data-theme="dark"] .post,html[data-theme="dark"] .composer,html[data-theme="dark"] .newsfeed-toolbar,html[data-theme="dark"] .menu-card,html[data-theme="dark"] .right-card{background:radial-gradient(circle at 96% 0,rgba(142,75,171,.22),transparent 34%),radial-gradient(circle at 0 100%,rgba(126,76,62,.16),transparent 32%),linear-gradient(145deg,rgba(45,25,51,.96),rgba(35,23,52,.96))!important;border-color:rgba(209,178,225,.15)!important;box-shadow:0 16px 42px rgba(0,0,0,.27),inset 0 1px 0 rgba(255,255,255,.055)!important}
+html[data-theme="dark"] .post-title,html[data-theme="dark"] .post-title a,html[data-theme="dark"] .post-body,html[data-theme="dark"] .author-name-row,html[data-theme="dark"] .author-name-row a,html[data-theme="dark"] .author-meta strong,html[data-theme="dark"] .humanitarian-copy h3,html[data-theme="dark"] .newsfeed-toolbar h3,html[data-theme="dark"] .composer *{color:#fbf8ff!important}
+html[data-theme="dark"] .author-meta small,html[data-theme="dark"] .bd-post-time,html[data-theme="dark"] .humanitarian-copy p,html[data-theme="dark"] .newsfeed-toolbar p,html[data-theme="dark"] .post-summary,html[data-theme="dark"] .bd31-summary{color:#d8cde4!important}
+html[data-theme="dark"] .humanitarian-mini{background:radial-gradient(circle at 96% 0,rgba(138,72,161,.18),transparent 36%),linear-gradient(135deg,rgba(47,31,47,.97),rgba(35,29,51,.96))!important;border-color:rgba(108,178,149,.25)!important}
+html[data-theme="dark"] #bdPublishForm[data-card-preview] #bdPublishBody,html[data-theme="dark"] #bdPublishForm[data-card-preview] #bdPublishTitle{color:#fff!important;background:radial-gradient(circle at 90% 0,rgba(147,72,171,.26),transparent 36%),radial-gradient(circle at 0 100%,rgba(129,75,62,.18),transparent 33%),linear-gradient(145deg,rgba(52,29,55,.98),rgba(37,25,54,.98))!important;border-color:rgba(209,178,225,.19)!important}
+
+/* Humanitarian block stays useful but slimmer. */
+.humanitarian-strip.multi{padding:6px!important;gap:6px!important}
+.humanitarian-mini{grid-template-columns:44px minmax(0,1fr) auto!important;gap:9px!important;padding:8px 10px!important;border-radius:14px!important}
+.humanitarian-mini .humanitarian-icon{width:42px!important;height:38px!important}
+.humanitarian-mini .humanitarian-copy h3{font-size:12.5px!important;margin:2px 0!important}.humanitarian-mini .humanitarian-copy p{font-size:8.1px!important;line-height:1.55!important}.humanitarian-mini .humanitarian-actions a{min-height:32px!important;padding:6px 9px!important;font-size:8px!important}
+@media(max-width:860px){.humanitarian-mini{grid-template-columns:40px minmax(0,1fr)!important;padding:8px!important}.humanitarian-mini .humanitarian-actions{grid-column:1/-1!important;margin-top:0!important}}
+
+/* Desktop: sidebars stay at the sides, only the center feed scrolls; center is not squeezed. */
+@media(min-width:1130px){
+  html,body{height:100%!important;overflow:hidden!important}
+  .layout{height:calc(100dvh - var(--header-h) - var(--ticker-h) - var(--nav-h))!important;overflow:hidden!important;align-items:stretch!important;grid-template-columns:clamp(190px,15vw,220px) minmax(0,1fr) clamp(205px,16vw,235px)!important;gap:12px!important;padding:12px!important}
+  .layout>.sidebar,.left-col,.right-col{position:relative!important;top:auto!important;height:100%!important;max-height:100%!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+  .center-col{min-width:0!important;width:100%!important;max-width:none!important;height:100%!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;padding-right:2px!important}
+  .center-col>.post,.center-col #postList,.center-col .composer,.center-col .newsfeed-toolbar{width:100%!important;max-width:none!important;min-width:0!important}
+}
+</style>
+
+<script id="bd-v857-index-polish-js">
+(()=>{'use strict';
+const D=document;
+const syncTemplatePreview=()=>{const sel=D.getElementById('bdPublishStyle'),form=D.getElementById('bdPublishForm');if(!sel||!form)return;form.dataset.cardPreview=sel.value||'pearl'};
+D.addEventListener('change',e=>{if(e.target?.id==='bdPublishStyle')syncTemplatePreview()},true);
+D.addEventListener('click',e=>{if(e.target.closest('#composerPrompt,.quick-type,[data-open-publisher]'))setTimeout(syncTemplatePreview,0)},true);
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',syncTemplatePreview,{once:true});else syncTemplatePreview();
+})();
+</script>
+
+
+<style id="bd-v858-font-template-system">
+/* V8.58 — requested composer font + unique template system. Existing layout remains locked. */
+@font-face{font-family:"BD Subha Typewriter";src:local("Subha Typewriter UNICODE"),url("assets/fonts/Subha%20Typewriter%20Unicode.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"BD Masud Nandonik";src:local("BL Masud Nandonik Unicode"),url("assets/fonts/BL%20Masud%20Nandonik%20Unicode.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"BD Kobiguru";src:local("Kobiguru"),url("assets/fonts/Kobiguru%20(1).ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"BD Bornomala";src:local("Bornomala"),url("assets/fonts/Bornomala-Regular.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:"BD Nill Jannati";src:local("Nill Jannati Matra"),url("assets/fonts/Nill%20Jannati%20Matra%20Unicode.ttf") format("truetype");font-style:normal;font-weight:400;font-display:swap}
+.bd58-font-toolbar{margin-top:9px;padding:8px 10px;border:1px solid rgba(103,112,166,.13);border-radius:13px;background:rgba(255,255,255,.46);display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center}
+.bd58-tool-title{font-size:10px;font-weight:850;color:var(--primary,#6550d7)}.bd58-font-hint{grid-column:1/-1;color:var(--muted,#8991a3);font-size:8px}
+.bd58-font-chips{display:flex;justify-content:center;align-items:center;gap:7px;flex-wrap:wrap}
+.bd58-font-chip{width:31px;height:31px;padding:0;border:1px solid rgba(85,99,151,.16);border-radius:9px;background:rgba(255,255,255,.88);box-shadow:0 4px 11px rgba(49,61,108,.07);font-size:17px;font-weight:700;line-height:1;cursor:pointer}
+.bd58-font-chip[data-bd58-font="subha"]{font-family:"BD Subha Typewriter","Noto Serif Bengali",serif;color:#18815d}.bd58-font-chip[data-bd58-font="masud"]{font-family:"BD Masud Nandonik","Noto Serif Bengali",serif;color:#ce4051}.bd58-font-chip[data-bd58-font="kobiguru"]{font-family:"BD Kobiguru","Noto Serif Bengali",serif;color:#744fd1}.bd58-font-chip[data-bd58-font="bornomala"]{font-family:"BD Bornomala","Noto Serif Bengali",serif;color:#2674bf}.bd58-font-chip[data-bd58-font="jannati"]{font-family:"BD Nill Jannati","Noto Serif Bengali",serif;color:#ad7818}
+.bd58-font-chip.active{outline:2px solid rgba(112,78,220,.26);outline-offset:2px;background:#fff;transform:translateY(-1px)}
+.bd58-template-picker{margin-top:8px;padding:8px 9px;border:1px solid rgba(101,110,159,.12);border-radius:13px;background:rgba(255,255,255,.42)}
+.bd58-template-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:7px}.bd58-template-head strong{font-size:10px;color:var(--primary,#6550d7)}.bd58-template-head small{font-size:7.8px;color:var(--muted,#8991a3);text-align:right}
+.bd58-template-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 1px 4px}.bd58-template-strip::-webkit-scrollbar{display:none}
+.bd58-template-chip{position:relative;flex:0 0 68px;width:68px;height:38px;padding:0;overflow:hidden;border:1px solid rgba(94,104,153,.15);border-radius:9px;background:#fff center/cover no-repeat;box-shadow:0 4px 12px rgba(47,59,108,.06);cursor:pointer}.bd58-template-chip:not(.bd58-template-none){background-image:var(--bd58-thumb)}.bd58-tpl-thumb-1{background-image:url("assets/templates/template-01.jpg")}.bd58-tpl-thumb-2{background-image:url("assets/templates/template-02.jpg")}.bd58-tpl-thumb-3{background-image:url("assets/templates/template-03.jpg")}.bd58-tpl-thumb-4{background-image:url("assets/templates/template-04.jpg")}.bd58-tpl-thumb-5{background-image:url("assets/templates/template-05.jpg")}.bd58-tpl-thumb-6{background-image:url("assets/templates/template-06.jpg")}.bd58-tpl-thumb-7{background-image:url("assets/templates/template-07.jpg")}.bd58-tpl-thumb-8{background-image:url("assets/templates/template-08.jpg")}
+.bd58-template-chip span{position:absolute;right:4px;bottom:3px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.86);color:#52607a;font-size:7px;font-weight:850;box-shadow:0 2px 7px rgba(30,40,80,.09)}.bd58-template-none{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#fff,#f7f8fc)}.bd58-template-none span{position:static;height:auto;background:transparent;box-shadow:none;font-size:8px}
+.bd58-template-chip.active{border-color:#7553df;box-shadow:0 0 0 2px rgba(117,83,223,.14),0 6px 14px rgba(65,54,120,.09);transform:translateY(-1px)}
+/* live writing preview */
+#composerForm #postTitle,#composerForm #postBody,#bdPublishForm #bdPublishTitle,#bdPublishForm #bdPublishBody{font-family:var(--bd58-compose-font,"Noto Serif Bengali",serif)!important}
+#composerForm[data-bd58-template]:not([data-bd58-template="none"]) #postBody,#bdPublishForm[data-bd58-template]:not([data-bd58-template="none"]) #bdPublishBody{min-height:145px!important;height:auto;overflow:hidden!important;resize:none!important;padding:45px 38px 44px!important;background-color:#fbfbff!important;background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;color:#17314a!important;border-color:rgba(109,100,165,.16)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.8),0 8px 20px rgba(73,65,120,.06)!important}
+#composerForm[data-bd58-template="tpl1"] #postBody,#bdPublishForm[data-bd58-template="tpl1"] #bdPublishBody{background-image:url("assets/templates/template-01.jpg")!important}
+#composerForm[data-bd58-template="tpl2"] #postBody,#bdPublishForm[data-bd58-template="tpl2"] #bdPublishBody{background-image:url("assets/templates/template-02.jpg")!important}
+#composerForm[data-bd58-template="tpl3"] #postBody,#bdPublishForm[data-bd58-template="tpl3"] #bdPublishBody{background-image:url("assets/templates/template-03.jpg")!important}
+#composerForm[data-bd58-template="tpl4"] #postBody,#bdPublishForm[data-bd58-template="tpl4"] #bdPublishBody{background-image:url("assets/templates/template-04.jpg")!important}
+#composerForm[data-bd58-template="tpl5"] #postBody,#bdPublishForm[data-bd58-template="tpl5"] #bdPublishBody{background-image:url("assets/templates/template-05.jpg")!important}
+#composerForm[data-bd58-template="tpl6"] #postBody,#bdPublishForm[data-bd58-template="tpl6"] #bdPublishBody{background-image:url("assets/templates/template-06.jpg")!important}
+#composerForm[data-bd58-template="tpl7"] #postBody,#bdPublishForm[data-bd58-template="tpl7"] #bdPublishBody{background-image:url("assets/templates/template-07.jpg")!important}
+#composerForm[data-bd58-template="tpl8"] #postBody,#bdPublishForm[data-bd58-template="tpl8"] #bdPublishBody{background-image:url("assets/templates/template-08.jpg")!important}
+/* published template: only the literary body gets the artwork; author/actions remain normal */
+.post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{margin-top:8px!important;min-height:150px!important;padding:46px 38px 44px!important;border:1px solid rgba(106,103,161,.12)!important;border-radius:16px!important;background-color:#fbfbff!important;background-repeat:no-repeat!important;background-position:center!important;background-size:100% 100%!important;color:#17314a!important;white-space:pre-wrap!important;overflow-wrap:anywhere!important}
+.post[class*="style-tpl1-"] .post-body,.bd-live-post[class*="style-tpl1-"] .post-body{background-image:url("assets/templates/template-01.jpg")!important}.post[class*="style-tpl2-"] .post-body,.bd-live-post[class*="style-tpl2-"] .post-body{background-image:url("assets/templates/template-02.jpg")!important}.post[class*="style-tpl3-"] .post-body,.bd-live-post[class*="style-tpl3-"] .post-body{background-image:url("assets/templates/template-03.jpg")!important}.post[class*="style-tpl4-"] .post-body,.bd-live-post[class*="style-tpl4-"] .post-body{background-image:url("assets/templates/template-04.jpg")!important}.post[class*="style-tpl5-"] .post-body,.bd-live-post[class*="style-tpl5-"] .post-body{background-image:url("assets/templates/template-05.jpg")!important}.post[class*="style-tpl6-"] .post-body,.bd-live-post[class*="style-tpl6-"] .post-body{background-image:url("assets/templates/template-06.jpg")!important}.post[class*="style-tpl7-"] .post-body,.bd-live-post[class*="style-tpl7-"] .post-body{background-image:url("assets/templates/template-07.jpg")!important}.post[class*="style-tpl8-"] .post-body,.bd-live-post[class*="style-tpl8-"] .post-body{background-image:url("assets/templates/template-08.jpg")!important}
+/* per-post font persistence via existing card_style field */
+.post[class*="-fsubha"] .post-title,.post[class*="-fsubha"] .post-body,.bd-live-post[class*="-fsubha"] .post-title,.bd-live-post[class*="-fsubha"] .post-body{font-family:"BD Subha Typewriter","Noto Serif Bengali",serif!important}.post[class*="-fmasud"] .post-title,.post[class*="-fmasud"] .post-body,.bd-live-post[class*="-fmasud"] .post-title,.bd-live-post[class*="-fmasud"] .post-body{font-family:"BD Masud Nandonik","Noto Serif Bengali",serif!important}.post[class*="-fkobiguru"] .post-title,.post[class*="-fkobiguru"] .post-body,.bd-live-post[class*="-fkobiguru"] .post-title,.bd-live-post[class*="-fkobiguru"] .post-body{font-family:"BD Kobiguru","Noto Serif Bengali",serif!important}.post[class*="-fbornomala"] .post-title,.post[class*="-fbornomala"] .post-body,.bd-live-post[class*="-fbornomala"] .post-title,.bd-live-post[class*="-fbornomala"] .post-body{font-family:"BD Bornomala","Noto Serif Bengali",serif!important}.post[class*="-fjannati"] .post-title,.post[class*="-fjannati"] .post-body,.bd-live-post[class*="-fjannati"] .post-title,.bd-live-post[class*="-fjannati"] .post-body{font-family:"BD Nill Jannati","Noto Serif Bengali",serif!important}
+html[data-theme="dark"] .bd58-font-toolbar,html[data-theme="dark"] .bd58-template-picker{background:rgba(52,31,57,.74);border-color:rgba(206,176,222,.14)}html[data-theme="dark"] .bd58-template-head strong,html[data-theme="dark"] .bd58-tool-title{color:#f2dcff}html[data-theme="dark"] .bd58-template-head small,html[data-theme="dark"] .bd58-font-hint{color:#d6c8dc}html[data-theme="dark"] .bd58-font-chip{background:rgba(55,35,62,.9);border-color:rgba(210,180,226,.16)}
+html[data-theme="dark"] .post[class*="style-tpl"] .post-body,html[data-theme="dark"] .bd-live-post[class*="style-tpl"] .post-body{color:#17314a!important}
+@media(max-width:520px){.bd58-font-toolbar{grid-template-columns:1fr;padding:7px 8px}.bd58-tool-title{text-align:center}.bd58-font-hint{text-align:center}.bd58-font-chips{gap:8px}.bd58-template-head{display:block;text-align:center}.bd58-template-head small{display:block;margin-top:2px;text-align:center}.bd58-template-chip{flex-basis:62px;width:62px;height:35px}.bd58-template-strip{padding-bottom:3px}#composerForm[data-bd58-template]:not([data-bd58-template="none"]) #postBody,#bdPublishForm[data-bd58-template]:not([data-bd58-template="none"]) #bdPublishBody,.post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{padding:35px 26px 36px!important;min-height:135px!important;border-radius:14px!important}}
+</style>
+<script id="bd-v858-font-template-system-js">
+(()=>{'use strict';
+ const D=document, FONT_KEY='bhubondanga-v858-font';
+ const F={subha:'"BD Subha Typewriter","Noto Serif Bengali",serif',masud:'"BD Masud Nandonik","Noto Serif Bengali",serif',kobiguru:'"BD Kobiguru","Noto Serif Bengali",serif',bornomala:'"BD Bornomala","Noto Serif Bengali",serif',jannati:'"BD Nill Jannati","Noto Serif Bengali",serif'};
+ const validFont=v=>F[v]?v:'subha', validTpl=v=>/^tpl[1-8]$/.test(v)?v:'none';
+ const getFont=()=>{try{return validFont(localStorage.getItem(FONT_KEY)||'subha')}catch(_){return'subha'}};
+ const selectFor=context=>context==='publisher'?D.getElementById('bdPublishStyle'):context==='profile'?D.getElementById('profileCardStyle'):D.getElementById('cardStyle');
+ const formFor=context=>context==='publisher'?D.getElementById('bdPublishForm'):D.getElementById('composerForm');
+ const contextOf=el=>el?.closest?.('#bdPublishForm')?'publisher':D.getElementById('profileCardStyle')?'profile':'index';
+ const getTpl=context=>validTpl(selectFor(context)?.value||'none');
+ function applyFont(v,context){v=validFont(v);try{localStorage.setItem(FONT_KEY,v)}catch(_){};const form=context?formFor(context):null;if(form){form.dataset.bd58Font=v;form.style.setProperty('--bd58-compose-font',F[v]);form.querySelectorAll('[data-bd58-font]').forEach(b=>b.classList.toggle('active',b.dataset.bd58Font===v))}else{D.querySelectorAll('[data-bd58-font]').forEach(b=>b.classList.toggle('active',b.dataset.bd58Font===v));for(const f of [D.getElementById('composerForm'),D.getElementById('bdPublishForm')].filter(Boolean)){f.dataset.bd58Font=v;f.style.setProperty('--bd58-compose-font',F[v])}}return v}
+ function applyTpl(v,context){v=validTpl(v);context=context||'index';const s=selectFor(context);if(s)s.value=v;const form=formFor(context);if(form){form.dataset.bd58Template=v;form.querySelectorAll('[data-bd58-template]').forEach(b=>{const on=b.dataset.bd58Template===v;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false')})}resizeEditors();return v}
+ function resizeOne(el){if(!el)return;const templated=(el.closest('form')?.dataset?.bd58Template||'none')!=='none';if(templated){el.style.height='auto';el.style.height=Math.max(145,el.scrollHeight)+'px'}else{el.style.height='';el.style.overflow=''}}
+ function resizeEditors(){resizeOne(D.getElementById('postBody'));resizeOne(D.getElementById('bdPublishBody'))}
+ function publisherTools(){if(D.getElementById('bd58PublisherTools'))return;const form=D.getElementById('bdPublishForm');if(!form)return;const grid=form.querySelector('.bd-publish-grid');if(!grid)return;const box=D.createElement('div');box.id='bd58PublisherTools';box.className='bd58-publisher-tools';box.innerHTML=`<div class="bd58-font-toolbar"><span class="bd58-tool-title">লেখার ফন্ট</span><div class="bd58-font-chips" role="group" aria-label="বাংলা লেখার ফন্ট"><button class="bd58-font-chip" data-bd58-font="subha" type="button" title="Subha Typewriter Unicode">অ</button><button class="bd58-font-chip" data-bd58-font="masud" type="button" title="BL Masud Nandonik Unicode">আ</button><button class="bd58-font-chip" data-bd58-font="kobiguru" type="button" title="Kobiguru Unicode">ক</button><button class="bd58-font-chip" data-bd58-font="bornomala" type="button" title="Bornomala Regular Unicode">খ</button><button class="bd58-font-chip" data-bd58-font="jannati" type="button" title="Nill Jannati Matra Unicode">ম</button></div><span class="bd58-font-hint">সিলেক্ট করলে লেখার ঘরেই দেখা যাবে</span></div><div class="bd58-template-picker"><div class="bd58-template-head"><strong>লেখার টেমপ্লেট</strong><small>ছোট লেখা/কোটের জন্য। বড় কবিতায় “সাধারণ” রাখুন।</small></div><div class="bd58-template-strip" role="listbox"><button class="bd58-template-chip active bd58-template-none" type="button" data-bd58-template="none"><span>সাধারণ</span></button>${[1,2,3,4,5,6,7,8].map(i=>`<button class="bd58-template-chip bd58-tpl-thumb-${i}" type="button" data-bd58-template="tpl${i}" aria-label="টেমপ্লেট ${i}"><span>${i}</span></button>`).join('')}</div></div>`;grid.insertAdjacentElement('afterend',box);applyFont(getFont(),'publisher');applyTpl('none','publisher')}
+ D.addEventListener('click',e=>{const f=e.target.closest('[data-bd58-font]');if(f){e.preventDefault();e.stopPropagation();applyFont(f.dataset.bd58Font,contextOf(f));return}const x=e.target.closest('[data-bd58-template]');if(x){e.preventDefault();e.stopPropagation();applyTpl(x.dataset.bd58Template,contextOf(x));return}},true);
+ D.addEventListener('input',e=>{if(e.target?.id==='postBody'||e.target?.id==='bdPublishBody')resizeOne(e.target)},true);
+ D.addEventListener('reset',e=>{if(e.target?.id==='composerForm'||e.target?.id==='bdPublishForm')setTimeout(()=>applyTpl('none',contextOf(e.target)),0)},true);
+ window.BD58ComposeStyle=context=>`${getTpl(context)==='none'?'plain':getTpl(context)}-f${getFont()}`;
+ const mo=new MutationObserver(()=>publisherTools());mo.observe(D.documentElement,{childList:true,subtree:true});
+ function boot(){applyFont(getFont());if(D.getElementById('profileCardStyle'))applyTpl('none','profile');else applyTpl('none','index');publisherTools();resizeEditors()}
+ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+
+
+<style id="bd-v860-index-stability-font-title">
+/* V8.60 — requested-only: keep the Index stable and place “লেখার ফন্ট” centered above অ/আ/ক/খ/ম. */
+.bd58-font-toolbar{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:6px!important;
+  text-align:center!important;
+}
+.bd58-tool-title{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  text-align:center!important;
+  justify-self:center!important;
+}
+.bd58-font-chips{
+  width:100%!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  margin:0 auto!important;
+}
+.bd58-font-hint{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  text-align:center!important;
+  justify-self:center!important;
+}
+/* Stop CSS smooth-scroll fighting JS scroll preservation on iOS/Safari. */
+html,body,.center-col,.center,.main-content,.page-main{
+  scroll-behavior:auto!important;
+}
+/* Interactive social controls must not create layout movement. */
+.bd31-social,.bd31-actions,.bd31-summary,#bd31ReactionTray,
+[data-bd31-react-main],[data-bd31-comments],[data-bd31-share],
+[data-bd31-react-summary],[data-bd31-comment-summary]{
+  -webkit-tap-highlight-color:transparent!important;
+}
+@media(max-width:520px){
+  .bd58-font-toolbar{padding-left:8px!important;padding-right:8px!important}
+  .bd58-tool-title{font-size:10px!important}
+  .bd58-font-chips{gap:8px!important}
+}
+</style>
+<script id="bd-v860-index-stability-js">
+(()=>{'use strict';
+ const D=document,W=window;
+ const interactive='[data-bd31-react-main],[data-bd31-tray-pick],[data-bd31-react-summary],[data-bd31-comment-summary],[data-bd31-comments],[data-bd31-share],[data-bd31-comment-like],[data-bd31-reply-toggle],[data-bd31-more],.post-menu-btn,.post-menu-panel button';
+ let snap=null;
+ const scrollerFor=el=>el?.closest?.('.center-col,.center,.main-content,.page-main')||D.scrollingElement;
+ const take=el=>{const sc=scrollerFor(el);return{sc,top:sc===D.scrollingElement?(W.scrollY||0):(sc.scrollTop||0),left:sc===D.scrollingElement?(W.scrollX||0):(sc.scrollLeft||0),wy:W.scrollY||0,wx:W.scrollX||0}};
+ const restore=s=>{if(!s)return;try{if(s.sc===D.scrollingElement){if(Math.abs((W.scrollY||0)-s.wy)>1||Math.abs((W.scrollX||0)-s.wx)>1)W.scrollTo(s.wx,s.wy)}else if(s.sc?.isConnected){if(Math.abs((s.sc.scrollTop||0)-s.top)>1)s.sc.scrollTop=s.top;if(Math.abs((s.sc.scrollLeft||0)-s.left)>1)s.sc.scrollLeft=s.left}}catch(_){}};
+ D.addEventListener('pointerdown',e=>{const hit=e.target.closest?.(interactive);if(hit)snap=take(hit)},true);
+ D.addEventListener('touchstart',e=>{const hit=e.target.closest?.(interactive);if(hit)snap=take(hit)},{capture:true,passive:true});
+ D.addEventListener('click',e=>{if(!e.target.closest?.(interactive)||!snap)return;const s=snap;queueMicrotask(()=>restore(s));requestAnimationFrame(()=>restore(s));setTimeout(()=>restore(s),48);setTimeout(()=>restore(s),140)},true);
+})();
+</script>
 
 </body>
 </html>
