@@ -754,6 +754,19 @@ html[data-theme="dark"] .bd54-view-replies{color:#b8c7ef!important}
 }
 </style>
 
+
+<style id="bd-v886-profile-template-center-lock">
+/* V8.86 — targeted only: decorative profile-post template text must sit in the visual center of the card. */
+.post[class*="style-tpl"] .post-body,
+.bd-live-post[class*="style-tpl"] .post-body{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  text-align-last:center!important;
+}
+</style>
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
@@ -2193,7 +2206,7 @@ D.addEventListener('keydown',e=>{if(e.key==='Escape'&&active){e.preventDefault()
 'use strict';
 const D=document,W=window;
 /* Profile post background/title tap now opens the same real card in a stable full-screen viewer. */
-D.addEventListener('click',e=>{const card=e.target.closest?.('.feed .post[data-post],.feed .post[data-post-id]');if(!card||card.classList.contains('bd45-in-viewer'))return;if(e.target.closest('a,button,input,textarea,select,label,form,.author a,.avatar44,.tag,.post-menu-panel,.bd31-social,#bd31ReactionTray,audio,video,[contenteditable="true"]'))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const body=card.querySelector('.post-body,[data-expand]'),open=card.classList.contains('expanded')||card.classList.contains('bd-inline-expanded')||card.dataset.bdInlineOpen==='1';if(open){card.classList.remove('expanded','bd-inline-expanded');delete card.dataset.bdInlineOpen;if(body){body.classList.add('collapsed');body.style.maxHeight=''}const more=card.querySelector('.post-read-more,.readmore');if(more)more.textContent='পূর্ণ লেখা পড়ুন →'}else{card.classList.add('expanded','bd-inline-expanded');card.dataset.bdInlineOpen='1';if(body){body.classList.remove('collapsed');body.style.maxHeight='none'}const more=card.querySelector('.post-read-more,.readmore');if(more)more.textContent='কম দেখুন ↑'}},true);
+D.addEventListener('click',e=>{const card=e.target.closest?.('.feed .post[data-post],.feed .post[data-post-id]');if(!card||card.classList.contains('bd45-in-viewer'))return;if(e.target.closest('a,button,input,textarea,select,label,form,.author a,.avatar44,.tag,.post-menu-panel,.bd31-social,#bd31ReactionTray,audio,video,.post-media img,img.post-media,[contenteditable="true"]'))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const body=card.querySelector('.post-body,[data-expand]'),open=card.classList.contains('expanded')||card.classList.contains('bd-inline-expanded')||card.dataset.bdInlineOpen==='1';if(open){card.classList.remove('expanded','bd-inline-expanded');delete card.dataset.bdInlineOpen;if(body){body.classList.add('collapsed');body.style.maxHeight=''}const more=card.querySelector('.post-read-more,.readmore');if(more)more.textContent='পূর্ণ লেখা পড়ুন →'}else{card.classList.add('expanded','bd-inline-expanded');card.dataset.bdInlineOpen='1';if(body){body.classList.remove('collapsed');body.style.maxHeight='none'}const more=card.querySelector('.post-read-more,.readmore');if(more)more.textContent='কম দেখুন ↑'}},true);
 /* Avatar crop/position editor. Cover already has one-touch drag/reposition in the locked code. */
 let file=null,url='',img=null,stage=null,zoom=1,dx=0,dy=0,base=1,drag=null;
 function ensure(){let root=D.getElementById('bd45AvatarEditor');if(root)return root;root=D.createElement('section');root.id='bd45AvatarEditor';root.innerHTML='<div class="bd45-avatar-panel" role="dialog" aria-modal="true" aria-label="প্রোফাইল ছবি ক্রপ"><h3>প্রোফাইল ছবি ঠিক করুন</h3><div class="bd45-avatar-stage"><img alt="প্রোফাইল ছবি প্রিভিউ"></div><div class="bd45-avatar-zoom"><span>−</span><input type="range" min="1" max="3" step="0.01" value="1" aria-label="জুম"><span>＋</span></div><div class="bd45-avatar-actions"><button type="button" data-cancel>বাতিল</button><button class="save" type="button" data-save>ক্রপ করে সেভ করুন</button></div></div>';D.body.appendChild(root);stage=root.querySelector('.bd45-avatar-stage');img=stage.querySelector('img');const range=root.querySelector('input[type=range]');range.addEventListener('input',()=>{zoom=Number(range.value)||1;clamp();paint()});root.querySelector('[data-cancel]').addEventListener('click',close);root.querySelector('[data-save]').addEventListener('click',save);stage.addEventListener('pointerdown',e=>{drag={id:e.pointerId,x:e.clientX,y:e.clientY,dx,dy};try{stage.setPointerCapture(e.pointerId)}catch{};e.preventDefault()});stage.addEventListener('pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;dx=drag.dx+(e.clientX-drag.x);dy=drag.dy+(e.clientY-drag.y);clamp();paint();e.preventDefault()});['pointerup','pointercancel'].forEach(ev=>stage.addEventListener(ev,e=>{if(drag&&drag.id===e.pointerId)drag=null}));return root}
@@ -3011,5 +3024,13 @@ const mo=new MutationObserver(()=>{const old=D.getElementById('bd31ReactionTray'
 })();
 </script>
 
+
+<style id="bd-v887-profile-photo-tap-fix">
+/* V8.87 — targeted profile media tap repair only. */
+.post .post-media img,.bd-live-post .post-media img{cursor:zoom-in;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.post.bd63-media-open .post-media,.bd-live-post.bd63-media-open .post-media{padding:6px!important;background:linear-gradient(145deg,rgba(244,248,255,.96),rgba(246,240,255,.96))!important;border:1px solid rgba(103,86,180,.12)!important}
+.post.bd63-media-open .post-media img,.bd-live-post.bd63-media-open .post-media img{cursor:zoom-out!important}
+html[data-theme="dark"] .post.bd63-media-open .post-media,html[data-theme="dark"] .bd-live-post.bd63-media-open .post-media{background:radial-gradient(circle at 18% 12%,rgba(63,101,205,.20),transparent 42%),radial-gradient(circle at 84% 18%,rgba(118,64,190,.22),transparent 45%),#07111f!important}
+</style>
 </body>
 </html>
