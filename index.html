@@ -15,7 +15,7 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.96-stable-20-post-batches-loadmore-label-20260810">
+<meta name="bhubondanga-build" content="V8.98-v896-master-reaction-media-menu-20260810">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
@@ -2255,7 +2255,7 @@ html[data-bd-theme="dark"] .bd58-font-chip.active{
 (()=>{'use strict';
 if(window.__BD_V884_REACTION_TOUCH_RECOVERY__)return;window.__BD_V884_REACTION_TOUCH_RECOVERY__=true;
 const W=window,D=document,TYPES=['like','love','care','sad','haha','wow','angry'];
-const LABEL={like:'লাইক',love:'ভালোবাসা',care:'যত্ন',sad:'দুঃখ',haha:'হাহা',wow:'ওয়াও',angry:'রাগ'};
+const LABEL={like:'লাইক',love:'ভালোবাসা',care:'যত্ন',sad:'দুঃখিত',haha:'হাহা',wow:'ওয়াও',angry:'রাগান্বিত'};
 const EMOJI={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};
 const BN='০১২৩৪৫৬৭৮৯';
 const q=(s,r=D)=>r?.querySelector?.(s)||null, qa=(s,r=D)=>[...(r?.querySelectorAll?.(s)||[])];
@@ -3006,7 +3006,7 @@ masterPostShell?.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&masterPostShell?.classList.contains('open'))closePostViewer()});
 addEventListener('popstate',()=>{const id=new URLSearchParams(location.search).get('post');if(id)openRequestedPost();else closePostViewer(false)});
-document.addEventListener('click',e=>{if(!postActionBoard.contains(e.target)&&!e.target.closest('[data-post-menu]'))closePostActionBoard()});addEventListener('scroll',closePostActionBoard,{passive:true});addEventListener('resize',closePostActionBoard);
+document.addEventListener('click',e=>{if(!postActionBoard.contains(e.target)&&!e.target.closest('[data-post-menu]'))closePostActionBoard()});document.addEventListener('pointerdown',e=>{if(postActionBoard?.classList.contains('open')&&!postActionBoard.contains(e.target)&&!e.target.closest?.('[data-post-menu]'))closePostActionBoard()},{capture:true,passive:true});addEventListener('scroll',closePostActionBoard,{passive:true});addEventListener('resize',closePostActionBoard);
 document.getElementById('loadMoreBtn').addEventListener('click',()=>{
   const button=document.getElementById('loadMoreBtn'),box=document.getElementById('postList'),total=filteredPosts().length;
   if(button.dataset.loading==='1')return;
@@ -7102,7 +7102,7 @@ function collapse(card){if(!card)return;card.classList.remove('bd76-inline-open'
 function expand(card){if(!card)return;card.classList.add('bd76-inline-open','bd-inline-expanded','bd63-expanded','expanded');const b=$('.post-body',card);if(b)b.classList.remove('collapsed');const m=$('.post-read-more,.readmore',card);if(m)m.textContent='কম দেখুন ↑'}
 function toggle(card){const b=$('.post-body',card);const open=card?.classList.contains('bd76-inline-open')||(b&&!b.classList.contains('collapsed'));open?collapse(card):expand(card)}
 W.BDStablePostViewer=W.BDStablePostViewer||{};W.BDStablePostViewer.open=(card)=>toggle(card);W.BDStablePostViewer.close=(card)=>collapse(card||$('#postList .bd76-inline-open'));
-W.addEventListener('click',e=>{const card=e.target.closest?.('#postList [data-post-card],#postList article.post[data-post],#postList .bd-live-post[data-post-id]');if(!card)return;if(e.target.closest('button,input,textarea,select,label,a.author-avatar,.author-meta a,.pill,.bd31-social,#postActionBoard,video,audio'))return;const opener=e.target.closest('[data-open-post],.post-title a,.post-read-more,.post-body')||(!e.target.closest('a,button')?card:null);if(!opener)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggle(card)},true);
+W.addEventListener('click',e=>{const card=e.target.closest?.('#postList [data-post-card],#postList article.post[data-post],#postList .bd-live-post[data-post-id]');if(!card)return;if(e.target.closest('button,input,textarea,select,label,a.author-avatar,.author-meta a,.pill,.bd31-social,#postActionBoard,video,audio,img,.post-media,.composer-media-render,.bd878-media-detail'))return;const opener=e.target.closest('[data-open-post],.post-title a,.post-read-more,.post-body')||(!e.target.closest('a,button')?card:null);if(!opener)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggle(card)},true);
 W.addEventListener('keydown',e=>{const card=e.target.closest?.('#postList [data-post-card]');if(!card||(e.key!=='Enter'&&e.key!==' '))return;if(e.target.closest('button,a,input,textarea,select'))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggle(card)},true);
 
 /* ----- Comments: summary is the disclosure link; totals include replies; reply groups stay folded ----- */
@@ -7389,17 +7389,18 @@ function mediaSrc(el){return String(el?.currentSrc||el?.src||el?.getAttribute?.(
 function closeMedia(card){const d=$(':scope > .bd878-media-detail',card);if(d){$('video',d)?.pause?.();d.remove()}const hit=$('.bd878-media-hit',card);if(hit)hit.setAttribute('aria-expanded','false')}
 function mediaCommentHTML(id){return '<form class="bd878-media-comment-form" data-bd878-media-comment="'+String(id).replace(/["&<>]/g,'')+'"><input maxlength="1200" autocomplete="off" placeholder="মন্তব্য লিখুন…" aria-label="মন্তব্য লিখুন"><button type="submit" aria-label="মন্তব্য পাঠান">➤</button></form>'}
 function openMedia(hit){
-  const wrap=hit.closest('.composer-media-render'),card=hit.closest('[data-post-card],[data-post],[data-post-id]');if(!wrap||!card)return;
+  const card=hit.closest('[data-post-card],[data-post],[data-post-id]');if(!card)return;
+  const wrap=hit.closest('.composer-media-render');
+  const source=hit.matches?.('img,video')?hit:(wrap?$(':scope > video,:scope > img',wrap):null);if(!source||source.closest('.bd878-media-detail'))return;
   const old=$(':scope > .bd878-media-detail',card);if(old){closeMedia(card);return}
-  const source=$(':scope > video,:scope > img',wrap);if(!source)return;const src=mediaSrc(source);if(!src)return;
+  const src=mediaSrc(source);if(!src)return;const anchor=wrap||source;
   const d=D.createElement('section');d.className='bd878-media-detail';d.setAttribute('aria-label',source.tagName==='VIDEO'?'ভিডিও বিস্তারিত':'ছবি বিস্তারিত');
   if(source.tagName==='VIDEO')d.innerHTML='<video controls playsinline preload="auto" src="'+src.replace(/"/g,'&quot;')+'"></video><button class="bd878-media-close" type="button">কম দেখুন ↑</button>'+mediaCommentHTML(postId(card));
   else d.innerHTML='<div class="bd878-zoom-stage"><img src="'+src.replace(/"/g,'&quot;')+'" alt=""></div><button class="bd878-media-close" type="button">কম দেখুন ↑</button>'+mediaCommentHTML(postId(card));
-  wrap.insertAdjacentElement('afterend',d);hit.setAttribute('aria-expanded','true');
+  anchor.insertAdjacentElement('afterend',d);const overlay=wrap?$(':scope > .bd878-media-hit',wrap):null;if(overlay)overlay.setAttribute('aria-expanded','true');
   if(source.tagName==='VIDEO'){
     try{source.pause()}catch{}const v=$('video',d);if(v)try{v.muted=false;v.defaultMuted=false;v.volume=1;v.removeAttribute('muted');const p=v.play();if(p?.catch)p.catch(()=>{})}catch{}
   }
-  requestAnimationFrame(()=>d.scrollIntoView({block:'nearest',behavior:'auto'}));
 }
 function decorateMedia(card){
   if(!card)return;$$('.composer-media-render',card).forEach(wrap=>{
@@ -7411,7 +7412,8 @@ function decorateMedia(card){
 /* Stop the legacy document-level video opener while keeping native controls functional in our inline detail. */
 W.addEventListener('click',e=>{if(e.target.closest?.('.bd878-media-detail video')){e.stopPropagation();e.stopImmediatePropagation()}},true);
 D.addEventListener('click',e=>{
-  const hit=e.target.closest?.('.bd878-media-hit');if(hit){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMedia(hit);return}
+  const hit=e.target.closest?.('.bd878-media-hit,#postList [data-post-card] img.post-media,#postList [data-post-card] video.post-media,#postList [data-post-card] .post-media img,#postList [data-post-card] .post-media video');
+  if(hit&&!hit.closest('.bd878-media-detail')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openMedia(hit);return}
   const close=e.target.closest?.('.bd878-media-close');if(close){e.preventDefault();e.stopPropagation();closeMedia(close.closest('[data-post-card],[data-post],[data-post-id]'));return}
 },true);
 
@@ -7468,30 +7470,31 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 }
 #bd95ReactionTray{
   position:fixed!important;z-index:2147483647!important;left:0;top:0;
-  display:none;align-items:center;justify-content:center;gap:3px;
-  width:max-content;max-width:calc(100vw - 18px);padding:6px 7px;
-  border:1px solid rgba(35,48,78,.13);border-radius:999px;
-  background:rgba(255,255,255,.985);box-shadow:0 12px 34px rgba(20,27,54,.24);
-  backdrop-filter:blur(18px) saturate(138%);-webkit-backdrop-filter:blur(18px) saturate(138%);
+  display:none;align-items:center;justify-content:center;gap:4px;
+  width:max-content;max-width:calc(100vw - 18px);padding:5px 7px;
+  border:1px solid rgba(25,32,55,.12);border-radius:999px;
+  background:#fff;box-shadow:0 10px 28px rgba(15,20,42,.22);
   touch-action:manipulation!important;-webkit-touch-callout:none!important;
   -webkit-user-select:none!important;user-select:none!important;-webkit-tap-highlight-color:transparent!important;
   contain:layout paint style!important
 }
 html[data-theme="dark"] #bd95ReactionTray{
-  background:rgba(9,20,48,.985);border-color:rgba(178,190,247,.24);
-  box-shadow:0 18px 46px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.075)
+  background:#fff;border-color:rgba(25,32,55,.12);
+  box-shadow:0 10px 28px rgba(15,20,42,.28)
 }
 #bd95ReactionTray.open{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
 #bd95ReactionTray button{
-  width:39px!important;height:39px!important;min-width:39px!important;min-height:39px!important;
+  width:35px!important;height:35px!important;min-width:35px!important;min-height:35px!important;flex:0 0 35px!important;
   padding:0!important;margin:0!important;border:0!important;border-radius:50%!important;
   display:grid!important;place-items:center!important;background:transparent!important;color:inherit!important;
-  font:27px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font:25px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
   touch-action:manipulation!important;-webkit-touch-callout:none!important;-webkit-user-select:none!important;
   user-select:none!important;-webkit-tap-highlight-color:transparent!important;transition:transform .12s ease!important
 }
-@media(hover:hover) and (pointer:fine){#bd95ReactionTray button:hover{transform:translateY(-5px) scale(1.12)!important}}
-#bd95ReactionTray button:active{transform:scale(.95)!important}
+@media(hover:hover) and (pointer:fine){#bd95ReactionTray button:hover{transform:translateY(-5px) scale(1.10)!important}}
+#bd95ReactionTray button:active{transform:scale(.93)!important}
+#bd95ReactionTray .bd95-react-main-icon{width:33px!important;height:33px!important;min-width:33px!important;max-width:33px!important;font-size:27px!important;overflow:hidden!important}
+#bd95ReactionTray .bd95-react-main-icon img{width:33px!important;height:33px!important;object-fit:contain!important;display:block!important}
 [data-bd95-react-main],[data-bd95-react-main] *{
   touch-action:manipulation!important;-webkit-touch-callout:none!important;-webkit-user-select:none!important;
   user-select:none!important;-webkit-tap-highlight-color:transparent!important
@@ -7501,11 +7504,12 @@ html[data-theme="dark"] #bd95ReactionTray{
 [data-bd95-react-summary][hidden]{display:inline-flex!important;visibility:hidden!important;pointer-events:none!important}
 [data-bd95-react-summary]{align-items:center!important;gap:6px!important}
 .bd95-react-stack{display:inline-flex;align-items:center;min-width:20px}
-.bd95-react-stack .bd95-mini{width:19px;height:19px;margin-left:-4px;border:2px solid var(--surface-solid,#fff);border-radius:50%;display:grid;place-items:center;background:var(--surface-solid,#fff);font:14px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.bd95-react-stack .bd95-mini{width:18px;height:18px;margin-left:-4px;border:2px solid var(--surface-solid,#fff);border-radius:50%;display:grid;place-items:center;background:var(--surface-solid,#fff);font:14px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
 .bd95-react-stack .bd95-mini:first-child{margin-left:0}
-.bd95-react-main-icon{display:grid;place-items:center;width:24px;height:24px;font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.bd95-react-main-icon{display:grid;place-items:center;width:22px;height:22px;font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
 .bd95-reactor-row{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px 4px;border-bottom:1px solid var(--border)}
 .bd95-reactor-row:last-child{border-bottom:0}.bd95-reactor-avatar{width:36px;height:36px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:var(--rainbow-soft);font-weight:800}.bd95-reactor-avatar img{width:100%;height:100%;object-fit:cover}.bd95-reactor-name{font-size:10.5px;font-weight:800;color:var(--text)}.bd95-reactor-type{font:20px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
+@media(max-width:430px){#bd95ReactionTray{gap:2px!important;padding:4px 6px!important;max-width:286px!important}#bd95ReactionTray button{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;flex-basis:36px!important}#bd95ReactionTray .bd95-react-main-icon,#bd95ReactionTray .bd95-react-main-icon img{width:32px!important;height:32px!important;min-width:32px!important;max-width:32px!important}}
 </style>
 <script id="bd-v895-reaction-master-js">
 (()=>{'use strict';
@@ -7531,7 +7535,7 @@ function adopt(root=D){
   sums.forEach(sum=>{const card=cardOf(sum),id=sum.getAttribute('data-bd31-react-summary')||pid(card);sum.setAttribute('data-bd95-react-summary',id||'1');sum.removeAttribute('data-bd31-react-summary');if(card&&!card.dataset.bd95Hydrated){card.dataset.bd95Hydrated='1';hydrate(card)}});
 }
 function killLegacyTrays(){['bd31ReactionTray','bd64ReactionTray','bd82ReactionTray','bd84ReactionTray'].forEach(id=>{const x=D.getElementById(id);if(x){x.classList.remove('open','show');x.setAttribute('aria-hidden','true');x.style.setProperty('pointer-events','none','important')}})}
-function tray(){let t=q('#bd95ReactionTray');if(t)return t;t=D.createElement('div');t.id='bd95ReactionTray';t.setAttribute('role','menu');t.setAttribute('aria-hidden','true');t.innerHTML=TYPES.map(type=>`<button type="button" data-bd95-pick="${type}" aria-label="${LABEL[type]}" title="${LABEL[type]}">${EMOJI[type]}</button>`).join('');D.body.appendChild(t);return t}
+function tray(){let t=q('#bd95ReactionTray');if(t)return t;t=D.createElement('div');t.id='bd95ReactionTray';t.setAttribute('role','menu');t.setAttribute('aria-hidden','true');t.innerHTML=TYPES.map(type=>`<button type="button" data-bd95-pick="${type}" aria-label="${LABEL[type]}" title="${LABEL[type]}">${icon(type,false)}</button>`).join('');D.body.appendChild(t);return t}
 function closeTray(){const t=q('#bd95ReactionTray');if(!t)return;t.classList.remove('open');t.setAttribute('aria-hidden','true');t.__card=null;t.__main=null}
 function openTray(main){const card=cardOf(main);if(!card)return;killLegacyTrays();const t=tray(),r=main.getBoundingClientRect();t.__card=card;t.__main=main;t.classList.add('open');t.setAttribute('aria-hidden','false');requestAnimationFrame(()=>{const w=t.offsetWidth||300,h=t.offsetHeight||51;let left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2)),top=r.top-h-8;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+8);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'})}
 async function rows(id){const c=client();if(c)try{const r=await c.rpc('get_post_social',{target_post:String(id)});if(!r.error){const d=Array.isArray(r.data)?r.data[0]:r.data;if(Array.isArray(d?.reactions))return d.reactions}}catch{}return []}
@@ -7548,7 +7552,7 @@ async function react(card,type,fromTray){if(!card||!TYPES.includes(type))return;
 async function showReactors(card){const id=pid(card),panel=q('[data-bd31-reactor-panel]',card),host=q('.bd31-reactor-list',panel);if(!panel||!host)return;if(!panel.hidden){panel.hidden=true;return}let list=cache.get(id);if(!list)list=await rows(id);cache.set(id,list||[]);if(!list?.length){panel.hidden=false;host.innerHTML='<div style="padding:10px;color:var(--muted)">এখনও কোনো প্রতিক্রিয়া নেই।</div>';return}const ids=[...new Set(list.map(x=>String(x.user_id||'')).filter(Boolean))],pmap={};const c=client();if(c&&ids.length)try{const r=await c.from('profiles').select('id,username,display_name,avatar_url,role').in('id',ids);if(!r.error)(r.data||[]).forEach(p=>pmap[String(p.id)]=p)}catch{}host.innerHTML=list.map(x=>{const p=pmap[String(x.user_id)]||{},name=p.display_name||p.username||'সদস্য',role=String(p.role||''),href=role==='founder'?'founder-profile.html':role==='admin'?`admin-profile.html?user=${encodeURIComponent(x.user_id)}`:`profile.html?user=${encodeURIComponent(p.username||x.user_id)}`,av=p.avatar_url?`<img src="${String(p.avatar_url).replace(/"/g,'&quot;')}" alt="">`:String(name).slice(0,1);return `<div class="bd95-reactor-row"><a class="bd95-reactor-avatar" href="${href}">${av}</a><a class="bd95-reactor-name" href="${href}">${String(name).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}</a><span class="bd95-reactor-type">${EMOJI[x.reaction]||'👍'}</span></div>`}).join('');panel.hidden=false}
 let press=null,skipClickUntil=0,hoverTimer=0,leaveTimer=0;
 function clearPress(){if(press?.timer)clearTimeout(press.timer);press=null}
-D.addEventListener('pointerdown',e=>{const main=e.target.closest?.('[data-bd95-react-main]');if(!main)return;clearPress();press={main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,timer:0};if(e.pointerType!=='mouse')press.timer=setTimeout(()=>{if(!press||press.id!==e.pointerId)return;press.held=true;openTray(main)},360)},{capture:true,passive:true});
+D.addEventListener('pointerdown',e=>{const main=e.target.closest?.('[data-bd95-react-main]');if(!main)return;clearPress();press={main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,timer:0};if(e.pointerType!=='mouse')press.timer=setTimeout(()=>{if(!press||press.id!==e.pointerId)return;press.held=true;openTray(main)},320)},{capture:true,passive:true});
 D.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot((e.clientX||0)-press.x,(e.clientY||0)-press.y)>11)clearPress()},{capture:true,passive:true});
 D.addEventListener('pointerup',e=>{if(!press||press.id!==e.pointerId)return;const p=press;clearPress();if(p.held)skipClickUntil=Date.now()+650},{capture:true,passive:true});
 D.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId)clearPress()},{capture:true,passive:true});
