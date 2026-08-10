@@ -7,6 +7,68 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<!-- BHUBONDANGA V9.00 LEGACY SERVICE-WORKER/CACHE RESET + FEED LIFECYCLE REPAIR: one-time cleanup only; no visual/layout changes. -->
+<script id="bd-legacy-cache-cleanup-v899">
+(function(){
+  'use strict';
+  var DONE_KEY='bdLegacyCacheCleanupV900_20260810';
+  var RELOAD_KEY='bdLegacyCacheCleanupReloadedV900';
+
+  async function clearLegacyOfflineState(){
+    try{
+      try{ if(localStorage.getItem(DONE_KEY)==='done') return; }catch(_e){}
+
+      var changed=false;
+
+      if('serviceWorker' in navigator && typeof navigator.serviceWorker.getRegistrations==='function'){
+        try{
+          var regs=await navigator.serviceWorker.getRegistrations();
+          if(regs && regs.length) changed=true;
+          await Promise.all((regs||[]).map(function(reg){
+            return reg.unregister().catch(function(){ return false; });
+          }));
+        }catch(err){
+          console.warn('Bhubondanga legacy Service Worker cleanup:',err);
+        }
+      }
+
+      if('caches' in window && typeof caches.keys==='function'){
+        try{
+          var cacheNames=await caches.keys();
+          if(cacheNames && cacheNames.length) changed=true;
+          await Promise.all((cacheNames||[]).map(function(name){
+            return caches.delete(name).catch(function(){ return false; });
+          }));
+        }catch(err){
+          console.warn('Bhubondanga legacy CacheStorage cleanup:',err);
+        }
+      }
+
+      try{ localStorage.setItem(DONE_KEY,'done'); }catch(_e){}
+
+      /* If an old worker/cache was actually found, perform one clean navigation only. */
+      if(changed){
+        try{
+          if(sessionStorage.getItem(RELOAD_KEY)!=='1'){
+            sessionStorage.setItem(RELOAD_KEY,'1');
+            var freshUrl=new URL(location.href);
+            freshUrl.searchParams.set('bdv','900');
+            location.replace(freshUrl.toString());
+          }
+        }catch(_e){}
+      }
+    }catch(err){
+      console.warn('Bhubondanga cache reset:',err);
+    }
+  }
+
+  if(document.readyState==='complete'){
+    setTimeout(clearLegacyOfflineState,0);
+  }else{
+    window.addEventListener('load',clearLegacyOfflineState,{once:true});
+  }
+})();
+</script>
 <!-- BHUBONDANGA FIX VERSION: V8 FONT / COPY LOCK / REACTION -->
 <meta content="#173153" name="theme-color"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
@@ -15,7 +77,7 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.98-v896-master-reaction-media-menu-20260810">
+<meta name="bhubondanga-build" content="V9.00-v899-rls-feed-lifecycle-direct-render-20260810">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
@@ -922,14 +984,20 @@ async function loadFeed(){
   if(!host)return;
   state.feedBusy=true;
   try{
-    let q=client.from('posts').select('*').eq('status','published').order('created_at',{ascending:false}).limit(opt.limit||40);
+    let q=client.from('posts').select('*').in('status',['published','published_flagged']).order('created_at',{ascending:false}).limit(opt.limit||40);
     if(opt.authorId)q=q.eq('author_id',opt.authorId);else if(opt.authorUsername)q=q.eq('author_username',opt.authorUsername);
     if(opt.type)q=q.eq('type',opt.type);
     const r=await q;if(r.error)throw r.error;
     const rows=r.data||[];
     if(f==='index.html'){
       W.__BD_SUPABASE_POSTS=rows;
-      D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows}}));
+      /* V9.00: use the direct renderer bridge when available; event remains as fallback. */
+      if(typeof W.BhubondangaApplySupabaseFeed==='function'){
+        try{ W.BhubondangaApplySupabaseFeed(rows); }
+        catch(_e){ D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows}})); }
+      }else{
+        D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows}}));
+      }
       const count=$('#feedCount');if(count)count.textContent=bnNum(rows.length)+'টি লেখা';
       return;
     }
@@ -954,7 +1022,17 @@ async function boot(){
   themeInit();drawers();dates();
   if(!W.__BD_DATE_TIMER__)W.__BD_DATE_TIMER__=setInterval(dates,60000);
   await resolveAuth();
-  setTimeout(loadFeed,140);setTimeout(()=>{if(!Array.isArray(W.__BD_SUPABASE_POSTS)||!W.__BD_SUPABASE_POSTS.length)loadFeed()},1100);realtime();
+  W.BhubondangaForceFeedRefresh=loadFeed;
+  setTimeout(loadFeed,80);
+  setTimeout(loadFeed,700);
+  setTimeout(loadFeed,1800);
+  realtime();
+  if(!W.__BD_V900_FEED_LIFECYCLE__){
+    W.__BD_V900_FEED_LIFECYCLE__=true;
+    W.addEventListener('pageshow',()=>setTimeout(loadFeed,60));
+    W.addEventListener('online',()=>setTimeout(loadFeed,40));
+    D.addEventListener('visibilitychange',()=>{if(!D.hidden)setTimeout(loadFeed,80)});
+  }
   if(client?.auth?.onAuthStateChange&&!bdIndexAuthListenerInstalled){
     bdIndexAuthListenerInstalled=true;
     client.auth.onAuthStateChange(async(_e,s)=>{state.session=s;await resolveAuth();await loadFeed()});
@@ -2862,7 +2940,9 @@ function bd77FeedScroller(){return innerWidth>=900?(document.querySelector('.cen
 function bd77CaptureFeedAnchor(){const sc=bd77FeedScroller(),cards=Array.from(document.querySelectorAll('#postList [data-post-card]'));let chosen=null;for(const c of cards){const r=c.getBoundingClientRect();if(r.bottom>0&&r.top<innerHeight){chosen=c;break}}return{sc,id:String(chosen?.dataset.post||chosen?.dataset.postId||''),top:chosen?chosen.getBoundingClientRect().top:0,scroll:Number(sc?.scrollTop||0)}}
 function bd77RestoreFeedAnchor(a){if(!a)return;requestAnimationFrame(()=>requestAnimationFrame(()=>{const sc=bd77FeedScroller();if(a.id){const c=document.querySelector(`#postList [data-post="${CSS.escape(a.id)}"],#postList [data-post-id="${CSS.escape(a.id)}"]`);if(c){const d=c.getBoundingClientRect().top-a.top;if(Math.abs(d)>.5){if(innerWidth>=900&&sc)sc.scrollTop+=d;else window.scrollBy(0,d)}return}}if(sc&&Number.isFinite(a.scroll))sc.scrollTop=Math.min(a.scroll,Math.max(0,sc.scrollHeight-sc.clientHeight))}))}
 function bd77StableFeedRender(){const a=bd77CaptureFeedAnchor();renderPosts();bd77RestoreFeedAnchor(a)}
-document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();bd77StableFeedRender();openRequestedPost()});
+function bd900ApplySupabaseFeed(){posts=storedPosts();if(!posts.length)posts=demoPosts();bd77StableFeedRender();openRequestedPost()}
+window.BhubondangaApplySupabaseFeed=bd900ApplySupabaseFeed;
+document.addEventListener('bd:supabase-posts',bd900ApplySupabaseFeed);
 window.addEventListener('storage',e=>{if(sourceKeys.includes(e.key)){posts=storedPosts();if(!posts.length)posts=demoPosts();bd77StableFeedRender();openRequestedPost()}});document.addEventListener('bd:home-feed-updated',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();bd77StableFeedRender();openRequestedPost()});
 const likedKey='bhubondangaIndexLovedPosts',memoryKey='bhubondangaMemories',commentKey='bhubondangaIndexComments',likeCountKey='bhubondangaIndexLikeCounts',activityKey='bhubondangaPostActivity';
 function likesObject(){return obj(likeCountKey)}
