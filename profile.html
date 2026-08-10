@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.83-mobile-composer-lock-20260810">
+<meta name="bhubondanga-build" content="V8.97-inline-profile-no-popup-20260810">
 <script id="bd-supabase-nonblocking-loader">
 (function(){
   "use strict";
@@ -644,114 +644,52 @@ html[data-theme="dark"] .bd54-view-replies{color:#b8c7ef!important}
 
 <!-- BHUBONDANGA PROFILE MASTER LOCK: original uploaded profile + isolated live moderation delivery only -->
 
-<style id="bd-v883-mobile-profile-composer-lock">
-/* V8.83 — mobile-only profile composer workspace lock.
-   Existing profile geometry, owner/visitor state, Supabase, posting, reactions and cross-posting remain untouched. */
+<style id="bd-v897-inline-profile-composer-lock">
+/* V8.97 — MASTER RULE: profile composer/post/media stay in normal document flow. No full-screen composer popup. */
 @media (max-width:899px){
-  html.bd83-composer-lock,
-  body.bd83-composer-lock{
-    overscroll-behavior:none!important;
+  html.bd83-composer-lock,body.bd83-composer-lock{overscroll-behavior:auto!important;overflow-x:hidden!important}
+  body.bd83-composer-lock{position:static!important;left:auto!important;right:auto!important;width:auto!important;top:auto!important;overflow-y:auto!important}
+  #composer.bd83-locked,#composer.open{
+    position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;
+    z-index:20!important;width:100%!important;height:auto!important;max-height:none!important;margin-top:10px!important;
+    padding:12px!important;border-radius:18px!important;display:block!important;overflow:visible!important;
+    background:rgba(255,255,255,.94)!important;box-shadow:var(--shadow)!important;backdrop-filter:blur(18px) saturate(125%)!important;
+    -webkit-backdrop-filter:blur(18px) saturate(125%)!important;touch-action:auto!important;
   }
-  body.bd83-composer-lock{
-    position:fixed!important;
-    left:0!important;
-    right:0!important;
-    width:100%!important;
-    overflow:hidden!important;
+  html[data-theme="dark"] #composer.bd83-locked,html[data-theme="dark"] #composer.open{
+    background:radial-gradient(circle at 10% 0,rgba(78,113,205,.14),transparent 35%),radial-gradient(circle at 96% 4%,rgba(137,82,210,.16),transparent 40%),rgba(10,22,40,.96)!important;
   }
-  #composer.bd83-locked{
-    position:fixed!important;
-    z-index:26000!important;
-    left:max(8px,env(safe-area-inset-left))!important;
-    right:max(8px,env(safe-area-inset-right))!important;
-    top:var(--bd83-vv-top,8px)!important;
-    height:var(--bd83-vv-height,calc(100dvh - 16px))!important;
-    max-height:var(--bd83-vv-height,calc(100dvh - 16px))!important;
-    margin:0!important;
-    padding:10px!important;
-    border-radius:18px!important;
-    display:flex!important;
-    flex-direction:column!important;
-    overflow:hidden!important;
-    overscroll-behavior:none!important;
-    background:linear-gradient(145deg,rgba(255,255,255,.985),rgba(247,246,255,.975))!important;
-    box-shadow:0 22px 70px rgba(27,31,72,.24),inset 0 1px 0 rgba(255,255,255,.96)!important;
-    -webkit-backdrop-filter:blur(24px) saturate(140%)!important;
-    backdrop-filter:blur(24px) saturate(140%)!important;
-    touch-action:pan-y!important;
+  #composer.bd83-locked .composer-top,#composer.open .composer-top{position:relative!important;padding:0!important;border:0!important;background:transparent!important}
+  #composer.bd83-locked .composer-body,#composer.open .composer-body{
+    display:block!important;position:relative!important;width:100%!important;height:auto!important;max-height:none!important;overflow:visible!important;
+    margin-top:11px!important;padding-top:10px!important;padding-bottom:8px!important;border-top:1px solid var(--line)!important;touch-action:auto!important;
   }
-  html[data-theme="dark"] #composer.bd83-locked{
-    background:radial-gradient(circle at 8% 0,rgba(71,118,235,.16),transparent 34%),radial-gradient(circle at 96% 4%,rgba(148,77,232,.19),transparent 38%),linear-gradient(155deg,rgba(17,28,49,.99),rgba(27,23,53,.99))!important;
-    border-color:rgba(165,153,230,.18)!important;
-  }
-  #composer.bd83-locked .composer-top{
-    flex:0 0 auto!important;
-    position:relative!important;
-    z-index:4!important;
-    padding:1px 0 9px!important;
-    border-bottom:1px solid rgba(93,91,155,.12)!important;
-    background:transparent!important;
-  }
-  #composer.bd83-locked .composer-body{
-    display:block!important;
-    flex:1 1 auto!important;
-    min-height:0!important;
-    width:100%!important;
-    margin-top:0!important;
-    padding:10px 2px max(22px,env(safe-area-inset-bottom))!important;
-    border-top:0!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    -webkit-overflow-scrolling:touch!important;
-    overscroll-behavior:contain!important;
-    scroll-behavior:auto!important;
-    touch-action:pan-y!important;
-  }
-  #composer.bd83-locked .composer-body::-webkit-scrollbar{width:0!important;height:0!important}
-  #composer.bd83-locked .form-grid,
-  #composer.bd83-locked .bd47-profile-tools,
-  #composer.bd83-locked .bd58-font-toolbar,
-  #composer.bd83-locked .bd58-template-picker,
-  #composer.bd83-locked #postTitle,
-  #composer.bd83-locked #postBody,
-  #composer.bd83-locked #mediaCaption,
-  #composer.bd83-locked .media-tools,
-  #composer.bd83-locked .media-preview,
-  #composer.bd83-locked .publish-row{
-    width:100%!important;
-    max-width:none!important;
-    min-width:0!important;
-  }
-  #composer.bd83-locked #postBody{
-    min-height:clamp(280px,44svh,520px)!important;
-    max-height:clamp(360px,58svh,680px)!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch!important;
-    overscroll-behavior:contain!important;
-    resize:none!important;
-    scroll-margin:0!important;
-  }
-  #composer.bd83-locked #postBody:focus,
-  #composer.bd83-locked input:focus,
-  #composer.bd83-locked select:focus,
-  #composer.bd83-locked textarea:focus{
-    scroll-margin:0!important;
-  }
-  #composer.bd83-locked input,
-  #composer.bd83-locked textarea,
-  #composer.bd83-locked select,
-  #composer.bd83-locked button{font-size:max(16px,1em)!important}
-  #composer.bd83-locked .prompt{
-    min-width:0!important;
-    white-space:nowrap!important;
-    overflow:hidden!important;
-    text-overflow:ellipsis!important;
-  }
-  #composer.bd83-locked[data-bd83-keyboard="1"] #postBody{
-    min-height:clamp(220px,34svh,420px)!important;
-    max-height:clamp(280px,48svh,520px)!important;
-  }
+  #composer #postBody{font-size:16px!important;min-height:260px!important;max-height:min(58vh,620px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;resize:none!important}
+  #composer input,#composer select,#composer textarea,#composer button{font-size:max(16px,1em)!important}
 }
+/* The retired fixed post viewer is never used. Posts/media expand only inside their own card. */
+#bd45PostViewer{display:none!important;pointer-events:none!important}
+/* Template chooser collapses after a decorative card is selected. */
+#bd58TemplatePicker.bd897-card-picked .bd58-template-strip{display:none!important}
+#bd58TemplatePicker.bd897-card-picked .bd58-template-head small{display:none!important}
+.bd897-template-change{display:none;min-height:32px;margin:6px auto 0;padding:0 12px;border:1px solid rgba(101,110,159,.15);border-radius:999px;background:#fff;color:#5b4caf;font-size:9px!important;font-weight:800;align-items:center;justify-content:center;gap:6px}
+#bd58TemplatePicker.bd897-card-picked .bd897-template-change{display:inline-flex!important}
+#bd58TemplatePicker.bd897-card-picked .bd58-template-head strong::after{content:" • কার্ড নির্বাচিত";color:#6f66aa;font-size:8px;font-weight:700}
+/* Post edit: add/remove decorative card in-place. */
+.bd897-edit-card-block{margin:2px 0 10px;padding:9px;border:1px solid rgba(93,91,155,.13);border-radius:11px;background:rgba(247,248,255,.8)}
+.bd897-edit-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.bd897-edit-card-head strong{font-size:10px}.bd897-edit-card-head small{color:#8b94a6;font-size:8px}
+.bd897-edit-card-picks{display:flex;gap:6px;overflow-x:auto;padding:2px 1px 5px;scrollbar-width:none}.bd897-edit-card-picks::-webkit-scrollbar{display:none}
+.bd897-edit-card{position:relative;flex:0 0 68px;width:68px;height:42px;border:1px solid rgba(94,104,153,.16);border-radius:9px;background:#fff center/cover no-repeat;color:#53617a;font-size:8px!important;font-weight:900;box-shadow:0 4px 12px rgba(47,59,108,.06)}
+.bd897-edit-card[data-v28-card="tpl1"]{background-image:var(--bd65-tpl-1)}.bd897-edit-card[data-v28-card="tpl2"]{background-image:var(--bd65-tpl-2)}.bd897-edit-card[data-v28-card="tpl3"]{background-image:var(--bd65-tpl-3)}.bd897-edit-card[data-v28-card="tpl4"]{background-image:var(--bd65-tpl-4)}.bd897-edit-card[data-v28-card="tpl5"]{background-image:var(--bd65-tpl-5)}.bd897-edit-card[data-v28-card="tpl6"]{background-image:var(--bd65-tpl-6)}.bd897-edit-card[data-v28-card="tpl7"]{background-image:var(--bd65-tpl-7)}.bd897-edit-card[data-v28-card="tpl8"]{background-image:var(--bd65-tpl-8)}
+.bd897-edit-card.selected{border-color:#6e4be0;box-shadow:0 0 0 2px rgba(110,75,224,.16)}.bd897-edit-card.none{flex-basis:84px;width:84px;background:linear-gradient(145deg,#fff,#f5f6fb)}
+/* Photo/video opens Facebook-style in the same post flow. */
+.post.bd63-media-open .post-media,.bd-live-post.bd63-media-open .post-media{width:100%!important;max-height:none!important;overflow:visible!important;padding:6px!important;border-radius:14px!important}
+.post.bd63-media-open .post-media img,.bd-live-post.bd63-media-open .post-media img{width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;touch-action:pan-x pan-y pinch-zoom!important}
+.post.bd63-media-open .post-media video,.bd-live-post.bd63-media-open .post-media video{width:100%!important;height:auto!important;max-height:min(82vh,760px)!important;object-fit:contain!important;background:#000!important}
+/* Restore the requested bottom-to-top shortcut. */
+#bd897TopArrow{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(18px,calc(env(safe-area-inset-bottom) + 14px));z-index:9000;width:52px;height:52px;border:1px solid rgba(112,76,228,.20);border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,rgba(114,64,239,.96),rgba(166,72,235,.94));color:#fff;box-shadow:0 13px 30px rgba(87,54,183,.28);font:800 24px/1 Arial,sans-serif;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease;touch-action:manipulation}
+#bd897TopArrow.show{opacity:1;visibility:visible;transform:none}#bd897TopArrow:active{transform:scale(.94)}
+@media(min-width:961px){#bd897TopArrow{right:calc((100vw - min(1370px,calc(100% - 28px)))/2 + 300px);bottom:22px}}
 </style>
 
 
@@ -1474,7 +1412,8 @@ function v28openEdit(card){
   if(!card||!state?.owner)return;v28close();const p=v28post(card);if(!p)return;
   const box=document.createElement('div');box.className='bd28-inline-editor';
   const options=Object.entries(V28_TYPES).filter(([k])=>k!=='midnight'||String(state?.target?.roleResolved||state?.target?.role||'').toLowerCase()==='founder').map(([k,v])=>`<option value="${k}" ${String(p.type)===k?'selected':''}>${v}</option>`).join('');
-  box.innerHTML=`<h4>পোস্ট সম্পাদনা</h4><div class="bd28-edit-grid"><select data-v28-type>${options}</select><input data-v28-title maxlength="240" aria-label="শিরোনাম"></div><textarea data-v28-body maxlength="50000" aria-label="পোস্টের লেখা"></textarea><div class="bd28-editor-actions"><button type="button" data-v28-cancel>বাতিল</button><button class="save" type="button" data-v28-save-edit>সংরক্ষণ</button></div>`;
+  const currentCard=/^tpl[1-8]$/.test(String(p.card_style||p.cardStyle||''))?String(p.card_style||p.cardStyle):'none';box.dataset.cardStyle=currentCard;
+  box.innerHTML=`<h4>পোস্ট সম্পাদনা</h4><div class="bd28-edit-grid"><select data-v28-type>${options}</select><input data-v28-title maxlength="240" aria-label="শিরোনাম"></div><div class="bd897-edit-card-block"><div class="bd897-edit-card-head"><strong>লেখার কার্ড</strong><small>এখান থেকেই কার্ড যোগ বা বাদ দিন</small></div><div class="bd897-edit-card-picks"><button type="button" class="bd897-edit-card none ${currentCard==='none'?'selected':''}" data-v28-card="none">কার্ড বাদ দিন</button>${[1,2,3,4,5,6,7,8].map(n=>`<button type="button" class="bd897-edit-card ${currentCard==='tpl'+n?'selected':''}" data-v28-card="tpl${n}" aria-label="কার্ড ${n}">${n}</button>`).join('')}</div></div><textarea data-v28-body maxlength="50000" aria-label="পোস্টের লেখা"></textarea><div class="bd28-editor-actions"><button type="button" data-v28-cancel>বাতিল</button><button class="save" type="button" data-v28-save-edit>সংরক্ষণ</button></div>`;
   box.querySelector('[data-v28-title]').value=p.title||'';box.querySelector('[data-v28-body]').value=p.body||'';
   v28host(card).insertAdjacentElement('afterend',box);
 }
@@ -1485,10 +1424,10 @@ function v28openPrivacy(card){
   v28host(card).insertAdjacentElement('afterend',box);
 }
 async function v28saveEdit(card,box){
-  const p=v28post(card),id=card?.dataset?.post;if(!p||!id)return;const type=box.querySelector('[data-v28-type]')?.value||p.type,title=box.querySelector('[data-v28-title]')?.value.trim()||'',body=box.querySelector('[data-v28-body]')?.value.trim()||'';
+  const p=v28post(card),id=card?.dataset?.post;if(!p||!id)return;const type=box.querySelector('[data-v28-type]')?.value||p.type,title=box.querySelector('[data-v28-title]')?.value.trim()||'',body=box.querySelector('[data-v28-body]')?.value.trim()||'',cardStyle=/^tpl[1-8]$/.test(String(box.dataset.cardStyle||''))?String(box.dataset.cardStyle):'none';
   if(!title||!body){v28msg('শিরোনাম ও লেখা খালি রাখা যাবে না');return}
-  const patch={type,category:V28_TYPES[type]||p.category||'প্রকাশনা',title,body};const ok=await v28dbUpdate(id,patch);Object.assign(p,patch);v28localUpdate(id,{type,category:patch.category,title,body,content:body});
-  const tag=card.querySelector('.tag');if(tag&&!tag.textContent.includes('মূল কবি'))tag.textContent=patch.category;const t=card.querySelector('.post-title a,.post-title');if(t)t.textContent=title;const b=card.querySelector('.post-body');if(b)b.textContent=body;box.remove();v28msg(ok?'পোস্ট সম্পাদনা সংরক্ষণ হয়েছে':'পোস্ট এই ডিভাইসে সংরক্ষণ হয়েছে');
+  const patch={type,category:V28_TYPES[type]||p.category||'প্রকাশনা',title,body,card_style:cardStyle};const ok=await v28dbUpdate(id,patch);Object.assign(p,patch,{cardStyle});v28localUpdate(id,{type,category:patch.category,title,body,content:body,card_style:cardStyle,cardStyle});
+  const tag=card.querySelector('.tag');if(tag&&!tag.textContent.includes('মূল কবি'))tag.textContent=patch.category;const t=card.querySelector('.post-title a,.post-title');if(t)t.textContent=title;const b=card.querySelector('.post-body');if(b)b.textContent=body;[...card.classList].filter(c=>/^style-(?:tpl[1-8]|none|pearl)$/.test(c)).forEach(c=>card.classList.remove(c));card.classList.add('style-'+cardStyle);box.remove();v28msg(ok?'পোস্ট সম্পাদনা সংরক্ষণ হয়েছে':'পোস্ট এই ডিভাইসে সংরক্ষণ হয়েছে');
 }
 async function v28savePrivacy(card,box){
   const p=v28post(card),id=card?.dataset?.post;if(!p||!id)return;const value=box.dataset.value||'public';let ok=false;
@@ -1499,6 +1438,7 @@ document.addEventListener('click',async function(e){
   const edit=e.target.closest('[data-post-option="edit"]'),privacy=e.target.closest('[data-post-option="privacy"]');
   if(edit||privacy){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=(edit||privacy).closest('.post');document.querySelectorAll('.post-menu-panel').forEach(x=>x.hidden=true);if(edit)v28openEdit(card);else v28openPrivacy(card);return}
   const choice=e.target.closest('[data-v28-privacy]');if(choice){e.preventDefault();e.stopPropagation();const box=choice.closest('.bd28-privacy-editor');box.dataset.value=choice.dataset.v28Privacy;box.querySelectorAll('[data-v28-privacy]').forEach(x=>x.classList.toggle('selected',x===choice));return}
+  const cardChoice=e.target.closest('[data-v28-card]');if(cardChoice){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const box=cardChoice.closest('.bd28-inline-editor');if(!box)return;box.dataset.cardStyle=cardChoice.dataset.v28Card||'none';box.querySelectorAll('[data-v28-card]').forEach(x=>x.classList.toggle('selected',x===cardChoice));return}
   const cancel=e.target.closest('[data-v28-cancel]');if(cancel){e.preventDefault();e.stopPropagation();cancel.closest('.bd28-inline-editor,.bd28-privacy-editor')?.remove();return}
   const saveEdit=e.target.closest('[data-v28-save-edit]');if(saveEdit){e.preventDefault();e.stopPropagation();const box=saveEdit.closest('.bd28-inline-editor'),card=box?.closest('.post');if(card)await v28saveEdit(card,box);return}
   const savePrivacy=e.target.closest('[data-v28-save-privacy]');if(savePrivacy){e.preventDefault();e.stopPropagation();const box=savePrivacy.closest('.bd28-privacy-editor'),card=box?.closest('.post');if(card)await v28savePrivacy(card,box);return}
@@ -1650,16 +1590,7 @@ function bd47ScrollSnapshot(card){
   try{scrollTop=(scroller===D.scrollingElement||scroller===D.documentElement||scroller===D.body)?(W.scrollY||0):(scroller?.scrollTop||0)}catch(_){}
   return{anchor,scroller,top,scrollTop};
 }
-function bd47RestoreScroll(snap){
-  if(!snap||!snap.anchor?.isConnected)return;
-  try{
-    const now=snap.anchor.getBoundingClientRect().top,delta=now-snap.top;
-    if(Math.abs(delta)<=0.75)return;
-    const sc=snap.scroller;
-    if(sc===D.scrollingElement||sc===D.documentElement||sc===D.body)W.scrollBy(0,delta);
-    else if(sc?.isConnected)sc.scrollTop=(sc.scrollTop||0)+delta;
-  }catch(_){}
-}
+function bd47RestoreScroll(){/* V8.97: reaction must never move the viewport. */}
 async function showReactors(card){const id=pid(card),panel=card.querySelector('[data-bd31-reactor-panel]'),list=panel.querySelector('.bd31-reactor-list');panel.hidden=!panel.hidden;if(panel.hidden)return;const rr=await reactionRows(id);if(!rr.length){list.innerHTML='<div class="bd31-empty">এখনও কোনো প্রতিক্রিয়া নেই।</div>';return}const ids=[...new Set(rr.map(x=>x.user_id).filter(Boolean))],pm=await profiles(ids);list.innerHTML=rr.map(x=>{const p=pm[x.user_id]||{id:x.user_id,display_name:'ভুবনডাঙ্গার সদস্য'};return `<a class="bd31-reactor" href="${esc(profileHref(p))}"><span class="bd31-reactor-avatar">${p.avatar_url?`<img src="${esc(p.avatar_url)}" alt="">`:esc((p.display_name||'স').slice(0,1))}</span><span><strong>${esc(p.display_name||p.username||'সদস্য')}</strong><small>${p.username?'@'+esc(p.username):'প্রোফাইল দেখুন'}</small></span>${rIcon(x.reaction||'like',true)}</a>`}).join('')}
 function authorOf(x){return{id:x.author_id||x.user_id,username:x.author_username||x.username,display_name:x.author_name||x.display_name||'সদস্য',avatar_url:x.author_avatar||x.avatar_url||'',role:x.author_role||x.role||''}}
 async function commentLikes(id){const c=client();if(c)try{const r=await c.from('comment_reactions').select('user_id,reaction').eq('comment_id',id);if(!r.error)return r.data||[]}catch{}return localGet('bd31-clike-'+id,[])}
@@ -1678,8 +1609,8 @@ W.addEventListener('click',async e=>{
   const main=e.target.closest('[data-bd31-react-main]'),pick=e.target.closest('[data-bd31-tray-pick]'),rs=e.target.closest('[data-bd31-react-summary]'),cs=e.target.closest('[data-bd31-comments],[data-bd31-comment-summary]'),sh=e.target.closest('[data-bd31-share]'),more=e.target.closest('[data-bd31-more]'),cl=e.target.closest('[data-bd31-comment-like]'),reply=e.target.closest('[data-bd31-reply]'),viewReplies=e.target.closest('[data-bd54-view-replies]');
   if(!(main||pick||rs||cs||sh||more||cl||reply||viewReplies))return;
   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  if(main){const card=main.closest('[data-bd31-ready="1"]');if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}const snap=bd47ScrollSnapshot(card),id=pid(card);try{main.blur?.()}catch(_){}if(id){await toggleReaction(id,'like');await refresh(card)}bd47RestoreScroll(snap);return}
-  if(pick){const t=ensureTray(),card=t.__card,id=t.dataset.pid,type=pick.dataset.bd31TrayPick,snap=bd47ScrollSnapshot(card);closeTray();try{pick.blur?.()}catch(_){}if(card&&id){await toggleReaction(id,type);await refresh(card)}bd47RestoreScroll(snap);return}
+  if(main){if(W.__BD_V864_REACTION__)return;const card=main.closest('[data-bd31-ready="1"]');if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}const snap=bd47ScrollSnapshot(card),id=pid(card);try{main.blur?.()}catch(_){}if(id){await toggleReaction(id,'like');await refresh(card)}bd47RestoreScroll(snap);return}
+  if(pick){if(W.__BD_V864_REACTION__)return;const t=ensureTray(),card=t.__card,id=t.dataset.pid,type=pick.dataset.bd31TrayPick,snap=bd47ScrollSnapshot(card);closeTray();try{pick.blur?.()}catch(_){}if(card&&id){await toggleReaction(id,type);await refresh(card)}bd47RestoreScroll(snap);return}
   if(rs){const card=rs.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await showReactors(card);bd47RestoreScroll(snap);return}
   if(cs){const card=cs.closest('[data-bd31-ready="1"]');if(!card)return;const snap=bd47ScrollSnapshot(card),p=card.querySelector('[data-bd31-comment-panel]');if(p){p.hidden=!p.hidden;if(!p.hidden)await renderComments(card,false)}bd47RestoreScroll(snap);return}
   if(sh){await share(sh.dataset.bd31Share);return}
@@ -2704,13 +2635,7 @@ function scrollSnap(node){
   const anchor=cardOf(node)||node;let top=0;try{top=anchor?.getBoundingClientRect?.().top||0}catch{}
   return{rows,x:W.scrollX||0,y:W.scrollY||0,anchor,top};
 }
-function restoreSnap(s){if(!s)return;requestAnimationFrame(()=>{for(const [n,t,l] of s.rows){if(n?.isConnected){n.scrollTop=t;n.scrollLeft=l}}try{if(s.anchor?.isConnected){const now=s.anchor.getBoundingClientRect().top,delta=now-s.top;if(Math.abs(delta)>2){const sc=s.rows[0]?.[0];if(sc?.isConnected)sc.scrollTop+=delta;else W.scrollTo(s.x,s.y)}}else W.scrollTo(s.x,s.y)}catch{}})}
-function currentMain(card){return q('[data-bd31-react-main]',card)||q('[data-action="bd-react"]',card)||q('[data-action="bd-react-v814"]',card)||q('[data-react]',card)||q('[data-live-like]',card)}
-function currentType(card){const b=currentMain(card);return String(b?.dataset?.current||'')}
-function currentCount(card){
-  const s=q('[data-bd31-react-summary]',card);if(s&&!s.hidden){const m=(s.textContent||'').match(/[০-৯0-9]+/);if(m)return Number(m[0].replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)))||0}
-  return Number(card?.dataset?.bd63ReactionCount||0)||0;
-}
+function restoreSnap(){/* V8.97: no scroll restoration; keep the reader exactly where they are. */}
 function bn(n){return String(Math.max(0,n|0)).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])}
 function pickMarkup(type){const tray=D.getElementById('bd31ReactionTray');const b=tray?.querySelector?.(`[data-bd31-tray-pick="${CSS.escape(type)}"]`);return b?b.innerHTML:EMOJI[type]||'👍'}
 function setUI(card,type,{remove=false,previous=''}={}){
@@ -2749,7 +2674,7 @@ async function applyReaction(target,type,fromTray){
   setUI(card,type,{remove,previous:prev});try{target.blur?.()}catch{}try{W.__bd45CloseReactionTray?.()}catch{}
   const result=await persistReaction(id,type,{remove,previous:prev});restoreSnap(snap);if(result.local)toast('প্রতিক্রিয়া দেখা যাচ্ছে; সার্ভার সিঙ্ক পুনরায় চেষ্টা করবে।');setTimeout(()=>{reconcileCount(card);restoreSnap(snap)},120);
 }
-function toggleInline(card,media=false){if(!card)return;const snap=scrollSnap(card);if(media)card.classList.toggle('bd63-media-open');card.classList.toggle('bd63-expanded',media?true:!card.classList.contains('bd63-expanded'));card.classList.toggle('expanded',card.classList.contains('bd63-expanded'));const b=q('.post-body',card);if(b)b.classList.toggle('collapsed',!card.classList.contains('bd63-expanded'));restoreSnap(snap)}
+function toggleInline(card,media=false){if(!card)return;if(media)card.classList.toggle('bd63-media-open');card.classList.toggle('bd63-expanded',media?true:!card.classList.contains('bd63-expanded'));card.classList.toggle('expanded',card.classList.contains('bd63-expanded'));const b=q('.post-body',card);if(b)b.classList.toggle('collapsed',!card.classList.contains('bd63-expanded'))}
 function closeMenus(except){qa('.post-menu-panel,.post-menu,.post-action-board').forEach(m=>{if(m!==except){if('hidden'in m)m.hidden=true;m.classList.remove('open')}});qa('.dots,.three-dot-btn,[data-post-menu]').forEach(b=>b.setAttribute?.('aria-expanded','false'))}
 D.addEventListener('click',e=>{
   const pick=e.target.closest('[data-bd31-tray-pick],[data-bd-index-pick],[data-v814-pick],[data-pick]');
@@ -2956,7 +2881,7 @@ W.addEventListener('click',e=>{
 },{capture:true});
 W.addEventListener('contextmenu',e=>{if(e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray'))stop(e)},{capture:true});
 /* Keep old document-level reaction systems from opening a second tray after mutations. */
-const mo=new MutationObserver(()=>{const old=D.getElementById('bd31ReactionTray');if(old){old.classList.remove('open');old.style.display='none'}});mo.observe(D.documentElement,{childList:true,subtree:true});
+/* V8.97: no document-wide reaction MutationObserver; old trays are inert by CSS. */
 })();
 </script>
 
@@ -2965,109 +2890,42 @@ const mo=new MutationObserver(()=>{const old=D.getElementById('bd31ReactionTray'
 .bd58-template-chip[data-bd58-template^="tpl"]{background-color:#fff!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important}
 </style>
 
-<script id="bd-v883-mobile-profile-composer-lock-js">
+<script id="bd-v897-inline-profile-composer-js">
 (()=>{
-  'use strict';
-  const D=document,W=window;
-  const composer=D.getElementById('composer');
-  const prompt=D.getElementById('composerPrompt');
-  const form=D.getElementById('composerForm');
-  const body=D.getElementById('postBody');
-  if(!composer||!prompt||!form)return;
-  const mobile=()=>W.matchMedia('(max-width:899px)').matches;
-  let locked=false, savedY=0, ro=null;
-  const vv=W.visualViewport;
+'use strict';
+const D=document,W=window;
+/* Remove the retired V8.83 full-screen lock if an old cached handler ever left classes/styles behind. */
+function clearLegacyComposerLock(){
+  const c=D.getElementById('composer');
+  D.documentElement.classList.remove('bd83-composer-lock');D.body.classList.remove('bd83-composer-lock');
+  D.body.style.removeProperty('top');delete D.body.dataset.bd83ScrollY;
+  if(c){c.classList.remove('bd83-locked');c.removeAttribute('data-bd83-keyboard');c.style.removeProperty('--bd83-vv-top');c.style.removeProperty('--bd83-vv-height')}
+}
+clearLegacyComposerLock();
+D.addEventListener('focusin',e=>{if(e.target.closest?.('#composer'))clearLegacyComposerLock()},true);
+D.addEventListener('click',e=>{if(e.target.closest?.('#composer'))clearLegacyComposerLock()},true);
 
-  function setViewport(){
-    if(!locked||!mobile())return;
-    const h=Math.max(260,Math.round(vv?vv.height:W.innerHeight));
-    const top=Math.max(6,Math.round(vv?vv.offsetTop:0)+6);
-    composer.style.setProperty('--bd83-vv-top',top+'px');
-    composer.style.setProperty('--bd83-vv-height',Math.max(250,h-12)+'px');
-    const base=W.innerHeight||h;
-    composer.dataset.bd83Keyboard=(h<base-100)?'1':'0';
-  }
-  function freezePage(){
-    if(D.body.classList.contains('bd83-composer-lock'))return;
-    savedY=W.scrollY||D.documentElement.scrollTop||0;
-    D.documentElement.classList.add('bd83-composer-lock');
-    D.body.classList.add('bd83-composer-lock');
-    D.body.dataset.bd83ScrollY=String(savedY);
-    D.body.style.top=(-savedY)+'px';
-  }
-  function unfreezePage(){
-    const y=Number(D.body.dataset.bd83ScrollY||savedY||0);
-    D.documentElement.classList.remove('bd83-composer-lock');
-    D.body.classList.remove('bd83-composer-lock');
-    D.body.style.removeProperty('top');
-    delete D.body.dataset.bd83ScrollY;
-    requestAnimationFrame(()=>W.scrollTo({top:y,left:0,behavior:'auto'}));
-  }
-  function lock(){
-    if(locked||!mobile()||!composer.classList.contains('open')||composer.hidden)return;
-    locked=true;
-    freezePage();
-    composer.classList.add('bd83-locked');
-    setViewport();
-    requestAnimationFrame(()=>{
-      const active=D.activeElement;
-      if(active&&form.contains(active)){
-        try{active.scrollIntoView({block:'nearest',inline:'nearest',behavior:'auto'})}catch(_){ }
-      }
-    });
-  }
-  function unlock(){
-    if(!locked)return;
-    locked=false;
-    composer.classList.remove('bd83-locked');
-    composer.removeAttribute('data-bd83-keyboard');
-    composer.style.removeProperty('--bd83-vv-top');
-    composer.style.removeProperty('--bd83-vv-height');
-    unfreezePage();
-  }
-  function sync(){
-    if(!mobile()){unlock();return}
-    if(composer.classList.contains('open')&&!composer.hidden)lock();
-    else unlock();
-  }
+/* Card picker: once a decorative card is chosen, hide the thumbnails and leave one compact change button. */
+const form=D.getElementById('composerForm'),picker=D.getElementById('bd58TemplatePicker'),body=D.getElementById('postBody'),select=D.getElementById('profileCardStyle');
+if(form&&picker){
+  let change=picker.querySelector('.bd897-template-change');
+  if(!change){change=D.createElement('button');change.type='button';change.className='bd897-template-change';change.textContent='কার্ড পরিবর্তন / বাদ দিন';picker.querySelector('.bd58-template-head')?.appendChild(change)}
+  const sync=()=>{const v=String(form.dataset.bd65Template||form.dataset.bd58Template||select?.value||'none');picker.classList.toggle('bd897-card-picked',/^tpl[1-8]$/.test(v))};
+  const mo=new MutationObserver(sync);mo.observe(form,{attributes:true,attributeFilter:['data-bd65-template','data-bd58-template']});
+  change.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();picker.classList.remove('bd897-card-picked');picker.querySelector('.bd58-template-strip')?.scrollTo({left:0,behavior:'smooth'})});
+  form.addEventListener('reset',()=>setTimeout(()=>{picker.classList.remove('bd897-card-picked');form.dataset.bd65Template='none';form.dataset.bd58Template='none';if(select)select.value='none';if(body){['background-image','background-size','background-position','background-repeat','height','overflow'].forEach(k=>body.style.removeProperty(k))}picker.querySelectorAll('[data-bd58-template]').forEach(b=>{const on=b.dataset.bd58Template==='none';b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false')})},0));
+  sync();
+}
 
-  /* Existing prompt toggle runs first. This only locks the already-open composer. */
-  prompt.addEventListener('click',()=>setTimeout(sync,0));
-  form.addEventListener('focusin',()=>{ if(composer.classList.contains('open')) lock(); },true);
+/* Floating up arrow works with the desktop center scroller and mobile page scroller. */
+let topBtn=D.getElementById('bd897TopArrow');if(!topBtn){topBtn=D.createElement('button');topBtn.id='bd897TopArrow';topBtn.type='button';topBtn.setAttribute('aria-label','প্রোফাইলের উপরে যান');topBtn.textContent='⌃';D.body.appendChild(topBtn)}
+function scroller(){if(W.matchMedia('(min-width:961px)').matches){const c=D.querySelector('.center');if(c&&c.scrollHeight>c.clientHeight+10)return c}return D.scrollingElement||D.documentElement}
+function pos(){const s=scroller(),y=(s===D.scrollingElement||s===D.documentElement)?(W.scrollY||D.documentElement.scrollTop||0):s.scrollTop;topBtn.classList.toggle('show',y>420)}
+topBtn.addEventListener('click',()=>{const s=scroller();if(s===D.scrollingElement||s===D.documentElement)W.scrollTo({top:0,behavior:'smooth'});else s.scrollTo({top:0,behavior:'smooth'})});
+D.querySelector('.center')?.addEventListener('scroll',pos,{passive:true});W.addEventListener('scroll',pos,{passive:true});W.addEventListener('resize',pos,{passive:true});pos();
 
-  /* Keep only the composer scrolling while the keyboard is open. */
-  form.addEventListener('touchmove',e=>{
-    if(!locked)return;
-    const scroller=e.target.closest('.composer-body,#postBody,.bd58-template-strip,.bd58-font-chips');
-    if(!scroller)e.preventDefault();
-  },{passive:false,capture:true});
-
-  /* If publish/moderation/reset closes the composer, restore the exact profile position. */
-  ro=new MutationObserver(sync);
-  ro.observe(composer,{attributes:true,attributeFilter:['class','hidden']});
-
-  if(vv){vv.addEventListener('resize',setViewport);vv.addEventListener('scroll',setViewport)}
-  W.addEventListener('resize',()=>{ if(!mobile())unlock(); else setViewport(); });
-  W.addEventListener('orientationchange',()=>setTimeout(setViewport,120));
-  D.addEventListener('keydown',e=>{if(e.key==='Escape'&&locked){composer.classList.remove('open');unlock()}},true);
-  W.addEventListener('pagehide',unlock);
-
-  /* In the locked editor, textarea grows until its internal cap, then only it scrolls. */
-  if(body){
-    const grow=()=>{
-      if(!locked)return;
-      const max=Math.max(280,Math.min(680,Math.round((vv?vv.height:W.innerHeight)*.58)));
-      body.style.height='auto';
-      const next=Math.min(max,Math.max(280,body.scrollHeight));
-      body.style.height=next+'px';
-      body.style.overflowY=body.scrollHeight>max?'auto':'hidden';
-    };
-    body.addEventListener('input',grow,true);
-    body.addEventListener('focus',()=>{lock();requestAnimationFrame(grow)},true);
-    D.addEventListener('click',e=>{
-      if(e.target.closest('[data-bd58-template],[data-bd65-template],.bd58-template-chip,.bd58-font-chip'))requestAnimationFrame(grow);
-    },true);
-  }
+/* No fixed post popup can survive: if legacy code creates it, keep it closed. */
+const viewer=D.getElementById('bd45PostViewer');if(viewer){viewer.classList.remove('open');viewer.setAttribute('aria-hidden','true')}
 })();
 </script>
 
