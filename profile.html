@@ -767,6 +767,53 @@ html[data-theme="dark"] .bd54-view-replies{color:#b8c7ef!important}
   text-align-last:center!important;
 }
 </style>
+
+<style id="bd-v892-profile-recovery-targeted">
+/* V8.92 recovery — built from V8.87 Master Lock. No observer, no global scroll/touch interception. */
+#archiveList .bd92-archive-head{
+  padding:10px 2px 12px!important;
+  margin:0 0 3px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  gap:7px!important;
+  border-bottom:1px solid rgba(96,101,158,.12)!important;
+}
+#archiveList .bd92-archive-label{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:32px!important;
+  padding:4px 12px!important;
+  border-radius:999px!important;
+  background:linear-gradient(135deg,rgba(73,167,133,.16),rgba(117,82,232,.12),rgba(229,102,154,.10))!important;
+  color:#5c43c8!important;
+  font-family:'Noto Sans Bengali','Noto Serif Bengali',sans-serif!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+}
+#archiveList .bd92-archive-dot{
+  width:7px!important;height:7px!important;margin-left:12px!important;border-radius:50%!important;
+  background:linear-gradient(135deg,#35a77b,#7a54ed,#dc6798)!important;
+  box-shadow:0 0 0 4px rgba(118,82,233,.08)!important;
+}
+html[data-theme="dark"] #archiveList .bd92-archive-label{
+  color:#f4efff!important;
+  background:linear-gradient(135deg,rgba(72,183,148,.24),rgba(122,84,245,.24),rgba(229,105,164,.18))!important;
+}
+/* Short decorative writing stays compact; longer writing may grow up to a 4:5 portrait ceiling. */
+.post[class*="style-tpl"],.bd-live-post[class*="style-tpl"]{container-type:inline-size!important;}
+.post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{
+  max-height:720px!important;
+  max-height:min(125cqi,720px)!important;
+  overflow:hidden!important;
+}
+.post[class*="style-tpl"].expanded .post-body,.post[class*="style-tpl"].bd-inline-expanded .post-body,.post[class*="style-tpl"].bd63-expanded .post-body,
+.bd-live-post[class*="style-tpl"].expanded .post-body,.bd-live-post[class*="style-tpl"].bd-inline-expanded .post-body,.bd-live-post[class*="style-tpl"].bd63-expanded .post-body{
+  max-height:none!important;overflow:visible!important;
+}
+@media(max-width:720px){#archiveList .bd92-archive-label{font-size:12px!important;min-height:30px!important}}
+</style>
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
@@ -1059,7 +1106,7 @@ function renderProfileMenu(){
   const h=$('#profileMenu');if(!h)return;
   if(state.owner){
     const cp=copyProtectionEnabled();
-    h.innerHTML='<button type="button" data-profile-option="edit-profile">✎ প্রোফাইল সম্পাদনা</button><button type="button" data-profile-option="avatar">◉ প্রোফাইল ছবি পরিবর্তন</button><button type="button" data-profile-option="cover">▧ কভার পরিবর্তন/অ্যাডজাস্ট</button><button type="button" data-profile-option="profile-caption">✎ ছবি/কভার ক্যাপশন</button><button class="bd26-copy-toggle" type="button" data-profile-option="copy-protect"><span>⛨ কপি প্রোটেকশন</span><span class="bd26-switch '+(cp?'on':'')+'"></span></button><a href="activity-log.html">◷ অ্যাক্টিভিটি লগ</a><button type="button" data-profile-option="archive">▦ আর্কাইভ</button><a href="settings.html">⚙ সেটিংস</a><button type="button" data-profile-option="copy">⧉ প্রোফাইল লিংক কপি</button>';
+    h.innerHTML='<button type="button" data-profile-option="edit-profile">✎ প্রোফাইল সম্পাদনা</button><button type="button" data-profile-option="avatar">◉ প্রোফাইল ছবি পরিবর্তন</button><button type="button" data-profile-option="cover">▧ কভার পরিবর্তন/অ্যাডজাস্ট</button><button type="button" data-profile-option="profile-caption">✎ ছবি/কভার ক্যাপশন</button><button class="bd26-copy-toggle" type="button" data-profile-option="copy-protect"><span>⛨ কপি প্রোটেকশন</span><span class="bd26-switch '+(cp?'on':'')+'"></span></button><a href="activity-log.html">◷ অ্যাক্টিভিটি লগ</a><a href="settings.html#blocked-users">⊘ ব্লক লিস্ট</a><button type="button" data-profile-option="archive">▦ আর্কাইভ</button><a href="settings.html">⚙ সেটিংস</a><button type="button" data-profile-option="copy">⧉ প্রোফাইল লিংক কপি</button>';
   }else{
     h.innerHTML='<button type="button" data-profile-option="copy">⧉ প্রোফাইল লিংক কপি</button><button type="button" data-profile-option="share">↗ শেয়ার</button><button type="button" data-profile-option="report">⚑ রিপোর্ট</button>';
   }
@@ -1118,7 +1165,7 @@ async function loadPosts(){
 }
 function mediaHtml(p){if(!p.media_url)return'';const t=String(p.media_type||'');if(t.includes('audio')||p.type==='recitation'&&/\.(mp3|wav|m4a|aac|ogg)(\?|$)/i.test(p.media_url))return'<div class="post-media"><audio controls preload="metadata" src="'+esc(p.media_url)+'"></audio></div>';if(t.includes('video')||/\.(mp4|webm|mov)(\?|$)/i.test(p.media_url))return'<div class="post-media"><video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video></div>';return'<div class="post-media"><img loading="lazy" src="'+esc(p.media_url)+'" alt="'+esc(p.caption||p.title)+'"></div>'}
 function postCard(p){const role=String(p.author_role||state.target?.roleResolved||'user').toLowerCase(),authorRoute=profileRoute({id:p.author_id,role}),badge=(role==='founder'?'<span class="mini-role">প্রতিষ্ঠাতা</span>':role==='admin'?'<span class="mini-role" style="background:#2488e9">অ্যাডমিন</span>':''),poet=p.original_author?'<a class="tag" href="poet-profile.html?poet='+encodeURIComponent(slug(p.original_author))+'">মূল কবি: '+esc(p.original_author)+'</a>':'';const menu=state.owner?'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↕ পূর্ণ লেখা দেখুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="edit">✎ পোস্ট সম্পাদনা</button><button type="button" data-post-option="caption">▧ ক্যাপশন পরিবর্তন</button><button type="button" data-post-option="privacy">◉ প্রাইভেসি পরিবর্তন</button><button type="button" data-post-option="archive">▦ আর্কাইভ</button><button class="danger" type="button" data-post-option="delete">⌫ মুছুন</button></div>':'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↕ পূর্ণ লেখা দেখুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="report">⚑ রিপোর্ট</button></div>';return '<article class="post glass style-'+esc(p.card_style||'pearl')+' '+((p.type==='cover-update'||p.type==='profile-update')?'profile-update-post ':'')+'" data-post="'+esc(p.id)+'"><div class="post-head"><div class="author"><a class="avatar44" href="'+esc(authorRoute)+'">'+(p.author_avatar?'<img src="'+esc(p.author_avatar)+'" alt="">':esc(initials(p.author_name)))+'</a><div class="author-meta"><strong><a href="'+esc(authorRoute)+'">'+esc(p.author_name)+'</a>'+badge+'</strong><small>'+esc(formatDate(p.created_at))+'</small></div></div><button class="dots" type="button" data-click="post-menu" aria-label="পোস্ট অপশন">•••</button></div>'+menu+'<a class="tag" href="'+esc(typeRoute(p))+'">'+esc(typeLabels[p.type]||p.category||'প্রকাশনা')+'</a>'+poet+'<h3 class="post-title"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a></h3><div class="post-body" data-expand>'+esc(p.body)+'</div>'+mediaHtml(p)+(p.caption?'<div class="post-caption">'+esc(p.caption)+'</div>':'')+'<div class="post-summary"><button class="reactors" type="button" data-reactors="'+esc(p.id)+'">প্রতিক্রিয়া দেখুন</button><span>'+bn(p.comments_count)+' মন্তব্য</span></div><div class="post-actions"><div class="react-wrap"><button class="social-btn" type="button" data-react="'+esc(p.id)+'">👍 লাইক</button><div class="picker" data-picker="'+esc(p.id)+'"><button data-pick="like" title="লাইক">👍</button><button data-pick="love" title="ভালোবাসা">❤️</button><button data-pick="care" title="কেয়ার">🥰</button><button data-pick="sad" title="দুঃখিত">😢</button><button data-pick="haha" title="হাহা">😂</button><button data-pick="wow" title="ওয়াও">😮</button><button data-pick="angry" title="রাগান্বিত">😡</button></div></div><button class="social-btn" type="button" data-comment="'+esc(p.id)+'">◯ মন্তব্য</button><button class="social-btn" type="button" data-share="'+esc(p.id)+'">↗ শেয়ার</button><button class="social-btn" type="button" data-save="'+esc(p.id)+'">▣ সেভ</button></div><div class="comments"><div class="comment-list" data-comment-list="'+esc(p.id)+'"></div><form class="comment-form" data-comment-form="'+esc(p.id)+'"><input maxlength="1200" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></article>'}
-function renderContent(){const feed=$('#feed'),archive=$('#archiveList');$$('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===state.tab));if(state.tab==='home'){feed.hidden=false;archive.hidden=true;feed.innerHTML=state.posts.slice(0,45).map(postCard).join('')||'<section class="post glass">এখনও কোনো পোস্ট নেই।</section>';return}const type=state.tab;const list=state.posts.filter(p=>p.type===type);feed.hidden=true;archive.hidden=false;archive.innerHTML='<h3 style="padding:8px 2px 4px;font-family:Noto Serif Bengali,serif">'+esc(typeLabels[type]||'শিরোনাম')+'</h3>'+list.slice(0,20).map(p=>'<div class="archive-item"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a><small>'+esc(formatDate(p.created_at))+'</small></div>').join('')+(list.length?'<button class="wide" type="button" data-click="more-archive">আরও দেখুন</button>':'<div style="padding:18px 2px;color:#8d96a5">এখনও কোনো লেখা নেই।</div>')}
+function renderContent(){const feed=$('#feed'),archive=$('#archiveList');$$('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===state.tab));if(state.tab==='home'){feed.hidden=false;archive.hidden=true;feed.innerHTML=state.posts.slice(0,45).map(postCard).join('')||'<section class="post glass">এখনও কোনো পোস্ট নেই।</section>';return}const type=state.tab;const list=state.posts.filter(p=>p.type===type);feed.hidden=true;archive.hidden=false;archive.innerHTML='<div class="bd92-archive-head" aria-label="'+esc(typeLabels[type]||'শিরোনাম')+' বিভাগ"><span class="bd92-archive-label">'+esc(typeLabels[type]||'শিরোনাম')+'</span><i class="bd92-archive-dot" aria-hidden="true"></i></div>'+list.slice(0,20).map(p=>'<div class="archive-item"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a><small>'+esc(formatDate(p.created_at))+'</small></div>').join('')+(list.length?'<button class="wide" type="button" data-click="more-archive">আরও দেখুন</button>':'<div style="padding:18px 2px;color:#8d96a5">এখনও কোনো লেখা নেই।</div>')}
 async function loadStats(){const posts=state.posts,poem=posts.filter(p=>p.type==='poem').length,rec=posts.filter(p=>p.type==='recitation').length,letter=posts.filter(p=>p.type==='letter').length;$('#postsCount').textContent=bn(posts.length);$('#chartPoem').textContent=bn(poem);$('#chartRec').textContent=bn(rec);$('#chartLetter').textContent=bn(letter);$('#metricPosts').textContent=bn(posts.length);$('#metricLikes').textContent=bn(posts.reduce((a,p)=>a+p.likes_count,0));$('#metricComments').textContent=bn(posts.reduce((a,p)=>a+p.comments_count,0));const rate=Math.min(99,posts.length?Math.round((poem+rec+letter)/Math.max(1,posts.length)*100):0);$('#chartRate').textContent=rate+'%';$('#completion').textContent=rate+'%';if(sb&&state.target?.id){try{const [f1,f2]=await Promise.all([sb.from('follows').select('*',{count:'exact',head:true}).eq('following_id',state.target.id),sb.from('follows').select('*',{count:'exact',head:true}).eq('follower_id',state.target.id)]);$('#followersCount').textContent=bn(f1.count||0);$('#followingCount').textContent=bn(f2.count||0);$('#friendsCount').textContent=bn(Math.min(f1.count||0,f2.count||0))}catch{}}}
 function writeCrosspost(p){const keys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts',...(typeKeys[p.type]||[])];keys.forEach(k=>pushUnique(k,p));if(p.originalAuthor){const rec={postId:p.id,title:p.title,type:p.type,url:'poet-profile.html?poet='+encodeURIComponent(slug(p.originalAuthor)),originalAuthor:p.originalAuthor,originalAuthorSlug:slug(p.originalAuthor),contributorName:p.authorName,contributorUsername:p.authorUsername,createdAt:p.createdAt,status:p.status};pushUnique('bhubondangaPoetContributions',rec);if(p.type==='poem'){const canon={canonicalId:'canonical-'+slug(p.originalAuthor)+'-'+Date.now(),poetName:p.originalAuthor,poetSlug:slug(p.originalAuthor),title:p.title,body:p.body,firstEditorName:p.authorName,firstEditorUsername:p.authorUsername,firstEditedAt:p.createdAt,createdAt:p.createdAt,status:'published'};const list=localArr('bhubondangaCanonicalPoems');if(!list.some(x=>slug(x.poetName||x.originalAuthor)===slug(p.originalAuthor)&&slug(x.title)===slug(p.title))){list.unshift(canon);localSave('bhubondangaCanonicalPoems',list.slice(0,5000))}}}}
 async function uploadMedia(file,type,uid){if(!file)return{url:'',kind:''};const ext=(file.name.split('.').pop()||'bin').replace(/[^a-zA-Z0-9]/g,'').slice(0,8)||'bin',path=uid+'/posts/'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext;const preferred=type==='recitation'&&(/^(audio|video)\//.test(file.type))?'recitations':'post-media';let bucket=preferred;let up=await sb.storage.from(bucket).upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});if(up.error&&bucket!=='post-media'){bucket='post-media';up=await sb.storage.from(bucket).upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false})}if(up.error)throw up.error;return{url:sb.storage.from(bucket).getPublicUrl(path).data.publicUrl,kind:file.type||''}}
