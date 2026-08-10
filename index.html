@@ -15,11 +15,11 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.107-cover-composer-center-aurora-video-stop-20260811">
+<meta name="bhubondanga-build" content="V8.110-two-newspaper-cards-headline-fonts-20260811">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700;800&family=Tiro+Bangla:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Atma:wght@500;600;700&family=Galada&family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700;800;900&family=Tiro+Bangla:ital@0;1&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 :root{
@@ -2472,6 +2472,8 @@ function storedPosts(){
       status:x.status||'published',
       cardStyle:x.card_style||x.cardStyle||x.style||cardStyles[i%cardStyles.length],
       newsCard:Boolean(x.news_card||x.newsCard||x.metadata?.news_card||String(x.card_style||x.cardStyle||'').includes('news-card')),
+      newsLayout:x.news_layout||x.newsLayout||x.metadata?.news_layout||((String(x.card_style||x.cardStyle||'').match(/news-card-(classic|modern)/)||[])[1]||'classic'),
+      newsFont:x.news_font||x.newsFont||x.metadata?.news_font||((String(x.card_style||x.cardStyle||'').match(/news-card-(?:classic|modern)-(book|display|editorial)/)||[])[1]||'book'),
       newsImage2:x.news_image_2||x.newsImage2||x.metadata?.news_image_2||'',
       originalAuthor:x.original_author||x.originalAuthor||'',
       media:x.media_url||x.mediaUrl||x.media_data||x.mediaData||x.media||x.image_url||x.imageUrl||x.cover_url||x.coverUrl||'',
@@ -2705,14 +2707,14 @@ function findCanonicalPoem(author,title){const key=canonicalIdentity(author,titl
 function contributionRecord(post,canonical){return{postId:post.id,canonicalId:canonical.canonicalId,title:canonical.title,type:'poem',url:'poet-details.html?poet='+encodeURIComponent(canonical.poetName)+'&poem='+encodeURIComponent(canonical.canonicalId)+'#poem-reader',originalAuthor:canonical.poetName,originalAuthorSlug:canonical.poetSlug,contributorName:canonical.firstEditorName,contributorUsername:canonical.firstEditorUsername,createdAt:canonical.firstEditedAt,status:post.status}}
 function registerCanonicalPoem(post){if(post.type!=='poem'||!post.originalAuthor)return{canonical:null,isNew:false};const list=canonicalList(),key=canonicalIdentity(post.originalAuthor,post.title),existing=list.find(x=>(x.canonicalKey||canonicalIdentity(x.poetName||x.originalAuthor||'',x.title||x.poemTitle||''))===key);if(existing)return{canonical:existing,isNew:false};const canonical={canonicalId:'canonical-'+slug(post.originalAuthor)+'-'+Date.now(),canonicalKey:key,poetName:post.originalAuthor,poetSlug:slug(post.originalAuthor),title:post.title,normalizedTitle:normalizePoemTitle(post.title),body:post.body,firstEditorName:post.authorName,firstEditorUsername:post.authorUsername,firstEditedAt:post.createdAt,createdAt:post.createdAt,status:'published'};list.unshift(canonical);save(canonicalStoreKey,list.slice(0,5000));return{canonical,isNew:true}}
 function saveFirstContributionIndexes(post,canonical){if(!canonical)return;const record=contributionRecord(post,canonical),poetItems=arr('bhubondangaPoetContributions');if(!poetItems.some(x=>String(x.canonicalId||'')===String(canonical.canonicalId))){poetItems.unshift(record);save('bhubondangaPoetContributions',poetItems.slice(0,5000))}const edits=arr('bhubondangaUserEdits');if(!edits.some(x=>String(x.canonicalId||'')===String(canonical.canonicalId))){edits.unshift(record);save('bhubondangaUserEdits',edits.slice(0,5000))}}
-function buildPost(payload,status){const live=window.__BD_IDENTITY||{},name=live.author_name||currentName,user=live.author_username||currentUsername||'your-profile',avatar=live.author_avatar||currentAvatar||'',uid=live.author_id||'';return{id:'home-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),authorId:uid,type:payload.type,title:payload.title||({prolap:'ছোট কথার প্রলাপ',letter:'শিরোনামহীন চিঠি',recitation:'শিরোনামহীন আবৃত্তি',environment:'পরিবেশের কথা'}[payload.type]||'শিরোনামহীন সাহিত্যকর্ম'),body:payload.body,authorName:name,authorUsername:user,authorAvatar:avatar,originalAuthor:payload.originalAuthor||'',originalAuthorSlug:payload.originalAuthor?slug(payload.originalAuthor):'',contribution:Boolean(payload.originalAuthor),excludeFromAuthorTimeline:false,canonicalPoemId:payload.canonicalPoemId||'',canonicalRepost:Boolean(payload.canonicalPoemId),createdAt:new Date().toISOString(),likes:0,comments:0,status:status||'published',cardStyle:payload.newsCard?'news-card':payload.cardStyle,newsCard:!!payload.newsCard,newsImage2:payload.newsImage2||'',media:payload.mediaData||'',mediaKind:payload.mediaKind||'',caption:payload.mediaCaption||''}}
+function buildPost(payload,status){const live=window.__BD_IDENTITY||{},name=live.author_name||currentName,user=live.author_username||currentUsername||'your-profile',avatar=live.author_avatar||currentAvatar||'',uid=live.author_id||'';return{id:'home-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),authorId:uid,type:payload.type,title:payload.title||({prolap:'ছোট কথার প্রলাপ',letter:'শিরোনামহীন চিঠি',recitation:'শিরোনামহীন আবৃত্তি',environment:'পরিবেশের কথা'}[payload.type]||'শিরোনামহীন সাহিত্যকর্ম'),body:payload.body,authorName:name,authorUsername:user,authorAvatar:avatar,originalAuthor:payload.originalAuthor||'',originalAuthorSlug:payload.originalAuthor?slug(payload.originalAuthor):'',contribution:Boolean(payload.originalAuthor),excludeFromAuthorTimeline:false,canonicalPoemId:payload.canonicalPoemId||'',canonicalRepost:Boolean(payload.canonicalPoemId),createdAt:new Date().toISOString(),likes:0,comments:0,status:status||'published',cardStyle:payload.newsCard?(payload.cardStyle||'news-card-classic-book'):payload.cardStyle,newsCard:!!payload.newsCard,newsLayout:payload.newsLayout||'',newsFont:payload.newsFont||'',newsImage2:payload.newsImage2||'',media:payload.mediaData||'',mediaKind:payload.mediaKind||'',caption:payload.mediaCaption||''}}
 async function syncPostToSupabase(post,statusOverride){
   const c=window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||window.BhubondangaAuth?.client||null;
   const uid=String(post.authorId||post.author_id||window.__BD_IDENTITY?.author_id||'');
   if(!c||!uid||!/^[0-9a-f-]{36}$/i.test(uid))return {ok:false,skipped:true};
   const media=String(post.media||post.media_url||''),kind=String(post.mediaKind||post.media_type||post.media_kind||'');
   const core={id:String(post.id),author_id:uid,author_username:String(post.authorUsername||post.author_username||window.__BD_IDENTITY?.author_username||'member'),author_name:String(post.authorName||post.author_name||window.__BD_IDENTITY?.author_name||'ভুবনডাঙ্গার সদস্য'),author_avatar:String(post.authorAvatar||post.author_avatar||window.__BD_IDENTITY?.author_avatar||''),type:String(post.type||'poem'),category:typeLabel(post.type||'poem'),title:String(post.title||'শিরোনামহীন সাহিত্যকর্ম'),body:String(post.body||''),original_author:String(post.originalAuthor||post.original_author||''),media_url:/^https?:/i.test(media)?media:'',media_type:kind,card_style:String(post.cardStyle||post.card_style||'pearl'),visibility:'public',status:String(statusOverride||post.status||'published'),created_at:post.createdAt||post.created_at||new Date().toISOString(),updated_at:new Date().toISOString()};
-  const news={news_card:!!post.newsCard,news_image_2:String(post.newsImage2||'')};const variants=[{...core,...news,author_role:String(post.authorRole||post.author_role||window.__BD_IDENTITY?.role||'user'),media_kind:kind,caption:String(post.caption||post.media_caption||''),media_caption:String(post.caption||post.media_caption||''),privacy:'public'},{...core,author_role:String(post.authorRole||post.author_role||window.__BD_IDENTITY?.role||'user'),media_kind:kind,caption:String(post.caption||post.media_caption||''),media_caption:String(post.caption||post.media_caption||''),privacy:'public',metadata:{crosspost:['index',typeLabel(post.type||'poem'),'profile-home','profile-archive'],...news}},{...core,media_caption:String(post.caption||post.media_caption||'')},{...core}];
+  const news={news_card:!!post.newsCard,news_image_2:String(post.newsImage2||''),news_layout:String(post.newsLayout||((String(post.cardStyle||'').match(/news-card-(classic|modern)/)||[])[1]||'')),news_font:String(post.newsFont||((String(post.cardStyle||'').match(/news-card-(?:classic|modern)-(book|display|editorial)/)||[])[1]||''))};const variants=[{...core,news_card:news.news_card,news_image_2:news.news_image_2,author_role:String(post.authorRole||post.author_role||window.__BD_IDENTITY?.role||'user'),media_kind:kind,caption:String(post.caption||post.media_caption||''),media_caption:String(post.caption||post.media_caption||''),privacy:'public'},{...core,author_role:String(post.authorRole||post.author_role||window.__BD_IDENTITY?.role||'user'),media_kind:kind,caption:String(post.caption||post.media_caption||''),media_caption:String(post.caption||post.media_caption||''),privacy:'public',metadata:{crosspost:['index',typeLabel(post.type||'poem'),'profile-home','profile-archive'],...news}},{...core,media_caption:String(post.caption||post.media_caption||'')},{...core}];
   let last=null;
   for(const payload of variants){try{const r=await c.from('posts').upsert(payload,{onConflict:'id'}).select('id,created_at,status').single();if(!r.error)return {ok:true,data:r.data};last=r.error}catch(error){last=error}}
   console.warn('Bhubondanga post sync:',last?.message||last);return {ok:false,error:last};
@@ -2773,7 +2775,7 @@ async function publishPost(payload,flaggedTerms){
   if(synced.ok)toast(registration.canonical&&!registration.isNew?'মূল সংরক্ষিত কবিতাটি পুনঃপ্রকাশ হয়েছে এবং এখন ফিডের ওপরে আছে।':'লেখাটি প্রকাশিত হয়েছে এবং এখন নিউজফিডের ওপরে আছে।');
   else toast('লেখাটি এই ডিভাইসে ফিডের ওপরে দেখানো হয়েছে; অনলাইন সংরক্ষণ পুনরায় চেষ্টা হবে।');
 }
-function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,body=postBody.value.trim(),author=originalAuthor.value.trim(),news=document.getElementById('composerForm')?.dataset.bd104News==='1';let title=postTitle.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(news&&!title)title=(String(body).trim().split(/\n+/).find(Boolean)||'সংবাদ আপডেট').replace(/\s+/g,' ').slice(0,120);if(type==='poem'&&!news&&!title){toast('কবিতার শিরোনাম লিখুন।');return null}if(!body){toast('আপনার লেখাটি লিখুন।');return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');return null}const exact=!news&&!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:news?'news-card':(window.BD58ComposeStyle?window.BD58ComposeStyle('index'):document.getElementById('cardStyle').value),newsCard:news,newsImage2:'',mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
+function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,body=postBody.value.trim(),author=originalAuthor.value.trim(),news=document.getElementById('composerForm')?.dataset.bd104News==='1';let title=postTitle.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(news&&!title)title=(String(body).trim().split(/\n+/).find(Boolean)||'সংবাদ আপডেট').replace(/\s+/g,' ').slice(0,120);if(type==='poem'&&!news&&!title){toast('কবিতার শিরোনাম লিখুন।');return null}if(!body){toast('আপনার লেখাটি লিখুন।');return null}if(!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');return null}const exact=!news&&!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:ownWork.checked?'':author,canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:news?('news-card-'+(document.getElementById('composerForm')?.dataset.bd110NewsLayout||'classic')+'-'+(document.getElementById('composerForm')?.dataset.bd110NewsFont||'book')):(window.BD58ComposeStyle?window.BD58ComposeStyle('index'):document.getElementById('cardStyle').value),newsCard:news,newsLayout:document.getElementById('composerForm')?.dataset.bd110NewsLayout||'',newsFont:document.getElementById('composerForm')?.dataset.bd110NewsFont||'',newsImage2:'',mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
 async function bdVerifiedComposerAuth(){
   let live=null;try{live=await window.BhubondangaAuth?.current?.()}catch(_){}
   const session=live?.session?.user?live.session:(window.__BD_LIVE_SESSION?.user?window.__BD_LIVE_SESSION:null);
@@ -5002,9 +5004,9 @@ function close(){const s=shell();s.classList.remove('open');s.setAttribute('aria
 function onScroll(e){clearTimeout(timer);timer=setTimeout(()=>{const host=e.currentTarget,y=host.scrollTop+host.clientHeight/2,el=[...host.children].find(x=>x.offsetTop<=y&&x.offsetTop+x.offsetHeight>y);activate(el,true)},90)}
 function underlying(id){return D.querySelector(`#postList [data-post="${CSS.escape(String(id))}"],#postList [data-post-id="${CSS.escape(String(id))}"]`)}
 async function actions(e){const like=e.target.closest('[data-r-like]'),com=e.target.closest('[data-r-comment]'),share=e.target.closest('[data-r-share]');if(like){e.preventDefault();underlying(like.dataset.rLike)?.querySelector('[data-bd31-react-main]')?.click();learn(items.get(like.dataset.rLike),2);return}if(com){e.preventDefault();const id=com.dataset.rComment,p=items.get(id),card=underlying(id);close();if(card&&W.BDStablePostViewer){W.BDStablePostViewer.open(card,p);setTimeout(()=>card.querySelector('[data-bd31-comments]')?.click(),40)}return}if(share){e.preventDefault();const u=new URL(location.href);u.searchParams.set('post',share.dataset.rShare);try{if(navigator.share)await navigator.share({title:'ভুবনডাঙ্গার কবিতা',url:u.href});else await navigator.clipboard.writeText(u.href)}catch{}return}}
-D.addEventListener('click',e=>{const v=e.target.closest?.('#postList video,.bd45-in-viewer video');if(!v)return;const card=v.closest('[data-post],[data-post-id]');if(!card)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{v.pause()}catch{};open(card.dataset.post||card.dataset.postId)},true);
+D.addEventListener('click',e=>{if(W.__BD_V8107_REELS__)return;const v=e.target.closest?.('#postList video,.bd45-in-viewer video');if(!v)return;const card=v.closest('[data-post],[data-post-id]');if(!card)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{v.pause()}catch{};open(card.dataset.post||card.dataset.postId)},true);
 D.addEventListener('keydown',e=>{if(e.key==='Escape'&&shell().classList.contains('open'))close()},true);
-W.BhubondangaVideoReels={open,close};
+W.BhubondangaVideoReels={open:(seed)=>W.BhubondangaReels107?.open?.(seed)??open(seed),close:()=>{try{W.BhubondangaReels107?.close?.()}catch{};close()}};
 })();
 </script>
 
@@ -7083,7 +7085,7 @@ function scanCards(root=D){const sel='article.post,article.bd-live-post,.post-ca
 /* A video that leaves the viewport must stop and become silent. Starting one video stops every other video. */
 const seenVideo=new WeakSet();
 const vio='IntersectionObserver'in W?new IntersectionObserver(es=>{for(const e of es){const v=e.target;if(!e.isIntersecting||e.intersectionRatio<.28){try{v.pause()}catch(_){}v.muted=true;v.defaultMuted=true;v.removeAttribute('autoplay')}}},{threshold:[0,.12,.28,.5,.75]}):null;
-function registerVideo(v){if(!v||seenVideo.has(v))return;seenVideo.add(v);v.playsInline=true;vio?.observe(v)}
+function registerVideo(v){if(!v||seenVideo.has(v)||v.closest?.('#bd107Reels'))return;seenVideo.add(v);v.playsInline=true;vio?.observe(v)}
 function scanVideos(root=D){if(root.tagName==='VIDEO')registerVideo(root);root.querySelectorAll?.('video').forEach(registerVideo)}
 D.addEventListener('play',e=>{const v=e.target;if(!(v instanceof HTMLVideoElement))return;D.querySelectorAll('video').forEach(o=>{if(o!==v){try{o.pause()}catch(_){}o.muted=true;o.defaultMuted=true}})},true);
 /* Comment expand/collapse keeps the tapped post anchored; no screen jump. */
@@ -7097,6 +7099,7 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 
 
 
+<!-- BHUBONDANGA V8.108 VERIFIED GUARD: legacy V8.45 video click bypasses when V8.107 engine exists; V8.106 viewport observer ignores active Reels videos; video/source markup both supported. -->
 <!-- BHUBONDANGA V8.107 — INDEX REELS PLAYBACK / AUDIO / TRANSPORT — 2026-08-11 -->
 <style id="bd-v8107-reels-player-css">
 /* The historical bd45 viewer is superseded, not stacked. */
@@ -7139,7 +7142,7 @@ const fmt=n=>{n=Number(n);if(!Number.isFinite(n)||n<0)return'0:00';const m=Math.
 let reelItems=[],current=null,soundOn=true,scrollTimer=0;
 function cardId(card){return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'')}
 function feedCard(v){return v?.closest?.('#postList [data-post],#postList [data-post-id],article.post,article.bd-live-post,.post-card')||null}
-function cardInfo(card){if(!card)return null;const v=$('video[src]',card);if(!v)return null;const src=v.currentSrc||v.src||$('source[src]',v)?.src||'';if(!src)return null;const id=cardId(card)||('video-'+Math.random().toString(36).slice(2));const authorEl=$('.author-meta a,.author-name-row a,.author-meta strong,.author a',card),avatar=$('.author-avatar img,.post-avatar img,.avatar44 img',card),title=$('.post-title',card)?.textContent?.trim()||'ভিডিও',body=$('.post-body',card)?.textContent?.trim()||'',profile=authorEl?.closest('a')?.href||authorEl?.getAttribute?.('href')||'#';return{id,src,card,title,body,author:authorEl?.textContent?.trim()||'ভুবনডাঙ্গার সদস্য',avatar:avatar?.currentSrc||avatar?.src||'',profile}}
+function cardInfo(card){if(!card)return null;const v=$('video',card);if(!v)return null;const source=$('source[src]',v),src=v.currentSrc||v.getAttribute('src')||v.src||source?.src||source?.getAttribute('src')||'';if(!src)return null;const id=cardId(card)||('video-'+Math.random().toString(36).slice(2));const authorEl=$('.author-meta a,.author-name-row a,.author-meta strong,.author a',card),avatar=$('.author-avatar img,.post-avatar img,.avatar44 img',card),title=$('.post-title',card)?.textContent?.trim()||'ভিডিও',body=$('.post-body',card)?.textContent?.trim()||'',profile=authorEl?.closest('a')?.href||authorEl?.getAttribute?.('href')||'#';return{id,src,card,title,body,author:authorEl?.textContent?.trim()||'ভুবনডাঙ্গার সদস্য',avatar:avatar?.currentSrc||avatar?.src||'',profile}}
 function collect(seed){const rows=[];const seen=new Set();$$('#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post').forEach(card=>{const p=cardInfo(card);if(p&&!seen.has(p.id)){seen.add(p.id);rows.push(p)}});const at=rows.findIndex(x=>x.id===String(seed));return at>0?rows.slice(at).concat(rows.slice(0,at)):rows}
 function shell(){let s=$('#bd107Reels');if(s)return s;s=D.createElement('section');s.id='bd107Reels';s.setAttribute('aria-hidden','true');s.innerHTML='<div class="bd107-reels-top"><button class="bd107-reels-back" type="button" aria-label="ফিরে যান">‹</button><div class="bd107-reels-title">Reels <small>⌄</small></div><button class="bd107-reels-search" type="button" aria-label="খুঁজুন">⌕</button></div><div class="bd107-reels-scroll"></div>';D.body.appendChild(s);$('.bd107-reels-back',s).addEventListener('click',close);$('.bd107-reels-search',s).addEventListener('click',()=>{close();const i=$('.searchbar input,#searchInput,input[type="search"]');if(i){i.focus({preventScroll:false});i.scrollIntoView({block:'center'})}});$('.bd107-reels-scroll',s).addEventListener('scroll',onScroll,{passive:true});s.addEventListener('click',onClick,true);s.addEventListener('input',onInput,true);return s}
 function socialState(p,reel){const main=p.card?.querySelector?.('[data-bd31-react-main]'),holder=main?.querySelector?.('.bd31-main-reaction'),label=main?.querySelector?.('[data-bd31-label]'),btn=reel?.querySelector?.('[data-bd107-like]');if(!btn)return;if(holder?.innerHTML)btn.querySelector('.ico').innerHTML=holder.innerHTML;else btn.querySelector('.ico').textContent='♡';btn.querySelector('small').textContent=label?.textContent?.trim()||'লাইক';btn.classList.toggle('selected',!!(main?.classList.contains('selected')||main?.classList.contains('active')||main?.dataset.current))}
@@ -7167,6 +7170,222 @@ const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes
 function boot(){scan();mo.observe(D.body,{childList:true,subtree:true});setTimeout(()=>scan(),450);setTimeout(()=>scan(),1600)}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 W.BhubondangaReels107={open,close};
+})();
+</script>
+
+
+
+<!-- BHUBONDANGA V8.109 — COMPACT INLINE POST PREVIEW + AURORA CARD LOCK — 2026-08-11 -->
+<style id="bd-v8109-inline-collapse-aurora-css">
+/* Final reading rule: long text never consumes the whole feed until the user opens THIS card. */
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd68-long-post:not(.bd76-inline-open):not(.bd-inline-expanded):not(.bd63-expanded):not(.expanded) .post-body.collapsed,
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd106-long-text-card:not(.bd76-inline-open):not(.bd-inline-expanded):not(.bd63-expanded):not(.expanded) .post-body.collapsed{
+  display:block!important;
+  max-height:9.6em!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow:hidden!important;
+  white-space:pre-line!important;
+  -webkit-line-clamp:unset!important;
+  -webkit-box-orient:initial!important;
+  cursor:pointer!important;
+  position:relative!important;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 100%)!important;
+  mask-image:linear-gradient(180deg,#000 0%,#000 72%,transparent 100%)!important;
+}
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd68-long-post:not(.bd76-inline-open):not(.bd-inline-expanded):not(.bd63-expanded):not(.expanded) .post-body.collapsed::after,
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd106-long-text-card:not(.bd76-inline-open):not(.bd-inline-expanded):not(.bd63-expanded):not(.expanded) .post-body.collapsed::after{display:none!important}
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd76-inline-open .post-body,
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd-inline-expanded .post-body,
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd63-expanded .post-body,
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).expanded .post-body{
+  max-height:none!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important
+}
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]) .post-read-more{display:inline-flex!important;align-items:center!important;gap:5px!important}
+/* Default pearl/clear cards are true soft aurora instead of flat white. Explicit user-selected colors/templates stay untouched. */
+#postList :is(.post,.bd-live-post).style-pearl,
+#postList :is(.post,.bd-live-post).style-clear{
+  --card-tint:linear-gradient(135deg,rgba(111,174,255,.10),rgba(166,128,239,.12),rgba(244,166,213,.085),rgba(112,218,201,.075))!important;
+  background:
+    radial-gradient(circle at 7% 5%,rgba(103,174,255,.15),transparent 34%),
+    radial-gradient(circle at 94% 10%,rgba(171,126,239,.15),transparent 36%),
+    radial-gradient(circle at 91% 94%,rgba(241,155,205,.10),transparent 38%),
+    radial-gradient(circle at 8% 94%,rgba(103,205,192,.08),transparent 36%),
+    linear-gradient(145deg,rgba(255,255,255,.965),rgba(246,243,255,.94))!important;
+  border-color:rgba(121,112,204,.20)!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"],html[data-theme="middle"],html[data-bd-theme="middle"]) #postList :is(.post,.bd-live-post).style-pearl,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"],html[data-theme="middle"],html[data-bd-theme="middle"]) #postList :is(.post,.bd-live-post).style-clear{
+  --card-tint:linear-gradient(135deg,rgba(110,113,218,.15),rgba(151,82,190,.15),rgba(211,91,142,.11),rgba(73,131,174,.09))!important;
+  background:
+    radial-gradient(circle at 91% 5%,rgba(211,94,151,.145),transparent 34%),
+    radial-gradient(circle at 8% 92%,rgba(154,82,178,.115),transparent 38%),
+    radial-gradient(circle at 36% 0%,rgba(94,113,207,.10),transparent 40%),
+    linear-gradient(145deg,rgba(20,28,50,.985),rgba(35,23,47,.985))!important;
+  border-color:rgba(224,155,193,.16)!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"],html[data-theme="middle"],html[data-bd-theme="middle"]) #postList :is(.post,.bd-live-post).style-pearl :is(.post-title,.post-title a,.post-body,.author-meta,.author-meta a,.author-meta strong,.bd-post-caption,.post-read-more),
+:is(html[data-theme="dark"],html[data-bd-theme="dark"],html[data-theme="middle"],html[data-bd-theme="middle"]) #postList :is(.post,.bd-live-post).style-clear :is(.post-title,.post-title a,.post-body,.author-meta,.author-meta a,.author-meta strong,.bd-post-caption,.post-read-more){color:#f8f5ff!important}
+@media(max-width:899px){
+  #postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd68-long-post:not(.bd76-inline-open):not(.bd-inline-expanded):not(.bd63-expanded):not(.expanded) .post-body.collapsed,
+  #postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd106-long-text-card:not(.bd76-inline-open):not(.bd-inline-expanded):not(.bd63-expanded):not(.expanded) .post-body.collapsed{max-height:9.45em!important}
+}
+</style>
+<script id="bd-v8109-inline-collapse-aurora-js">
+(()=>{'use strict';
+const D=document,W=window;
+const SEL='#postList article.post,#postList article.bd-live-post,#postList .post-card[data-post],#postList .post-card[data-post-id],#postList [data-post-card]';
+function idOf(card){return String(card?.dataset?.post||card?.dataset?.postId||'')}
+function isOpen(card){return !!card&&(card.classList.contains('bd76-inline-open')||card.classList.contains('bd-inline-expanded')||card.classList.contains('bd63-expanded')||card.classList.contains('expanded'))}
+function isLong(card){const b=card?.querySelector?.('.post-body');if(!b)return false;const text=(b.textContent||'').trim();return card.classList.contains('bd68-long-post')||card.classList.contains('bd106-long-text-card')||text.length>360||text.split(/\n/).filter(Boolean).length>6}
+function collapseOne(card){if(!card||!isLong(card)||isOpen(card))return;card.classList.add('bd68-long-post');const b=card.querySelector('.post-body');if(b)b.classList.add('collapsed');const m=card.querySelector('.post-read-more,.readmore');if(m)m.textContent='পূর্ণ লেখা পড়ুন →';card.setAttribute('aria-expanded','false')}
+function scan(root=D){if(root.matches?.(SEL))collapseOne(root);root.querySelectorAll?.(SEL).forEach(collapseOne)}
+let scheduled=false;const mo=new MutationObserver(ms=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n)})});
+function boot(){scan();mo.observe(D.body,{subtree:true,childList:true});setTimeout(()=>scan(),350);setTimeout(()=>scan(),1200);const target=new URLSearchParams(location.search).get('post');if(target)setTimeout(()=>{const c=[...D.querySelectorAll(SEL)].find(x=>idOf(x)===String(target));if(c){c.classList.add('bd76-inline-open','bd-inline-expanded','bd63-expanded','expanded');c.querySelector('.post-body')?.classList.remove('collapsed');c.setAttribute('aria-expanded','true')}},500)}
+/* Existing V8.76 inline click engine remains the owner of open/close. We only keep aria state synchronized after it toggles. */
+W.addEventListener('click',e=>{const c=e.target.closest?.(SEL);if(!c||e.target.closest('button,input,textarea,select,label,.bd31-social,.comments,.comment-box,video,audio,.post-menu,.post-action-board'))return;setTimeout(()=>c.setAttribute('aria-expanded',isOpen(c)?'true':'false'),0)},false);
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+
+<!-- BHUBONDANGA V8.110 TARGETED — two real newspaper cards + free Bengali headline fonts -->
+<style id="bd-v8110-newspaper-css">
+/* Hide the old single News chip; the two V8.110 newspaper cards replace it without changing publish/storage contracts. */
+.bd104-news-choice:not(.bd110-news-choice){display:none!important}
+.bd110-news-choice{min-width:118px!important;min-height:58px!important;border:1px solid rgba(48,54,63,.16)!important;background:linear-gradient(145deg,#fffdf8,#f3f0e7)!important;color:#18201d!important;box-shadow:0 8px 18px rgba(50,44,31,.08)!important}
+.bd110-news-choice[data-layout="modern"]{background:linear-gradient(145deg,#fbfcff,#edf2f8)!important;color:#17395a!important}
+.bd110-news-choice.active{border-color:currentColor!important;box-shadow:0 0 0 2px rgba(32,55,47,.09),0 9px 20px rgba(44,52,49,.09)!important;transform:translateY(-1px)!important}
+.bd110-news-choice span{display:block!important}.bd110-news-choice small{display:block;margin-top:2px;font:700 7.5px/1.2 'Noto Sans Bengali',sans-serif;opacity:.68}
+.bd110-news-fontbar{display:none;margin:8px 0 9px;padding:8px;border:1px solid rgba(68,76,84,.13);border-radius:12px;background:rgba(255,255,255,.74);gap:6px;grid-template-columns:auto repeat(3,minmax(0,1fr));align-items:center}
+#composerForm.bd110-news-mode .bd110-news-fontbar{display:grid}
+.bd110-news-fontbar>strong{font-size:9px;color:#53606d;white-space:nowrap}
+.bd110-news-fontbar button{min-height:36px;padding:5px 8px;border:1px solid rgba(60,70,78,.13);border-radius:9px;background:#fff;color:#26333f;font-size:9px;font-weight:800}
+.bd110-news-fontbar button[data-font="book"]{font-family:'Noto Serif Bengali',serif;font-weight:900;color:#17251f}
+.bd110-news-fontbar button[data-font="display"]{font-family:'Galada','Noto Serif Bengali',serif;font-size:13px;color:#7a2130}
+.bd110-news-fontbar button[data-font="editorial"]{font-family:'Atma','Noto Serif Bengali',serif;font-size:12px;font-weight:700;color:#173c66}
+.bd110-news-fontbar button.active{box-shadow:0 0 0 2px rgba(65,84,105,.10);border-color:currentColor;background:#f9fafb}
+
+/* The selected newspaper IS the writing box. Actual postTitle/postBody/media controls are moved inside this sheet by JS. */
+.bd110-compose-news-sheet{display:none;position:relative;margin:9px 0 7px;padding:12px 13px 14px;border:1px solid rgba(42,44,39,.20);border-radius:4px;background:#fffef9;color:#172019;box-shadow:0 12px 32px rgba(38,37,30,.10);overflow:hidden}
+#composerForm.bd110-news-mode .bd110-compose-news-sheet{display:block}
+.bd110-compose-news-sheet .bd110-masthead{text-align:center;padding:3px 4px 8px;border-top:4px double currentColor;border-bottom:4px double currentColor}
+.bd110-compose-news-sheet .bd110-masthead b{display:block;font:400 clamp(28px,7vw,48px)/1.08 'Galada','Noto Serif Bengali',serif;letter-spacing:.01em}
+.bd110-compose-news-sheet .bd110-masthead small{display:block;margin-top:1px;font:700 8px/1.4 'Noto Sans Bengali',sans-serif;letter-spacing:.08em}
+.bd110-compose-news-sheet .bd110-paper-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0 2px;padding-bottom:5px;border-bottom:1px solid rgba(25,31,28,.28);font:700 8px/1.4 'Noto Sans Bengali',sans-serif;color:#59615d}
+.bd110-compose-news-sheet #postTitle{height:auto!important;min-height:64px!important;margin:8px 0 5px!important;padding:4px 2px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;font-size:clamp(26px,6vw,42px)!important;line-height:1.18!important;font-weight:900!important;text-align:left!important;color:var(--bd110-news-ink,#17251f)!important}
+.bd110-compose-news-sheet #postBody{width:100%!important;aspect-ratio:auto!important;min-height:260px!important;max-height:62vh!important;margin:4px 0 0!important;padding:8px 2px!important;border:0!important;border-top:1px solid rgba(31,38,34,.18)!important;border-radius:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;resize:vertical!important;text-align:left!important;color:#29312d!important;font:500 15px/1.9 'Noto Serif Bengali',serif!important}
+.bd110-compose-news-sheet .bd-index-media-tools{margin:8px 0!important;padding:7px 0!important;border-top:1px dashed rgba(40,48,44,.20);border-bottom:1px dashed rgba(40,48,44,.20)}
+.bd110-compose-news-sheet .bd-index-media-preview{background:#f4f1e8!important;border-radius:2px!important}
+.bd110-compose-news-sheet .bd104-news-tools{margin-top:8px!important;background:rgba(246,244,236,.78)!important;border-color:rgba(42,55,49,.14)!important}
+/* Font = ink pair. */
+#composerForm[data-bd110-news-font="book"] .bd110-compose-news-sheet #postTitle{font-family:'Noto Serif Bengali',serif!important;font-weight:900!important;--bd110-news-ink:#17251f}
+#composerForm[data-bd110-news-font="display"] .bd110-compose-news-sheet #postTitle{font-family:'Galada','Noto Serif Bengali',serif!important;font-weight:400!important;--bd110-news-ink:#7a2130}
+#composerForm[data-bd110-news-font="editorial"] .bd110-compose-news-sheet #postTitle{font-family:'Atma','Noto Serif Bengali',serif!important;font-weight:700!important;--bd110-news-ink:#173c66}
+/* Two newspaper identities. */
+#composerForm[data-bd110-news-layout="classic"] .bd110-compose-news-sheet{background:linear-gradient(180deg,#fffef9,#faf6ea);color:#17251f}
+#composerForm[data-bd110-news-layout="classic"] .bd110-masthead b::after{content:'  দৈনিক';font-family:'Noto Serif Bengali',serif;font-size:.34em;font-weight:800;vertical-align:.55em;margin-left:4px}
+#composerForm[data-bd110-news-layout="modern"] .bd110-compose-news-sheet{background:linear-gradient(180deg,#fff,#f4f7fb);color:#173c66;border-radius:8px;border-top:7px solid #173c66}
+#composerForm[data-bd110-news-layout="modern"] .bd110-masthead{border-top:0;border-bottom:2px solid currentColor;text-align:left}
+#composerForm[data-bd110-news-layout="modern"] .bd110-masthead b{font-family:'Atma','Noto Serif Bengali',serif;font-weight:700;font-size:clamp(26px,6.5vw,44px)}
+#composerForm[data-bd110-news-layout="modern"] .bd110-masthead b::after{content:' • সম্পাদকীয়';font-family:'Noto Sans Bengali',sans-serif;font-size:.25em;font-weight:800;letter-spacing:.05em}
+
+/* Published newspaper card: author/social shell stays unchanged; only article content becomes a newspaper sheet. */
+.post.bd104-news-post .bd110-newspaper-sheet{position:relative;margin:10px 0 5px;padding:13px 14px 15px;border:1px solid rgba(43,46,42,.16);border-radius:4px;background:#fffef9;color:#18201d;box-shadow:0 9px 24px rgba(45,43,34,.07)}
+.post.bd104-news-post .bd110-pub-masthead{text-align:center;padding:2px 3px 8px;border-top:4px double currentColor;border-bottom:4px double currentColor}
+.post.bd104-news-post .bd110-pub-masthead b{display:block;font:400 clamp(28px,6vw,46px)/1.05 'Galada','Noto Serif Bengali',serif}
+.post.bd104-news-post .bd110-pub-masthead small{display:block;margin-top:2px;font:700 8px/1.35 'Noto Sans Bengali',sans-serif;letter-spacing:.06em}
+.post.bd104-news-post .bd110-pub-meta{display:flex;justify-content:space-between;gap:8px;margin:6px 0;padding-bottom:5px;border-bottom:1px solid rgba(33,38,34,.22);font:700 8px/1.35 'Noto Sans Bengali',sans-serif;color:#5d6561}
+.post.bd104-news-post .bd110-newspaper-sheet>.pill{margin-top:2px!important;background:transparent!important;padding:0!important;color:inherit!important;border-radius:0!important;font:800 9px/1.3 'Noto Sans Bengali',sans-serif!important}
+.post.bd104-news-post .bd110-newspaper-sheet>.post-title{margin:7px 0 7px!important;max-width:100%!important;text-align:left!important;color:var(--bd110-pub-ink,#17251f)!important;font-size:clamp(27px,5.5vw,42px)!important;line-height:1.18!important}
+.post.bd104-news-post .bd110-newspaper-sheet>.post-body{margin-top:5px!important;padding-top:8px!important;border-top:1px solid rgba(40,46,42,.15);font-family:'Noto Serif Bengali',serif!important;font-size:14px!important;line-height:1.9!important;text-align:justify!important;color:#29312d!important;column-gap:24px;column-rule:1px solid rgba(40,46,42,.12)}
+@media(min-width:760px){.post.bd104-news-post .bd110-newspaper-sheet>.post-body:not(.collapsed),.post.bd104-news-post.bd-inline-expanded .bd110-newspaper-sheet>.post-body{column-count:2}}
+.post.bd104-news-post .bd110-newspaper-sheet .composer-media-render,.post.bd104-news-post .bd110-newspaper-sheet .bd104-news-image2{border-radius:2px!important;border:1px solid rgba(28,35,31,.15)!important;background:#f2efe5!important}
+.post.bd104-news-post .bd110-newspaper-sheet .composer-media-render img,.post.bd104-news-post .bd110-newspaper-sheet .composer-media-render video,.post.bd104-news-post .bd110-newspaper-sheet .bd104-news-image2 img{border-radius:1px!important}
+.post.bd104-news-post[class*="news-card-classic"] .bd110-newspaper-sheet{background:linear-gradient(180deg,#fffef9,#faf6ea);color:#17251f}
+.post.bd104-news-post[class*="news-card-modern"] .bd110-newspaper-sheet{background:linear-gradient(180deg,#fff,#f3f7fb);color:#173c66;border-radius:8px;border-top:7px solid #173c66}
+.post.bd104-news-post[class*="news-card-modern"] .bd110-pub-masthead{border-top:0;border-bottom:2px solid currentColor;text-align:left}
+.post.bd104-news-post[class*="news-card-modern"] .bd110-pub-masthead b{font-family:'Atma','Noto Serif Bengali',serif;font-weight:700}
+.post.bd104-news-post[class*="news-card-classic"][class*="-book"] .post-title{font-family:'Noto Serif Bengali',serif!important;font-weight:900!important;--bd110-pub-ink:#17251f}
+.post.bd104-news-post[class*="-display"] .post-title{font-family:'Galada','Noto Serif Bengali',serif!important;font-weight:400!important;--bd110-pub-ink:#7a2130}
+.post.bd104-news-post[class*="-editorial"] .post-title{font-family:'Atma','Noto Serif Bengali',serif!important;font-weight:700!important;--bd110-pub-ink:#173c66}
+/* Old news-card posts remain supported. */
+.post.bd104-news-post.style-news-card .post-title{font-family:'Noto Serif Bengali',serif!important;font-weight:900!important}
+@media(max-width:520px){
+ .bd110-news-fontbar{grid-template-columns:1fr 1fr 1fr}.bd110-news-fontbar>strong{grid-column:1/-1}
+ .bd110-compose-news-sheet{padding:10px 11px 12px}
+ .bd110-compose-news-sheet #postTitle{font-size:30px!important;min-height:58px!important}
+ .bd110-compose-news-sheet #postBody{font-size:14px!important;min-height:250px!important}
+ .post.bd104-news-post .bd110-newspaper-sheet{padding:11px 12px 13px}
+ .post.bd104-news-post .bd110-newspaper-sheet>.post-title{font-size:29px!important}
+ .post.bd104-news-post .bd110-newspaper-sheet>.post-body{font-size:13.5px!important;text-align:left!important;column-count:1!important}
+}
+</style>
+<script id="bd-v8110-newspaper-js">
+(()=>{'use strict';
+if(window.__BD_V8110_NEWSPAPER__)return;window.__BD_V8110_NEWSPAPER__=true;
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+let titleAnchor=null,bodyAnchor=null,mediaAnchor=null,previewAnchor=null,captionAnchor=null,toolsAnchor=null,sheet=null,fontbar=null;
+function dhakaNow(){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric'}).format(new Date())}catch(_){return''}}
+function authorName(){return W.__BD_IDENTITY?.author_name||'ভুবনডাঙ্গা ডেস্ক'}
+function ensureAnchors(){
+ const title=$('#postTitle'),body=$('#postBody'),media=$('#bdIndexMediaTools'),preview=$('#postMediaPreview'),caption=$('#postMediaCaption'),tools=$('.bd104-news-tools');
+ if(title&&!titleAnchor){titleAnchor=D.createComment('bd110-title');title.before(titleAnchor)}
+ if(body&&!bodyAnchor){bodyAnchor=D.createComment('bd110-body');body.before(bodyAnchor)}
+ if(media&&!mediaAnchor){mediaAnchor=D.createComment('bd110-media');media.before(mediaAnchor)}
+ if(preview&&!previewAnchor){previewAnchor=D.createComment('bd110-preview');preview.before(previewAnchor)}
+ if(caption&&!captionAnchor){captionAnchor=D.createComment('bd110-caption');caption.before(captionAnchor)}
+ if(tools&&!toolsAnchor){toolsAnchor=D.createComment('bd110-tools');tools.before(toolsAnchor)}
+}
+function ensureUI(){
+ const form=$('#composerForm'),picker=$('#bd58TemplatePicker');if(!form||!picker)return;
+ const strip=$('.bd58-template-strip',picker)||picker;
+ if(!$('.bd110-news-choice',strip)){
+   const classic=D.createElement('button');classic.type='button';classic.className='bd58-template-chip bd110-news-choice';classic.dataset.layout='classic';classic.innerHTML='<span>🗞️ দৈনিক</span><small>ক্লাসিক খবরের কাগজ</small>';
+   const modern=D.createElement('button');modern.type='button';modern.className='bd58-template-chip bd110-news-choice';modern.dataset.layout='modern';modern.innerHTML='<span>📰 সম্পাদকীয়</span><small>আধুনিক নিউজ লেআউট</small>';
+   strip.append(classic,modern);
+ }
+ if(!fontbar){fontbar=D.createElement('div');fontbar.className='bd110-news-fontbar';fontbar.innerHTML='<strong>হেডলাইন ফন্ট</strong><button type="button" data-font="book">বই</button><button type="button" data-font="display">শিরোনাম</button><button type="button" data-font="editorial">সম্পাদকীয়</button>';picker.insertAdjacentElement('afterend',fontbar)}
+ if(!sheet){sheet=D.createElement('section');sheet.className='bd110-compose-news-sheet';sheet.id='bd110ComposeNewsSheet';sheet.innerHTML='<header class="bd110-masthead"><b>ভুবনডাঙ্গার বার্তা</b><small>সাহিত্য • সমাজ • সংস্কৃতি • মানুষের খবর</small></header><div class="bd110-paper-meta"><span data-bd110-date></span><span data-bd110-byline></span></div>';fontbar.insertAdjacentElement('afterend',sheet)}
+ ensureAnchors();
+}
+function moveIntoSheet(){ensureUI();ensureAnchors();if(!sheet)return;const title=$('#postTitle'),body=$('#postBody'),media=$('#bdIndexMediaTools'),preview=$('#postMediaPreview'),caption=$('#postMediaCaption'),tools=$('.bd104-news-tools');
+ [title,media,preview,caption,body,tools].forEach(el=>{if(el)sheet.appendChild(el)});
+ const d=$('[data-bd110-date]',sheet),b=$('[data-bd110-byline]',sheet);if(d)d.textContent=dhakaNow();if(b)b.textContent='প্রতিবেদন: '+authorName();
+}
+function restore(){const pairs=[[titleAnchor,$('#postTitle')],[bodyAnchor,$('#postBody')],[mediaAnchor,$('#bdIndexMediaTools')],[previewAnchor,$('#postMediaPreview')],[captionAnchor,$('#postMediaCaption')],[toolsAnchor,$('.bd104-news-tools')]];pairs.forEach(([a,el])=>{if(a?.parentNode&&el)a.parentNode.insertBefore(el,a.nextSibling)})}
+function setFont(font){const form=$('#composerForm');if(!form)return;font=['book','display','editorial'].includes(font)?font:'book';form.dataset.bd110NewsFont=font;$$('[data-font]',fontbar).forEach(b=>b.classList.toggle('active',b.dataset.font===font))}
+function activate(layout){
+ const form=$('#composerForm'),picker=$('#bd58TemplatePicker'),title=$('#postTitle');if(!form||!picker)return;ensureUI();layout=layout==='modern'?'modern':'classic';
+ form.dataset.bd104News='1';form.dataset.bd110NewsLayout=layout;form.classList.add('bd110-news-mode');
+ if(!form.dataset.bd110NewsFont)setFont(layout==='modern'?'editorial':'book');else setFont(form.dataset.bd110NewsFont);
+ $$('.bd110-news-choice',picker).forEach(b=>b.classList.toggle('active',b.dataset.layout===layout));
+ const old=$('.bd104-news-choice',picker);old?.classList.remove('active');
+ const tools=$('.bd104-news-tools');if(tools)tools.hidden=false;
+ try{W.BD65ApplyTemplate?.('none','index')}catch(_){}
+ const none=$('[data-bd58-template="none"]',picker);try{none?.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'mouse'}))}catch(_){none?.dispatchEvent(new Event('pointerdown',{bubbles:true}))}
+ if(title)title.placeholder=layout==='classic'?'প্রধান শিরোনাম লিখুন…':'এডিটোরিয়াল হেডলাইন লিখুন…';
+ moveIntoSheet();
+}
+function deactivate(callOld=false){const form=$('#composerForm'),picker=$('#bd58TemplatePicker'),title=$('#postTitle');if(!form)return;restore();form.classList.remove('bd110-news-mode');form.dataset.bd104News='0';delete form.dataset.bd110NewsLayout;delete form.dataset.bd110NewsFont;$$('.bd110-news-choice',picker).forEach(b=>b.classList.remove('active'));if(title)title.placeholder='লেখার শিরোনাম';const tools=$('.bd104-news-tools');if(tools)tools.hidden=true;if(callOld)try{oldReset?.()}catch(_){}}
+let oldReset=null;
+function install(){ensureUI();const picker=$('#bd58TemplatePicker');if(!picker)return;
+ picker.addEventListener('click',e=>{const b=e.target.closest('.bd110-news-choice');if(b){e.preventDefault();e.stopPropagation();activate(b.dataset.layout);return}const other=e.target.closest('[data-bd58-template]');if(other&&$('#composerForm')?.classList.contains('bd110-news-mode'))deactivate(false)},true);
+ fontbar?.addEventListener('click',e=>{const b=e.target.closest('[data-font]');if(!b)return;e.preventDefault();e.stopPropagation();setFont(b.dataset.font)},true);
+ oldReset=W.bd104ResetNewsCard;W.bd104ResetNewsCard=()=>{deactivate(false);try{oldReset?.()}catch(_){}};
+}
+function layoutFromCard(card){const c=card.className||'';return c.includes('news-card-modern')?'modern':'classic'}
+function decorate(card){if(!card||card.dataset.bd110Newspaper==='1'||!card.classList.contains('bd104-news-post'))return;card.dataset.bd110Newspaper='1';
+ const head=$('.post-head',card);if(!head)return;const sheet=D.createElement('section');sheet.className='bd110-newspaper-sheet';
+ const layout=layoutFromCard(card),author=$('.author-meta a',card)?.textContent?.trim()||'ভুবনডাঙ্গা ডেস্ক',date=$('.author-meta small',card)?.textContent?.trim()||'',category=$('.pill',card)?.textContent?.trim()||'সংবাদ';
+ sheet.innerHTML='<header class="bd110-pub-masthead"><b>ভুবনডাঙ্গার বার্তা</b><small>'+(layout==='modern'?'আধুনিক সম্পাদকীয় সংস্করণ':'বাংলা সাহিত্য ও সামাজিক সংবাদ')+'</small></header><div class="bd110-pub-meta"><span>'+category+' • '+date+'</span><span>প্রতিবেদন: '+author+'</span></div>';
+ head.insertAdjacentElement('afterend',sheet);
+ const move=['.pill','.post-title','.composer-media-render','.post-media','.post-body','.bd104-news-image2','.bd-post-caption','.post-read-more','.owner-hint','.review-badge'];
+ for(const sel of move){$$(sel,card).filter(el=>el.parentElement===card).forEach(el=>sheet.appendChild(el))}
+}
+function scan(root=D){if(root.matches?.('.bd104-news-post'))decorate(root);$$('.bd104-news-post',root).forEach(decorate)}
+function boot(){install();scan();new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n)}).observe(D.body,{childList:true,subtree:true});D.addEventListener('bd:auth-ready',()=>{const by=$('[data-bd110-byline]',sheet);if(by)by.textContent='প্রতিবেদন: '+authorName()})}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
 
