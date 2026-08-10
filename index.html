@@ -15,7 +15,7 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.82-reaction-unlock-master-20260810">
+<meta name="bhubondanga-build" content="V8.85-safari-reaction-touch-recovery-20260810">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
@@ -2211,106 +2211,314 @@ html[data-bd-theme="dark"] .bd58-font-chip.active{
 
 <!-- BHUBONDANGA MASTER LOCK V8.81: V8.78 visual/interaction baseline + live moderation delivery only -->
 
-<!-- BHUBONDANGA V8.82 — REACTION UNLOCK MASTER PATCH
-     Baseline: V8.81. Scope ONLY: reaction touch/long-press stability + stale overlay unlock.
-     No feed layout, composer, moderation, Supabase schema/RLS, dashboard, post rendering or cross-post logic changed. -->
-<style id="bd-v882-reaction-unlock-css">
-/* One interaction surface only. The historical trays stay render-inert but their data/render code remains untouched. */
-#bd31ReactionTray,#bd64ReactionTray{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
-#bd82ReactionTray{
+<!-- BHUBONDANGA V8.84 — SAFARI REACTION TOUCH RECOVERY
+     Baseline: exact V8.82 master. Scope ONLY: reaction gesture/touch release.
+     No feed layout, composer, moderation, posting, Supabase schema/RLS, dashboard, post rendering or cross-post logic changed. -->
+<style id="bd-v884-reaction-touch-recovery-css">
+/* Historical reaction trays stay inert. Their data/Supabase code is not deleted. */
+#bd31ReactionTray,#bd64ReactionTray,#bd82ReactionTray{
+  display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important
+}
+#bd84ReactionTray{
   position:fixed!important;z-index:2147483646!important;left:0;top:0;
   width:min(286px,calc(100vw - 20px));aspect-ratio:1023/166;
   display:none;grid-template-columns:repeat(7,minmax(0,1fr));
   padding:0!important;margin:0!important;border:0!important;border-radius:999px!important;
   background:#fff;box-shadow:0 10px 28px rgba(20,24,45,.22);overflow:hidden!important;
-  pointer-events:none!important;touch-action:none!important;-webkit-touch-callout:none!important;
-  -webkit-user-select:none!important;user-select:none!important;contain:layout paint style!important;
+  pointer-events:none!important;touch-action:manipulation!important;-webkit-touch-callout:none!important;
+  -webkit-user-select:none!important;user-select:none!important;
+  contain:layout paint style!important
 }
-#bd82ReactionTray.bd82-exact{background-color:transparent!important;background-image:var(--bd50-reaction-tray)!important;background-size:100% 100%!important;background-repeat:no-repeat!important;background-position:center!important}
-#bd82ReactionTray.open{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-#bd82ReactionTray button{width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;display:grid!important;place-items:center!important;touch-action:none!important;-webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important;-webkit-tap-highlight-color:transparent!important}
-#bd82ReactionTray.bd82-exact button .bd82-fallback{display:none!important}
-#bd82ReactionTray .bd82-fallback{font:27px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;filter:drop-shadow(0 2px 2px rgba(0,0,0,.12))}
-#bd82ReactionTray button:active{transform:scale(.96)!important}
-@media(min-width:900px){#bd82ReactionTray{width:326px}}
-/* A reaction must never dim/lock the page. There is intentionally no scrim/backdrop. */
-body.bd82-reacting{touch-action:auto!important}
-[data-bd31-react-main],[data-bd31-react-main] *{ -webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important;-webkit-tap-highlight-color:transparent!important }
+#bd84ReactionTray.bd84-exact{
+  background-color:transparent!important;background-image:var(--bd50-reaction-tray)!important;
+  background-size:100% 100%!important;background-repeat:no-repeat!important;background-position:center!important
+}
+#bd84ReactionTray.open{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+#bd84ReactionTray button{
+  width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;
+  margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;
+  display:grid!important;place-items:center!important;touch-action:manipulation!important;
+  -webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important;
+  -webkit-tap-highlight-color:transparent!important
+}
+#bd84ReactionTray.bd84-exact button .bd84-fallback{display:none!important}
+#bd84ReactionTray .bd84-fallback{font:27px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;filter:drop-shadow(0 2px 2px rgba(0,0,0,.12))}
+#bd84ReactionTray button:active{transform:scale(.96)!important}
+@media(min-width:900px){#bd84ReactionTray{width:326px}}
+/* Critical: reaction never owns body scroll/touch state and never creates a scrim. */
+[data-bd31-react-main],[data-bd31-react-main] *{
+  touch-action:manipulation!important;-webkit-touch-callout:none!important;-webkit-user-select:none!important;
+  user-select:none!important;-webkit-tap-highlight-color:transparent!important
+}
 </style>
-<script id="bd-v882-reaction-unlock-js">
+<script id="bd-v884-reaction-touch-recovery-js">
 (()=>{'use strict';
-if(window.__BD_V882_REACTION_UNLOCK__)return;window.__BD_V882_REACTION_UNLOCK__=true;
+if(window.__BD_V884_REACTION_TOUCH_RECOVERY__)return;window.__BD_V884_REACTION_TOUCH_RECOVERY__=true;
 const W=window,D=document,TYPES=['like','love','care','sad','haha','wow','angry'];
 const LABEL={like:'লাইক',love:'ভালোবাসা',care:'যত্ন',sad:'দুঃখ',haha:'হাহা',wow:'ওয়াও',angry:'রাগ'};
 const EMOJI={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};
 const BN='০১২৩৪৫৬৭৮৯';
-const q=(s,r=D)=>r?.querySelector?.(s)||null;
+const q=(s,r=D)=>r?.querySelector?.(s)||null, qa=(s,r=D)=>[...(r?.querySelectorAll?.(s)||[])];
 function bn(n){return String(Math.max(0,Number(n)||0)).replace(/\d/g,d=>BN[d])}
 function cardOf(n){return n?.closest?.('[data-bd31-ready="1"],[data-post-card],article.post,.bd-live-post,.post-card')||null}
 function pid(card){return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'').trim()}
 function client(){try{return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null}catch{return null}}
 function mainOf(card){return q('[data-bd31-react-main]',card)}
 function current(card){return String(mainOf(card)?.dataset?.current||'')}
-function stop(e){try{e.preventDefault()}catch{}try{e.stopPropagation()}catch{}try{e.stopImmediatePropagation()}catch{}}
-function clearStaleBlockers(){
-  /* Reaction is never allowed to own a page-sized blocker. Close only stale legacy social layers. */
-  for(const sel of ['#bd31ReactionTray','#bd64ReactionTray']){const x=q(sel);if(x){x.classList.remove('open');x.style.display='none'}}
-  const b=q('#bd35CommentBackdrop'),s=q('#bd35CommentSheet');
-  if(b&&!s?.classList.contains('open'))b.classList.remove('open');
-  if(!s?.classList.contains('open'))D.body.classList.remove('bd35-comment-open');
-  /* A stuck mobile-more lock must not survive a reaction gesture. */
-  if(!q('#mobileMoreMenu')?.classList.contains('bd48-open'))D.body.classList.remove('locked');
+function halt(e,prevent=false){try{if(prevent)e.preventDefault()}catch{}try{e.stopPropagation()}catch{}try{e.stopImmediatePropagation()}catch{}}
+function anyOpen(sel){return qa(sel).some(x=>x.classList.contains('open')||x.classList.contains('show'))}
+function releasePageTouch(){
+  /* Close only stale reaction surfaces. */
+  for(const sel of ['#bd31ReactionTray','#bd64ReactionTray','#bd82ReactionTray']){
+    const x=q(sel);if(x){x.classList.remove('open');x.setAttribute('aria-hidden','true');x.style.pointerEvents='none';x.style.display='none'}
+  }
+  /* A reaction must never leave comment touch-lock behind unless the comment sheet is genuinely open. */
+  const commentSheet=q('#bd35CommentSheet');
+  if(!commentSheet?.classList.contains('open')){
+    q('#bd35CommentBackdrop')?.classList.remove('open');
+    D.body.classList.remove('bd35-comment-open');
+  }
+  /* Likewise, do not keep the page body locked when no drawer is actually open. */
+  const drawerOpen=anyOpen('#mobileDrawer,#leftDrawer,#midnightLeftDrawer,#rightMobileDrawer,#rightDrawer,#midnightRightDrawer,.mobile-drawer');
+  if(!drawerOpen){
+    D.body.classList.remove('locked','drawer-open');
+    q('#drawerBackdrop')?.classList.remove('show');
+    q('#backdrop')?.classList.remove('show');
+    q('#midnightDrawerBackdrop')?.classList.remove('show');
+  }
+  /* Never leave reaction-specific inline touch/overflow locks. */
+  D.body.classList.remove('bd82-reacting','bd84-reacting');
+  if(D.body.style.touchAction==='none')D.body.style.removeProperty('touch-action');
+  if(D.documentElement.style.touchAction==='none')D.documentElement.style.removeProperty('touch-action');
 }
+function postRelease(){releasePageTouch();[0,80,260,800].forEach(ms=>setTimeout(releasePageTouch,ms))}
 function tray(){
-  let t=q('#bd82ReactionTray');if(t)return t;
-  t=D.createElement('div');t.id='bd82ReactionTray';t.setAttribute('role','menu');t.setAttribute('aria-hidden','true');
-  const exact=getComputedStyle(D.documentElement).getPropertyValue('--bd50-reaction-tray').trim();if(exact)t.classList.add('bd82-exact');
-  t.innerHTML=TYPES.map(type=>`<button type="button" data-bd82-pick="${type}" aria-label="${LABEL[type]}" title="${LABEL[type]}"><span class="bd82-fallback">${EMOJI[type]}</span></button>`).join('');
-  D.body.appendChild(t);return t;
+  let t=q('#bd84ReactionTray');if(t)return t;
+  t=D.createElement('div');t.id='bd84ReactionTray';t.setAttribute('role','menu');t.setAttribute('aria-hidden','true');
+  const exact=getComputedStyle(D.documentElement).getPropertyValue('--bd50-reaction-tray').trim();if(exact)t.classList.add('bd84-exact');
+  t.innerHTML=TYPES.map(type=>`<button type="button" data-bd84-pick="${type}" aria-label="${LABEL[type]}" title="${LABEL[type]}"><span class="bd84-fallback">${EMOJI[type]}</span></button>`).join('');
+  D.body.appendChild(t);return t
 }
-function closeTray(){const t=q('#bd82ReactionTray');if(!t)return;t.classList.remove('open');t.setAttribute('aria-hidden','true');t.__card=null;t.__button=null;D.body.classList.remove('bd82-reacting');clearStaleBlockers()}
+function closeTray(){
+  const t=q('#bd84ReactionTray');
+  if(t){t.classList.remove('open');t.setAttribute('aria-hidden','true');t.__card=null;t.__button=null}
+  try{D.activeElement?.closest?.('#bd84ReactionTray')&&D.activeElement.blur?.()}catch{}
+  postRelease()
+}
 function openTray(btn){
-  const card=cardOf(btn);if(!card)return;clearStaleBlockers();const t=tray(),r=btn.getBoundingClientRect();t.__card=card;t.__button=btn;t.classList.add('open');t.setAttribute('aria-hidden','false');D.body.classList.add('bd82-reacting');
-  requestAnimationFrame(()=>{const w=t.offsetWidth||286,h=t.offsetHeight||47;let left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2));let top=r.top-h-9;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+9);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'});
+  const card=cardOf(btn);if(!card)return;
+  releasePageTouch();const t=tray(),r=btn.getBoundingClientRect();t.__card=card;t.__button=btn;
+  t.classList.add('open');t.setAttribute('aria-hidden','false');
+  requestAnimationFrame(()=>{
+    const w=t.offsetWidth||286,h=t.offsetHeight||47;
+    const left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2));
+    let top=r.top-h-9;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+9);
+    t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'
+  })
 }
 function iconHTML(type){const src=W.BD52_REACTION_SRC?.[type];return src?`<span class="bd64-icon"><img src="${src}" alt="" draggable="false"></span>`:`<span class="bd31-r ${type} bd31-mini" aria-hidden="true">${EMOJI[type]}</span>`}
 function parseCount(sum){const m=String(sum?.textContent||'').match(/[০-৯0-9]+/);if(!m)return 0;return Number(m[0].replace(/[০-৯]/g,d=>String(BN.indexOf(d))))||0}
 function setUI(card,type,remove){
-  const main=mainOf(card);if(!main)return;const prev=String(main.dataset.current||''),next=remove?'':type;main.dataset.current=next;main.classList.toggle('selected',!!next);main.classList.toggle('active',!!next);
-  const holder=q('.bd31-main-reaction',main);if(holder){if(!holder.dataset.bd82Neutral)holder.dataset.bd82Neutral=holder.innerHTML;holder.innerHTML=next?iconHTML(next):holder.dataset.bd82Neutral}
+  const main=mainOf(card);if(!main)return;
+  const prev=String(main.dataset.current||''),next=remove?'':type;
+  main.dataset.current=next;main.classList.toggle('selected',!!next);main.classList.toggle('active',!!next);
+  const holder=q('.bd31-main-reaction',main);
+  if(holder){if(!holder.dataset.bd84Neutral)holder.dataset.bd84Neutral=holder.innerHTML;holder.innerHTML=next?iconHTML(next):holder.dataset.bd84Neutral}
   const label=q('[data-bd31-label]',main);if(label)label.textContent=next?(LABEL[next]||'লাইক'):'লাইক';
-  const sum=q('[data-bd31-react-summary]',card);if(sum){let n=Number(card.dataset.bd82ReactionCount);if(!Number.isFinite(n))n=parseCount(sum);if(!prev&&next)n++;else if(prev&&remove)n=Math.max(0,n-1);card.dataset.bd82ReactionCount=String(n);if(n>0){sum.hidden=false;sum.style.visibility='visible';let txt=sum.querySelector('span:last-child');if(!txt){txt=D.createElement('span');sum.appendChild(txt)}txt.textContent=bn(n)+' জন প্রতিক্রিয়া'}else{sum.hidden=true;sum.style.visibility='hidden'}}
+  const sum=q('[data-bd31-react-summary]',card);
+  if(sum){
+    let n=Number(card.dataset.bd84ReactionCount);if(!Number.isFinite(n))n=parseCount(sum);
+    if(!prev&&next)n++;else if(prev&&remove)n=Math.max(0,n-1);
+    card.dataset.bd84ReactionCount=String(n);
+    if(n>0){sum.hidden=false;sum.style.visibility='visible';let txt=sum.querySelector('span:last-child');if(!txt){txt=D.createElement('span');sum.appendChild(txt)}txt.textContent=bn(n)+' জন প্রতিক্রিয়া'}
+    else{sum.hidden=true;sum.style.visibility='hidden'}
+  }
 }
 async function persist(card,type,remove){
-  const id=pid(card),c=client();if(!id||!c)return;let s=null;try{s=(await c.auth.getSession()).data?.session||null}catch{}if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}
+  const id=pid(card),c=client();if(!id||!c)return;
+  let s=null;try{s=(await c.auth.getSession()).data?.session||null}catch{}
+  if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}
   try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(type)});if(!r?.error)return}catch{}
-  for(const table of ['post_reactions','reactions']){try{const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;if(remove)r=cur.data?await c.from(table).delete().eq('post_id',id).eq('user_id',s.user.id):{error:null};else if(cur.data)r=await c.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);else r=await c.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});if(!r?.error)return}catch{}}
+  for(const table of ['post_reactions','reactions']){
+    try{
+      const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;
+      if(remove)r=cur.data?await c.from(table).delete().eq('post_id',id).eq('user_id',s.user.id):{error:null};
+      else if(cur.data)r=await c.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);
+      else r=await c.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});
+      if(!r?.error)return
+    }catch{}
+  }
 }
-function apply(card,type,fromTray){if(!card||!TYPES.includes(type))return;const prev=current(card),remove=!fromTray&&prev==='like'&&type==='like';if(fromTray&&prev===type){closeTray();return}setUI(card,type,remove);closeTray();persist(card,type,remove).catch(()=>{})}
+function apply(card,type,fromTray){
+  if(!card||!TYPES.includes(type))return;
+  const prev=current(card),remove=!fromTray&&prev==='like'&&type==='like';
+  if(fromTray&&prev===type){closeTray();return}
+  setUI(card,type,remove);closeTray();
+  persist(card,type,remove).catch(()=>{}).finally(postRelease)
+}
 let press=null,suppressClickUntil=0;
-/* Registered in <head>, before every legacy social listener. This is the key fix: old reaction engines never receive the gesture. */
+function clearPress(){if(press?.timer)clearTimeout(press.timer);press=null}
+/* Safari-safe capture: stop legacy handlers, but do NOT prevent default on pointerdown/pointerup.
+   This preserves the browser's normal touch/scroll lifecycle and avoids the "dead page" state. */
 W.addEventListener('pointerdown',e=>{
-  const pick=e.target.closest?.('#bd82ReactionTray [data-bd82-pick]');if(pick){stop(e);press={kind:'pick',pick,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,t:0};return}
-  const main=e.target.closest?.('[data-bd31-react-main]');if(main){stop(e);if(e.pointerType==='mouse'){press={kind:'main',main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,t:0};return}press={kind:'main',main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,t:setTimeout(()=>{if(!press||press.id!==e.pointerId||press.kind!=='main')return;press.held=true;openTray(main)},300)};return}
-  if(q('#bd82ReactionTray')?.classList.contains('open')&&!e.target.closest?.('#bd82ReactionTray'))closeTray();
-},{capture:true,passive:false});
-W.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot((e.clientX||0)-press.x,(e.clientY||0)-press.y)>11){if(press.t)clearTimeout(press.t);press=null}}, {capture:true,passive:true});
+  const pick=e.target.closest?.('#bd84ReactionTray [data-bd84-pick]');
+  if(pick){halt(e,false);press={kind:'pick',pick,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,timer:0};return}
+  const main=e.target.closest?.('[data-bd31-react-main]');
+  if(main){
+    halt(e,false);press={kind:'main',main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,timer:0};
+    if(e.pointerType!=='mouse')press.timer=setTimeout(()=>{if(!press||press.id!==e.pointerId||press.kind!=='main')return;press.held=true;openTray(main)},380);
+    return
+  }
+  if(q('#bd84ReactionTray')?.classList.contains('open')&&!e.target.closest?.('#bd84ReactionTray'))closeTray()
+},{capture:true,passive:true});
+W.addEventListener('pointermove',e=>{
+  if(!press||press.id!==e.pointerId)return;
+  if(Math.hypot((e.clientX||0)-press.x,(e.clientY||0)-press.y)>12)clearPress()
+},{capture:true,passive:true});
 W.addEventListener('pointerup',e=>{
-  if(!press||press.id!==e.pointerId)return;const p=press;press=null;if(p.t)clearTimeout(p.t);stop(e);suppressClickUntil=Date.now()+700;
-  if(p.kind==='pick'){const t=q('#bd82ReactionTray'),card=t?.__card,type=p.pick?.dataset?.bd82Pick;if(card&&type)apply(card,type,true);return}
-  if(p.kind==='main'&&!p.held)apply(cardOf(p.main),'like',false);
-},{capture:true,passive:false});
-W.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId){if(press.t)clearTimeout(press.t);press=null;closeTray()}},{capture:true});
+  if(!press||press.id!==e.pointerId)return;
+  const p=press;clearPress();halt(e,false);
+  if(p.held){suppressClickUntil=Date.now()+650;return}
+  /* Let the click event perform the action. It is the safest path on iOS Safari. */
+},{capture:true,passive:true});
+W.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId){clearPress();closeTray()}},{capture:true,passive:true});
 W.addEventListener('click',e=>{
-  const pick=e.target.closest?.('#bd82ReactionTray [data-bd82-pick]');if(pick){stop(e);if(Date.now()>=suppressClickUntil){const t=q('#bd82ReactionTray');if(t?.__card)apply(t.__card,pick.dataset.bd82Pick,true)}return}
-  const main=e.target.closest?.('[data-bd31-react-main]');if(main){stop(e);if(Date.now()>=suppressClickUntil)apply(cardOf(main),'like',false);return}
-},{capture:true});
-W.addEventListener('contextmenu',e=>{if(e.target.closest?.('[data-bd31-react-main],#bd82ReactionTray'))stop(e)},{capture:true});
-W.addEventListener('blur',closeTray,{passive:true});D.addEventListener('visibilitychange',()=>{if(D.hidden)closeTray()});D.addEventListener('keydown',e=>{if(e.key==='Escape')closeTray()});
-function boot(){clearStaleBlockers();tray();}
+  const pick=e.target.closest?.('#bd84ReactionTray [data-bd84-pick]');
+  if(pick){halt(e,true);const t=q('#bd84ReactionTray');if(t?.__card)apply(t.__card,pick.dataset.bd84Pick,true);return}
+  const main=e.target.closest?.('[data-bd31-react-main]');
+  if(main){halt(e,true);if(Date.now()<suppressClickUntil){suppressClickUntil=0;return}apply(cardOf(main),'like',false);return}
+},{capture:true,passive:false});
+W.addEventListener('contextmenu',e=>{if(e.target.closest?.('[data-bd31-react-main],#bd84ReactionTray'))halt(e,true)},{capture:true,passive:false});
+W.addEventListener('blur',()=>{clearPress();closeTray()},{passive:true});
+D.addEventListener('visibilitychange',()=>{if(D.hidden){clearPress();closeTray()}});
+D.addEventListener('keydown',e=>{if(e.key==='Escape')closeTray()});
+function boot(){releasePageTouch();tray()}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
+
+
+<style id="bd-v885-button-auth-polish">
+/* V8.85 — interaction feedback + explicit guest auth only. No layout/Supabase changes. */
+:where(button:not(:disabled),
+       .menu-item,
+       .account-actions a,
+       .account-shortcut,
+       .bd-r6-auth-actions a,
+       .bd-r6-user-links a,
+       .post-menu a,
+       .bd9-menu a,
+       .edge-menu,
+       .icon-btn,
+       .mobile-more-btn,
+       .load-btn,
+       .primary-btn,
+       .ghost-btn,
+       .action-btn,
+       .three-dot-btn,
+       .drawer-close,
+       .composer-prompt,
+       [role="button"]){
+  cursor:pointer;
+  transition:translate .14s ease,scale .10s ease,box-shadow .14s ease,background-color .14s ease,border-color .14s ease,color .14s ease,filter .14s ease!important;
+  -webkit-tap-highlight-color:transparent;
+}
+@media(hover:hover) and (pointer:fine){
+  :where(button:not(:disabled),
+         .menu-item,
+         .account-actions a,
+         .account-shortcut,
+         .bd-r6-auth-actions a,
+         .bd-r6-user-links a,
+         .post-menu a,
+         .bd9-menu a,
+         .edge-menu,
+         .icon-btn,
+         .mobile-more-btn,
+         .load-btn,
+         .primary-btn,
+         .ghost-btn,
+         .action-btn,
+         .three-dot-btn,
+         .drawer-close,
+         .composer-prompt,
+         [role="button"]):hover{
+    translate:0 -2px;
+    filter:brightness(1.02);
+    box-shadow:0 9px 22px rgba(55,61,120,.13);
+  }
+}
+:where(button:not(:disabled),
+       .menu-item,
+       .account-actions a,
+       .account-shortcut,
+       .bd-r6-auth-actions a,
+       .bd-r6-user-links a,
+       .post-menu a,
+       .bd9-menu a,
+       .edge-menu,
+       .icon-btn,
+       .mobile-more-btn,
+       .load-btn,
+       .primary-btn,
+       .ghost-btn,
+       .action-btn,
+       .three-dot-btn,
+       .drawer-close,
+       .composer-prompt,
+       [role="button"]):active,
+.bd-v885-pressed{
+  translate:0 1px!important;
+  scale:.975!important;
+  filter:brightness(.97)!important;
+}
+:where(button,a,[role="button"]):focus-visible{
+  outline:2px solid rgba(91,92,220,.72)!important;
+  outline-offset:2px!important;
+}
+button:disabled{cursor:not-allowed!important;opacity:.56}
+.bd-guest-auth-actions{margin-top:10px!important}
+.bd-guest-auth-actions a{min-height:38px!important;font-weight:800!important}
+.bd-auth-login-link strong{color:var(--primary)!important}
+.bd-auth-register-link strong{color:var(--green)!important}
+</style>
+<script id="bd-v885-button-press-feedback">
+(function(){
+'use strict';
+if(window.__BD_V885_BUTTON_FEEDBACK__)return;window.__BD_V885_BUTTON_FEEDBACK__=true;
+const PRESSABLE='button:not(:disabled),.menu-item,.account-actions a,.account-shortcut,.bd-r6-auth-actions a,.bd-r6-user-links a,.post-menu a,.bd9-menu a,.edge-menu,.icon-btn,.mobile-more-btn,.load-btn,.primary-btn,.ghost-btn,.action-btn,.three-dot-btn,.drawer-close,.composer-prompt,[role="button"]';
+let active=null;
+function clear(){if(active){active.classList.remove('bd-v885-pressed');active=null}}
+document.addEventListener('pointerdown',function(e){const el=e.target.closest?.(PRESSABLE);if(!el)return;clear();active=el;el.classList.add('bd-v885-pressed')},{passive:true});
+document.addEventListener('pointerup',clear,{passive:true});
+document.addEventListener('pointercancel',clear,{passive:true});
+document.addEventListener('dragstart',clear,{passive:true});
+window.addEventListener('blur',clear,{passive:true});
+})();
+</script>
+
+<style id="bd-v891-safe-card-only">
+/* V8.91: CSS-only decorative-card sizing. No MutationObserver, no feed rerender, no touch interception. */
+#postList .post[class*="style-tpl"] .post-body,
+#postList .bd-live-post[class*="style-tpl"] .post-body{
+  display:grid!important;place-items:center!important;text-align:center!important;text-align-last:center!important;
+  height:auto!important;overflow:hidden!important;box-sizing:border-box!important;
+}
+@media(max-width:899px){
+  #postList .post[class*="style-tpl"] .post-body,
+  #postList .bd-live-post[class*="style-tpl"] .post-body{
+    max-height:calc((100vw - 44px)*1.25)!important;
+  }
+}
+@media(min-width:900px){
+  #postList .post[class*="style-tpl"] .post-body,
+  #postList .bd-live-post[class*="style-tpl"] .post-body{max-height:980px!important}
+}
+#postList .post[class*="style-tpl"].expanded .post-body,
+#postList .post[class*="style-tpl"].bd-inline-expanded .post-body,
+#postList .bd-live-post[class*="style-tpl"].expanded .post-body,
+#postList .bd-live-post[class*="style-tpl"].bd-inline-expanded .post-body{max-height:none!important;overflow:visible!important}
+</style>
 
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
@@ -2576,12 +2784,12 @@ function sessionMenuHtml(){
   if(loggedIn){return [
     ['message','ইনবক্স','messages.html'],['bell','নোটিফিকেশন','notifications.html'],['user','আপনার প্রোফাইল',currentProfileUrl],['archive','আর্কাইভ','archive.html'],['memory','মেমোরিজ','memories.html'],['settings','সেটিংস','settings.html']
   ].map(x=>'<a class="menu-item" href="'+esc(x[2])+'"><span class="menu-icon">'+icon(x[0])+'</span><strong>'+esc(x[1])+'</strong><span>›</span></a>').join('')+'<button class="menu-item sidebar-logout" type="button" data-logout><span class="menu-icon">'+icon('x')+'</span><strong>লগআউট</strong><span>›</span></button>'}
-  return '<a class="menu-item" href="poem.html"><span class="menu-icon">'+icon('poem')+'</span><strong>আজকের কবিতা</strong><span>›</span></a><a class="menu-item" href="famous-quotes.html"><span class="menu-icon">'+icon('quote')+'</span><strong>মনীষীদের বাণী</strong><span>›</span></a><a class="menu-item" href="bhubondangar-lekhok.html"><span class="menu-icon">'+icon('users')+'</span><strong>নতুন লেখকদের চিনুন</strong><span>›</span></a>'
+  return '<a class="menu-item bd-auth-login-link" href="login.html"><span class="menu-icon">'+icon('user')+'</span><strong>লগইন</strong><span>›</span></a><a class="menu-item bd-auth-register-link" href="register.html"><span class="menu-icon">'+icon('users')+'</span><strong>নিবন্ধন করুন</strong><span>›</span></a><a class="menu-item" href="poem.html"><span class="menu-icon">'+icon('poem')+'</span><strong>আজকের কবিতা</strong><span>›</span></a><a class="menu-item" href="famous-quotes.html"><span class="menu-icon">'+icon('quote')+'</span><strong>মনীষীদের বাণী</strong><span>›</span></a><a class="menu-item" href="bhubondangar-lekhok.html"><span class="menu-icon">'+icon('users')+'</span><strong>নতুন লেখকদের চিনুন</strong><span>›</span></a>'
 }
 function leftSidebarHtml(){return '<div class="side-box glass"><div class="apn-vhuban"><div class="apn-leaf" aria-hidden="true">🌿</div><h3><a href="index.html">আপন ভুবন</a></h3><p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p><div class="quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></div><div class="menu-card"><div class="menu-list">'+baseMenuItems.map(x=>'<a class="menu-item" href="'+esc(x[2])+'"><span class="menu-icon">'+icon(x[0])+'</span><strong>'+esc(x[1])+'</strong><span>›</span></a>').join('')+sessionMenuHtml()+'<button class="menu-item theme-switch-row" type="button" data-drawer-theme aria-pressed="false"><span class="menu-icon theme-mode-icon">'+icon('moon')+'</span><span class="theme-switch-copy"><strong class="theme-mode-title">ডার্ক মোড</strong><small class="theme-mode-subtitle">লাইট মোড চালু আছে</small></span><span class="theme-switch" aria-hidden="true"><span class="theme-switch-knob"></span></span></button></div></div><div class="contact-card"><a href="founder-profile.html">জরুরি প্রয়োজনে মাহমুদ সোহেলের সঙ্গে যোগাযোগ করুন</a><p>প্রতিষ্ঠাতার প্রোফাইল ও যোগাযোগের মাধ্যম দেখুন।</p></div></div>'}
 function accountHtml(){
   if(loggedIn){const count=unreadNotificationCount();return '<section class="glass right-section account-card"><div class="account-avatar">'+(currentAvatar&&currentUsername!=='mahmud-sohel'?'<img src="'+esc(currentAvatar)+'" alt="'+esc(currentName)+'">':icon('user'))+'</div><h3>'+esc(currentName)+'</h3><p>আপনার ব্যক্তিগত ভুবন</p><div class="account-actions"><a href="'+esc(currentProfileUrl)+'">প্রোফাইল</a><a class="primary" href="edit-profile.html">সম্পাদনা</a></div><div class="account-shortcuts"><a class="account-shortcut" href="messages.html">'+icon('message')+'ইনবক্স</a><a class="account-shortcut" href="notifications.html">'+icon('bell')+'নোটিফিকেশন'+(count?'<span class="count">'+toBn(count)+'</span>':'')+'</a></div><button class="sidebar-logout" type="button" data-logout>লগআউট</button></section>'}
-  return '<section class="glass right-section account-card bd-guest-inspiration"><div class="account-avatar">🌿</div><h3>আজকের অনুপ্রেরণা</h3><p>পড়ুন, অনুভব করুন, তারপর নিজের ভাষায় নতুন কিছু সৃষ্টি করুন।</p><div class="account-actions"><a class="primary" href="poem.html">কবিতা পড়ুন</a><a href="discussion.html">আলোচনায় যান</a></div></section>'
+  return '<section class="glass right-section account-card bd-guest-inspiration"><div class="account-avatar">🌿</div><h3>আপন ভুবনে স্বাগতম</h3><p>লেখা প্রকাশ, মন্তব্য ও নিজের সাহিত্যিক ভুবন সংরক্ষণ করতে লগইন করুন অথবা নতুন অ্যাকাউন্ট খুলুন।</p><div class="account-actions bd-guest-auth-actions"><a class="primary" href="login.html">লগইন</a><a href="register.html">নিবন্ধন</a></div><div class="account-shortcuts bd-guest-reading-actions"><a class="account-shortcut" href="poem.html">'+icon('poem')+'কবিতা পড়ুন</a><a class="account-shortcut" href="discussion.html">'+icon('chat')+'আলোচনায় যান</a></div></section>'
 }
 function rightSidebarHtml(){return accountHtml()+'<section class="glass right-section"><h3>দ্রুত দেখুন</h3><div class="quick-item"><a href="bhubondangar-lekhok.html">ভুবনডাঙ্গার লেখক <span>›</span></a></div><div class="quick-item"><a href="favorite-authors.html">প্রিয় লেখক <span>›</span></a></div><div class="quick-item"><a href="famous-quotes.html">মনীষীদের বাণী <span>›</span></a></div><div class="quick-item"><a href="humanitarian-notice.html">যাচাইকৃত মানবিক নোটিস <span>›</span></a></div><div class="quick-item"><a href="policy.html">নীতিমালা <span>›</span></a></div></section><section class="glass right-section"><div class="right-note">নিউজফিডে সাধারণ সাহিত্যিক লেখা সরাসরি প্রকাশিত হয়। মানবিক আবেদন যাচাইয়ের পর অগ্রাধিকার পায়।</div></section>'}
 document.getElementById('leftSidebar').innerHTML=leftSidebarHtml();
