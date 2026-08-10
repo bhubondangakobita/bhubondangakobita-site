@@ -15,7 +15,7 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.95-single-reaction-engine-safari-stable-20260810">
+<meta name="bhubondanga-build" content="V8.96-stable-20-post-batches-loadmore-label-20260810">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
@@ -2520,6 +2520,15 @@ window.addEventListener('blur',clear,{passive:true});
 #postList .bd-live-post[class*="style-tpl"].bd-inline-expanded .post-body{max-height:none!important;overflow:visible!important}
 </style>
 
+
+<style id="bd-v896-stable-pagination">
+/* V8.96 — exactly 20 posts per batch. No feed-wide pagination observer. */
+#loadMoreBtn.load-btn{color:#fff!important;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:176px;font-weight:800!important;letter-spacing:.01em}
+#loadMoreBtn.load-btn[hidden]{display:none!important}
+#loadMoreBtn.load-btn:disabled{cursor:wait;opacity:.9}
+.bd-load-spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.38);border-top-color:#fff;border-radius:50%;animation:bdV896Spin .72s linear infinite;flex:0 0 auto}
+@keyframes bdV896Spin{to{transform:rotate(360deg)}}
+</style>
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -2875,7 +2884,7 @@ function renderPosts(){
   closePostActionBoard();
   if(!shown.length){
     box.innerHTML='<section class="glass empty-feed"><div class="empty-icon">'+icon('poem')+'</div><h3>এখনো কোনো লেখা নেই</h3><p>প্রথম কবিতা বা প্রলাপটি প্রকাশ করুন।</p></section>';
-    const more=document.getElementById('loadMoreBtn');more.hidden=false;more.classList.add('is-end');more.setAttribute('aria-disabled','true');return;
+    const more=document.getElementById('loadMoreBtn');more.hidden=true;more.classList.add('is-end');more.setAttribute('aria-disabled','true');more.setAttribute('aria-busy','false');more.textContent='আরও দেখুন';return;
   }
   box.innerHTML=shown.map(p=>{
     const url=postViewUrl(p),isLoved=loved.includes(String(p.id)),isSaved=memories.some(x=>String(x.id)===String(p.id)),count=Number(likeCounts[p.id]??p.likes),owner=canEdit(p),badges=((p.authorRole==='founder'||p.authorUsername==='mahmud-sohel')?'<span class="founder-badge">প্রতিষ্ঠাতা</span>':p.authorRole==='admin'?'<span class="admin-badge">অ্যাডমিন</span>':'')+(p.status==='pending_review'||p.status==='published_flagged'?'<span class="review-badge">পর্যালোচনাধীন</span>':'')+(p.demo?'<span class="demo-badge">নমুনা</span>':'');
@@ -2891,7 +2900,7 @@ function renderPosts(){
       +'<div class="post-footer"><div class="post-actions"><button class="action-btn '+(isLoved?'active':'')+'" type="button" data-action="bd-react-v814" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('heart')+'</span><span>'+toBn(count)+'</span></button><button class="action-btn" type="button" data-action="bd-comment-v814" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('comment')+'</span><span>'+toBn(p.comments||0)+'</span></button><button class="action-btn" type="button" data-action="share" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('share')+'</span><span>শেয়ার</span></button><button class="action-btn '+(isSaved?'active':'')+'" type="button" data-action="save" data-id="'+esc(p.id)+'"><span class="action-icon">'+icon('bookmark')+'</span><span>সেভ</span></button></div></div>'
       +'<div class="comment-box" data-comment-box="'+esc(p.id)+'"><textarea placeholder="মন্তব্য লিখুন..."></textarea><div class="comment-row"><button class="ghost-btn" type="button" data-action="bd-cancel-comment-v814" data-id="'+esc(p.id)+'">বাতিল</button><button class="primary-btn" type="button" data-action="bd-submit-comment-v814" data-id="'+esc(p.id)+'">মন্তব্য করুন</button></div><div class="comment-list" data-comments-list="'+esc(p.id)+'"></div></div></article>';
   }).join('');
-  const more=document.getElementById('loadMoreBtn');more.hidden=false;more.classList.toggle('is-end',visible>=list.length);more.setAttribute('aria-disabled',visible>=list.length?'true':'false');shown.forEach(p=>renderComments(p.id));
+  const more=document.getElementById('loadMoreBtn'),atEnd=visible>=list.length;more.hidden=atEnd;more.classList.toggle('is-end',atEnd);more.setAttribute('aria-disabled',atEnd?'true':'false');more.setAttribute('aria-busy','false');more.textContent='আরও দেখুন';shown.forEach(p=>renderComments(p.id));
   requestAnimationFrame(openRequestedPost);
 }
 function findPost(id){return posts.find(p=>String(p.id)===String(id))}
@@ -2998,7 +3007,21 @@ masterPostShell?.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&masterPostShell?.classList.contains('open'))closePostViewer()});
 addEventListener('popstate',()=>{const id=new URLSearchParams(location.search).get('post');if(id)openRequestedPost();else closePostViewer(false)});
 document.addEventListener('click',e=>{if(!postActionBoard.contains(e.target)&&!e.target.closest('[data-post-menu]'))closePostActionBoard()});addEventListener('scroll',closePostActionBoard,{passive:true});addEventListener('resize',closePostActionBoard);
-document.getElementById('loadMoreBtn').addEventListener('click',()=>{const total=filteredPosts().length;if(visible>=total){toast('এই মুহূর্তে আর কোনো লেখা নেই।');return}visible+=20;renderPosts()});
+document.getElementById('loadMoreBtn').addEventListener('click',()=>{
+  const button=document.getElementById('loadMoreBtn'),box=document.getElementById('postList'),total=filteredPosts().length;
+  if(button.dataset.loading==='1')return;
+  if(visible>=total){button.hidden=true;return}
+  button.dataset.loading='1';button.setAttribute('aria-busy','true');button.disabled=true;button.innerHTML='<span class="bd-load-spinner" aria-hidden="true"></span><span>লোড হচ্ছে…</span>';
+  const oldNodes=Array.from(box.children),oldIds=new Set(oldNodes.map(n=>String(n.dataset?.post||'')).filter(Boolean));
+  setTimeout(()=>{
+    visible=Math.min(total,visible+20);
+    renderPosts();
+    const rendered=Array.from(box.children),fresh=rendered.filter(n=>{const id=String(n.dataset?.post||'');return id&&!oldIds.has(id)}).slice(0,20);
+    if(oldNodes.length&&fresh.length)box.replaceChildren(...oldNodes,...fresh);
+    button.dataset.loading='0';button.disabled=false;button.setAttribute('aria-busy','false');button.textContent='আরও দেখুন';
+    const done=visible>=filteredPosts().length;button.hidden=done;button.classList.toggle('is-end',done);button.setAttribute('aria-disabled',done?'true':'false');
+  },260);
+});
 document.getElementById('categoryFilter').addEventListener('change',e=>{category=e.target.value;visible=20;renderPosts()});
 document.getElementById('sortFilter').addEventListener('change',e=>{sort=e.target.value;visible=20;renderPosts()});
 const moderationTerms=[...((window.BHUBONDANGA_BLOCKED_TERMS&&window.BHUBONDANGA_BLOCKED_TERMS.length)?window.BHUBONDANGA_BLOCKED_TERMS:["শালা","শালী","হারামজাদা","হারামজাদী","হারামির বাচ্চা","শুয়োর","শুয়োর","শুয়ার","শুয়ার","শুয়োরের বাচ্চা","শুয়োরের বাচ্চা","শুয়ারের বাচ্চা","শুয়ারের বাচ্চা","কুত্তা","খানকি","খানকির পোলা","খানকির ছেলে","মাগী","বেশ্যা","চোদা","চুদি","চুদ","চোদন","চোদা চুদি","চোদাচুদি","মাদারচোদ","মাদারচোদা","বাঞ্চোদ","বাইঞ্চদ","বোকাচোদা","বাল","গুদ"])];
