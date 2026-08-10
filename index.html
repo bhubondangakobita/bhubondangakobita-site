@@ -895,7 +895,7 @@ function authUI(){const logged=!!state.session,who=identity(),privateNames=['mes
 async function resolveAuth(){let session=null;if(client){try{session=(await client.auth.getSession()).data?.session||null}catch(_){session=null}}state.session=session;if(session){state.role=await getRole(session.user.id,session.user);state.profile=await getProfile(session.user.id)}else{const l=legacyUser();state.role=String(l?.role||'visitor').toLowerCase();state.profile=l?{id:l.id||l.uid,username:l.username||l.slug,display_name:l.name||l.displayName,avatar_url:l.avatar||l.photo}:null}await founderId();try{W.__BD_IDENTITY=identity();W.__BD_LIVE_SESSION=state.session;W.__BD_LIVE_ROLE=state.role;D.dispatchEvent(new CustomEvent('bd:auth-ready',{detail:{session:state.session,identity:W.__BD_IDENTITY,role:state.role}}))}catch(_){}authUI();return state}
 function typeLabel(type){return({poem:'কবিতা',prolap:'ছোট কথার প্রলাপ',recitation:'আবৃত্তি',environment:'পরিবেশের কথা',letters:'চিঠিপত্র',children:'শিশুতোষ',midnight:'মধ্যরাতের প্রলাপ',song:'গান',songs:'গান'})[type]||'কবিতা'}
 function normalizeType(raw){const s=String(raw||'poem').toLowerCase();if(s.includes('midnight')||s.includes('মধ্যরাত'))return'midnight';if(s.includes('song')||s.includes('গান'))return'song';if(s.includes('prolap')||s.includes('প্রলাপ'))return'prolap';if(s.includes('recitation')||s.includes('আবৃত্তি'))return'recitation';if(s.includes('environment')||s.includes('পরিবেশ'))return'environment';if(s.includes('letter')||s.includes('চিঠি'))return'letters';if(s.includes('children')||s.includes('শিশু'))return'children';return'poem'}
-const blocked=["খানকির পোলা","khankir pola","খানকির ছেলে","khankir chele","মাগির ছেলে","magir chele","মাগির পোলা","magir pola","হারামের বাচ্চা","haramer baccha","হারামজাদা","haramjada","হারামজাদী","haramjadi","বেশ্যা","beshya","মাগি","magi","খানকি","khanki","চোদাচুদি","chodachudi","চোদ","chod","চোদন","chodon","চোদা","choda","চুদি","chudi","মাদারচোদ","madarchod","মাদারচোদা","madarchoda","বাঞ্চোদ","banchod","বোকাচোদ","bokachod","বোকাচোদা","bokachoda","গুদ","gud","লাউড়া","laura","বাড়া","bara","খানকির পুত","khankir put","মাগির পুত","magir put","নটির পুত","notir put","চুত মারানির পুত","chut maranir put","খানকি মাগির পুত","khanki magir put","খানকি মাগির ঝি","khanki magir jhi","মাগির ঝি","magir jhi"];
+const blocked=["খানকির পোলা","khankir pola","খানকির ছেলে","khankir chele","মাগির ছেলে","magir chele","মাগির পোলা","magir pola","হারামের বাচ্চা","haramer baccha","হারামজাদা","haramjada","হারামজাদী","haramjadi","বেশ্যা","beshya","মাগি","magi","খানকি","khanki","চোদাচুদি","chodachudi","চোদ","chod","চোদন","chodon","চোদা","choda","চুদি","chudi","মাদারচোদ","madarchod","মাদারচোদা","madarchoda","বাঞ্চোদ","banchod","বোকাচোদ","bokachod","বোকাচোদা","bokachoda","গুদ","gud","লাউড়া","laura","বাড়া","bara","খানকির পুত","khankir put","মাগির পুত","magir put","নটির পুত","notir put","চুত মারানির পুত","chut maranir put","খানকি মাগির পুত","khanki magir put","খানকি মাগির ঝি","khanki magir jhi","মাগির ঝি","magir jhi","fuck","fuck you","fuck off","fucking","fucker","motherfucker","mother fucker","asshole","bitch","son of a bitch","dickhead","bullshit"];
 function normalizeBlockedText(value){return String(value||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim()}
 function exactBlockedTerms(value){const words=normalizeBlockedText(value).split(' ').filter(Boolean),found=[];for(const term of blocked){const tw=normalizeBlockedText(term).split(' ').filter(Boolean);if(!tw.length)continue;let hit=false;for(let i=0;i<=words.length-tw.length&&!hit;i++){hit=tw.every((w,j)=>words[i+j]===w)}if(hit)found.push(term)}return[...new Set(found)]}
 function flagged(text){return exactBlockedTerms(text).length>0}
@@ -5486,7 +5486,7 @@ html[data-theme="dark"] #mobileMoreMenu.bd48-open>button:not(.bd48-more-close){
 </style>
 <script id="bd-v852-index-final-lock-js">
 (()=>{'use strict';
-const TERMS=["খানকির পোলা","khankir pola","খানকির ছেলে","khankir chele","মাগির ছেলে","magir chele","মাগির পোলা","magir pola","হারামের বাচ্চা","haramer baccha","হারামজাদা","haramjada","হারামজাদী","haramjadi","বেশ্যা","beshya","মাগি","magi","খানকি","khanki","চোদাচুদি","chodachudi","চোদ","chod","চোদন","chodon","চোদা","choda","চুদি","chudi","মাদারচোদ","madarchod","মাদারচোদা","madarchoda","বাঞ্চোদ","banchod","বোকাচোদ","bokachod","বোকাচোদা","bokachoda","গুদ","gud","লাউড়া","laura","বাড়া","bara","খানকির পুত","khankir put","মাগির পুত","magir put","নটির পুত","notir put","চুত মারানির পুত","chut maranir put","খানকি মাগির পুত","khanki magir put","খানকি মাগির ঝি","khanki magir jhi","মাগির ঝি","magir jhi"];
+const TERMS=["খানকির পোলা","khankir pola","খানকির ছেলে","khankir chele","মাগির ছেলে","magir chele","মাগির পোলা","magir pola","হারামের বাচ্চা","haramer baccha","হারামজাদা","haramjada","হারামজাদী","haramjadi","বেশ্যা","beshya","মাগি","magi","খানকি","khanki","চোদাচুদি","chodachudi","চোদ","chod","চোদন","chodon","চোদা","choda","চুদি","chudi","মাদারচোদ","madarchod","মাদারচোদা","madarchoda","বাঞ্চোদ","banchod","বোকাচোদ","bokachod","বোকাচোদা","bokachoda","গুদ","gud","লাউড়া","laura","বাড়া","bara","খানকির পুত","khankir put","মাগির পুত","magir put","নটির পুত","notir put","চুত মারানির পুত","chut maranir put","খানকি মাগির পুত","khanki magir put","খানকি মাগির ঝি","khanki magir jhi","মাগির ঝি","magir jhi","fuck","fuck you","fuck off","fucking","fucker","motherfucker","mother fucker","asshole","bitch","son of a bitch","dickhead","bullshit"];
 const norm=v=>String(v||'').normalize('NFKC').replace(/[​-‍﻿]/g,'').toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim();
 const exact=v=>{const words=norm(v).split(' ').filter(Boolean),out=[];for(const term of TERMS){const t=norm(term).split(' ').filter(Boolean);for(let i=0;i<=words.length-t.length;i++){if(t.every((w,j)=>words[i+j]===w)){out.push(term);break}}}return [...new Set(out)]};
 window.BHUBONDANGA_BLOCKED_TERMS=TERMS.slice();window.BhubondangaModerationScan=exact;
@@ -7261,6 +7261,184 @@ function enhanceDeck(detail){
 const mediaObserver=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1){if(n.matches?.('.bd878-media-detail'))enhanceDeck(n);qa('.bd878-media-detail',n).forEach(enhanceDeck)}});
 mediaObserver.observe(D.body,{childList:true,subtree:true});
 qa('.bd878-media-detail').forEach(enhanceDeck);
+})();
+</script>
+
+
+
+<!-- BHUBONDANGA V8.101 SURGICAL FINAL LAYER — 2026-08-10
+     Scope only: exact English moderation additions, non-locking modern reactions,
+     and Facebook-style inline photo/video continuation with reactions.
+     Existing Supabase URLs/keys/schema/RLS/routing/layout remain untouched. -->
+<style id="bd-v8101-reaction-media-surgical-css">
+/* Retire only legacy reaction surfaces. Their data/Supabase contracts remain untouched. */
+#bd31ReactionTray,#bd64ReactionTray,#bdV814ReactionTray,.bd-v814-picker,.bd-index-reaction-picker{display:none!important;visibility:hidden!important;pointer-events:none!important}
+#bd101ReactionTray{position:fixed;z-index:2147483646;display:none;align-items:center;gap:3px;width:max-content;max-width:calc(100vw - 16px);padding:6px 8px;border:1px solid rgba(115,126,169,.20);border-radius:999px;background:rgba(255,255,255,.985);box-shadow:0 14px 38px rgba(30,43,86,.25);backdrop-filter:blur(16px) saturate(145%);-webkit-backdrop-filter:blur(16px) saturate(145%);touch-action:manipulation;-webkit-user-select:none;user-select:none}
+#bd101ReactionTray.open{display:flex;visibility:visible;pointer-events:auto}
+html[data-theme="dark"] #bd101ReactionTray{border-color:rgba(183,197,248,.20);background:rgba(17,29,51,.985);box-shadow:0 16px 42px rgba(0,0,0,.48)}
+#bd101ReactionTray button{position:relative;width:42px;height:42px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;background:transparent;cursor:pointer;transition:transform .13s ease,background .13s ease}
+#bd101ReactionTray button:hover,#bd101ReactionTray button:focus-visible{transform:translateY(-6px) scale(1.17);background:rgba(122,127,220,.08);outline:0}
+#bd101ReactionTray .bd101-face{width:34px;height:34px;display:grid;place-items:center;font:28px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
+#bd101ReactionTray .bd101-face img{width:34px;height:34px;display:block;object-fit:contain;pointer-events:none}
+#bd101ReactionTray .bd101-tip{position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%);display:none;padding:3px 7px;border-radius:7px;background:rgba(17,24,39,.92);color:#fff;font:700 9px/1.25 system-ui,sans-serif;white-space:nowrap;pointer-events:none}
+#bd101ReactionTray button:hover .bd101-tip,#bd101ReactionTray button:focus-visible .bd101-tip{display:block}
+[data-bd101-react-main]{touch-action:manipulation!important;-webkit-user-select:none;user-select:none}
+[data-bd101-react-main] .bd101-main-face{width:21px;height:21px;display:grid;place-items:center;font:18px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
+[data-bd101-react-main] .bd101-main-face img{width:21px;height:21px;display:block;object-fit:contain}
+
+/* Media remains in normal document flow: no backdrop, no body lock, no fixed viewer. */
+.bd878-media-detail{isolation:isolate}
+.bd101-media-actions{display:flex;align-items:center;gap:8px;margin:9px 0 1px;padding:7px 9px;border:1px solid var(--border);border-radius:12px;background:var(--surface-strong);box-shadow:var(--shadow-soft)}
+.bd101-media-react{min-height:38px;padding:6px 11px;border:0;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:transparent;color:var(--text-soft);font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif;font-size:10px;font-weight:800;touch-action:manipulation}
+.bd101-media-react:hover,.bd101-media-react.active{background:var(--rainbow-soft);color:var(--primary)}
+.bd101-media-react .bd101-media-face{width:22px;height:22px;display:grid;place-items:center;font:19px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif}
+.bd101-media-react .bd101-media-face img{width:22px;height:22px;display:block;object-fit:contain}
+.bd100-reel-item .bd101-reel-actions{position:absolute;right:11px;bottom:68px;z-index:8;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bd100-reel-item .bd101-media-react{width:52px;min-height:58px;padding:6px 3px;border:1px solid rgba(255,255,255,.18);border-radius:16px;flex-direction:column;gap:3px;background:rgba(0,0,0,.48);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.24);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:9px}
+.bd100-reel-item .bd101-media-react:hover,.bd100-reel-item .bd101-media-react.active{background:rgba(0,0,0,.64);color:#fff}
+.bd100-reel-item .bd101-media-react .bd101-media-face{width:28px;height:28px;font-size:25px}
+.bd100-reel-item .bd101-media-react .bd101-media-face img{width:28px;height:28px}
+.bd101-media-post-title{max-width:180px;padding:5px 8px;border-radius:9px;background:rgba(0,0,0,.48);color:#fff;font:600 10px/1.35 'Noto Sans Bengali','Hind Siliguri',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+@media(max-width:620px){#bd101ReactionTray{gap:1px;padding:5px 6px}#bd101ReactionTray button{width:39px;height:39px}#bd101ReactionTray .bd101-face,#bd101ReactionTray .bd101-face img{width:31px;height:31px}.bd100-reel-item .bd101-reel-actions{right:8px;bottom:62px}}
+</style>
+<script id="bd-v8101-reaction-media-surgical-js">
+(()=>{'use strict';
+if(window.__BD_V8101_SURGICAL__)return;window.__BD_V8101_SURGICAL__=true;
+const W=window,D=document,q=(s,r=D)=>r?.querySelector?.(s)||null,qa=(s,r=D)=>[...(r?.querySelectorAll?.(s)||[])];
+const RX={like:['👍','লাইক'],love:['❤️','ভালোবাসা'],care:['🥰','কেয়ার'],haha:['😂','হাহা'],wow:['😮','ওয়াও'],sad:['😢','দুঃখ'],angry:['😡','রাগ']};
+const state=new Map();let pressTimer=0,hoverTimer=0,suppressClick=false,scanQueued=false;
+const client=()=>W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null;
+const toast=m=>{try{W.BhubondangaToast?.(m)}catch(_){}if(!W.BhubondangaToast){const t=q('#toast');if(t){t.textContent=m;t.style.display='block';clearTimeout(t.__bd101);t.__bd101=setTimeout(()=>t.style.display='none',2400)}}};
+const login=()=>{const next=location.pathname+location.search+location.hash;location.href='login.html?next='+encodeURIComponent(next)};
+function reactionSrc(type){return W.BD52_REACTION_SRC?.[type]||''}
+function face(type,cls='bd101-main-face'){const src=reactionSrc(type);return `<span class="${cls}">${src?`<img alt="" aria-hidden="true" src="${src}">`:RX[type]?.[0]||'👍'}</span>`}
+function postId(card){return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post-card')||card?.getAttribute?.('data-post-id')||'')}
+function cardOf(el){return el?.closest?.('[data-post-card],[data-post],[data-post-id],article.post,.post-card')||null}
+function titleOf(card){return q('.post-title',card)?.textContent?.trim()||q('.post-body',card)?.textContent?.trim()?.slice(0,70)||'ভিডিও'}
+function cardsFor(id){return qa('[data-post-card],[data-post],[data-post-id],article.post,.post-card').filter(c=>postId(c)===String(id))}
+function current(id){return state.get(String(id))||''}
+function setMain(btn,type){if(!btn)return;btn.dataset.bd101Current=type||'';btn.classList.toggle('active',!!type);const label=type?(RX[type]?.[1]||'লাইক'):'লাইক';btn.innerHTML=face(type||'like')+`<span>${label}</span>`}
+function setMedia(btn,type){if(!btn)return;btn.dataset.bd101Current=type||'';btn.classList.toggle('active',!!type);const label=type?(RX[type]?.[1]||'লাইক'):'লাইক';btn.innerHTML=face(type||'like','bd101-media-face')+`<span>${label}</span>`}
+function releaseLegacyReactionLock(){
+  ['#bd31ReactionTray','#bd64ReactionTray','#bdV814ReactionTray'].forEach(s=>{const n=q(s);if(n){n.classList.remove('open');n.style.display='none'}});
+  qa('.bd-v814-picker,.bd-index-reaction-picker').forEach(n=>n.classList.remove('open'));
+  const realOpen=q('#mobileDrawer.open,#leftDrawer.open,#rightMobileDrawer.open,#rightDrawer.open,.mobile-drawer.open,#bdPublishSheet.open,#bd35CommentSheet.open,.drawer-backdrop.show');
+  if(!realOpen)D.body.classList.remove('locked','drawer-open');
+}
+function convertButton(btn){
+  if(!btn||btn.id==='bd101ReactionTray')return;
+  const card=cardOf(btn),id=postId(card)||btn.getAttribute('data-bd31-react-main')||btn.getAttribute('data-bd76-react-main')||btn.getAttribute('data-bd101-react-main')||'';
+  if(id&&!btn.hasAttribute('data-bd101-react-main'))btn.setAttribute('data-bd101-react-main',id);
+  /* Removing only legacy listener hooks prevents several historical reaction engines from firing together. */
+  btn.removeAttribute('data-bd31-react-main');btn.removeAttribute('data-bd76-react-main');
+  if(!btn.dataset.bd101Current){const old=btn.dataset.current||'';if(RX[old])btn.dataset.bd101Current=old}
+}
+function scanButtons(root=D){
+  if(root?.matches?.('[data-bd31-react-main],[data-bd76-react-main]'))convertButton(root);
+  qa('[data-bd31-react-main],[data-bd76-react-main]',root).forEach(convertButton);
+}
+function queueScan(root=D){if(scanQueued)return;scanQueued=true;requestAnimationFrame(()=>{scanQueued=false;scanButtons(root)})}
+function ensureTray(){
+  let tray=q('#bd101ReactionTray');if(tray)return tray;
+  tray=D.createElement('div');tray.id='bd101ReactionTray';tray.setAttribute('role','toolbar');tray.setAttribute('aria-label','প্রতিক্রিয়া বেছে নিন');
+  tray.innerHTML=Object.entries(RX).map(([k,v])=>`<button type="button" data-bd101-pick="${k}" aria-label="${v[1]}"><span class="bd101-face">${reactionSrc(k)?`<img alt="" aria-hidden="true" src="${reactionSrc(k)}">`:v[0]}</span><span class="bd101-tip">${v[1]}</span></button>`).join('');
+  D.body.appendChild(tray);return tray;
+}
+function closeTray(){const t=q('#bd101ReactionTray');if(t){t.classList.remove('open');t.__ctx=null}clearTimeout(hoverTimer)}
+function placeTray(tray,anchor){const r=anchor.getBoundingClientRect(),w=tray.offsetWidth||330,h=tray.offsetHeight||54;let left=r.left+(r.width-w)/2;left=Math.max(8,Math.min(innerWidth-w-8,left));let top=r.top-h-9;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+9);tray.style.left=Math.round(left)+'px';tray.style.top=Math.round(top)+'px'}
+function openTray(anchor){
+  if(!anchor)return;const id=anchor.dataset.bd101MediaReact||anchor.dataset.bd101ReactMain||postId(cardOf(anchor));if(!id)return;
+  const tray=ensureTray();tray.__ctx={id:String(id),anchor,card:cardOf(anchor)};tray.style.display='flex';tray.classList.add('open');requestAnimationFrame(()=>placeTray(tray,anchor));
+}
+async function authUser(){try{const c=client(),r=c?.auth?.getSession?await c.auth.getSession():null;return r?.data?.session?.user||W.__BD_LIVE_SESSION?.user||null}catch{return W.__BD_LIVE_SESSION?.user||null}}
+async function fetchRows(id){
+  const c=client();if(!c)return[];
+  try{const r=await c.rpc('get_post_social',{target_post:String(id)});if(!r.error){const d=Array.isArray(r.data)?r.data[0]:r.data;if(Array.isArray(d?.reactions))return d.reactions;if(Array.isArray(d?.reaction_rows))return d.reaction_rows}}catch(_){}
+  for(const table of ['post_reactions','reactions']){try{const r=await c.from(table).select('*').eq('post_id',String(id));if(!r.error&&Array.isArray(r.data))return r.data}catch(_){} }
+  return[];
+}
+function updateSummary(id,rows){
+  const counts={};for(const r of rows||[]){const t=r.reaction||r.type||r.reaction_type;if(RX[t])counts[t]=(counts[t]||0)+1}
+  const top=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]).slice(0,3),total=Object.values(counts).reduce((a,b)=>a+b,0);
+  for(const card of cardsFor(id)){
+    card.__bd31Rows=card.__bd31Rows||{};card.__bd31Rows.reactions=rows||[];
+    const s=q('[data-bd31-react-summary],.bd31-reaction-summary,.bd-v814-summary-btn',card);if(!s)continue;
+    if(!total){s.innerHTML='';s.style.display='none';continue}s.style.removeProperty('display');
+    s.innerHTML=`<span class="bd31-summary-icons">${top.map(t=>reactionSrc(t)?`<img alt="" aria-hidden="true" src="${reactionSrc(t)}">`:`<span>${RX[t][0]}</span>`).join('')}</span><span>${total.toLocaleString('bn-BD')}</span>`;
+  }
+}
+async function syncPost(id){
+  const [user,rows]=await Promise.all([authUser(),fetchRows(id)]);let mine='';if(user)mine=(rows.find(r=>String(r.user_id||r.profile_id||r.author_id||'')===String(user.id))?.reaction)||'';
+  if(mine&&!RX[mine])mine='';state.set(String(id),mine);cardsFor(id).forEach(card=>qa('[data-bd101-react-main]',card).forEach(b=>setMain(b,mine)));qa(`[data-bd101-media-react="${CSS.escape(String(id))}"]`).forEach(b=>setMedia(b,mine));updateSummary(id,rows);return mine;
+}
+async function persist(id,newType,remove,oldType){
+  const c=client(),user=await authUser();if(!user){login();return false}if(!c){toast('অনলাইন সংযোগ পাওয়া যায়নি।');return false}
+  const chosen=remove?(oldType||newType):newType;
+  try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:chosen});if(!r.error)return true}catch(_){}
+  for(const table of ['post_reactions','reactions']){
+    try{
+      let find=await c.from(table).select('*').eq('post_id',String(id)).eq('user_id',user.id).maybeSingle();if(find.error&&String(find.error.code||'')!=='PGRST116')continue;
+      const row=find.data;
+      if(remove){if(row){const del=await c.from(table).delete().eq('post_id',String(id)).eq('user_id',user.id);if(del.error)continue}return true}
+      if(row){let up=await c.from(table).update({reaction:newType,updated_at:new Date().toISOString()}).eq('post_id',String(id)).eq('user_id',user.id);if(!up.error)return true;up=await c.from(table).update({type:newType,updated_at:new Date().toISOString()}).eq('post_id',String(id)).eq('user_id',user.id);if(!up.error)return true}
+      else{let ins=await c.from(table).insert({post_id:String(id),user_id:user.id,reaction:newType});if(!ins.error)return true;ins=await c.from(table).insert({post_id:String(id),user_id:user.id,type:newType});if(!ins.error)return true}
+    }catch(_){}
+  }
+  return false;
+}
+function paintOptimistic(id,type){state.set(String(id),type||'');cardsFor(id).forEach(card=>qa('[data-bd101-react-main]',card).forEach(b=>setMain(b,type)));qa(`[data-bd101-media-react="${CSS.escape(String(id))}"]`).forEach(b=>setMedia(b,type))}
+async function choose(id,type,{toggleMain=false}={}){
+  id=String(id||'');if(!id||!RX[type])return;const user=await authUser();if(!user){closeTray();releaseLegacyReactionLock();login();return}
+  const old=current(id),remove=toggleMain&&!!old;const next=remove?'':type;
+  if(!toggleMain&&old===type){closeTray();releaseLegacyReactionLock();return}
+  paintOptimistic(id,next);closeTray();releaseLegacyReactionLock();
+  const ok=await persist(id,type,remove,old);if(!ok){paintOptimistic(id,old);toast('প্রতিক্রিয়া সংরক্ষণ করা যায়নি।');return}
+  try{await syncPost(id)}catch(_){}
+}
+function sourceOf(v){return v?.currentSrc||v?.src||v?.querySelector?.('source')?.src||''}
+function sameSrc(a,b){try{return new URL(a,location.href).href===new URL(b,location.href).href}catch{return a===b}}
+function originalVideos(){return qa('#postList video').filter(v=>!v.closest('.bd878-media-detail,.bd100-reel-deck')&&sourceOf(v))}
+function sourceCard(src){for(const v of originalVideos())if(sameSrc(sourceOf(v),src))return cardOf(v);return null}
+function addMediaButton(host,id,card,reel=false){
+  if(!host||!id||q(':scope > .bd101-reel-actions, :scope > .bd101-media-actions',host))return;
+  const wrap=D.createElement('div');wrap.className=reel?'bd101-reel-actions':'bd101-media-actions';
+  const b=D.createElement('button');b.type='button';b.className='bd101-media-react';b.setAttribute('data-bd101-media-react',String(id));b.setAttribute('aria-label','প্রতিক্রিয়া দিন');setMedia(b,current(id));wrap.appendChild(b);
+  if(reel){const title=D.createElement('span');title.className='bd101-media-post-title';title.textContent=titleOf(card);wrap.appendChild(title);host.appendChild(wrap)}
+  else{const form=q('.bd878-media-comment-form',host);host.insertBefore(wrap,form||null)}
+}
+function extendDeck(deck){
+  if(!deck)return;const detail=deck.closest('.bd878-media-detail'),detailCard=cardOf(detail);const seen=new Set(qa('.bd100-reel-item video',deck).map(sourceOf).filter(Boolean));
+  for(const orig of originalVideos()){
+    const src=sourceOf(orig);if(!src||[...seen].some(x=>sameSrc(x,src)))continue;seen.add(src);
+    const item=D.createElement('section');item.className='bd100-reel-item';const v=D.createElement('video');v.src=src;v.controls=true;v.playsInline=true;v.preload='metadata';v.muted=false;v.defaultMuted=false;v.volume=1;const poster=orig.getAttribute('poster');if(poster)v.poster=poster;item.appendChild(v);const badge=D.createElement('span');badge.className='bd100-reel-count';item.appendChild(badge);deck.appendChild(item);if(seen.size>=20)break;
+  }
+  const items=qa('.bd100-reel-item',deck),total=items.length;
+  items.forEach((item,i)=>{const v=q('video',item),src=sourceOf(v),card=sourceCard(src)||detailCard,id=postId(card);const badge=q('.bd100-reel-count',item);if(badge)badge.textContent=(i+1)+' / '+total;if(id){item.dataset.bd101PostId=id;addMediaButton(item,id,card,true);if(!state.has(String(id)))syncPost(id).catch(()=>{})}});
+}
+function decorateMedia(root=D){
+  qa('.bd100-reel-deck',root).forEach(extendDeck);if(root?.matches?.('.bd100-reel-deck'))extendDeck(root);
+  const details=[];if(root?.matches?.('.bd878-media-detail'))details.push(root);details.push(...qa('.bd878-media-detail',root));
+  details.forEach(detail=>{const deck=q('.bd100-reel-deck',detail);if(deck){extendDeck(deck);return}const media=q('img,video',detail),card=cardOf(detail)||sourceCard(sourceOf(media)),id=postId(card);if(id){addMediaButton(detail,id,card,false);if(!state.has(String(id)))syncPost(id).catch(()=>{})}})
+}
+function boot(){scanButtons();decorateMedia();qa('[data-bd101-react-main]').forEach(b=>{const id=b.dataset.bd101ReactMain||postId(cardOf(b));if(id&&!state.has(String(id)))syncPost(id).catch(()=>{})});releaseLegacyReactionLock()}
+
+/* New reaction interactions are isolated from every historical data-bd31/data-bd76 listener. */
+D.addEventListener('pointerdown',e=>{
+  const b=e.target.closest?.('[data-bd101-react-main],[data-bd101-media-react]');if(!b||e.button>0)return;clearTimeout(pressTimer);suppressClick=false;
+  if(e.pointerType==='mouse')return;pressTimer=setTimeout(()=>{suppressClick=true;openTray(b)},300)
+},true);
+D.addEventListener('pointerup',()=>clearTimeout(pressTimer),true);D.addEventListener('pointercancel',()=>clearTimeout(pressTimer),true);
+D.addEventListener('mouseover',e=>{const b=e.target.closest?.('[data-bd101-react-main],[data-bd101-media-react]');if(!b||e.relatedTarget?.closest?.('[data-bd101-react-main],[data-bd101-media-react]')===b)return;clearTimeout(hoverTimer);hoverTimer=setTimeout(()=>openTray(b),320)},true);
+D.addEventListener('click',e=>{
+  const pick=e.target.closest?.('[data-bd101-pick]');if(pick){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const t=q('#bd101ReactionTray'),ctx=t?.__ctx;if(ctx)choose(ctx.id,pick.dataset.bd101Pick);return}
+  const b=e.target.closest?.('[data-bd101-react-main],[data-bd101-media-react]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(suppressClick){suppressClick=false;return}const id=b.dataset.bd101MediaReact||b.dataset.bd101ReactMain||postId(cardOf(b));const old=current(id);choose(id,old||'like',{toggleMain:true})
+},true);
+D.addEventListener('pointerdown',e=>{const t=q('#bd101ReactionTray');if(t?.classList.contains('open')&&!e.target.closest('#bd101ReactionTray,[data-bd101-react-main],[data-bd101-media-react]')){closeTray();releaseLegacyReactionLock()}},true);
+D.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTray();releaseLegacyReactionLock()}},true);
+W.addEventListener('resize',closeTray,{passive:true});W.addEventListener('scroll',closeTray,{passive:true,capture:true});
+const mo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='attributes'){convertButton(m.target);continue}for(const n of m.addedNodes||[])if(n.nodeType===1){queueScan(n);decorateMedia(n)}}});
+mo.observe(D.body,{childList:true,subtree:true,attributes:true,attributeFilter:['data-bd31-react-main','data-bd76-react-main']});
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
 
