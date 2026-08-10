@@ -4325,24 +4325,37 @@ async function bd35SheetClick(e){const sheet=e.currentTarget,card=sheet.__card;i
 async function bd35SheetSubmit(e){const sheet=e.currentTarget,card=sheet.__card;if(!card)return;const f=e.target;if(!f.matches('.bd35-comment-composer,.bd35-reply-form'))return;e.preventDefault();const input=f.querySelector('input'),body=input?.value.trim();if(!body)return;try{await insertComment(pid(card),body,f.dataset.parent||'');input.value='';await bd35Render();await refresh(card)}catch(err){if(err?.message!=='login')alert(err?.message||'মন্তব্য করা যায়নি')}}
 
 W.addEventListener('pointerdown',e=>{if(e.target.closest('.bd31-social,#bd31ReactionTray'))return;if(!e.target.closest('#bd31ReactionTray'))closeTray()},true);
-W.addEventListener('click',async e=>{const main=e.target.closest('[data-bd31-react-main]'),pick=e.target.closest('[data-bd31-tray-pick]'),rs=e.target.closest('[data-bd31-react-summary]'),cs=e.target.closest('[data-bd31-comments],[data-bd31-comment-summary]'),sh=e.target.closest('[data-bd31-share]'),more=e.target.closest('[data-bd31-more]'),cl=e.target.closest('[data-bd31-comment-like]'),reply=e.target.closest('[data-bd31-reply]');if(!(main||pick||rs||cs||sh||more||cl||reply))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(main){const card=main.closest('[data-bd31-ready="1"]');if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}const snap=bd47ScrollSnapshot(card),id=pid(card);try{main.blur?.()}catch(_){}if(id){await toggleReaction(id,'like');await new Promise(r=>setTimeout(r,180));await refresh(card)}bd47RestoreScroll(snap);return}if(pick){const t=ensureTray(),card=t.__card,id=t.dataset.pid,type=pick.dataset.bd31TrayPick,snap=bd47ScrollSnapshot(card);closeTray();try{pick.blur?.()}catch(_){}if(card&&id){await toggleReaction(id,type);await new Promise(r=>setTimeout(r,180));await refresh(card)}bd47RestoreScroll(snap);return}if(rs){const card=rs.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await showReactors(card);bd47RestoreScroll(snap);return}if(cs){const card=cs.closest('[data-bd31-ready="1"]');if(!card)return;const snap=bd47ScrollSnapshot(card);if(!card.classList.contains('bd-inline-expanded')){card.classList.add('bd-inline-expanded','expanded');card.querySelector('.post-body')?.classList.remove('collapsed')}const p=card.querySelector('[data-bd31-comment-panel]');if(p){p.hidden=!p.hidden;if(!p.hidden)await renderComments(card,false)}bd47RestoreScroll(snap);return}if(sh){await share(sh.dataset.bd31Share);return}if(more){const card=more.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await renderComments(card,true);bd47RestoreScroll(snap);return}if(cl){const card=cl.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await toggleCLike(cl.dataset.bd31CommentLike);await renderComments(card,false);bd47RestoreScroll(snap);return}if(reply){const cmt=reply.closest('[data-bd31-comment]'),f=cmt?.querySelector(':scope > div > .bd31-reply-form'),g=cmt?.querySelector('[data-bd54-replies],.bd31-replies');if(f)f.classList.toggle('open');if(g&&g.hidden){g.hidden=false;g.classList.add('bd76-replies-open');const rb=g.previousElementSibling;if(rb?.matches?.('.bd54-view-replies,.bd76-reply-count,.bd71-reply-count,.bd870-reply-count')){rb.setAttribute('aria-expanded','true');rb.textContent='রিপ্লাই লুকান'}}return}},true);
+W.addEventListener('click',async e=>{const main=e.target.closest('[data-bd31-react-main]'),pick=e.target.closest('[data-bd31-tray-pick]'),rs=e.target.closest('[data-bd31-react-summary]'),cs=e.target.closest('[data-bd31-comments],[data-bd31-comment-summary]'),sh=e.target.closest('[data-bd31-share]'),more=e.target.closest('[data-bd31-more]'),cl=e.target.closest('[data-bd31-comment-like]'),reply=e.target.closest('[data-bd31-reply]');if(!(main||pick||rs||cs||sh||more||cl||reply))return;
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+ const restoreStable=snap=>{if(!snap)return;requestAnimationFrame(()=>{bd47RestoreScroll(snap);requestAnimationFrame(()=>bd47RestoreScroll(snap))})};
+ if(main){const card=main.closest('[data-bd31-ready="1"]');if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}const snap=bd47ScrollSnapshot(card),id=pid(card);try{main.blur?.()}catch(_){}if(id){await toggleReaction(id,'like');await new Promise(r=>setTimeout(r,180));await refresh(card)}restoreStable(snap);return}
+ if(pick){const t=ensureTray(),card=t.__card,id=t.dataset.pid,type=pick.dataset.bd31TrayPick,snap=bd47ScrollSnapshot(card);closeTray();try{pick.blur?.()}catch(_){}if(card&&id){await toggleReaction(id,type);await new Promise(r=>setTimeout(r,180));await refresh(card)}restoreStable(snap);return}
+ if(rs){const card=rs.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await showReactors(card);restoreStable(snap);return}
+ if(cs){const card=cs.closest('[data-bd31-ready="1"]');if(!card)return;const snap=bd47ScrollSnapshot(card),panel=card.querySelector('[data-bd31-comment-panel]');if(!panel)return;
+   const isSummary=cs.hasAttribute('data-bd31-comment-summary');
+   if(isSummary){panel.hidden=false;const opening=panel.dataset.bd76CommentsOpen!=='1';panel.dataset.bd76CommentsOpen=opening?'1':'0';panel.dataset.bd71CommentsOpen=opening?'1':'0';card.dataset.bd76CommentsOpen=opening?'1':'0';card.dataset.bd71CommentsOpen=opening?'1':'0';const list=panel.querySelector('.bd31-comments'),moreBtn=panel.querySelector('[data-bd31-more]');if(opening){await renderComments(card,false);if(list)list.hidden=false}else{if(list)list.hidden=true;if(moreBtn)moreBtn.hidden=true}}
+   else{panel.hidden=!panel.hidden;if(!panel.hidden){const rowsOpen=panel.dataset.bd76CommentsOpen==='1';if(rowsOpen)await renderComments(card,false);else{const list=panel.querySelector('.bd31-comments'),moreBtn=panel.querySelector('[data-bd31-more]');if(list)list.hidden=true;if(moreBtn)moreBtn.hidden=true}}}
+   restoreStable(snap);return}
+ if(sh){await share(sh.dataset.bd31Share);return}
+ if(more){const card=more.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await renderComments(card,true);restoreStable(snap);return}
+ if(cl){const card=cl.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await toggleCLike(cl.dataset.bd31CommentLike);await renderComments(card,false);restoreStable(snap);return}
+ if(reply){const cmt=reply.closest('[data-bd31-comment]');if(!cmt)return;const card=reply.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(cmt),f=cmt.querySelector(':scope > div > .bd31-reply-form'),g=cmt.querySelector('[data-bd54-replies],.bd31-replies');if(f){const opening=!f.classList.contains('open');f.classList.toggle('open',opening);if(g){g.hidden=!opening;g.classList.toggle('bd76-replies-open',opening);const rb=g.previousElementSibling;if(rb?.matches?.('.bd54-view-replies,.bd76-reply-count,.bd71-reply-count,.bd870-reply-count')){rb.setAttribute('aria-expanded',opening?'true':'false');const n=g.querySelectorAll(':scope > .bd31-comment,:scope > .bd35-comment-row').length||g.children.length;rb.textContent=opening?'রিপ্লাই লুকান':bn(n)+'টি রিপ্লাই দেখুন'}}}restoreStable(snap);return}
+},true);
 W.addEventListener('click',async e=>{
  const del=e.target.closest?.('[data-bd31-comment-delete]');if(!del)return;
  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
  const card=del.closest('[data-bd31-ready="1"]');if(!card)return;
  if(!confirm('এই মন্তব্যটি মুছে ফেলবেন?'))return;
- const snap=typeof bd47ScrollSnapshot==='function'?bd47ScrollSnapshot(card):null;
+ const snap=bd47ScrollSnapshot(card);
  try{
   await deleteComment(del.dataset.bd31CommentDelete,card);
   await renderComments(card,false);
   await refresh(card);
-  if(typeof bd47RestoreScroll==='function')bd47RestoreScroll(snap);
+  requestAnimationFrame(()=>{bd47RestoreScroll(snap);requestAnimationFrame(()=>bd47RestoreScroll(snap))});
   if(typeof W.toast==='function')W.toast('মন্তব্য মুছে ফেলা হয়েছে');
- }catch(err){
-  if(err?.message!=='login')alert(err?.message||'মন্তব্য মুছতে পারিনি');
- }
+ }catch(err){if(err?.message!=='login')alert(err?.message||'মন্তব্য মুছতে পারিনি')}
 },true);
-W.addEventListener('submit',async e=>{const f=e.target.closest('.bd31-comment-form,.bd31-reply-form');if(!f)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=f.closest('[data-bd31-ready="1"]'),input=f.querySelector('input'),body=input?.value.trim();if(!card||!body)return;try{await insertComment(pid(card),body,f.dataset.parent||'');input.value='';card.querySelector('[data-bd31-comment-panel]').hidden=false;await new Promise(r=>setTimeout(r,180));await renderComments(card,false);await refresh(card)}catch(err){if(err?.message!=='login')alert(err?.message||'মন্তব্য করা যায়নি')}},true);
+W.addEventListener('submit',async e=>{const f=e.target.closest('.bd31-comment-form,.bd31-reply-form');if(!f)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=f.closest('[data-bd31-ready="1"]'),input=f.querySelector('input'),body=input?.value.trim();if(!card||!body)return;const snap=bd47ScrollSnapshot(card);try{await insertComment(pid(card),body,f.dataset.parent||'');input.value='';const panel=card.querySelector('[data-bd31-comment-panel]');if(panel){panel.hidden=false;panel.dataset.bd76CommentsOpen='1';panel.dataset.bd71CommentsOpen='1';card.dataset.bd76CommentsOpen='1';card.dataset.bd71CommentsOpen='1'}await renderComments(card,false);await refresh(card);requestAnimationFrame(()=>{bd47RestoreScroll(snap);requestAnimationFrame(()=>bd47RestoreScroll(snap))})}catch(err){if(err?.message!=='login')alert(err?.message||'মন্তব্য করা যায়নি')}},true);
 D.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-bd31-react-main]')){e.preventDefault();const b=e.target.closest('[data-bd31-react-main]');openTray(b,b.closest('[data-bd31-ready="1"]'))}},true);
 allCards();const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){allCards(n);const c=n.matches?.('article.post,article.bd-live-post,.post-card')?n:null;if(c)install(c)}});mo.observe(D.body,{childList:true,subtree:true});setInterval(()=>allCards(),2500);
 })();
@@ -6689,6 +6702,9 @@ html[data-theme="dark"] .bd76-comment-gate{color:#c7c2ff!important}
 [data-bd76-comments-open="0"]>.bd31-comments{display:none!important}
 [data-bd76-comments-open="0"]>[data-bd31-more]{display:none!important}
 .bd31-replies:not(.bd76-replies-open),.bd35-comment-replies:not(.bd76-replies-open){display:none!important}
+.bd31-comment-panel,.bd31-comments,.bd31-comment,.bd31-replies,.bd35-comment-replies{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+.bd31-comment-panel{overflow-anchor:none!important;contain:layout style!important}
+.bd31-comments{overflow-anchor:none!important}
 .bd76-reply-count{border:0!important;background:transparent!important;color:#6b64c9!important;padding:2px 8px!important;margin:3px 0 5px!important;font:800 10px/1.5 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;cursor:pointer!important;text-align:left!important}
 html[data-theme="dark"] .bd76-reply-count{color:#c7c2ff!important}
 .bd76-react-stack{display:inline-flex!important;align-items:center!important;padding-left:2px!important}.bd76-react-face{width:21px!important;height:21px!important;min-width:21px!important;margin-left:-4px!important;border:1.5px solid var(--surface-solid,#fff)!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#fff!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:17px!important;line-height:1!important;box-shadow:0 1px 3px rgba(0,0,0,.10)!important}
@@ -6809,10 +6825,7 @@ let mutualMemo={uid:'',at:0,set:new Set()};
 async function mutualSet(){const me=uid(),c=db();if(!me||!c)return new Set();if(mutualMemo.uid===me&&Date.now()-mutualMemo.at<30000)return mutualMemo.set;try{const [a,b]=await Promise.all([c.from('follows').select('following_id').eq('follower_id',me).limit(1000),c.from('follows').select('follower_id').eq('following_id',me).limit(1000)]);if(!a.error&&!b.error){const f=new Set((a.data||[]).map(v=>String(v.following_id))),set=new Set((b.data||[]).map(v=>String(v.follower_id)).filter(v=>f.has(v)));mutualMemo={uid:me,at:Date.now(),set};return set}}catch{}return new Set()}
 async function commentSummaryText(rows){const roots=(rows||[]).filter(x=>!(x.parent_id||x.parent_comment_id||x.reply_to)),unique=[],seen=new Set();for(const x of roots){const id=String(x.author_id||x.user_id||'');if(id&&!seen.has(id)){seen.add(id);unique.push(x)}}if(!unique.length)return'';const me=uid(),mutual=await mutualSet();let fr=unique.find(x=>x.author_id&&mutual.has(String(x.author_id))&&String(x.author_id)!==me)||unique[0];const nm=String(xName(fr));return unique.length===1?nm+' মন্তব্য করেছেন':nm+' সহ '+bn(unique.length)+' জন মন্তব্য করেছেন'}
 async function syncComments(card){if(!card?.dataset?.bd31Ready)return;const rows=card.__bd31Rows?.comments||[],sum=$('[data-bd31-comment-summary],[data-bd76-comment-summary]',card),panel=$('[data-bd31-comment-panel]',card);if(sum){sum.hidden=!rows.length;if(rows.length){const txt=await commentSummaryText(rows);if(sum.textContent!==txt)sum.textContent=txt;sum.dataset.bd76Total=String(rows.length)}}if(!panel)return;panel.dataset.bd76CommentsOpen=panel.dataset.bd76CommentsOpen||'0';card.dataset.bd76CommentsOpen=panel.dataset.bd76CommentsOpen;const legacy=$('.bd71-comment-gate',panel);if(legacy)legacy.hidden=true;const list=$('.bd31-comments',panel),more=$('[data-bd31-more]',panel);if(panel.dataset.bd76CommentsOpen!=='1'){if(list)list.hidden=true;if(more)more.hidden=true}else if(list)list.hidden=false;replyFold(panel)}
-/* Comment button may open the panel, but the comment rows remain closed until the summary link is tapped. */
-W.addEventListener('pointerdown',e=>{const action=e.target.closest?.('[data-bd31-comments]');if(action){const card=action.closest('[data-bd31-ready="1"]'),panel=card&&$('[data-bd31-comment-panel]',card);if(panel){panel.dataset.bd76CommentsOpen='0';panel.dataset.bd71CommentsOpen='0';card.dataset.bd76CommentsOpen='0';card.dataset.bd71CommentsOpen='0';const list=$('.bd31-comments',panel);if(list)list.hidden=true}}const sum=e.target.closest?.('[data-bd31-comment-summary]');if(sum){sum.dataset.bd76CommentSummary=sum.getAttribute('data-bd31-comment-summary')||'';sum.removeAttribute('data-bd31-comment-summary')}},true);
-W.addEventListener('click',async e=>{const sum=e.target.closest?.('[data-bd76-comment-summary]');if(sum){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=sum.closest('[data-bd31-ready="1"]'),panel=card&&$('[data-bd31-comment-panel]',card);if(card&&panel){panel.hidden=false;const opening=panel.dataset.bd76CommentsOpen!=='1';panel.dataset.bd76CommentsOpen=opening?'1':'0';panel.dataset.bd71CommentsOpen=opening?'1':'0';card.dataset.bd76CommentsOpen=opening?'1':'0';card.dataset.bd71CommentsOpen=opening?'1':'0';const list=$('.bd31-comments',panel),more=$('[data-bd31-more]',panel);if(opening&&typeof renderComments==='function')await renderComments(card,false);if(list)list.hidden=!opening;setTimeout(()=>syncComments(card),180)}const v=sum.dataset.bd76CommentSummary;if(v)sum.setAttribute('data-bd31-comment-summary',v);delete sum.dataset.bd76CommentSummary;return}const r=e.target.closest?.('.bd76-reply-count');if(r){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const group=r.nextElementSibling;if(!group)return;const open=!group.classList.contains('bd76-replies-open');group.classList.toggle('bd76-replies-open',open);group.hidden=!open;const n=group.querySelectorAll(':scope > .bd31-comment,:scope > .bd35-comment-row').length||group.children.length;r.textContent=open?'রিপ্লাই লুকান':bn(n)+'টি রিপ্লাই দেখুন'}},true);
-W.addEventListener('pointercancel',e=>{const sum=e.target.closest?.('[data-bd76-comment-summary]');if(sum){const v=sum.dataset.bd76CommentSummary;if(v)sum.setAttribute('data-bd31-comment-summary',v);delete sum.dataset.bd76CommentSummary}},true);
+/* V8.111: comment interactions are owned by the single stable bd31 handler above; no competing capture listener here. */
 
 /* ----- Reaction compatibility: Index now uses the same stable V8.64 engine as Profile. ----- */
 function pid(card){return String(card?.dataset?.post||card?.dataset?.postId||'')}
@@ -6963,6 +6976,8 @@ const q=(s,r=D)=>r?.querySelector?.(s)||null,qa=(s,r=D)=>Array.from(r?.querySele
 function form(){return D.getElementById('composerForm')}
 function body(){return D.getElementById('postBody')}
 function selectedTpl(){const f=form();const raw=String(f?.dataset?.bd65Template||f?.dataset?.bd58Template||'none');return /^tpl[1-8]$/.test(raw)?raw:'none'}
+let tplMirror=null,tplCenterRAF=0;
+function centerTemplateComposerText(){const f=form(),b=body();if(!f||!b||!f.classList.contains('bd105-card-in-box'))return;cancelAnimationFrame(tplCenterRAF);tplCenterRAF=requestAnimationFrame(()=>{if(!b.clientWidth||!b.clientHeight)return;const cs=getComputedStyle(b);if(!tplMirror){tplMirror=D.createElement('div');tplMirror.setAttribute('aria-hidden','true');tplMirror.style.cssText='position:fixed;left:-99999px;top:0;visibility:hidden;white-space:pre-wrap;overflow-wrap:anywhere;pointer-events:none;';D.body.appendChild(tplMirror)}const side=Math.max(26,b.clientWidth*.10);Object.assign(tplMirror.style,{width:Math.max(40,b.clientWidth-side*2)+'px',fontFamily:cs.fontFamily,fontSize:cs.fontSize,fontWeight:cs.fontWeight,lineHeight:cs.lineHeight,letterSpacing:cs.letterSpacing});tplMirror.textContent=b.value||' ';const textH=Math.max(parseFloat(cs.lineHeight)||24,tplMirror.scrollHeight||24),pad=Math.max(26,Math.min(b.clientHeight*.36,(b.clientHeight-textH)/2));b.style.setProperty('padding-top',pad+'px','important');b.style.setProperty('padding-bottom',pad+'px','important')})}
 function syncCardInsideBox(){
  const f=form(),b=body();if(!f||!b)return;const tpl=selectedTpl(),on=tpl!=='none';
  f.classList.toggle('bd105-card-in-box',on);
@@ -6974,12 +6989,13 @@ function syncCardInsideBox(){
    b.style.setProperty('background-position','center','important');
    b.style.setProperty('background-repeat','no-repeat','important');
    b.style.setProperty('background-color','#fff','important');
+   centerTemplateComposerText();
  }else{
    f.style.removeProperty('--bd105-compose-card');
    b.style.removeProperty('background-image');b.style.removeProperty('background-size');b.style.removeProperty('background-position');b.style.removeProperty('background-repeat');
  }
 }
-function watchComposer(){const f=form();if(!f)return;syncCardInsideBox();new MutationObserver(syncCardInsideBox).observe(f,{attributes:true,attributeFilter:['data-bd65-template','data-bd58-template','data-bd104-news']});
+function watchComposer(){const f=form();if(!f)return;syncCardInsideBox();body()?.addEventListener('input',centerTemplateComposerText,{passive:true});W.addEventListener('resize',centerTemplateComposerText,{passive:true});new MutationObserver(()=>{syncCardInsideBox();centerTemplateComposerText()}).observe(f,{attributes:true,attributeFilter:['data-bd65-template','data-bd58-template','data-bd104-news']});
  const picker=D.getElementById('bd58TemplatePicker');if(picker)new MutationObserver(()=>requestAnimationFrame(syncCardInsideBox)).observe(picker,{subtree:true,attributes:true,attributeFilter:['class','aria-selected','aria-pressed']});
 }
 
@@ -7047,7 +7063,9 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 .bd-live-post.bd106-long-text-card:not([class*="style-tpl"]) .post-body,
 [data-post-card].bd106-long-text-card:not([class*="style-tpl"]) .post-body{text-align:left!important;max-height:none!important;-webkit-line-clamp:unset!important;overflow:visible!important}
 .post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body,[data-post-card][class*="style-tpl"] .post-body{
-  display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;white-space:pre-line!important;
+  width:min(100%,680px)!important;aspect-ratio:4/5!important;height:auto!important;min-height:0!important;max-height:none!important;margin:8px auto 0!important;
+  display:grid!important;place-items:center!important;align-content:center!important;justify-content:center!important;text-align:center!important;white-space:pre-line!important;
+  padding:12% 10%!important;line-height:1.85!important;overflow:hidden!important;-webkit-line-clamp:unset!important;
 }
 /* Night mode: white/flat cards become a very soft rose-mauve aurora, never bright red. */
 :is(html[data-theme="dark"],html[data-bd-theme="dark"]) :is(.post,.bd-live-post,[data-post-card]):not([class*="style-tpl"]){
@@ -7237,7 +7255,7 @@ const D=document,W=window;
 const SEL='#postList article.post,#postList article.bd-live-post,#postList .post-card[data-post],#postList .post-card[data-post-id],#postList [data-post-card]';
 function idOf(card){return String(card?.dataset?.post||card?.dataset?.postId||'')}
 function isOpen(card){return !!card&&(card.classList.contains('bd76-inline-open')||card.classList.contains('bd-inline-expanded')||card.classList.contains('bd63-expanded')||card.classList.contains('expanded'))}
-function isLong(card){const b=card?.querySelector?.('.post-body');if(!b)return false;const text=(b.textContent||'').trim();return card.classList.contains('bd68-long-post')||card.classList.contains('bd106-long-text-card')||text.length>360||text.split(/\n/).filter(Boolean).length>6}
+function isLong(card){const b=card?.querySelector?.('.post-body');if(!b)return false;if(/style-tpl[1-8]/.test(card.className||''))return false;const text=(b.textContent||'').trim();return card.classList.contains('bd68-long-post')||card.classList.contains('bd106-long-text-card')||text.length>360||text.split(/\n/).filter(Boolean).length>6}
 function collapseOne(card){if(!card||!isLong(card)||isOpen(card))return;card.classList.add('bd68-long-post');const b=card.querySelector('.post-body');if(b)b.classList.add('collapsed');const m=card.querySelector('.post-read-more,.readmore');if(m)m.textContent='পূর্ণ লেখা পড়ুন →';card.setAttribute('aria-expanded','false')}
 function scan(root=D){if(root.matches?.(SEL))collapseOne(root);root.querySelectorAll?.(SEL).forEach(collapseOne)}
 let scheduled=false;const mo=new MutationObserver(ms=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n)})});
@@ -7253,8 +7271,8 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 <style id="bd-v8110-newspaper-css">
 /* Hide the old single News chip; the two V8.110 newspaper cards replace it without changing publish/storage contracts. */
 .bd104-news-choice:not(.bd110-news-choice){display:none!important}
-.bd110-news-choice{min-width:118px!important;min-height:58px!important;border:1px solid rgba(48,54,63,.16)!important;background:linear-gradient(145deg,#fffdf8,#f3f0e7)!important;color:#18201d!important;box-shadow:0 8px 18px rgba(50,44,31,.08)!important}
-.bd110-news-choice[data-layout="modern"]{background:linear-gradient(145deg,#fbfcff,#edf2f8)!important;color:#17395a!important}
+.bd110-news-choice{min-width:118px!important;min-height:58px!important;border:1px solid rgba(120,74,46,.18)!important;background:radial-gradient(circle at 12% 0,rgba(202,117,70,.14),transparent 42%),linear-gradient(145deg,#fff8e9,#f3ead6)!important;color:#4a3325!important;box-shadow:0 8px 18px rgba(84,57,35,.09)!important}
+.bd110-news-choice[data-layout="modern"]{background:radial-gradient(circle at 90% 10%,rgba(203,86,142,.12),transparent 38%),linear-gradient(145deg,#f8fbff,#eef0ff)!important;color:#17395a!important;border-color:rgba(72,82,166,.18)!important}
 .bd110-news-choice.active{border-color:currentColor!important;box-shadow:0 0 0 2px rgba(32,55,47,.09),0 9px 20px rgba(44,52,49,.09)!important;transform:translateY(-1px)!important}
 .bd110-news-choice span{display:block!important}.bd110-news-choice small{display:block;margin-top:2px;font:700 7.5px/1.2 'Noto Sans Bengali',sans-serif;opacity:.68}
 .bd110-news-fontbar{display:none;margin:8px 0 9px;padding:8px;border:1px solid rgba(68,76,84,.13);border-radius:12px;background:rgba(255,255,255,.74);gap:6px;grid-template-columns:auto repeat(3,minmax(0,1fr));align-items:center}
@@ -7269,8 +7287,8 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 /* The selected newspaper IS the writing box. Actual postTitle/postBody/media controls are moved inside this sheet by JS. */
 .bd110-compose-news-sheet{display:none;position:relative;margin:9px 0 7px;padding:12px 13px 14px;border:1px solid rgba(42,44,39,.20);border-radius:4px;background:#fffef9;color:#172019;box-shadow:0 12px 32px rgba(38,37,30,.10);overflow:hidden}
 #composerForm.bd110-news-mode .bd110-compose-news-sheet{display:block}
-.bd110-compose-news-sheet .bd110-masthead{text-align:center;padding:3px 4px 8px;border-top:4px double currentColor;border-bottom:4px double currentColor}
-.bd110-compose-news-sheet .bd110-masthead b{display:block;font:400 clamp(28px,7vw,48px)/1.08 'Galada','Noto Serif Bengali',serif;letter-spacing:.01em}
+.bd110-compose-news-sheet .bd110-masthead{text-align:center;padding:8px 6px 9px;border-top:4px double currentColor;border-bottom:4px double currentColor;position:relative}
+.bd110-compose-news-sheet .bd110-masthead b{display:block;font-family:'Noto Serif Bengali',serif;font-size:clamp(27px,6.5vw,46px);font-weight:900;font-style:normal;line-height:1.08;letter-spacing:0;color:inherit}
 .bd110-compose-news-sheet .bd110-masthead small{display:block;margin-top:1px;font:700 8px/1.4 'Noto Sans Bengali',sans-serif;letter-spacing:.08em}
 .bd110-compose-news-sheet .bd110-paper-meta{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0 2px;padding-bottom:5px;border-bottom:1px solid rgba(25,31,28,.28);font:700 8px/1.4 'Noto Sans Bengali',sans-serif;color:#59615d}
 .bd110-compose-news-sheet #postTitle{height:auto!important;min-height:64px!important;margin:8px 0 5px!important;padding:4px 2px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;font-size:clamp(26px,6vw,42px)!important;line-height:1.18!important;font-weight:900!important;text-align:left!important;color:var(--bd110-news-ink,#17251f)!important}
@@ -7283,17 +7301,17 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 #composerForm[data-bd110-news-font="display"] .bd110-compose-news-sheet #postTitle{font-family:'Galada','Noto Serif Bengali',serif!important;font-weight:400!important;--bd110-news-ink:#7a2130}
 #composerForm[data-bd110-news-font="editorial"] .bd110-compose-news-sheet #postTitle{font-family:'Atma','Noto Serif Bengali',serif!important;font-weight:700!important;--bd110-news-ink:#173c66}
 /* Two newspaper identities. */
-#composerForm[data-bd110-news-layout="classic"] .bd110-compose-news-sheet{background:linear-gradient(180deg,#fffef9,#faf6ea);color:#17251f}
-#composerForm[data-bd110-news-layout="classic"] .bd110-masthead b::after{content:'  দৈনিক';font-family:'Noto Serif Bengali',serif;font-size:.34em;font-weight:800;vertical-align:.55em;margin-left:4px}
-#composerForm[data-bd110-news-layout="modern"] .bd110-compose-news-sheet{background:linear-gradient(180deg,#fff,#f4f7fb);color:#173c66;border-radius:8px;border-top:7px solid #173c66}
-#composerForm[data-bd110-news-layout="modern"] .bd110-masthead{border-top:0;border-bottom:2px solid currentColor;text-align:left}
-#composerForm[data-bd110-news-layout="modern"] .bd110-masthead b{font-family:'Atma','Noto Serif Bengali',serif;font-weight:700;font-size:clamp(26px,6.5vw,44px)}
-#composerForm[data-bd110-news-layout="modern"] .bd110-masthead b::after{content:' • সম্পাদকীয়';font-family:'Noto Sans Bengali',sans-serif;font-size:.25em;font-weight:800;letter-spacing:.05em}
+#composerForm[data-bd110-news-layout="classic"] .bd110-compose-news-sheet{background:radial-gradient(circle at 8% 3%,rgba(194,87,52,.10),transparent 28%),radial-gradient(circle at 94% 12%,rgba(44,123,112,.09),transparent 30%),linear-gradient(180deg,#fffaf0,#f7edd9);color:#4a3325;border-color:rgba(133,88,48,.25);box-shadow:0 12px 32px rgba(86,57,32,.12)}
+#composerForm[data-bd110-news-layout="classic"] .bd110-masthead{color:#6f382b;border-color:#b36a45}#composerForm[data-bd110-news-layout="classic"] .bd110-masthead::after{content:'';display:block;width:78px;height:5px;border-radius:999px;margin:7px auto 0;background:linear-gradient(90deg,#b65d42,#d8a548,#3d8a7b)}
+#composerForm[data-bd110-news-layout="modern"] .bd110-compose-news-sheet{background:radial-gradient(circle at 92% 3%,rgba(199,78,143,.10),transparent 27%),radial-gradient(circle at 4% 96%,rgba(52,154,184,.08),transparent 31%),linear-gradient(180deg,#ffffff,#f3f5ff);color:#173c66;border-radius:12px;border-top:0;box-shadow:0 14px 38px rgba(54,65,120,.13)}
+#composerForm[data-bd110-news-layout="modern"] .bd110-masthead{border:0;text-align:left;color:#153b69;padding:12px 12px 10px;background:linear-gradient(105deg,rgba(27,67,113,.08),rgba(105,73,177,.08),rgba(205,84,137,.075));border-radius:9px}
+#composerForm[data-bd110-news-layout="modern"] .bd110-masthead b{font-family:'Noto Serif Bengali',serif;font-weight:900;font-style:normal;font-size:clamp(26px,6.2vw,43px)}
+#composerForm[data-bd110-news-layout="modern"] .bd110-masthead::after{content:'';display:block;width:100%;height:5px;border-radius:999px;margin-top:8px;background:linear-gradient(90deg,#1d5d88,#6f57bd,#d05283,#dd9b4d)}
 
 /* Published newspaper card: author/social shell stays unchanged; only article content becomes a newspaper sheet. */
 .post.bd104-news-post .bd110-newspaper-sheet{position:relative;margin:10px 0 5px;padding:13px 14px 15px;border:1px solid rgba(43,46,42,.16);border-radius:4px;background:#fffef9;color:#18201d;box-shadow:0 9px 24px rgba(45,43,34,.07)}
 .post.bd104-news-post .bd110-pub-masthead{text-align:center;padding:2px 3px 8px;border-top:4px double currentColor;border-bottom:4px double currentColor}
-.post.bd104-news-post .bd110-pub-masthead b{display:block;font:400 clamp(28px,6vw,46px)/1.05 'Galada','Noto Serif Bengali',serif}
+.post.bd104-news-post .bd110-pub-masthead b{display:block;font-family:'Noto Serif Bengali',serif;font-size:clamp(27px,6vw,45px);font-weight:900;font-style:normal;line-height:1.05;letter-spacing:0}
 .post.bd104-news-post .bd110-pub-masthead small{display:block;margin-top:2px;font:700 8px/1.35 'Noto Sans Bengali',sans-serif;letter-spacing:.06em}
 .post.bd104-news-post .bd110-pub-meta{display:flex;justify-content:space-between;gap:8px;margin:6px 0;padding-bottom:5px;border-bottom:1px solid rgba(33,38,34,.22);font:700 8px/1.35 'Noto Sans Bengali',sans-serif;color:#5d6561}
 .post.bd104-news-post .bd110-newspaper-sheet>.pill{margin-top:2px!important;background:transparent!important;padding:0!important;color:inherit!important;border-radius:0!important;font:800 9px/1.3 'Noto Sans Bengali',sans-serif!important}
@@ -7302,10 +7320,12 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 @media(min-width:760px){.post.bd104-news-post .bd110-newspaper-sheet>.post-body:not(.collapsed),.post.bd104-news-post.bd-inline-expanded .bd110-newspaper-sheet>.post-body{column-count:2}}
 .post.bd104-news-post .bd110-newspaper-sheet .composer-media-render,.post.bd104-news-post .bd110-newspaper-sheet .bd104-news-image2{border-radius:2px!important;border:1px solid rgba(28,35,31,.15)!important;background:#f2efe5!important}
 .post.bd104-news-post .bd110-newspaper-sheet .composer-media-render img,.post.bd104-news-post .bd110-newspaper-sheet .composer-media-render video,.post.bd104-news-post .bd110-newspaper-sheet .bd104-news-image2 img{border-radius:1px!important}
-.post.bd104-news-post[class*="news-card-classic"] .bd110-newspaper-sheet{background:linear-gradient(180deg,#fffef9,#faf6ea);color:#17251f}
-.post.bd104-news-post[class*="news-card-modern"] .bd110-newspaper-sheet{background:linear-gradient(180deg,#fff,#f3f7fb);color:#173c66;border-radius:8px;border-top:7px solid #173c66}
-.post.bd104-news-post[class*="news-card-modern"] .bd110-pub-masthead{border-top:0;border-bottom:2px solid currentColor;text-align:left}
-.post.bd104-news-post[class*="news-card-modern"] .bd110-pub-masthead b{font-family:'Atma','Noto Serif Bengali',serif;font-weight:700}
+.post.bd104-news-post[class*="news-card-classic"] .bd110-newspaper-sheet{background:radial-gradient(circle at 8% 3%,rgba(194,87,52,.10),transparent 28%),radial-gradient(circle at 94% 12%,rgba(44,123,112,.09),transparent 30%),linear-gradient(180deg,#fffaf0,#f7edd9);color:#4a3325;border-color:rgba(133,88,48,.24)}
+.post.bd104-news-post[class*="news-card-modern"] .bd110-newspaper-sheet{background:radial-gradient(circle at 92% 3%,rgba(199,78,143,.10),transparent 27%),radial-gradient(circle at 4% 96%,rgba(52,154,184,.08),transparent 31%),linear-gradient(180deg,#fff,#f3f5ff);color:#173c66;border-radius:12px;border-top:0;box-shadow:0 12px 32px rgba(54,65,120,.11)}
+.post.bd104-news-post[class*="news-card-modern"] .bd110-pub-masthead{border:0;text-align:left;padding:10px 11px 9px;background:linear-gradient(105deg,rgba(27,67,113,.08),rgba(105,73,177,.08),rgba(205,84,137,.075));border-radius:9px;color:#153b69}
+.post.bd104-news-post[class*="news-card-modern"] .bd110-pub-masthead b{font-family:'Noto Serif Bengali',serif;font-weight:900;font-style:normal}
+.post.bd104-news-post[class*="news-card-classic"] .bd110-pub-masthead{color:#6f382b;border-color:#b36a45}.post.bd104-news-post[class*="news-card-classic"] .bd110-pub-masthead::after{content:'';display:block;width:78px;height:5px;border-radius:999px;margin:7px auto 0;background:linear-gradient(90deg,#b65d42,#d8a548,#3d8a7b)}
+.post.bd104-news-post[class*="news-card-modern"] .bd110-pub-masthead::after{content:'';display:block;width:100%;height:5px;border-radius:999px;margin-top:8px;background:linear-gradient(90deg,#1d5d88,#6f57bd,#d05283,#dd9b4d)}
 .post.bd104-news-post[class*="news-card-classic"][class*="-book"] .post-title{font-family:'Noto Serif Bengali',serif!important;font-weight:900!important;--bd110-pub-ink:#17251f}
 .post.bd104-news-post[class*="-display"] .post-title{font-family:'Galada','Noto Serif Bengali',serif!important;font-weight:400!important;--bd110-pub-ink:#7a2130}
 .post.bd104-news-post[class*="-editorial"] .post-title{font-family:'Atma','Noto Serif Bengali',serif!important;font-weight:700!important;--bd110-pub-ink:#173c66}
@@ -7341,12 +7361,12 @@ function ensureUI(){
  const form=$('#composerForm'),picker=$('#bd58TemplatePicker');if(!form||!picker)return;
  const strip=$('.bd58-template-strip',picker)||picker;
  if(!$('.bd110-news-choice',strip)){
-   const classic=D.createElement('button');classic.type='button';classic.className='bd58-template-chip bd110-news-choice';classic.dataset.layout='classic';classic.innerHTML='<span>🗞️ দৈনিক</span><small>ক্লাসিক খবরের কাগজ</small>';
-   const modern=D.createElement('button');modern.type='button';modern.className='bd58-template-chip bd110-news-choice';modern.dataset.layout='modern';modern.innerHTML='<span>📰 সম্পাদকীয়</span><small>আধুনিক নিউজ লেআউট</small>';
+   const classic=D.createElement('button');classic.type='button';classic.className='bd58-template-chip bd110-news-choice';classic.dataset.layout='classic';classic.innerHTML='<span>🗞️ ভিন্টেজ</span><small>রঙিন আধুনিক-ভিন্টেজ</small>';
+   const modern=D.createElement('button');modern.type='button';modern.className='bd58-template-chip bd110-news-choice';modern.dataset.layout='modern';modern.innerHTML='<span>📰 ডিজিটাল</span><small>মডার্ন ডিজিটাল ম্যাগাজিন</small>';
    strip.append(classic,modern);
  }
  if(!fontbar){fontbar=D.createElement('div');fontbar.className='bd110-news-fontbar';fontbar.innerHTML='<strong>হেডলাইন ফন্ট</strong><button type="button" data-font="book">বই</button><button type="button" data-font="display">শিরোনাম</button><button type="button" data-font="editorial">সম্পাদকীয়</button>';picker.insertAdjacentElement('afterend',fontbar)}
- if(!sheet){sheet=D.createElement('section');sheet.className='bd110-compose-news-sheet';sheet.id='bd110ComposeNewsSheet';sheet.innerHTML='<header class="bd110-masthead"><b>ভুবনডাঙ্গার বার্তা</b><small>সাহিত্য • সমাজ • সংস্কৃতি • মানুষের খবর</small></header><div class="bd110-paper-meta"><span data-bd110-date></span><span data-bd110-byline></span></div>';fontbar.insertAdjacentElement('afterend',sheet)}
+ if(!sheet){sheet=D.createElement('section');sheet.className='bd110-compose-news-sheet';sheet.id='bd110ComposeNewsSheet';sheet.innerHTML='<header class="bd110-masthead"><b>ভুবনডাঙ্গার বার্তা</b><small>ডিজিটাল সংবাদ • সাহিত্য • সমাজ • সংস্কৃতি</small></header><div class="bd110-paper-meta"><span data-bd110-date></span><span data-bd110-byline></span></div>';fontbar.insertAdjacentElement('afterend',sheet)}
  ensureAnchors();
 }
 function moveIntoSheet(){ensureUI();ensureAnchors();if(!sheet)return;const title=$('#postTitle'),body=$('#postBody'),media=$('#bdIndexMediaTools'),preview=$('#postMediaPreview'),caption=$('#postMediaCaption'),tools=$('.bd104-news-tools');
@@ -7364,7 +7384,7 @@ function activate(layout){
  const tools=$('.bd104-news-tools');if(tools)tools.hidden=false;
  try{W.BD65ApplyTemplate?.('none','index')}catch(_){}
  const none=$('[data-bd58-template="none"]',picker);try{none?.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,pointerType:'mouse'}))}catch(_){none?.dispatchEvent(new Event('pointerdown',{bubbles:true}))}
- if(title)title.placeholder=layout==='classic'?'প্রধান শিরোনাম লিখুন…':'এডিটোরিয়াল হেডলাইন লিখুন…';
+ const sub=$('.bd110-masthead small',sheet);if(sub)sub.textContent=layout==='classic'?'ভিন্টেজ সংস্করণ • সাহিত্য • সমাজ • সংস্কৃতি':'ডিজিটাল ম্যাগাজিন • সাহিত্য • সমাজ • সংস্কৃতি';if(title)title.placeholder=layout==='classic'?'ভিন্টেজ প্রধান শিরোনাম লিখুন…':'ডিজিটাল হেডলাইন লিখুন…';
  moveIntoSheet();
 }
 function deactivate(callOld=false){const form=$('#composerForm'),picker=$('#bd58TemplatePicker'),title=$('#postTitle');if(!form)return;restore();form.classList.remove('bd110-news-mode');form.dataset.bd104News='0';delete form.dataset.bd110NewsLayout;delete form.dataset.bd110NewsFont;$$('.bd110-news-choice',picker).forEach(b=>b.classList.remove('active'));if(title)title.placeholder='লেখার শিরোনাম';const tools=$('.bd104-news-tools');if(tools)tools.hidden=true;if(callOld)try{oldReset?.()}catch(_){}}
@@ -7378,7 +7398,7 @@ function layoutFromCard(card){const c=card.className||'';return c.includes('news
 function decorate(card){if(!card||card.dataset.bd110Newspaper==='1'||!card.classList.contains('bd104-news-post'))return;card.dataset.bd110Newspaper='1';
  const head=$('.post-head',card);if(!head)return;const sheet=D.createElement('section');sheet.className='bd110-newspaper-sheet';
  const layout=layoutFromCard(card),author=$('.author-meta a',card)?.textContent?.trim()||'ভুবনডাঙ্গা ডেস্ক',date=$('.author-meta small',card)?.textContent?.trim()||'',category=$('.pill',card)?.textContent?.trim()||'সংবাদ';
- sheet.innerHTML='<header class="bd110-pub-masthead"><b>ভুবনডাঙ্গার বার্তা</b><small>'+(layout==='modern'?'আধুনিক সম্পাদকীয় সংস্করণ':'বাংলা সাহিত্য ও সামাজিক সংবাদ')+'</small></header><div class="bd110-pub-meta"><span>'+category+' • '+date+'</span><span>প্রতিবেদন: '+author+'</span></div>';
+ sheet.innerHTML='<header class="bd110-pub-masthead"><b>ভুবনডাঙ্গার বার্তা</b><small>'+(layout==='modern'?'ডিজিটাল ম্যাগাজিন • সাহিত্য • সমাজ • সংস্কৃতি':'ভিন্টেজ সংস্করণ • সাহিত্য • সমাজ • সংস্কৃতি')+'</small></header><div class="bd110-pub-meta"><span>'+category+' • '+date+'</span><span>প্রতিবেদন: '+author+'</span></div>';
  head.insertAdjacentElement('afterend',sheet);
  const move=['.pill','.post-title','.composer-media-render','.post-media','.post-body','.bd104-news-image2','.bd-post-caption','.post-read-more','.owner-hint','.review-badge'];
  for(const sel of move){$$(sel,card).filter(el=>el.parentElement===card).forEach(el=>sheet.appendChild(el))}
