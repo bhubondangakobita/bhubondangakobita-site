@@ -106,7 +106,88 @@ html.dark .msg-row.mine .bubble{background:linear-gradient(145deg,#7764e9,#5645b
 @media(min-width:1600px){.shell{grid-template-columns:320px minmax(640px,1fr) 310px;gap:14px}.bubble{font-size:14px}}
 </style>
 
-</head><body class="bd-messenger-page"><div class="app"><header class="topbar"><a class="brand" href="index.html"><span class="logo">🪶</span><span><strong>ভুবনডাঙ্গার বার্তালাপ</strong><small>BHUBONDANGAR KOBITA</small></span></a><input class="global-search" data-global-search="" placeholder="বার্তা বা নাম দিয়ে খুঁজুন…"/><div class="top-actions"><button class="round" data-top-call="audio"><svg aria-hidden="true" class="call-icon" viewbox="0 0 24 24"><path d="M7.2 3.8 9.8 8l-1.9 1.9c1.4 2.7 3.6 4.9 6.3 6.3l1.9-1.9 4.2 2.6-.8 3.1c-.2.8-.9 1.3-1.7 1.3C9.5 21.3 2.7 14.5 2.7 6.2c0-.8.5-1.5 1.3-1.7l3.2-.7Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-top-call="video"><svg aria-hidden="true" class="video-icon" viewbox="0 0 24 24"><rect fill="none" height="12" rx="2" stroke="currentColor" stroke-width="1.8" width="13" x="3" y="6"></rect><path d="m16 10 5-3v10l-5-3Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-theme="">◐</button><a class="round own-profile-link" data-own-profile="" href="profile.html" aria-label="নিজের প্রোফাইল"><span data-own-profile-avatar="">♙</span></a></div></header><div class="shell"><aside class="panel left" data-left=""><div class="left-head"><button aria-label="কথোপকথন তালিকা বন্ধ করুন" class="mini mobile-close-list" data-close-list="" type="button">‹</button><h2>কথোপকথন</h2><div class="left-tools"><button class="mini compose-new" data-new="">✎</button><button class="mini" data-list-more="" aria-label="আরও অপশন">•••</button></div></div><div class="filters"><button class="active" data-filter="all">সব</button><button data-filter="unread">অপঠিত</button><button data-filter="favorite">প্রিয়</button><button data-filter="archived">আর্কাইভ</button></div><div class="thread-list" data-threads=""></div><button class="archived" data-archived="">▣ আর্কাইভ কথোপকথন　›</button></aside><main class="panel center"><header class="chat-head"><button class="round mobile-list" data-open-list="">☰</button><a class="person" data-profile="" href="#"><span class="avatar online" data-chat-avatar="">ভ</span><span><strong data-chat-name="">কথোপকথন নির্বাচন করুন</strong><small data-chat-status="">বাম পাশ থেকে একজনকে নির্বাচন করুন</small></span></a><div class="chat-actions"><button class="round" data-call="audio"><svg aria-hidden="true" class="call-icon" viewbox="0 0 24 24"><path d="M7.2 3.8 9.8 8l-1.9 1.9c1.4 2.7 3.6 4.9 6.3 6.3l1.9-1.9 4.2 2.6-.8 3.1c-.2.8-.9 1.3-1.7 1.3C9.5 21.3 2.7 14.5 2.7 6.2c0-.8.5-1.5 1.3-1.7l3.2-.7Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-call="video"><svg aria-hidden="true" class="video-icon" viewbox="0 0 24 24"><rect fill="none" height="12" rx="2" stroke="currentColor" stroke-width="1.8" width="13" x="3" y="6"></rect><path d="m16 10 5-3v10l-5-3Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-open-info="">•••</button></div></header><div class="notice">ⓘ একজন সদস্য নির্বাচন করুন। নতুন কথোপকথনে অনুমতি অনুরোধ যাবে; গ্রহণ হলে লেখা, ছবি, ফাইল ও ভয়েস পাঠাতে পারবেন।</div><section class="messages" data-messages=""><div class="empty"><div><div style="font-size:54px">💬</div><h2>ভুবনডাঙ্গার বার্তালাপ</h2><p>একজন সদস্যকে নির্বাচন করুন।</p><button class="pick-member" data-pick-member="" type="button">সদস্য নির্বাচন করুন</button></div></div></section><div class="permission" data-permission=""></div><form class="composer" data-form="">
+
+<style id="bd-v893-messenger-aurora-fullscreen">
+/* V8.93 visual-only Messenger recovery. Existing Supabase / realtime / message / call logic is untouched. */
+:root{
+  --bh-au-1:#f7f8ff;--bh-au-2:#f2efff;--bh-au-3:#edf8f5;--bh-au-4:#fdf7fb;
+  --bh-glass:rgba(255,255,255,.91);--bh-glass-strong:rgba(255,255,255,.975);
+  --bh-line:rgba(101,97,170,.14);--bh-ink:#17304f;--bh-soft:#7a879c;
+  --bh-purple:#795fe8;--bh-purple-2:#a35fda;--bh-green:#49a985;
+  --bh-shadow:0 18px 55px rgba(66,62,126,.11);
+}
+html.dark{
+  --bh-au-1:#061222;--bh-au-2:#0b1730;--bh-au-3:#10223b;--bh-au-4:#15142f;
+  --bh-glass:rgba(10,23,43,.94);--bh-glass-strong:rgba(9,22,42,.985);
+  --bh-line:rgba(177,185,241,.16);--bh-ink:#f5f7ff;--bh-soft:#aeb9cf;
+  --bh-shadow:0 22px 65px rgba(0,0,0,.38);
+}
+html,body.bd-messenger-page{width:100%;height:100%;min-height:100%;overscroll-behavior:none}
+body.bd-messenger-page{
+  background:
+    radial-gradient(circle at 8% 9%,rgba(122,95,232,.16),transparent 27%),
+    radial-gradient(circle at 92% 10%,rgba(75,169,133,.12),transparent 28%),
+    radial-gradient(circle at 74% 86%,rgba(163,95,218,.10),transparent 30%),
+    linear-gradient(145deg,var(--bh-au-1),var(--bh-au-2) 48%,var(--bh-au-3) 78%,var(--bh-au-4));
+}
+body.bd-messenger-page::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.55;background:
+  radial-gradient(circle at 12% 20%,rgba(255,255,255,.88) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 38% 12%,rgba(255,255,255,.70) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 73% 23%,rgba(255,255,255,.68) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 86% 62%,rgba(255,255,255,.58) 0 1px,transparent 1.5px),
+  radial-gradient(circle at 28% 78%,rgba(255,255,255,.56) 0 1px,transparent 1.5px)}
+.app{position:relative;z-index:1;width:100%;max-width:none;margin:0;height:100dvh;min-height:100dvh}
+.topbar{background:var(--bh-glass);border-color:var(--bh-line);box-shadow:0 8px 32px rgba(47,55,94,.06)}
+.shell{max-width:1880px!important;width:100%!important;margin:0 auto!important;min-height:0}
+.panel{background:var(--bh-glass)!important;border-color:var(--bh-line)!important;box-shadow:var(--bh-shadow)!important}
+.left,.right,.center{backdrop-filter:blur(18px) saturate(128%);-webkit-backdrop-filter:blur(18px) saturate(128%)}
+.left{grid-template-rows:auto auto auto minmax(0,1fr) auto!important}
+.left-head{position:relative;padding:16px 16px 8px}.left-head h2{font-size:20px;letter-spacing:-.01em;color:var(--bh-ink)}
+.left-head::after{content:"আপনার মানুষ, আপনার বার্তা";position:absolute;left:16px;bottom:-7px;color:var(--bh-soft);font-size:9px;font-weight:600;pointer-events:none}
+.bd-mobile-thread-search{position:relative;margin:14px 14px 9px;height:45px;display:flex;align-items:center;border:1px solid var(--bh-line);border-radius:16px;background:rgba(255,255,255,.78);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 22px rgba(70,67,120,.05)}
+html.dark .bd-mobile-thread-search{background:rgba(19,35,60,.86)}
+.bd-mobile-thread-search input{width:100%;height:100%;border:0;outline:0;background:transparent;color:var(--bh-ink);padding:0 40px 0 42px;font:600 13px/1.2 "Noto Sans Bengali",system-ui,sans-serif}
+.bd-mobile-thread-search input::placeholder{color:#9aa4b6;font-weight:500}.bd-search-glyph{position:absolute;left:14px;color:var(--bh-purple);font-size:20px}.bd-mobile-thread-search button{position:absolute;right:6px;width:31px;height:31px;border:0;border-radius:10px;background:transparent;color:var(--bh-soft);font-size:20px;display:grid;place-items:center}
+.filters{padding:2px 14px 10px}.filters button{height:36px;border-radius:12px!important;background:rgba(123,131,161,.08)!important;color:var(--bh-soft)!important}.filters button.active{background:linear-gradient(135deg,var(--bh-purple),var(--bh-purple-2))!important;color:#fff!important;box-shadow:0 8px 20px rgba(121,95,232,.22)}
+.thread-list{padding:2px 9px 12px}.thread{min-height:74px;border:1px solid transparent!important;border-radius:16px!important;margin:3px 0;padding:9px 10px!important}.thread:hover,.thread.active{background:linear-gradient(135deg,rgba(121,95,232,.11),rgba(163,95,218,.07),rgba(73,169,133,.05))!important;border-color:rgba(121,95,232,.12)!important}.thread.active{box-shadow:inset 3px 0 0 var(--bh-purple)}
+.thread .avatar{box-shadow:0 0 0 3px rgba(255,255,255,.85),0 5px 15px rgba(75,72,120,.10)}
+.archived{margin:8px 14px 14px!important;min-height:52px!important;border:1px solid var(--bh-line)!important;border-radius:15px!important;background:linear-gradient(135deg,rgba(121,95,232,.07),rgba(163,95,218,.05))!important}
+.center{background:var(--bh-glass-strong)!important;overflow:hidden}
+.chat-head{background:var(--bh-glass-strong)!important;border-color:var(--bh-line)!important}.chat-head .person strong{font-size:15px;color:var(--bh-ink)}
+.notice{margin:0!important;border-radius:0!important;border-bottom:1px solid var(--bh-line)!important;background:linear-gradient(90deg,rgba(121,95,232,.07),rgba(73,169,133,.05))!important;color:#6f7c93!important}
+.messages{position:relative;background:
+  radial-gradient(circle at 10% 8%,rgba(121,95,232,.085),transparent 24%),
+  radial-gradient(circle at 88% 14%,rgba(73,169,133,.075),transparent 25%),
+  radial-gradient(circle at 76% 86%,rgba(163,95,218,.06),transparent 28%),
+  linear-gradient(180deg,rgba(247,249,255,.98),rgba(242,244,252,.96))!important}
+html.dark .messages{background:radial-gradient(circle at 12% 9%,rgba(121,95,232,.13),transparent 25%),radial-gradient(circle at 88% 17%,rgba(73,169,133,.07),transparent 25%),linear-gradient(180deg,#081426,#091a2e)!important}
+.messages::before{content:"🌿";position:absolute;right:4%;top:38%;font-size:110px;line-height:1;opacity:.025;filter:grayscale(1);pointer-events:none;transform:rotate(-13deg)}
+.msg-row{position:relative;z-index:1}.bubble{border-color:rgba(107,110,159,.11)!important;box-shadow:0 8px 26px rgba(42,51,84,.07)!important}.msg-row.mine .bubble{background:linear-gradient(145deg,#2d2941,#191a29)!important;color:#fff!important}html.dark .msg-row.mine .bubble{background:linear-gradient(145deg,#806bea,#5e4fc0)!important}.msg-row:not(.mine) .bubble{background:rgba(255,255,255,.94)!important}html.dark .msg-row:not(.mine) .bubble{background:rgba(20,37,61,.96)!important}
+.composer{background:var(--bh-glass-strong)!important;border-color:var(--bh-line)!important}.message-input-wrap{border-color:var(--bh-line)!important;background:rgba(121,129,159,.07)!important}.composer .send{background:linear-gradient(135deg,var(--bh-purple),var(--bh-purple-2))!important}
+.right{background:var(--bh-glass)!important}.profile-box .avatar{box-shadow:0 0 0 5px rgba(121,95,232,.10),0 10px 24px rgba(78,73,130,.10)}.info-card{background:rgba(255,255,255,.72)!important}html.dark .info-card{background:rgba(17,32,55,.88)!important}
+@media (min-width:1280px){.shell{grid-template-columns:minmax(280px,330px) minmax(560px,1fr) minmax(270px,310px)!important;padding:14px 18px 18px!important;gap:14px!important}.panel{border-radius:20px!important}}
+@media (min-width:1800px){.shell{grid-template-columns:350px minmax(760px,1fr) 330px!important;max-width:1980px!important}}
+@media(max-width:760px){
+ html,body.bd-messenger-page,.app,.shell{width:100%!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;padding:0!important;overflow:hidden!important;background:transparent!important}
+ .shell{display:block!important}.topbar{display:none!important}.panel{border:0!important;border-radius:0!important;box-shadow:none!important}
+ .center{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;max-height:100dvh!important;z-index:10!important;grid-template-rows:auto auto minmax(0,1fr) auto!important;background:var(--bh-glass-strong)!important}
+ .left,.right{position:fixed!important;inset:0!important;width:100vw!important;max-width:none!important;height:100dvh!important;max-height:100dvh!important;border:0!important;border-radius:0!important;box-shadow:none!important;isolation:isolate!important;opacity:1!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ .left{z-index:400!important;grid-template-rows:auto auto auto minmax(0,1fr) auto!important;background:linear-gradient(160deg,#fbfcff 0%,#f5f1ff 45%,#eef8f5 100%)!important;transform:translateX(-100%)!important}.left.open{transform:translateX(0)!important}
+ html.dark .left{background:linear-gradient(160deg,#061222,#0c1730 52%,#0d2233)!important}
+ .left::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 8% 6%,rgba(121,95,232,.15),transparent 28%),radial-gradient(circle at 92% 12%,rgba(73,169,133,.09),transparent 26%)}
+ .right{z-index:410!important;background:linear-gradient(160deg,#fbfcff,#f4f1ff 48%,#eef8f5)!important;transform:translateX(100%)!important}.right.open{transform:translateX(0)!important}html.dark .right{background:linear-gradient(160deg,#061222,#0d1831 55%,#0d2133)!important}
+ .left-head{min-height:78px!important;padding:calc(12px + env(safe-area-inset-top)) 15px 10px!important;border-bottom:0!important;background:transparent!important}.left-head h2{font-size:22px!important}.left-head::after{left:56px;bottom:5px;font-size:9px}.mobile-close-list{display:grid!important;width:38px!important;height:38px!important;border:1px solid var(--bh-line)!important;background:rgba(255,255,255,.75)!important;color:var(--bh-ink)!important}.left-tools .mini{background:rgba(255,255,255,.76)!important;border:1px solid var(--bh-line)!important}.left-tools .compose-new{background:linear-gradient(135deg,var(--bh-purple),var(--bh-purple-2))!important;color:#fff!important}
+ .bd-mobile-thread-search{display:flex!important;margin:8px 14px 10px!important;background:rgba(255,255,255,.88)!important}html.dark .bd-mobile-thread-search{background:rgba(17,34,58,.92)!important}
+ .filters{padding:0 14px 10px!important}.thread-list{padding:0 10px 10px!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}.thread{min-height:76px!important;border-radius:17px!important}.thread strong{font-size:14px!important}.thread small{font-size:10px!important}.archived{margin:8px 14px calc(14px + env(safe-area-inset-bottom))!important}
+ .chat-head{min-height:74px!important;padding:calc(8px + env(safe-area-inset-top)) 9px 8px!important;background:rgba(255,255,255,.96)!important;box-shadow:0 5px 18px rgba(41,48,82,.06)!important}html.dark .chat-head{background:rgba(7,19,37,.97)!important}.person{max-width:calc(100vw - 188px)!important}.person strong{font-size:14px!important}.chat-actions{gap:4px!important}.chat-actions .round,.mobile-list{width:40px!important;height:40px!important;background:rgba(255,255,255,.82)!important;border:1px solid var(--bh-line)!important}html.dark .chat-actions .round,html.dark .mobile-list{background:rgba(18,34,58,.88)!important}
+ .notice{font-size:9px!important;padding:6px 10px!important}.messages{padding:12px 10px 18px!important;-webkit-overflow-scrolling:touch!important}.messages::before{font-size:92px;right:1%;top:42%}.bubble{max-width:84%!important;border-radius:18px 18px 18px 7px!important;font-size:14px!important}.msg-row.mine .bubble{border-radius:18px 18px 7px 18px!important}
+ .composer{grid-template-columns:38px minmax(0,1fr) 32px 46px!important;gap:6px!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;background:rgba(255,255,255,.97)!important;box-shadow:0 -8px 24px rgba(41,47,82,.08)!important}html.dark .composer{background:rgba(7,19,37,.98)!important}.message-input-wrap textarea{font-size:16px!important}.composer .send{width:46px!important;height:46px!important}
+ .drawer-shade{display:none!important}.right-close{top:calc(10px + env(safe-area-inset-top))!important}.info-card{border-radius:16px!important}.profile-box{padding-top:10px}
+}
+@media(max-width:390px){.person{max-width:calc(100vw - 174px)!important}.chat-actions .round,.mobile-list{width:37px!important;height:37px!important}.thread{grid-template-columns:48px minmax(0,1fr) auto!important}.thread .avatar{width:48px!important;height:48px!important}}
+</style>
+
+</head><body class="bd-messenger-page"><div class="app"><header class="topbar"><a class="brand" href="index.html"><span class="logo">🪶</span><span><strong>ভুবনডাঙ্গার বার্তালাপ</strong><small>BHUBONDANGAR KOBITA</small></span></a><input class="global-search" data-global-search="" placeholder="বার্তা বা নাম দিয়ে খুঁজুন…"/><div class="top-actions"><button class="round" data-top-call="audio"><svg aria-hidden="true" class="call-icon" viewbox="0 0 24 24"><path d="M7.2 3.8 9.8 8l-1.9 1.9c1.4 2.7 3.6 4.9 6.3 6.3l1.9-1.9 4.2 2.6-.8 3.1c-.2.8-.9 1.3-1.7 1.3C9.5 21.3 2.7 14.5 2.7 6.2c0-.8.5-1.5 1.3-1.7l3.2-.7Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-top-call="video"><svg aria-hidden="true" class="video-icon" viewbox="0 0 24 24"><rect fill="none" height="12" rx="2" stroke="currentColor" stroke-width="1.8" width="13" x="3" y="6"></rect><path d="m16 10 5-3v10l-5-3Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-theme="">◐</button><a class="round own-profile-link" data-own-profile="" href="profile.html" aria-label="নিজের প্রোফাইল"><span data-own-profile-avatar="">♙</span></a></div></header><div class="shell"><aside class="panel left" data-left=""><div class="left-head"><button aria-label="কথোপকথন তালিকা বন্ধ করুন" class="mini mobile-close-list" data-close-list="" type="button">‹</button><h2>কথোপকথন</h2><div class="left-tools"><button class="mini compose-new" data-new="">✎</button><button class="mini" data-list-more="" aria-label="আরও অপশন">•••</button></div></div><div class="bd-mobile-thread-search" data-mobile-search-wrap><span class="bd-search-glyph" aria-hidden="true">⌕</span><input data-mobile-thread-search type="search" inputmode="search" autocomplete="off" placeholder="মানুষ বা কথোপকথন খুঁজুন…" aria-label="কথোপকথন খুঁজুন"><button type="button" data-mobile-search-clear aria-label="সার্চ মুছুন">×</button></div><div class="filters"><button class="active" data-filter="all">সব</button><button data-filter="unread">অপঠিত</button><button data-filter="favorite">প্রিয়</button><button data-filter="archived">আর্কাইভ</button></div><div class="thread-list" data-threads=""></div><button class="archived" data-archived="">▣ আর্কাইভ কথোপকথন　›</button></aside><main class="panel center"><header class="chat-head"><button class="round mobile-list" data-open-list="">☰</button><a class="person" data-profile="" href="#"><span class="avatar online" data-chat-avatar="">ভ</span><span><strong data-chat-name="">কথোপকথন নির্বাচন করুন</strong><small data-chat-status="">বাম পাশ থেকে একজনকে নির্বাচন করুন</small></span></a><div class="chat-actions"><button class="round" data-call="audio"><svg aria-hidden="true" class="call-icon" viewbox="0 0 24 24"><path d="M7.2 3.8 9.8 8l-1.9 1.9c1.4 2.7 3.6 4.9 6.3 6.3l1.9-1.9 4.2 2.6-.8 3.1c-.2.8-.9 1.3-1.7 1.3C9.5 21.3 2.7 14.5 2.7 6.2c0-.8.5-1.5 1.3-1.7l3.2-.7Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-call="video"><svg aria-hidden="true" class="video-icon" viewbox="0 0 24 24"><rect fill="none" height="12" rx="2" stroke="currentColor" stroke-width="1.8" width="13" x="3" y="6"></rect><path d="m16 10 5-3v10l-5-3Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"></path></svg></button><button class="round" data-open-info="">•••</button></div></header><div class="notice">ⓘ একজন সদস্য নির্বাচন করুন। নতুন কথোপকথনে অনুমতি অনুরোধ যাবে; গ্রহণ হলে লেখা, ছবি, ফাইল ও ভয়েস পাঠাতে পারবেন।</div><section class="messages" data-messages=""><div class="empty"><div><div style="font-size:54px">💬</div><h2>ভুবনডাঙ্গার বার্তালাপ</h2><p>একজন সদস্যকে নির্বাচন করুন।</p><button class="pick-member" data-pick-member="" type="button">সদস্য নির্বাচন করুন</button></div></div></section><div class="permission" data-permission=""></div><form class="composer" data-form="">
 <div class="attachment-pop" data-attach-menu="" hidden="">
 <button data-photo="" type="button">▧ <span>ছবি / ভিডিও</span></button>
 <button data-doc="" type="button">⌑ <span>ফাইল</span></button>
@@ -188,6 +269,26 @@ html.dark .msg-row.mine .bubble{background:linear-gradient(145deg,#7764e9,#5645b
  let tries=0;const timer=setInterval(()=>{tries++;if(syncOwn()||tries>40)clearInterval(timer)},200);
  D.addEventListener('click',e=>{if(e.target.closest('[data-list-more]')){e.preventDefault();const t=D.getElementById('toast');if(t){t.textContent='কথোপকথনের অতিরিক্ত অপশন ডান পাশের তথ্য প্যানেলে পাওয়া যাবে';t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200)}}});
  D.addEventListener('visibilitychange',()=>{if(!D.hidden){try{const ctx=window.__BD_MESSENGER_AUDIO_CONTEXT;if(ctx?.state==='suspended')ctx.resume()}catch(_){}}});
+})();
+</script>
+
+
+<script id="bd-v893-messenger-mobile-search-sync">
+(()=>{'use strict';
+ const D=document;
+ function boot(){
+  const mobile=D.querySelector('[data-mobile-thread-search]');
+  const global=D.querySelector('[data-global-search]');
+  const clear=D.querySelector('[data-mobile-search-clear]');
+  if(!mobile||!global)return;
+  const relay=()=>{global.value=mobile.value;global.dispatchEvent(new Event('input',{bubbles:true}));clear.style.opacity=mobile.value?'1':'.42'};
+  mobile.addEventListener('input',relay);
+  global.addEventListener('input',()=>{if(D.activeElement!==mobile)mobile.value=global.value||''});
+  clear?.addEventListener('click',()=>{mobile.value='';relay();mobile.focus({preventScroll:true})});
+  const left=D.querySelector('[data-left]');
+  if(left){new MutationObserver(()=>{D.body.classList.toggle('bd-conversation-list-open',left.classList.contains('open'))}).observe(left,{attributes:true,attributeFilter:['class']})}
+ }
+ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
 
