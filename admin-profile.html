@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f5f4ff">
 <title>অ্যাডমিন প্রোফাইল | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.104-comment-pagination-composer-news-20260810">
+<meta name="bhubondanga-build" content="V8.106-cover-composer-center-aurora-video-stop-20260811">
 <script id="bd-supabase-nonblocking-loader">
 (function(){
   "use strict";
@@ -3059,6 +3059,247 @@ function lines(el){if(!el)return 0;const cs=getComputedStyle(el),lh=parseFloat(c
 function fit(){const form=D.getElementById('composerForm'),b=D.getElementById('postBody');if(!form||!b)return;const tpl=/^tpl[1-8]$/.test(form.dataset.bd65Template||'none');if(tpl&&lines(b)>10){try{W.BD65ApplyTemplate?.('none','profile')}catch(_){};form.dataset.bd65Template='none';form.dataset.bd58Template='none';const s=D.getElementById('profileCardStyle');if(s)s.value='none';say('লেখা বড় হওয়ায় সাদা পৃষ্ঠার সাধারণ কার্ডে নেওয়া হয়েছে।')}if(!/^tpl[1-8]$/.test(form.dataset.bd65Template||'none')){b.style.height='auto';const wanted=Math.max(240,b.scrollHeight);const max=Math.max(320,Math.min(innerHeight*.72,820));b.style.height=Math.min(wanted,max)+'px';b.style.overflowY=wanted>max?'auto':'hidden'}}
 D.addEventListener('input',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);W.addEventListener('resize',()=>requestAnimationFrame(fit),{passive:true});
 D.addEventListener('DOMContentLoaded',()=>{installNews();fit()},{once:true});if(D.readyState!=='loading'){installNews();fit()}
+})();
+</script>
+
+
+
+<!-- BHUBONDANGA V8.105 TARGETED: selected card inside composer + one reaction artwork/surface -->
+<style id="bd-v8105-card-reaction-lock-css">
+/* 1) Selected decorative card lives INSIDE the writing box. */
+#composerForm.bd105-card-in-box #postBody{
+  width:100%!important;
+  aspect-ratio:4/5!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:hidden!important;
+  resize:none!important;
+  padding:16% 10%!important;
+  border-radius:18px!important;
+  background-color:#fff!important;
+  background-image:var(--bd105-compose-card)!important;
+  background-size:100% 100%!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  text-align:center!important;
+  color:#17314a!important;
+  caret-color:#305ad8!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88),0 8px 20px rgba(73,65,120,.07)!important;
+}
+#composerForm:not(.bd105-card-in-box) #postBody{
+  background-image:none;
+}
+@media(max-width:520px){#composerForm.bd105-card-in-box #postBody{padding:14% 9%!important;border-radius:16px!important}}
+
+/* 2) Exactly one reaction tray. Every retired tray/picker remains inert. */
+#bd31ReactionTray,#bdV814ReactionTray,#bd45ReactionTray,#bd28ReactionTray,
+.bd-index-reaction-picker,.bd-v814-picker,.bd45-reaction-picker,.legacy-reaction-picker{
+  display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important;
+}
+#bd64ReactionTray{pointer-events:auto!important;touch-action:manipulation!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}
+#bd64ReactionTray button,[data-bd31-react-main]{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important}
+#postList,.post-list,.feed,.center-col,.center{touch-action:pan-y pinch-zoom}
+
+/* One artwork geometry in summary, selected action and tray. */
+.bd105-rx-art{display:inline-grid!important;place-items:center!important;line-height:1!important;vertical-align:middle!important;flex:0 0 auto!important}
+.bd31-main-reaction>.bd105-rx-art{width:24px!important;height:24px!important}
+.bd31-main-reaction>.bd105-rx-art .bd31-r,.bd31-main-reaction>.bd105-rx-art img{width:24px!important;height:24px!important;min-width:24px!important;max-width:24px!important;object-fit:contain!important}
+[data-bd31-react-summary] .bd105-rx-art{width:21px!important;height:21px!important;margin-left:-4px!important;border:1.5px solid #fff!important;border-radius:50%!important;background:#fff!important;overflow:visible!important}
+[data-bd31-react-summary] .bd105-rx-art:first-child{margin-left:0!important}
+[data-bd31-react-summary] .bd105-rx-art .bd31-r,[data-bd31-react-summary] .bd105-rx-art img{width:20px!important;height:20px!important;min-width:20px!important;max-width:20px!important;object-fit:contain!important}
+#bd64ReactionTray .bd105-rx-art,#bd64ReactionTray .bd105-rx-art .bd31-r,#bd64ReactionTray .bd105-rx-art img{width:33px!important;height:33px!important;min-width:33px!important;max-width:33px!important;object-fit:contain!important}
+
+/* No reaction popup is allowed to create a page-sized hit surface. */
+#bdV814Backdrop,#bdV814Sheet,#masterPostShell,#bd45PostViewer{
+  pointer-events:none!important;
+}
+</style>
+<script id="bd-v8105-card-reaction-lock-js">
+(()=>{'use strict';
+if(window.__BD_V8105_CARD_REACTION_LOCK__)return;window.__BD_V8105_CARD_REACTION_LOCK__=true;
+const D=document,W=window,TYPES=['like','love','care','haha','wow','sad','angry'];
+const q=(s,r=D)=>r?.querySelector?.(s)||null,qa=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+
+/* ---------- Selected card -> the writing box itself ---------- */
+function form(){return D.getElementById('composerForm')}
+function body(){return D.getElementById('postBody')}
+function selectedTpl(){const f=form();const raw=String(f?.dataset?.bd65Template||f?.dataset?.bd58Template||'none');return /^tpl[1-8]$/.test(raw)?raw:'none'}
+function syncCardInsideBox(){
+ const f=form(),b=body();if(!f||!b)return;const tpl=selectedTpl(),on=tpl!=='none';
+ f.classList.toggle('bd105-card-in-box',on);
+ if(on){
+   const n=tpl.slice(3),bg=`var(--bd65-tpl-${n})`;
+   f.style.setProperty('--bd105-compose-card',bg);
+   b.style.setProperty('background-image',bg,'important');
+   b.style.setProperty('background-size','100% 100%','important');
+   b.style.setProperty('background-position','center','important');
+   b.style.setProperty('background-repeat','no-repeat','important');
+   b.style.setProperty('background-color','#fff','important');
+ }else{
+   f.style.removeProperty('--bd105-compose-card');
+   b.style.removeProperty('background-image');b.style.removeProperty('background-size');b.style.removeProperty('background-position');b.style.removeProperty('background-repeat');
+ }
+}
+function watchComposer(){const f=form();if(!f)return;syncCardInsideBox();new MutationObserver(syncCardInsideBox).observe(f,{attributes:true,attributeFilter:['data-bd65-template','data-bd58-template','data-bd104-news']});
+ const picker=D.getElementById('bd58TemplatePicker');if(picker)new MutationObserver(()=>requestAnimationFrame(syncCardInsideBox)).observe(picker,{subtree:true,attributes:true,attributeFilter:['class','aria-selected','aria-pressed']});
+}
+
+/* ---------- One reaction artwork everywhere ---------- */
+const refs={};
+function typeOf(el){if(!el)return'';for(const t of TYPES)if(el.classList?.contains(t)||el.dataset?.reaction===t||el.dataset?.bd64Pick===t||el.dataset?.bd31TrayPick===t)return t;return''}
+function captureRefs(root=D){
+ qa('[data-bd31-react-summary] .bd31-r,[data-bd31-react-summary] .bd105-rx-art,#bd31ReactionTray .bd31-r,.bd-v814-picker .bd31-r',root).forEach(el=>{const inner=el.classList.contains('bd105-rx-art')?el.firstElementChild:el;const t=typeOf(inner);if(t&&!refs[t])refs[t]=inner.outerHTML});
+}
+function fallbackMarkup(type){
+ const src=W.BD52_REACTION_SRC?.[type]||'';
+ if(src)return `<img class="bd52-reaction-img bd105-rx-img" data-reaction="${type}" src="${src}" alt="" draggable="false">`;
+ const emoji={like:'👍',love:'❤️',care:'🥰',haha:'😂',wow:'😮',sad:'😢',angry:'😡'};
+ return `<span data-reaction="${type}" style="font:20px/1 'Apple Color Emoji','Segoe UI Emoji',sans-serif">${emoji[type]||'👍'}</span>`;
+}
+function art(type){return `<span class="bd105-rx-art" data-reaction="${type}">${refs[type]||fallbackMarkup(type)}</span>`}
+function currentType(card){const main=q('[data-bd31-react-main]',card);return String(main?.dataset?.current||'')}
+function syncCardReaction(card){
+ if(!card)return;captureRefs(card);
+ const type=currentType(card),holder=q('.bd31-main-reaction',card);
+ if(type&&TYPES.includes(type)&&holder){const old=holder.querySelector('.bd105-rx-art');if(!old||old.dataset.reaction!==type)holder.innerHTML=art(type)}
+ const stack=q('[data-bd31-react-summary] .bd31-stack',card);
+ if(stack){qa(':scope > .bd31-r',stack).forEach(el=>{const t=typeOf(el);if(!t)return;if(!refs[t])refs[t]=el.outerHTML;const wrap=D.createElement('span');wrap.className='bd105-rx-art';wrap.dataset.reaction=t;wrap.innerHTML=refs[t];el.replaceWith(wrap)})}
+}
+function syncTray(){const t=D.getElementById('bd64ReactionTray');if(!t)return;qa('[data-bd64-pick]',t).forEach(btn=>{const type=btn.dataset.bd64Pick;if(!TYPES.includes(type))return;const cur=q('.bd105-rx-art',btn);if(!cur||cur.dataset.reaction!==type)btn.innerHTML=art(type)})}
+let queued=false;
+function syncAll(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;captureRefs();qa('[data-bd31-ready="1"],[data-post-card],article.post,.bd-live-post,.post-card').forEach(syncCardReaction);syncTray();releaseReactionLock()})}
+function legitimateLockOpen(){return !!q('.mobile-drawer.open,.drawer.open,#mobileDrawer.open,#rightMobileDrawer.open,#leftDrawer.open,#rightDrawer.open,.post-menu-panel.open,.post-action-board.open')}
+function releaseReactionLock(){
+ /* V8.64 itself never needs body lock. Remove only reaction-named stale locks; generic locked is kept for real drawers. */
+ [D.documentElement,D.body].forEach(el=>{[...el.classList].filter(c=>/react(ion)?[-_]?open|reaction[-_]?lock/i.test(c)).forEach(c=>el.classList.remove(c))});
+ if(!legitimateLockOpen()&&q('#bd64ReactionTray.open')){D.body.style.removeProperty('pointer-events');D.documentElement.style.removeProperty('pointer-events')}
+}
+
+/* Any old tray that is recreated stays inert; V8.64 remains the only interactive surface. */
+const mo=new MutationObserver(ms=>{let reaction=false,composer=false;for(const m of ms){const el=m.target?.nodeType===1?m.target:m.target?.parentElement;if(el?.closest?.('.bd31-social,#bd64ReactionTray,[data-bd31-react-summary],[data-bd31-react-main]')||[...m.addedNodes||[]].some(n=>n.nodeType===1&&n.matches?.('#bd64ReactionTray,.bd31-social,[data-bd31-ready="1"]')))reaction=true;if(el?.closest?.('#composerForm,#bd58TemplatePicker'))composer=true}if(reaction)syncAll();if(composer)requestAnimationFrame(syncCardInsideBox)});
+function boot(){watchComposer();captureRefs();syncAll();mo.observe(D.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','data-current','hidden','data-bd65-template','data-bd58-template']})}
+W.addEventListener('pointerup',e=>{if(e.target.closest?.('[data-bd31-react-main],[data-bd64-pick],#bd64ReactionTray'))setTimeout(syncAll,0)},{capture:false,passive:true});
+W.addEventListener('click',e=>{if(e.target.closest?.('[data-bd31-react-main],[data-bd64-pick],#bd64ReactionTray'))setTimeout(syncAll,0)},false);
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+
+
+<style id="bd-v8106-reading-video-theme-css">
+/* V8.106 — reading-card centering, soft reddish aurora night palette, inline comments and safe video lifecycle. */
+.post.bd106-short-text-card:not([class*="style-tpl"]),
+.bd-live-post.bd106-short-text-card:not([class*="style-tpl"]),
+[data-post-card].bd106-short-text-card:not([class*="style-tpl"]){overflow:hidden!important}
+.post.bd106-short-text-card:not([class*="style-tpl"]) .post-title,
+.bd-live-post.bd106-short-text-card:not([class*="style-tpl"]) .post-title,
+[data-post-card].bd106-short-text-card:not([class*="style-tpl"]) .post-title{text-align:center!important;margin-inline:auto!important;max-width:92%!important}
+.post.bd106-short-text-card:not([class*="style-tpl"]) .post-body,
+.bd-live-post.bd106-short-text-card:not([class*="style-tpl"]) .post-body,
+[data-post-card].bd106-short-text-card:not([class*="style-tpl"]) .post-body{
+  width:min(100%,680px)!important;aspect-ratio:4/5!important;min-height:0!important;max-height:none!important;margin:10px auto 0!important;
+  padding:13% 10%!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;
+  white-space:pre-line!important;overflow:hidden!important;-webkit-line-clamp:unset!important;
+  border:1px solid rgba(105,116,167,.14)!important;border-radius:20px!important;
+  background:radial-gradient(circle at 12% 5%,rgba(169,145,235,.11),transparent 34%),radial-gradient(circle at 90% 92%,rgba(104,187,177,.08),transparent 35%),linear-gradient(145deg,rgba(255,255,255,.99),rgba(247,247,252,.96))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 12px 30px rgba(68,76,128,.07)!important;
+}
+.post.bd106-long-text-card:not([class*="style-tpl"]) .post-body,
+.bd-live-post.bd106-long-text-card:not([class*="style-tpl"]) .post-body,
+[data-post-card].bd106-long-text-card:not([class*="style-tpl"]) .post-body{text-align:left!important;max-height:none!important;-webkit-line-clamp:unset!important;overflow:visible!important}
+.post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body,[data-post-card][class*="style-tpl"] .post-body{
+  display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;white-space:pre-line!important;
+}
+/* Night mode: white/flat cards become a very soft rose-mauve aurora, never bright red. */
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) :is(.post,.bd-live-post,[data-post-card]):not([class*="style-tpl"]){
+  background:radial-gradient(circle at 92% 4%,rgba(196,91,132,.135),transparent 34%),radial-gradient(circle at 8% 92%,rgba(150,82,151,.10),transparent 38%),radial-gradient(circle at 42% 0,rgba(111,98,190,.09),transparent 42%),linear-gradient(145deg,rgba(18,27,46,.985),rgba(29,22,43,.985))!important;
+  border-color:rgba(221,157,188,.16)!important;box-shadow:0 18px 46px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.065)!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) :is(.post,.bd-live-post,[data-post-card]).bd106-short-text-card:not([class*="style-tpl"]) .post-body{
+  color:#fbf8ff!important;background:radial-gradient(circle at 88% 6%,rgba(206,105,148,.12),transparent 34%),radial-gradient(circle at 8% 94%,rgba(137,94,170,.09),transparent 38%),linear-gradient(145deg,rgba(39,30,49,.92),rgba(25,28,45,.94))!important;border-color:rgba(226,171,199,.14)!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .post.bd104-news-post{
+  background:radial-gradient(circle at 92% 4%,rgba(198,96,139,.13),transparent 34%),radial-gradient(circle at 4% 100%,rgba(137,84,161,.09),transparent 36%),linear-gradient(145deg,rgba(18,28,47,.985),rgba(31,23,44,.985))!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .post.bd104-news-post :is(.post-title,.post-title a,.post-body){color:#fbf9ff!important}
+/* Comment UI is always inline/folded; no old floating comment sheet can cover the feed. */
+#bd35CommentSheet,#masterPostShell,.bd45-post-shell{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.bd31-comment-panel[hidden],.bd31-replies[hidden],.bd31-reply-form:not(.open){display:none!important}
+.bd31-comment-panel:not([hidden]){position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;transform:none!important;box-shadow:none!important;overflow:visible!important}
+@media(max-width:520px){
+  .post.bd106-short-text-card:not([class*="style-tpl"]) .post-body,.bd-live-post.bd106-short-text-card:not([class*="style-tpl"]) .post-body,[data-post-card].bd106-short-text-card:not([class*="style-tpl"]) .post-body{padding:12% 8%!important;border-radius:17px!important}
+}
+</style>
+
+<style id="bd-v8106-profile-cover-composer-css">
+/* Cover controls: mobile save/cancel can never be clipped behind the avatar. */
+#cover{isolation:isolate!important}
+#coverAdjust:not([hidden]){z-index:90!important;top:10px!important;bottom:auto!important;left:10px!important;right:10px!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto auto!important;align-items:center!important;gap:7px!important;min-height:52px!important;padding:8px 9px!important;overflow:visible!important;background:rgba(9,19,40,.82)!important;border:1px solid rgba(255,255,255,.42)!important;box-shadow:0 12px 30px rgba(0,0,0,.28)!important}
+#coverAdjust:not([hidden]) strong{min-width:0!important;font-size:10px!important;line-height:1.35!important;color:#fff!important}
+#coverAdjust:not([hidden]) button{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:76px!important;min-height:38px!important;padding:0 12px!important;font-size:10px!important;font-weight:900!important}
+#coverAdjust:not([hidden]) #saveCoverBtn{background:linear-gradient(135deg,#6c53f6,#a149ed)!important;color:#fff!important;border:0!important;box-shadow:0 7px 18px rgba(105,73,229,.30)!important}
+#coverHint:not([hidden]){z-index:75!important;display:flex!important;min-height:39px!important;padding:0 13px!important;background:rgba(8,20,40,.68)!important;color:#fff!important}
+body.is-owner #composer{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;pointer-events:auto!important}
+body.is-owner #composer .composer-top{display:grid!important}
+@media(max-width:720px){
+ #coverAdjust:not([hidden]){grid-template-columns:1fr 1fr!important;top:8px!important;left:8px!important;right:8px!important;padding:8px!important}
+ #coverAdjust:not([hidden]) strong{grid-column:1/-1!important;text-align:center!important;font-size:9.5px!important}
+ #coverAdjust:not([hidden]) button{width:100%!important;min-width:0!important;min-height:40px!important}
+ #coverHint:not([hidden]){right:9px!important;top:9px!important;bottom:auto!important}
+}
+/* Profile composer selected template stays centered just like the published card. */
+#composerForm.bd105-card-in-box #postBody,#composerForm[data-bd65-template^="tpl"] #postBody{display:block!important;text-align:center!important;line-height:1.95!important;background-position:center!important}
+</style>
+
+<script id="bd-v8106-reading-video-theme-js">
+(()=>{'use strict';
+const D=document,W=window,H=D.documentElement;
+/* Keep both historical theme attributes in sync so every existing CSS layer changes color together. */
+let themeBusy=false;
+function mirrorTheme(source){if(themeBusy)return;const t=H.getAttribute(source);if(!t)return;const other=source==='data-theme'?'data-bd-theme':'data-theme';if(H.getAttribute(other)!==t){themeBusy=true;H.setAttribute(other,t);requestAnimationFrame(()=>themeBusy=false)}}
+if(H.hasAttribute('data-theme'))mirrorTheme('data-theme');else if(H.hasAttribute('data-bd-theme'))mirrorTheme('data-bd-theme');
+new MutationObserver(ms=>{for(const m of ms)if(m.type==='attributes'&&(m.attributeName==='data-theme'||m.attributeName==='data-bd-theme')){mirrorTheme(m.attributeName);break}}).observe(H,{attributes:true,attributeFilter:['data-theme','data-bd-theme']});
+/* Short text-only posts use a 4:5 centered reading card; long writing stays a normal page. */
+function lineGuess(text){text=String(text||'').trim();if(!text)return 0;return Math.max(text.split(/\n/).length,Math.ceil(text.replace(/\s+/g,' ').length/36))}
+function decorateCard(card){if(!card||card.nodeType!==1)return;const body=card.querySelector?.('.post-body');if(!body)return;const templ=/style-tpl[1-8]/.test(card.className||''),news=card.classList.contains('bd104-news-post'),update=card.classList.contains('profile-update-post');const media=!!card.querySelector('.post-media img,.post-media video,.post-media audio,.composer-media-render img,.composer-media-render video,.composer-media-render audio,.bd104-news-image2 img');if(templ||news||update||media){card.classList.remove('bd106-short-text-card','bd106-long-text-card');return}const n=lineGuess(body.textContent);const short=n>0&&n<=10;card.classList.toggle('bd106-short-text-card',short);card.classList.toggle('bd106-long-text-card',!short)}
+function scanCards(root=D){const sel='article.post,article.bd-live-post,.post-card[data-post],.post-card[data-post-id],[data-post-card]';if(root.matches?.(sel))decorateCard(root);root.querySelectorAll?.(sel).forEach(decorateCard)}
+/* A video that leaves the viewport must stop and become silent. Starting one video stops every other video. */
+const seenVideo=new WeakSet();
+const vio='IntersectionObserver'in W?new IntersectionObserver(es=>{for(const e of es){const v=e.target;if(!e.isIntersecting||e.intersectionRatio<.28){try{v.pause()}catch(_){}v.muted=true;v.defaultMuted=true;v.removeAttribute('autoplay')}}},{threshold:[0,.12,.28,.5,.75]}):null;
+function registerVideo(v){if(!v||seenVideo.has(v))return;seenVideo.add(v);v.playsInline=true;vio?.observe(v)}
+function scanVideos(root=D){if(root.tagName==='VIDEO')registerVideo(root);root.querySelectorAll?.('video').forEach(registerVideo)}
+D.addEventListener('play',e=>{const v=e.target;if(!(v instanceof HTMLVideoElement))return;D.querySelectorAll('video').forEach(o=>{if(o!==v){try{o.pause()}catch(_){}o.muted=true;o.defaultMuted=true}})},true);
+/* Comment expand/collapse keeps the tapped post anchored; no screen jump. */
+D.addEventListener('click',e=>{const t=e.target.closest?.('[data-bd31-comments],[data-bd31-comment-summary],[data-bd24-comments-toggle],[data-comment],[data-bd76-comment-summary]');if(!t)return;const card=t.closest?.('article.post,article.bd-live-post,.post-card,[data-post-card],[data-post],[data-post-id]');if(!card)return;const top=card.getBoundingClientRect().top;[0,45,140].forEach(ms=>setTimeout(()=>{const now=card.getBoundingClientRect().top,dy=now-top;if(Math.abs(dy)>.5)W.scrollBy(0,dy)},ms))},true);
+let queued=false;function scan(root=D){scanCards(root);scanVideos(root)}
+const mo=new MutationObserver(ms=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n);scanCards()})});
+function boot(){scan();mo.observe(D.body,{subtree:true,childList:true});setTimeout(()=>scan(),500);setTimeout(()=>scan(),1600)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+<script id="bd-v8106-profile-cover-composer-js">
+(()=>{'use strict';
+const D=document,W=window;
+function knownOwner(){try{return typeof state!=='undefined'&&!!state.owner}catch(_){return false}}
+function targetId(){try{return String((typeof state!=='undefined'&&state.target?.id)||'')}catch(_){return''}}
+async function confirmOwner(){
+ let owner=knownOwner();let session=null;
+ if(!owner){const c=W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase;try{session=(await c?.auth?.getSession?.()).data?.session||null}catch(_){}const uid=String(session?.user?.id||''),tid=targetId();if(uid&&tid&&uid===tid)owner=true}
+ if(!owner)return false;
+ try{if(typeof state!=='undefined')state.owner=true}catch(_){}
+ D.body.classList.add('is-owner');D.body.classList.remove('bd-v842-visitor','bd-v841-visitor');
+ const c=D.getElementById('composer');if(c){c.hidden=false;c.removeAttribute('hidden');c.style.removeProperty('display')}
+ const hint=D.getElementById('coverHint');let draft=false;try{draft=!!(typeof state!=='undefined'&&state.coverDraft)}catch(_){}if(hint&&!draft){hint.hidden=false;hint.removeAttribute('hidden')}
+ return true;
+}
+function enhanceCoverDraft(){const a=D.getElementById('coverAdjust'),s=D.getElementById('saveCoverBtn'),c=D.getElementById('cancelCoverBtn');if(!a)return;if(!a.hidden){a.setAttribute('role','group');a.setAttribute('aria-label','কভার সংরক্ষণ');if(s){s.textContent=s.disabled?'সেভ হচ্ছে…':'✓ সংরক্ষণ';s.setAttribute('aria-label','কভার ছবি ও অবস্থান সংরক্ষণ করুন')}if(c)c.textContent='বাতিল'}}
+const comp=D.getElementById('composer');if(comp)new MutationObserver(()=>{if(knownOwner()&&comp.hidden){comp.hidden=false;comp.removeAttribute('hidden')}}).observe(comp,{attributes:true,attributeFilter:['hidden']});
+const ca=D.getElementById('coverAdjust');if(ca)new MutationObserver(enhanceCoverDraft).observe(ca,{attributes:true,attributeFilter:['hidden']});
+D.getElementById('coverInput')?.addEventListener('change',()=>setTimeout(()=>{enhanceCoverDraft();D.getElementById('coverAdjust')?.scrollIntoView?.({block:'nearest',behavior:'smooth'})},80),false);
+function boot(){confirmOwner().then(enhanceCoverDraft);[300,900,1800,3200].forEach(ms=>setTimeout(()=>confirmOwner().then(enhanceCoverDraft),ms))}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
 
