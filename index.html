@@ -15,7 +15,7 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.110-two-newspaper-cards-headline-fonts-20260811">
+<meta name="bhubondanga-build" content="V8.114-v113-newspaper-natural-height-recovery-20260811">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
@@ -7449,5 +7449,109 @@ function boot(){reconcileBackdrop();syncGuest();for(const sel of drawers.concat(
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
+
+
+<!-- BHUBONDANGA V8.114 — V8.113 NEWSPAPER NATURAL-HEIGHT RECOVERY ONLY — 2026-08-11 -->
+<style id="bd-v8114-newspaper-natural-height-lock">
+/* Surgical scope: published newspaper cards only. Do not alter reaction/comment/reels/sidebar/Supabase. */
+#postList article.post.bd104-news-post,
+#postList article.post.bd104-news-post .bd110-newspaper-sheet{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+}
+#postList article.post.bd104-news-post .bd110-newspaper-sheet{
+  overflow:visible!important;
+  padding-bottom:13px!important;
+}
+/* Newspaper text is never allowed to inherit a poster/template height. */
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-body{
+  display:block!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  padding-bottom:0!important;
+  margin-bottom:0!important;
+  align-content:initial!important;
+  align-items:initial!important;
+  justify-content:initial!important;
+  place-items:initial!important;
+  white-space:pre-line!important;
+}
+/* Keep the existing compact preview contract, but without phantom reserved height. */
+#postList article.post.bd104-news-post:not(.bd76-inline-open):not(.bd-inline-expanded):not(.bd63-expanded):not(.expanded) .bd110-newspaper-sheet>.post-body.collapsed{
+  display:block!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:9.6em!important;
+  overflow:hidden!important;
+  aspect-ratio:auto!important;
+  -webkit-box-orient:initial!important;
+}
+#postList article.post.bd104-news-post:is(.bd76-inline-open,.bd-inline-expanded,.bd63-expanded,.expanded) .bd110-newspaper-sheet>.post-body{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  aspect-ratio:auto!important;
+}
+/* Media wrappers size themselves from their real media, never from stale 4:5/template dimensions. */
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.composer-media-render,
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-media,
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.bd104-news-image2{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  aspect-ratio:auto!important;
+  padding-bottom:0!important;
+  overflow:hidden!important;
+}
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.composer-media-render>img,
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.composer-media-render>video,
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-media>img,
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-media>video,
+#postList article.post.bd104-news-post .bd110-newspaper-sheet>.bd104-news-image2>img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:min(70vh,520px)!important;
+  aspect-ratio:auto!important;
+  object-fit:cover!important;
+}
+@media(max-width:520px){
+  #postList article.post.bd104-news-post .bd110-newspaper-sheet{padding-bottom:11px!important}
+  #postList article.post.bd104-news-post .bd110-newspaper-sheet>.composer-media-render>img,
+  #postList article.post.bd104-news-post .bd110-newspaper-sheet>.composer-media-render>video,
+  #postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-media>img,
+  #postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-media>video,
+  #postList article.post.bd104-news-post .bd110-newspaper-sheet>.bd104-news-image2>img{max-height:62vh!important}
+}
+</style>
+<script id="bd-v8114-newspaper-natural-height-js">
+(()=>{'use strict';
+if(window.__BD_V8114_NEWS_HEIGHT__)return;window.__BD_V8114_NEWS_HEIGHT__=true;
+const D=document;
+function clean(card){
+  if(!card?.classList?.contains('bd104-news-post'))return;
+  const sheet=card.querySelector('.bd110-newspaper-sheet');if(!sheet)return;
+  /* Remove only stale inline geometry; content, order and data are untouched. */
+  for(const el of [sheet,sheet.querySelector(':scope > .post-body'),...sheet.querySelectorAll(':scope > .composer-media-render,:scope > .post-media,:scope > .bd104-news-image2')].filter(Boolean)){
+    for(const k of ['height','min-height','max-height','aspect-ratio','padding-bottom'])el.style.removeProperty(k);
+  }
+  /* An empty media shell must not reserve white space. */
+  sheet.querySelectorAll(':scope > .composer-media-render,:scope > .post-media,:scope > .bd104-news-image2').forEach(w=>{
+    const m=w.querySelector('img[src],video[src],video source[src],audio[src],audio source[src]');
+    if(!m && !(w.textContent||'').trim())w.remove();
+  });
+}
+function scan(root=D){if(root.matches?.('article.post.bd104-news-post'))clean(root);root.querySelectorAll?.('article.post.bd104-news-post').forEach(clean)}
+let q=false;const mo=new MutationObserver(ms=>{if(q)return;q=true;requestAnimationFrame(()=>{q=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n)})});
+function boot(){scan();mo.observe(D.getElementById('postList')||D.body,{childList:true,subtree:true});setTimeout(()=>scan(),500);setTimeout(()=>scan(),1500)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 </html>
