@@ -15,7 +15,7 @@ onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
 <title>হোম | ভুবনডাঙ্গার কবিতা</title>
-<meta name="bhubondanga-build" content="V8.101-single-reaction-inline-original-media-20260810">
+<meta name="bhubondanga-build" content="V8.102-single-reaction-inline-original-media-20260810">
 
 <meta content="ভুবনডাঙ্গার কবিতা—বাংলা কবিতা, প্রলাপ, চিঠিপত্র, আবৃত্তি, পরিবেশ, সাহিত্য আলোচনা ও মানবিক আবেদনের একটি মুক্ত ভুবন।" name="description"/>
 <style>
@@ -2314,6 +2314,30 @@ window.addEventListener('blur',clear,{passive:true});
 #loadMoreBtn.load-btn:disabled{cursor:wait;opacity:.9}
 .bd-load-spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.38);border-top-color:#fff;border-radius:50%;animation:bdV896Spin .72s linear infinite;flex:0 0 auto}
 @keyframes bdV896Spin{to{transform:rotate(360deg)}}
+</style>
+
+<style id="bd-v8102-hardening-css">
+/* V8.102 — only center feed scrolls on desktop; mobile keeps normal document scrolling. */
+#postList,.center-col{touch-action:pan-y pinch-zoom!important;overscroll-behavior-y:auto!important}
+#bd101ReactionTray,#bd101ReactionTray *{touch-action:manipulation!important}
+#bd101ReactionTray:not(.open){pointer-events:none!important}
+@media (min-width:900px){
+  html,body{height:100%!important;overflow:hidden!important}
+  body{overscroll-behavior:none!important}
+  .layout{height:calc(100dvh - var(--bd-fix-header-h,76px) - var(--bd-fix-ticker-h,34px) - var(--bd-fix-nav-h,76px))!important;min-height:0!important;overflow:hidden!important;align-items:stretch!important}
+  #leftSidebar,#rightSidebar,.left-col,.right-col{position:relative!important;top:auto!important;height:100%!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important}
+  .center-col{height:100%!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;scrollbar-gutter:stable!important}
+}
+@media (max-width:899px){
+  html,body{height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;touch-action:pan-y pinch-zoom!important}
+  .layout,.center-col{height:auto!important;max-height:none!important;overflow:visible!important}
+}
+/* Inline media never creates a second copy or modal. */
+#postList .bd878-media-detail{display:none!important;pointer-events:none!important}
+#postList [data-bd101-media-open="1"]{touch-action:pan-y pinch-zoom!important}
+#postList .bd101-media-open img,#postList .bd101-media-open video{width:100%!important;height:auto!important;max-height:82dvh!important;object-fit:contain!important}
+/* 4:5 writing-card ceiling: small writing stays compact; selected designed cards may grow up to FB-photo-like 4:5. */
+#postList .post [class*="template"],#postList .post [class*="quote-card"],#postList .post [class*="writing-card"]{max-height:min(82dvh,calc((100vw - 32px)*1.25))!important;overflow:hidden!important}
 </style>
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
@@ -7266,7 +7290,7 @@ qa('.bd878-media-detail').forEach(enhanceDeck);
 
 
 
-<!-- BHUBONDANGA V8.101 TARGETED STABILITY REPAIR — 2026-08-10
+<!-- BHUBONDANGA V8.102 TARGETED STABILITY REPAIR — 2026-08-10
      STRICT SCOPE: reaction freeze + photo/video duplicate only.
      No redesign, no popup/modal, no feed rerender, no body lock. -->
 <style id="bd-v8101-reaction-media-stability-css">
@@ -7292,7 +7316,7 @@ qa('.bd878-media-detail').forEach(enhanceDeck);
 [data-bd101-react-main] .bd31-main-reaction img{display:block!important;width:22px!important;height:22px!important;object-fit:contain!important}
 @media(max-width:430px){#bd101ReactionTray{gap:1px;padding:5px 6px}#bd101ReactionTray button{width:37px;height:37px;min-width:37px}#bd101ReactionTray img{width:35px;height:35px}}
 
-/* V8.101 media rule: expand THE ORIGINAL media node in the same post. Never clone it. Never popup. */
+/* V8.102 media rule: expand THE ORIGINAL media node in the same post. Never clone it. Never popup. */
 #postList .bd878-media-detail{display:none!important;visibility:hidden!important;pointer-events:none!important}
 #postList .composer-media-render.bd101-media-open,
 #postList img.post-media.bd101-media-open,
@@ -7346,14 +7370,17 @@ function closeTray(){const t=q('#bd101ReactionTray');if(!t)return;t.classList.re
 function openTray(main){const card=cardOf(main);if(!card)return;hydrate(card);const t=tray(),r=main.getBoundingClientRect();t.__card=card;t.__main=main;t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||298,h=t.offsetHeight||51;let left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+8);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'})}
 async function persist(card,next,prev){const c=db(),me=user(),id=pid(card);if(!c||!me||!id)return false;const remove=!next;try{if(!remove){const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(next)});if(!r.error)return true}else if(prev){/* RPC toggles off when the same reaction is chosen. */const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(prev)});if(!r.error)return true}}catch{}for(const table of ['post_reactions','reactions']){try{const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',me.id).maybeSingle();let r;if(remove)r=cur.data?await c.from(table).delete().eq('post_id',id).eq('user_id',me.id):{error:null};else if(cur.data)r=await c.from(table).update({reaction:next}).eq('post_id',id).eq('user_id',me.id);else r=await c.from(table).insert({post_id:id,user_id:me.id,reaction:next});if(!r?.error)return true}catch{}}try{localStorage.setItem('bd101-react-'+id,JSON.stringify({reaction:next,at:Date.now()}))}catch{}return false}
 function apply(card,type,fromTray=false){const me=user();if(!me){location.href='login.html?next='+encodeURIComponent(location.pathname+location.search+location.hash);return}hydrate(card);let list=rows(card).slice(),prev=current(card);if(!prev){const mine=list.find(x=>String(x.user_id)===String(me.id));prev=String(mine?.reaction||'')}let next=type;if(!fromTray&&prev)next='';if(fromTray&&prev===type)next=type;list=list.filter(x=>String(x.user_id)!==String(me.id));if(next)list.push({user_id:me.id,reaction:next});setRows(card,list);renderMain(card,next);renderSummary(card,list);closeTray();card.__bd101Queue=(card.__bd101Queue||Promise.resolve()).then(()=>persist(card,next,prev)).catch(()=>false)}
-let press=null;
-W.addEventListener('pointerdown',e=>{const main=e.target.closest?.('[data-bd101-react-main]');if(!main)return;if(e.pointerType==='mouse')return;e.stopPropagation();press={main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,t:setTimeout(()=>{if(!press||press.id!==e.pointerId)return;press.held=true;openTray(main)},330)}},{capture:true});
-W.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot(e.clientX-press.x,e.clientY-press.y)>12){clearTimeout(press.t);press=null}},{capture:true,passive:true});
-W.addEventListener('pointerup',e=>{if(!press||press.id!==e.pointerId)return;const p=press;clearTimeout(p.t);press=null;if(p.held){e.preventDefault();e.stopPropagation();p.main.dataset.bd101Skip='1';setTimeout(()=>delete p.main.dataset.bd101Skip,450)}},{capture:true});
-W.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId){clearTimeout(press.t);press=null}},{capture:true});
-W.addEventListener('contextmenu',e=>{if(e.target.closest?.('[data-bd101-react-main],#bd101ReactionTray')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}},{capture:true});
-W.addEventListener('click',e=>{const pick=e.target.closest?.('[data-bd101-pick]');if(pick){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const t=tray(),card=t.__card;if(card)apply(card,pick.dataset.bd101Pick,true);return}const main=e.target.closest?.('[data-bd101-react-main]');if(main){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(main.dataset.bd101Skip){delete main.dataset.bd101Skip;return}apply(cardOf(main),'like',false);return}if(!e.target.closest?.('#bd101ReactionTray'))closeTray()},{capture:true});
-W.addEventListener('scroll',closeTray,{capture:true,passive:true});W.addEventListener('resize',closeTray,{passive:true});
+/* V8.102: no long-press pointer ownership. A normal tap opens the tray; picker selection persists.
+   This deliberately avoids pointerdown/touchstart capture so vertical scrolling can never be held by reactions. */
+W.addEventListener('click',e=>{
+  const pick=e.target.closest?.('[data-bd101-pick]');
+  if(pick){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const t=tray(),card=t.__card;if(card)apply(card,pick.dataset.bd101Pick,true);return}
+  const main=e.target.closest?.('[data-bd101-react-main]');
+  if(main){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openTray(main);return}
+  if(!e.target.closest?.('#bd101ReactionTray'))closeTray()
+},{capture:true});
+W.addEventListener('scroll',closeTray,{capture:true,passive:true});
+W.addEventListener('resize',closeTray,{passive:true});
 
 /* -------- ORIGINAL-NODE inline photo/video expansion -------- */
 function mediaSource(hit){if(!hit)return null;if(hit.matches?.('img,video'))return hit;const wrap=hit.closest?.('.composer-media-render');return wrap?q(':scope > img,:scope > video',wrap):null}
@@ -7370,5 +7397,25 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 })();
 </script>
 
+
+<script id="bd-v8102-hardening-js">
+(()=>{'use strict';
+if(window.__BD_V8102_HARDENING__)return;window.__BD_V8102_HARDENING__=1;
+const D=document;
+function clearLegacyReactionHitboxes(){
+  for(const el of D.querySelectorAll('#bd31ReactionTray,#bd64ReactionTray,#bdV814ReactionTray,.bd-index-reaction-picker,.bd-v814-picker,.bd24-picker')){
+    el.classList.remove('open','show','visible','active');el.setAttribute('aria-hidden','true');el.style.pointerEvents='none';el.style.display='none';
+  }
+}
+function releaseReactionState(){
+  clearLegacyReactionHitboxes();
+  const t=D.getElementById('bd101ReactionTray');if(t&&!t.classList.contains('open'))t.style.pointerEvents='none';
+}
+D.addEventListener('DOMContentLoaded',releaseReactionState,{once:true});
+D.addEventListener('bd:supabase-posts',()=>setTimeout(releaseReactionState,0),true);
+D.addEventListener('visibilitychange',()=>{if(!D.hidden)releaseReactionState()});
+window.addEventListener('pageshow',releaseReactionState,{passive:true});
+})();
+</script>
 </body>
 </html>
