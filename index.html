@@ -2501,10 +2501,10 @@ function demoPosts(){
  return Array.from({length:45},(_,i)=>({id:'demo-'+(i+1),type:types[i%types.length],title:titles[i],body:bodies[i%bodies.length]+'\n\nএই ডেমো প্রকাশনাটি ভুবনডাঙ্গার সম্পূর্ণ ফিড পরীক্ষা করার জন্য রাখা হয়েছে।',authorName:names[i%names.length],authorUsername:names[i%names.length]==='মাহমুদ সোহেল'?'mahmud-sohel':'demo-writer-'+(i%names.length+1),authorAvatar:'',createdAt:new Date(now-i*3600000).toISOString(),likes:27+i*3,comments:(i+2)%9,status:'published',cardStyle:styles[i%styles.length],demo:true}));
 }
 
-let posts=storedPosts();if(!posts.length&&new URLSearchParams(location.search).get('demo')==='1')posts=demoPosts();
+let posts=storedPosts();if(!posts.length)posts=demoPosts();
 let visible=15,category='all',sort='forYou';
-document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length&&new URLSearchParams(location.search).get('demo')==='1')posts=demoPosts();renderPosts();openRequestedPost()});
-window.addEventListener('storage',e=>{if(sourceKeys.includes(e.key)){posts=storedPosts();if(!posts.length&&new URLSearchParams(location.search).get('demo')==='1')posts=demoPosts();renderPosts();openRequestedPost()}});document.addEventListener('bd:home-feed-updated',()=>{posts=storedPosts();if(!posts.length&&new URLSearchParams(location.search).get('demo')==='1')posts=demoPosts();renderPosts();openRequestedPost()});
+document.addEventListener('bd:supabase-posts',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
+window.addEventListener('storage',e=>{if(sourceKeys.includes(e.key)){posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()}});document.addEventListener('bd:home-feed-updated',()=>{posts=storedPosts();if(!posts.length)posts=demoPosts();renderPosts();openRequestedPost()});
 const likedKey='bhubondangaIndexLovedPosts',memoryKey='bhubondangaMemories',commentKey='bhubondangaIndexComments',likeCountKey='bhubondangaIndexLikeCounts',activityKey='bhubondangaPostActivity';
 function likesObject(){return obj(likeCountKey)}
 function activityObject(){return obj(activityKey)}
@@ -7555,113 +7555,5 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 })();
 </script>
 
-
-<style id="bd-production-feed-safari-safety-v1">
-/* Production safety: no phantom fixed heights on normal/news feed cards. Template cards keep their own 4:5 rules. */
-@media (max-width:899px){
-  html,body{visibility:visible!important;opacity:1!important;min-height:100%!important}
-  body:not(.locked){overflow-y:auto!important}
-  #postList,.post-list,.center-col,.main-content{min-height:0!important}
-  .post,.bd-live-post{min-height:0!important;height:auto!important;max-height:none!important}
-  .post.bd104-news-post,.post.bd104-news-post .bd110-newspaper-sheet,
-  .post.bd104-news-post .post-body,.post.bd104-news-post .composer-media-render,
-  .post.bd104-news-post .post-media,.post.bd104-news-post .bd104-news-image2{
-    min-height:0!important;height:auto!important;max-height:none!important;aspect-ratio:auto!important
-  }
-  .post.bd104-news-post .composer-media-render img,
-  .post.bd104-news-post .post-media img,
-  .post.bd104-news-post .bd104-news-image2 img{
-    display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important
-  }
-}
-</style>
-<script id="bd-production-feed-safari-safety-v1">
-(function(){
-  'use strict';
-  var D=document,W=window;
-  var BAD_STATUS={deleted:1,rejected:1,archived:1,pending_review:1,published_flagged:1,draft:1,private:1};
-  var GOOD_STATUS={published:1,approved:1,active:1,public:1};
-  function publicRows(rows){
-    return (Array.isArray(rows)?rows:[]).filter(function(r){
-      var st=String(r&&r.status!=null?r.status:'').toLowerCase().trim();
-      var vis=String(r&&(r.visibility!=null?r.visibility:r.privacy!=null?r.privacy:'')).toLowerCase().trim();
-      if(BAD_STATUS[st])return false;
-      if(st && !GOOD_STATUS[st])return false;
-      if(vis && !['public','everyone','all'].includes(vis))return false;
-      return true;
-    });
-  }
-  function dispatchRows(rows){
-    W.__BD_SUPABASE_POSTS=publicRows(rows);
-    try{D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows:W.__BD_SUPABASE_POSTS,source:'rest'}}))}catch(_){ }
-    var count=D.getElementById('feedCount');
-    if(count)count.textContent=String(W.__BD_SUPABASE_POSTS.length).replace(/\d/g,function(d){return '০১২৩৪৫৬৭৮৯'[Number(d)]})+'টি লেখা';
-  }
-  async function restFeed(){
-    var base=W.SUPABASE_URL||'https://ihjiisysrwgxxkuywuhc.supabase.co';
-    var key=W.SUPABASE_KEY||'sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz';
-    if(!base||!key)return false;
-    var headers={'apikey':key,'Accept':'application/json'};
-    try{
-      var c=W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null;
-      if(c&&c.auth&&typeof c.auth.getSession==='function'){
-        var sr=await c.auth.getSession();
-        var token=sr&&sr.data&&sr.data.session&&sr.data.session.access_token;
-        if(token)headers.Authorization='Bearer '+token;
-      }
-    }catch(_){ }
-    var root=base.replace(/\/$/,'')+'/rest/v1/posts';
-    var urls=[root+'?select=*&order=created_at.desc&limit=100',root+'?select=*&limit=100'];
-    for(var i=0;i<urls.length;i++){
-      try{
-        var r=await fetch(urls[i],{method:'GET',headers:headers,cache:'no-store',credentials:'omit'});
-        if(!r.ok)throw new Error('posts '+r.status);
-        var rows=await r.json();
-        dispatchRows(rows);
-        return true;
-      }catch(e){
-        if(i===urls.length-1)console.warn('Bhubondanga REST feed:',e&&e.message?e.message:e);
-      }
-    }
-    return false;
-  }
-  function clearStaleOverlays(){
-    if(!D.body)return;
-    D.body.classList.remove('locked','modal-open','no-scroll','bd-modal-open','bd-reels-open');
-    var sels=['#drawerBackdrop','#backdrop','#midnightDrawerBackdrop','.drawer-backdrop','#bd35CommentBackdrop','#bdV814Backdrop','.bd-r6-sheet-backdrop','.bd-v814-sheet-backdrop','.bd48-more-backdrop'];
-    sels.forEach(function(sel){
-      D.querySelectorAll(sel).forEach(function(el){
-        el.classList.remove('show','open','active');
-        el.setAttribute('aria-hidden','true');
-      });
-    });
-    ['#masterPostShell','#bd45PostViewer','#bd45Reels','#bdV814Sheet'].forEach(function(sel){
-      var el=D.querySelector(sel);if(el){el.classList.remove('show','open','active');el.style.display='none';el.setAttribute('aria-hidden','true')}
-    });
-  }
-  function recoverBlankSafariViewport(){
-    setTimeout(function(){
-      if(!W.scrollY||W.scrollY<240)return;
-      var selectors='.post,.bd-live-post,.site-header,.date-bar,.category-wrap,.humanitarian-card,.composer,#postList,.newsfeed-toolbar';
-      var xs=[.25,.5,.75],ys=[.22,.42,.62,.82],seen=0;
-      for(var i=0;i<xs.length;i++)for(var j=0;j<ys.length;j++){
-        var el=D.elementFromPoint(Math.max(1,W.innerWidth*xs[i]),Math.max(1,W.innerHeight*ys[j]));
-        if(el&&el.closest&&el.closest(selectors))seen++;
-      }
-      if(seen===0&&D.querySelector('#postList .post,#postList .bd-live-post'))W.scrollTo(0,0);
-    },1200);
-  }
-  function boot(){
-    clearStaleOverlays();
-    restFeed();
-    setTimeout(restFeed,900);
-    setTimeout(restFeed,2600);
-    recoverBlankSafariViewport();
-  }
-  W.addEventListener('pageshow',function(){clearStaleOverlays();recoverBlankSafariViewport();setTimeout(restFeed,120)});
-  D.addEventListener('visibilitychange',function(){if(!D.hidden)setTimeout(restFeed,80)});
-  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
 </body>
 </html>
