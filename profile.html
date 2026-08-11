@@ -644,12 +644,17 @@ html[data-theme="dark"] .bd54-view-replies{color:#b8c7ef!important}
 
 
 <style id="bd-v8120-bangladesh-profile-flag-media-lock">
-/* Tiny standing Bangladesh flag appears only when the saved location contains Bangladesh. */
-.bd-country-flag{display:inline-flex;align-items:center;justify-content:center;width:27px;height:23px;margin-left:1px;vertical-align:middle;position:relative;filter:drop-shadow(0 3px 4px rgba(25,43,65,.12));flex:0 0 27px}
-.bd-country-flag .bd-cf-pole{position:absolute;left:3px;top:2px;width:2px;height:18px;border-radius:3px;background:linear-gradient(90deg,#8b744e,#d6c39d,#76603e)}
-.bd-country-flag .bd-cf-cloth{position:absolute;left:5px;top:3px;width:20px;height:12px;border-radius:1px 2px 2px 1px;background:#006a4e;transform-origin:0 50%;animation:bdProfileFlagWave 3.4s ease-in-out infinite;overflow:hidden}
-.bd-country-flag .bd-cf-cloth::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#f42a41;left:8px;top:3px}
+/* Country flag is based only on the country saved in the profile editor — never device/IP/geolocation. */
+.bd-country-flag{display:inline-flex;align-items:center;justify-content:center;width:29px;height:24px;margin-left:1px;vertical-align:middle;position:relative;filter:drop-shadow(0 3px 4px rgba(25,43,65,.12));flex:0 0 29px;cursor:default}
+.bd-country-flag .bd-cf-pole{position:absolute;left:3px;top:2px;width:2px;height:19px;border-radius:3px;background:linear-gradient(90deg,#8b744e,#d6c39d,#76603e)}
+.bd-country-flag .bd-cf-cloth{position:absolute;left:5px;top:3px;width:21px;height:13px;border-radius:1px 2px 2px 1px;transform-origin:0 50%;animation:bdProfileFlagWave 3.4s ease-in-out infinite;overflow:hidden;background:#eef2f8}
 .bd-country-flag .bd-cf-base{position:absolute;left:1px;bottom:2px;width:8px;height:2px;border-radius:50%;background:#806b49}
+.bd-country-flag .bd-cf-emoji{position:absolute;inset:-2px -2px -2px -1px;display:grid;place-items:center;font:19px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;transform:scale(1.14);background:#fff}
+.bd-country-flag[data-country="BD"] .bd-cf-cloth{background:#006a4e}
+.bd-country-flag[data-country="BD"] .bd-cf-cloth::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#f42a41;left:8px;top:3.5px}
+.bd-country-flag[data-country="BD"] .bd-cf-emoji,.bd-country-flag[data-country="IN"] .bd-cf-emoji{display:none}
+.bd-country-flag[data-country="IN"] .bd-cf-cloth{background:linear-gradient(to bottom,#ff9933 0 33.333%,#fff 33.333% 66.666%,#138808 66.666% 100%)}
+.bd-country-flag[data-country="IN"] .bd-cf-cloth::after{content:"";position:absolute;left:8px;top:4px;width:5px;height:5px;border:1px solid #000080;border-radius:50%;box-sizing:border-box}
 @keyframes bdProfileFlagWave{0%,100%{transform:perspective(70px) rotateY(0deg)}50%{transform:perspective(70px) rotateY(-8deg) skewY(-1deg)}}
 @media(prefers-reduced-motion:reduce){.bd-country-flag .bd-cf-cloth{animation:none!important}}
 /* Cover/profile-update posts use the uploaded image's natural aspect ratio: no phantom fixed canvas. */
@@ -709,7 +714,8 @@ html[data-theme="dark"] .bd54-view-replies{color:#b8c7ef!important}
           <h3>প্রোফাইল সম্পাদনা</h3>
           <div class="inline-edit-grid">
             <input class="inline-edit-field" id="editDisplayName" maxlength="100" placeholder="নাম">
-            <input class="inline-edit-field" id="editLocation" maxlength="120" placeholder="কুমিল্লা, বাংলাদেশ">
+            <select class="inline-edit-field" id="editCountry" aria-label="দেশ নির্বাচন"></select>
+            <input class="inline-edit-field full" id="editLocation" maxlength="120" placeholder="জেলা / শহর — যেমন কুমিল্লা বা কলকাতা">
             <textarea class="inline-edit-field full" id="editBio" maxlength="500" placeholder="Bio লিখুন"></textarea>
           </div>
           <div class="inline-edit-media">
@@ -899,12 +905,39 @@ function editLocation(){
   const h=$('#location');h.contentEditable='true';h.focus();
   const sel=window.getSelection(),range=document.createRange();range.selectNodeContents(h);range.collapse(false);sel.removeAllRanges();sel.addRange(range)
 }
+
+const BD_COUNTRY_CODES=["BD", "IN", "AE", "AF", "AL", "AM", "AO", "AR", "AT", "AU", "AZ", "BA", "BB", "BE", "BF", "BG", "BH", "BI", "BJ", "BN", "BO", "BR", "BS", "BT", "BW", "BY", "BZ", "CA", "CD", "CF", "CG", "CH", "CI", "CL", "CM", "CN", "CO", "CR", "CU", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "ER", "ES", "ET", "FI", "FJ", "FM", "FR", "GA", "GB", "GD", "GE", "GH", "GM", "GN", "GQ", "GR", "GT", "GW", "GY", "HK", "HN", "HR", "HT", "HU", "ID", "IE", "IL", "IQ", "IR", "IS", "IT", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KZ", "LA", "LB", "LC", "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MR", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA", "NE", "NG", "NI", "NL", "NO", "NP", "NR", "NZ", "OM", "PA", "PE", "PG", "PH", "PK", "PL", "PS", "PT", "PW", "PY", "QA", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SD", "SE", "SG", "SI", "SK", "SL", "SM", "SN", "SO", "SR", "SS", "ST", "SV", "SY", "SZ", "TD", "TG", "TH", "TJ", "TL", "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "US", "UY", "UZ", "VA", "VC", "VE", "VN", "VU", "WS", "YE", "ZA", "ZM", "ZW"];
+let BD_REGION_BN=null,BD_REGION_EN=null;
+try{BD_REGION_BN=new Intl.DisplayNames(['bn-BD','bn'],{type:'region'})}catch(_){try{BD_REGION_BN=new Intl.DisplayNames(['bn'],{type:'region'})}catch(__){}}
+try{BD_REGION_EN=new Intl.DisplayNames(['en'],{type:'region'})}catch(_){}
+function bdCountryLabel(code){code=String(code||'BD').toUpperCase();if(code==='BD')return'বাংলাদেশ';if(code==='IN')return'ভারত';return BD_REGION_BN?.of(code)||BD_REGION_EN?.of(code)||code}
+function bdCountryEnglish(code){return BD_REGION_EN?.of(String(code||'').toUpperCase())||''}
+function bdFlagEmoji(code){code=String(code||'').toUpperCase();return /^[A-Z]{2}$/.test(code)?String.fromCodePoint(...[...code].map(c=>127397+c.charCodeAt(0))):''}
+function bdCountryAliases(code){
+ const map={BD:['বাংলাদেশ','bangladesh'],IN:['ভারত','ইন্ডিয়া','ইন্ডিয়া','india','bharat'],GB:['যুক্তরাজ্য','ইউকে','uk','united kingdom','britain'],US:['যুক্তরাষ্ট্র','আমেরিকা','usa','us','united states','america'],AE:['সংযুক্ত আরব আমিরাত','ইউএই','uae','united arab emirates'],SA:['সৌদি আরব','saudi arabia'],CA:['কানাডা','canada'],AU:['অস্ট্রেলিয়া','অস্ট্রেলিয়া','australia'],MY:['মালয়েশিয়া','মালয়েশিয়া','malaysia'],SG:['সিঙ্গাপুর','singapore'],QA:['কাতার','qatar'],OM:['ওমান','oman'],KW:['কুয়েত','কুয়েত','kuwait'],BH:['বাহরাইন','bahrain'],NL:['নেদারল্যান্ডস','netherlands'],DE:['জার্মানি','germany'],IT:['ইতালি','italy'],FR:['ফ্রান্স','france'],JP:['জাপান','japan']};
+ const a=[...(map[code]||[])],bn=bdCountryLabel(code),en=bdCountryEnglish(code);if(bn)a.push(bn);if(en)a.push(en);return [...new Set(a.filter(Boolean))]
+}
+function bdCountryFromLocation(text){
+ const raw=String(text||'').trim(),low=raw.toLocaleLowerCase('bn');if(/বাংলাদেশ|bangladesh/i.test(raw))return'BD';if(/ভারত|ইন্ডিয়া|ইন্ডিয়া|india|bharat/i.test(raw))return'IN';
+ for(const code of BD_COUNTRY_CODES){if(code==='BD'||code==='IN')continue;for(const alias of bdCountryAliases(code)){if(alias&&low.includes(String(alias).toLocaleLowerCase('bn')))return code}}return'BD'
+}
+function bdStripCountry(text,code){let v=String(text||'').trim();for(const alias of bdCountryAliases(code)){if(!alias)continue;const safe=String(alias).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');v=v.replace(new RegExp('(?:\\s*[,·|/\\-]\\s*)?'+safe+'\\s*$','i'),'').trim()}return v.replace(/[\s,·|/\-]+$/,'').trim()}
+function bdComposeLocation(locality,code){code=String(code||'BD').toUpperCase();let base=String(locality||'').trim();for(const c of BD_COUNTRY_CODES)base=bdStripCountry(base,c);const country=bdCountryLabel(code);return base?base+', '+country:country}
+function bdPopulateCountrySelect(){
+ const s=document.getElementById('editCountry');if(!s||s.dataset.ready==='1')return;s.dataset.ready='1';s.innerHTML='';
+ const top=document.createElement('optgroup');top.label='বাংলাভাষী প্রধান অঞ্চল';for(const code of ['BD','IN']){const o=document.createElement('option');o.value=code;o.textContent=bdFlagEmoji(code)+'  '+bdCountryLabel(code);top.appendChild(o)}s.appendChild(top);
+ const rest=document.createElement('optgroup');rest.label='অন্যান্য দেশ';BD_COUNTRY_CODES.filter(c=>!['BD','IN'].includes(c)).map(code=>[code,bdCountryLabel(code)]).sort((a,b)=>a[1].localeCompare(b[1],'bn')).forEach(([code,label])=>{const o=document.createElement('option');o.value=code;o.textContent=bdFlagEmoji(code)+'  '+label;rest.appendChild(o)});s.appendChild(rest)
+}
+
 function openInlineProfileEditor(){
   if(!state.owner)return;
   const panel=$('#inlineProfileEditor');
   if(panel&&panel.parentElement!==document.body)document.body.appendChild(panel);
   $('#editDisplayName').value=profileName(state.target);
-  $('#editLocation').value=state.target?.location||'বাংলাদেশ';
+  bdPopulateCountrySelect();
+  const currentLocation=state.target?.location||'বাংলাদেশ',currentCountry=bdCountryFromLocation(currentLocation);
+  $('#editCountry').value=currentCountry;
+  $('#editLocation').value=bdStripCountry(currentLocation,currentCountry);
   $('#editBio').value=state.target?.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।';
   panel.hidden=false;
   document.documentElement.classList.add('bd52-profile-edit-open');
@@ -913,7 +946,7 @@ function openInlineProfileEditor(){
 }
 async function saveInlineProfile(){
   if(!state.owner||!state.me)return;
-  const name=$('#editDisplayName').value.trim(),locationText=$('#editLocation').value.trim(),bioText=$('#editBio').value.trim();
+  const name=$('#editDisplayName').value.trim(),countryCode=$('#editCountry')?.value||'BD',localityText=$('#editLocation').value.trim(),locationText=bdComposeLocation(localityText,countryCode),bioText=$('#editBio').value.trim();
   if(!name){toast('নাম খালি রাখা যাবে না');return}
   const btn=$('#saveInlineProfile');btn.disabled=true;const old=btn.textContent;btn.textContent='সেভ হচ্ছে…';
   try{
@@ -2804,20 +2837,33 @@ const mo=new MutationObserver(()=>{const old=D.getElementById('bd31ReactionTray'
 .bd58-template-chip[data-bd58-template^="tpl"]{background-color:#fff!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important}
 </style>
 
-<script id="bd-v8120-bangladesh-profile-flag-js">
-(()=>{'use strict';
-const D=document;
-function syncBDFlag(){
- const loc=D.getElementById('location');if(!loc)return;
- const text=(loc.textContent||'').trim();
- const on=/বাংলাদেশ|bangladesh/i.test(text);
- let flag=D.getElementById('bdCountryFlag');
- if(on&&!flag){flag=D.createElement('span');flag.id='bdCountryFlag';flag.className='bd-country-flag';flag.setAttribute('role','img');flag.setAttribute('aria-label','বাংলাদেশের পতাকা');flag.innerHTML='<i class="bd-cf-pole"></i><i class="bd-cf-cloth"></i><i class="bd-cf-base"></i>';loc.insertAdjacentElement('afterend',flag)}
- else if(!on&&flag)flag.remove();
-}
-function boot(){syncBDFlag();const loc=D.getElementById('location');if(loc)new MutationObserver(syncBDFlag).observe(loc,{childList:true,characterData:true,subtree:true})}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
+<script id="bd-v8121-profile-country-flag-js">
+(()=>{'use strict';const D=document;
+function syncCountryFlag(){const loc=D.getElementById('location');if(!loc)return;const code=typeof bdCountryFromLocation==='function'?bdCountryFromLocation(loc.textContent||''):'BD',label=typeof bdCountryLabel==='function'?bdCountryLabel(code):code;let flag=D.getElementById('bdCountryFlag');if(!flag){flag=D.createElement('span');flag.id='bdCountryFlag';flag.className='bd-country-flag';flag.setAttribute('role','img');flag.innerHTML='<i class="bd-cf-pole"></i><i class="bd-cf-cloth"><span class="bd-cf-emoji"></span></i><i class="bd-cf-base"></i>';loc.insertAdjacentElement('afterend',flag)}flag.dataset.country=code;flag.setAttribute('aria-label',label+'-এর পতাকা');flag.title=label;const emoji=flag.querySelector('.bd-cf-emoji');if(emoji)emoji.textContent=typeof bdFlagEmoji==='function'?bdFlagEmoji(code):''}
+function boot(){syncCountryFlag();const loc=D.getElementById('location');if(loc)new MutationObserver(syncCountryFlag).observe(loc,{childList:true,characterData:true,subtree:true})}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();})();
 </script>
+
+<style id="bd-v8122-country-flag-history-link-lock">
+.bd-country-flag{overflow:visible!important}
+.bd-country-flag[data-country="BD"]{cursor:pointer!important}
+.bd-country-flag[data-country="BD"]:focus-visible{outline:2px solid rgba(36,146,115,.42);outline-offset:3px;border-radius:5px}
+@keyframes bdProfileFlagWave{
+  0%,100%{transform:perspective(62px) rotateY(0deg) skewY(0deg) translateY(0)}
+  20%{transform:perspective(62px) rotateY(-14deg) skewY(-2deg) translateY(-.3px)}
+  45%{transform:perspective(62px) rotateY(9deg) skewY(1deg) translateY(.2px)}
+  70%{transform:perspective(62px) rotateY(-10deg) skewY(-1.2deg) translateY(-.2px)}
+}
+@media(prefers-reduced-motion:reduce){.bd-country-flag .bd-cf-cloth{animation:none!important}}
+</style>
+<script id="bd-v8122-country-flag-history-link-js">
+(()=>{'use strict';const D=document;
+function syncLink(){const f=D.getElementById('bdCountryFlag');if(!f)return;const bd=String(f.dataset.country||'').toUpperCase()==='BD';if(bd){f.setAttribute('role','link');f.setAttribute('tabindex','0');f.setAttribute('aria-label','বাংলাদেশের পতাকা — বাংলাদেশের ইতিহাস খুলুন');f.title='বাংলাদেশের ইতিহাস';}else{f.setAttribute('role','img');f.removeAttribute('tabindex');}}
+D.addEventListener('click',e=>{const f=e.target.closest?.('#bdCountryFlag');if(f&&String(f.dataset.country||'').toUpperCase()==='BD'){e.preventDefault();location.href='bangladesh.html';}},true);
+D.addEventListener('keydown',e=>{const f=e.target?.closest?.('#bdCountryFlag');if(f&&String(f.dataset.country||'').toUpperCase()==='BD'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();location.href='bangladesh.html';}},true);
+function boot(){syncLink();const loc=D.getElementById('location');if(loc)new MutationObserver(()=>requestAnimationFrame(syncLink)).observe(loc,{childList:true,characterData:true,subtree:true});setTimeout(syncLink,300);setTimeout(syncLink,1200)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();})();
+</script>
+
 </body>
 </html>
