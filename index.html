@@ -7216,10 +7216,10 @@ function showPhoto(i){if(!photoItems.length)return;i=(i+photoItems.length)%photo
 function openPhoto(src){photoItems=photoSources();photoAt=Math.max(0,photoItems.findIndex(x=>x.src===src));const s=photoShell();showPhoto(photoAt);s.classList.add('open')}
 function closePhoto(){$('#bd116PhotoViewer')?.classList.remove('open')}
 function decoratePhoto(img){if(!img||img.dataset.bd116Photo==='1'||img.closest('#bd116PhotoViewer'))return;const card=cardOf(img);if(!card)return;const host=img.parentElement;if(!host)return;img.dataset.bd116Photo='1';host.classList.add('bd116-photo-host');const b=D.createElement('button');b.type='button';b.className='bd116-open-photo';b.setAttribute('aria-label','ছবি খুলুন');host.append(b)}
-function scan(root=D){root.querySelectorAll?.('#postList video').forEach(decorateVideo);root.querySelectorAll?.('#postList .composer-media-render img,#postList .post-media img,#postList .bd104-news-image2 img').forEach(decoratePhoto)}
+function scan(root=D){if(root.matches?.('video')&&root.closest?.('#postList'))decorateVideo(root);root.querySelectorAll?.('video').forEach(v=>{if(v.closest('#postList'))decorateVideo(v)});if(root.matches?.('img')&&root.closest?.('#postList .composer-media-render,#postList .post-media,#postList .bd104-news-image2'))decoratePhoto(root);root.querySelectorAll?.('.composer-media-render img,.post-media img,.bd104-news-image2 img').forEach(img=>{if(img.closest('#postList'))decoratePhoto(img)})}
 D.addEventListener('click',e=>{const vr=e.target.closest('.bd107-open-reel');if(vr){e.preventDefault();e.stopImmediatePropagation();const v=vr.parentElement.querySelector('video');open(id(cardOf(v)));return}const ph=e.target.closest('.bd116-open-photo');if(ph){e.preventDefault();e.stopImmediatePropagation();const img=ph.parentElement.querySelector('img');if(img)openPhoto(img.currentSrc||img.src)}},true);
 const io='IntersectionObserver'in W?new IntersectionObserver(es=>es.forEach(x=>{if(x.target.closest('#bd107Reels'))return;if(x.intersectionRatio<.25){try{x.target.pause()}catch{}x.target.muted=true}}),{threshold:[0,.25,.6]}):null;
-function boot(){scan();$$('#postList video').forEach(v=>io?.observe(v));new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1){scan(n);n.querySelectorAll?.('#postList video').forEach(v=>io?.observe(v))}}).observe(D.body,{childList:true,subtree:true})}
+function boot(){scan();$$('#postList video').forEach(v=>io?.observe(v));new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1){scan(n);if(n.matches?.('video')&&n.closest?.('#postList'))io?.observe(n);n.querySelectorAll?.('video').forEach(v=>{if(v.closest('#postList'))io?.observe(v)})}}).observe(D.body,{childList:true,subtree:true})}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 W.BhubondangaReels107={open,close};W.BhubondangaPhotoViewer={open:openPhoto,close:closePhoto};
 })();
@@ -7400,7 +7400,6 @@ function activate(layout){
  if(!form.dataset.bd110NewsFont)setFont('editorial');else setFont(form.dataset.bd110NewsFont);
  $$('.bd110-news-choice',picker).forEach(b=>b.classList.toggle('active',b.dataset.layout===layout));$('.bd104-news-choice',picker)?.classList.remove('active');
  const tools=$('.bd104-news-tools');if(tools)tools.hidden=false;try{W.BD65ApplyTemplate?.('none','index')}catch(_){}
- const none=$('[data-bd58-template="none"]',picker);none?.click?.();
  const sub=$('.bd110-masthead small',sheet),labels={modern:'ডিজিটাল ম্যাগাজিন • সাহিত্য • সমাজ • সংস্কৃতি',editorial:'সম্পাদকীয় • বিশ্লেষণ • সমাজ • সংস্কৃতি',aurora:'অরোরা ডিজিটাল • সংবাদ • সাহিত্য • সংস্কৃতি',minimal:'মিনিমাল নিউজ • সত্য • সাহিত্য • সমাজ'};if(sub)sub.textContent=labels[layout];if(title)title.placeholder='নিউজ হেডলাইন লিখুন…';moveIntoSheet();
 }
 function deactivate(callOld=false){const form=$('#composerForm'),picker=$('#bd58TemplatePicker'),title=$('#postTitle');if(!form)return;restore();form.classList.remove('bd110-news-mode');form.dataset.bd104News='0';delete form.dataset.bd110NewsLayout;delete form.dataset.bd110NewsFont;$$('.bd110-news-choice',picker).forEach(b=>b.classList.remove('active'));if(title)title.placeholder='লেখার শিরোনাম';const tools=$('.bd104-news-tools');if(tools)tools.hidden=true;if(callOld)try{oldReset?.()}catch(_){}}
@@ -7685,5 +7684,119 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
   if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
+
+<style id="bd-master-20260811-stability-css">
+/* Single final interaction contract: no text-callout on controls, inline long-post reading, stable social actions. */
+:is(.bd31-social,.bd31-actions,#bd31ReactionTray,.post-actions,.social-btn,.react-wrap,.picker,
+[data-bd31-react-main],[data-bd31-comments],[data-bd31-comment-summary],[data-bd31-share],
+[data-react],[data-comment],[data-share],[data-save],.comment-form button,.bd31-comment-form button,
+.bd107-open-reel,.bd116-open-photo,#bd107Reels,#bd116PhotoViewer) {
+  -webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+body.copy-protected :is(.post-body,.post-title,.post-title a,.post-caption,.bd-post-caption,.post-summary,.author-meta,.category-tag){
+  -webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;
+}
+/* Long writing always starts compact. Explicit template/news cards keep their own layout rules. */
+:is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd-master-long:not(.bd-master-open) .post-body{
+  display:block!important;height:auto!important;min-height:0!important;max-height:8.8em!important;overflow:hidden!important;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%)!important;
+  mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%)!important;
+}
+:is(article.post,article.bd-live-post,.post-card,[data-post-card]).bd-master-long.bd-master-open .post-body{
+  display:block!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+  -webkit-mask-image:none!important;mask-image:none!important;
+}
+.bd-master-readmore{margin:7px 0 2px!important;padding:0!important;border:0!important;background:transparent!important;color:#5a67c8!important;font:800 10px/1.4 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;cursor:pointer!important}
+html[data-theme="dark"] .bd-master-readmore,html[data-bd-theme="dark"] .bd-master-readmore{color:#c5b2ff!important}
+/* No overlay/comment sheet can resurrect on top of inline comments. */
+#bd35CommentSheet,#masterPostShell,#bd45PostViewer{display:none!important;visibility:hidden!important;pointer-events:none!important}
+</style>
+
+<style id="bd-master-20260811-index-css">
+/* Mobile composer: no horizontal page overflow; font/template/news choices remain horizontally swipeable. */
+@media(max-width:899px){
+  #composer,#composerForm,.composer-form,.composer-grid,#bd58TemplatePicker,.bd58-template-picker,.bd58-font-toolbar,.bd110-news-fontbar,.bd110-compose-news-sheet,.bd-index-media-tools,.composer-actions{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+  #composer,#composerForm{overflow-x:clip!important}
+  #postTitle,#postBody,#postMediaCaption,.form-control{max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+  .bd58-font-toolbar{align-items:stretch!important;text-align:left!important;overflow:hidden!important}
+  .bd58-tool-title,.bd58-font-hint{text-align:left!important}
+  .bd58-font-chips,.bd58-template-strip,.bd110-news-fontbar{display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;gap:8px!important;width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;padding:4px 2px 7px!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;overscroll-behavior-x:contain!important;scroll-snap-type:x proximity!important}
+  .bd58-font-chips::-webkit-scrollbar,.bd58-template-strip::-webkit-scrollbar,.bd110-news-fontbar::-webkit-scrollbar{display:none!important}
+  .bd58-font-chip,.bd58-template-chip,.bd110-news-choice,.bd110-news-fontbar button{flex:0 0 auto!important;scroll-snap-align:start!important}
+  .composer-actions{position:sticky!important;bottom:0!important;z-index:70!important;margin-top:10px!important;padding:10px 0 calc(8px + env(safe-area-inset-bottom))!important;background:linear-gradient(180deg,rgba(248,248,255,.30),rgba(248,248,255,.96) 32%,rgba(248,248,255,.99))!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important}
+  html[data-theme="dark"] .composer-actions,html[data-bd-theme="dark"] .composer-actions{background:linear-gradient(180deg,rgba(24,27,47,.25),rgba(24,27,47,.96) 32%,rgba(24,27,47,.99))!important}
+  .composer-actions .action-group{display:grid!important;grid-template-columns:minmax(90px,.42fr) minmax(150px,1fr)!important;gap:8px!important;width:100%!important}
+  .composer-actions .action-group button{width:100%!important;min-height:46px!important}
+  .bd110-compose-news-sheet{overflow:hidden!important}
+}
+/* Four modern news choices only. */
+.bd104-news-choice:not(.bd110-news-choice){display:none!important}
+.bd110-news-choice{touch-action:pan-x!important;-webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important}
+body.bd-master-media-open{overflow:hidden!important;overscroll-behavior:none!important}
+</style>
+
+<script id="bd-master-20260811-stability-js">
+(()=>{'use strict';
+if(window.__BD_MASTER_20260811_STABILITY__)return;window.__BD_MASTER_20260811_STABILITY__=true;
+const D=document,W=window;
+const CARD='article.post,article.bd-live-post,.post-card,[data-post-card],[data-post],[data-post-id]';
+const SOCIAL='[data-bd31-react-main],[data-bd31-comments],[data-bd31-comment-summary],[data-bd31-share],[data-bd31-react-summary],[data-react],[data-comment],[data-share],[data-save],[data-bd31-comment-delete],[data-comment-delete],.bd31-comment-form button,.comment-form button,.bd31-more-comments,.bd31-c-meta button,.social-btn,.react-wrap,.picker';
+const FORM='form.bd31-comment-form,form.comment-form,form.bd24-comment-form,form[data-comment-form]';
+const pid=c=>String(c?.dataset?.post||c?.dataset?.postId||c?.getAttribute?.('data-post')||c?.getAttribute?.('data-post-id')||'');
+function cardOf(n){return n?.closest?.(CARD)||null}
+function scrollParents(node){const a=[];let n=node?.parentElement;while(n&&n!==D.documentElement){try{const cs=getComputedStyle(n);if(/auto|scroll|overlay/.test(cs.overflowY||'')&&n.scrollHeight>n.clientHeight+2)a.push([n,n.scrollTop,n.scrollLeft])}catch{}n=n.parentElement}return a}
+function snap(card){if(!card)return null;return{id:pid(card),card,top:card.getBoundingClientRect().top,x:W.scrollX||0,y:W.scrollY||0,rows:scrollParents(card)}}
+function findCard(s){if(!s)return null;if(s.card?.isConnected)return s.card;if(!s.id)return null;try{return D.querySelector(`[data-post="${CSS.escape(s.id)}"],[data-post-id="${CSS.escape(s.id)}"]`)}catch{return null}}
+function restore(s){if(!s)return;for(const [n,t,l] of s.rows||[]){if(n?.isConnected){try{n.scrollTop=t;n.scrollLeft=l}catch{}}}const c=findCard(s);if(c){const dy=c.getBoundingClientRect().top-s.top;if(Math.abs(dy)>1){const sc=(s.rows||[])[0]?.[0];try{if(sc?.isConnected)sc.scrollTop+=dy;else W.scrollBy(0,dy)}catch{}}}else{try{W.scrollTo(s.x,s.y)}catch{}}}
+let pending=null;
+function rememberFrom(n){const c=cardOf(n);if(c)pending=snap(c)}
+W.addEventListener('pointerdown',e=>{if(e.target.closest?.(SOCIAL))rememberFrom(e.target)},true);
+W.addEventListener('click',e=>{if(!e.target.closest?.(SOCIAL))return;const s=pending||snap(cardOf(e.target));[0,60,170,360,650].forEach(ms=>setTimeout(()=>restore(s),ms));pending=null},true);
+W.addEventListener('submit',e=>{if(!e.target.matches?.(FORM))return;const s=snap(cardOf(e.target));[0,70,180,380,700].forEach(ms=>setTimeout(()=>restore(s),ms))},true);
+/* iOS: long-pressing Like/Comment/Share must never open Copy/Look Up/Translate. */
+for(const type of ['contextmenu','selectstart','dragstart'])W.addEventListener(type,e=>{if(e.target.closest?.(SOCIAL+',#bd107Reels,#bd116PhotoViewer,.bd107-open-reel,.bd116-open-photo')){e.preventDefault();try{W.getSelection?.().removeAllRanges?.()}catch{}}else if(D.body?.classList.contains('copy-protected')&&e.target.closest?.('.post-body,.post-title,.post-caption,.bd-post-caption'))e.preventDefault()},true);
+function isSpecial(c){return /style-tpl[1-8]/.test(c.className||'')||c.classList.contains('bd104-news-post')||c.classList.contains('profile-update-post')}
+function isLong(body){const t=String(body?.textContent||'').trim();if(!t)return false;const lines=Math.max(t.split(/\n/).length,Math.ceil(t.replace(/\s+/g,' ').length/43));return lines>=7||t.length>=260}
+function setOpen(c,on){const b=c.querySelector('.post-body,[data-expand]');if(!b)return;const s=snap(c);c.classList.toggle('bd-master-open',on);c.classList.toggle('expanded',on);c.classList.toggle('bd-inline-expanded',on);c.classList.toggle('bd63-expanded',on);c.setAttribute('aria-expanded',on?'true':'false');b.classList.toggle('collapsed',!on);if(on)b.style.setProperty('max-height','none','important');else b.style.removeProperty('max-height');const m=c.querySelector('.bd-master-readmore,.post-read-more,.readmore');if(m)m.textContent=on?'কম দেখুন ↑':'পূর্ণ লেখা পড়ুন →';requestAnimationFrame(()=>restore(s))}
+function decorate(c){if(!c||c.nodeType!==1||isSpecial(c))return;const b=c.querySelector?.('.post-body,[data-expand]');if(!b||!isLong(b)){c.classList.remove('bd-master-long');return}c.classList.add('bd-master-long');if(c.dataset.bdMasterLongInit!=='1'){c.dataset.bdMasterLongInit='1';c.classList.remove('bd-master-open','expanded','bd-inline-expanded','bd63-expanded','bd76-inline-open');b.classList.add('collapsed');b.style.removeProperty('max-height');c.setAttribute('aria-expanded','false')}if(!c.querySelector('.post-read-more,.readmore,.bd-master-readmore')){const m=D.createElement('button');m.type='button';m.className='bd-master-readmore';m.textContent='পূর্ণ লেখা পড়ুন →';b.insertAdjacentElement('afterend',m)}}
+function scan(root=D){if(root.matches?.(CARD))decorate(root);root.querySelectorAll?.(CARD).forEach(decorate)}
+/* Own long-post body/title/read-more taps at Window capture so legacy document handlers cannot double-toggle. */
+W.addEventListener('click',e=>{const hit=e.target.closest?.('.bd-master-readmore,.post-read-more,.readmore,.post-body,.post-title a,.post-title');if(!hit)return;const c=cardOf(hit);if(!c?.classList.contains('bd-master-long'))return;if(hit.closest('button,a')&&!hit.matches('.bd-master-readmore,.post-read-more,.readmore,.post-title a'))return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();setOpen(c,!c.classList.contains('bd-master-open'))},true);
+let q=false;const mo=new MutationObserver(ms=>{if(q)return;q=true;requestAnimationFrame(()=>{q=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n)})});
+function boot(){scan();mo.observe(D.body,{subtree:true,childList:true});setTimeout(()=>scan(),450);setTimeout(()=>scan(),1400)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+<script id="bd-master-20260811-index-js">
+(()=>{'use strict';
+if(window.__BD_MASTER_20260811_INDEX__)return;window.__BD_MASTER_20260811_INDEX__=true;
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+/* Repair dynamic media decoration: posts are rendered after DOMContentLoaded, so selectors must be relative to each added node. */
+function cardOf(n){return n?.closest?.('#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post')||null}
+function decorateMedia(root=D){
+ const vids=[];if(root.matches?.('video')&&root.closest?.('#postList'))vids.push(root);root.querySelectorAll?.('video').forEach(v=>{if(v.closest('#postList'))vids.push(v)});
+ for(const v of vids){if(v.closest('#bd107Reels'))continue;const c=cardOf(v),host=v.parentElement;if(!c||!host)continue;if(!v.dataset.bd107Feed){v.dataset.bd107Feed='1';v.classList.add('bd107-feed-video');v.controls=false;v.removeAttribute('controls');v.removeAttribute('autoplay');try{v.pause()}catch{}v.muted=true;host.classList.add('bd107-video-preview');if(!host.querySelector('.bd107-open-reel')){const b=D.createElement('button');b.type='button';b.className='bd107-open-reel';b.innerHTML='<span class="bd107-preview-play">▶</span>';b.setAttribute('aria-label','Reels-এ ভিডিও দেখুন');host.append(b)}}}
+ const imgs=[];if(root.matches?.('img')&&root.closest?.('#postList .composer-media-render,#postList .post-media,#postList .bd104-news-image2'))imgs.push(root);root.querySelectorAll?.('.composer-media-render img,.post-media img,.bd104-news-image2 img').forEach(i=>{if(i.closest('#postList'))imgs.push(i)});
+ for(const img of imgs){if(img.closest('#bd116PhotoViewer')||img.dataset.bd116Photo==='1')continue;const c=cardOf(img),host=img.parentElement;if(!c||!host)continue;img.dataset.bd116Photo='1';host.classList.add('bd116-photo-host');if(!host.querySelector('.bd116-open-photo')){const b=D.createElement('button');b.type='button';b.className='bd116-open-photo';b.setAttribute('aria-label','ছবি খুলুন');host.append(b)}}
+}
+/* Direct fallback openers, used only if the V8.107 public API is missing. */
+W.addEventListener('click',e=>{const vr=e.target.closest?.('.bd107-open-reel');if(vr){const c=cardOf(vr);if(!c)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const id=String(c.dataset.post||c.dataset.postId||'');const ok=W.BhubondangaReels107?.open?.(id);if(ok!==false)D.body.classList.add('bd-master-media-open');return}const ph=e.target.closest?.('.bd116-open-photo');if(ph){const img=ph.parentElement?.querySelector('img');if(!img)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();W.BhubondangaPhotoViewer?.open?.(img.currentSrc||img.src);D.body.classList.add('bd-master-media-open')}},true);
+W.addEventListener('click',e=>{if(e.target.closest?.('.bd107-reels-back,.bd116-photo-back'))setTimeout(()=>D.body.classList.remove('bd-master-media-open'),0)},true);
+/* If an existing media viewer closes by another code path, release body lock. */
+const viewMo=new MutationObserver(()=>{if(!$('#bd107Reels.open')&&!$('#bd116PhotoViewer.open'))D.body.classList.remove('bd-master-media-open')});
+/* News choice selection must not jump the page. */
+let newsSnap=null;
+W.addEventListener('pointerdown',e=>{const b=e.target.closest?.('.bd110-news-choice,[data-font],.bd58-template-chip,.bd58-font-chip');if(!b)return;const picker=b.closest('#bd58TemplatePicker,.bd58-font-toolbar,.bd110-news-fontbar')||b;newsSnap={y:W.scrollY,top:picker.getBoundingClientRect().top,picker}},true);
+W.addEventListener('click',e=>{if(!e.target.closest?.('.bd110-news-choice,[data-font],.bd58-template-chip,.bd58-font-chip')||!newsSnap)return;const s=newsSnap;newsSnap=null;[0,50,150].forEach(ms=>setTimeout(()=>{if(!s.picker?.isConnected)return;const dy=s.picker.getBoundingClientRect().top-s.top;if(Math.abs(dy)>1)W.scrollBy(0,dy)},ms))},true);
+/* Mobile composer can always submit: keep the real submit button visible and never let template/font strips hijack vertical scrolling. */
+function composerFit(){const f=$('#composerForm');if(!f)return;f.style.maxWidth='100%';f.style.minWidth='0';$$('.bd58-font-chips,.bd58-template-strip,.bd110-news-fontbar',f).forEach(x=>{x.style.maxWidth='100%'})}
+let q=false;const mo=new MutationObserver(ms=>{if(q)return;q=true;requestAnimationFrame(()=>{q=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)decorateMedia(n);decorateMedia();composerFit()})});
+function boot(){decorateMedia();composerFit();mo.observe(D.body,{subtree:true,childList:true});viewMo.observe(D.body,{subtree:true,attributes:true,attributeFilter:['class']});setTimeout(()=>decorateMedia(),500);setTimeout(()=>decorateMedia(),1600)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 </html>
