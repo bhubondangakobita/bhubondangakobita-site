@@ -752,6 +752,26 @@ html[data-theme="dark"] #archiveList .bd92-archive-label{
 }
 @media(max-width:720px){#archiveList .bd92-archive-label{font-size:12px!important;min-height:30px!important}}
 </style>
+
+<style id="bd-v8120-bangladesh-profile-flag-media-lock">
+/* Tiny standing Bangladesh flag appears only when the saved location contains Bangladesh. */
+.bd-country-flag{display:inline-flex;align-items:center;justify-content:center;width:27px;height:23px;margin-left:1px;vertical-align:middle;position:relative;filter:drop-shadow(0 3px 4px rgba(25,43,65,.12));flex:0 0 27px}
+.bd-country-flag .bd-cf-pole{position:absolute;left:3px;top:2px;width:2px;height:18px;border-radius:3px;background:linear-gradient(90deg,#8b744e,#d6c39d,#76603e)}
+.bd-country-flag .bd-cf-cloth{position:absolute;left:5px;top:3px;width:20px;height:12px;border-radius:1px 2px 2px 1px;background:#006a4e;transform-origin:0 50%;animation:bdProfileFlagWave 3.4s ease-in-out infinite;overflow:hidden}
+.bd-country-flag .bd-cf-cloth::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:#f42a41;left:8px;top:3px}
+.bd-country-flag .bd-cf-base{position:absolute;left:1px;bottom:2px;width:8px;height:2px;border-radius:50%;background:#806b49}
+@keyframes bdProfileFlagWave{0%,100%{transform:perspective(70px) rotateY(0deg)}50%{transform:perspective(70px) rotateY(-8deg) skewY(-1deg)}}
+@media(prefers-reduced-motion:reduce){.bd-country-flag .bd-cf-cloth{animation:none!important}}
+/* Cover/profile-update posts use the uploaded image's natural aspect ratio: no phantom fixed canvas. */
+.profile-update-post .post-media{height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:auto!important;padding:0!important;background:transparent!important;overflow:hidden!important}
+.profile-update-post .post-media img{display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important;margin:0!important}
+/* News display parity without touching the existing reaction/comment engine. */
+.post.bd104-news-post{background:#fff!important;border-color:rgba(21,87,61,.16)!important}
+.post.bd104-news-post .post-title{font-family:'Noto Serif Bengali',serif!important;font-size:24px!important;line-height:1.35!important;color:#13271f!important}
+.post.bd104-news-post .post-body{font-family:'Noto Sans Bengali','Hind Siliguri',sans-serif!important;text-align:left!important;font-size:13px!important;line-height:1.78!important;color:#2f4139!important;max-width:100%!important}
+.bd104-news-image2{margin-top:10px;border-radius:13px;overflow:hidden}.bd104-news-image2 img{display:block;width:100%!important;height:auto!important;max-height:none!important;object-fit:cover!important}
+@media(max-width:520px){.post.bd104-news-post .post-title{font-size:20px!important}}
+</style>
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
@@ -3319,6 +3339,22 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 
 <script id="bd-final-interactive-copy-guard">
 (()=>{'use strict';const D=document,SEL='.bd31-social,#bd31ReactionTray,[data-bd31-react-main],[data-bd31-tray-pick],.post .dots,.post .three-dot-btn,[data-post-menu],.profile-actions,.profile-tabs';for(const t of ['contextmenu','selectstart','dragstart'])D.addEventListener(t,e=>{if(e.target.closest?.(SEL)){e.preventDefault();e.stopPropagation()}},true)})();
+</script>
+
+<script id="bd-v8120-bangladesh-profile-flag-js">
+(()=>{'use strict';
+const D=document;
+function syncBDFlag(){
+ const loc=D.getElementById('location');if(!loc)return;
+ const text=(loc.textContent||'').trim();
+ const on=/বাংলাদেশ|bangladesh/i.test(text);
+ let flag=D.getElementById('bdCountryFlag');
+ if(on&&!flag){flag=D.createElement('span');flag.id='bdCountryFlag';flag.className='bd-country-flag';flag.setAttribute('role','img');flag.setAttribute('aria-label','বাংলাদেশের পতাকা');flag.innerHTML='<i class="bd-cf-pole"></i><i class="bd-cf-cloth"></i><i class="bd-cf-base"></i>';loc.insertAdjacentElement('afterend',flag)}
+ else if(!on&&flag)flag.remove();
+}
+function boot(){syncBDFlag();const loc=D.getElementById('location');if(loc)new MutationObserver(syncBDFlag).observe(loc,{childList:true,characterData:true,subtree:true})}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
 </script>
 </body>
 </html>
