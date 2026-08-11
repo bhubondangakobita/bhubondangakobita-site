@@ -1811,7 +1811,22 @@ textarea.form-control{
 <script id="bd-register-supabase-helper-v1">
 (function(){
 const URL="https://ihjiisysrwgxxkuywuhc.supabase.co",KEY="sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz";let sb=null;try{sb=window.supabase?.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(_){}
+
 window.BhubondangaRegisterClient=sb;
+function bdSafeHandle(value){return String(value||'').trim().toLowerCase().replace(/^@/,'').replace(/\s+/g,'-').replace(/[^a-z0-9_-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,24)}
+async function bdEnsureProfile(session,seed={}){
+ if(!sb||!session?.user?.id)return null;
+ const u=session.user,meta=u.user_metadata||{};
+ let existing=null;try{const q=await sb.from('profiles').select('*').eq('id',u.id).maybeSingle();existing=q.data||null}catch(_){}
+ const display=existing?.display_name||seed.fullName||meta.full_name||meta.name||meta.display_name||u.email?.split('@')[0]||'সদস্য';
+ const base=bdSafeHandle(existing?.username||seed.username||meta.username||u.email?.split('@')[0]||display)||'member';
+ const username=existing?.username||((base+'-'+String(u.id).replace(/-/g,'').slice(0,6)).slice(0,30));
+ const avatar=existing?.avatar_url||seed.avatar||meta.avatar_url||meta.picture||'';
+ const profile={id:u.id,username,display_name:display,bio:existing?.bio||seed.bio||meta.bio||'',avatar_url:avatar||null,role:existing?.role||meta.role||'user',updated_at:new Date().toISOString()};
+ const up=await sb.from('profiles').upsert(profile,{onConflict:'id'});if(up.error)throw up.error;
+ return profile;
+}
+window.BhubondangaEnsureProfile=bdEnsureProfile;
 function dataUrlToBlob(data){const [head,body]=String(data).split(','),mime=(head.match(/data:(.*?);/)||[])[1]||'image/jpeg',bin=atob(body||''),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
 window.BhubondangaRegisterRemote=async function(v){
  if(!sb)throw new Error('Supabase সংযোগ পাওয়া যায়নি');
@@ -1821,8 +1836,8 @@ window.BhubondangaRegisterRemote=async function(v){
  if(r.data?.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0)throw new Error('এই ইমেইল বা Username আগে থেকেই ব্যবহৃত হয়েছে।');
  let avatar='';
  if(r.data.session&&v.avatar&&String(v.avatar).startsWith('data:')){try{const ext=(String(v.avatar).match(/^data:image\/([a-z0-9+.-]+);/i)||[])[1]||'jpg'.replace('jpeg','jpg');const path=r.data.user.id+'/avatars/profile-'+Date.now()+'.'+ext;const up=await sb.storage.from('bhubondanga-media').upload(path,dataUrlToBlob(v.avatar),{upsert:true,contentType:dataUrlToBlob(v.avatar).type});if(!up.error)avatar=sb.storage.from('bhubondanga-media').getPublicUrl(path).data.publicUrl}catch(_){}}
- if(r.data.session){const pr={id:r.data.user.id,username,display_name:v.fullName,bio:v.bio||'',avatar_url:avatar||null,role:'user',updated_at:new Date().toISOString()};const u=await sb.from('profiles').upsert(pr,{onConflict:'id'});if(u.error)throw u.error}
- return{user:r.data.user,session:r.data.session,avatar,needsConfirmation:!r.data.session};
+ if(r.data.session){await bdEnsureProfile(r.data.session,{fullName:v.fullName,username,bio:v.bio||'',avatar})}
+ return{user:r.data.user,session:r.data.session,avatar,userId:r.data?.user?.id||null,needsConfirmation:!r.data.session};
 };
 })();
 </script>
@@ -1951,6 +1966,17 @@ html[data-theme="dark"] .account-type-box{background:linear-gradient(145deg,rgba
 @media(max-width:980px){.master-identity-strip{grid-template-columns:1fr 1fr}.account-type-tabs{grid-template-columns:1fr 1fr}.page-access-fields{grid-template-columns:1fr 1fr}.register-slogan{font-size:29px!important}}
 @media(max-width:560px){.account-type-box{margin-top:12px;padding:7px;border-radius:14px}.account-type-tab{min-height:58px;padding:8px;grid-template-columns:32px minmax(0,1fr);gap:7px}.account-type-icon{width:32px;height:32px}.account-type-tab strong{font-size:9px}.account-type-tab small{font-size:6.3px}.page-access-fields{grid-template-columns:1fr}.page-access-fields .wide{grid-column:auto}.page-code-row{grid-template-columns:1fr}.page-code-check{min-height:44px}.master-identity-strip{grid-template-columns:1fr}.master-identity-card{padding:10px}.form-heading h2{font-size:21px}}
 </style>
+
+<style id="bd-v892-social-auth-uuid-repair-css">
+.social-entry{margin:11px 0 4px;padding:10px;border:1px solid rgba(91,103,157,.16);border-radius:15px;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(246,247,255,.94));box-shadow:inset 0 1px 0 rgba(255,255,255,.96)}
+.social-entry-title{display:flex;align-items:center;justify-content:center;gap:8px;color:#66728b;font-size:8px;font-weight:800}.social-entry-title:before,.social-entry-title:after{content:"";height:1px;flex:1;background:rgba(91,103,157,.14)}
+.social-entry-actions{margin-top:9px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.social-entry-btn{min-height:45px;padding:8px 10px;border:1px solid rgba(91,103,157,.18);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:#2d3f5f;font-size:9px;font-weight:800;box-shadow:0 7px 18px rgba(70,76,139,.055);transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}.social-entry-btn:hover{transform:translateY(-1px);border-color:rgba(81,92,224,.32);box-shadow:0 10px 24px rgba(76,75,155,.10)}.social-entry-btn:active{transform:translateY(1px) scale(.99)}
+.social-entry-mark{width:27px;height:27px;flex:0 0 27px;border-radius:50%;display:grid;place-items:center;background:#fff;font-family:Arial,sans-serif;font-size:15px;font-weight:900;box-shadow:0 3px 9px rgba(35,45,90,.09)}.social-entry-btn.google .social-entry-mark{color:#4285f4}.social-entry-btn.facebook .social-entry-mark{background:#1877f2;color:#fff}.social-entry-note{margin-top:7px;color:#8a95aa;font-size:6.8px;line-height:1.6;text-align:center}
+body[data-account-kind="page"] #socialEntry{display:none!important}
+html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,30,58,.96),rgba(25,25,63,.94));border-color:rgba(173,184,255,.15)}html[data-theme="dark"] .social-entry-btn{background:rgba(12,28,55,.96);border-color:rgba(173,184,255,.14);color:#f7f8ff}html[data-theme="dark"] .social-entry-title,html[data-theme="dark"] .social-entry-note{color:#c8d2e7}
+@media(max-width:560px){.social-entry{padding:8px;border-radius:13px}.social-entry-actions{grid-template-columns:1fr}.social-entry-btn{min-height:47px;font-size:9.5px}.social-entry-note{font-size:7px}}
+</style>
+
 </head>
 
 <body>
@@ -2367,6 +2393,15 @@ html[data-theme="dark"] .account-type-box{background:linear-gradient(145deg,rgba
               <span class="account-type-icon">▣</span><span><strong>অনুমোদিত পেজ</strong><small>সংবাদমাধ্যম, প্রকাশনা, প্রতিষ্ঠান বা Founder-অনুমোদিত অফিসিয়াল চ্যানেল।</small></span>
             </button>
           </div>
+        </section>
+
+        <section class="social-entry" id="socialEntry" aria-label="দ্রুত নিবন্ধন">
+          <div class="social-entry-title">অথবা দ্রুত ব্যক্তিগত প্রোফাইল তৈরি করুন</div>
+          <div class="social-entry-actions">
+            <button class="social-entry-btn google" id="googleRegisterButton" type="button"><span class="social-entry-mark">G</span><span>Google দিয়ে প্রবেশ</span></button>
+            <button class="social-entry-btn facebook" id="facebookRegisterButton" type="button"><span class="social-entry-mark">f</span><span>Facebook দিয়ে প্রবেশ</span></button>
+          </div>
+          <div class="social-entry-note" id="socialEntryNote">Google বা Facebook ব্যবহার করলে Supabase Auth-এর একই User ID আপনার প্রোফাইলের ID হিসেবেও সংরক্ষিত হবে।</div>
         </section>
 
         <section class="page-access-panel" id="pageAccessPanel" hidden>
@@ -4725,14 +4760,17 @@ document.addEventListener(
  const client=window.BhubondangaRegisterClient;if(!client)return;
  try{
    const {data:{session}}=await client.auth.getSession();if(!session?.user)return;
-   const uid=session.user.id;let p={};try{const r=await client.from('profiles').select('*').eq('id',uid).maybeSingle();p=r.data||{}}catch(_){ }
-   const role=p.role||session.user.user_metadata?.role||'user',username=p.username||session.user.user_metadata?.username||'',name=p.display_name||session.user.user_metadata?.full_name||username||'সদস্য',avatar=p.avatar_url||session.user.user_metadata?.avatar_url||'';
-   const current={loggedIn:true,id:uid,uid,name,displayName:name,username,slug:username,email:session.user.email||'',role,avatar,profileImage:avatar,lastLoginAt:new Date().toISOString()};
-   localStorage.setItem('bhubondangaCurrentUser',JSON.stringify(current));localStorage.setItem('bd_current_user',username||uid);
-   const roleKey=String(role).toLowerCase(),identity=uid||username;const url=roleKey==='founder'?'founder-profile.html?user='+encodeURIComponent(identity):roleKey==='admin'?'admin-profile.html?user='+encodeURIComponent(identity):'profile.html?user='+encodeURIComponent(identity);
+   const uid=session.user.id;
+   let p={};
+   try{p=(await window.BhubondangaEnsureProfile?.(session,{}))||{}}catch(_){try{const r=await client.from('profiles').select('*').eq('id',uid).maybeSingle();p=r.data||{}}catch(__){}}
+   const meta=session.user.user_metadata||{},role=p.role||meta.role||'user',username=p.username||meta.username||'',name=p.display_name||meta.full_name||meta.name||username||session.user.email?.split('@')[0]||'সদস্য',avatar=p.avatar_url||meta.avatar_url||meta.picture||'';
+   const current={loggedIn:true,id:uid,uid,user_id:uid,supabaseUserId:uid,name,displayName:name,username,slug:username,email:session.user.email||'',role,avatar,profileImage:avatar,lastLoginAt:new Date().toISOString()};
+   localStorage.setItem('bhubondangaCurrentUser',JSON.stringify(current));localStorage.setItem('bd_current_user',username||uid);localStorage.setItem('bd_supabase_user_id',uid);
+   const roleKey=String(role).toLowerCase(),identity=uid;const url=roleKey==='founder'?'founder-profile.html?user='+encodeURIComponent(identity):roleKey==='admin'?'admin-profile.html?user='+encodeURIComponent(identity):'profile.html?user='+encodeURIComponent(identity);
    const a=document.getElementById('headerAvatar');if(a){a.hidden=false;a.href=url;a.innerHTML=avatar?'<img src="'+String(avatar).replace(/"/g,'&quot;')+'" alt="">':String(name).replace(/\s+/g,'').slice(0,2)}
    const anon=document.getElementById('anonymousActions');if(anon)anon.hidden=true;
    const card=document.getElementById('loggedCard');if(card){card.classList.add('show');const title=document.getElementById('loggedCardTitle');if(title)title.textContent=name+', আপনি ইতোমধ্যে লগইন করেছেন';const link=document.getElementById('loggedProfileLink');if(link)link.href=url;const form=document.getElementById('registerForm');if(form)form.hidden=true}
+   if(new URLSearchParams(location.search).get('oauth')==='1'){const clean=new URL(location.href);clean.searchParams.delete('oauth');history.replaceState(null,'',clean.pathname+clean.search+clean.hash)}
  }catch(_){ }
 })();
 </script>
@@ -4764,5 +4802,22 @@ D.getElementById('registerForm')?.addEventListener('submit',async function(e){if
 setMode('profile');
 })();
 </script>
+
+<script id="bd-v892-social-auth-uuid-repair-js">
+(()=>{'use strict';
+const D=document,client=window.BhubondangaRegisterClient;
+function note(message,bad=false){const n=D.getElementById('socialEntryNote');if(!n)return;n.textContent=message;n.style.color=bad?'var(--red)':''}
+function redirectUrl(){try{const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('oauth','1');return u.href}catch{return location.href}}
+async function oauth(provider){
+ if(D.body.dataset.accountKind==='page'){note('Page তৈরির জন্য Founder Approval Code ব্যবহার করুন।',true);return}
+ if(!client){note('Supabase সংযোগ পাওয়া যায়নি।',true);return}
+ note(provider==='google'?'Google-এ নেওয়া হচ্ছে…':'Facebook-এ নেওয়া হচ্ছে…');
+ try{const {error}=await client.auth.signInWithOAuth({provider,options:{redirectTo:redirectUrl()}});if(error)throw error}catch(err){note(err?.message||'Social login শুরু করা যায়নি।',true)}
+}
+D.getElementById('googleRegisterButton')?.addEventListener('click',()=>oauth('google'));
+D.getElementById('facebookRegisterButton')?.addEventListener('click',()=>oauth('facebook'));
+})();
+</script>
+
 </body>
 </html>
