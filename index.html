@@ -6,6 +6,113 @@
 <meta content="#173153" name="theme-color"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
 onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"></script>
+
+<script id="bd-v8146-video-reels-capture">
+(function(){
+'use strict';
+if(window.__BD_V8146_VIDEO_REELS_CAPTURE__)return;
+window.__BD_V8146_VIDEO_REELS_CAPTURE__=true;
+const D=document,W=window;
+
+function cardOf(node){
+  return node?.closest?.(
+    '#postList [data-post],#postList [data-post-id],#postList [data-post-card],'+
+    '#postList article.post,#postList article.bd-live-post,#postList .post-card'
+  )||null;
+}
+function idOf(card){
+  return String(card?.dataset?.post||card?.dataset?.postId||
+    card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'');
+}
+function mediaFromEvent(e){
+  const path=typeof e.composedPath==='function'?e.composedPath():[];
+  for(const n of path){
+    if(!(n instanceof Element))continue;
+    if(n.closest?.('#bd107Reels'))return null;
+    const direct=n.closest?.(
+      '#postList video,#postList .bd138-open-reel,#postList .bd107-open-reel,'+
+      '#postList .bd107-video-preview,#postList .composer-media-render,#postList .post-media'
+    );
+    if(!direct)continue;
+    if(direct.matches?.('video')||direct.querySelector?.('video'))return direct;
+  }
+  return null;
+}
+function openReels(card){
+  const id=idOf(card);
+  if(!id)return false;
+  const v=card.querySelector?.('video');
+  if(v){try{v.pause()}catch(_){} v.muted=true; v.defaultMuted=true;}
+  const api=W.BhubondangaReels107||W.BhubondangaVideoReels;
+  if(api?.open){
+    try{api.open(id);return true}catch(_){}
+  }
+  setTimeout(()=>{try{(W.BhubondangaReels107||W.BhubondangaVideoReels)?.open?.(id)}catch(_){}},0);
+  return true;
+}
+
+let lastPointerOpen=0;
+
+D.addEventListener('pointerup',e=>{
+  const media=mediaFromEvent(e);
+  if(!media)return;
+  const card=cardOf(media);
+  if(!card)return;
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  lastPointerOpen=Date.now();
+  const v=media.matches?.('video')?media:media.querySelector?.('video');
+  if(v){
+    v.controls=false;
+    v.removeAttribute('controls');
+    v.setAttribute('playsinline','');
+    v.setAttribute('webkit-playsinline','');
+  }
+  openReels(card);
+},true);
+
+D.addEventListener('click',e=>{
+  const media=mediaFromEvent(e);
+  if(!media)return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  if(Date.now()-lastPointerOpen<700)return;
+  const card=cardOf(media);
+  if(!card)return;
+  openReels(card);
+},true);
+
+function retireLegacyVideoViewers(){
+  const list=[
+    '#bd45Reels',
+    '.bd45-post-shell',
+    '#masterPostShell',
+    '[data-media-viewer="video"]',
+    '.legacy-video-viewer'
+  ];
+  for(const sel of list){
+    D.querySelectorAll?.(sel).forEach(el=>{
+      if(el.id==='bd107Reels')return;
+      const hasVideo=!!el.querySelector?.('video');
+      if(!hasVideo&&sel!=='#bd45Reels')return;
+      try{el.querySelectorAll('video').forEach(v=>{v.pause();v.muted=true})}catch(_){}
+      el.classList.remove('open','active','show');
+      el.setAttribute('aria-hidden','true');
+      el.style.setProperty('display','none','important');
+      el.style.setProperty('pointer-events','none','important');
+    });
+  }
+}
+new MutationObserver(retireLegacyVideoViewers).observe(
+  D.documentElement,
+  {subtree:true,childList:true,attributes:true,attributeFilter:['class','style','aria-hidden']}
+);
+})();
+</script>
+
 <style id="bd-supabase-boot-visibility">html,body{visibility:visible!important;opacity:1!important}</style>
 <meta charset="utf-8">
 <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover,interactive-widget=resizes-content" name="viewport"/>
@@ -4296,6 +4403,43 @@ D.addEventListener('click',e=>{if(!e.target.closest?.('[data-bd31-tray-pick]'))r
 }
 @media(prefers-reduced-motion:reduce){
   .bd145-children-symbol,.bd145-children-symbol *{animation:none!important;transition:none!important}
+}
+</style>
+
+
+<style id="bd-v8146-video-reels-lock-css">
+#bd45Reels,
+.bd45-post-shell:has(video),
+#masterPostShell:has(video),
+[data-media-viewer="video"],
+.legacy-video-viewer{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+#postList .bd107-video-preview{
+  position:relative!important;
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:transparent!important;
+  touch-action:manipulation!important;
+}
+#postList .bd107-video-preview>video{pointer-events:none!important}
+#postList .bd138-open-reel,
+#postList .bd107-open-reel{
+  position:absolute!important;
+  inset:0!important;
+  z-index:12!important;
+  display:grid!important;
+  place-items:center!important;
+  border:0!important;
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:transparent!important;
+  touch-action:manipulation!important;
+}
+#bd107Reels.open{
+  display:block!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
 }
 </style>
 
