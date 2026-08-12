@@ -622,7 +622,7 @@ function liveIdentity(){return window.__BD_IDENTITY||{}}
 function isLoggedInNow(){return Boolean(window.__BD_LIVE_SESSION?.user)||loggedIn}
 function canEdit(p){const live=liveIdentity(),liveUser=String(live.author_username||currentUsername||''),liveId=String(live.author_id||'');return isLoggedInNow()&&!p.demo&&(isFounder||String(p.authorUsername||'')===liveUser||(liveId&&String(p.authorId||'')===liveId))}
 function postViewUrl(p){const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('post',p.id);return u.href}
-function renderIndexMedia(p){if(!p.media)return'';const kind=String(p.mediaKind||'image').toLowerCase();if(kind==='audio')return'<div class="composer-media-render"><audio controls preload="metadata" src="'+esc(p.media)+'"></audio></div>';if(kind==='video')return'<div class="composer-media-render"><video controls playsinline preload="metadata" src="'+esc(p.media)+'"></video></div>';return'<div class="composer-media-render"><img src="'+esc(p.media)+'" alt="'+esc(p.title)+'" loading="lazy"></div>'}
+function renderIndexMedia(p){if(!p.media)return'';const raw=String(p.mediaKind||'').toLowerCase(),url=String(p.media||'');const kind=(raw==='video'||raw.startsWith('video/')||/\.(?:mp4|webm|mov|m4v|ogv)(?:[?#]|$)/i.test(url))?'video':(raw==='audio'||raw.startsWith('audio/')||/\.(?:mp3|wav|ogg|m4a|aac|flac)(?:[?#]|$)/i.test(url))?'audio':'image';if(kind==='audio')return'<div class="composer-media-render"><audio controls preload="metadata" src="'+esc(url)+'"></audio></div>';if(kind==='video')return'<div class="composer-media-render"><video playsinline webkit-playsinline preload="metadata" src="'+esc(url)+'"></video></div>';return'<div class="composer-media-render"><img src="'+esc(url)+'" alt="'+esc(p.title)+'" loading="lazy"></div>'}
 function renderPosts(){
   const list=filteredPosts(),shown=list.slice(0,visible),loved=arr(likedKey).map(String),memories=arr(memoryKey),likeCounts=likesObject(),box=document.getElementById('postList');
   closePostActionBoard();
@@ -861,7 +861,7 @@ async function publishPost(payload,flaggedTerms){
   try{await window.__BD_INDEX_REFRESH_FEED?.()}catch(_){}
   toast(registration.canonical&&!registration.isNew?'মূল সংরক্ষিত কবিতাটি পুনঃপ্রকাশ হয়েছে এবং এখন ফিডের ওপরে আছে।':'লেখাটি প্রকাশিত হয়েছে এবং এখন নিউজফিডের ওপরে আছে।');
 }
-function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,body=postBody.value.trim(),author=originalAuthor.value.trim(),news=document.getElementById('composerForm')?.dataset.bd104News==='1';let title=postTitle.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='news'&&!(window.__BD_NEWS_CAN_PUBLISH?.()||window.__BD_NEWS_CHANNEL)){toast('নিউজ প্রকাশ শুধুমাত্র Premium/Founder-অনুমোদিত চ্যানেলের জন্য।');return null}if(type==='news'&&!news){toast('নিউজপেপার ডিজাইন নির্বাচন করুন।');return null}if(news&&!title)title=(String(body).trim().split(/\n+/).find(Boolean)||'সংবাদ আপডেট').replace(/\s+/g,' ').slice(0,120);if(type==='poem'&&!news&&!title){toast('কবিতার শিরোনাম লিখুন।');return null}if(!body){toast('আপনার লেখাটি লিখুন।');return null}if(type!=='news'&&!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');return null}const exact=!news&&!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:type==='news'?'':(ownWork.checked?'':author),canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:(news?('news-card-'+(document.getElementById('composerForm')?.dataset.bd110NewsLayout||'digital')+'-'+(document.getElementById('composerForm')?.dataset.bd110NewsFont||'editorial')):(window.BD58ComposeStyle?window.BD58ComposeStyle('index'):document.getElementById('cardStyle').value))+(window.BhubondangaPremiumFonts?.current?.()?('-pf-'+window.BhubondangaPremiumFonts.current()):''),newsCard:news,newsLayout:document.getElementById('composerForm')?.dataset.bd110NewsLayout||'',newsFont:document.getElementById('composerForm')?.dataset.bd110NewsFont||'',newsImage2:'',mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
+function validatePayload(){const type=document.querySelector('input[name="postType"]:checked')?.value,body=postBody.value.trim(),author=originalAuthor.value.trim(),news=document.getElementById('composerForm')?.dataset.bd104News==='1';let title=postTitle.value.trim();if(!type){toast('লেখার বিভাগ নির্বাচন করুন।');return null}if(type==='news'&&!(window.__BD_NEWS_CAN_PUBLISH?.()||window.__BD_NEWS_CHANNEL)){toast('নিউজ প্রকাশ শুধুমাত্র Premium/Founder-অনুমোদিত চ্যানেলের জন্য।');return null}if(type==='news'&&!news){toast('নিউজপেপার ডিজাইন নির্বাচন করুন।');return null}if(news&&!title)title=(String(body).trim().split(/\n+/).find(Boolean)||'সংবাদ আপডেট').replace(/\s+/g,' ').slice(0,120);if(type==='poem'&&!news&&!title){toast('কবিতার শিরোনাম লিখুন।');return null}if(!body){toast('আপনার লেখাটি লিখুন।');return null}if(type!=='news'&&!ownWork.checked&&!author){toast('তালিকা থেকে মূল কবির নাম নির্বাচন করুন।');return null}const exact=!news&&!ownWork.checked&&type==='poem'?findCanonicalPoem(author,title):null;return{type,title:exact?.title||title,body:exact?.body||body,originalAuthor:type==='news'?'':(ownWork.checked?'':author),canonicalPoemId:exact?.canonicalId||postTitle.dataset.canonicalId||'',cardStyle:(news?('news-card-'+(document.getElementById('composerForm')?.dataset.bd110NewsLayout||'digital')+'-'+(document.getElementById('composerForm')?.dataset.bd110NewsFont||'editorial')):(window.BD58ComposeStyle?window.BD58ComposeStyle('index'):document.getElementById('cardStyle').value))+(window.BhubondangaPremiumFonts?.current?.()?('-pf-'+window.BhubondangaPremiumFonts.current()):'')+(window.BhubondangaTitleStyle?.suffix?.()||''),newsCard:news,newsLayout:document.getElementById('composerForm')?.dataset.bd110NewsLayout||'',newsFont:document.getElementById('composerForm')?.dataset.bd110NewsFont||'',newsImage2:'',mediaKind:window.BDComposerMedia?.kind||'',mediaData:window.BDComposerMedia?.data||'',mediaCaption:document.getElementById('postMediaCaption')?.value.trim()||''}}
 async function bdVerifiedComposerAuth(){
   let live=null;try{live=await window.BhubondangaAuth?.current?.()}catch(_){}
   const session=live?.session?.user?live.session:(window.__BD_LIVE_SESSION?.user?window.__BD_LIVE_SESSION:null);
@@ -3336,6 +3336,484 @@ function boot(){
 D.addEventListener('bd:auth-ready',()=>setTimeout(()=>{addFontImportUI();renderBrand()},30));
 D.addEventListener('pointerup',e=>{if(e.target.closest?.('[data-bd31-react-main],[data-bd64-pick],#bd64ReactionTray'))setTimeout(()=>normalizeReactions(),0)},{passive:true});
 D.addEventListener('click',e=>{if(e.target.closest?.('[data-open-type="news"],.bd110-news-choice'))setTimeout(()=>{renderBrand();refreshComposerBrand()},80)},true);
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+
+<style id="bd-v8138-video-title-style-css">
+/* V8.138 — INDEX MASTER LOCK: video playback + separate title typography only. */
+
+/* Feed video keeps the approved card geometry. Reels owns playback UI. */
+#postList .composer-media-render:has(>video){
+  position:relative!important;
+  overflow:hidden!important;
+  min-height:180px!important;
+  border-radius:14px!important;
+  background:#05070c!important;
+}
+#postList .composer-media-render>video.bd107-feed-video{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-height:180px!important;
+  max-height:min(72dvh,720px)!important;
+  object-fit:contain!important;
+  background:#05070c!important;
+}
+#postList .bd107-video-preview>.bd138-open-reel{
+  position:absolute!important;
+  inset:0!important;
+  z-index:5!important;
+  width:100%!important;
+  height:100%!important;
+  padding:0!important;
+  border:0!important;
+  display:grid!important;
+  place-items:center!important;
+  background:linear-gradient(180deg,rgba(0,0,0,.02),rgba(0,0,0,.12))!important;
+  color:#fff!important;
+  touch-action:manipulation!important;
+  -webkit-user-select:none!important;
+  user-select:none!important;
+  -webkit-touch-callout:none!important;
+}
+#postList .bd138-open-reel .bd138-play-disc{
+  width:58px!important;
+  height:58px!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  padding-left:4px!important;
+  background:rgba(7,12,24,.60)!important;
+  box-shadow:0 9px 28px rgba(0,0,0,.28)!important;
+  backdrop-filter:blur(9px)!important;
+  -webkit-backdrop-filter:blur(9px)!important;
+  font:900 23px/1 Arial,sans-serif!important;
+}
+#postList .bd138-open-reel:active .bd138-play-disc{transform:scale(.96)!important}
+#postList .bd107-open-reel{display:none!important}
+
+/* Body font and title font are independent.
+   Existing Premium Font selection now remains the BODY font only. */
+#composerForm[data-bd134-premium-font] #postTitle{
+  font-family:'Noto Serif Bengali',serif!important;
+}
+#postList .post[class*="-pf-"] .post-title,
+#postList .post[class*="-pf-"] .post-title a{
+  font-family:'Noto Serif Bengali',serif!important;
+}
+
+/* Separate heading controls live inside the existing Premium Font Vault. */
+#bd134PremiumFonts .bd138-title-tools{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid #2d3949;
+}
+#bd134PremiumFonts .bd138-title-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:6px;
+}
+#bd134PremiumFonts .bd138-title-head strong{
+  color:#fff;
+  font:900 8.5px/1.2 'Noto Sans Bengali',sans-serif;
+}
+#bd134PremiumFonts .bd138-title-head small{
+  color:#9ba8ba;
+  font:700 6.4px/1.2 'Noto Sans Bengali',sans-serif;
+}
+#bd134PremiumFonts .bd138-title-fonts{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding:1px 1px 4px;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+}
+#bd134PremiumFonts .bd138-title-fonts::-webkit-scrollbar{display:none}
+#bd134PremiumFonts .bd138-title-fonts button{
+  flex:0 0 auto;
+  min-width:78px;
+  min-height:37px;
+  padding:5px 8px;
+  border:1px solid #334052;
+  border-radius:9px;
+  background:#0d1520;
+  color:#fff;
+  font-size:8px;
+  line-height:1.15;
+}
+#bd134PremiumFonts .bd138-title-fonts button.active{
+  background:#fff;
+  color:#10151b;
+  border-color:#fff;
+  box-shadow:0 0 0 2px rgba(255,255,255,.15);
+}
+#bd134PremiumFonts .bd138-title-colors{
+  margin-top:6px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  overflow-x:auto;
+  padding:1px 1px 3px;
+  scrollbar-width:none;
+}
+#bd134PremiumFonts .bd138-title-colors::-webkit-scrollbar{display:none}
+#bd134PremiumFonts .bd138-color-label{
+  flex:0 0 auto;
+  color:#b7c1cf;
+  font:800 7px/1 'Noto Sans Bengali',sans-serif;
+}
+#bd134PremiumFonts .bd138-color{
+  width:27px!important;
+  height:27px!important;
+  min-width:27px!important;
+  min-height:27px!important;
+  padding:0!important;
+  border:2px solid rgba(255,255,255,.28)!important;
+  border-radius:50%!important;
+  background:var(--bd138-swatch)!important;
+  box-shadow:none!important;
+}
+#bd134PremiumFonts .bd138-color.active{
+  border-color:#fff!important;
+  box-shadow:0 0 0 2px rgba(255,255,255,.20)!important;
+}
+#bd134PremiumFonts .bd138-color-auto{
+  width:auto!important;
+  min-width:49px!important;
+  border-radius:999px!important;
+  background:#111b28!important;
+  color:#fff!important;
+  font:800 7px/1 'Noto Sans Bengali',sans-serif!important;
+}
+#bd134PremiumFonts .bd138-color-picker{
+  width:31px;
+  height:31px;
+  flex:0 0 31px;
+  padding:2px;
+  border:1px solid #3c4a5d;
+  border-radius:8px;
+  background:#111c28;
+  cursor:pointer;
+}
+
+/* Explicit selected heading color remains readable as the author's choice. */
+#composerForm[data-bd138-title-color] #postTitle{
+  color:var(--bd138-title-color)!important;
+}
+#postList .post[data-bd138-title-color] .post-title,
+#postList .post[data-bd138-title-color] .post-title a{
+  color:var(--bd138-title-color)!important;
+}
+
+@media(max-width:520px){
+  #postList .bd138-open-reel .bd138-play-disc{width:52px!important;height:52px!important;font-size:21px!important}
+  #bd134PremiumFonts .bd138-title-tools{margin-top:7px;padding-top:7px}
+  #bd134PremiumFonts .bd138-title-fonts button{min-width:73px;min-height:36px}
+}
+</style>
+
+
+<script id="bd-v8138-video-title-style-js">
+(()=>{'use strict';
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+
+/* ---------------- VIDEO / REELS ---------------- */
+function postId(card){
+  return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'');
+}
+function playableSrc(v){
+  if(!v)return'';
+  const s=v.currentSrc||v.getAttribute('src')||v.src||$('source[src]',v)?.src||$('source[src]',v)?.getAttribute('src')||v.dataset.src||'';
+  return String(s||'');
+}
+function prepareFeedVideo(v){
+  if(!v||v.closest('#bd107Reels'))return;
+  const card=v.closest('#postList article.post,#postList article.bd-live-post,#postList [data-post-card],#postList .post-card');
+  if(!card)return;
+  v.playsInline=true;
+  v.setAttribute('playsinline','');
+  v.setAttribute('webkit-playsinline','');
+  v.preload='metadata';
+  v.controls=false;
+  v.removeAttribute('controls');
+  v.removeAttribute('autoplay');
+  v.muted=true;
+  v.defaultMuted=true;
+  try{v.pause()}catch(_){}
+  v.classList.add('bd107-feed-video');
+
+  const host=v.parentElement;
+  if(!host)return;
+  host.classList.add('bd107-video-preview');
+
+  /* Retire only the old anonymous trigger UI; existing Reels engine itself is kept. */
+  host.querySelectorAll(':scope > .bd107-open-reel').forEach(old=>{
+    old.classList.remove('bd107-open-reel');
+    old.classList.add('bd138-open-reel');
+    old.innerHTML='<span class="bd138-play-disc">▶</span>';
+    old.setAttribute('aria-label','ভিডিও চালান');
+  });
+  if(!host.querySelector(':scope > .bd138-open-reel')){
+    const b=D.createElement('button');
+    b.type='button';
+    b.className='bd138-open-reel';
+    b.setAttribute('aria-label','ভিডিও চালান');
+    b.innerHTML='<span class="bd138-play-disc">▶</span>';
+    host.appendChild(b);
+  }
+}
+function scanVideos(root=D){
+  if(root?.tagName==='VIDEO')prepareFeedVideo(root);
+  root?.querySelectorAll?.('#postList video').forEach(prepareFeedVideo);
+}
+async function openReelFromGesture(button){
+  const host=button.closest('.bd107-video-preview');
+  const feedVideo=host?.querySelector('video');
+  const card=feedVideo?.closest('#postList article.post,#postList article.bd-live-post,#postList [data-post-card],#postList .post-card');
+  const id=postId(card);
+  if(!feedVideo||!card||!id)return;
+
+  /* iOS Safari gets a real media play call inside the user gesture.
+     It is muted, then the Reels instance is created and played muted safely. */
+  const src=playableSrc(feedVideo);
+  if(src&&!feedVideo.getAttribute('src'))feedVideo.src=src;
+  feedVideo.muted=true;
+  feedVideo.defaultMuted=true;
+  feedVideo.playsInline=true;
+  try{
+    const warm=feedVideo.play();
+    if(warm?.catch)await warm.catch(()=>{});
+    feedVideo.pause();
+  }catch(_){}
+
+  const ok=W.BhubondangaReels107?.open?.(id);
+  if(ok===false||!$('#bd107Reels.open')){
+    /* Native fallback: never leave a dead video. */
+    feedVideo.controls=true;
+    feedVideo.muted=false;
+    feedVideo.defaultMuted=false;
+    try{await feedVideo.play()}catch(_){
+      feedVideo.muted=true;
+      feedVideo.defaultMuted=true;
+      try{await feedVideo.play()}catch(__){}
+    }
+    return;
+  }
+
+  const reelVideo=$('#bd107Reels .bd107-reel:first-child video');
+  if(reelVideo){
+    reelVideo.playsInline=true;
+    reelVideo.setAttribute('playsinline','');
+    reelVideo.setAttribute('webkit-playsinline','');
+    reelVideo.muted=true;
+    reelVideo.defaultMuted=true;
+    const ds=reelVideo.dataset.src;
+    if(ds&&!reelVideo.getAttribute('src')){
+      reelVideo.src=ds;
+      try{reelVideo.load()}catch(_){}
+    }
+    try{await reelVideo.play()}catch(_){}
+  }
+}
+D.addEventListener('click',e=>{
+  const b=e.target.closest?.('.bd138-open-reel');
+  if(!b)return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  openReelFromGesture(b);
+},true);
+
+/* ---------------- SEPARATE TITLE TYPOGRAPHY ---------------- */
+const TITLE_KEY='bdPremiumTitleFontSelected';
+const COLOR_KEY='bdPremiumTitleColorSelected';
+const DEFAULT_COLORS=[
+  {key:'auto',label:'স্বয়ংক্রিয়',value:''},
+  {key:'navy',label:'নীল',value:'#173c5d'},
+  {key:'red',label:'লাল',value:'#b72b38'},
+  {key:'green',label:'সবুজ',value:'#176b50'},
+  {key:'purple',label:'পার্পল',value:'#693dc8'},
+  {key:'gold',label:'সোনালি',value:'#9b6b18'},
+  {key:'black',label:'কালো',value:'#111111'}
+];
+const titleState={font:'',color:''};
+
+function fontRegistry(){
+  return W.BhubondangaPremiumFonts?.fonts||{};
+}
+function allowed(){
+  return !!W.BhubondangaPremiumFonts?.allowed?.();
+}
+function safeFontKey(v){
+  v=String(v||'').toLowerCase();
+  return /^[a-z0-9_-]{1,64}$/.test(v)?v:'';
+}
+function safeColor(v){
+  v=String(v||'').trim();
+  return /^#[0-9a-f]{6}$/i.test(v)?v.toLowerCase():'';
+}
+function selectedFontFamily(){
+  const row=fontRegistry()[titleState.font];
+  return row?.family||"'Noto Serif Bengali',serif";
+}
+function applyComposerTitle(){
+  const form=$('#composerForm'),title=$('#postTitle');
+  if(!form||!title)return;
+  if(titleState.font){
+    form.dataset.bd138TitleFont=titleState.font;
+    title.style.setProperty('font-family',selectedFontFamily(),'important');
+  }else{
+    delete form.dataset.bd138TitleFont;
+    title.style.removeProperty('font-family');
+  }
+  if(titleState.color){
+    form.dataset.bd138TitleColor=titleState.color.slice(1);
+    form.style.setProperty('--bd138-title-color',titleState.color);
+    title.style.setProperty('color',titleState.color,'important');
+  }else{
+    delete form.dataset.bd138TitleColor;
+    form.style.removeProperty('--bd138-title-color');
+    title.style.removeProperty('color');
+  }
+}
+function selectTitleFont(key){
+  if(!allowed())return;
+  key=safeFontKey(key);
+  if(key&&!fontRegistry()[key])key='';
+  titleState.font=key;
+  try{localStorage.setItem(TITLE_KEY,key)}catch(_){}
+  applyComposerTitle();
+  $$('#bd134PremiumFonts [data-bd138-title-font]').forEach(b=>b.classList.toggle('active',b.dataset.bd138TitleFont===key));
+}
+function selectTitleColor(value){
+  if(!allowed())return;
+  titleState.color=safeColor(value);
+  try{localStorage.setItem(COLOR_KEY,titleState.color)}catch(_){}
+  applyComposerTitle();
+  $$('#bd134PremiumFonts [data-bd138-title-color]').forEach(b=>b.classList.toggle('active',(b.dataset.bd138TitleColor||'')===titleState.color));
+  const picker=$('#bd138TitleColorPicker');
+  if(picker&&titleState.color)picker.value=titleState.color;
+}
+function titleTools(){
+  const panel=$('#bd134PremiumFonts');
+  if(!panel||!allowed())return;
+  let tools=$('.bd138-title-tools',panel);
+  if(tools)return tools;
+  tools=D.createElement('section');
+  tools.className='bd138-title-tools';
+  tools.setAttribute('aria-label','শিরোনামের আলাদা ফন্ট ও রঙ');
+  panel.appendChild(tools);
+  return tools;
+}
+function renderTitleTools(){
+  const panel=$('#bd134PremiumFonts');
+  if(!panel)return;
+  if(!allowed()){panel.querySelector('.bd138-title-tools')?.remove();return}
+  const tools=titleTools();if(!tools)return;
+  const fonts=fontRegistry();
+  tools.innerHTML=
+    '<div class="bd138-title-head"><strong>শিরোনামের ফন্ট</strong><small>মূল লেখার ফন্ট থেকে আলাদা</small></div>'+
+    '<div class="bd138-title-fonts">'+
+      '<button type="button" data-bd138-title-font="">ডিফল্ট</button>'+
+      Object.entries(fonts).map(([k,v])=>
+        '<button type="button" data-bd138-title-font="'+k+'" style="font-family:'+String(v.family||'').replace(/"/g,'&quot;')+'">'+
+        String(v.label||k).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))+
+        '</button>').join('')+
+    '</div>'+
+    '<div class="bd138-title-colors"><span class="bd138-color-label">শিরোনামের রঙ</span>'+
+      DEFAULT_COLORS.map(c=>c.key==='auto'
+        ?'<button type="button" class="bd138-color bd138-color-auto" data-bd138-title-color="">Auto</button>'
+        :'<button type="button" class="bd138-color" title="'+c.label+'" aria-label="'+c.label+'" data-bd138-title-color="'+c.value+'" style="--bd138-swatch:'+c.value+'"></button>'
+      ).join('')+
+      '<input id="bd138TitleColorPicker" class="bd138-color-picker" type="color" value="'+(titleState.color||'#173c5d')+'" aria-label="নিজের রঙ বেছে নিন">'+
+    '</div>';
+
+  tools.onclick=e=>{
+    const f=e.target.closest('[data-bd138-title-font]');
+    if(f){e.preventDefault();selectTitleFont(f.dataset.bd138TitleFont||'');return}
+    const c=e.target.closest('[data-bd138-title-color]');
+    if(c){e.preventDefault();selectTitleColor(c.dataset.bd138TitleColor||'')}
+  };
+  $('#bd138TitleColorPicker',tools)?.addEventListener('input',e=>selectTitleColor(e.target.value));
+  selectTitleFont(titleState.font);
+  selectTitleColor(titleState.color);
+}
+function decodePostTitleStyle(card){
+  if(!card||card.nodeType!==1)return;
+  const cls=String(card.className||'');
+  const fm=(cls.match(/(?:^|\s|-)tf-([a-z0-9_-]+?)(?=-tc-|(?:\s|$))/i)||[])[1]||'';
+  const cm=(cls.match(/(?:^|\s|-)tc-([0-9a-f]{6})(?=\s|$)/i)||[])[1]||'';
+  const title=card.querySelector('.post-title');
+  if(!title)return;
+  const key=safeFontKey(fm);
+  const row=fontRegistry()[key];
+  if(key&&row?.family)title.style.setProperty('font-family',row.family,'important');
+  else title.style.removeProperty('font-family');
+  const color=cm?safeColor('#'+cm):'';
+  if(color){
+    card.dataset.bd138TitleColor=color.slice(1);
+    card.style.setProperty('--bd138-title-color',color);
+    title.style.setProperty('color',color,'important');
+    title.querySelectorAll('a').forEach(a=>a.style.setProperty('color',color,'important'));
+  }
+}
+function scanTitleStyles(root=D){
+  if(root.matches?.('#postList article.post,#postList article.bd-live-post,#postList [data-post-card]'))decodePostTitleStyle(root);
+  root.querySelectorAll?.('#postList article.post,#postList article.bd-live-post,#postList [data-post-card]').forEach(decodePostTitleStyle);
+}
+
+/* card_style suffix: no database/schema change. */
+W.BhubondangaTitleStyle={
+  current:()=>({...titleState}),
+  suffix:()=>{
+    if(!allowed())return'';
+    const f=titleState.font?('-tf-'+safeFontKey(titleState.font)):'';
+    const c=titleState.color?('-tc-'+titleState.color.slice(1).toLowerCase()):'';
+    return f+c;
+  },
+  selectFont:selectTitleFont,
+  selectColor:selectTitleColor
+};
+
+let moBusy=false;
+const mo=new MutationObserver(ms=>{
+  if(moBusy)return;
+  moBusy=true;
+  requestAnimationFrame(()=>{
+    moBusy=false;
+    let needsVideo=false,needsPosts=false,needsTools=false;
+    for(const m of ms){
+      for(const n of m.addedNodes||[]){
+        if(n.nodeType!==1)continue;
+        if(n.matches?.('video')||n.querySelector?.('#postList video'))needsVideo=true;
+        if(n.matches?.('#postList article.post,#postList article.bd-live-post,#postList [data-post-card]')||n.querySelector?.('#postList article.post,#postList article.bd-live-post,#postList [data-post-card]'))needsPosts=true;
+        if(n.id==='bd134PremiumFonts'||n.querySelector?.('#bd134PremiumFonts'))needsTools=true;
+      }
+      if(m.target?.closest?.('#bd134PremiumFonts'))needsTools=true;
+    }
+    if(needsVideo)scanVideos();
+    if(needsPosts)scanTitleStyles();
+    if(needsTools)setTimeout(renderTitleTools,0);
+  });
+});
+
+function boot(){
+  try{titleState.font=safeFontKey(localStorage.getItem(TITLE_KEY)||'')}catch(_){}
+  try{titleState.color=safeColor(localStorage.getItem(COLOR_KEY)||'')}catch(_){}
+  scanVideos();
+  scanTitleStyles();
+  applyComposerTitle();
+  setTimeout(renderTitleTools,80);
+  setTimeout(()=>{scanVideos();scanTitleStyles();renderTitleTools();applyComposerTitle()},650);
+  mo.observe(D.body,{subtree:true,childList:true});
+}
+D.addEventListener('bd:auth-ready',()=>setTimeout(()=>{renderTitleTools();applyComposerTitle();scanTitleStyles()},40));
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
