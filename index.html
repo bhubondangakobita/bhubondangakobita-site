@@ -1581,7 +1581,7 @@ const bn=n=>String(Number(n)||0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮�
 const client=()=>W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null;
 function pid(card){return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post-id')||'').trim()}
 function profileHref(p={}){const id=p.id||p.user_id||p.author_id||'',u=String(p.username||p.author_username||'').replace(/^@/,'').toLowerCase(),role=String(p.role||p.author_role||'').toLowerCase(),name=String(p.display_name||p.author_name||p.name||'');if(role==='founder'||u==='mahmud-sohel'||name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);return'profile.html?v=842&user='+encodeURIComponent(id||u)}
-function rIcon(type,mini=false){const t=R[type]?type:'like';return `<span class="bd31-r bd35-react-sprite ${t}${mini?' bd31-mini':''}" aria-hidden="true"></span>`}
+function rIcon(type,mini=false){const t=R[type]?type:'like',E={like:'👍',love:'❤️',care:'🥰',haha:'😂',wow:'😮',sad:'😢',angry:'😡'};return `<span class="bd139-rx ${mini?'mini':''}" data-reaction="${t}" aria-hidden="true"><span>${E[t]}</span></span>`}
 function thumbSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 21H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3.5v11Z"></path><path d="M7.5 11 11 4.5c.7-1.4 2.7-1.1 3 .4l.4 2.1c.1.7.7 1.2 1.4 1.2H20a2 2 0 0 1 1.9 2.6l-2.2 7.3a4 4 0 0 1-3.8 2.9H7.5V11Z"></path></svg>'}
 function commentSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a4 4 0 0 1-4 4H8l-5 3v-7a4 4 0 0 1-1-3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"></path></svg>'}
 function shareSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 21 11l-6 6"></path><path d="M20 11H9a6 6 0 0 0-6 6v2"></path></svg>'}
@@ -1623,7 +1623,7 @@ function cleanOld(card){card.querySelectorAll(':scope > .bd24-social,:scope > .b
 function install(card){if(!card||!pid(card))return;if(card.dataset.bd31Ready==='1'&&card.querySelector(':scope > .bd31-social'))return;cleanOld(card);if(!card.querySelector(':scope > .bd31-social'))card.insertAdjacentHTML('beforeend',socialHTML(pid(card)));card.dataset.bd31Ready='1';refresh(card)}
 function allCards(root=D){root.querySelectorAll?.('article.post[data-post],article.post[data-post-id],article.bd-live-post[data-post-id],article.bd-live-post[data-post],.post-card[data-post],.post-card[data-post-id]').forEach(install)}
 function ensureTray(){let t=D.getElementById('bd31ReactionTray');if(t)return t;t=D.createElement('div');t.id='bd31ReactionTray';t.setAttribute('role','menu');t.innerHTML=Object.keys(R).map(k=>`<button type="button" data-bd31-tray-pick="${k}" aria-label="${R[k][0]}" title="${R[k][0]}">${rIcon(k)}</button>`).join('');D.body.appendChild(t);return t}
-function closeTray(){const t=ensureTray();t.classList.remove('open');t.removeAttribute('data-pid');t.__card=null}
+function closeTray(){const t=D.getElementById('bd31ReactionTray');if(!t)return;t.classList.remove('open');t.removeAttribute('data-pid');t.__card=null}
 function openTray(button,card){const t=ensureTray(),r=button.getBoundingClientRect();t.__card=card;t.dataset.pid=pid(card);t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||310,h=t.offsetHeight||55;let left=Math.max(9,Math.min(innerWidth-w-9,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+8);t.style.left=left+'px';t.style.top=top+'px'})}
 W.__bd45OpenReactionTray=openTray;W.__bd45CloseReactionTray=closeTray;
 function bd47ScrollSnapshot(card){
@@ -2024,8 +2024,9 @@ function getClient(){try{return W.bdProductionSupabase||W.bdSupabase||W.supabase
 async function getSession(){const c=getClient();if(!c)return null;try{return (await c.auth.getSession()).data?.session||null}catch{return null}}
 function getMine(card){return String(q('[data-bd31-react-main]',card)?.dataset?.current||'')}
 function icon(type){
- const emoji={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};
- return `<span class="bd64-icon bd136-rx" data-reaction="${type}" aria-hidden="true"><span>${emoji[type]||'👍'}</span></span>`;
+ const E={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};
+ const t=TYPES.includes(type)?type:'like';
+ return `<span class="bd139-rx" data-reaction="${t}" aria-hidden="true"><span>${E[t]}</span></span>`;
 }
 function tray(){
  let t=D.getElementById('bd64ReactionTray');if(t)return t;
@@ -2880,10 +2881,7 @@ html[data-theme="dark"] .bd31-summary,html[data-theme="dark"] [data-bd31-react-s
 const D=document,W=window;
 function historyLink(){const f=D.querySelector('.bd-national-flag');if(!f)return;f.setAttribute('href','bangladesh.html');f.setAttribute('aria-label','বাংলাদেশের জাতীয় পতাকা — বাংলাদেশের ইতিহাস পড়ুন');f.setAttribute('title','বাংলাদেশের ইতিহাস');}
 function typeOf(el){return String(el?.dataset?.reaction||'')||['like','love','care','haha','wow','sad','angry'].find(t=>el?.classList?.contains(t))||''}
-function normalizeReactionCard(card){
- const stack=card?.querySelector?.('.bd31-stack');if(stack){const seen=new Set();let kept=0;for(const child of [...stack.children]){const deep=child.querySelector?.('[data-reaction],.like,.love,.care,.haha,.wow,.sad,.angry'),type=typeOf(child)||typeOf(deep);if(!type||seen.has(type)||kept>=3){child.remove();continue}seen.add(type);kept++;}}
- const main=card?.querySelector?.('.bd31-main-reaction');if(main){const visuals=[...main.children].filter(n=>n.matches?.('.bd105-rx-art,.bd31-r,.bd52-reaction-img,img,svg,.bd64-icon'));if(visuals.length>1){const preferred=visuals.find(n=>n.matches?.('.bd105-rx-art,.bd64-icon,img'))||visuals[visuals.length-1];for(const n of visuals)if(n!==preferred)n.remove();}}
-}
+function normalizeReactionCard(){return}
 function markProfileMedia(card){if(!card?.querySelector)return;const title=(card.querySelector('.post-title')?.textContent||'').trim(),body=(card.querySelector('.post-body')?.textContent||'').trim();if(/(?:কভার|প্রোফাইল)\s*ছবি\s*পরিবর্তন|(?:cover|profile)\s*(?:photo|picture)\s*(?:changed|updated)/i.test(title+' '+body))card.classList.add('bd-true-profile-media');}
 function scan(root=D){if(root.matches?.('article.post,[data-post-card]')){normalizeReactionCard(root);markProfileMedia(root)}root.querySelectorAll?.('article.post,[data-post-card]').forEach(c=>{normalizeReactionCard(c);markProfileMedia(c)});const tray=D.getElementById('bd64ReactionTray');if(tray)tray.classList.remove('bd64-exact-reference');historyLink()}
 let q=false;const mo=new MutationObserver(ms=>{if(q)return;q=true;requestAnimationFrame(()=>{q=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n);const tray=D.getElementById('bd64ReactionTray');if(tray)tray.classList.remove('bd64-exact-reference')})});
@@ -3288,26 +3286,9 @@ body.bd-news-only #bd136NewsBranding{display:flex;align-items:center;gap:9px}
 </style>
 
 
-<script id="bd-v8136-reaction-news-font-logo-js">
-(()=>{'use strict';
+<script id="bd-v8136-reaction-news-font-logo-js">(()=>{'use strict';
 const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null;
-const RX={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'},RX_TYPES=Object.keys(RX);
-function rxType(el){if(!el)return'';const d=String(el.dataset?.reaction||el.dataset?.bd64Pick||el.dataset?.current||'').toLowerCase();if(RX_TYPES.includes(d))return d;return RX_TYPES.find(t=>el.classList?.contains(t))||''}
-function makeRx(type,summary=false){const w=D.createElement('span');w.className=summary?'bd136-summary-rx':'bd64-icon bd136-rx';w.dataset.reaction=type;const s=D.createElement('span');s.textContent=RX[type]||'👍';w.appendChild(s);return w}
-function normalizeReactionCard(card){
-  if(!card?.querySelector)return;
-  const main=card.querySelector('[data-bd31-react-main]'),holder=main?.querySelector('.bd31-main-reaction'),cur=String(main?.dataset?.current||'').toLowerCase();
-  if(holder){if(RX_TYPES.includes(cur)){const x=holder.querySelector('.bd136-rx');if(!x||x.dataset.reaction!==cur)holder.replaceChildren(makeRx(cur,false))}else holder.replaceChildren()}
-  const stack=card.querySelector('.bd31-stack');if(stack){const types=[];for(const el of [...stack.querySelectorAll('[data-reaction],.like,.love,.care,.sad,.haha,.wow,.angry')]){const t=rxType(el);if(t&&!types.includes(t))types.push(t)}if(!types.length&&RX_TYPES.includes(cur))types.push(cur);if(types.length)stack.replaceChildren(...types.slice(0,3).map(t=>makeRx(t,true)))}
-}
-function normalizeTray(){const tray=D.getElementById('bd64ReactionTray');if(!tray)return;tray.classList.remove('bd64-exact-reference');tray.style.backgroundImage='none';tray.querySelectorAll('[data-bd64-pick]').forEach(btn=>{const t=String(btn.dataset.bd64Pick||'').toLowerCase();if(!RX_TYPES.includes(t))return;const x=btn.querySelector('.bd136-rx');if(!x||x.dataset.reaction!==t)btn.replaceChildren(makeRx(t,false))})}
-let rq=false;function normalizeReactions(root=D){if(rq)return;rq=true;requestAnimationFrame(()=>{rq=false;if(root.matches?.('article.post,[data-post-card],.bd-live-post'))normalizeReactionCard(root);root.querySelectorAll?.('article.post,[data-post-card],.bd-live-post').forEach(normalizeReactionCard);normalizeTray()})}
-
-/* News: one tap expands the same card downward, second tap collapses it. */
-function keepAnchor(card,fn){const rows=[];let n=card;while(n&&n!==D.documentElement){const cs=getComputedStyle(n);if(/auto|scroll|overlay/.test(cs.overflowY||'')&&n.scrollHeight>n.clientHeight+2)rows.push([n,n.scrollTop]);n=n.parentElement}const top=card.getBoundingClientRect().top,wy=W.scrollY;fn();requestAnimationFrame(()=>{for(const [el,y] of rows)if(el.isConnected)el.scrollTop=y;const dy=card.getBoundingClientRect().top-top;if(Math.abs(dy)>.5)W.scrollTo(W.scrollX,wy+dy)})}
-function newsToggle(card){const open=card.dataset.bd136NewsExpanded!=='1';keepAnchor(card,()=>{card.dataset.bd136NewsExpanded=open?'1':'0';card.classList.toggle('expanded',open);card.classList.toggle('bd63-expanded',open);card.classList.toggle('bd-inline-expanded',open);const b=card.querySelector('.bd110-newspaper-sheet>.post-body');if(b){b.classList.toggle('collapsed',!open);b.style.maxHeight=open?'none':'';b.style.overflow=open?'visible':''}const more=card.querySelector('.post-read-more');if(more)more.textContent=open?'কম দেখুন ↑':'পূর্ণ লেখা পড়ুন →'})}
-D.addEventListener('click',e=>{const t=e.target.closest?.('#postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-title,#postList article.post.bd104-news-post .bd110-newspaper-sheet>.post-body,#postList article.post.bd104-news-post .post-read-more');if(!t)return;if(e.target.closest('button,input,textarea,select,label,audio,video,img,[contenteditable="true"],.comments,.comment-form'))return;const card=t.closest('article.post.bd104-news-post');if(!card)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();newsToggle(card)},true);
-
+function normalizeReactions(){return}
 /* Founder-only imported font vault. Trial persistence = IndexedDB on this browser. */
 const FONT_DB='bhubondanga-premium-fonts',FONT_STORE='fonts';
 function founder(){const id=W.__BD_IDENTITY||{};return W.__BD_NEWS_IS_FOUNDER===true||String(id.role||W.__BD_LIVE_ROLE||'').toLowerCase()==='founder'||String(id.author_username||'').toLowerCase()==='mahmud-sohel'}
@@ -3814,6 +3795,317 @@ function boot(){
   mo.observe(D.body,{subtree:true,childList:true});
 }
 D.addEventListener('bd:auth-ready',()=>setTimeout(()=>{renderTitleTools();applyComposerTitle();scanTitleStyles()},40));
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+
+<style id="bd-v8139-reaction-news-canonical-css">
+/* ============================================================
+   V8.139 — INDEX canonical reaction + newspaper expansion
+   DESIGN MASTER LOCK: no header/sidebar/composer redesign.
+   ============================================================ */
+
+/* ONE reaction visual node. No sprite background, no stacked artwork. */
+.bd139-rx{
+  display:inline-grid!important;
+  place-items:center!important;
+  width:25px!important;
+  height:25px!important;
+  min-width:25px!important;
+  max-width:25px!important;
+  flex:0 0 25px!important;
+  position:static!important;
+  inset:auto!important;
+  margin:0!important;
+  padding:0!important;
+  transform:none!important;
+  overflow:visible!important;
+  background:transparent!important;
+  border:0!important;
+  filter:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.bd139-rx>span{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  font:22px/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  transform:none!important;
+  margin:0!important;
+  text-shadow:none!important;
+}
+.bd139-rx.mini{
+  width:19px!important;height:19px!important;min-width:19px!important;max-width:19px!important;flex-basis:19px!important
+}
+.bd139-rx.mini>span{font-size:17px!important}
+
+#postList .bd31-main-reaction{
+  width:26px!important;height:26px!important;min-width:26px!important;max-width:26px!important;
+  display:grid!important;place-items:center!important;overflow:visible!important;contain:none!important;
+}
+#postList .bd31-main-reaction>.bd139-rx{width:25px!important;height:25px!important}
+#postList .bd31-stack{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:2px!important;
+  width:auto!important;
+  max-width:none!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+#postList .bd31-stack>.bd139-rx{
+  position:static!important;
+  margin:0!important;
+  transform:none!important;
+}
+#postList [data-bd31-react-summary]{
+  overflow:visible!important;
+  min-width:0!important;
+}
+
+/* The only live tray is V8.64. */
+#bd31ReactionTray,#bdV814ReactionTray,#bd45ReactionTray,#bd28ReactionTray,
+.bd-index-reaction-picker,.bd-v814-picker,.bd45-reaction-picker,.legacy-reaction-picker{
+  display:none!important;visibility:hidden!important;pointer-events:none!important
+}
+#bd64ReactionTray{
+  display:none!important;
+  position:fixed!important;
+  z-index:2147483000!important;
+  width:auto!important;
+  height:auto!important;
+  min-width:0!important;
+  max-width:calc(100vw - 16px)!important;
+  padding:5px 7px!important;
+  gap:3px!important;
+  align-items:center!important;
+  border:1px solid rgba(65,76,109,.14)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.99)!important;
+  background-image:none!important;
+  box-shadow:0 12px 31px rgba(22,29,57,.22)!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  overflow:visible!important;
+  touch-action:manipulation!important;
+}
+#bd64ReactionTray.open{display:flex!important}
+#bd64ReactionTray button{
+  width:39px!important;height:39px!important;min-width:39px!important;max-width:39px!important;
+  padding:0!important;margin:0!important;border:0!important;border-radius:50%!important;
+  display:grid!important;place-items:center!important;background:transparent!important;
+  overflow:visible!important;transform:none!important;
+}
+#bd64ReactionTray button .bd139-rx{
+  width:38px!important;height:38px!important;min-width:38px!important;max-width:38px!important
+}
+#bd64ReactionTray button .bd139-rx>span{font-size:31px!important}
+#bd64ReactionTray button:active .bd139-rx{transform:scale(.91)!important}
+#bd64ReactionTray::before,#bd64ReactionTray::after{display:none!important;content:none!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #bd64ReactionTray{
+  background:#151d2b!important;
+  border-color:rgba(255,255,255,.15)!important;
+  box-shadow:0 15px 34px rgba(0,0,0,.38)!important;
+}
+
+/* Newspaper: no fixed-height/line-clamp layer may survive an open state. */
+#postList article.bd104-news-post,
+#postList article.bd104-news-post .bd110-newspaper-sheet{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  overflow-x:hidden!important;
+  box-sizing:border-box!important;
+}
+#postList article.bd104-news-post .bd110-newspaper-sheet>*{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+#postList article.bd104-news-post .bd110-newspaper-sheet>.post-body{
+  position:static!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  box-sizing:border-box!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  -webkit-box-orient:unset!important;
+}
+#postList article.bd104-news-post[data-bd139-news-open="0"] .bd110-newspaper-sheet>.post-body{
+  display:block!important;
+  max-height:10.4em!important;
+  overflow:hidden!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%)!important;
+  mask-image:linear-gradient(180deg,#000 0%,#000 76%,transparent 100%)!important;
+  column-count:1!important;
+  column-width:auto!important;
+  column-rule:0!important;
+}
+#postList article.bd104-news-post[data-bd139-news-open="1"],
+#postList article.bd104-news-post[data-bd139-news-open="1"] .bd110-newspaper-sheet,
+#postList article.bd104-news-post[data-bd139-news-open="1"] .bd110-newspaper-sheet>.post-body{
+  max-height:none!important;
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+#postList article.bd104-news-post .bd139-news-more{
+  margin:9px 0 2px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:#5d58c8!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  display:inline-flex!important;
+}
+@media(max-width:759px){
+  #postList article.bd104-news-post[data-bd139-news-open="1"] .bd110-newspaper-sheet>.post-body{
+    display:block!important;
+    column-count:2!important;
+    column-width:auto!important;
+    column-gap:12px!important;
+    column-rule:1px solid rgba(28,42,55,.17)!important;
+    column-fill:balance!important;
+    font-size:clamp(8.2px,2.35vw,10px)!important;
+    line-height:1.72!important;
+  }
+}
+@media(max-width:335px){
+  #postList article.bd104-news-post[data-bd139-news-open="1"] .bd110-newspaper-sheet>.post-body{
+    column-count:1!important;column-rule:0!important;font-size:9.2px!important
+  }
+}
+@media(min-width:760px){
+  #postList article.bd104-news-post[data-bd139-news-open="1"] .bd110-newspaper-sheet>.post-body{
+    column-count:2!important;
+    column-gap:22px!important;
+    column-rule:1px solid rgba(28,42,55,.17)!important;
+  }
+}
+</style>
+
+
+<script id="bd-v8139-reaction-news-canonical-js">
+(()=>{'use strict';
+const D=document,W=window;
+const CARD='article.bd104-news-post';
+
+function isOpen(card){return card?.dataset?.bd139NewsOpen==='1'}
+function snapshot(card){
+  const rows=[];let n=card;
+  while(n&&n!==D.documentElement){
+    try{
+      const cs=getComputedStyle(n);
+      if(/auto|scroll|overlay/.test(cs.overflowY||'')&&n.scrollHeight>n.clientHeight+2)
+        rows.push([n,n.scrollTop,n.scrollLeft]);
+    }catch(_){}
+    n=n.parentElement;
+  }
+  return{rows,top:card.getBoundingClientRect().top,wy:W.scrollY,wx:W.scrollX};
+}
+function restore(card,s){
+  requestAnimationFrame(()=>{
+    for(const [el,y,x] of s.rows)if(el?.isConnected){el.scrollTop=y;el.scrollLeft=x}
+    const dy=card.getBoundingClientRect().top-s.top;
+    if(Math.abs(dy)>1){
+      const sc=s.rows[0]?.[0];
+      if(sc?.isConnected)sc.scrollTop+=dy;
+      else W.scrollTo(s.wx,s.wy+dy);
+    }
+  });
+}
+function setOpen(card,open){
+  if(!card)return;
+  const s=snapshot(card);
+  card.dataset.bd139NewsOpen=open?'1':'0';
+
+  /* Remove every historical open/closed class conflict first. */
+  card.classList.toggle('expanded',open);
+  card.classList.toggle('bd63-expanded',open);
+  card.classList.toggle('bd-inline-expanded',open);
+  card.classList.toggle('bd76-inline-open',open);
+  delete card.dataset.bd136NewsExpanded;
+
+  const body=card.querySelector('.bd110-newspaper-sheet>.post-body');
+  if(body){
+    body.classList.toggle('collapsed',!open);
+    body.style.setProperty('height','auto','important');
+    body.style.setProperty('min-height','0','important');
+    body.style.setProperty('max-height',open?'none':'10.4em','important');
+    body.style.setProperty('overflow',open?'visible':'hidden','important');
+    body.style.removeProperty('-webkit-line-clamp');
+  }
+  const b=card.querySelector('.bd139-news-more');
+  if(b)b.textContent=open?'কম দেখুন ↑':'পূর্ণ সংবাদ পড়ুন →';
+  card.setAttribute('aria-expanded',open?'true':'false');
+  restore(card,s);
+}
+function decorate(card){
+  if(!card||card.nodeType!==1)return;
+  const paper=card.querySelector('.bd110-newspaper-sheet');
+  if(!paper)return;
+  if(!card.dataset.bd139NewsOpen)card.dataset.bd139NewsOpen='0';
+  let b=card.querySelector('.bd139-news-more');
+  if(!b){
+    b=D.createElement('button');
+    b.type='button';
+    b.className='bd139-news-more';
+    b.textContent='পূর্ণ সংবাদ পড়ুন →';
+    const body=paper.querySelector(':scope>.post-body');
+    (body||paper).insertAdjacentElement('afterend',b);
+  }
+  card.setAttribute('aria-expanded',isOpen(card)?'true':'false');
+  if(!isOpen(card))setOpen(card,false);
+}
+function scan(root=D){
+  if(root.matches?.(CARD))decorate(root);
+  root.querySelectorAll?.('#postList '+CARD).forEach(decorate);
+}
+
+/* Whole newspaper sheet is the toggle target.
+   Media, reaction, comments and actual controls remain independent. */
+D.addEventListener('click',e=>{
+  const paper=e.target.closest?.('#postList '+CARD+' .bd110-newspaper-sheet');
+  if(!paper)return;
+  if(e.target.closest('button:not(.bd139-news-more),input,textarea,select,label,audio,video,img,.composer-media-render,.post-media,.bd104-news-image2,.bd31-social,.comments,.comment-form,[contenteditable="true"]'))return;
+  const card=paper.closest(CARD);
+  if(!card)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  setOpen(card,!isOpen(card));
+},true);
+
+D.addEventListener('click',e=>{
+  const b=e.target.closest?.('.bd139-news-more');
+  if(!b)return;
+  const card=b.closest(CARD);if(!card)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  setOpen(card,!isOpen(card));
+},true);
+
+const mo=new MutationObserver(ms=>{
+  requestAnimationFrame(()=>{
+    for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n);
+  });
+});
+function boot(){
+  scan();
+  mo.observe(D.body,{subtree:true,childList:true});
+  setTimeout(()=>scan(),500);
+  setTimeout(()=>scan(),1500);
+}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
