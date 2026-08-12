@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<title>নিবন্ধন | ভুবনডাঙ্গার কবিতা — V8.91</title>
+<title>নিবন্ধন | ভুবনডাঙ্গার কবিতা — V8.137</title>
 
 <meta name="description" content="ভুবনডাঙ্গা একটি সাহিত্যভিত্তিক সামাজিক মাধ্যম—পরিবেশ, চিঠিপত্র, মনীষীদের বাণী, শিশুতোষ, আধ্যাত্মিক দর্শন ও বাংলা কবিতার সহজ সামাজিক ভুবন।">
 
@@ -1831,7 +1831,7 @@ function dataUrlToBlob(data){const [head,body]=String(data).split(','),mime=(hea
 window.BhubondangaRegisterRemote=async function(v){
  if(!sb)throw new Error('Supabase সংযোগ পাওয়া যায়নি');
  const username=String(v.username||'').replace(/^@/,'').toLowerCase();
- const r=await sb.auth.signUp({email:String(v.email||'').toLowerCase(),password:v.password,options:{data:{full_name:v.fullName,username,bio:v.bio||'',role:'user'}}});
+ const r=await sb.auth.signUp({email:String(v.email||'').toLowerCase(),password:v.password,options:{data:{full_name:v.fullName,username,bio:v.bio||'',preferences:v.preferences||v.bio||'',country:v.country||'',location:v.location||'',role:'user'}}});
  if(r.error)throw r.error;
  if(r.data?.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0)throw new Error('এই ইমেইল বা Username আগে থেকেই ব্যবহৃত হয়েছে।');
  let avatar='';
@@ -2231,20 +2231,20 @@ html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,
         </span>
 
         <h1 class="register-slogan">
-          ফেসবুকের মতো সহজ<br>
-          <span>ও শেখার মতো সুন্দর</span>
+          কেন ভুবনডাঙ্গায়<br>
+          <span>আপনার নিজের একটি ভুবন?</span>
         </h1>
 
         <p class="register-lead">
-          ভুবনডাঙ্গা একটি সাহিত্যভিত্তিক সামাজিক মাধ্যম—ফেসবুকের মতো পরিচিত ও সহজ, কিন্তু শেখা, পড়া ও সৃজনশীলতার জন্য আরও মনোযোগী।
-          এখানে লিখবেন, পড়বেন, শুনবেন, জানবেন এবং মানুষের সঙ্গে সাহিত্যিকভাবে যুক্ত থাকবেন।
+          নিজের ভাষায় লিখুন, মন দিয়ে পড়ুন, আবৃত্তি শুনুন এবং সাহিত্যকে ঘিরে মানুষের সঙ্গে যুক্ত থাকুন।
+          ভুবনডাঙ্গা বিজ্ঞাপনমুক্ত, বাংলা-কেন্দ্রিক এবং কবিতা থেকে শিশুতোষ, চিঠিপত্র, মনীষীদের বাণী ও খ্যাতিমান কবিদের সাহিত্য—সবকিছুকে একটি শান্ত সামাজিক ভুবনে রাখার চেষ্টা।
         </p>
 
         <div class="benefit-banner">
           <div class="benefit-banner-icon">✦</div>
           <div>
-            <strong>একটি অ্যাকাউন্ট, পুরো ভুবন</strong>
-            <span>নিজস্ব প্রোফাইল • লেখা ও আবৃত্তি • ফলো ও রিঅ্যাকশন • বার্তা ও কল • নোটিফিকেশন</span>
+            <strong>বিজ্ঞাপনমুক্ত সাহিত্যিক সামাজিক মাধ্যম</strong>
+            <span>নিজস্ব প্রোফাইল • স্বাধীন প্রকাশ • কবিতা ও শিশুতোষ • মনীষীদের বাণী • আবৃত্তি • ফলো, রিঅ্যাকশন ও বার্তা • Android ও মোবাইলে অ্যাপের মতো স্বচ্ছন্দ ব্যবহার</span>
           </div>
         </div>
 
@@ -2253,68 +2253,37 @@ html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,
           <div class="master-identity-card page"><b>Founder-অনুমোদিত পেজ</b><span>সংবাদমাধ্যম ও প্রতিষ্ঠানের অফিসিয়াল উপস্থিতি—Approval Code ছাড়া Page তৈরি নয়।</span></div>
         </div>
 
-        <div class="feature-title">
-          কেন ভুবনডাঙ্গা ব্যবহার করবেন
+        
+        <div class="bd137-register-catalogue">
+          <details open>
+            <summary><span>✦</span> কেন ভুবনডাঙ্গা আপনার জন্য</summary>
+            <div class="bd137-catalogue-body">
+              <div><b>বিজ্ঞাপনমুক্ত</b><small>লেখা ও পাঠের মাঝখানে বিজ্ঞাপনের ঝামেলা নয়।</small></div>
+              <div><b>নিজের লেখা, নিজের ভুবন</b><small>কবিতা, প্রলাপ, চিঠিপত্র, আলোচনা, পরিবেশ ও আবৃত্তি—নিজের পরিচয়ে প্রকাশ করুন।</small></div>
+              <div><b>শেখার জায়গা</b><small>শিশুতোষ লেখা, বিখ্যাত মনীষীদের বাণী, খ্যাতিমান কবি ও সাহিত্যিক আর্কাইভ একসঙ্গে।</small></div>
+              <div><b>পরিষ্কার সামাজিক পরিবেশ</b><small>রিঅ্যাকশন, মন্তব্য, বার্তা ও ফলো থাকবে; পাশাপাশি দায়িত্বশীল moderation থাকবে।</small></div>
+              <div><b>মোবাইল-বান্ধব</b><small>Android, iPhone ও ডেস্কটপে একই অ্যাকাউন্ট—মোবাইলে অ্যাপের মতো স্বচ্ছন্দ অভিজ্ঞতা।</small></div>
+              <div><b>আপনার নিয়ন্ত্রণ</b><small>প্রোফাইল, লেখা ও privacy নিজের প্রয়োজন অনুযায়ী পরে সম্পাদনা করতে পারবেন।</small></div>
+            </div>
+          </details>
+          <details>
+            <summary><span>①</span> নিবন্ধন কীভাবে করবেন</summary>
+            <ol class="bd137-steps">
+              <li><b>সবচেয়ে সহজ:</b> Google অথবা Facebook দিয়ে প্রবেশ করুন।</li>
+              <li>অথবা First Name, Last Name, Username, Email ও Password দিয়ে নতুন অ্যাকাউন্ট তৈরি করুন।</li>
+              <li>বাংলাদেশি হলে আপনার জেলা/শহর লিখুন—যেমন <b>কুমিল্লা, বাংলাদেশ</b>।</li>
+              <li>নিবন্ধন শেষ হলে সরাসরি নিজের Profile-এ গিয়ে ছবি, cover, bio ও অন্যান্য তথ্য সম্পাদনা করুন।</li>
+            </ol>
+          </details>
+          <details>
+            <summary><span>☰</span> এখানে কী কী পাবেন</summary>
+            <div class="bd137-topic-pills">
+              <span>কবিতা</span><span>আবৃত্তি</span><span>শিশুতোষ</span><span>চিঠিপত্র</span>
+              <span>মনীষীদের বাণী</span><span>খ্যাতিমান কবি</span><span>পরিবেশ</span><span>সাহিত্য আলোচনা</span>
+              <span>মধ্যরাতের প্রলাপ</span><span>বার্তা ও ফলো</span>
+            </div>
+          </details>
         </div>
-
-        <div class="feature-grid">
-
-          <div class="feature-item">
-            <span class="feature-icon">🌱</span>
-            <span class="feature-copy">
-              <strong>পরিবেশের কথা</strong>
-              <span>প্রকৃতি, পরিবেশ রক্ষা এবং ভবিষ্যৎ প্রজন্মের জন্য দায়িত্বশীল চিন্তা ও লেখা ভাগ করুন।</span>
-            </span>
-          </div>
-
-          <div class="feature-item">
-            <span class="feature-icon">✉</span>
-            <span class="feature-copy">
-              <strong>অনুভূতির ঠিকানায় চিঠি</strong>
-              <span>চিঠিপত্রে অনুভূতি, স্মৃতি, সম্পর্ক ও না-বলা কথাগুলো নিজের ভাষায় লিখুন ও পড়ুন।</span>
-            </span>
-          </div>
-
-          <div class="feature-item">
-            <span class="feature-icon">❝</span>
-            <span class="feature-copy">
-              <strong>বিখ্যাত মনীষীদের বাণী</strong>
-              <span>বিখ্যাত মনীষীদের নির্বাচিত বাণী পড়ুন, তাঁদের জীবনবোধ জানুন এবং গভীর ভাবনার খোরাক খুঁজে নিন।</span>
-            </span>
-          </div>
-
-          <div class="feature-item">
-            <span class="feature-icon">📚</span>
-            <span class="feature-copy">
-              <strong>শিশুতোষ ও আধ্যাত্মিক দর্শন</strong>
-              <span>শিশু-কিশোরদের উপযোগী লেখা এবং জীবন, মানুষ ও আধ্যাত্মিক দর্শনের ভাবনা খুঁজে পাবেন।</span>
-            </span>
-          </div>
-
-          <div class="feature-item">
-            <span class="feature-icon">🖋</span>
-            <span class="feature-copy">
-              <strong>বাংলা ভাষাভাষী বিখ্যাত কবি</strong>
-              <span>বাংলা ভাষার বিখ্যাত কবিদের কবিতা, পরিচিতি ও সাহিত্যিক উত্তরাধিকার এক জায়গায় পড়ুন।</span>
-            </span>
-          </div>
-
-          <div class="feature-item android-feature">
-            <span class="feature-icon">📱</span>
-            <span class="feature-copy">
-              <strong>সাহিত্যভিত্তিক সামাজিক মাধ্যম</strong>
-              <span>ফলো, রিঅ্যাকশন, মন্তব্য, বার্তা, আবৃত্তি ও প্রকাশনা—Android ও স্মার্ট ডিভাইসে সহজে ব্যবহারযোগ্য।</span>
-            </span>
-          </div>
-
-        </div>
-
-        <div class="quick-start">
-          <span><b>১</b> নাম ও ইউজারনেম</span>
-          <span><b>২</b> ইমেইল ও পাসওয়ার্ড</span>
-          <span><b>৩</b> তৈরি হয়ে যাবে আপন ভুবন</span>
-        </div>
-
       </div>
 
       <div class="welcome-bottom">
@@ -2396,12 +2365,12 @@ html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,
         </section>
 
         <section class="social-entry" id="socialEntry" aria-label="দ্রুত নিবন্ধন">
-          <div class="social-entry-title">অথবা দ্রুত ব্যক্তিগত প্রোফাইল তৈরি করুন</div>
+          <div class="social-entry-title">সবচেয়ে সহজ উপায়ে নিবন্ধন করুন</div>
           <div class="social-entry-actions">
             <button class="social-entry-btn google" id="googleRegisterButton" type="button"><span class="social-entry-mark">G</span><span>Google দিয়ে প্রবেশ</span></button>
             <button class="social-entry-btn facebook" id="facebookRegisterButton" type="button"><span class="social-entry-mark">f</span><span>Facebook দিয়ে প্রবেশ</span></button>
           </div>
-          <div class="social-entry-note" id="socialEntryNote">Google বা Facebook ব্যবহার করলে Supabase Auth-এর একই User ID আপনার প্রোফাইলের ID হিসেবেও সংরক্ষিত হবে।</div>
+          <div class="social-entry-note" id="socialEntryNote">Google বা Facebook বেছে নিলে আলাদা করে নতুন পাসওয়ার্ড মনে রাখার প্রয়োজন হবে না। চাইলে নিচে Email দিয়েও নিবন্ধন করতে পারেন।</div>
         </section>
 
         <section class="page-access-panel" id="pageAccessPanel" hidden>
@@ -2415,6 +2384,32 @@ html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,
           <div class="page-brand-preview"><div class="page-brand-dot">🌿</div><div><strong id="pageApprovedName">অনুমোদিত প্রতিষ্ঠানের পরিচয় এখানে দেখা যাবে</strong><span id="pageApprovedMeta">Code যাচাই হলে Founder-এর নির্ধারিত নাম ও মেয়াদ দেখানো হবে।</span></div></div>
         </section>
 <div class="form-grid">
+        <div class="bd137-personal-fields">
+          <div class="form-group">
+            <div class="form-label-row"><label class="form-label" for="firstNameInput">First Name</label><span class="field-note">অবশ্যই</span></div>
+            <div class="input-wrap"><span class="input-icon">👤</span><input class="form-control" id="firstNameInput" type="text" autocomplete="given-name" maxlength="45" placeholder="প্রথম নাম" required></div>
+            <div class="field-error" id="firstNameError"></div>
+          </div>
+          <div class="form-group">
+            <div class="form-label-row"><label class="form-label" for="lastNameInput">Last Name</label><span class="field-note">অবশ্যই</span></div>
+            <div class="input-wrap"><span class="input-icon">👤</span><input class="form-control" id="lastNameInput" type="text" autocomplete="family-name" maxlength="45" placeholder="শেষ নাম" required></div>
+            <div class="field-error" id="lastNameError"></div>
+          </div>
+
+          <div class="form-group full bd137-country-block">
+            <div class="form-label-row"><span class="form-label">আপনি কি বাংলাদেশি?</span><span class="field-note">প্রোফাইলের দেশ</span></div>
+            <div class="bd137-country-choice" role="radiogroup" aria-label="আপনি কি বাংলাদেশি?">
+              <label><input type="radio" name="bd137Bangladeshi" value="yes" checked><span>🇧🇩 হ্যাঁ, বাংলাদেশি</span></label>
+              <label><input type="radio" name="bd137Bangladeshi" value="no"><span>না / অন্য দেশ</span></label>
+            </div>
+            <div class="input-wrap bd137-location-wrap">
+              <span class="input-icon">⌖</span>
+              <input class="form-control" id="bd137LocationInput" type="text" maxlength="100" autocomplete="address-level2" placeholder="যেমন: কুমিল্লা, বাংলাদেশ">
+            </div>
+            <div class="field-error" id="bd137LocationError"></div>
+          </div>
+        </div>
+
 
           <div class="form-group full">
 
@@ -2740,7 +2735,7 @@ html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,
                 class="form-label"
                 for="bioInput"
               >
-                নিজের সম্পর্কে
+                আপনার পছন্দগুলো সংক্ষেপে লিখুন
               </label>
 
               <span class="field-note">
@@ -2756,7 +2751,7 @@ html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,
               <textarea
                 class="form-control"
                 id="bioInput"
-                placeholder="আপনি কী পড়েন, কী লেখেন অথবা কী ভালোবাসেন..."
+                placeholder="যেমন—কবিতা, গল্প, আবৃত্তি, শিশুতোষ, ইতিহাস, প্রকৃতি বা যেসব বিষয় পড়তে ও লিখতে ভালোবাসেন..."
                 maxlength="350"
               ></textarea>
 
@@ -4179,7 +4174,10 @@ registerForm.addEventListener(
         email:email,
         password:passwordInput.value,
         bio:document.getElementById("bioInput").value.trim(),
-        avatar:selectedProfileImage
+        preferences:document.getElementById("bioInput").value.trim(),
+        country:(window.BD137RegistrationLocation?.country||""),
+        location:(window.BD137RegistrationLocation?.location||""),
+        avatar:"" 
       });
     }catch(error){
       setButtonLoading(false);
@@ -4205,8 +4203,11 @@ registerForm.addEventListener(
       passwordHash:passwordHash,
       role:"reader",
       status:"active",
-      avatar:remoteAuth?.avatar || selectedProfileImage,
-      profileImage:remoteAuth?.avatar || selectedProfileImage,
+      avatar:"",
+      profileImage:"",
+      country:(window.BD137RegistrationLocation?.country||""),
+      location:(window.BD137RegistrationLocation?.location||""),
+      preferences:document.getElementById("bioInput").value.trim(),
       initials:getInitials(
         fullNameInput.value
       ),
@@ -4348,6 +4349,11 @@ function showSuccess(user){
   showToast(
     user.loggedIn ? "স্বাগতম! আপনার আপন ভুবন তৈরি হয়েছে।" : "অ্যাকাউন্ট তৈরি হয়েছে—ইমেইল যাচাই করে লগইন করুন।"
   );
+  if(user.loggedIn){
+    setTimeout(function(){
+      window.location.href = profileUrl(user);
+    },700);
+  }
 }
 
 /* ANOTHER ACCOUNT */
@@ -4770,7 +4776,7 @@ document.addEventListener(
    const a=document.getElementById('headerAvatar');if(a){a.hidden=false;a.href=url;a.innerHTML=avatar?'<img src="'+String(avatar).replace(/"/g,'&quot;')+'" alt="">':String(name).replace(/\s+/g,'').slice(0,2)}
    const anon=document.getElementById('anonymousActions');if(anon)anon.hidden=true;
    const card=document.getElementById('loggedCard');if(card){card.classList.add('show');const title=document.getElementById('loggedCardTitle');if(title)title.textContent=name+', আপনি ইতোমধ্যে লগইন করেছেন';const link=document.getElementById('loggedProfileLink');if(link)link.href=url;const form=document.getElementById('registerForm');if(form)form.hidden=true}
-   if(new URLSearchParams(location.search).get('oauth')==='1'){const clean=new URL(location.href);clean.searchParams.delete('oauth');history.replaceState(null,'',clean.pathname+clean.search+clean.hash)}
+   if(new URLSearchParams(location.search).get('oauth')==='1'){location.replace(url);return}
  }catch(_){ }
 })();
 </script>
@@ -4790,7 +4796,7 @@ function bnDate(v){try{return new Intl.DateTimeFormat('bn-BD',{dateStyle:'medium
 function setMode(kind){accountKind=kind==='page'?'page':'profile';D.body.dataset.accountKind=accountKind;D.querySelectorAll('[data-account-kind]').forEach(b=>{const on=b.dataset.accountKind===accountKind;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false')});D.getElementById('pageAccessPanel').hidden=accountKind!=='page';verifiedCode=null;const st=D.getElementById('pageCodeState');if(st){st.className='page-code-state';st.textContent='Founder-এর কাছ থেকে পাওয়া সক্রিয় Code লিখুন।'}
  const h2=D.querySelector('.form-heading h2'),hp=D.querySelector('.form-heading p'),nameLabel=D.querySelector('label[for="fullNameInput"]'),userLabel=D.querySelector('label[for="usernameInput"]'),emailNote=D.querySelector('label[for="emailInput"]')?.closest('.form-label-row')?.querySelector('.field-note'),bioLabel=D.querySelector('label[for="bioInput"]');
  if(accountKind==='page'){if(h2)h2.textContent='অনুমোদিত পেজ তৈরি করুন';if(hp)hp.textContent='Founder Approval Code যাচাই করে আপনার প্রতিষ্ঠানের অফিসিয়াল Page পরিচয় সক্রিয় করুন।';if(nameLabel)nameLabel.textContent='পেজ / প্রতিষ্ঠানের নাম';if(userLabel)userLabel.textContent='পেজ Handle';if(emailNote)emailNote.textContent='অফিশিয়াল ইমেইল';if(bioLabel)bioLabel.textContent='পেজ সম্পর্কে';D.getElementById('fullNameInput').placeholder='যেমন RTV News';D.getElementById('usernameInput').placeholder='rtv_news';D.getElementById('bioInput').placeholder='প্রতিষ্ঠান, সম্পাদকীয় পরিচয় বা অফিসিয়াল Page সম্পর্কে সংক্ষিপ্ত তথ্য...';D.querySelector('#registerButton .button-text').textContent='অনুমোদিত পেজ তৈরি করুন';}
- else{if(h2)h2.textContent='আপন ভুবন তৈরি করুন';if(hp)hp.textContent='কয়েকটি সাধারণ তথ্য দিয়ে ভুবনডাঙ্গার সাহিত্যিক পরিবারে নিজের নতুন ঠিকানা তৈরি করুন।';if(nameLabel)nameLabel.textContent='আপনার পূর্ণ নাম';if(userLabel)userLabel.textContent='ইউজারনেম';if(emailNote)emailNote.textContent='ব্যক্তিগত ইমেইল';if(bioLabel)bioLabel.textContent='নিজের সম্পর্কে';D.getElementById('fullNameInput').placeholder='আপনার নাম লিখুন';D.getElementById('usernameInput').placeholder='your-name';D.getElementById('bioInput').placeholder='আপনি কী পড়েন, কী লেখেন অথবা কী ভালোবাসেন...';D.querySelector('#registerButton .button-text').textContent='ঢুকে পড়ুন ভুবনডাঙ্গায়';}
+ else{if(h2)h2.textContent='আপন ভুবন তৈরি করুন';if(hp)hp.textContent='কয়েকটি সাধারণ তথ্য দিয়ে ভুবনডাঙ্গার সাহিত্যিক পরিবারে নিজের নতুন ঠিকানা তৈরি করুন।';if(nameLabel)nameLabel.textContent='আপনার পূর্ণ নাম';if(userLabel)userLabel.textContent='ইউজারনেম';if(emailNote)emailNote.textContent='ব্যক্তিগত ইমেইল';if(bioLabel)bioLabel.textContent='আপনার পছন্দগুলো সংক্ষেপে লিখুন';D.getElementById('fullNameInput').placeholder='আপনার নাম লিখুন';D.getElementById('usernameInput').placeholder='your-name';D.getElementById('bioInput').placeholder='যেমন—কবিতা, গল্প, আবৃত্তি, শিশুতোষ, ইতিহাস, প্রকৃতি বা যেসব বিষয় পড়তে ও লিখতে ভালোবাসেন...';D.querySelector('#registerButton .button-text').textContent='ঢুকে পড়ুন ভুবনডাঙ্গায়';}
 }
 function verifyCode(){const input=D.getElementById('pageApprovalCode'),out=D.getElementById('pageCodeState'),code=cleanCode(input.value),rows=read(CODE_STORE),row=rows.find(x=>cleanCode(x.code)===code);verifiedCode=null;if(!code){out.className='page-code-state bad';out.textContent='Approval Code লিখুন।';return false}if(!row){out.className='page-code-state bad';out.textContent='এই Code পাওয়া যায়নি। Founder-এর দেওয়া সঠিক Code ব্যবহার করুন।';return false}const st=state(row);if(st!=='active'){out.className='page-code-state bad';out.textContent=st==='used'?'এই Code ইতোমধ্যে ব্যবহার হয়েছে।':st==='expired'?'এই Code-এর মেয়াদ শেষ হয়েছে। Founder-এর কাছ থেকে Renewal নিন।':'এই Code বাতিল করা হয়েছে।';return false}verifiedCode=row;out.className='page-code-state ok';out.textContent='✓ Code যাচাই হয়েছে · মেয়াদ '+bnDate(row.expiresAt);D.getElementById('pageApprovedName').textContent=row.channelName||row.handle||'অনুমোদিত Page';D.getElementById('pageApprovedMeta').textContent='@'+(row.handle||'page')+' · '+(row.duration==='1y'?'১ বছর':'১ মাস')+' · মেয়াদ '+bnDate(row.expiresAt);if(row.channelName&&!D.getElementById('fullNameInput').value.trim())D.getElementById('fullNameInput').value=row.channelName;if(row.handle&&!D.getElementById('usernameInput').value.trim())D.getElementById('usernameInput').value=pageHandle(row.handle);if(row.email&&!D.getElementById('emailInput').value.trim())D.getElementById('emailInput').value=row.email;if(row.website&&!D.getElementById('pageWebsite').value.trim())D.getElementById('pageWebsite').value=row.website;return true}
 D.getElementById('profileAccountTab')?.addEventListener('click',()=>setMode('profile'));D.getElementById('pageAccountTab')?.addEventListener('click',()=>setMode('page'));D.getElementById('verifyPageCode')?.addEventListener('click',verifyCode);D.getElementById('pageApprovalCode')?.addEventListener('input',()=>{verifiedCode=null;const o=D.getElementById('pageCodeState');o.className='page-code-state';o.textContent='Code পরিবর্তন হয়েছে—আবার যাচাই করুন।'});
@@ -4816,6 +4822,121 @@ async function oauth(provider){
 }
 D.getElementById('googleRegisterButton')?.addEventListener('click',()=>oauth('google'));
 D.getElementById('facebookRegisterButton')?.addEventListener('click',()=>oauth('facebook'));
+})();
+</script>
+
+
+<style id="bd-v8137-register-simple-smart-css">
+/* V8.137 — simpler registration; existing visual identity preserved. */
+.bd137-register-catalogue{margin-top:18px;display:grid;gap:8px}
+.bd137-register-catalogue details{border:1px solid rgba(255,255,255,.24);border-radius:14px;background:rgba(255,255,255,.09);overflow:hidden;backdrop-filter:blur(10px)}
+.bd137-register-catalogue summary{list-style:none;min-height:48px;padding:10px 13px;display:flex;align-items:center;gap:8px;color:#fff;font-size:9.5px;font-weight:800;cursor:pointer}
+.bd137-register-catalogue summary::-webkit-details-marker{display:none}
+.bd137-register-catalogue summary:after{content:"＋";margin-left:auto;font:700 15px/1 Arial}
+.bd137-register-catalogue details[open] summary:after{content:"−"}
+.bd137-catalogue-body{padding:0 11px 11px;display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.bd137-catalogue-body>div{padding:9px;border:1px solid rgba(255,255,255,.16);border-radius:10px;background:rgba(255,255,255,.07)}
+.bd137-catalogue-body b{display:block;color:#fff;font-size:8.2px}
+.bd137-catalogue-body small{display:block;margin-top:2px;color:rgba(255,255,255,.78);font-size:6.7px;line-height:1.6}
+.bd137-steps{padding:0 28px 13px;color:rgba(255,255,255,.87);font-size:7.5px;line-height:1.9}
+.bd137-topic-pills{padding:0 10px 12px;display:flex;gap:6px;flex-wrap:wrap}
+.bd137-topic-pills span{padding:5px 8px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;font-size:6.8px}
+
+/* Split name + country block. The legacy fullName control stays hidden as compatibility state. */
+.bd137-personal-fields{display:contents}
+.form-group:has(#fullNameInput){display:none!important}
+.form-group:has(#profileImageInput){display:none!important}
+.check-row:has(#photoPolicyCheckbox){display:none!important}
+body[data-account-kind="page"] .bd137-personal-fields{display:none!important}
+body[data-account-kind="page"] .form-group:has(#fullNameInput){display:block!important}
+.bd137-country-choice{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.bd137-country-choice label{cursor:pointer}
+.bd137-country-choice input{position:absolute;opacity:0;pointer-events:none}
+.bd137-country-choice span{min-height:42px;padding:7px 10px;border:1px solid var(--border);border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--surface-soft);color:var(--text-soft);font-size:8px;font-weight:800}
+.bd137-country-choice input:checked+span{border-color:rgba(42,154,116,.42);background:var(--green-soft);color:var(--green-dark);box-shadow:0 0 0 3px rgba(42,154,116,.07)}
+.bd137-location-wrap{margin-top:2px}
+.social-entry{order:-1}
+.form-heading p{max-width:460px}
+@media(max-width:560px){
+  .bd137-catalogue-body{grid-template-columns:1fr}
+  .bd137-country-choice{grid-template-columns:1fr 1fr}
+  .bd137-country-choice span{font-size:7.8px}
+  .bd137-personal-fields{display:contents}
+}
+</style>
+
+
+<script id="bd-v8137-register-simple-smart-js">
+(()=>{'use strict';
+const D=document;
+const first=D.getElementById('firstNameInput'),last=D.getElementById('lastNameInput'),
+      full=D.getElementById('fullNameInput'),loc=D.getElementById('bd137LocationInput'),
+      photoPolicy=D.getElementById('photoPolicyCheckbox');
+
+if(photoPolicy)photoPolicy.checked=true;
+
+function isBD(){return D.querySelector('input[name="bd137Bangladeshi"]:checked')?.value!=='no'}
+function normalizeBDLocation(){
+  let v=String(loc?.value||'').trim().replace(/\s*,\s*/g,', ');
+  if(isBD()){
+    v=v.replace(/(?:,\s*)?(বাংলাদেশ|Bangladesh)\s*$/i,'').replace(/[,\s]+$/,'').trim();
+    if(v)v+=', বাংলাদেশ';
+  }
+  if(loc)loc.value=v;
+  const state={country:isBD()?'BD':'',location:v};
+  window.BD137RegistrationLocation=state;
+  return state;
+}
+function syncName(){
+  if(!full)return;
+  const name=[first?.value.trim(),last?.value.trim()].filter(Boolean).join(' ');
+  full.value=name;
+  full.dispatchEvent(new Event('input',{bubbles:true}));
+}
+[first,last].forEach(x=>x?.addEventListener('input',syncName,{passive:true}));
+loc?.addEventListener('blur',normalizeBDLocation);
+D.querySelectorAll('input[name="bd137Bangladeshi"]').forEach(r=>r.addEventListener('change',()=>{
+  const bd=isBD();
+  if(loc){
+    loc.placeholder=bd?'যেমন: কুমিল্লা, বাংলাদেশ':'যেমন: কলকাতা, ভারত';
+    if(!bd&&/বাংলাদেশ|Bangladesh/i.test(loc.value))loc.value='';
+  }
+  normalizeBDLocation();
+},{passive:true}));
+normalizeBDLocation();
+
+/* Profile registration validation stays simple. Page registration keeps its existing Approval Code flow. */
+D.getElementById('registerForm')?.addEventListener('submit',e=>{
+  if(D.body.dataset.accountKind==='page')return;
+  syncName();normalizeBDLocation();
+  let bad=null;
+  for(const [el,msg,id] of [
+    [first,'First Name লিখুন।','firstNameError'],
+    [last,'Last Name লিখুন।','lastNameError']
+  ]){
+    if(!el?.value.trim()&&!bad){
+      bad=el;const out=D.getElementById(id);if(out)out.textContent=msg;el?.classList.add('invalid')
+    }else{
+      const out=D.getElementById(id);if(out)out.textContent='';el?.classList.remove('invalid')
+    }
+  }
+  if(isBD()&&loc&&!loc.value.trim()&&!bad){
+    bad=loc;const out=D.getElementById('bd137LocationError');if(out)out.textContent='আপনার জেলা বা শহর লিখুন—যেমন কুমিল্লা, বাংলাদেশ।';loc.classList.add('invalid')
+  }else{
+    const out=D.getElementById('bd137LocationError');if(out)out.textContent='';loc?.classList.remove('invalid')
+  }
+  if(bad){
+    e.preventDefault();e.stopImmediatePropagation();
+    bad.focus({preventScroll:false});
+  }
+},true);
+
+/* Page mode never asks for a logo during registration; logo/brand is set after approval/login. */
+const pageTab=D.getElementById('pageAccountTab');
+pageTab?.addEventListener('click',()=>{
+  const note=D.querySelector('.page-verification-note');
+  if(note)note.innerHTML='<b>ব্র্যান্ড সুরক্ষা:</b> Approval Code দিয়ে Page তৈরি হবে। অফিসিয়াল Logo ও Page branding লগইনের পর Founder-approved Page সেটিংস থেকে যোগ করা হবে।';
+},true);
 })();
 </script>
 
