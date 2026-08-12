@@ -2879,5 +2879,122 @@ let queued=false;const mo=new MutationObserver(ms=>{if(queued)return;queued=true
 function boot(){scan();const f=D.getElementById('feed')||D.body;mo.observe(f,{childList:true,subtree:true});setTimeout(scan,450)}if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();})();
 </script>
 
+
+<style id="bd-v8131-profile-stability-lock">
+/* Functional-only profile stability lock: preserve the approved profile shell/hero/sidebars. */
+article.post,.post,.bd-live-post,[data-post-card]{min-width:0!important;max-width:100%!important;overflow-x:hidden!important;box-sizing:border-box!important}
+.post-head,.author,.author-meta,.post-title,.post-title a,.post-body,.post-caption,.post-media,.post-summary,.post-actions,.comments{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+.post-title,.post-title a,.post-body,.post-caption{overflow-wrap:anywhere!important;word-break:normal!important}
+.post.bd104-news-post .bd110-newspaper-sheet{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;overflow:hidden!important}
+.post.bd104-news-post .bd110-newspaper-sheet>*{max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.post.bd104-news-post .bd110-newspaper-sheet>.post-body{column-width:auto!important}
+@media(max-width:759px){
+  .post.bd104-news-post .bd110-newspaper-sheet>.post-body{column-count:1!important;column-width:auto!important;column-rule:0!important}
+}
+/* Bangladesh profile flag is the history link; other countries keep only their own flag. */
+.bd-country-flag{pointer-events:auto!important}
+.bd-country-flag[data-country="BD"]{cursor:pointer!important}
+.bd-country-flag[data-country="BD"]:focus-visible{outline:2px solid rgba(0,106,78,.45)!important;outline-offset:3px!important;border-radius:5px}
+.bd-country-flag[data-country="BD"]::after{
+  content:"ইতিহাস";position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);
+  font:800 6px/1 'Noto Sans Bengali','Hind Siliguri',sans-serif;color:#30745e;white-space:nowrap;opacity:.72
+}
+html[data-theme="dark"] .bd-country-flag[data-country="BD"]::after{color:#a9ebd2}
+</style>
+
+
+<script id="bd-v8131-profile-stability-js">
+(()=>{'use strict';
+const D=document,W=window;
+function keepVisualAnchor(card,fn){
+  const before=card.getBoundingClientRect().top;
+  fn();
+  requestAnimationFrame(()=>{
+    const after=card.getBoundingClientRect().top;
+    const dy=after-before;
+    if(Math.abs(dy)>0.5)W.scrollBy(0,dy);
+  });
+}
+function setExpanded(card,open){
+  if(!card)return;
+  keepVisualAnchor(card,()=>{
+    card.classList.toggle('expanded',open);
+    card.classList.toggle('bd63-expanded',open);
+    card.classList.toggle('bd-inline-expanded',open);
+    const body=card.querySelector('.post-body');
+    if(body){
+      body.classList.toggle('collapsed',!open);
+      body.style.maxHeight=open?'none':'';
+      body.style.overflow=open?'visible':'';
+      body.style.webkitLineClamp=open?'unset':'';
+    }
+    const more=card.querySelector('.post-read-more,.readmore,[data-read-more]');
+    if(more)more.textContent=open?'কম দেখুন ↑':'পূর্ণ লেখা পড়ুন →';
+  });
+}
+function togglePost(card){setExpanded(card,!card.classList.contains('bd63-expanded')&&!card.classList.contains('expanded'))}
+
+/* Highest-priority, one-tap inline toggle. Second tap collapses the same card. */
+D.addEventListener('click',e=>{
+  const trigger=e.target.closest?.('.post-title,.post-title a,.post-body,.post-read-more,.readmore,[data-read-more]');
+  if(!trigger)return;
+  const card=trigger.closest?.('article.post,.post,[data-post-card],.bd-live-post');
+  if(!card)return;
+  if(e.target.closest('button,input,textarea,select,label,audio,video,[contenteditable="true"],.comments,.comment-form,.post-menu-panel,.post-action-board'))return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  togglePost(card);
+},true);
+
+/* Country flag: Bangladesh => bangladesh.html. India/others => no history link. */
+function syncCountryHistoryLink(){
+  const flag=D.getElementById('bdCountryFlag');
+  if(!flag)return;
+  const code=String(flag.dataset.country||'').toUpperCase();
+  if(code==='BD'){
+    flag.setAttribute('tabindex','0');
+    flag.setAttribute('role','link');
+    flag.setAttribute('aria-label','বাংলাদেশের পতাকা — বাংলাদেশের ইতিহাস পড়ুন');
+    flag.setAttribute('title','বাংলাদেশের ইতিহাস');
+    flag.dataset.historyHref='bangladesh.html';
+  }else{
+    flag.removeAttribute('tabindex');
+    flag.setAttribute('role','img');
+    flag.setAttribute('aria-label',(flag.title||code)+'-এর পতাকা');
+    delete flag.dataset.historyHref;
+  }
+}
+D.addEventListener('click',e=>{
+  const flag=e.target.closest?.('#bdCountryFlag');
+  if(!flag||flag.dataset.country!=='BD')return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  location.href='bangladesh.html';
+},true);
+D.addEventListener('keydown',e=>{
+  const flag=e.target.closest?.('#bdCountryFlag');
+  if(!flag||flag.dataset.country!=='BD'||(e.key!=='Enter'&&e.key!==' '))return;
+  e.preventDefault();location.href='bangladesh.html';
+},true);
+
+const mo=new MutationObserver(ms=>{
+  let flagChanged=false;
+  for(const m of ms){
+    for(const n of m.addedNodes||[]){
+      if(n.nodeType!==1)continue;
+      if(n.id==='bdCountryFlag'||n.querySelector?.('#bdCountryFlag'))flagChanged=true;
+    }
+    if(m.target?.id==='bdCountryFlag')flagChanged=true;
+  }
+  if(flagChanged)syncCountryHistoryLink();
+});
+function boot(){
+  syncCountryHistoryLink();
+  mo.observe(D.body,{childList:true,subtree:true,attributes:true,attributeFilter:['data-country']});
+  setTimeout(syncCountryHistoryLink,350);
+  setTimeout(syncCountryHistoryLink,1200);
+}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
 </body>
 </html>
