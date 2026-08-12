@@ -1810,35 +1810,215 @@ textarea.form-control{
 
 <script id="bd-register-supabase-helper-v1">
 (function(){
-const URL="https://ihjiisysrwgxxkuywuhc.supabase.co",KEY="sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz";let sb=null;try{sb=window.supabase?.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(_){}
+'use strict';
 
-window.BhubondangaRegisterClient=sb;
-function bdSafeHandle(value){return String(value||'').trim().toLowerCase().replace(/^@/,'').replace(/\s+/g,'-').replace(/[^a-z0-9_-]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'').slice(0,24)}
-async function bdEnsureProfile(session,seed={}){
- if(!sb||!session?.user?.id)return null;
- const u=session.user,meta=u.user_metadata||{};
- let existing=null;try{const q=await sb.from('profiles').select('*').eq('id',u.id).maybeSingle();existing=q.data||null}catch(_){}
- const display=existing?.display_name||seed.fullName||meta.full_name||meta.name||meta.display_name||u.email?.split('@')[0]||'সদস্য';
- const base=bdSafeHandle(existing?.username||seed.username||meta.username||u.email?.split('@')[0]||display)||'member';
- const username=existing?.username||((base+'-'+String(u.id).replace(/-/g,'').slice(0,6)).slice(0,30));
- const avatar=existing?.avatar_url||seed.avatar||meta.avatar_url||meta.picture||'';
- const profile={id:u.id,username,display_name:display,bio:existing?.bio||seed.bio||meta.bio||'',avatar_url:avatar||null,role:existing?.role||meta.role||'user',updated_at:new Date().toISOString()};
- const up=await sb.from('profiles').upsert(profile,{onConflict:'id'});if(up.error)throw up.error;
- return profile;
+const URL="https://ihjiisysrwgxxkuywuhc.supabase.co";
+const KEY="sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz";
+
+let sb=null;
+try{
+  sb=window.bdSupabase||
+     window.supabaseClient||
+     window.bhubondangaSupabase||
+     window.supabase?.createClient(URL,KEY,{
+       auth:{
+         persistSession:true,
+         autoRefreshToken:true,
+         detectSessionInUrl:true
+       }
+     });
+}catch(_){}
+
+if(sb){
+  window.bdSupabase=sb;
+  window.supabaseClient=sb;
+  window.bhubondangaSupabase=sb;
 }
-window.BhubondangaEnsureProfile=bdEnsureProfile;
-function dataUrlToBlob(data){const [head,body]=String(data).split(','),mime=(head.match(/data:(.*?);/)||[])[1]||'image/jpeg',bin=atob(body||''),arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return new Blob([arr],{type:mime})}
+window.BhubondangaRegisterClient=sb;
+
+const cleanEmail=v=>String(v||'').trim().toLowerCase();
+function safeHandle(value){
+  return String(value||'')
+    .trim().toLowerCase().replace(/^@/,'')
+    .replace(/\s+/g,'-')
+    .replace(/[^a-z0-9_-]/g,'')
+    .replace(/-+/g,'-')
+    .replace(/^-|-$/g,'')
+    .slice(0,24);
+}
+function canonicalHandle(value,uid){
+  const b=safeHandle(value)||'member';
+  return (b+'-'+String(uid||'').replace(/-/g,'').slice(0,8)).slice(0,34);
+}
+
+async function ensureProfile(session,seed={}){
+  if(!sb||!session?.user?.id)return null;
+
+  const u=session.user;
+  const meta=u.user_metadata||{};
+  let existing=null;
+
+  try{
+    const r=await sb.from('profiles').select('*').eq('id',u.id).maybeSingle();
+    if(!r.error)existing=r.data||null;
+  }catch(_){}
+
+  const display=
+    existing?.display_name||
+    seed.fullName||
+    meta.full_name||
+    meta.name||
+    meta.display_name||
+    u.email?.split('@')[0]||
+    'সদস্য';
+
+  const username=
+    existing?.username||
+    canonicalHandle(seed.username||meta.username||u.email?.split('@')[0]||display,u.id);
+
+  const profile={
+    id:u.id,
+    username,
+    display_name:display,
+    bio:existing?.bio||seed.bio||meta.bio||'',
+    avatar_url:existing?.avatar_url||seed.avatar||meta.avatar_url||meta.picture||null,
+    role:existing?.role||meta.role||'user',
+    updated_at:new Date().toISOString()
+  };
+
+  const up=await sb.from('profiles').upsert(profile,{onConflict:'id'}).select('*').maybeSingle();
+  if(up.error)throw up.error;
+
+  let saved=up.data||profile;
+
+  /* Optional production fields: update only when the schema supports them. */
+  const extras={};
+  const country=seed.country||meta.country||'';
+  const location=seed.location||meta.location||'';
+  if(country)extras.country=country;
+  if(location)extras.location=location;
+
+  if(Object.keys(extras).length){
+    try{
+      const ex=await sb.from('profiles').update(extras).eq('id',u.id).select('*').maybeSingle();
+      if(!ex.error&&ex.data)saved=ex.data;
+    }catch(_){}
+  }
+  return saved;
+}
+window.BhubondangaEnsureProfile=ensureProfile;
+
+async function persistReturnedSession(session){
+  if(!sb||!session?.access_token||!session?.refresh_token)return session||null;
+
+  try{
+    const set=await sb.auth.setSession({
+      access_token:session.access_token,
+      refresh_token:session.refresh_token
+    });
+    if(!set.error&&set.data?.session)return set.data.session;
+  }catch(_){}
+
+  try{
+    const cur=await sb.auth.getSession();
+    if(cur.data?.session)return cur.data.session;
+  }catch(_){}
+
+  return session;
+}
+
 window.BhubondangaRegisterRemote=async function(v){
- if(!sb)throw new Error('Supabase সংযোগ পাওয়া যায়নি');
- const username=String(v.username||'').replace(/^@/,'').toLowerCase();
- const r=await sb.auth.signUp({email:String(v.email||'').toLowerCase(),password:v.password,options:{data:{full_name:v.fullName,username,bio:v.bio||'',preferences:v.preferences||v.bio||'',country:v.country||'',location:v.location||'',role:'user'}}});
- if(r.error)throw r.error;
- if(r.data?.user&&Array.isArray(r.data.user.identities)&&r.data.user.identities.length===0)throw new Error('এই ইমেইল বা Username আগে থেকেই ব্যবহৃত হয়েছে।');
- let avatar='';
- if(r.data.session&&v.avatar&&String(v.avatar).startsWith('data:')){try{const ext=(String(v.avatar).match(/^data:image\/([a-z0-9+.-]+);/i)||[])[1]||'jpg'.replace('jpeg','jpg');const path=r.data.user.id+'/avatars/profile-'+Date.now()+'.'+ext;const up=await sb.storage.from('bhubondanga-media').upload(path,dataUrlToBlob(v.avatar),{upsert:true,contentType:dataUrlToBlob(v.avatar).type});if(!up.error)avatar=sb.storage.from('bhubondanga-media').getPublicUrl(path).data.publicUrl}catch(_){}}
- if(r.data.session){await bdEnsureProfile(r.data.session,{fullName:v.fullName,username,bio:v.bio||'',avatar})}
- return{user:r.data.user,session:r.data.session,avatar,userId:r.data?.user?.id||null,needsConfirmation:!r.data.session};
+  if(!sb)throw new Error('Supabase সংযোগ পাওয়া যায়নি');
+
+  const email=cleanEmail(v.email);
+  const requestedUsername=safeHandle(v.username);
+
+  const r=await sb.auth.signUp({
+    email,
+    password:v.password,
+    options:{
+      data:{
+        first_name:v.firstName||'',
+        last_name:v.lastName||'',
+        full_name:v.fullName||'',
+        username:requestedUsername,
+        bio:v.bio||'',
+        preferences:v.preferences||v.bio||'',
+        country:v.country||'',
+        location:v.location||'',
+        role:'user'
+      }
+    }
+  });
+
+  if(r.error)throw r.error;
+
+  if(
+    r.data?.user &&
+    Array.isArray(r.data.user.identities) &&
+    r.data.user.identities.length===0
+  ){
+    throw new Error('এই ইমেইলটি আগে থেকেই ব্যবহৃত হয়েছে। লগইন করুন অথবা পাসওয়ার্ড পুনরুদ্ধার করুন।');
+  }
+
+  if(!r.data?.user?.id){
+    throw new Error('Supabase User ID তৈরি হয়নি। আবার চেষ্টা করুন।');
+  }
+
+  let session=r.data.session||null;
+
+  /*
+    Immediate Profile flow is possible only when Supabase returns a session.
+    If Confirm Email is enabled, Supabase intentionally returns session=null.
+    Never fake a logged-in local session in that state.
+  */
+  if(!session){
+    return{
+      user:r.data.user,
+      session:null,
+      profile:null,
+      userId:r.data.user.id,
+      needsConfirmation:true
+    };
+  }
+
+  session=await persistReturnedSession(session);
+
+  const check=await sb.auth.getSession();
+  session=check.data?.session||session;
+
+  if(!session?.user?.id){
+    throw new Error('অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু নিরাপদ সেশন সংরক্ষণ করা যায়নি। আবার লগইন করুন।');
+  }
+
+  const profile=await ensureProfile(session,{
+    firstName:v.firstName||'',
+    lastName:v.lastName||'',
+    fullName:v.fullName||'',
+    username:requestedUsername,
+    bio:v.bio||'',
+    country:v.country||'',
+    location:v.location||'',
+    avatar:''
+  });
+
+  return{
+    user:session.user,
+    session,
+    profile,
+    userId:session.user.id,
+    needsConfirmation:false
+  };
 };
+
+/* OAuth callback / refresh also uses the exact same persistent session. */
+if(sb){
+  sb.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_IN'&&session?.user){
+      queueMicrotask(()=>ensureProfile(session,{}).catch(()=>{}));
+    }
+  });
+}
 })();
 </script>
 
@@ -4169,6 +4349,8 @@ registerForm.addEventListener(
 
     try{
       remoteAuth = await window.BhubondangaRegisterRemote({
+        firstName:(document.getElementById("firstNameInput")?.value||"").trim(),
+        lastName:(document.getElementById("lastNameInput")?.value||"").trim(),
         fullName:fullNameInput.value.trim(),
         username:username,
         email:email,
@@ -4185,6 +4367,19 @@ registerForm.addEventListener(
       return;
     }
 
+    if(!remoteAuth?.session?.user){
+      setButtonLoading(false);
+      try{
+        localStorage.removeItem(KEYS.currentUser);
+        localStorage.removeItem("bd_supabase_user_id");
+      }catch(_){}
+      showFormAlert(
+        "অ্যাকাউন্ট তৈরি হয়েছে, কিন্তু Email confirmation চালু থাকায় এখনো লগইন সেশন তৈরি হয়নি। Supabase-এ Confirm Email বন্ধ করার পর নতুন নিবন্ধন সঙ্গে সঙ্গে নিজের প্রোফাইলে যাবে।",
+        "error"
+      );
+      return;
+    }
+
     const now =
       new Date().toISOString();
 
@@ -4194,14 +4389,17 @@ registerForm.addEventListener(
       );
 
     const user = {
-      id:remoteAuth?.user?.id || uniqueId(),
-      name:fullNameInput.value.trim(),
-      fullName:fullNameInput.value.trim(),
-      username:username,
-      slug:username,
-      email:email,
+      id:remoteAuth.user.id,
+      uid:remoteAuth.user.id,
+      user_id:remoteAuth.user.id,
+      supabaseUserId:remoteAuth.user.id,
+      name:remoteAuth.profile?.display_name || fullNameInput.value.trim(),
+      fullName:remoteAuth.profile?.display_name || fullNameInput.value.trim(),
+      username:remoteAuth.profile?.username || username,
+      slug:remoteAuth.profile?.username || username,
+      email:remoteAuth.user.email || email,
       passwordHash:passwordHash,
-      role:"reader",
+      role:remoteAuth.profile?.role || "user",
       status:"active",
       avatar:"",
       profileImage:"",
@@ -4216,11 +4414,11 @@ registerForm.addEventListener(
           .getElementById("bioInput")
           .value
           .trim(),
-      loggedIn:!!remoteAuth?.session,
+      loggedIn:true,
       createdAt:now,
       updatedAt:now,
       lastLoginAt:now,
-      emailVerified:!!remoteAuth?.session,
+      emailVerified:true,
       followers:0,
       following:0,
       posts:0
@@ -4238,6 +4436,8 @@ registerForm.addEventListener(
         KEYS.currentUser,
         user
       );
+      localStorage.setItem("bd_supabase_user_id",remoteAuth.user.id);
+      localStorage.setItem("bd_current_user",user.username || remoteAuth.user.id);
     }catch(error){
       setButtonLoading(false);
 
@@ -4262,9 +4462,7 @@ registerForm.addEventListener(
       title:"ভুবনডাঙ্গায় স্বাগতম",
       message:
         "আপনার আপন ভুবন তৈরি হয়েছে। নিজের প্রোফাইল সাজিয়ে লেখা, পাঠ ও সাহিত্যিক পথচলা শুরু করুন।",
-      url:
-        "profile.html?user=" +
-        encodeURIComponent(username),
+      url:profileUrl(user),
       read:false,
       createdAt:now
     });
@@ -4362,10 +4560,13 @@ document
   .getElementById("createAnotherButton")
   .addEventListener(
     "click",
-    function(){
+    async function(){
+      try{await window.BhubondangaRegisterClient?.auth?.signOut()}catch(_){}
       localStorage.removeItem(
         KEYS.currentUser
       );
+      localStorage.removeItem("bd_supabase_user_id");
+      localStorage.removeItem("bd_current_user");
 
       document
         .getElementById("loggedCard")

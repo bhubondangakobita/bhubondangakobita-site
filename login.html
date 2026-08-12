@@ -16,26 +16,193 @@ body{min-height:100vh;overflow-x:hidden;background:var(--page-bg);color:var(--te
 
 <script id="bd-login-supabase-helper-v1">
 (function(){
-const URL="https://ihjiisysrwgxxkuywuhc.supabase.co",KEY="sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz";
-let sb=null;try{sb=window.supabase?.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(_){}
+'use strict';
+
+const URL="https://ihjiisysrwgxxkuywuhc.supabase.co";
+const KEY="sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz";
+
+let sb=null;
+try{
+  sb=window.bdSupabase||
+     window.supabaseClient||
+     window.bhubondangaSupabase||
+     window.supabase?.createClient(URL,KEY,{
+       auth:{
+         persistSession:true,
+         autoRefreshToken:true,
+         detectSessionInUrl:true
+       }
+     });
+}catch(_){}
+
+if(sb){
+  window.bdSupabase=sb;
+  window.supabaseClient=sb;
+  window.bhubondangaSupabase=sb;
+}
+window.BhubondangaLoginClient=sb;
+
+const cleanEmail=v=>String(v||'').trim().toLowerCase();
+const cleanUsername=v=>String(v||'').trim().replace(/^@/,'').toLowerCase();
+
+function authMessage(error){
+  const raw=String(error?.message||error||'');
+  if(/email not confirmed/i.test(raw)){
+    return 'এই ইমেইলটি এখনো নিশ্চিত করা হয়নি। Founder/Admin থেকে account confirmation সম্পন্ন করুন।';
+  }
+  if(/invalid login credentials/i.test(raw)){
+    return 'ইমেইল অথবা পাসওয়ার্ড সঠিক নয়। ইমেইলের বানান ও পাসওয়ার্ড আবার দেখুন।';
+  }
+  if(/user not found/i.test(raw)){
+    return 'এই ইমেইলের কোনো সক্রিয় অ্যাকাউন্ট পাওয়া যায়নি।';
+  }
+  return raw||'লগইন করা যায়নি।';
+}
+
+async function ensureProfile(session){
+  if(!sb||!session?.user?.id)return {};
+  const u=session.user,meta=u.user_metadata||{};
+
+  let r=await sb.from('profiles').select('*').eq('id',u.id).maybeSingle();
+  if(!r.error&&r.data)return r.data;
+
+  const base=cleanUsername(meta.username||u.email?.split('@')[0]||'member')
+    .replace(/\s+/g,'-').replace(/[^a-z0-9_-]/g,'').slice(0,24)||'member';
+  const username=(base+'-'+u.id.replace(/-/g,'').slice(0,8)).slice(0,34);
+
+  const profile={
+    id:u.id,
+    username,
+    display_name:meta.full_name||meta.name||meta.display_name||u.email?.split('@')[0]||'সদস্য',
+    bio:meta.bio||'',
+    avatar_url:meta.avatar_url||meta.picture||null,
+    role:meta.role||'user',
+    updated_at:new Date().toISOString()
+  };
+
+  const up=await sb.from('profiles').upsert(profile,{onConflict:'id'}).select('*').maybeSingle();
+  if(up.error)throw up.error;
+  return up.data||profile;
+}
+
+async function finalize(session,user,identity){
+  if(!session?.user?.id||!user?.id)throw new Error('নিরাপদ লগইন সেশন তৈরি হয়নি।');
+
+  /* Verify that the persisted session is actually readable from browser storage. */
+  const gs=await sb.auth.getSession();
+  const persisted=gs.data?.session||session;
+  if(!persisted?.user?.id)throw new Error('সেশন সংরক্ষণ করা যায়নি। আবার লগইন করুন।');
+
+  const gu=await sb.auth.getUser();
+  const realUser=gu.data?.user||user;
+  if(!realUser?.id)throw new Error('Supabase User ID পাওয়া যায়নি।');
+
+  const p=await ensureProfile(persisted);
+
+  const current={
+    loggedIn:true,
+    id:realUser.id,
+    uid:realUser.id,
+    user_id:realUser.id,
+    supabaseUserId:realUser.id,
+    name:p.display_name||realUser.user_metadata?.full_name||realUser.email?.split('@')[0]||identity,
+    displayName:p.display_name||realUser.user_metadata?.full_name||realUser.email?.split('@')[0]||identity,
+    username:p.username||realUser.user_metadata?.username||cleanUsername(realUser.email?.split('@')[0]||identity),
+    slug:p.username||'',
+    email:realUser.email||'',
+    role:p.role||realUser.user_metadata?.role||'user',
+    avatar:p.avatar_url||realUser.user_metadata?.avatar_url||realUser.user_metadata?.picture||'',
+    profileImage:p.avatar_url||'',
+    lastLoginAt:new Date().toISOString()
+  };
+
+  localStorage.setItem('bhubondangaCurrentUser',JSON.stringify(current));
+  localStorage.setItem('bd_current_user',current.username||current.id);
+  localStorage.setItem('bd_supabase_user_id',current.id);
+
+  return current;
+}
+
 window.BhubondangaLoginRemote=async function(identity,password){
- if(!sb)throw new Error('Supabase সংযোগ পাওয়া যায়নি');
- let session,user;
- if(identity.includes('@')){const r=await sb.auth.signInWithPassword({email:identity.toLowerCase(),password});if(r.error)throw r.error;session=r.data.session;user=r.data.user}
- else{
-   let ok=false;
-   try{const r=await sb.functions.invoke('username-login',{body:{identity:identity.replace(/^@/,''),password}});if(r.error)throw r.error;const d=r.data||{};if(d.access_token&&d.refresh_token){const s=await sb.auth.setSession({access_token:d.access_token,refresh_token:d.refresh_token});if(s.error)throw s.error;session=s.data.session;user=s.data.user;ok=true}else if(d.session){session=d.session;user=d.user||d.session.user;ok=true}else if(d.error_description||d.msg)throw new Error(d.error_description||d.msg)}catch(err){
-     const lists=['bhubondangaUsers','bhubondangaRegisteredUsers'];let email='';for(const k of lists){try{const a=JSON.parse(localStorage.getItem(k)||'[]');const x=a.find(v=>String(v.username||v.slug||'').toLowerCase()===identity.toLowerCase());if(x?.email){email=x.email;break}}catch(_){}}
-     if(!email)throw new Error('Username login চালু করতে username-login Edge Function deploy করুন; আপাতত Email দিয়ে লগইন করুন।');
-     const r=await sb.auth.signInWithPassword({email,password});if(r.error)throw r.error;session=r.data.session;user=r.data.user;ok=true;
-   }
-   if(!ok&&!session)throw new Error('লগইন করা যায়নি');
- }
- if(!session||!user)throw new Error('সেশন তৈরি হয়নি');
- const pr=await sb.from('profiles').select('*').eq('id',user.id).maybeSingle();const p=pr.data||{};
- const current={loggedIn:true,id:user.id,uid:user.id,name:p.display_name||user.user_metadata?.full_name||identity,displayName:p.display_name||user.user_metadata?.full_name||identity,username:p.username||user.user_metadata?.username||identity.replace(/^@/,'').toLowerCase(),slug:p.username||'',email:user.email||'',role:p.role||user.user_metadata?.role||'member',avatar:p.avatar_url||user.user_metadata?.avatar_url||'',profileImage:p.avatar_url||'',lastLoginAt:new Date().toISOString()};
- localStorage.setItem('bhubondangaCurrentUser',JSON.stringify(current));localStorage.setItem('bd_current_user',current.username||current.id);
- return current;
+  if(!sb)throw new Error('Supabase সংযোগ পাওয়া যায়নি');
+
+  identity=String(identity||'').trim();
+  password=String(password||'');
+
+  let session=null,user=null;
+
+  if(identity.includes('@')){
+    const r=await sb.auth.signInWithPassword({
+      email:cleanEmail(identity),
+      password
+    });
+    if(r.error)throw new Error(authMessage(r.error));
+    session=r.data?.session||null;
+    user=r.data?.user||null;
+  }else{
+    let edgeError=null;
+
+    try{
+      const r=await sb.functions.invoke('username-login',{
+        body:{identity:cleanUsername(identity),password}
+      });
+      if(r.error)throw r.error;
+
+      const d=r.data||{};
+      if(d.access_token&&d.refresh_token){
+        const s=await sb.auth.setSession({
+          access_token:d.access_token,
+          refresh_token:d.refresh_token
+        });
+        if(s.error)throw s.error;
+        session=s.data?.session||null;
+        user=s.data?.user||session?.user||null;
+      }else if(d.session){
+        session=d.session;
+        user=d.user||d.session.user||null;
+        if(session?.access_token&&session?.refresh_token){
+          const s=await sb.auth.setSession({
+            access_token:session.access_token,
+            refresh_token:session.refresh_token
+          });
+          if(!s.error){
+            session=s.data?.session||session;
+            user=s.data?.user||user;
+          }
+        }
+      }else{
+        throw new Error(d.error_description||d.msg||'Username login unavailable');
+      }
+    }catch(err){
+      edgeError=err;
+    }
+
+    if(!session){
+      /*
+        Never guess an email from stale browser demo data.
+        Username login must come from the secure username-login Edge Function.
+      */
+      throw new Error(
+        edgeError?.message && !/function/i.test(edgeError.message)
+          ? authMessage(edgeError)
+          : 'Username দিয়ে লগইনের জন্য secure username-login service প্রয়োজন। আপাতত Email দিয়ে লগইন করুন।'
+      );
+    }
+  }
+
+  return finalize(session,user,identity);
+};
+
+/* Existing session remains valid across refresh/navigation. */
+window.BhubondangaResumeLoginSession=async function(){
+  if(!sb)return null;
+  try{
+    const s=(await sb.auth.getSession()).data?.session;
+    if(!s?.user)return null;
+    return await finalize(s,s.user,s.user.email||'');
+  }catch(_){
+    return null;
+  }
 };
 })();
 </script>
