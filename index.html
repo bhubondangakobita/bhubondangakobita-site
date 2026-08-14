@@ -7548,5 +7548,98 @@ W.BhubondangaMasterLock182={sync,goWriteAfterCard,fixSidebar};
 })();
 </script>
 
+
+<!-- =========================================================
+     BHUBONDANGA V8.183 — BENGALI WRITING / FONT UX MASTER LOCK
+     Fixes: single-letter font samples, font->write transition, Bengali IME focus.
+     ========================================================= -->
+<style id="bd-v8183-bengali-writing-font-ux-css">
+/* The five built-in font buttons are FONT PREVIEWS, never a one-letter keyboard.
+   Show the same real Bengali phrase so vowel signs/matra shaping can be compared. */
+#bd58FontToolbar .bd58-font-chip[data-bd76-key]{
+  width:auto!important;min-width:118px!important;max-width:150px!important;height:56px!important;
+  padding:6px 10px!important;border-radius:13px!important;display:grid!important;grid-template-rows:1fr auto!important;
+  place-items:center!important;gap:2px!important;font-size:0!important;line-height:1!important;white-space:nowrap!important;
+  flex:0 0 auto!important;scroll-snap-align:center!important;touch-action:pan-x manipulation!important;
+}
+#bd58FontToolbar .bd58-font-chip[data-bd76-key]::before{
+  content:attr(data-bd183-sample)!important;display:block!important;font:700 17px/1.1 inherit!important;
+  color:currentColor!important;-webkit-text-fill-color:currentColor!important;letter-spacing:0!important;
+}
+#bd58FontToolbar .bd58-font-chip[data-bd76-key]::after{
+  content:attr(data-bd183-name)!important;display:block!important;
+  font:700 8px/1.1 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;
+  color:#7a8798!important;-webkit-text-fill-color:#7a8798!important;opacity:.95!important;
+}
+#bd58FontToolbar .bd58-font-chips{justify-content:flex-start!important;overflow-x:auto!important;overflow-y:hidden!important;touch-action:pan-x!important}
+#bd58FontToolbar .bd179-font-chip{scroll-snap-align:center!important;touch-action:pan-x manipulation!important}
+/* Writing surface must become a normal text editor immediately after a font is selected. */
+#composer[data-bd71-stage="write"] #postTitle,
+#composer[data-bd71-stage="write"] #postBody{
+  -webkit-user-select:text!important;user-select:text!important;-webkit-touch-callout:default!important;
+  pointer-events:auto!important;touch-action:manipulation!important;caret-color:currentColor!important;
+}
+#composer[data-bd71-stage="write"] #postBody{font-size:max(16px,1em)!important;line-height:1.9!important}
+@media(max-width:520px){
+  #bd58FontToolbar .bd58-font-chip[data-bd76-key]{min-width:112px!important;max-width:138px!important;height:54px!important;padding-inline:8px!important}
+  #bd58FontToolbar .bd58-font-chip[data-bd76-key]::before{font-size:16px!important}
+}
+</style>
+<script id="bd-v8183-bengali-writing-font-ux-js">
+(()=>{'use strict';
+if(window.__BD_V8183_BENGALI_WRITING_FONT_UX__)return;window.__BD_V8183_BENGALI_WRITING_FONT_UX__=true;
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+const NAMES={
+ subha:'Subha',masud:'Masud Nandonik',kobiguru:'Kobiguru',bornomala:'Bornomala',jannati:'Jannati Matra'
+};
+function keyOf(b){return String(b?.dataset?.bd76Key||b?.dataset?.bd58Font||'')}
+function decorateFixedFonts(){
+ $$('#bd58FontToolbar .bd58-font-chip').forEach(b=>{
+   const k=keyOf(b);if(!k)return;
+   b.dataset.bd76Key=k;
+   b.dataset.bd183Sample='বাংলা কবিতা';
+   b.dataset.bd183Name=NAMES[k]||b.title||'বাংলা ফন্ট';
+   b.setAttribute('aria-label',(NAMES[k]||'বাংলা ফন্ট')+' — বাংলা কবিতা নমুনা');
+ });
+}
+function prepareEditors(){
+ for(const id of ['postTitle','postBody']){
+   const el=D.getElementById(id);if(!el)continue;
+   el.setAttribute('lang','bn');el.setAttribute('inputmode','text');el.setAttribute('enterkeyhint',id==='postBody'?'enter':'next');
+   el.autocomplete='off';el.spellcheck=true;
+ }
+}
+function goWriteAndFocus(){
+ const c=$('#composer'),f=$('#composerForm'),body=$('#postBody');if(!c||!f||!body)return;
+ c.dataset.bd71Stage='write';f.hidden=false;f.removeAttribute('hidden');
+ try{W.BhubondangaMasterLock181?.ensurePublish?.()}catch(_){}
+ /* Keep the user's actual Bengali editor active; font buttons are only selectors. */
+ try{body.focus({preventScroll:true})}catch(_){try{body.focus()}catch(__){}}
+ requestAnimationFrame(()=>{try{body.focus({preventScroll:true})}catch(_){}});
+}
+/* Use click (a completed tap), so horizontal swiping across fonts never enters writing accidentally. */
+D.addEventListener('click',e=>{
+ const b=e.target.closest?.('#bd58FontToolbar .bd58-font-chip,#bd58FontToolbar .bd179-font-chip');
+ if(!b)return;
+ /* Long-press menu stays owned by V8.179; do not steal it. */
+ if($('#bd179FontMenu.open'))return;
+ goWriteAndFocus();
+},false);
+/* If an older pointerdown stage handler moves to write first, always place the caret in body, not in a one-line title. */
+D.addEventListener('pointerup',e=>{
+ const b=e.target.closest?.('#bd58FontToolbar .bd58-font-chip,#bd58FontToolbar .bd179-font-chip');if(!b)return;
+ setTimeout(()=>{const c=$('#composer');if(c?.dataset?.bd71Stage==='write'){const body=$('#postBody');try{body?.focus({preventScroll:true})}catch(_){}}},55);
+},false);
+/* Bengali IME composition is left untouched; only refresh the live card after the composition is complete. */
+D.addEventListener('compositionstart',e=>{if(e.target?.id==='postTitle'||e.target?.id==='postBody')e.target.dataset.bd183Composing='1'},true);
+D.addEventListener('compositionend',e=>{if(e.target?.id==='postTitle'||e.target?.id==='postBody'){delete e.target.dataset.bd183Composing;try{W.BhubondangaCardStudio177?.mount?.()}catch(_){}}},true);
+const mo=new MutationObserver(()=>decorateFixedFonts());
+function boot(){decorateFixedFonts();prepareEditors();const row=$('#bd58FontToolbar .bd58-font-chips');if(row)mo.observe(row,{childList:true,subtree:false});[250,900,1800].forEach(ms=>setTimeout(()=>{decorateFixedFonts();prepareEditors()},ms))}
+D.addEventListener('bd:auth-ready',()=>setTimeout(()=>{decorateFixedFonts();prepareEditors()},50));
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+W.BhubondangaWriting183={goWrite:goWriteAndFocus,refresh:decorateFixedFonts};
+})();
+</script>
+
 </body>
 </html>
