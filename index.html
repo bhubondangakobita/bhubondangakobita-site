@@ -7138,5 +7138,225 @@ W.BhubondangaFontCompact179={refresh:renderCompactFonts,remove:removeFont,openAd
 })();
 </script>
 
+
+<!-- =========================================================
+     BHUBONDANGA V8.180 — MASTER LOCK
+     Smart card contrast + Facebook reactions/comments + zero-jump anchor guard
+     Base: V8.179 Font Compact Runtime-Recovery MASTER
+========================================================= -->
+<style id="bd-v8180-master-lock-css">
+/* ---------- 1) CARD / TEMPLATE CONTRAST: surface decides ink, never global theme ---------- */
+#composerForm[data-bd65-template]:not([data-bd65-template="none"]) #postBody,
+#bdPublishForm[data-bd65-template]:not([data-bd65-template="none"]) #bdPublishBody,
+#postList :is(article.post,article.bd-live-post,.post-card)[class*="style-tpl"] .post-body{
+  color:#111827!important;
+  -webkit-text-fill-color:#111827!important;
+  text-shadow:none!important;
+  opacity:1!important;
+}
+#postList :is(article.post,article.bd-live-post,.post-card)[class*="style-tpl"] .post-body :is(p,span,strong,em,b,i,a){
+  color:inherit!important;-webkit-text-fill-color:currentColor!important;text-shadow:none!important;opacity:1!important;
+}
+/* JS-generated cards carry their own ink independently of Light/Dark mode. */
+#bd177CardStudio .bd177-card-preview:not([data-layout="night"]) .bd177-card-text,
+#postList .bd177-published-card:not([data-layout="night"]) .bd177-pub-text{
+  color:#132f29!important;-webkit-text-fill-color:#132f29!important;text-shadow:none!important;
+}
+#bd177CardStudio .bd177-card-preview[data-layout="rose"] .bd177-card-text,
+#postList .bd177-published-card[data-layout="rose"] .bd177-pub-text{color:#6d3d51!important;-webkit-text-fill-color:#6d3d51!important}
+#bd177CardStudio .bd177-card-preview[data-layout="gold"] .bd177-card-text,
+#postList .bd177-published-card[data-layout="gold"] .bd177-pub-text{color:#5b481f!important;-webkit-text-fill-color:#5b481f!important}
+#bd177CardStudio .bd177-card-preview[data-layout="night"] .bd177-card-text,
+#postList .bd177-published-card[data-layout="night"] .bd177-pub-text{color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 1px 3px rgba(0,0,0,.38)!important}
+#postList .bd177-pub-text :is(.post-title,.post-title a,.post-body,.post-body *){color:inherit!important;-webkit-text-fill-color:currentColor!important}
+/* Auto-contrast hook for future runtime cards/templates. */
+[data-bd180-surface="light"]{--bd180-ink:#111827!important}
+[data-bd180-surface="dark"]{--bd180-ink:#fff!important}
+/* Apply ink to the marked surface itself as well as its descendants. */
+[data-bd180-surface]{color:var(--bd180-ink)!important;-webkit-text-fill-color:var(--bd180-ink)!important}
+[data-bd180-surface] :is(.post-title,.post-title a,.post-body,.post-body *,textarea,input,.bd177-card-text,.bd177-pub-text){color:var(--bd180-ink)!important;-webkit-text-fill-color:var(--bd180-ink)!important}
+/* Final specificity shield: later/older Dark-Mode locks can never turn a light template's ink white. */
+:is(html[data-theme="light"],html[data-theme="middle"],html[data-theme="dark"],html[data-bd-theme="light"],html[data-bd-theme="middle"],html[data-bd-theme="dark"]) body #postList :is(article.post,article.bd-live-post,.post-card)[class*="style-tpl"] .post-body,
+:is(html[data-theme="light"],html[data-theme="middle"],html[data-theme="dark"],html[data-bd-theme="light"],html[data-bd-theme="middle"],html[data-bd-theme="dark"]) body #postList :is(article.post,article.bd-live-post,.post-card)[class*="style-tpl"] .post-body *{
+  color:#111827!important;-webkit-text-fill-color:#111827!important;text-shadow:none!important;opacity:1!important;
+}
+:is(html[data-theme="light"],html[data-theme="middle"],html[data-theme="dark"],html[data-bd-theme="light"],html[data-bd-theme="middle"],html[data-bd-theme="dark"]) body #composerForm[data-bd65-template]:not([data-bd65-template="none"]) #postBody,
+:is(html[data-theme="light"],html[data-theme="middle"],html[data-theme="dark"],html[data-bd-theme="light"],html[data-bd-theme="middle"],html[data-bd-theme="dark"]) body #bdPublishForm[data-bd65-template]:not([data-bd65-template="none"]) #bdPublishBody{
+  color:#111827!important;-webkit-text-fill-color:#111827!important;text-shadow:none!important;
+}
+:is(html[data-theme="light"],html[data-theme="middle"],html[data-theme="dark"],html[data-bd-theme="light"],html[data-bd-theme="middle"],html[data-bd-theme="dark"]) body #postList .bd177-published-card:not([data-layout="night"]) .bd177-pub-text{
+  color:#132f29!important;-webkit-text-fill-color:#132f29!important;text-shadow:none!important;
+}
+:is(html[data-theme="light"],html[data-theme="middle"],html[data-theme="dark"],html[data-bd-theme="light"],html[data-bd-theme="middle"],html[data-bd-theme="dark"]) body #postList .bd177-published-card[data-layout="night"] .bd177-pub-text{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+
+/* ---------- 2) FACEBOOK-LIKE ACTION ROW: clean, flat, no pill boxes ---------- */
+#postList .bd31-social{margin-top:9px!important;border-top:0!important;background:transparent!important;overflow:visible!important}
+#postList .bd31-summary{
+  height:32px!important;min-height:32px!important;max-height:32px!important;padding:4px 4px 3px!important;
+  border:0!important;background:transparent!important;overflow:visible!important;contain:layout style!important;
+}
+#postList .bd31-summary button{border:0!important;background:transparent!important;box-shadow:none!important;padding:0!important}
+#postList .bd31-actions{
+  height:46px!important;min-height:46px!important;max-height:46px!important;
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;
+  padding:2px 0 0!important;border-top:1px solid rgba(110,124,150,.20)!important;background:transparent!important;
+  contain:layout style!important;
+}
+#postList .bd31-action{
+  height:43px!important;min-height:43px!important;max-height:43px!important;padding:0 5px!important;
+  border:0!important;border-radius:6px!important;background:transparent!important;box-shadow:none!important;
+  transform:none!important;animation:none!important;font-weight:750!important;
+}
+#postList .bd31-action:hover{background:rgba(112,125,150,.08)!important;transform:none!important}
+#postList .bd31-action:active{background:rgba(112,125,150,.12)!important;transform:none!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-actions{border-top-color:rgba(210,221,244,.15)!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-action{color:#E8EEF9!important}
+
+/* ---------- 3) CANONICAL FACEBOOK REACTION TRAY: icon-only + rise animation ---------- */
+#bd31ReactionTray,#bdV814ReactionTray,.bd-index-reaction-picker,.bd-v814-picker{display:none!important;visibility:hidden!important;pointer-events:none!important}
+#bd64ReactionTray{
+  position:fixed!important;z-index:2147483646!important;display:none;align-items:center!important;justify-content:center!important;
+  width:auto!important;height:auto!important;max-width:calc(100vw - 16px)!important;padding:5px 7px!important;gap:2px!important;
+  border:1px solid rgba(40,48,70,.13)!important;border-radius:999px!important;background:rgba(255,255,255,.995)!important;
+  box-shadow:0 9px 28px rgba(18,24,44,.23),0 2px 6px rgba(18,24,44,.08)!important;
+  overflow:visible!important;overflow-anchor:none!important;contain:layout paint style!important;transform-origin:50% 100%!important;
+  transition:none!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+}
+#bd64ReactionTray.open{display:flex!important;visibility:visible!important;pointer-events:auto!important;animation:bd180TrayIn .155s cubic-bezier(.18,.86,.28,1.12)!important}
+@keyframes bd180TrayIn{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+#bd64ReactionTray::before,#bd64ReactionTray::after,#bd64ReactionTray button::before,#bd64ReactionTray button::after{content:none!important;display:none!important}
+#bd64ReactionTray button{
+  position:relative!important;flex:0 0 40px!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;
+  padding:0!important;margin:0!important;border:0!important;border-radius:50%!important;background:transparent!important;box-shadow:none!important;
+  display:grid!important;place-items:center!important;overflow:visible!important;color:transparent!important;font-size:0!important;
+  transition:none!important;animation:none!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+}
+#bd64ReactionTray button .bd64-icon,#bd64ReactionTray button .bd31-r,#bd64ReactionTray button .bd-final-reaction-fallback{
+  width:38px!important;height:38px!important;min-width:38px!important;max-width:38px!important;display:grid!important;place-items:center!important;
+  overflow:visible!important;transform:translateY(0) scale(1)!important;transition:transform .12s cubic-bezier(.2,.88,.28,1.18)!important;transform-origin:50% 90%!important;
+}
+#bd64ReactionTray button img{width:38px!important;height:38px!important;min-width:38px!important;max-width:38px!important;object-fit:contain!important;display:block!important}
+@media(hover:hover) and (pointer:fine){#bd64ReactionTray button:hover .bd64-icon,#bd64ReactionTray button:hover .bd31-r,#bd64ReactionTray button:hover .bd-final-reaction-fallback{transform:translateY(-8px) scale(1.18)!important}}
+#bd64ReactionTray button:active .bd64-icon,#bd64ReactionTray button:active .bd31-r,#bd64ReactionTray button:active .bd-final-reaction-fallback{transform:translateY(-6px) scale(1.14)!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #bd64ReactionTray{background:rgba(24,31,46,.99)!important;border-color:rgba(255,255,255,.14)!important;box-shadow:0 13px 34px rgba(0,0,0,.42)!important}
+@media(max-width:430px){
+ #bd64ReactionTray{padding:5px 6px!important;gap:1px!important}
+ #bd64ReactionTray button{flex-basis:38px!important;width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important}
+ #bd64ReactionTray button .bd64-icon,#bd64ReactionTray button .bd31-r,#bd64ReactionTray button .bd-final-reaction-fallback,#bd64ReactionTray button img{width:36px!important;height:36px!important;min-width:36px!important;max-width:36px!important}
+}
+
+/* ---------- 4) FACEBOOK-LIKE COMMENTS ---------- */
+#postList .bd31-comment-panel:not([hidden]){
+  display:block!important;margin:4px 0 0!important;padding:9px 0 2px!important;border:0!important;border-top:1px solid rgba(110,124,150,.16)!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;color:inherit!important;
+}
+#postList .bd31-comments{display:grid!important;gap:10px!important}
+#postList .bd31-comment{display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;gap:8px!important;align-items:start!important}
+#postList .bd31-c-avatar{width:36px!important;height:36px!important;border-radius:50%!important}
+#postList .bd31-c-bubble{
+  display:inline-block!important;width:auto!important;max-width:min(100%,620px)!important;padding:8px 12px!important;border:0!important;border-radius:18px!important;
+  background:#F0F2F5!important;color:#1C1E21!important;font-size:12px!important;line-height:1.5!important;box-shadow:none!important;
+}
+#postList .bd31-c-bubble a{display:block!important;color:#050505!important;font-weight:850!important;margin-bottom:1px!important}
+#postList .bd31-c-meta{display:flex!important;align-items:center!important;gap:14px!important;padding:3px 8px 0!important;color:#65676B!important;font-size:10px!important;font-weight:750!important}
+#postList .bd31-c-meta button{border:0!important;background:transparent!important;color:inherit!important;padding:0!important;box-shadow:none!important}
+#postList .bd31-c-meta button.active{color:#0866FF!important}
+#postList .bd31-replies{margin:7px 0 0 7px!important;padding-left:11px!important;border-left:2px solid #E4E6EB!important;gap:7px!important}
+#postList .bd31-comment-form,#postList .bd31-reply-form{grid-template-columns:minmax(0,1fr) 40px!important;gap:7px!important;margin-top:9px!important}
+#postList .bd31-comment-form input,#postList .bd31-reply-form input{
+  height:42px!important;min-height:42px!important;padding:0 14px!important;border:0!important;border-radius:999px!important;background:#F0F2F5!important;
+  color:#1C1E21!important;-webkit-text-fill-color:#1C1E21!important;box-shadow:none!important;outline:none!important;font-size:16px!important;
+}
+#postList .bd31-comment-form input::placeholder,#postList .bd31-reply-form input::placeholder{color:#65676B!important;-webkit-text-fill-color:#65676B!important;opacity:1!important}
+#postList .bd31-comment-form button,#postList .bd31-reply-form button{width:40px!important;height:40px!important;border:0!important;border-radius:50%!important;background:#0866FF!important;color:#fff!important;box-shadow:none!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-c-bubble{background:#263447!important;color:#fff!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-c-bubble a{color:#fff!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-c-meta{color:#C7D1E1!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-replies{border-left-color:#31445C!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-comment-form input,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-reply-form input{background:#1B2A3D!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-comment-form input::placeholder,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList .bd31-reply-form input::placeholder{color:#B8C4D6!important;-webkit-text-fill-color:#B8C4D6!important}
+/* Existing mobile comment sheet becomes a full-height Facebook-style surface, without changing its data engine. */
+@media(max-width:960px){
+ #bd35CommentBackdrop.open{background:rgba(0,0,0,.34)!important}
+ #bd35CommentSheet{top:0!important;bottom:0!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;box-shadow:none!important}
+ #bd35CommentSheet.open{transform:none!important}
+ .bd35-comment-head{min-height:58px!important;padding-top:env(safe-area-inset-top)!important;background:#fff!important;border-bottom:1px solid #E4E6EB!important}
+ .bd35-comment-scroll{padding:12px 12px calc(78px + env(safe-area-inset-bottom))!important;background:#fff!important}
+ .bd35-comment-composer{padding:8px 10px calc(8px + env(safe-area-inset-bottom))!important;background:rgba(255,255,255,.99)!important;border-top:1px solid #E4E6EB!important}
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) #bd35CommentSheet,
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-comment-head,
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-comment-scroll,
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-comment-composer{background:#0E1725!important;color:#fff!important;border-color:#26364B!important}
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-comment-text,
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-comment-author{color:#fff!important}
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-comment-meta{color:#BCC8DA!important}
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-comment-composer input,
+ :is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd35-reply-form input{background:#1B2A3D!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+}
+
+/* ---------- 5) ZERO-JUMP GEOMETRY ---------- */
+html,body,.center-col,#postList,.post-list{scroll-behavior:auto!important}
+#postList,#postList article,#postList .bd31-social,#postList .bd31-summary,#postList .bd31-actions,#bd64ReactionTray{overflow-anchor:none!important}
+html.bd180-rx-settling,html.bd180-rx-settling body{scroll-behavior:auto!important}
+</style>
+
+<script id="bd-v8180-master-lock-js">
+(()=>{'use strict';
+if(window.__BD_V8180_MASTER_LOCK__)return;window.__BD_V8180_MASTER_LOCK__=true;
+const D=document,W=window,H=D.documentElement;
+const q=(s,r=D)=>r?.querySelector?.(s)||null,qq=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+const CARD_SEL='#postList [data-bd31-ready="1"],#postList [data-post-card],#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post,#postList .post-card';
+const RX_SEL='[data-bd31-react-main],#bd64ReactionTray [data-bd64-pick],#bd31ReactionTray [data-bd31-tray-pick],.bd-index-reaction-picker [data-reaction]';
+function cardId(c){return String(c?.dataset?.post||c?.dataset?.postId||c?.getAttribute?.('data-post')||c?.getAttribute?.('data-post-id')||'').trim()}
+function cardOf(t){const c=t?.closest?.(CARD_SEL);if(c)return c;const tray=t?.closest?.('#bd64ReactionTray,#bd31ReactionTray,.bd-index-reaction-picker');return tray?.__card||null}
+function findCard(id,fallback){if(id){for(const c of qq(CARD_SEL)){if(cardId(c)===id)return c}}return fallback?.isConnected?fallback:null}
+function scrollRoot(c){let n=c?.parentElement;while(n&&n!==D.body&&n!==D.documentElement){try{const cs=getComputedStyle(n),oy=cs.overflowY;if((oy==='auto'||oy==='scroll')&&n.scrollHeight>n.clientHeight+2)return n}catch(_){}n=n.parentElement}return D.scrollingElement||D.documentElement}
+function isDoc(sc){return sc===D.scrollingElement||sc===D.documentElement||sc===D.body}
+function capture(c){if(!c)return null;const sc=scrollRoot(c),doc=isDoc(sc);return{id:cardId(c),card:c,sc,doc,top:c.getBoundingClientRect().top,scroll:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop}}
+let guard=null,token=0,restoring=false,settleTimer=0;
+function restoreVisual(g){if(!g||g.token!==token)return;const c=findCard(g.id,g.card);if(!c)return;const sc=g.sc?.isConnected!==false?g.sc:scrollRoot(c);const doc=isDoc(sc);const nowTop=c.getBoundingClientRect().top;const delta=nowTop-g.top;if(!Number.isFinite(delta)||Math.abs(delta)<.5)return;restoring=true;try{if(doc)W.scrollBy(0,delta);else sc.scrollTop+=delta}catch(_){}requestAnimationFrame(()=>{restoring=false})}
+function settle(c){const snap=capture(c);if(!snap)return;const t=++token;guard={...snap,token:t};H.classList.add('bd180-rx-settling');const run=()=>{if(guard?.token===t)restoreVisual(guard)};run();queueMicrotask(run);requestAnimationFrame(()=>{run();requestAnimationFrame(run)});[32,72,130,220,360,560,820,1150].forEach(ms=>setTimeout(run,ms));clearTimeout(settleTimer);settleTimer=setTimeout(()=>{if(guard?.token===t){run();guard=null;H.classList.remove('bd180-rx-settling')}},1250)}
+function cancelSettle(){guard=null;++token;clearTimeout(settleTimer);H.classList.remove('bd180-rx-settling')}
+/* V8.64 owns pointerdown/click on window-capture and stops propagation.
+   So snapshot on pointerover/touchstart, which occur before its mutation path on mobile/desktop. */
+function armFromEvent(e){const hit=e.target?.closest?.(RX_SEL);if(!hit)return;const c=cardOf(hit);if(c)settle(c)}
+D.addEventListener('pointerover',armFromEvent,true);
+D.addEventListener('touchstart',armFromEvent,{capture:true,passive:true});
+D.addEventListener('mouseover',armFromEvent,true);
+/* pointerup is an extra safety path for short taps when it is not consumed by the legacy owner. */
+D.addEventListener('pointerup',e=>{const hit=e.target.closest?.(RX_SEL);if(!hit)return;const c=cardOf(hit);if(c&&!guard)settle(c)},true);
+/* During the short settle window, rerender/mutation cannot move the clicked post. */
+const feed=q('#postList');if(feed)new MutationObserver(()=>{if(guard)requestAnimationFrame(()=>restoreVisual(guard))}).observe(feed,{childList:true,subtree:true});
+/* User-initiated scrolling always wins; never fight the user. */
+W.addEventListener('wheel',()=>{if(guard&&!restoring)cancelSettle()},{passive:true,capture:true});
+D.addEventListener('pointerdown',e=>{if(guard&&!e.target.closest?.(RX_SEL)&&!e.target.closest?.('#bd64ReactionTray'))cancelSettle()},true);
+
+/* Template/card ink is tied to the card surface, not to site Dark Mode. */
+function markSurfaces(root=D){
+ root.querySelectorAll?.('#postList :is(article.post,article.bd-live-post,.post-card)[class*="style-tpl"] .post-body').forEach(el=>el.setAttribute('data-bd180-surface','light'));
+ const f=q('#composerForm');if(f){const b=q('#postBody',f);if(b&&/^tpl[1-8]$/.test(f.dataset.bd65Template||''))b.setAttribute('data-bd180-surface','light');else b?.removeAttribute('data-bd180-surface')}
+ root.querySelectorAll?.('.bd177-card-preview,.bd177-published-card').forEach(el=>el.setAttribute('data-bd180-surface',el.dataset.layout==='night'?'dark':'light'));
+}
+D.addEventListener('click',e=>{if(e.target.closest?.('.bd58-template-chip,[data-bd58-template],[data-card-id]'))setTimeout(()=>markSurfaces(),0)},true);
+D.addEventListener('change',e=>{if(e.target?.id==='cardStyle'||e.target?.name==='cardStyle')setTimeout(()=>markSurfaces(),0)},true);
+
+/* Canonical tray is icon-only and always ordered like Facebook. */
+const ORDER=['like','love','care','haha','wow','sad','angry'];
+function normalizeTray(){const t=q('#bd64ReactionTray');if(!t)return;const map=new Map(qq('[data-bd64-pick]',t).map(b=>[String(b.dataset.bd64Pick||'').toLowerCase(),b]));if(!map.size)return;const frag=D.createDocumentFragment();for(const k of ORDER){const b=map.get(k);if(!b)continue;b.removeAttribute('title');b.setAttribute('aria-label',k);frag.appendChild(b)}t.appendChild(frag)}
+/* Remove only visible helper labels from the tray; accessibility names remain. */
+D.addEventListener('pointerover',e=>{if(e.target.closest?.('#bd64ReactionTray'))normalizeTray()},true);
+
+function boot(){markSurfaces();normalizeTray();setTimeout(()=>{markSurfaces();normalizeTray()},300);setTimeout(()=>{markSurfaces();normalizeTray()},1100)}
+const mo=new MutationObserver(ms=>{let cards=false,tray=false;for(const m of ms)for(const n of m.addedNodes||[]){if(n.nodeType!==1)continue;if(n.id==='bd64ReactionTray'||n.querySelector?.('#bd64ReactionTray'))tray=true;if(n.matches?.(CARD_SEL+'.bd177-js-card-post')||n.querySelector?.(CARD_SEL+',.bd177-published-card'))cards=true}if(cards)markSurfaces();if(tray)normalizeTray()});
+function start(){boot();mo.observe(D.body,{childList:true,subtree:true})}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
+W.BhubondangaMasterLock180={settleReaction:settle,markSurfaces,normalizeTray};
+})();
+</script>
+
 </body>
 </html>
