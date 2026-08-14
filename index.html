@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-bd-glass="pearl" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
-<meta name="bhubondanga-safe-lite" content="V8.164-FB-REACTIONS-REELS-DARKFIX-20260814">
+<meta name="bhubondanga-safe-lite" content="V8.178-RUNTIME-RECOVERY-MASTER-20260814">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Expires" content="0">
 <meta content="#173153" name="theme-color"/>
@@ -1164,8 +1164,8 @@ renderDates();setInterval(renderDates,60000);document.getElementById('yearText')
 document.getElementById('globalSearchForm').addEventListener('submit',e=>{e.preventDefault();const q=document.getElementById('globalSearchInput').value.trim();if(!q){toast('কী খুঁজতে চান, লিখুন।');return}location.href=ROUTES.search+'?q='+encodeURIComponent(q)});
 const themeBtn=document.getElementById('themeToggle'),themeUse=document.getElementById('themeUse');root.setAttribute('data-theme',safeGet('bhubondangaTheme')||'light');function updateTheme(){const dark=root.getAttribute('data-theme')==='dark';themeUse.setAttribute('href',dark?'#i-sun':'#i-moon');document.querySelectorAll('[data-drawer-theme]').forEach(button=>{button.setAttribute('aria-pressed',dark?'true':'false');const title=button.querySelector('.theme-mode-title'),subtitle=button.querySelector('.theme-mode-subtitle'),use=button.querySelector('.theme-mode-icon use');if(title)title.textContent=dark?'লাইট মোড':'ডার্ক মোড';if(subtitle)subtitle.textContent=dark?'ডার্ক মোড চালু আছে':'লাইট মোড চালু আছে';if(use)use.setAttribute('href',dark?'#i-sun':'#i-moon')})}function toggleTheme(){const next=root.getAttribute('data-theme')==='dark'?'light':'dark';root.setAttribute('data-theme',next);safeSet('bhubondangaTheme',next);updateTheme()}themeBtn.addEventListener('click',toggleTheme);document.querySelectorAll('[data-drawer-theme]').forEach(b=>b.addEventListener('click',toggleTheme));updateTheme();
 const toTop=document.getElementById('toTop');addEventListener('scroll',()=>toTop.classList.toggle('show',scrollY>500));toTop.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
-const backdrop=document.getElementById('drawerBackdrop'),drawer=document.getElementById('mobileDrawer'),rightDrawer=document.getElementById('rightMobileDrawer');function openDrawer(){rightDrawer.classList.remove('open');drawer.classList.add('open');backdrop.classList.add('show');document.body.classList.add('locked')}function openRightDrawer(){drawer.classList.remove('open');rightDrawer.classList.add('open');backdrop.classList.add('show');document.body.classList.add('locked')}function closeDrawer(){drawer.classList.remove('open');rightDrawer.classList.remove('open');backdrop.classList.remove('show');document.body.classList.remove('locked')}document.getElementById('leftEdgeMenu').addEventListener('click',openDrawer);document.getElementById('rightEdgeMenu').addEventListener('click',openRightDrawer);document.getElementById('closeDrawer').addEventListener('click',closeDrawer);document.getElementById('closeRightDrawer').addEventListener('click',closeDrawer);document.getElementById('mobileQuickMenu').addEventListener('click',()=>{closeMobileMore();openDrawer()});backdrop.addEventListener('click',closeDrawer);drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeDrawer));rightDrawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeDrawer));
-const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=document.getElementById('mobileMoreMenu');function closeMobileMore(){mobileMoreMenu.classList.remove('open');mobileMoreBtn.setAttribute('aria-expanded','false')}mobileMoreBtn.addEventListener('click',e=>{e.stopPropagation();const open=!mobileMoreMenu.classList.contains('open');closeMobileMore();if(open){mobileMoreMenu.classList.add('open');mobileMoreBtn.setAttribute('aria-expanded','true')}});document.addEventListener('click',e=>{if(!mobileMoreMenu.contains(e.target)&&e.target!==mobileMoreBtn)closeMobileMore()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeMobileMore();closePostActionBoard()}});
+const backdrop=document.getElementById('drawerBackdrop'),drawer=document.getElementById('mobileDrawer'),rightDrawer=document.getElementById('rightMobileDrawer');function openDrawer(){rightDrawer.classList.remove('open');drawer.classList.add('open');backdrop.classList.add('show');document.body.classList.add('locked')}function openRightDrawer(){drawer.classList.remove('open');rightDrawer.classList.add('open');backdrop.classList.add('show');document.body.classList.add('locked')}function closeDrawer(){drawer.classList.remove('open');rightDrawer.classList.remove('open');backdrop.classList.remove('show');document.body.classList.remove('locked')}document.getElementById('leftEdgeMenu').addEventListener('click',openDrawer);document.getElementById('rightEdgeMenu').addEventListener('click',openRightDrawer);document.getElementById('closeDrawer').addEventListener('click',closeDrawer);document.getElementById('closeRightDrawer').addEventListener('click',closeDrawer);document.getElementById('mobileQuickMenu')?.addEventListener('click',()=>{closeMobileMore();openDrawer()});backdrop.addEventListener('click',closeDrawer);drawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeDrawer));rightDrawer.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeDrawer));
+const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=document.getElementById('mobileMoreMenu');function closeMobileMore(){if(!mobileMoreMenu||!mobileMoreBtn)return;mobileMoreMenu.classList.remove('open');mobileMoreBtn.setAttribute('aria-expanded','false')}mobileMoreBtn?.addEventListener('click',e=>{if(!mobileMoreMenu)return;e.stopPropagation();const open=!mobileMoreMenu.classList.contains('open');closeMobileMore();if(open){mobileMoreMenu.classList.add('open');mobileMoreBtn.setAttribute('aria-expanded','true')}});document.addEventListener('click',e=>{if(mobileMoreMenu&&mobileMoreBtn&&!mobileMoreMenu.contains(e.target)&&e.target!==mobileMoreBtn)closeMobileMore()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeMobileMore();closePostActionBoard()}});
 })();
 </script>
 <script id="bd-index-master-controller-20260727">
@@ -6611,60 +6611,58 @@ const CARD_SEL='#postList [data-bd31-ready="1"],#postList [data-post-card],#post
 const ORDER=['like','love','care','haha','wow','sad','angry'];
 const q=(s,r=D)=>r?.querySelector?.(s)||null,qq=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
 function scrollRootFor(card){
-  let n=card?.parentElement||null;
-  while(n&&n!==D.body&&n!==D.documentElement){
-    try{const cs=getComputedStyle(n),oy=cs.overflowY;if((oy==='auto'||oy==='scroll')&&n.scrollHeight>n.clientHeight+2)return n}catch(_){}
-    n=n.parentElement;
-  }
-  return D.scrollingElement||D.documentElement;
+ let n=card?.parentElement||null;
+ while(n&&n!==D.body&&n!==D.documentElement){try{const cs=getComputedStyle(n),oy=cs.overflowY;if((oy==='auto'||oy==='scroll')&&n.scrollHeight>n.clientHeight+2)return n}catch(_){}n=n.parentElement}
+ return D.scrollingElement||D.documentElement;
 }
 function snap(card){const sc=scrollRootFor(card),doc=sc===D.scrollingElement||sc===D.documentElement||sc===D.body;return{sc,doc,y:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop,x:doc?(W.scrollX||0):sc.scrollLeft}}
-let settling=false,settleToken=0;
-function restore(s){if(!s)return;settling=true;try{if(s.doc)W.scrollTo(s.x,s.y);else{if(s.sc?.isConnected){s.sc.scrollLeft=s.x;s.sc.scrollTop=s.y}}}catch(_){}finally{settling=false}}
-function settleReaction(card){
-  if(!card)return;const s=snap(card),token=++settleToken;H.classList.add('bd173-reaction-settling');
-  restore(s);queueMicrotask(()=>{if(token===settleToken)restore(s)});
-  requestAnimationFrame(()=>{if(token===settleToken)restore(s);requestAnimationFrame(()=>{if(token===settleToken)restore(s)})});
-  [48,120,280,650].forEach(ms=>setTimeout(()=>{if(token!==settleToken)return;restore(s);if(ms===650)H.classList.remove('bd173-reaction-settling')},ms));
+function restore(s){if(!s)return;try{if(s.doc)W.scrollTo(s.x,s.y);else if(s.sc?.isConnected){s.sc.scrollLeft=s.x;s.sc.scrollTop=s.y}}catch(_){}}
+let reactionSnap=null,reactionToken=0,reactionTimer=0;
+function holdReactionPosition(card){
+ if(!card)return;reactionSnap=snap(card);const token=++reactionToken;H.classList.add('bd173-reaction-settling');
+ const apply=()=>{if(token===reactionToken&&reactionSnap)restore(reactionSnap)};
+ apply();queueMicrotask(apply);requestAnimationFrame(()=>{apply();requestAnimationFrame(apply)});[48,120,280,650].forEach(ms=>setTimeout(apply,ms));
+ clearTimeout(reactionTimer);reactionTimer=setTimeout(()=>{if(token===reactionToken){apply();reactionSnap=null;H.classList.remove('bd173-reaction-settling')}},760);
 }
-function reactionCardFromMutation(m){
-  const t=m.target?.nodeType===1?m.target:m.target?.parentElement;if(!t)return null;
-  if(m.type==='attributes'){
-    if(m.attributeName==='data-current'&&t.matches?.('[data-bd31-react-main]'))return t.closest(CARD_SEL);
-    if(m.attributeName==='hidden'&&t.matches?.('[data-bd31-react-summary]'))return t.closest(CARD_SEL);
-    if(m.attributeName==='class'&&t.matches?.('[data-bd31-react-main]'))return t.closest(CARD_SEL);
-  }
-  if(m.type==='childList'||m.type==='characterData'){
-    const host=t.closest?.('.bd31-main-reaction,[data-bd31-react-summary]');if(host)return host.closest(CARD_SEL);
-  }
-  return null;
+function cardForTarget(target){
+ const direct=target?.closest?.(CARD_SEL);if(direct)return direct;
+ const tray=target?.closest?.('#bd64ReactionTray,#bd31ReactionTray,.bd-index-reaction-picker');return tray?.__card||q('[data-bd31-react-main][aria-expanded="true"]')?.closest?.(CARD_SEL)||null;
 }
-function watchReactionGeometry(){
-  const feed=q('#postList');if(!feed||feed.dataset.bd173ReactionWatch==='1')return;feed.dataset.bd173ReactionWatch='1';
-  new MutationObserver(ms=>{if(settling)return;let card=null;for(const m of ms){card=reactionCardFromMutation(m);if(card)break}if(card)settleReaction(card)}).observe(feed,{subtree:true,attributes:true,attributeFilter:['data-current','hidden','class'],childList:true,characterData:true});
-}
+D.addEventListener('pointerdown',e=>{
+ const hit=e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray [data-bd64-pick],#bd31ReactionTray [data-bd31-tray-pick],.bd-index-reaction-picker [data-reaction]');
+ if(!hit)return;const card=cardForTarget(hit);if(card)holdReactionPosition(card);
+},true);
+D.addEventListener('click',e=>{
+ const hit=e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray [data-bd64-pick],#bd31ReactionTray [data-bd31-tray-pick],.bd-index-reaction-picker [data-reaction]');
+ if(!hit)return;const card=cardForTarget(hit);if(card&&!reactionSnap)holdReactionPosition(card);
+},true);
 function canonicalTray(){
-  const tray=q('#bd64ReactionTray');if(!tray)return false;const map=new Map(qq('[data-bd64-pick]',tray).map(b=>[String(b.dataset.bd64Pick||'').toLowerCase(),b]));
-  for(const type of ORDER){const b=map.get(type);if(b)tray.appendChild(b)}return ORDER.every((t,i)=>qq('[data-bd64-pick]',tray)[i]?.dataset?.bd64Pick===t)
+ const tray=q('#bd64ReactionTray');if(!tray)return false;
+ const buttons=qq('[data-bd64-pick]',tray);if(!buttons.length)return false;
+ const current=buttons.map(b=>String(b.dataset.bd64Pick||'').toLowerCase());
+ const expected=ORDER.filter(t=>current.includes(t));
+ if(current.join('|')!==expected.join('|')){
+   const map=new Map(buttons.map(b=>[String(b.dataset.bd64Pick||'').toLowerCase(),b]));
+   const frag=D.createDocumentFragment();for(const type of expected){const b=map.get(type);if(b)frag.appendChild(b)}tray.appendChild(frag);
+ }
+ const after=qq('[data-bd64-pick]',tray).map(b=>String(b.dataset.bd64Pick||'').toLowerCase());
+ return expected.every((t,i)=>after[i]===t);
 }
 /* Preserve the feed position when leaving/returning from Reels. */
 let reelOpen=false,reelSnap=null;
 function mainFeedScroller(){const c=q('.center-col');if(c){try{const cs=getComputedStyle(c);if((cs.overflowY==='auto'||cs.overflowY==='scroll')&&c.scrollHeight>c.clientHeight+2)return c}catch(_){}}return D.scrollingElement||D.documentElement}
 function feedSnap(){const sc=mainFeedScroller(),doc=sc===D.scrollingElement||sc===D.documentElement||sc===D.body;return{sc,doc,y:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop,x:doc?(W.scrollX||0):sc.scrollLeft}}
 function watchReels(){
-  const shell=q('#bd107Reels');if(!shell||shell.dataset.bd173Watch==='1')return;shell.dataset.bd173Watch='1';reelOpen=shell.classList.contains('open');
-  new MutationObserver(()=>{const on=shell.classList.contains('open');if(on&&!reelOpen){reelSnap=feedSnap()}else if(!on&&reelOpen&&reelSnap){const s=reelSnap;requestAnimationFrame(()=>restore(s));setTimeout(()=>restore(s),80)}reelOpen=on}).observe(shell,{attributes:true,attributeFilter:['class']});
+ const shell=q('#bd107Reels');if(!shell||shell.dataset.bd173Watch==='1')return;shell.dataset.bd173Watch='1';reelOpen=shell.classList.contains('open');
+ new MutationObserver(()=>{const on=shell.classList.contains('open');if(on&&!reelOpen){reelSnap=feedSnap()}else if(!on&&reelOpen&&reelSnap){const s=reelSnap;requestAnimationFrame(()=>restore(s));setTimeout(()=>restore(s),80)}reelOpen=on}).observe(shell,{attributes:true,attributeFilter:['class']});
 }
-function audit(){
-  const feed=q('#postList'),composer=q('#composer'),form=q('#composerForm'),reels=typeof W.BhubondangaReels107?.open==='function';
-  const main=feed?.querySelector?.('[data-bd31-react-main]');const comments=feed?.querySelector?.('[data-bd31-comments],.bd31-comment-form');
-  return{feed:!!feed,composer:!!composer,composerForm:!!form,reactionMain:!!main,reactionTray:!!q('#bd64ReactionTray'),reactionOrder:canonicalTray(),comments:!!comments,reels};
-}
-function boot(){watchReactionGeometry();canonicalTray();watchReels();setTimeout(()=>{watchReactionGeometry();canonicalTray();watchReels()},300);setTimeout(()=>{canonicalTray();watchReels()},1200)}
-const mo=new MutationObserver(()=>{if(!q('#postList')?.dataset?.bd173ReactionWatch)watchReactionGeometry();if(q('#bd64ReactionTray'))canonicalTray();if(q('#bd107Reels')&&!q('#bd107Reels')?.dataset?.bd173Watch)watchReels()});
+function audit(){const feed=q('#postList'),composer=q('#composer'),form=q('#composerForm'),reels=typeof W.BhubondangaReels107?.open==='function';const main=feed?.querySelector?.('[data-bd31-react-main]'),comments=feed?.querySelector?.('[data-bd31-comments],.bd31-comment-form');return{feed:!!feed,composer:!!composer,composerForm:!!form,reactionMain:!!main,reactionTray:!!q('#bd64ReactionTray'),reactionOrder:canonicalTray(),comments:!!comments,reels}}
+function boot(){canonicalTray();watchReels();setTimeout(()=>{canonicalTray();watchReels()},300);setTimeout(()=>{canonicalTray();watchReels()},1200)}
+/* Important: only react to insertion of the specific runtime shells. Never mutate the reaction tray on every body mutation. */
+const mo=new MutationObserver(ms=>{let tray=false,reels=false;for(const m of ms){for(const n of m.addedNodes||[]){if(n.nodeType!==1)continue;if(n.id==='bd64ReactionTray'||n.querySelector?.('#bd64ReactionTray'))tray=true;if(n.id==='bd107Reels'||n.querySelector?.('#bd107Reels'))reels=true}}if(tray)canonicalTray();if(reels)watchReels()});
 function start(){boot();mo.observe(D.body,{childList:true,subtree:true})}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
-W.BhubondangaMasterLock173={audit,settleReaction,canonicalTray};
+W.BhubondangaMasterLock173={audit,settleReaction:holdReactionPosition,canonicalTray};
 })();
 </script>
 
@@ -6862,18 +6860,18 @@ function toast(s){try{W.toast?.(s)}catch(_){}}
 function reelCard(id){return $$('#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post').find(c=>String(c.dataset.post||c.dataset.postId||'')===String(id))||null}
 function reelReactionStrip(reel){
   if(!reel)return;let box=$('.bd177-reel-reactions',reel);if(!box){box=D.createElement('div');box.className='bd177-reel-reactions';const author=$('.bd107-author',reel);author?.parentElement?.insertBefore(box,author)}
-  const id=reel.dataset.bd107Reel,card=reelCard(id),sum=card?.querySelector?.('[data-bd31-react-summary]');
-  box.innerHTML=sum&&!sum.hidden?sum.innerHTML:'';
+  const id=reel.dataset.bd107Reel,card=reelCard(id),sum=card?.querySelector?.('[data-bd31-react-summary]'),html=sum&&!sum.hidden?sum.innerHTML:'';
+  if(box.innerHTML!==html)box.innerHTML=html;
 }
 function decorateReels(){
-  const shell=$('#bd107Reels');if(!shell)return;shell.classList.add('bd177-fb-reels');
+  const shell=$('#bd107Reels');if(!shell)return;if(!shell.classList.contains('bd177-fb-reels'))shell.classList.add('bd177-fb-reels');
   const top=$('.bd107-reels-top',shell),title=$('.bd107-reels-title',shell),back=$('.bd107-reels-back',shell);
-  if(title)title.innerHTML='Reels';if(back)back.setAttribute('aria-label','Reels বন্ধ করুন');
+  if(title&&title.textContent.trim()!=='Reels')title.textContent='Reels';if(back&&back.getAttribute('aria-label')!=='Reels বন্ধ করুন')back.setAttribute('aria-label','Reels বন্ধ করুন');
   if(top&&!$('.bd177-reels-more',top)){const b=D.createElement('button');b.type='button';b.className='bd177-reels-more';b.setAttribute('aria-label','আরও অপশন');b.addEventListener('click',e=>{e.preventDefault();toast('Reels অপশন');});top.appendChild(b)}
-  $$('.bd107-fullscreen',shell).forEach(b=>{b.textContent='⛶';b.setAttribute('aria-label','Fullscreen')});
+  $$('.bd107-fullscreen',shell).forEach(b=>{if(b.textContent!=='⛶')b.textContent='⛶';if(b.getAttribute('aria-label')!=='Fullscreen')b.setAttribute('aria-label','Fullscreen')});
   $$('.bd107-reel',shell).forEach(reelReactionStrip);
 }
-const reelMO=new MutationObserver(ms=>{let needed=false;for(const m of ms){if(m.target?.id==='bd107Reels'||m.target?.closest?.('#bd107Reels')||[...m.addedNodes||[]].some(n=>n.nodeType===1&&(n.id==='bd107Reels'||n.querySelector?.('#bd107Reels')||n.closest?.('#bd107Reels')))){needed=true;break}}if(needed)requestAnimationFrame(decorateReels)});
+let reelDecorateQueued=false;const reelMO=new MutationObserver(ms=>{let needed=false;for(const m of ms){if(m.target?.id==='bd107Reels'||m.target?.closest?.('#bd107Reels')||[...m.addedNodes||[]].some(n=>n.nodeType===1&&(n.id==='bd107Reels'||n.querySelector?.('#bd107Reels')||n.closest?.('#bd107Reels')))){needed=true;break}}if(needed&&!reelDecorateQueued){reelDecorateQueued=true;requestAnimationFrame(()=>{reelDecorateQueued=false;decorateReels()})}});
 
 /* ========== Premium fonts: custom-font persistence + Founder remove ========== */
 const FONT_REG='bhubondangaPremiumFontRegistryV2',CORE_FONTS=new Set(['noto','tiro','atma','galada','hind']);
@@ -6967,13 +6965,39 @@ function boot(){
   D.addEventListener('input',onComposerChange,true);D.addEventListener('change',onComposerChange,true);
   D.addEventListener('reset',e=>{if(e.target?.id==='composerForm')setTimeout(clearCardSelection,0)},true);
   D.addEventListener('bd:auth-ready',()=>{setTimeout(()=>{patchFontApi();renderFontManager();mountCardStudio()},0)});
-  reelMO.observe(D.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
+  reelMO.observe(D.body,{subtree:true,childList:true});
   cardMO.observe(D.body,{subtree:true,childList:true});
   setTimeout(()=>{patchFontApi();renderFontManager();patchComposeStyle();mountCardStudio();decorateReels();scanPostCards();renderCardPreview()},450);
   setTimeout(()=>{patchFontApi();renderFontManager();patchComposeStyle();mountCardStudio();decorateReels();scanPostCards()},1600);
 }
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 W.BhubondangaCardStudio177={mount:mountCardStudio,select:selectCard,center:()=>setPos(50,50),clear:clearCardSelection,templates:CARD_TEMPLATES};
+})();
+</script>
+
+
+<script id="bd-v8178-runtime-recovery-master">
+(()=>{'use strict';
+if(window.__BD_V8178_RUNTIME_RECOVERY__)return;window.__BD_V8178_RUNTIME_RECOVERY__=true;
+const D=document,W=window;
+let feedResolved=false;
+D.addEventListener('bd:supabase-posts',e=>{const s=String(e.detail?.status||'');if(['ready','stale','error'].includes(s))feedResolved=true});
+function clearStaleLocks(){
+ const drawerOpen=!!D.querySelector('#mobileDrawer.open,#rightMobileDrawer.open,#leftDrawer.open,#rightDrawer.open');
+ if(!drawerOpen)D.body?.classList.remove('locked','bd172-drawer-open');
+ if(!D.querySelector('#bd35CommentSheet.open'))D.body?.classList.remove('bd35-comment-open');
+ if(!D.querySelector('#bd107Reels.open'))D.body?.classList.remove('bd164-reels-open');
+}
+function retryFeed(){try{const fn=W.__BD_INDEX_REFRESH_FEED;if(typeof fn==='function')fn()}catch(e){console.warn('BD feed retry:',e)}}
+function failSafe(){
+ if(feedResolved)return;const list=D.getElementById('postList');if(!list)return;
+ const text=(list.textContent||'').trim();if(/লোড|আসছে/.test(text)){
+   D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows:Array.isArray(W.__BD_SUPABASE_POSTS)?W.__BD_SUPABASE_POSTS:[],status:'error',error:'Feed request timed out'}}));
+ }
+}
+function boot(){clearStaleLocks();setTimeout(clearStaleLocks,300);setTimeout(retryFeed,1800);setTimeout(retryFeed,4800);setTimeout(failSafe,12000)}
+W.addEventListener('pageshow',clearStaleLocks,{passive:true});
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
 
