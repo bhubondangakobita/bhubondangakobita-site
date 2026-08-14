@@ -8,118 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
 onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'"></script>
 
-<script id="bd-v8146-video-reels-capture">
-(function(){
-'use strict';
-if(window.__BD_V8146_VIDEO_REELS_CAPTURE__)return;
-window.__BD_V8146_VIDEO_REELS_CAPTURE__=true;
-const D=document,W=window;
 
-function cardOf(node){
-  return node?.closest?.(
-    '#postList [data-post],#postList [data-post-id],#postList [data-post-card],'+
-    '#postList article.post,#postList article.bd-live-post,#postList .post-card'
-  )||null;
-}
-function idOf(card){
-  return String(card?.dataset?.post||card?.dataset?.postId||
-    card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'');
-}
-function mediaFromEvent(e){
-  const path=typeof e.composedPath==='function'?e.composedPath():[];
-  for(const n of path){
-    if(!(n instanceof Element))continue;
-    if(n.closest?.('#bd107Reels'))return null;
-    const direct=n.closest?.(
-      '#postList video,#postList .bd138-open-reel,#postList .bd107-open-reel,'+
-      '#postList .bd107-video-preview,#postList .composer-media-render,#postList .post-media'
-    );
-    if(!direct)continue;
-    if(direct.matches?.('video')||direct.querySelector?.('video'))return direct;
-  }
-  return null;
-}
-function openReels(card){
-  const id=idOf(card),v=card?.querySelector?.('video');
-  if(!id||!v)return false;
-  const fresh=W.BhubondangaFreshLaunch;
-  if(fresh?.openReel){try{fresh.openReel(card,v);return true}catch(_){}}
-  // Fresh-launch fallback: stay inside the same post card; never open a fixed viewer.
-  card.classList.add('bd-launch-card','bd-launch-reel-active');
-  const host=v.closest('.post-media,.media,.post-video,figure,.video-wrap')||v.parentElement;
-  host?.classList.add('bd-launch-video-host');
-  v.controls=true;v.playsInline=true;v.setAttribute('playsinline','');
-  try{v.play()}catch(_){}
-  return true;
-}
-
-let lastPointerOpen=0,lastMediaTapAt=0,lastMediaTapId='';
-
-D.addEventListener('pointerup',e=>{
-  const media=mediaFromEvent(e);
-  if(!media)return;
-  const card=cardOf(media);
-  if(!card)return;
-  if(e.pointerType==='mouse'&&e.button!==0)return;
-  const now=Date.now(),cid=idOf(card);
-  if(card.classList.contains('bd-launch-reel-active')&&cid&&lastMediaTapId===cid&&now-lastMediaTapAt<330){
-    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();lastMediaTapAt=0;lastMediaTapId='';
-    W.BhubondangaFreshLaunch?.forceLove?.(card);return;
-  }
-  lastMediaTapAt=now;lastMediaTapId=cid;
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-  lastPointerOpen=Date.now();
-  const v=media.matches?.('video')?media:media.querySelector?.('video');
-  if(v){
-    v.controls=false;
-    v.removeAttribute('controls');
-    v.setAttribute('playsinline','');
-    v.setAttribute('webkit-playsinline','');
-  }
-  openReels(card);
-},true);
-
-D.addEventListener('click',e=>{
-  const media=mediaFromEvent(e);
-  if(!media)return;
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-  if(Date.now()-lastPointerOpen<700)return;
-  const card=cardOf(media);
-  if(!card)return;
-  openReels(card);
-},true);
-
-function retireLegacyVideoViewers(){
-  const list=[
-    '#bd45Reels',
-    '.bd45-post-shell',
-    '#masterPostShell',
-    '[data-media-viewer="video"]',
-    '.legacy-video-viewer'
-  ];
-  for(const sel of list){
-    D.querySelectorAll?.(sel).forEach(el=>{
-      if(el.id==='bd107Reels')return;
-      const hasVideo=!!el.querySelector?.('video');
-      if(!hasVideo&&sel!=='#bd45Reels')return;
-      try{el.querySelectorAll('video').forEach(v=>{v.pause();v.muted=true})}catch(_){}
-      el.classList.remove('open','active','show');
-      el.setAttribute('aria-hidden','true');
-      el.style.setProperty('display','none','important');
-      el.style.setProperty('pointer-events','none','important');
-    });
-  }
-}
-new MutationObserver(retireLegacyVideoViewers).observe(
-  D.documentElement,
-  {subtree:true,childList:true,attributes:true,attributeFilter:['class','style','aria-hidden']}
-);
-})();
-</script>
 <script id="bd-fresh-early-anchor-stability">/* Disabled: reaction must never write viewport position. */</script>
 
 <style id="bd-supabase-boot-visibility">html,body{visibility:visible!important;opacity:1!important}</style>
@@ -497,6 +386,7 @@ html[data-theme="dark"] .bd162-comment-moderation-note{
 @media(max-width:720px){.bd-section-history{margin:10px 0 12px;padding:14px;border-radius:16px}.bd-section-history p{font-size:11.5px}.bd-section-history h2{font-size:22px}}
 </style>
 
+<meta name="bhubondanga-master-lock" content="V8.193">
 </head>
 <body class="bd9-shell-page" data-bd-family="public" data-build="index-master-nextgen-challenge3-20260727" data-page="index">
 <svg aria-hidden="true" class="svg-sprite" focusable="false">
@@ -1935,259 +1825,16 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 <style id="bd-v863-final-interaction-lock">*,*::before,*::after{box-sizing:border-box} html,body{max-width:100%;overflow-x:hidden} img,video,audio,canvas,svg{max-width:100%} .post,.bd-live-post,[data-post-card]{min-width:0;max-width:100%} .post-title,.post-title a,.post-body,.author-meta,.author-name-row{min-width:0;overflow-wrap:anywhere} .post .dots,.post .three-dot,.post .three-dot-btn,.post [data-click="post-menu"],.post [data-post-menu]{position:relative;z-index:80;pointer-events:auto!important} .post .author a,.post .author-avatar,.post .author-meta a,.post .post-title a,.bd-live-post .author-avatar,.bd-live-post .author-meta a,.bd-live-post .post-title a{pointer-events:auto!important;cursor:pointer!important;position:relative;z-index:6} .right-card.welcome>small:first-child,.welcome>small:first-child{display:none!important} #bd45PostViewer,#bdV814Sheet,#bdV814Backdrop{display:none!important;visibility:hidden!important;pointer-events:none!important} .post.bd63-expanded .post-body,.bd-live-post.bd63-expanded .post-body{max-height:none!important;-webkit-line-clamp:unset!important;overflow:visible!important;display:block!important} .post.bd63-media-open .post-media,.bd-live-post.bd63-media-open .post-media{max-height:none!important;overflow:visible!important} .post.bd63-media-open img.post-media,.bd-live-post.bd63-media-open img.post-media, .post.bd63-media-open .post-media img,.bd-live-post.bd63-media-open .post-media img{width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;display:block!important} .post.bd63-media-open video,.bd-live-post.bd63-media-open video, .post.bd63-media-open .post-media video,.bd-live-post.bd63-media-open .post-media video{width:100%!important;height:auto!important;max-height:min(82vh,760px)!important;object-fit:contain!important;background:#000!important;display:block!important} .author-meta small,.bd-post-time{white-space:nowrap!important;font-variant-numeric:tabular-nums;max-width:100%;overflow:hidden;text-overflow:ellipsis} .bd31-main-reaction{width:27px!important;height:27px!important;min-width:27px!important;display:grid!important;place-items:center!important;overflow:visible!important} .bd31-main-reaction>*{max-width:27px!important;max-height:27px!important} .bd31-main-reaction img,.bd31-main-reaction svg{width:27px!important;height:27px!important;object-fit:contain!important} #bd31ReactionTray{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important} #bd31ReactionTray button,[data-bd31-tray-pick]{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important} @media(max-width:899px){ html,body{width:100%!important;max-width:100%!important} .page,.layout,.center,.center-col,.main,.main-content,.feed,#feed,#postList{min-width:0!important;max-width:100%!important} .post,.bd-live-post,[data-post-card]{width:100%!important;max-width:100%!important} }</style>
 
 <style id="bd-v865-final-template-visibility">.bd58-template-chip[data-bd58-template^="tpl"]{background-color:#fff!important;background-position:center!important;background-size:cover!important;background-repeat:no-repeat!important}</style>
-<style id="bd-v866-requested-composer-only-css">#postBody{ resize:none!important; overflow-y:hidden; overscroll-behavior:contain!important; -webkit-overflow-scrolling:touch; transition:height .14s ease!important; scroll-behavior:smooth; } @media(min-width:900px){ #composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #postBody{min-height:220px!important;max-height:min(60dvh,640px)!important} } @media(max-width:899px){ #postBody{min-height:145px!important;max-height:min(52dvh,520px)!important} }</style>
-<script id="bd-v866-requested-composer-only-js">
-(()=>{'use strict';
-const D=document;
-function maxBodyHeight(){return innerWidth>=900?Math.min(innerHeight*.60,640):Math.min(innerHeight*.52,520)}
-function fitWritingBox(){
-  const el=D.getElementById('postBody');if(!el)return;
-  const min=innerWidth>=900?220:145,max=Math.max(min,maxBodyHeight());
-  el.style.height='auto';
-  const wanted=Math.max(min,el.scrollHeight);
-  el.style.height=Math.min(wanted,max)+'px';
-  el.style.overflowY=wanted>max?'auto':'hidden';
-}
-function unlockDesktopComposer(){
-  if(innerWidth<900)return;
-  const composer=D.getElementById('composer'),form=D.getElementById('composerForm'),choices=D.getElementById('composerChoices'),note=D.getElementById('composerNote'),prompt=D.getElementById('composerPrompt');
-  if(!window.__BD_LIVE_SESSION?.user){if(composer){composer.hidden=false;composer.removeAttribute('hidden');if(!composer.dataset.bd71Stage)composer.dataset.bd71Stage='compact'}return}
-  if(composer)composer.hidden=false;
-  if(form){form.hidden=false;form.classList.remove('bd-stage-selecting','bd-write-ready')}
-  if(choices)choices.hidden=false;
-  if(note)note.hidden=false;
-  if(prompt)prompt.setAttribute('aria-expanded','true');
-  const checked=D.querySelector('input[name="postType"]:checked');if(!checked){const poem=D.getElementById('typePoem');if(poem)poem.checked=true}
-  requestAnimationFrame(fitWritingBox);
-}
-D.addEventListener('input',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitWritingBox)},true);
-D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitWritingBox)},true);
-addEventListener('resize',()=>requestAnimationFrame(fitWritingBox),{passive:true});
-/* Keep wheel/trackpad movement inside the writing field once it has reached its maximum height. */
-D.addEventListener('wheel',e=>{
-  const el=e.target?.closest?.('#postBody');if(!el||el.scrollHeight<=el.clientHeight+1)return;
-  const down=e.deltaY>0,atTop=el.scrollTop<=0,atBottom=el.scrollTop+el.clientHeight>=el.scrollHeight-1;
-  if((down&&!atBottom)||(!down&&!atTop))e.stopPropagation();
-},{passive:true,capture:true});
-function boot(){unlockDesktopComposer();fitWritingBox()}
-D.addEventListener('bd:auth-ready',()=>requestAnimationFrame(unlockDesktopComposer));
-D.addEventListener('click',e=>{if(innerWidth>=900&&e.target.closest('#composerPrompt,#composerChoices [data-open-type]'))setTimeout(unlockDesktopComposer,0)},true);
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
-<style id="bd-v867-requested-only-css">@media(min-width:900px){ #composer:not([hidden]) #composerForm:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composerForm.bd-stage-selecting .bd-index-write-field{display:block!important;visibility:visible!important;opacity:1!important} #composerForm.bd-stage-selecting .composer-grid{display:grid!important} #composerForm.bd-stage-selecting .composer-actions,#composerForm.bd-stage-selecting .ownership-row,#composerForm.bd-stage-selecting .founder-tools{display:flex!important} #postBody{min-height:260px!important;max-height:min(66dvh,720px)!important} } #composerForm[data-bd65-template]:not([data-bd65-template="none"]) #postBody{ height:230px!important;min-height:230px!important;max-height:230px!important; overflow:hidden!important;resize:none!important;text-align:center!important; color:#111827!important;-webkit-text-fill-color:#111827!important; padding:56px 46px!important;line-height:1.75!important; } .post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{ min-height:190px!important;padding:42px 42px!important; display:flex!important;align-items:center!important;justify-content:center!important; text-align:center!important;color:#111827!important;-webkit-text-fill-color:#111827!important; -webkit-line-clamp:unset!important;max-height:none!important;overflow:visible!important; } html[data-theme="dark"] .post[class*="style-tpl"] .post-body, html[data-theme="dark"] .bd-live-post[class*="style-tpl"] .post-body, html[data-theme="dark"] #composerForm[data-bd65-template]:not([data-bd65-template="none"]) #postBody{ color:#111827!important;-webkit-text-fill-color:#111827!important; } @media(max-width:899px){ #composerForm[data-bd65-template]:not([data-bd65-template="none"]) #postBody{height:178px!important;min-height:178px!important;max-height:178px!important;padding:40px 28px!important} .post[class*="style-tpl"] .post-body,.bd-live-post[class*="style-tpl"] .post-body{min-height:158px!important;padding:34px 27px!important} }</style>
-<script id="bd-v867-requested-only-js">
-(()=>{'use strict';
-const D=document;
-function isTemplate(){const f=D.getElementById('composerForm');return !!(f&&/^tpl[1-8]$/.test(f.dataset.bd65Template||''))}
-function normalFit(){const el=D.getElementById('postBody');if(!el||isTemplate())return;const min=innerWidth>=900?260:145,max=innerWidth>=900?Math.max(min,Math.min(innerHeight*.66,720)):Math.max(min,Math.min(innerHeight*.52,520));el.style.height='auto';const wanted=Math.max(min,el.scrollHeight);el.style.height=Math.min(wanted,max)+'px';el.style.overflowY=wanted>max?'auto':'hidden'}
-function templateGuard(){
-  const el=D.getElementById('postBody'),form=D.getElementById('composerForm');if(!el||!form||!isTemplate())return;
-  requestAnimationFrame(()=>{
-    if(!isTemplate())return;
-    /* A decorative card has a fixed readable area. If the writing exceeds it, return to Normal automatically. */
-    if(el.scrollHeight>el.clientHeight+3){
-      if(typeof window.BD65ApplyTemplate==='function')window.BD65ApplyTemplate('none','index');
-      else{form.dataset.bd65Template='none';const s=D.getElementById('cardStyle');if(s)s.value='none'}
-      requestAnimationFrame(normalFit);
-    }
-  });
-}
-function syncAuth(detail){
-  const composer=D.getElementById('composer'),session=detail?.session||window.__BD_LIVE_SESSION;
-  if(composer){composer.hidden=false;composer.removeAttribute('hidden');if(!composer.dataset.bd71Stage)composer.dataset.bd71Stage='compact'}
-  if(session?.user&&innerWidth>=900){
-    const form=D.getElementById('composerForm'),choices=D.getElementById('composerChoices'),note=D.getElementById('composerNote');
-    if(form){form.hidden=false;form.classList.remove('bd-stage-selecting','bd-write-ready')}
-    if(choices)choices.hidden=false;if(note)note.hidden=false;
-    requestAnimationFrame(normalFit);
-  }
-}
-D.addEventListener('bd:auth-ready',e=>syncAuth(e.detail));
-D.addEventListener('input',e=>{if(e.target?.id==='postBody'){templateGuard();if(!isTemplate())requestAnimationFrame(normalFit)}},true);
-D.addEventListener('click',e=>{if(e.target.closest?.('[data-bd58-template]'))setTimeout(()=>{templateGuard();if(!isTemplate())normalFit()},0);if(innerWidth>=900&&e.target.closest?.('#composerPrompt,#composerChoices [data-open-type]'))setTimeout(()=>syncAuth({session:window.__BD_LIVE_SESSION}),0)},true);
-addEventListener('resize',()=>requestAnimationFrame(normalFit),{passive:true});
-function boot(){syncAuth({session:window.__BD_LIVE_SESSION});normalFit()}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
-<style id="bd-v868-targeted-only-css">@media (min-width:900px){ #composer[data-bd68-desktop-open="1"]{overflow:visible!important} #composer[data-bd68-desktop-open="1"] #composerChoices{ display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important } #composer[data-bd68-desktop-open="1"] #composerNote{ display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important } #composer[data-bd68-desktop-open="1"] #composerForm{ display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important; height:auto!important;max-height:none!important;overflow:visible!important } #composer[data-bd68-desktop-open="1"] #composerForm .composer-grid{ display:grid!important;visibility:visible!important;opacity:1!important } #composer[data-bd68-desktop-open="1"] #postTitle, #composer[data-bd68-desktop-open="1"] #bd58TemplatePicker, #composer[data-bd68-desktop-open="1"] #postBody{ display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important } #composer[data-bd68-desktop-open="1"] #bdIndexMediaTools{display:flex!important;visibility:visible!important;opacity:1!important} #composer[data-bd68-desktop-open="1"] .ownership-row{display:flex!important;visibility:visible!important;opacity:1!important} #composer[data-bd68-desktop-open="1"] .composer-actions{display:flex!important;visibility:visible!important;opacity:1!important} #composer[data-bd68-desktop-open="1"] #postBody{ min-height:280px!important;max-height:min(68dvh,760px)!important; resize:none!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important } #composer[data-bd68-desktop-open="1"] #composerForm.bd-stage-selecting .bd-index-write-field{ visibility:visible!important;opacity:1!important;pointer-events:auto!important } } #masterPostShell,#bd45PostViewer,.master-post-shell,.bd45-post-shell{ display:none!important;visibility:hidden!important;pointer-events:none!important } .post.bd68-long-post .post-body.collapsed,.bd-live-post.bd68-long-post .post-body.collapsed{ display:-webkit-box!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:7!important; overflow:hidden!important;max-height:13.4em!important } .post.bd63-expanded .post-body,.bd-live-post.bd63-expanded .post-body, .post.expanded .post-body,.bd-live-post.expanded .post-body{ display:block!important;-webkit-line-clamp:unset!important;max-height:none!important;overflow:visible!important } [data-bd68-comment-locked="1"] input,[data-bd68-comment-locked="1"] textarea, [data-bd68-comment-locked="1"] button[type="submit"]{ cursor:not-allowed!important;opacity:.66!important }</style>
-<script id="bd-v868-targeted-only-js">
-(()=>{'use strict';
-const D=document,W=window;
-let logged=!!W.__BD_LIVE_SESSION?.user;
-const commentFormSelector='.bd31-comment-form,.bd31-reply-form,.bd35-comment-composer,.bd24-comment-form,.bd24-reply-form,.comment-form';
-function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null}
-function isDesktop(){return W.innerWidth>=900}
-function fitBody(){
-  if(!isDesktop())return;
-  const form=D.getElementById('composerForm'),el=D.getElementById('postBody');
-  if(!form||!el)return;
-  const templ=/^tpl[1-8]$/.test(form.dataset.bd65Template||'');
-  if(templ)return; // Existing fixed-card/template guard owns template height.
-  const min=280,max=Math.max(min,Math.min(W.innerHeight*.68,760));
-  el.style.height='auto';
-  const wanted=Math.max(min,el.scrollHeight);
-  el.style.height=Math.min(wanted,max)+'px';
-  el.style.overflowY=wanted>max?'auto':'hidden';
-}
-function forceDesktopComposer(){
-  if(!isDesktop()||!logged)return;
-  const composer=D.getElementById('composer'),form=D.getElementById('composerForm'),choices=D.getElementById('composerChoices'),note=D.getElementById('composerNote'),prompt=D.getElementById('composerPrompt');
-  if(!composer||!form)return;
-  if(composer.hidden)composer.hidden=false;
-  if(composer.dataset.bd68DesktopOpen!=='1')composer.dataset.bd68DesktopOpen='1';
-  if(form.hidden)form.hidden=false;
-  if(form.classList.contains('bd-stage-selecting'))form.classList.remove('bd-stage-selecting');
-  if(form.classList.contains('bd-write-ready'))form.classList.remove('bd-write-ready');
-  if(choices?.hidden)choices.hidden=false;
-  if(note?.hidden)note.hidden=false;
-  prompt?.setAttribute('aria-expanded','true');
-  if(!D.querySelector('input[name="postType"]:checked')){
-    const poem=D.getElementById('typePoem');
-    if(poem){poem.checked=true;poem.dispatchEvent(new Event('change',{bubbles:true}))}
-  }
-  requestAnimationFrame(fitBody);
-}
-async function refreshSession(){
-  try{
-    const c=client(),s=c?.auth?.getSession?((await c.auth.getSession()).data?.session||null):null;
-    logged=!!s?.user;
-  }catch(_){logged=!!W.__BD_LIVE_SESSION?.user}
-  if(logged)forceDesktopComposer();
-  syncCommentAuth();
-}
-function markLongPosts(root=D){
-  root.querySelectorAll?.('article.post,article.bd-live-post,.post-card').forEach(card=>{
-    const body=card.querySelector?.('.post-body');if(!body)return;
-    const text=(body.textContent||'').trim(),long=text.length>420||text.split(/\n/).length>7;
-    if(!long)return;
-    card.classList.add('bd68-long-post');
-    if(!card.classList.contains('bd63-expanded')&&!card.classList.contains('expanded')&&!card.classList.contains('bd-inline-expanded'))body.classList.add('collapsed');
-  });
-}
-function syncCommentAuth(root=D){
-  root.querySelectorAll?.(commentFormSelector).forEach(form=>{
-    const controls=form.querySelectorAll('input,textarea,button[type="submit"]');
-    if(!logged){
-      form.dataset.bd68CommentLocked='1';
-      controls.forEach(c=>{
-        if(c.dataset.bd68AuthLock!=='1'){
-          c.dataset.bd68AuthLock='1';
-          c.dataset.bd68WasDisabled=c.disabled?'1':'0';
-          if('placeholder' in c)c.dataset.bd68Placeholder=c.getAttribute('placeholder')||'';
-        }
-        c.disabled=true;
-        if('placeholder' in c)c.setAttribute('placeholder','মন্তব্য করতে লগইন করুন');
-      });
-    }else if(form.dataset.bd68CommentLocked==='1'){
-      delete form.dataset.bd68CommentLocked;
-      controls.forEach(c=>{
-        if(c.dataset.bd68AuthLock==='1'){
-          if(c.dataset.bd68WasDisabled!=='1')c.disabled=false;
-          if('placeholder' in c&&c.dataset.bd68Placeholder!==undefined)c.setAttribute('placeholder',c.dataset.bd68Placeholder);
-          delete c.dataset.bd68AuthLock;delete c.dataset.bd68WasDisabled;delete c.dataset.bd68Placeholder;
-        }
-      });
-    }
-  });
-}
-/* Desktop prompt is an OPEN control only. Legacy toggle code is not allowed to collapse it again. */
-D.addEventListener('click',e=>{
-  if(!isDesktop()||!logged||!e.target.closest?.('#composerPrompt'))return;
-  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();forceDesktopComposer();
-},true);
-D.addEventListener('input',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitBody)},true);
-D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fitBody)},true);
-D.addEventListener('submit',e=>{
-  const form=e.target.closest?.(commentFormSelector);if(!form||logged)return;
-  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  location.href='login.html?next='+encodeURIComponent(location.href);
-},true);
-D.addEventListener('bd:auth-ready',e=>{
-  logged=!!e.detail?.session?.user;
-  if(logged)forceDesktopComposer();
-  syncCommentAuth();
-});
-W.addEventListener('resize',()=>{if(logged)forceDesktopComposer();requestAnimationFrame(fitBody)},{passive:true});
-const mo=new MutationObserver(ms=>{
-  let composerChanged=false;
-  for(const m of ms){
-    if(m.type==='attributes'&&(m.target?.id==='composerForm'||m.target?.id==='composerChoices'||m.target?.id==='composerNote'||m.target?.id==='composer'))composerChanged=true;
-    for(const n of m.addedNodes||[])if(n.nodeType===1){markLongPosts(n);syncCommentAuth(n)}
-  }
-  if(composerChanged&&logged&&isDesktop())requestAnimationFrame(forceDesktopComposer);
-});
-function boot(){
-  markLongPosts();syncCommentAuth();
-  const composer=D.getElementById('composer');if(composer)mo.observe(composer,{subtree:true,attributes:true,attributeFilter:['hidden','class']});
-  mo.observe(D.body,{childList:true,subtree:true});
-  refreshSession();setTimeout(refreshSession,450);setTimeout(refreshSession,1300);
-}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
-<style id="bd-v869-targeted-only-css">@media(min-width:900px){ body.bd869-authenticated #composer{display:block!important;visibility:visible!important;opacity:1!important;overflow:visible!important} body.bd869-authenticated #composerChoices{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd869-authenticated #composerNote{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd869-authenticated #composerForm{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;max-height:none!important;overflow:visible!important} body.bd869-authenticated #composerForm .bd-index-write-field{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd869-authenticated #composerForm .composer-grid{display:grid!important} body.bd869-authenticated #composerForm .composer-actions,body.bd869-authenticated #composerForm .ownership-row{display:flex!important} body.bd869-authenticated #postBody{display:block!important;min-height:300px!important;max-height:min(70dvh,780px)!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;resize:none!important;overscroll-behavior:contain!important} } body.bd869-guest #composer{display:block!important;visibility:visible!important;opacity:1!important} .bd31-summary{display:flex!important;align-items:center!important;justify-content:space-between!important;visibility:visible!important;opacity:1!important} [data-bd31-react-summary]:not([hidden]){display:inline-flex!important;align-items:center!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;cursor:pointer!important} .bd31-reactor-panel:not([hidden]){display:block!important}</style>
-<script id="bd-v869-targeted-only-js">
-(()=>{'use strict';
-const D=document,W=window;let realSession=null;
-function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null}
-function fit(){if(innerWidth<900)return;const f=D.getElementById('composerForm'),el=D.getElementById('postBody');if(!f||!el||!realSession?.user)return;if(/^tpl[1-8]$/.test(f.dataset.bd65Template||''))return;const min=300,max=Math.max(min,Math.min(innerHeight*.70,780));el.style.height='auto';const wanted=Math.max(min,el.scrollHeight);el.style.height=Math.min(wanted,max)+'px';el.style.overflowY=wanted>max?'auto':'hidden'}
-function apply(){const ok=!!realSession?.user;D.body.classList.toggle('bd869-authenticated',ok);D.body.classList.toggle('bd869-guest',!ok);const comp=D.getElementById('composer');if(comp){comp.hidden=false;comp.removeAttribute('hidden');if(!comp.dataset.bd71Stage)comp.dataset.bd71Stage='compact'}if(!ok)return;const f=D.getElementById('composerForm'),ch=D.getElementById('composerChoices'),n=D.getElementById('composerNote');if(f){f.hidden=false;f.classList.remove('bd-stage-selecting','bd-write-ready')}if(ch)ch.hidden=false;if(n)n.hidden=false;requestAnimationFrame(fit)}
-async function read(){try{realSession=(await client()?.auth?.getSession?.()).data?.session||null}catch(_){realSession=null}W.__BD_LIVE_SESSION=realSession;apply();lockComments()}
-function lockComments(root=D){const ok=!!realSession?.user;root.querySelectorAll?.('.comment-box textarea,.comment-box input,.comment-box [data-action="bd-submit-comment-v814"],.bd31-comment-form input,.bd31-comment-form button[type="submit"],.bd31-reply-form input,.bd31-reply-form button[type="submit"],.bd24-comment-form input,.bd24-comment-form button[type="submit"],.bd24-reply-form input,.bd24-reply-form button[type="submit"]').forEach(el=>{el.disabled=!ok;if('placeholder' in el){if(!el.dataset.bd869Placeholder)el.dataset.bd869Placeholder=el.getAttribute('placeholder')||'';el.setAttribute('placeholder',ok?el.dataset.bd869Placeholder:'মন্তব্য করতে লগইন করুন')}})}
-D.addEventListener('input',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);
-D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);
-D.addEventListener('click',e=>{if(realSession?.user)return;const x=e.target.closest?.('[data-action="bd-comment-v814"],[data-action="bd-submit-comment-v814"],[data-bd31-comments],.bd31-comment-form button[type="submit"],.bd31-reply-form button[type="submit"]');if(!x)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();location.href='login.html?next='+encodeURIComponent(location.href)},true);
-D.addEventListener('submit',e=>{if(realSession?.user)return;if(e.target?.matches?.('#composerForm,#bdPublishForm,.bd31-comment-form,.bd31-reply-form,.bd24-comment-form,.bd24-reply-form,.comment-form')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();location.href='login.html?next='+encodeURIComponent(location.href)}},true);
-D.addEventListener('bd:auth-ready',e=>{realSession=e.detail?.session?.user?e.detail.session:realSession;apply();lockComments()});
-const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)lockComments(n)});mo.observe(D.body,{childList:true,subtree:true});
-addEventListener('resize',()=>requestAnimationFrame(fit),{passive:true});
-function boot(){read();setTimeout(read,400);setTimeout(read,1200);try{client()?.auth?.onAuthStateChange?.((_e,s)=>{realSession=s||null;W.__BD_LIVE_SESSION=realSession;apply();lockComments()})}catch(_){}}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
-<style id="bd-v870-targeted-master-lock-css">@media(min-width:900px){ body.bd870-auth #composer, body.bd870-auth #composer[hidden]{display:block!important;visibility:visible!important;opacity:1!important;overflow:visible!important} body.bd870-auth #composerChoices, body.bd870-auth #composerChoices[hidden]{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd870-auth #composerNote, body.bd870-auth #composerNote[hidden]{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd870-auth #composerForm, body.bd870-auth #composerForm[hidden], body.bd870-auth #composerForm.bd-stage-selecting, body.bd870-auth #composerForm.bd-write-ready{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:visible!important} body.bd870-auth #composerForm .bd-index-write-field, body.bd870-auth #composerForm.bd-stage-selecting .bd-index-write-field, body.bd870-auth #composerForm.bd-write-ready .bd-index-write-field{visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd870-auth #composerForm .composer-grid, body.bd870-auth #composerForm.bd-stage-selecting .composer-grid{display:grid!important;width:100%!important} body.bd870-auth #composerForm #bd58TemplatePicker, body.bd870-auth #composerForm .bd-index-media-tools, body.bd870-auth #composerForm .bd-index-media-preview, body.bd870-auth #composerForm #postMediaCaption, body.bd870-auth #composerForm .author-area, body.bd870-auth #composerForm .moderation-warning{visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd870-auth #composerForm .composer-actions, body.bd870-auth #composerForm .ownership-row, body.bd870-auth #composerForm .founder-tools{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} body.bd870-auth #composerForm[data-bd65-template="none"] #postBody, body.bd870-auth #composerForm:not([data-bd65-template]) #postBody{display:block!important;width:100%!important;min-height:340px!important;height:340px;max-height:min(72dvh,820px)!important;overflow-y:hidden!important;resize:none!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;box-sizing:border-box!important} } #composerForm[data-bd65-template^="tpl"] #postBody{ display:block!important; width:min(100%,680px)!important; max-width:680px!important; min-height:0!important; max-height:none!important; margin:10px auto 0!important; overflow:hidden!important; resize:none!important; padding:15% 11%!important; text-align:center!important; line-height:1.68!important; font-size:clamp(15px,1.2vw,18px)!important; background-position:center!important; background-size:100% 100%!important; background-repeat:no-repeat!important; color:#111d2b!important; box-sizing:border-box!important; } @media(max-width:899px){ #composerForm[data-bd65-template^="tpl"] #postBody{width:100%!important;max-width:none!important;padding:15% 10%!important;font-size:15px!important} } .bd31-replies[hidden],.bd35-comment-replies[hidden]{display:none!important} .bd870-reply-count{border:0!important;background:transparent!important;color:#6b64c9!important;padding:2px 8px!important;margin:3px 0 5px!important;font:800 10px/1.5 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;cursor:pointer!important;text-align:left!important} .bd870-reply-count:hover{text-decoration:underline!important} html[data-theme="dark"] .bd870-reply-count{color:#b9b4ff!important} .bd870-react-stack{display:inline-flex!important;align-items:center!important;padding-left:1px!important;min-width:0!important} .bd870-react-face{width:21px!important;height:21px!important;min-width:21px!important;margin-left:-4px!important;border:1.5px solid var(--surface-solid,#fff)!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#fff!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:17px!important;line-height:1!important;box-shadow:0 1px 3px rgba(0,0,0,.10)!important} .bd870-react-face:first-child{margin-left:0!important} html[data-theme="dark"] .bd870-react-face{border-color:#101b35!important;background:#101b35!important} [data-bd31-react-summary]{display:inline-flex!important;align-items:center!important;gap:6px!important;min-width:0!important}</style>
-<script id="bd-v870-targeted-master-lock-js">
-(()=>{'use strict';
-const D=document,W=window;let session=null,forcing=false;
-const q=(s,r=D)=>r.querySelector(s),qa=(s,r=D)=>Array.from(r.querySelectorAll(s));
-const bn=n=>String(Number(n)||0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
-const client=()=>W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null;
-const isDesktop=()=>innerWidth>=900;
-function toast(msg){try{if(typeof W.toast==='function')return W.toast(msg)}catch{}let t=q('#bdSingleToast');if(t){t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}}
-function normalTemplate(form){return !/^tpl[1-8]$/.test(form?.dataset?.bd65Template||'none')}
-function setTemplateFrame(){const f=q('#composerForm'),b=q('#postBody');if(!f||!b||normalTemplate(f))return;const width=Math.max(240,b.getBoundingClientRect().width||b.clientWidth||480);b.style.setProperty('height',Math.round(width*1.25)+'px','important');b.style.setProperty('overflow-y','hidden','important')}
-function measureLines(el){if(!el)return 0;const cs=getComputedStyle(el),lh=parseFloat(cs.lineHeight)||28,pl=parseFloat(cs.paddingLeft)||0,pr=parseFloat(cs.paddingRight)||0;const m=D.createElement('div');m.style.cssText='position:fixed;left:-100000px;top:0;visibility:hidden;pointer-events:none;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;';m.style.width=Math.max(40,(el.getBoundingClientRect().width||el.clientWidth||400)-pl-pr)+'px';for(const p of ['fontFamily','fontSize','fontWeight','fontStyle','letterSpacing','wordSpacing','lineHeight'])m.style[p]=cs[p];m.textContent=el.value||' ';D.body.appendChild(m);const h=m.getBoundingClientRect().height;m.remove();const visual=Math.max(1,Math.ceil(h/lh));const explicit=(el.value||'').split('\n').length;return Math.max(visual,explicit)}
-function toNormalIfOverflow(){const f=q('#composerForm'),b=q('#postBody');if(!f||!b||normalTemplate(f))return false;setTemplateFrame();if(measureLines(b)<=10)return false;try{W.BD65ApplyTemplate?.('none','index')}catch{}f.dataset.bd65Template='none';f.dataset.bd58Template='none';const s=q('#cardStyle');if(s)s.value='none';qa('[data-bd58-template]',f).forEach(x=>{const on=x.dataset.bd58Template==='none';x.classList.toggle('active',on);x.setAttribute('aria-selected',on?'true':'false')});b.style.removeProperty('height');b.style.removeProperty('overflow-y');toast('১০ লাইনের বেশি হওয়ায় লেখাটি সাধারণ কার্ডে নেওয়া হয়েছে।');requestAnimationFrame(fitNormal);return true}
-function fitNormal(){if(!isDesktop()||!session?.user)return;const f=q('#composerForm'),b=q('#postBody');if(!f||!b)return;if(!normalTemplate(f)){setTemplateFrame();return}const min=340,max=Math.max(min,Math.min(innerHeight*.72,820));b.style.setProperty('display','block','important');b.style.setProperty('width','100%','important');b.style.setProperty('min-height',min+'px','important');b.style.setProperty('max-height',max+'px','important');b.style.setProperty('height','auto','important');const wanted=Math.max(min,b.scrollHeight);b.style.setProperty('height',Math.min(wanted,max)+'px','important');b.style.setProperty('overflow-y',wanted>max?'auto':'hidden','important')}
-function forceDesktopComposer(){if(forcing||!session?.user||!isDesktop())return;forcing=true;try{const c=q('#composer'),f=q('#composerForm'),ch=q('#composerChoices'),n=q('#composerNote');if(c){c.hidden=false;c.removeAttribute('hidden')}if(ch){ch.hidden=false;ch.removeAttribute('hidden')}if(n){n.hidden=false;n.removeAttribute('hidden')}if(f){f.hidden=false;f.removeAttribute('hidden');f.classList.remove('bd-stage-selecting');qa('.bd-index-write-field',f).forEach(x=>{x.hidden=false;x.removeAttribute('hidden');x.style.removeProperty('display');x.style.removeProperty('visibility');x.style.removeProperty('opacity')});const grid=q('.composer-grid',f);if(grid)grid.style.setProperty('display','grid','important');const acts=q('.composer-actions',f);if(acts)acts.style.setProperty('display','flex','important');const own=q('.ownership-row',f);if(own)own.style.setProperty('display','flex','important')}requestAnimationFrame(()=>{if(toNormalIfOverflow())return;fitNormal()})}finally{forcing=false}}
-async function refreshAuth(){try{session=(await client()?.auth?.getSession?.()).data?.session||null}catch{session=W.__BD_LIVE_SESSION||null}D.body.classList.toggle('bd870-auth',!!session?.user);if(session?.user)forceDesktopComposer()}
-/* Desktop prompt and category choices may open the form, but may never collapse it again. */
-W.addEventListener('click',e=>{if(!isDesktop()||!session?.user)return;if(e.target.closest?.('#composerPrompt,#composerChoices button,[data-open-type]'))setTimeout(forceDesktopComposer,0)},true);
-D.addEventListener('input',e=>{if(e.target?.id!=='postBody')return;if(toNormalIfOverflow())return;requestAnimationFrame(fitNormal)},true);
-D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(()=>{setTemplateFrame();fitNormal()})},true);
-W.addEventListener('resize',()=>requestAnimationFrame(()=>{forceDesktopComposer();setTemplateFrame();fitNormal()}),{passive:true});
-/* Guard submit too: a 4:5 template can never be published past 10 visual lines. */
-W.addEventListener('submit',e=>{if(e.target?.id==='composerForm')toNormalIfOverflow()},true);
-/* When a template is selected, immediately apply the 4:5 frame and validate current text. */
-W.addEventListener('pointerup',e=>{if(!e.target.closest?.('[data-bd58-template]'))return;setTimeout(()=>{setTemplateFrame();toNormalIfOverflow()},0)},true);
-/* Comment UX: count-link opens the complete root-comment list; replies remain folded. */
-function enhanceReplyGroups(root=D){
-  qa('.bd31-replies,.bd35-comment-replies',root).forEach(group=>{if(group.dataset.bd870Ready==='1')return;group.dataset.bd870Ready='1';const count=group.querySelectorAll(':scope > .bd31-comment,:scope > .bd35-comment-row').length||group.children.length;if(!count)return;group.hidden=true;const btn=D.createElement('button');btn.type='button';btn.className='bd870-reply-count';btn.dataset.bd870Replies='1';btn.textContent=bn(count)+'টি রিপ্লাই দেখুন';btn.dataset.bd870Label=btn.textContent;group.insertAdjacentElement('beforebegin',btn)});
-  qa('[data-bd31-comment-summary]',root).forEach(btn=>{const card=btn.closest('[data-bd31-ready="1"]');const rows=card?.__bd31Rows?.comments||[];const roots=rows.filter(x=>!(x.parent_id||x.parent_comment_id||x.reply_to));if(roots.length&&btn.dataset.bd104Summary!=='1')btn.textContent=bn(roots.length)+' জন মন্তব্য করেছেন'});
-}
-D.addEventListener('click',e=>{const b=e.target.closest?.('[data-bd870-replies]');if(!b)return;e.preventDefault();e.stopPropagation();const g=b.nextElementSibling;if(!g)return;g.hidden=!g.hidden;b.textContent=g.hidden?b.dataset.bd870Label||(b.dataset.bd870Label=b.textContent):'রিপ্লাইগুলো লুকান'},false);
-/* Existing BD31 engine first opens two comments; count-link immediately expands to all. */
-/* V8.104: comment summary no longer auto-expands every comment. */
-/* Reaction summary artwork is owned by the canonical V8.31/V8.105 visual painter. */
-function scan(root=D){enhanceReplyGroups(root);qa('[data-bd31-ready="1"]',root).forEach(enhanceReplyGroups)}
-/* V8.104: media remains in the same post flow; no separate reels popup. */
-const mo=new MutationObserver(ms=>{let comp=false;for(const m of ms){if(m.type==='attributes'&&(m.target?.id==='composer'||m.target?.id==='composerForm'||m.target?.id==='composerChoices'||m.target?.id==='composerNote'))comp=true;for(const n of m.addedNodes||[])if(n.nodeType===1)scan(n)}if(comp&&session?.user&&isDesktop())requestAnimationFrame(forceDesktopComposer)});
-function boot(){scan();refreshAuth();setTimeout(refreshAuth,350);setTimeout(refreshAuth,1100);const c=q('#composer');if(c)mo.observe(c,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','style','data-bd65-template']});mo.observe(D.body,{childList:true,subtree:true});try{client()?.auth?.onAuthStateChange?.((_e,s)=>{session=s||null;D.body.classList.toggle('bd870-auth',!!session?.user);if(session?.user)forceDesktopComposer()})}catch{}setInterval(()=>{scan();if(session?.user&&isDesktop())forceDesktopComposer()},2200)}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
+
+
+
+
+
+
+
+
+
+
 <style id="bd-v871-masterlock-targeted-css">#composer[data-bd71-stage="compact"] #bd58FontToolbar, #composer[data-bd71-stage="compact"] #composerChoices, #composer[data-bd71-stage="compact"] #composerNote, #composer[data-bd71-stage="compact"] #composerForm{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="type"] #bd58FontToolbar, #composer[data-bd71-stage="type"] #composerNote, #composer[data-bd71-stage="type"] #composerForm{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="type"] #composerChoices{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="template"] #bd58FontToolbar, #composer[data-bd71-stage="template"] #composerChoices, #composer[data-bd71-stage="template"] #composerNote{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="template"] #composerForm{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;overflow:visible!important} #composer[data-bd71-stage="template"] #composerForm>*:not(#bd58TemplatePicker){display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="template"] #bd58TemplatePicker{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;margin-top:0!important} #composer[data-bd71-stage="font"] #composerChoices, #composer[data-bd71-stage="font"] #composerNote, #composer[data-bd71-stage="font"] #composerForm{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="font"] #bd58FontToolbar{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="write"] #composerChoices, #composer[data-bd71-stage="write"] #composerNote{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="write"] #bd58FontToolbar{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="write"] #composerForm{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;max-height:none!important;overflow:visible!important} #composer[data-bd71-stage="write"] #bd58TemplatePicker{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="write"] #composerForm .composer-grid{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="write"] #postBody, #composer[data-bd71-stage="write"] #bdIndexMediaTools, #composer[data-bd71-stage="write"] .ownership-row, #composer[data-bd71-stage="write"] .composer-actions{visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="write"] #bdIndexMediaTools, #composer[data-bd71-stage="write"] .ownership-row, #composer[data-bd71-stage="write"] .composer-actions{display:flex!important} #composer[data-bd71-stage="write"] #composerForm[data-bd65-template^="tpl"] #postBody{aspect-ratio:4/5!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:hidden!important} .bd31-summary{min-height:30px!important;contain:layout!important} .bd31-actions{min-height:47px!important;contain:layout!important} [data-bd31-react-summary]{min-width:96px!important} .bd71-comment-gate{width:100%!important;min-height:35px!important;margin:2px 0 8px!important;padding:5px 8px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:#625bc0!important;font:800 10px/1.5 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;text-align:left!important;cursor:pointer!important} .bd71-comment-gate:hover{text-decoration:underline!important;background:rgba(122,112,223,.05)!important} html[data-theme="dark"] .bd71-comment-gate{color:#c7c2ff!important} [data-bd71-comments-open="0"]>.bd31-comments{display:none!important} [data-bd71-comments-open="0"]>[data-bd31-more]{display:none!important} #bd71NotifyBanner{position:fixed;z-index:2147483646;left:50%;top:max(10px,env(safe-area-inset-top));width:min(540px,calc(100vw - 22px));transform:translate(-50%,-130%);opacity:0;pointer-events:none;padding:11px 13px;border:1px solid rgba(120,132,181,.22);border-radius:17px;background:rgba(255,255,255,.97);color:#17324f;box-shadow:0 18px 55px rgba(20,31,68,.25);backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);transition:transform .26s cubic-bezier(.2,.8,.2,1),opacity .2s ease} #bd71NotifyBanner.show{transform:translate(-50%,0);opacity:1;pointer-events:auto} #bd71NotifyBanner strong{display:block;font-size:12px;line-height:1.35} #bd71NotifyBanner span{display:block;margin-top:2px;color:#5f6f87;font-size:10px;line-height:1.5;white-space:normal} html[data-theme="dark"] #bd71NotifyBanner{background:rgba(12,28,52,.97);color:#fff;border-color:rgba(171,188,245,.22)} html[data-theme="dark"] #bd71NotifyBanner span{color:#cbd6ef}</style>
 <script id="bd-v871-masterlock-targeted-js">
 (()=>{'use strict';
@@ -2245,6 +1892,7 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 </script>
 <style id="bd-v876-consolidated-targeted-css">#composer:not([hidden]) #bd58FontToolbar, #composer[data-bd71-stage] #bd58FontToolbar{ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important; position:relative!important;z-index:40!important } #composer[data-bd71-stage="compact"] #composerChoices, #composer[data-bd71-stage="compact"] #composerNote, #composer[data-bd71-stage="compact"] #composerForm{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="type"] #composerChoices{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="type"] #composerNote, #composer[data-bd71-stage="type"] #composerForm{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="template"] #composerChoices, #composer[data-bd71-stage="template"] #composerNote{display:none!important} #composer[data-bd71-stage="template"] #composerForm, #composer[data-bd71-stage="template"] #composerForm[hidden]{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;overflow:visible!important} #composer[data-bd71-stage="template"] #composerForm>*:not(#bd58TemplatePicker){display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="template"] #bd58TemplatePicker{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="font"] #composerChoices, #composer[data-bd71-stage="font"] #composerNote, #composer[data-bd71-stage="font"] #composerForm{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer[data-bd71-stage="write"] #composerChoices, #composer[data-bd71-stage="write"] #composerNote{display:none!important} #composer[data-bd71-stage="write"] #composerForm, #composer[data-bd71-stage="write"] #composerForm[hidden]{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;max-height:none!important;overflow:visible!important} #composer[data-bd71-stage="write"] #composerForm .composer-grid{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="write"] #postTitle, #composer[data-bd71-stage="write"] #postBody{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="write"] #bd58TemplatePicker, #composer[data-bd71-stage="write"] #composerStylePicker{display:none!important} #composer[data-bd71-stage="write"] #bdIndexMediaTools, #composer[data-bd71-stage="write"] .ownership-row, #composer[data-bd71-stage="write"] .composer-actions{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer[data-bd71-stage="write"] #postBody{ min-height:190px!important;max-height:min(58dvh,640px)!important;overflow-y:auto!important;resize:vertical!important; overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important } @media(max-width:899px){#composer[data-bd71-stage="write"] #postBody{min-height:220px!important;max-height:58dvh!important}} #composer[data-bd71-stage="write"] #composerForm[data-bd65-template^="tpl"] #postBody, #composer[data-bd71-stage="write"] #composerForm[data-bd58-template^="tpl"] #postBody{ width:100%!important;aspect-ratio:4/5!important;height:auto!important;min-height:0!important;max-height:none!important; overflow:hidden!important;resize:none!important } #composer.bd76-recitation #bd58TemplatePicker, #composer.bd76-recitation #composerStylePicker, #composer.bd76-recitation #postTitle, #composer.bd76-recitation #postBody, #composer.bd76-recitation .ownership-row{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important} #composer.bd76-recitation #composerForm, #composer.bd76-recitation #composerForm[hidden]{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;overflow:visible!important} #composer.bd76-recitation #bdIndexMediaTools, #composer.bd76-recitation #postMediaCaption, #composer.bd76-recitation #originalAuthorArea, #composer.bd76-recitation .ownership-row, #composer.bd76-recitation .composer-actions{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #composer.bd76-recitation #bdIndexMediaTools, #composer.bd76-recitation .composer-actions{display:flex!important} @font-face{font-family:"BD76 Bornomala";src:local("Bornomala"),local("Bornomala Regular"),url("assets/fonts/Bornomala-Regular.ttf") format("truetype");font-display:swap;font-weight:400} @font-face{font-family:"BD76 Kaium";src:local("Li Kaium Potromitali Unicode"),url("assets/fonts/Li%20Kaium%20Potromitali%20Unicode.ttf") format("truetype"),url("assets/fonts/Unicode/Li%20Kaium%20Potromitali%20Unicode.ttf") format("truetype");font-display:swap;font-weight:400} @font-face{font-family:"BD76 Kobiguru";src:local("Kobiguru"),url("assets/fonts/Kobiguru%20(1)(1).ttf") format("truetype");font-display:swap;font-weight:400} @font-face{font-family:"BD76 Mamun";src:local("FN Mamun Bornolipi Unicode"),url("assets/fonts/FN%20Mamun%20Bornolipi%20Unicode.ttf") format("truetype"),url("assets/fonts/Unicode/FN%20Mamun%20Bornolipi%20Unicode.ttf") format("truetype");font-display:swap;font-weight:400} @font-face{font-family:"BD76 Ruposhi";src:local("Ruposhi Bangla Pr UNI"),local("Ruposhi Bangla Pr UNI Bold"),url("assets/fonts/Ruposhi%20বাংলা%20লেখা%20Bangla%20Pr%20UNI%20Bold.ttf") format("truetype"),url("assets/fonts/Ruposhi%20Bangla%20Pr%20UNI%20Bold.ttf") format("truetype");font-display:swap;font-weight:700} #bd58FontToolbar .bd58-font-chip[data-bd76-key="subha"]{font-family:"BD76 Bornomala","Noto Serif Bengali",serif!important;color:#16815c!important} #bd58FontToolbar .bd58-font-chip[data-bd76-key="masud"]{font-family:"BD76 Kaium","Noto Serif Bengali",serif!important;color:#d54858!important} #bd58FontToolbar .bd58-font-chip[data-bd76-key="kobiguru"]{font-family:"BD76 Kobiguru","Tiro Bangla","Noto Serif Bengali",serif!important;color:#7650d5!important} #bd58FontToolbar .bd58-font-chip[data-bd76-key="bornomala"]{font-family:"BD76 Mamun","Hind Siliguri","Noto Sans Bengali",sans-serif!important;color:#2879c4!important} #bd58FontToolbar .bd58-font-chip[data-bd76-key="jannati"]{font-family:"BD76 Ruposhi","Noto Serif Bengali",serif!important;color:#a97819!important} #bd58FontToolbar .bd58-font-chip.bd76-active{outline:2px solid rgba(102,70,210,.42)!important;outline-offset:2px!important;background:var(--surface-solid,#fff)!important;box-shadow:0 0 0 4px rgba(102,70,210,.09)!important} #composerForm[data-bd76-font="subha"] #postTitle{color:#16815c!important} #composerForm[data-bd76-font="masud"] #postTitle{color:#d54858!important} #composerForm[data-bd76-font="kobiguru"] #postTitle{color:#7650d5!important} #composerForm[data-bd76-font="bornomala"] #postTitle{color:#2879c4!important} #composerForm[data-bd76-font="jannati"] #postTitle{color:#a97819!important} .post[class*="-fsubha"] .post-title,.post[class*="-fsubha"] .post-body{font-family:"BD76 Bornomala","Noto Serif Bengali",serif!important} .post[class*="-fmasud"] .post-title,.post[class*="-fmasud"] .post-body{font-family:"BD76 Kaium","Noto Serif Bengali",serif!important} .post[class*="-fkobiguru"] .post-title,.post[class*="-fkobiguru"] .post-body{font-family:"BD76 Kobiguru","Tiro Bangla","Noto Serif Bengali",serif!important} .post[class*="-fbornomala"] .post-title,.post[class*="-fbornomala"] .post-body{font-family:"BD76 Mamun","Hind Siliguri","Noto Sans Bengali",sans-serif!important} .post[class*="-fjannati"] .post-title,.post[class*="-fjannati"] .post-body{font-family:"BD76 Ruposhi","Noto Serif Bengali",serif!important} .post[class*="-fsubha"] .post-title{color:#16815c!important}.post[class*="-fmasud"] .post-title{color:#d54858!important}.post[class*="-fkobiguru"] .post-title{color:#7650d5!important}.post[class*="-fbornomala"] .post-title{color:#2879c4!important}.post[class*="-fjannati"] .post-title{color:#a97819!important} #postList .post .post-body.collapsed{cursor:pointer!important} #postList .post[class*="style-tpl"] .post-body.collapsed, #postList .bd-live-post[class*="style-tpl"] .post-body.collapsed{ display:block!important;min-height:0!important;height:auto!important;max-height:clamp(190px,42vw,310px)!important; overflow:hidden!important;-webkit-line-clamp:unset!important;position:relative!important;cursor:pointer!important } #postList .post[class*="style-tpl"] .post-body.collapsed::after, #postList .bd-live-post[class*="style-tpl"] .post-body.collapsed::after{ content:""!important;position:absolute!important;left:0!important;right:0!important;bottom:0!important;height:64px!important; pointer-events:none!important;background:linear-gradient(180deg,transparent,rgba(255,255,255,.90))!important } html[data-theme="dark"] #postList .post[class*="style-tpl"] .post-body.collapsed::after, html[data-theme="dark"] #postList .bd-live-post[class*="style-tpl"] .post-body.collapsed::after{background:linear-gradient(180deg,transparent,rgba(19,29,61,.92))!important} #postList .post.bd76-inline-open .post-body, #postList .bd-live-post.bd76-inline-open .post-body{display:block!important;max-height:none!important;overflow:visible!important;-webkit-line-clamp:unset!important;cursor:pointer!important} #postList .post.bd76-inline-open .post-body::after, #postList .bd-live-post.bd76-inline-open .post-body::after{display:none!important} @media(max-width:899px){#postList .post[class*="style-tpl"] .post-body.collapsed,#postList .bd-live-post[class*="style-tpl"] .post-body.collapsed{max-height:clamp(180px,62vw,285px)!important}} html[data-theme="dark"] #postList .post[class*="style-tpl"] .post-body, html[data-theme="dark"] #postList .bd-live-post[class*="style-tpl"] .post-body{color:#101820!important} .bd31-social,.bd31-summary,.bd31-actions,[data-bd31-react-summary],[data-bd31-react-main]{transition:none!important;animation:none!important} .bd31-summary{min-height:30px!important;contain:layout!important;visibility:visible!important} .bd31-actions{min-height:47px!important;contain:layout!important} [data-bd31-react-summary]{min-width:96px!important;min-height:22px!important} [data-bd31-react-summary].bd76-has-reactions{display:inline-flex!important;visibility:visible!important;opacity:1!important} .bd76-comment-gate{width:100%!important;min-height:35px!important;margin:2px 0 8px!important;padding:5px 8px!important;border:0!important;border-radius:9px!important;background:transparent!important;color:#625bc0!important;font:800 10px/1.5 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;text-align:left!important;cursor:pointer!important} .bd76-comment-gate:hover{text-decoration:underline!important;background:rgba(122,112,223,.05)!important} .bd71-comment-gate{display:none!important} html[data-theme="dark"] .bd76-comment-gate{color:#c7c2ff!important} [data-bd76-comments-open="0"]>.bd31-comments{display:none!important} [data-bd76-comments-open="0"]>[data-bd31-more]{display:none!important} .bd31-replies:not(.bd76-replies-open),.bd35-comment-replies:not(.bd76-replies-open){display:none!important} .bd31-comment-panel,.bd31-comments,.bd31-comment,.bd31-replies,.bd35-comment-replies{transition:none!important;animation:none!important;scroll-behavior:auto!important} .bd31-comment-panel{overflow-anchor:none!important;contain:layout style!important} .bd31-comments{overflow-anchor:none!important} .bd76-reply-count{border:0!important;background:transparent!important;color:#6b64c9!important;padding:2px 8px!important;margin:3px 0 5px!important;font:800 10px/1.5 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;cursor:pointer!important;text-align:left!important} html[data-theme="dark"] .bd76-reply-count{color:#c7c2ff!important} .bd76-react-stack{display:inline-flex!important;align-items:center!important;padding-left:2px!important}.bd76-react-face{width:21px!important;height:21px!important;min-width:21px!important;margin-left:-4px!important;border:1.5px solid var(--surface-solid,#fff)!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:#fff!important;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;font-size:17px!important;line-height:1!important;box-shadow:0 1px 3px rgba(0,0,0,.10)!important} #bd31ReactionTray [data-bd31-tray-pick="care"]{display:grid!important} #postList [data-post-menu],#postList .three-dot-btn,#postList .three-dot{position:relative!important;z-index:2147480100!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important} #postList .post::before,#postList .post::after,#postList [data-post-card]::before,#postList [data-post-card]::after{pointer-events:none!important} #postActionBoard{position:fixed!important;z-index:2147483600!important;pointer-events:auto!important} #postActionBoard.open{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important} #postActionBoard.open button,#postActionBoard.open a{pointer-events:auto!important;touch-action:manipulation!important;position:relative!important;z-index:2!important} #bd76Editor,#bd76Privacy{position:fixed!important;z-index:2147483641!important;max-height:min(76dvh,640px)!important;overflow:auto!important;padding:12px!important;border:1px solid var(--border-strong)!important;border-radius:16px!important;background:var(--surface-solid)!important;color:var(--text)!important;box-shadow:0 28px 80px rgba(14,25,58,.32)!important;backdrop-filter:blur(24px)!important;-webkit-backdrop-filter:blur(24px)!important} #bd76Editor[hidden],#bd76Privacy[hidden]{display:none!important} #bd76Editor h4,#bd76Privacy h4{margin:0 0 10px!important;font-size:14px!important} #bd76Editor input,#bd76Editor textarea,#bd76Editor select{width:100%!important;margin:0 0 8px!important;padding:9px 10px!important;border:1px solid var(--border)!important;border-radius:10px!important;background:var(--surface-strong)!important;color:var(--text)!important;font:inherit!important;font-size:16px!important;outline:0!important} #bd76Editor textarea{min-height:160px!important;resize:vertical!important}.bd76-actions{display:flex!important;justify-content:flex-end!important;gap:7px!important;margin-top:8px!important}.bd76-actions button{min-height:39px!important;padding:0 12px!important;border:1px solid var(--border)!important;border-radius:10px!important;background:transparent!important;color:inherit!important;font-weight:800!important}.bd76-actions .save{border:0!important;background:linear-gradient(135deg,#688bf0,#8f75ec)!important;color:#fff!important} .bd76-privacy-list{display:grid!important;gap:6px!important}.bd76-privacy{width:100%!important;min-height:54px!important;padding:7px 9px!important;border:1px solid var(--border)!important;border-radius:11px!important;display:grid!important;grid-template-columns:34px minmax(0,1fr) 20px!important;align-items:center!important;gap:8px!important;background:transparent!important;color:inherit!important;text-align:left!important}.bd76-privacy.selected{border-color:#7a7fdc!important;background:rgba(122,127,220,.08)!important}.bd76-privacy b,.bd76-privacy small{display:block!important}.bd76-privacy small{opacity:.68!important;font-size:9px!important}.bd76-radio{width:16px!important;height:16px!important;border:2px solid rgba(90,103,151,.38)!important;border-radius:50%!important}.bd76-privacy.selected .bd76-radio{border:5px solid #7a7fdc!important} html[data-theme="dark"] #postActionBoard,html[data-theme="dark"] #bd76Editor,html[data-theme="dark"] #bd76Privacy{background:rgba(11,25,49,.985)!important;color:#f7f9ff!important;border-color:rgba(166,182,245,.22)!important}</style>
 <script id="bd-v876-consolidated-targeted-js">
+
 (()=>{'use strict';
 const D=document,W=window,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s)),BN='০১২৩৪৫৬৭৮৯';
 const bn=v=>String(Number(v)||0).replace(/\d/g,d=>BN[d]);
@@ -2282,7 +1930,7 @@ W.addEventListener('submit',e=>{if(e.target?.id!=='composerForm')return;const c=
 /* 4:5 template, maximum ten visual lines; line eleven returns to Normal without losing text. */
 function lineCount(el){if(!el)return 0;const cs=getComputedStyle(el),lh=parseFloat(cs.lineHeight)||28,pl=parseFloat(cs.paddingLeft)||0,pr=parseFloat(cs.paddingRight)||0;const m=D.createElement('div');m.style.cssText='position:fixed;left:-100000px;top:0;visibility:hidden;pointer-events:none;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;';m.style.width=Math.max(40,(el.getBoundingClientRect().width||el.clientWidth||400)-pl-pr)+'px';for(const p of ['fontFamily','fontSize','fontWeight','fontStyle','letterSpacing','wordSpacing','lineHeight'])m.style[p]=cs[p];m.textContent=el.value||' ';D.body.appendChild(m);const n=Math.max(Math.ceil(m.getBoundingClientRect().height/lh),(el.value||'').split('\n').length);m.remove();return n}
 function normaliseCard(){const f=$('#composerForm'),b=$('#postBody');if(!f||!b||!/^tpl[1-8]$/.test(selectedTemplate()))return false;if(lineCount(b)<=10)return false;try{W.BD65ApplyTemplate?.('none','index')}catch{}f.dataset.bd65Template='none';f.dataset.bd58Template='none';const s=$('#cardStyle');if(s)s.value='none';$$('#bd58TemplatePicker [data-bd58-template]').forEach(x=>{const on=x.dataset.bd58Template==='none';x.classList.toggle('active',on);x.setAttribute('aria-selected',on?'true':'false')});notice('১০ লাইনের বেশি হওয়ায় লেখাটি সাধারণ কার্ডে নেওয়া হয়েছে।');return true}
-D.addEventListener('input',e=>{if(e.target?.id==='postBody')normaliseCard()},true);W.addEventListener('submit',e=>{if(e.target?.id==='composerForm')normaliseCard()},true);
+let bd193NormaliseTimer=0;D.addEventListener('input',e=>{if(e.target?.id==='postBody'){clearTimeout(bd193NormaliseTimer);bd193NormaliseTimer=setTimeout(()=>{if(!e.target.dataset.bd183Composing)normaliseCard()},320)}},true);W.addEventListener('submit',e=>{if(e.target?.id==='composerForm')normaliseCard()},true);
 /* ----- Raw post helpers used only by menu/ranking; no schema changes ----- */
 const STORE_KEYS=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts','bhubondangaTodayPoemPosts','bhubondangaPublishedPoems','bhubondangaTodayProlapPosts','bhubondangaPublishedProlaps','bhubondangaLetterPosts','bhubondangaRecitationPosts','bhubondangaPublishedRecitations','bhubondangaPublishedEnvironmentPosts','bhubondangaEnvironmentPosts'];
 function readArray(k){try{const x=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(x)?x:[]}catch{return[]}}
@@ -2372,6 +2020,7 @@ const commentMo=new MutationObserver(ms=>{const cards=new Set();for(const m of m
 function boot(){prepareFonts();const c=$('#composer');if(c&&!c.dataset.bd71Stage)setStage('compact');if(c){c.hidden=false;c.removeAttribute('hidden')}scan();mo.observe(D.body,{childList:true,subtree:true});const host=$('#postList');if(host){reactionMo.observe(host,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden']});commentMo.observe(host,{subtree:true,childList:true,characterData:true})}clearTimeout(signalTimer);signalTimer=setTimeout(buildSignals,1700);D.addEventListener('bd:supabase-posts',()=>{setTimeout(()=>{scan();rankHome();buildSignals()},300)});const requested=new URLSearchParams(location.search).get('post');if(requested)setTimeout(()=>{const card=cardFor(requested);if(card){expand(card);card.scrollIntoView({block:'center',behavior:'auto'})}},550)}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
+
 </script>
 <style id="bd-v8103-targeted-final-css">.bd103-comment-delete{color:#b33f56!important;font-weight:800!important} .bd103-comment-delete:hover{background:rgba(179,63,86,.08)!important} #bd35CommentBackdrop,#bd35CommentSheet,#masterPostShell,.bd45-post-shell{display:none!important;visibility:hidden!important;pointer-events:none!important} body.bd35-comment-open{overflow-x:hidden!important} .post.bd63-media-open .post-media,.bd-live-post.bd63-media-open .post-media{width:100%!important;max-width:none!important;margin-inline:0!important;overflow:hidden!important;border-radius:14px!important} .post.bd63-media-open .post-media video,.bd-live-post.bd63-media-open .post-media video{width:100%!important;max-height:82dvh!important;object-fit:contain!important;background:#050607!important} .post.bd63-media-open .post-media img,.bd-live-post.bd63-media-open .post-media img{width:100%!important;max-height:82dvh!important;object-fit:contain!important} .post .post-media img,.post .post-media video,.bd-live-post .post-media img,.bd-live-post .post-media video{cursor:zoom-in} .post.bd63-media-open .post-media img,.post.bd63-media-open .post-media video,.bd-live-post.bd63-media-open .post-media img,.bd-live-post.bd63-media-open .post-media video{cursor:zoom-out}</style>
 <script id="bd-v8103-no-popup-final-guard">
@@ -3526,6 +3175,7 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 #bd107Reels{--bd143-sheet:#0f1014;--bd143-line:rgba(255,255,255,.13)}#bd107Reels .bd143-reel-comments{position:absolute;z-index:70;left:0;right:0;bottom:0;height:min(54dvh,520px);display:grid;grid-template-rows:auto minmax(0,1fr) auto;transform:translateY(104%);transition:transform .23s ease;border-top:1px solid var(--bd143-line);border-radius:20px 20px 0 0;background:rgba(12,13,17,.97);box-shadow:0 -18px 55px rgba(0,0,0,.42);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);color:#fff}.bd143-reel-comments.open{transform:none!important}.bd143-reel-comment-head{min-height:54px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd143-line)}.bd143-reel-comment-head strong{font-size:15px}.bd143-reel-comment-head button{width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.09);color:#fff;font-size:21px}.bd143-reel-comment-list{overflow:auto;padding:10px 12px 14px;display:grid;align-content:start;gap:10px;overscroll-behavior:contain}.bd143-reel-comment{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:start}.bd143-reel-comment-av{width:34px;height:34px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#7651e5,#95afe8);color:#fff;font-weight:800}.bd143-reel-comment-av img{width:100%;height:100%;object-fit:cover}.bd143-reel-comment-body{min-width:0;padding:8px 10px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(255,255,255,.075);font-size:11px;line-height:1.52;color:#f8f8fb;word-break:break-word}.bd143-reel-comment-body b{display:block;margin-bottom:2px;font-size:10.5px}.bd143-reel-comment-form{padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:8px;border-top:1px solid var(--bd143-line);background:#0a0b0e}.bd143-reel-comment-form input{height:44px;min-width:0;padding:0 12px;border:1px solid rgba(255,255,255,.16);border-radius:13px;background:#191b20;color:#fff;outline:0;font-size:16px}.bd143-reel-comment-form input:focus{border-color:#8ca0ff;box-shadow:0 0 0 3px rgba(120,139,255,.12)}.bd143-reel-comment-form button{width:44px;height:44px;border:0;border-radius:13px;background:linear-gradient(135deg,#7357ee,#3978ed);color:#fff;font-size:18px}.bd143-reel-empty{padding:18px;text-align:center;color:#aeb6c7;font-size:11px}#bd107Reels .bd107-comment-cta{border-radius:12px!important;text-align:left!important;padding-inline:14px!important}#bd107Reels .bd107-side-action{border-radius:14px!important}#bd31ReactionTray{z-index:2147483647!important}
 </style>
 <script id="bd-v8143-reels-social-js">
+
 (()=>{'use strict';const D=document,W=window,$=(s,c=D)=>c.querySelector(s),$$=(s,c=D)=>Array.from(c.querySelectorAll(s));if(W.__BD_V8143_REELS_SOCIAL__)return;W.__BD_V8143_REELS_SOCIAL__=true;
 const BAD=['মাদারচোদ','মাদারচোদা','ভ্যানচোদ','ভ্যাংচোদ','খানকির ছেলে','খানকি ছেলে','মাগির ছেলে','চোদাচুদি','motherfucker','mother fucker','fuck you','fucking bitch'];
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -3540,12 +3190,6 @@ async function toggleSheet(btn){const reel=reelOf(btn);if(!reel)return;const s=s
 /* Capture before the older reels handler, so comments stay inside the reel. */
 W.addEventListener('click',e=>{const b=e.target.closest?.('#bd107Reels [data-bd107-comment]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();toggleSheet(b)},true);
 W.addEventListener('click',e=>{if(e.target.closest?.('.bd143-reel-comments'))e.stopPropagation()},true);
-/* Facebook-style behavior: tap = current/default reaction; press-and-hold = full seven-reaction tray. */
-let hold=0,heldBtn=null,suppressUntil=0,startX=0,startY=0;
-W.addEventListener('pointerdown',e=>{const b=e.target.closest?.('#bd107Reels [data-bd107-like]');if(!b)return;heldBtn=b;startX=e.clientX||0;startY=e.clientY||0;clearTimeout(hold);hold=setTimeout(()=>{const r=reelOf(b),card=underlying(postId(r));if(card&&typeof W.__bd45OpenReactionTray==='function'){suppressUntil=Date.now()+700;W.__bd45OpenReactionTray(b,card)}},430)},true);
-W.addEventListener('pointermove',e=>{if(!heldBtn)return;if(Math.abs((e.clientX||0)-startX)+Math.abs((e.clientY||0)-startY)>12){clearTimeout(hold);heldBtn=null}},true);['pointerup','pointercancel'].forEach(ev=>W.addEventListener(ev,()=>{clearTimeout(hold);heldBtn=null},true));
-W.addEventListener('click',e=>{const b=e.target.closest?.('#bd107Reels [data-bd107-like]');if(b&&Date.now()<suppressUntil){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}},true);
-D.addEventListener('click',e=>{if(!e.target.closest?.('[data-bd31-tray-pick]'))return;setTimeout(()=>{const reel=$('#bd107Reels.open .bd107-reel');if(!reel)return;const id=postId(reel),card=underlying(id),main=card?.querySelector?.('[data-bd31-react-main]'),btn=$('[data-bd107-like]',reel);if(!main||!btn)return;const holder=main.querySelector('.bd31-main-reaction'),label=main.querySelector('[data-bd31-label]');if(holder?.innerHTML)btn.querySelector('.ico').innerHTML=holder.innerHTML;if(label)btn.querySelector('small').textContent=label.textContent},420)},true);
 })();
 </script>
 
@@ -3578,41 +3222,7 @@ D.addEventListener('click',e=>{if(!e.target.closest?.('[data-bd31-tray-pick]'))r
 }
 </style>
 
-<style id="bd-v8146-video-reels-lock-css">
-#bd45Reels,
-.bd45-post-shell:has(video),
-#masterPostShell:has(video),
-[data-media-viewer="video"],
-.legacy-video-viewer{
-  display:none!important;
-  visibility:hidden!important;
-  pointer-events:none!important;
-}
-#postList .bd107-video-preview{
-  position:relative!important;
-  cursor:pointer!important;
-  -webkit-tap-highlight-color:transparent!important;
-  touch-action:manipulation!important;
-}
-#postList .bd107-video-preview>video{pointer-events:none!important}
-#postList .bd138-open-reel,
-#postList .bd107-open-reel{
-  position:absolute!important;
-  inset:0!important;
-  z-index:12!important;
-  display:grid!important;
-  place-items:center!important;
-  border:0!important;
-  cursor:pointer!important;
-  -webkit-tap-highlight-color:transparent!important;
-  touch-action:manipulation!important;
-}
-#bd107Reels.open{
-  display:block!important;
-  visibility:visible!important;
-  pointer-events:auto!important;
-}
-</style>
+
 
 <style id="bd-v8152-index-reels-comments-fix">
 #bd107Reels .bd143-reel-comments{border-radius:0!important;box-shadow:0 -12px 34px rgba(0,0,0,.34)!important}
@@ -4446,7 +4056,7 @@ function currentUser(){for(const k of ['bhubondangaCurrentUser','currentUser','b
 function profileUrl(u){if(!u)return'login.html';const m=meta(u),role=String(u.role||m.role||'').toLowerCase(),name=String(u.displayName||u.display_name||u.name||m.full_name||m.name||u.username||m.username||''),username=String(u.username||m.username||'').toLowerCase(),id=u.id||u.uid||username;if(role==='founder'||username==='mahmud-sohel'||name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id||username);return'profile.html?v=842&user='+encodeURIComponent(id||username)}
 function userData(u){if(!u)return null;const m=meta(u),name=u.displayName||u.display_name||u.full_name||u.name||m.full_name||m.name||u.username||m.username||u.email?.split('@')[0]||'ভুবনডাঙ্গার সদস্য',avatar=u.avatar||u.avatar_url||u.photo||m.avatar_url||m.picture||'',role=String(u.role||m.role||'member');return{name,avatar,role,url:profileUrl(u)}}
 function identity(){return `<section class="bd172-card bd172-identity"><a class="bd172-leaf" href="index.html" aria-label="ভুবনডাঙ্গার কবিতা">🌿</a><h2>আপন ভুবন</h2><p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p><div class="bd172-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></section>`}
-function userCard(u){const x=userData(u);if(!x)return'';return `<section class="bd172-card bd172-user"><a class="bd172-user-main" href="${esc(x.url)}"><span class="bd172-user-avatar">${x.avatar?`<img src="${esc(x.avatar)}" alt="">`:esc(x.name.slice(0,1))}</span><span><strong>${esc(x.name)}</strong><small>${esc(x.role)} · আপনার ব্যক্তিগত ভুবন</small></span></a><div class="bd172-user-actions"><a href="${esc(x.url)}">প্রোফাইল</a><a href="notifications.html">নোটিফিকেশন</a><a href="messages.html">ইনবক্স</a></div></section>`}
+function userCard(u){const x=userData(u);if(!x)return'';return `<section class="bd172-card bd172-user"><a class="bd172-user-main" href="${esc(x.url)}"><span class="bd172-user-avatar">${x.avatar?`<img src="${esc(x.avatar)}" alt="">`:esc(x.name.slice(0,1))}</span><span><strong>${esc(x.name)}</strong><small>${esc(x.role)} · আপনার ব্যক্তিগত ভুবন</small></span></a><div class="bd172-user-actions"><a href="${esc(x.url)}">প্রোফাইল</a><a href="notifications.html">নোটিফিকেশন</a><a href="messages.html">ইনবক্স</a><button type="button" data-bd172-logout>লগআউট</button></div></section>`}
 function menuCard(title,sub,items){return `<section class="bd172-card"><div class="bd172-headrow"><h3>${esc(title)}</h3><small>${esc(sub)}</small></div><nav class="bd172-menu">${items.map(x=>`<a href="${esc(x[2])}"><span class="bd172-ico">${x[0]}</span><b>${esc(x[1])}</b><i>›</i></a>`).join('')}</nav></section>`}
 function themeCard(){const t=H.dataset.theme||H.dataset.bdTheme||'light';return `<section class="bd172-card"><div class="bd172-headrow"><h3>গ্লাস থিম</h3><small>সরাসরি পরিবর্তন</small></div><div class="bd172-theme"><button type="button" data-bd172-theme="light" class="${t==='light'?'active':''}">লাইট</button><button type="button" data-bd172-theme="middle" class="${t==='middle'?'active':''}">মিডল</button><button type="button" data-bd172-theme="dark" class="${t==='dark'?'active':''}">ডার্ক</button></div></section>`}
 function leftHTML(){const u=currentUser();return `<div class="bd172-root" data-bd172-side="left">${identity()}${u?userCard(u):''}${menuCard('আজকের সাহিত্যপথ','নির্বাচিত',groups.path)}${menuCard('ভুবনের দরজা','উন্মুক্ত',groups.door)}${themeCard()}</div>`}
@@ -4468,6 +4078,7 @@ D.addEventListener('click',e=>{
  const r=e.target.closest?.('#rightEdgeMenu,[data-bd9-handle="right"],.edge-menu-right');if(r&&W.innerWidth<=860){e.preventDefault();e.stopImmediatePropagation();openDrawer('right');return}
  if(e.target.closest?.('[data-bd172-close]')){e.preventDefault();e.stopImmediatePropagation();closeDrawer();return}
  if(e.target===backdrop()){e.preventDefault();closeDrawer();return}
+ const lo=e.target.closest?.('[data-bd172-logout]');if(lo){e.preventDefault();e.stopImmediatePropagation();Promise.resolve(W.BhubondangaAuth?.signOut?.()).finally(()=>{try{localStorage.removeItem('bhubondangaCurrentUser');sessionStorage.removeItem('bhubondangaSessionUser')}catch{}location.href='index.html'});return}
  const t=e.target.closest?.('[data-bd172-theme]');if(t){e.preventDefault();const next=t.dataset.bd172Theme||'light';H.dataset.theme=next;H.dataset.bdTheme=next;try{localStorage.setItem('bhubondangaTheme',next)}catch{};install();return}
 },true);
 W.addEventListener('popstate',()=>{if(drawerSide||$('#mobileDrawer.open')||$('#rightMobileDrawer.open'))closeRaw()},true);
@@ -4655,6 +4266,7 @@ W.BhubondangaSidebars172={open:openDrawer,close:closeDrawer,refresh:install};
 </style>
 
 <script id="bd-v8177-reels-font-card-studio-js">
+
 (()=>{'use strict';
 const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -4775,7 +4387,7 @@ function transformPostCard(card){
 function scanPostCards(root=D){const sel='#postList article.post,#postList article.bd-live-post,#postList .post-card[data-post],#postList .post-card[data-post-id]';if(root.matches?.(sel))transformPostCard(root);root.querySelectorAll?.(sel).forEach(transformPostCard)}
 const cardMO=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)scanPostCards(n)});
 
-function onComposerChange(e){if(e.target?.id==='postTitle'||e.target?.id==='postBody'||e.target?.id==='postImage')requestAnimationFrame(()=>{mountCardStudio();renderCardPreview()})}
+function onComposerChange(e){if(e.target?.id==='postTitle'||e.target?.id==='postBody'||e.target?.id==='postImage')requestAnimationFrame(()=>{if(selectedCard())renderCardPreview()})}
 function boot(){
   patchFontApi();renderFontManager();patchComposeStyle();mountCardStudio();decorateReels();scanPostCards();
   D.addEventListener('input',onComposerChange,true);D.addEventListener('change',onComposerChange,true);
@@ -4789,6 +4401,7 @@ function boot(){
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 W.BhubondangaCardStudio177={mount:mountCardStudio,select:selectCard,center:()=>setPos(50,50),clear:clearCardSelection,templates:CARD_TEMPLATES};
 })();
+
 </script>
 
 <script id="bd-v8178-runtime-recovery-master">
@@ -5191,7 +4804,7 @@ D.addEventListener('pointerup',e=>{
 },false);
 /* Bengali IME composition is left untouched; only refresh the live card after the composition is complete. */
 D.addEventListener('compositionstart',e=>{if(e.target?.id==='postTitle'||e.target?.id==='postBody')e.target.dataset.bd183Composing='1'},true);
-D.addEventListener('compositionend',e=>{if(e.target?.id==='postTitle'||e.target?.id==='postBody'){delete e.target.dataset.bd183Composing;try{W.BhubondangaCardStudio177?.mount?.()}catch(_){}}},true);
+D.addEventListener('compositionend',e=>{if(e.target?.id==='postTitle'||e.target?.id==='postBody'){delete e.target.dataset.bd183Composing;/* Do not remount composer/card DOM here: remounting after each Bengali IME glyph steals the caret. */}},true);
 const mo=new MutationObserver(()=>decorateFixedFonts());
 function boot(){decorateFixedFonts();prepareEditors();const row=$('#bd58FontToolbar .bd58-font-chips');if(row)mo.observe(row,{childList:true,subtree:false});[250,900,1800].forEach(ms=>setTimeout(()=>{decorateFixedFonts();prepareEditors()},ms))}
 D.addEventListener('bd:auth-ready',()=>setTimeout(()=>{decorateFixedFonts();prepareEditors()},50));
@@ -5200,242 +4813,228 @@ W.BhubondangaWriting183={goWrite:goWriteAndFocus,refresh:decorateFixedFonts};
 })();
 </script>
 
-<style id="bd-v8188-lightweight-runtime-css">
+<style id="bd-v8193-master-lock-css">
 
-:root{--bd188-line:rgba(103,121,157,.18);--bd188-soft:#687991;--bd188-ink:#20334b;--bd172-drawer-w:50vw!important}
-:is(html[data-theme="dark"],html[data-bd-theme="dark"]){--bd188-line:rgba(191,208,239,.16);--bd188-soft:#bdcbe0;--bd188-ink:#fff}
+/* BHUBONDANGA V8.193 — FINAL MASTER LOCK
+   Canonical social owner, no reaction borders, inline comments/replies,
+   lighter glass, stable composer, theme-safe templates and 50vw drawers. */
+:root{--bd193-line:rgba(99,116,151,.14);--bd193-soft:#697991;--bd193-ink:#20334b;--bd172-drawer-w:50vw!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]){--bd193-line:rgba(194,210,239,.13);--bd193-soft:#c2cee1;--bd193-ink:#fff}
 
-html[data-theme] .glass,html[data-theme] :is(.bd172-card,.post,.composer){box-shadow:0 4px 13px rgba(47,61,100,.04)!important}
-html[data-theme] .glass{backdrop-filter:blur(6.5px) saturate(104%)!important;-webkit-backdrop-filter:blur(6.5px) saturate(104%)!important}
-html[data-theme] .glass::before{opacity:.21!important}html[data-theme] .glass::after{opacity:.09!important}
-html[data-theme="dark"] .glass::after{opacity:.035!important}
+/* Another ~25% less glass than V8.192; also retire unnecessary compositing layers. */
+html[data-theme] .glass{backdrop-filter:blur(4.6px) saturate(102%)!important;-webkit-backdrop-filter:blur(4.6px) saturate(102%)!important;box-shadow:0 2px 8px rgba(42,57,93,.028)!important;transform:none!important}
+html[data-theme] .glass::before{opacity:.145!important}html[data-theme] .glass::after{opacity:.055!important}
+html[data-theme="dark"] .glass::before{opacity:.10!important}html[data-theme="dark"] .glass::after{opacity:.018!important}
+html[data-theme] :is(.bd172-card,.composer,.post){box-shadow:0 2px 8px rgba(38,52,84,.026)!important}
+html[data-theme] :is(.site-header,.date-bar,.topnav){backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important;box-shadow:none!important}
 
-@media(max-width:860px){
- #mobileDrawer,#rightMobileDrawer{width:50vw!important;max-width:50vw!important;padding-inline:7px!important;box-shadow:10px 0 24px rgba(14,27,50,.12)!important}
- #rightMobileDrawer{box-shadow:-10px 0 24px rgba(14,27,50,.12)!important}
- .bd172-drawer-head{min-height:64px!important;margin:0 -7px 8px!important;padding:calc(6px + env(safe-area-inset-top)) 8px 6px!important;backdrop-filter:blur(7px)!important;-webkit-backdrop-filter:blur(7px)!important}
- .bd172-drawer-title{font-size:12px!important;font-weight:680!important;gap:5px!important}.bd172-drawer-title .leaf{font-size:18px!important}
- .bd172-close{width:38px!important;height:38px!important;flex-basis:38px!important;font-size:24px!important;box-shadow:none!important}
- .bd172-root{gap:7px!important;padding-bottom:9px!important}.bd172-card{border-radius:13px!important;box-shadow:0 4px 12px rgba(34,51,84,.035)!important}
- .bd172-headrow{min-height:36px!important;padding:8px 9px 5px!important}.bd172-headrow h3{font-size:11px!important;font-weight:680!important}.bd172-headrow small{font-size:6.8px!important;font-weight:550!important}
- .bd172-identity{padding:12px 8px!important}.bd172-leaf{width:46px!important;height:46px!important;border-radius:13px!important;font-size:28px!important;margin-bottom:6px!important;box-shadow:none!important}.bd172-identity h2{font-size:17px!important;font-weight:700!important}.bd172-identity p{font-size:7.4px!important;line-height:1.45!important}.bd172-quote{margin-top:8px!important;padding:7px 8px!important;border-left-width:3px!important;font-size:6.8px!important}
- .bd172-user{padding:8px!important}.bd172-user-main{grid-template-columns:36px minmax(0,1fr)!important;gap:7px!important}.bd172-user-avatar{width:36px!important;height:36px!important;font-size:13px!important}.bd172-user strong{font-size:9px!important;font-weight:680!important}.bd172-user small{font-size:6.4px!important}.bd172-user-actions{margin-top:7px!important;gap:4px!important;grid-template-columns:1fr 1fr!important}.bd172-user-actions a,.bd172-user-actions button{min-height:34px!important;border-radius:9px!important;font-size:6.8px!important;font-weight:650!important}
- .bd172-menu{gap:4px!important;padding:0 7px 8px!important}.bd172-menu a{min-height:42px!important;padding:5px 6px!important;border-radius:10px!important;grid-template-columns:30px minmax(0,1fr) 8px!important;gap:5px!important;box-shadow:none!important}.bd172-ico{width:30px!important;height:30px!important;border-radius:8px!important;font-size:13px!important}.bd172-menu b{font-size:7.8px!important;font-weight:650!important}.bd172-menu i{font-size:12px!important}
- .bd172-welcome-strip{height:31px!important;margin:0 7px 5px!important;border-radius:9px!important;font-size:6.8px!important}.bd172-people{gap:4px!important;padding:0 7px 8px!important}.bd172-person{min-height:49px!important;padding:5px 6px!important;border-radius:10px!important;grid-template-columns:34px minmax(0,1fr) 8px!important;gap:6px!important;box-shadow:none!important}.bd172-avatar{width:34px!important;height:34px!important;font-size:11px!important}.bd172-person b{font-size:8px!important;font-weight:650!important}.bd172-person small{font-size:6.2px!important}.bd172-person i{font-size:12px!important}.bd172-member-scroll{max-height:270px!important}
- .bd172-profile-create{padding:10px 9px!important}.bd172-profile-create h3{font-size:12px!important;font-weight:680!important}.bd172-profile-create p{font-size:7px!important;margin:4px 0 8px!important}.bd172-auth-actions{gap:5px!important}.bd172-auth-actions a{min-height:37px!important;border-radius:9px!important;font-size:7.4px!important;font-weight:650!important}
- .bd172-theme{padding:0 7px 8px!important;gap:4px!important}.bd172-theme button{min-height:32px!important;border-radius:8px!important;font-size:7px!important;font-weight:650!important}
+/* Mobile drawers: exactly half viewport and visually thin/classic. */
+@media(max-width:899px){
+ #mobileDrawer,#rightMobileDrawer{width:50vw!important;max-width:50vw!important;padding-inline:5px!important;box-shadow:6px 0 14px rgba(12,25,48,.08)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ #rightMobileDrawer{box-shadow:-6px 0 14px rgba(12,25,48,.08)!important}
+ .bd172-drawer-head{min-height:58px!important;margin:0 -5px 6px!important;padding:calc(5px + env(safe-area-inset-top)) 7px 5px!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ .bd172-drawer-title{font-size:11px!important;font-weight:650!important}.bd172-close{width:34px!important;height:34px!important;flex-basis:34px!important;box-shadow:none!important}
+ .bd172-root{gap:6px!important}.bd172-card{border-radius:11px!important;box-shadow:none!important}.bd172-headrow{min-height:32px!important;padding:7px 8px 4px!important}.bd172-headrow h3{font-size:10px!important;font-weight:650!important}.bd172-headrow small{font-size:6.4px!important;font-weight:500!important}
+ .bd172-identity{padding:10px 7px!important}.bd172-leaf{width:40px!important;height:40px!important;border-radius:11px!important;font-size:24px!important;margin-bottom:5px!important;box-shadow:none!important}.bd172-identity h2{font-size:15px!important;font-weight:680!important}.bd172-identity p{font-size:7px!important}.bd172-quote{margin-top:6px!important;padding:6px 7px!important;font-size:6.4px!important}
+ .bd172-user{padding:7px!important}.bd172-user-main{grid-template-columns:34px minmax(0,1fr)!important;gap:6px!important}.bd172-user-avatar{width:34px!important;height:34px!important}.bd172-user strong{font-size:8.5px!important;font-weight:650!important}.bd172-user small{font-size:6px!important}
+ .bd172-menu{gap:3px!important;padding:0 6px 7px!important}.bd172-menu a{min-height:38px!important;padding:4px 5px!important;border-radius:8px!important;grid-template-columns:27px minmax(0,1fr) 7px!important;gap:5px!important;box-shadow:none!important}.bd172-ico{width:27px!important;height:27px!important;border-radius:7px!important;font-size:12px!important}.bd172-menu b{font-size:7.2px!important;font-weight:620!important}
+ .bd172-welcome-strip{height:28px!important;margin:0 6px 4px!important;border-radius:8px!important;font-size:6.4px!important}.bd172-people{gap:3px!important;padding:0 6px 7px!important}.bd172-person{min-height:44px!important;padding:4px 5px!important;border-radius:8px!important;grid-template-columns:30px minmax(0,1fr) 7px!important;gap:5px!important;box-shadow:none!important}.bd172-avatar{width:30px!important;height:30px!important}.bd172-person b{font-size:7.4px!important;font-weight:620!important}.bd172-person small{font-size:5.8px!important}
+ .bd172-profile-create{padding:8px!important}.bd172-profile-create h3{font-size:10.5px!important;font-weight:650!important}.bd172-profile-create p{font-size:6.5px!important;margin:3px 0 7px!important}.bd172-auth-actions{gap:4px!important}.bd172-auth-actions a{min-height:34px!important;border-radius:8px!important;font-size:6.8px!important;font-weight:650!important}
+ #leftEdgeMenu,#rightEdgeMenu,[data-bd9-handle]{top:50dvh!important;transform:translateY(-50%)!important;width:18px!important;height:50px!important;z-index:2147483400!important;pointer-events:auto!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:0 3px 9px rgba(22,34,61,.08)!important}
 }
 
-#bd188PublicFonts{margin:7px 0 8px;padding:6px 7px;border:1px solid var(--bd188-line);border-radius:12px;display:flex;justify-content:center;align-items:center;gap:7px;background:rgba(255,255,255,.32)}
-html[data-theme="dark"] #bd188PublicFonts{background:rgba(10,25,46,.38)}
-#bd188PublicFonts button{width:40px;height:40px;border:1px solid var(--bd188-line);border-radius:10px;background:rgba(255,255,255,.88);font-size:21px;font-weight:700;box-shadow:none;touch-action:manipulation}
-html[data-theme="dark"] #bd188PublicFonts button{background:#10233b}
-#bd188PublicFonts button:nth-child(1){color:#16815c}#bd188PublicFonts button:nth-child(2){color:#d54858}#bd188PublicFonts button:nth-child(3){color:#7650d5}#bd188PublicFonts button:nth-child(4){color:#2879c4}#bd188PublicFonts button:nth-child(5){color:#a97819}
+/* Logged-in profile card actions: classic black/white. */
+.bd172-user-actions{gap:4px!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}.bd172-user-actions :is(a,button){min-height:34px!important;font-size:7px!important;padding:4px 5px!important}
+.bd172-user-actions :is(a,button){box-shadow:none!important;border:1px solid rgba(37,48,66,.15)!important}
+.bd172-user-actions :is(a,button):nth-child(odd){background:#0c1118!important;color:#fff!important;border-color:#0c1118!important}
+.bd172-user-actions :is(a,button):nth-child(even){background:#fff!important;color:#162235!important;border-color:rgba(48,61,82,.18)!important}
+html[data-theme="dark"] .bd172-user-actions :is(a,button):nth-child(even){background:#f8fafc!important;color:#111827!important}
 
-:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList :is(.post,.bd-live-post,[data-post-card])[class*="style-tpl"] .post-body,
-:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList :is(.post,.bd-live-post,[data-post-card])[class*="style-tpl"] .post-body *{color:#172536!important;text-shadow:none!important}
-:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #postList :is(.post,.bd-live-post,[data-post-card])[class*="style-tpl"] .post-body{background-color:#fff!important}
-:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #composerForm[data-bd65-template]:not([data-bd65-template="none"]) #postBody{color:#172536!important;background-color:#fff!important}
+/* Author avatar must be a full photo, never half-photo/half-story decoration. */
+#postList .author-avatar{width:42px!important;height:42px!important;min-width:42px!important;max-width:42px!important;aspect-ratio:1!important;padding:0!important;border:0!important;border-radius:50%!important;overflow:hidden!important;background:transparent!important;box-shadow:none!important;position:relative!important}
+#postList .author-avatar::before,#postList .author-avatar::after{display:none!important;content:none!important}
+#postList .author-avatar img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;min-width:100%!important;max-width:none!important;object-fit:cover!important;object-position:center!important;border:0!important;border-radius:50%!important;margin:0!important;padding:0!important}
+#postList .author-avatar:has(img)>:not(img){display:none!important}
+#postList .author-name-row a,#postList .author-avatar[href],#postList .bd193-comment-author{pointer-events:auto!important;cursor:pointer!important;text-decoration:none!important;position:relative!important;z-index:8!important}
 
-#postList :is(.bd31-social,.bd24-social,.bdx-social,.bd-fb-counts,.bd-facebook-action-row,.post-actions):not(.bd188-actions){display:none!important}
-#postList .bd188-social{display:block!important;width:100%;min-height:72px;border-top:1px solid var(--bd188-line);overflow-anchor:none;contain:layout style}
-#postList .bd188-summary{height:28px;min-height:28px;display:flex;align-items:center;justify-content:space-between;padding:3px 8px;color:var(--bd188-soft);font:500 10px/1.2 'Noto Sans Bengali',sans-serif;overflow:hidden}
-#postList .bd188-summary button{border:0;background:transparent;color:inherit;display:flex;align-items:center;gap:5px;min-width:0}.bd188-stack{display:flex;align-items:center}.bd188-stack img{width:18px;height:18px;margin-right:-4px;border:1px solid var(--surface-solid,#fff);border-radius:50%}
-#postList .bd188-actions{height:44px;min-height:44px;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;padding:2px 5px;border-top:1px solid var(--bd188-line)}
-#postList .bd188-action{min-width:0;border:0;border-radius:7px;background:transparent;color:var(--bd188-soft);display:flex;align-items:center;justify-content:center;gap:6px;font:650 11px/1 'Noto Sans Bengali',sans-serif;touch-action:manipulation}.bd188-action svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.bd188-action img{width:22px;height:22px;object-fit:contain}.bd188-action.active{color:#1877f2}
-#bd188ReactionTray{position:fixed;z-index:2147483647;display:none;align-items:center;gap:2px;padding:5px 6px;border:1px solid rgba(130,142,173,.25);border-radius:999px;background:rgba(255,255,255,.98);box-shadow:0 8px 26px rgba(25,36,66,.22);overflow:visible}html[data-theme="dark"] #bd188ReactionTray{background:#17243a;border-color:rgba(255,255,255,.16)}#bd188ReactionTray.open{display:flex}#bd188ReactionTray button{width:38px;height:38px;border:0;border-radius:50%;background:transparent;display:grid;place-items:center;padding:2px;overflow:visible}#bd188ReactionTray img{width:35px;height:35px;object-fit:contain;transition:transform .14s ease;transform-origin:50% 100%}@media(hover:hover){#bd188ReactionTray button:hover img{transform:translateY(-7px) scale(1.2)}}#bd188ReactionTray button:active img{transform:translateY(-4px) scale(1.12)}
-#postList .bd188-comments{display:none;padding:8px 9px 10px;border-top:1px solid var(--bd188-line);background:rgba(248,250,253,.54);overflow-anchor:none}#postList .bd188-comments.open{display:block}html[data-theme="dark"] #postList .bd188-comments{background:#09182b}
-.bd188-comment-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;color:var(--bd188-ink);font:650 11px 'Noto Sans Bengali',sans-serif}.bd188-comment-head button{width:30px;height:30px;border:0;border-radius:50%;background:rgba(110,125,158,.10);color:inherit;font-size:18px}
-.bd188-comment-list{display:grid;gap:8px;max-height:46vh;overflow:auto;overscroll-behavior:contain}.bd188-comment{display:grid;grid-template-columns:32px minmax(0,1fr);gap:7px;align-items:start}.bd188-comment-av{width:32px;height:32px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#7280d8;color:#fff;font-size:10px}.bd188-comment-av img{width:100%;height:100%;object-fit:cover}.bd188-comment-bubble{justify-self:start;max-width:min(82%,620px);padding:7px 10px;border-radius:14px;background:#eef1f5;color:#172536;font:500 10.5px/1.5 'Noto Sans Bengali',sans-serif;word-break:break-word}.bd188-comment-bubble strong{display:block;color:#111d2d!important;font-size:10px;margin-bottom:1px}html[data-theme="dark"] .bd188-comment-bubble{background:#14263d;color:#fff!important}html[data-theme="dark"] .bd188-comment-bubble strong{color:#fff!important}
-.bd188-comment-form{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:6px;margin-top:8px}.bd188-comment-form input{height:40px;min-width:0;padding:0 12px;border:1px solid var(--bd188-line);border-radius:999px;background:#fff;color:#172536;font-size:16px;outline:none}.bd188-comment-form input::placeholder{color:#7f8a9a;opacity:1}.bd188-comment-form button{width:40px;height:40px;border:0;border-radius:50%;background:#526fd0;color:#fff;font-size:17px}html[data-theme="dark"] .bd188-comment-form input{background:#0d2037;color:#fff}html[data-theme="dark"] .bd188-comment-form input::placeholder{color:#aebbd0}
+/* Canonical social row. Old owners are retired visually. */
+#postList :is(.bd31-social,.bd24-social,.bdx-social,.bd-fb-counts,.bd-facebook-action-row,.bd188-social,.post-actions){display:none!important}
+#postList .bd193-social{display:block!important;width:100%!important;min-height:70px!important;border-top:1px solid var(--bd193-line)!important;overflow-anchor:none!important;contain:layout style!important}
+#postList .bd193-summary{height:27px!important;min-height:27px!important;padding:2px 7px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;color:var(--bd193-soft)!important;font:500 10px/1.2 'Noto Sans Bengali',sans-serif!important;border:0!important}
+#postList .bd193-summary button{min-height:22px!important;border:0!important;background:transparent!important;color:inherit!important;padding:0!important;display:flex!important;align-items:center!important;gap:5px!important;box-shadow:none!important}
+.bd193-stack{display:flex;align-items:center;min-width:18px}.bd193-stack .bd193-rx{width:18px!important;height:18px!important;margin-right:-4px!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;outline:0!important}
+#postList .bd193-actions{height:43px!important;min-height:43px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:2px!important;padding:2px 4px!important;border-top:1px solid var(--bd193-line)!important}
+#postList .bd193-action{min-width:0!important;border:0!important;outline:0!important;border-radius:6px!important;background:transparent!important;color:var(--bd193-soft)!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;font:620 11px/1 'Noto Sans Bengali',sans-serif!important;box-shadow:none!important;touch-action:manipulation!important;transform:none!important;animation:none!important}
+#postList .bd193-action svg:not(.bd193-rx){width:21px!important;height:21px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+#postList .bd193-action .bd193-rx{width:22px!important;height:22px!important;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important}
+#postList .bd193-action.active{color:var(--bd193-active,#1877f2)!important}
 
-#bd107Reels .bd143-reel-comments,#bdxReels .bdx-reel-comments{border-radius:24px 24px 0 0!important;background:rgba(14,15,20,.98)!important;box-shadow:0 -10px 34px rgba(0,0,0,.32)!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;overflow:hidden!important}
-#bd107Reels .bd143-reel-comments::before,#bdxReels .bdx-reel-comments::before{content:"";position:absolute;top:7px;left:50%;width:42px;height:4px;border-radius:99px;background:rgba(255,255,255,.28);transform:translateX(-50%);z-index:4}
-#bd107Reels .bd143-reel-comment-head{padding-top:8px!important}.bd143-reel-comment-head button,[data-bdx-reel-comments-close]{border-radius:50%!important}
+/* Facebook-like reaction tray — floating capsule, zero borders around reactions. */
+#bd193ReactionTray{position:fixed!important;z-index:2147483647!important;display:none;align-items:center;gap:1px;padding:5px 6px;border:0!important;border-radius:999px;background:#fff;box-shadow:0 8px 22px rgba(20,30,55,.18);overflow:visible;contain:layout paint}
+html[data-theme="dark"] #bd193ReactionTray{background:#172237}
+#bd193ReactionTray.open{display:flex}
+#bd193ReactionTray button{width:39px;height:39px;padding:2px;border:0!important;outline:0!important;border-radius:50%;background:transparent!important;box-shadow:none!important;display:grid;place-items:center;overflow:visible}
+#bd193ReactionTray .bd193-rx{width:36px;height:36px;border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;transition:transform .14s ease;transform-origin:50% 100%}
+@media(hover:hover){#bd193ReactionTray button:hover .bd193-rx{transform:translateY(-7px) scale(1.18)}}
+#bd193ReactionTray button:active .bd193-rx{transform:translateY(-4px) scale(1.1)}
+
+/* Modern inline comments, replies and comment reactions. */
+#postList .bd193-comments{display:none;padding:9px 9px 10px;border-top:1px solid var(--bd193-line);background:rgba(250,251,253,.70);overflow-anchor:none;border-radius:0 0 14px 14px}
+#postList .bd193-comments.open{display:block}
+html[data-theme="dark"] #postList .bd193-comments{background:#0a192b;color:#fff}
+.bd193-comment-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;color:var(--bd193-ink);font:650 12px 'Noto Sans Bengali',sans-serif}.bd193-comment-head button{width:30px;height:30px;border:0;border-radius:50%;background:rgba(113,126,157,.10);color:inherit;font-size:18px;box-shadow:none}
+.bd193-comment-list{display:grid;gap:9px;max-height:52vh;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin}
+.bd193-comment{display:grid;grid-template-columns:32px minmax(0,1fr);gap:7px;align-items:start;min-width:0}
+.bd193-comment.is-reply{grid-template-columns:28px minmax(0,1fr);margin-left:24px}.bd193-comment.is-reply .bd193-comment-av{width:28px;height:28px}
+.bd193-comment-av{width:32px;height:32px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:#7181d7;color:#fff;font-size:10px;text-decoration:none}.bd193-comment-av img{width:100%;height:100%;object-fit:cover}
+.bd193-comment-main{min-width:0}.bd193-comment-bubble{display:inline-block;max-width:min(92%,650px);padding:7px 10px;border-radius:15px;background:#eef1f5;color:#172536;font:500 11px/1.48 'Noto Sans Bengali',sans-serif;word-break:break-word}.bd193-comment-bubble strong{display:block;margin-bottom:1px;font-size:10.5px}.bd193-comment-bubble strong a{color:#111d2d!important;font-weight:700!important}
+html[data-theme="dark"] .bd193-comment-bubble{background:#14263d;color:#fff!important}html[data-theme="dark"] .bd193-comment-bubble strong a{color:#fff!important}
+.bd193-comment-meta{min-height:22px;display:flex;align-items:center;gap:9px;padding:2px 4px 0;color:var(--bd193-soft);font:600 8.5px/1.2 'Noto Sans Bengali',sans-serif}.bd193-comment-meta button{border:0;background:transparent;color:inherit;padding:2px 0;font:inherit;font-weight:700;box-shadow:none}.bd193-comment-meta button.active{color:#1877f2}.bd193-comment-rxsum{display:inline-flex;align-items:center;gap:2px;margin-left:auto}.bd193-comment-rxsum .bd193-rx{width:14px;height:14px;border:0!important}
+.bd193-reply-form{display:none;grid-template-columns:minmax(0,1fr) 34px;gap:5px;margin:5px 0 1px 4px;max-width:560px}.bd193-reply-form.open{display:grid}.bd193-reply-form input,.bd193-comment-form input{min-width:0;border:1px solid var(--bd193-line);border-radius:999px;background:#fff;color:#172536;outline:none;font-size:16px}.bd193-reply-form input{height:34px;padding:0 10px}.bd193-reply-form button{width:34px;height:34px;border:0;border-radius:50%;background:#526fd0;color:#fff}
+.bd193-comment-form{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:6px;margin-top:9px}.bd193-comment-form input{height:40px;padding:0 12px}.bd193-comment-form button{width:40px;height:40px;border:0;border-radius:50%;background:#526fd0;color:#fff;font-size:17px}
+html[data-theme="dark"] :is(.bd193-comment-form input,.bd193-reply-form input){background:#0d2037!important;color:#fff!important}html[data-theme="dark"] :is(.bd193-comment-form input,.bd193-reply-form input)::placeholder{color:#aebbd0!important;opacity:1}
+
+/* Continuous writing: textarea is always an actual text editor, never a one-glyph control. */
+#composerForm #postTitle,#composerForm #postBody{pointer-events:auto!important;-webkit-user-select:text!important;user-select:text!important;-webkit-touch-callout:default!important;touch-action:auto!important;caret-color:currentColor!important;animation:none!important;transform:none!important;transition:none!important}
+#composerForm #postBody{font-size:max(16px,1em)!important;line-height:1.85!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+
+/* Public signature stays visible to guests; custom/premium rows appear only in writing mode. */
+#composer #bd58FontToolbar{display:block!important;width:100%!important;margin:7px auto 9px!important;padding:7px 6px!important;text-align:center!important;overflow:hidden!important;background:rgba(255,255,255,.18)!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+#composer #bd58FontToolbar .bd58-tool-title{display:block!important;width:100%!important;margin:0 0 6px!important;text-align:center!important;font-size:13px!important;font-weight:680!important}
+#composer #bd58FontToolbar .bd58-font-chips{width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;padding:2px!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;flex-wrap:nowrap!important;scrollbar-width:none!important;touch-action:pan-x!important}
+#composer #bd58FontToolbar .bd58-font-chips::-webkit-scrollbar{display:none!important}
+#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]{flex:0 0 44px!important;width:44px!important;min-width:44px!important;max-width:44px!important;height:44px!important;padding:0!important;margin:0!important;border-radius:10px!important;display:grid!important;place-items:center!important;font-size:0!important;line-height:1!important;box-shadow:none!important;touch-action:pan-x manipulation!important}
+#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]::before{content:attr(data-bd193-glyph)!important;display:block!important;font:800 24px/1 'Noto Serif Bengali','Noto Sans Bengali',serif!important;color:currentColor!important;-webkit-text-fill-color:currentColor!important}
+#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]::after{display:none!important;content:none!important}
+#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="subha"]{color:#16815c!important}#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="masud"]{color:#d54858!important}#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="kobiguru"]{color:#7650d5!important}#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="bornomala"]{color:#2879c4!important}#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="jannati"]{color:#a97819!important}
+#composer:not([data-bd71-stage="write"]) #bd58FontToolbar .bd179-font-chip{display:none!important}#composer[data-bd71-stage="write"] #bd58FontToolbar .bd179-font-chip{display:flex!important}
+
+/* Template = light literary canvas in every site theme; art remains visible under a readability veil. */
+#composerForm.bd193-template-active #postBody{color:#152536!important;-webkit-text-fill-color:#152536!important;background-color:#fff!important;background-blend-mode:screen!important;text-shadow:none!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) #composerForm.bd193-template-active #postBody{color:#111d2d!important;-webkit-text-fill-color:#111d2d!important;background-color:#fff!important}
+#postList :is(.post,.bd-live-post,[data-post-card])[class*="style-tpl"] .post-body{color:#172536!important;-webkit-text-fill-color:#172536!important;background-color:#fff!important;background-blend-mode:screen!important;text-shadow:none!important}
+#postList :is(.post,.bd-live-post,[data-post-card])[class*="style-tpl"] .post-body *{color:inherit!important;-webkit-text-fill-color:inherit!important}
+
+/* Reels opener must sit above feed video and receive the tap. */
+#postList .bd107-video-preview{position:relative!important;overflow:hidden!important;background:#050607!important}#postList .bd107-open-reel{pointer-events:auto!important;z-index:18!important;touch-action:manipulation!important}
+
 </style>
-<style id="bd-v8189-final-interaction-css">
-html.bd189-no-smooth{scroll-behavior:auto!important}
-@media(max-width:899px){#leftEdgeMenu,#rightEdgeMenu,[data-bd9-handle]{top:50dvh!important;transform:translateY(-50%)!important;width:20px!important;height:54px!important;z-index:2147483400!important;pointer-events:auto!important;opacity:.92!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;box-shadow:0 5px 14px rgba(26,38,68,.10)!important}#leftEdgeMenu{left:0!important}#rightEdgeMenu{right:0!important}}
-#postList .author-name-row a,#postList .author-avatar[href],#postList .bd189-author-link,#postList .bd188-comment-bubble a{position:relative!important;z-index:8!important;pointer-events:auto!important;cursor:pointer!important;text-decoration:none!important}
-#postList .bd188-comment-bubble strong a{color:inherit!important;font-weight:inherit!important}
-html[data-theme] .bd172-drawer-head,html[data-theme] #mobileDrawer,html[data-theme] #rightMobileDrawer{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-</style>
-<style id="bd-v8190-inline-reaction-art-css">
-/* V8.190 — reaction artwork is inline SVG: no external/data image loading, no broken-image glyphs. */
-.bd190-rx-svg{display:block!important;overflow:visible!important;flex:0 0 auto!important;pointer-events:none!important;filter:none!important;box-shadow:none!important}
-#postList .bd188-stack .bd190-rx-svg{width:18px!important;height:18px!important;margin-right:-4px!important;border:1px solid var(--surface-solid,#fff)!important;border-radius:50%!important;background:transparent!important}
-#postList .bd188-action .bd190-rx-svg{width:22px!important;height:22px!important}
-#bd188ReactionTray .bd190-rx-svg{width:35px!important;height:35px!important;transition:transform .14s ease!important;transform-origin:50% 100%!important}
-@media(hover:hover){#bd188ReactionTray button:hover .bd190-rx-svg{transform:translateY(-7px) scale(1.2)!important}}
-#bd188ReactionTray button:active .bd190-rx-svg{transform:translateY(-4px) scale(1.12)!important}
-#postList .bd188-stack img,#postList .bd188-action img,#bd188ReactionTray img{display:none!important}
-</style>
-<script id="bd-v8188-lightweight-runtime-js">
-(()=>{'use strict';if(window.__BD_V8188__)return;window.__BD_V8188__=1;
+
+
+<script id="bd-v8193-master-lock-js">
+
+(()=>{'use strict';if(window.__BD_V8193__)return;window.__BD_V8193__=1;
 const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
 const CARD='#postList article.post,#postList article.bd-live-post,#postList .post-card[data-post],#postList .post-card[data-post-id],#postList [data-post-card],#postList [data-post-id]';
 const ORDER=['like','love','care','haha','wow','sad','angry'];
-const RXSVG={
- like:'<circle cx="32" cy="32" r="30" fill="#1877F2"/><path fill="#fff" d="M25 50H15c-2 0-3.5-1.5-3.5-3.5v-20c0-2 1.5-3.5 3.5-3.5h10v27Zm5-27c3-4 5-9 5-14 0-2 1-3 2.7-3 4.7 0 7.3 4.2 6.2 9.3L42.5 22H51c4.4 0 7.4 4.1 6.2 8.3l-4.1 14.2A7.4 7.4 0 0 1 46 50H29V25.5c0-1 .3-1.8 1-2.5Z"/>',
- love:'<circle cx="32" cy="32" r="30" fill="#F55368"/><path fill="#fff" d="M32 49 15.8 33.6C7.5 25.7 12.8 13 22.4 13c4.2 0 7.5 2.3 9.6 5.2 2.1-2.9 5.4-5.2 9.6-5.2 9.6 0 14.9 12.7 6.6 20.6L32 49Z"/>',
- care:'<circle cx="32" cy="32" r="30" fill="#F7B928"/><circle cx="22" cy="25" r="3" fill="#5b3b19"/><circle cx="42" cy="25" r="3" fill="#5b3b19"/><path d="M21 35c6 6 16 6 22 0" fill="none" stroke="#5b3b19" stroke-width="3.5" stroke-linecap="round"/><path fill="#f55368" d="M32 52C15 42 13 32 20 28c5-3 10 0 12 4 2-4 7-7 12-4 7 4 5 14-12 24Z"/>',
- haha:'<circle cx="32" cy="32" r="30" fill="#FFD84F"/><path d="M15 24c4-5 9-5 13 0M36 24c4-5 9-5 13 0" fill="none" stroke="#654500" stroke-width="3.5" stroke-linecap="round"/><path fill="#6b3200" d="M17 34h30c-1.3 12-7 19-15 19S18.3 46 17 34Z"/><path fill="#fff" d="M20 34h24c-.6 3-2.2 5.5-4 7H24c-2-1.7-3.4-4-4-7Z"/>',
- wow:'<circle cx="32" cy="32" r="30" fill="#FFD84F"/><circle cx="21" cy="25" r="4" fill="#5C4200"/><circle cx="43" cy="25" r="4" fill="#5C4200"/><ellipse cx="32" cy="43" rx="8" ry="11" fill="#6B3500"/>',
- sad:'<circle cx="32" cy="32" r="30" fill="#FFD84F"/><circle cx="22" cy="29" r="2.5" fill="#654500"/><circle cx="42" cy="29" r="2.5" fill="#654500"/><path d="M22 47c6-6 14-6 20 0" fill="none" stroke="#654500" stroke-width="3.5" stroke-linecap="round"/><path fill="#4DA4FF" d="M48 32c0 7-3.8 11-7 11s-4.7-3.8-2.4-7.5L43 29l5 3Z"/>',
- angry:'<circle cx="32" cy="32" r="30" fill="#E95B38"/><path d="m15 21 13 5M49 21l-13 5" fill="none" stroke="#5B250F" stroke-width="4" stroke-linecap="round"/><circle cx="23" cy="31" r="3" fill="#5B250F"/><circle cx="41" cy="31" r="3" fill="#5B250F"/><path d="M21 48c6-7 16-7 22 0" fill="none" stroke="#5B250F" stroke-width="4" stroke-linecap="round"/>'
-};
 const LABEL={like:'লাইক',love:'ভালোবাসা',care:'কেয়ার',haha:'হাহা',wow:'ওয়াও',sad:'দুঃখিত',angry:'রাগ'};
-W.BD52_REACTION_SRC=W.BD52_REACTION_SRC||{};/* V8.192: inline SVG reactions are self-contained; no legacy asset map required. */
+const COLOR={like:'#1877f2',love:'#f55368',care:'#f7b928',haha:'#f7b928',wow:'#f7b928',sad:'#f7b928',angry:'#e95b38'};
+const RX={
+like:'<circle cx="32" cy="32" r="30" fill="#1877F2"/><path fill="#fff" d="M25 50H15c-2 0-3.5-1.5-3.5-3.5v-20c0-2 1.5-3.5 3.5-3.5h10v27Zm5-27c3-4 5-9 5-14 0-2 1-3 2.7-3 4.7 0 7.3 4.2 6.2 9.3L42.5 22H51c4.4 0 7.4 4.1 6.2 8.3l-4.1 14.2A7.4 7.4 0 0 1 46 50H29V25.5c0-1 .3-1.8 1-2.5Z"/>',
+love:'<circle cx="32" cy="32" r="30" fill="#F55368"/><path fill="#fff" d="M32 49 15.8 33.6C7.5 25.7 12.8 13 22.4 13c4.2 0 7.5 2.3 9.6 5.2 2.1-2.9 5.4-5.2 9.6-5.2 9.6 0 14.9 12.7 6.6 20.6L32 49Z"/>',
+care:'<circle cx="32" cy="32" r="30" fill="#F7B928"/><circle cx="22" cy="25" r="3" fill="#5b3b19"/><circle cx="42" cy="25" r="3" fill="#5b3b19"/><path d="M21 35c6 6 16 6 22 0" fill="none" stroke="#5b3b19" stroke-width="3.5" stroke-linecap="round"/><path fill="#f55368" d="M32 52C15 42 13 32 20 28c5-3 10 0 12 4 2-4 7-7 12-4 7 4 5 14-12 24Z"/>',
+haha:'<circle cx="32" cy="32" r="30" fill="#FFD84F"/><path d="M15 24c4-5 9-5 13 0M36 24c4-5 9-5 13 0" fill="none" stroke="#654500" stroke-width="3.5" stroke-linecap="round"/><path fill="#6b3200" d="M17 34h30c-1.3 12-7 19-15 19S18.3 46 17 34Z"/><path fill="#fff" d="M20 34h24c-.6 3-2.2 5.5-4 7H24c-2-1.7-3.4-4-4-7Z"/>',
+wow:'<circle cx="32" cy="32" r="30" fill="#FFD84F"/><circle cx="21" cy="25" r="4" fill="#5C4200"/><circle cx="43" cy="25" r="4" fill="#5C4200"/><ellipse cx="32" cy="43" rx="8" ry="11" fill="#6B3500"/>',
+sad:'<circle cx="32" cy="32" r="30" fill="#FFD84F"/><circle cx="22" cy="29" r="2.5" fill="#654500"/><circle cx="42" cy="29" r="2.5" fill="#654500"/><path d="M22 47c6-6 14-6 20 0" fill="none" stroke="#654500" stroke-width="3.5" stroke-linecap="round"/><path fill="#4DA4FF" d="M48 32c0 7-3.8 11-7 11s-4.7-3.8-2.4-7.5L43 29l5 3Z"/>',
+angry:'<circle cx="32" cy="32" r="30" fill="#E95B38"/><path d="m15 21 13 5M49 21l-13 5" fill="none" stroke="#5B250F" stroke-width="4" stroke-linecap="round"/><circle cx="23" cy="31" r="3" fill="#5B250F"/><circle cx="41" cy="31" r="3" fill="#5B250F"/><path d="M21 48c6-7 16-7 22 0" fill="none" stroke="#5B250F" stroke-width="4" stroke-linecap="round"/>'};
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const bn=n=>String(Number(n)||0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
 const client=()=>W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null;
+let sessionCache=null,sessionAt=0;
+async function session(){if(Date.now()-sessionAt<12000)return sessionCache;try{sessionCache=(await client()?.auth?.getSession?.()).data?.session||W.__BD_LIVE_SESSION||null}catch{sessionCache=W.__BD_LIVE_SESSION||null}sessionAt=Date.now();return sessionCache}
 function pid(c){return String(c?.dataset?.post||c?.dataset?.postId||c?.getAttribute?.('data-post')||c?.getAttribute?.('data-post-id')||'').trim()}
 function cards(root=D){const a=[];if(root.matches?.(CARD))a.push(root);root.querySelectorAll?.(CARD).forEach(x=>a.push(x));return [...new Set(a)]}
-async function session(){try{return (await client()?.auth?.getSession?.()).data?.session||null}catch{return null}}
-function localGet(k,d=[]){try{return JSON.parse(localStorage.getItem(k)||'null')??d}catch{return d}}function localSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+function localGet(k,d){try{return JSON.parse(localStorage.getItem(k)||'null')??d}catch{return d}}function localSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 function dedupe(rows){const m=new Map(),anon=[];for(const x of Array.isArray(rows)?rows:[]){const u=String(x?.user_id||x?.author_id||'');if(u)m.set(u,x);else anon.push(x)}return[...m.values(),...anon]}
+function rxSvg(k,small=false){k=ORDER.includes(k)?k:'like';const z=small?18:22;return `<svg class="bd193-rx ${k}" viewBox="0 0 64 64" width="${z}" height="${z}" aria-hidden="true">${RX[k]}</svg>`}
+function actionSvg(k){return k==='comment'?'<svg viewBox="0 0 24 24"><path d="M20 15a4 4 0 0 1-4 4H8l-5 3v-7a4 4 0 0 1-1-3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"/></svg>':'<svg viewBox="0 0 24 24"><path d="M15 5 21 11l-6 6"/><path d="M20 11H9a6 6 0 0 0-6 6v2"/></svg>'}
 function personHref(x={}){const role=String(x.role||x.author_role||'').toLowerCase(),name=String(x.author_name||x.display_name||x.name||''),u=String(x.author_username||x.username||'').replace(/^@/,'').toLowerCase(),id=x.author_id||x.user_id||x.id||u;if(role==='founder'||u==='mahmud-sohel'||name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);return'profile.html?v=842&user='+encodeURIComponent(id||u||'member')}
-function ensureAuthorLink(card){if(!card)return;const strong=$('.author-name-row strong,.author-meta strong',card);if(!strong)return;let href=$('.author-name-row a[href],.author-meta a[href],a.author-avatar[href]',card)?.getAttribute('href')||'';if(!href||href==='#')return;let a=strong.closest('a');if(!a){a=D.createElement('a');a.href=href;a.className='bd189-author-link';strong.replaceWith(a);a.appendChild(strong)}else{a.classList.add('bd189-author-link');a.href=href}const av=$('.author-avatar',card);if(av&&av.tagName==='A')av.href=href}
-async function reactionRows(id){const c=client();if(c){try{const r=await c.rpc('get_post_social',{target_post:String(id)});if(!r.error){const d=Array.isArray(r.data)?r.data[0]:r.data;if(Array.isArray(d?.reactions))return dedupe(d.reactions)}}catch{}for(const t of ['post_reactions','reactions'])try{const r=await c.from(t).select('user_id,reaction').eq('post_id',id).limit(500);if(!r.error)return dedupe(r.data||[])}catch{}}return dedupe(localGet('bd188-rx-'+id,[]))}
-async function comments(id){const c=client();if(c)try{let r=await c.from('comments').select('*').eq('post_id',id).eq('status','published').order('created_at',{ascending:true}).limit(200);if(r.error)r=await c.from('comments').select('*').eq('post_id',id).order('created_at',{ascending:true}).limit(200);if(!r.error)return r.data||[]}catch{}return localGet('bd188-comments-'+id,[])}
-function anchor(card){let sc=card?.parentElement;while(sc&&sc!==D.body&&sc!==D.documentElement){const cs=getComputedStyle(sc);if(/auto|scroll/.test(cs.overflowY)&&sc.scrollHeight>sc.clientHeight+2)break;sc=sc.parentElement}const win=!sc||sc===D.body||sc===D.documentElement;return{card,sc:win?null:sc,top:card?.getBoundingClientRect?.().top||0}}
-function restore(a){if(!a?.card?.isConnected)return;const run=()=>{if(!a.card.isConnected)return;const d=a.card.getBoundingClientRect().top-a.top;if(Math.abs(d)<=.6)return;const root=D.documentElement,old=root.style.scrollBehavior;root.style.scrollBehavior='auto';if(a.sc){const os=a.sc.style.scrollBehavior;a.sc.style.scrollBehavior='auto';a.sc.scrollTop+=d;a.sc.style.scrollBehavior=os}else W.scrollTo(W.scrollX||0,(W.scrollY||0)+d);root.style.scrollBehavior=old};requestAnimationFrame(run);setTimeout(run,70);setTimeout(run,170)}
-async function setReaction(id,type,card){const s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}const c=client();let ok=false;if(c){try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:type});if(!r.error)ok=true}catch{}if(!ok)for(const t of ['post_reactions','reactions']){try{const cur=await c.from(t).select('reaction').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;if(cur.data?.reaction===type)r=await c.from(t).delete().eq('post_id',id).eq('user_id',s.user.id);else if(cur.data)r=await c.from(t).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);else r=await c.from(t).insert({post_id:id,user_id:s.user.id,reaction:type});if(!r.error){ok=true;break}}catch{}}}if(!ok){let a=dedupe(localGet('bd188-rx-'+id,[])),old=a.find(x=>String(x.user_id)===String(s.user.id));a=a.filter(x=>String(x.user_id)!==String(s.user.id));if(!old||old.reaction!==type)a.push({user_id:s.user.id,reaction:type});localSet('bd188-rx-'+id,a);ok=true}return ok}
-function ico(k,small=false){k=ORDER.includes(k)?k:'like';const z=small?18:22;return `<svg class="bd190-rx-svg ${k}" viewBox="0 0 64 64" width="${z}" height="${z}" aria-hidden="true" focusable="false">${RXSVG[k]}</svg>`}
-function sv(k){return k==='comment'?'<svg viewBox="0 0 24 24"><path d="M20 15a4 4 0 0 1-4 4H8l-5 3v-7a4 4 0 0 1-1-3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"/></svg>':'<svg viewBox="0 0 24 24"><path d="M15 5 21 11l-6 6"/><path d="M20 11H9a6 6 0 0 0-6 6v2"/></svg>'}
-function markup(id){return `<section class="bd188-social" data-bd188-social="${esc(id)}"><div class="bd188-summary"><button type="button" data-bd188-summary><span class="bd188-stack"></span><span data-bd188-total></span></button><button type="button" data-bd188-comment-count></button></div><div class="bd188-actions"><button class="bd188-action" type="button" data-bd188-react><span data-bd188-main>${ico('like')}</span><span data-bd188-label>লাইক</span></button><button class="bd188-action" type="button" data-bd188-comments>${sv('comment')}<span>মন্তব্য</span></button><button class="bd188-action" type="button" data-bd188-share>${sv('share')}<span>শেয়ার</span></button></div><section class="bd188-comments" data-bd188-panel><div class="bd188-comment-head"><strong>মন্তব্য</strong><button type="button" data-bd188-close aria-label="বন্ধ করুন">×</button></div><div class="bd188-comment-list"></div><form class="bd188-comment-form"><input maxlength="1200" autocomplete="off" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></section></section>`}
-async function refresh(card){if(!card?.isConnected)return;const id=pid(card),root=$('.bd188-social',card);if(!id||!root)return;const [rx,cc,s]=await Promise.all([reactionRows(id),comments(id),session()]);const counts={};rx.forEach(x=>{const k=ORDER.includes(x.reaction)?x.reaction:'like';counts[k]=(counts[k]||0)+1});const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);$('.bd188-stack',root).innerHTML=top.map(k=>ico(k,true)).join('');$('[data-bd188-total]',root).textContent=rx.length?bn(rx.length)+' জন প্রতিক্রিয়া':'';$('[data-bd188-comment-count]',root).textContent=cc.length?bn(cc.length)+' মন্তব্য':'';const mine=s?.user&&rx.find(x=>String(x.user_id)===String(s.user.id)),b=$('[data-bd188-react]',root);b.classList.toggle('active',!!mine);b.dataset.current=mine?.reaction||'';$('[data-bd188-main]',b).innerHTML=ico(mine?.reaction||'like');$('[data-bd188-label]',b).textContent=mine?LABEL[mine.reaction]:'লাইক';card.__bd188Comments=cc}
-function install(card){if(!card||!pid(card))return;ensureAuthorLink(card);if(card.dataset.bd188Ready==='1')return;card.dataset.bd188Ready='1';card.insertAdjacentHTML('beforeend',markup(pid(card)));refresh(card)}
-function installAll(root=D){cards(root).forEach(install)}
-function tray(){let t=$('#bd188ReactionTray');if(t)return t;t=D.createElement('div');t.id='bd188ReactionTray';t.innerHTML=ORDER.map(k=>`<button type="button" data-bd188-pick="${k}" aria-label="${LABEL[k]}">${ico(k)}</button>`).join('');D.body.appendChild(t);return t}
-let ctx=null,hold=0,startX=0,startY=0,suppress=0,hoverClose=0;
-function openTray(btn,card){const t=tray(),r=btn.getBoundingClientRect();ctx={btn,card,id:pid(card)};t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||286,h=t.offsetHeight||48;t.style.left=Math.round(Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2)))+'px';let top=r.top-h-8;if(top<6)top=r.bottom+8;t.style.top=Math.round(top)+'px'})}function closeTray(delay=0){clearTimeout(hoverClose);hoverClose=setTimeout(()=>{tray().classList.remove('open');ctx=null},delay)}
-D.addEventListener('pointerdown',e=>{const b=e.target.closest?.('[data-bd188-react]');if(!b)return;const card=b.closest(CARD);startX=e.clientX;startY=e.clientY;clearTimeout(hold);hold=setTimeout(()=>{suppress=Date.now()+650;openTray(b,card)},390)},true);D.addEventListener('pointermove',e=>{if(hold&&Math.hypot(e.clientX-startX,e.clientY-startY)>11){clearTimeout(hold);hold=0}},true);['pointerup','pointercancel'].forEach(ev=>D.addEventListener(ev,()=>{clearTimeout(hold);hold=0},true));
-D.addEventListener('pointerenter',e=>{const b=e.target.closest?.('[data-bd188-react]');if(!b||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;clearTimeout(hoverClose);hold=setTimeout(()=>openTray(b,b.closest(CARD)),180)},true);D.addEventListener('pointerleave',e=>{if(e.target.closest?.('[data-bd188-react]')&&matchMedia('(hover:hover) and (pointer:fine)').matches)closeTray(280)},true);
-async function renderComments(card){const root=$('.bd188-social',card),list=$('.bd188-comment-list',root),rows=await comments(pid(card));list.innerHTML=rows.length?rows.map(x=>{const n=x.author_name||x.display_name||x.author_username||'সদস্য',av=x.author_avatar||x.avatar_url||'',href=personHref(x);return `<article class="bd188-comment"><a class="bd188-comment-av" href="${esc(href)}">${av?`<img src="${esc(av)}" alt="">`:esc(n.slice(0,1))}</a><div class="bd188-comment-bubble"><strong><a href="${esc(href)}">${esc(n)}</a></strong>${esc(x.body||x.content||'')}</div></article>`}).join(''):'<div style="padding:10px;color:var(--bd188-soft);font-size:10px">এখনও কোনো মন্তব্য নেই।</div>';card.__bd188Comments=rows}
-async function addComment(card,body){body=String(body||'').trim();if(!body)return false;const s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}const hit=W.BhubondangaProfanity?.scan?.(body);if(hit?.flagged){(W.toast||W.bdV7Toast||alert)(W.BhubondangaProfanity?.commentMessage||'শব্দটি একটু ভদ্র করে লিখুন।');return false}let p={id:s.user.id,display_name:s.user.user_metadata?.full_name||s.user.user_metadata?.name||s.user.email?.split('@')[0]||'সদস্য',avatar_url:s.user.user_metadata?.avatar_url||'',username:s.user.user_metadata?.username||''},c=client();if(c)try{const r=await c.from('profiles').select('id,display_name,username,avatar_url').eq('id',s.user.id).maybeSingle();if(!r.error&&r.data)p={...p,...r.data}}catch{}const row={id:'comment-'+(crypto.randomUUID?.()||Date.now()),post_id:pid(card),author_id:s.user.id,user_id:s.user.id,author_name:p.display_name,author_avatar:p.avatar_url,body,status:'published',created_at:new Date().toISOString()};let ok=false;if(c)for(const raw of [row,(()=>{const x={...row};delete x.user_id;return x})(),(()=>{const x={...row};delete x.author_id;return x})()])try{const r=await c.from('comments').insert(raw);if(!r.error){ok=true;break}}catch{}if(!ok){const a=localGet('bd188-comments-'+pid(card),[]);a.push(row);localSet('bd188-comments-'+pid(card),a);ok=true}return ok}
-W.addEventListener('click',async e=>{const pick=e.target.closest?.('[data-bd188-pick]');if(pick){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();D.documentElement.classList.add('bd189-no-smooth');const c=ctx;if(!c)return;const a=anchor(c.card),k=pick.dataset.bd188Pick;closeTray();await setReaction(c.id,k,c.card);await refresh(c.card);restore(a);setTimeout(()=>D.documentElement.classList.remove('bd189-no-smooth'),220);return}const rb=e.target.closest?.('[data-bd188-react]');if(rb){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(Date.now()<suppress)return;D.documentElement.classList.add('bd189-no-smooth');const card=rb.closest(CARD),a=anchor(card),k=rb.dataset.current||'like';await setReaction(pid(card),k,card);await refresh(card);restore(a);setTimeout(()=>D.documentElement.classList.remove('bd189-no-smooth'),220);return}const cb=e.target.closest?.('[data-bd188-comments],[data-bd188-comment-count]');if(cb){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=cb.closest(CARD),p=$('[data-bd188-panel]',card),a=anchor(card);p.classList.toggle('open');if(p.classList.contains('open')){await renderComments(card);setTimeout(()=>{try{$('.bd188-comment-form input',p)?.focus({preventScroll:true})}catch{}},20)}restore(a);return}const x=e.target.closest?.('[data-bd188-close]');if(x){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=x.closest(CARD),a=anchor(card);x.closest('.bd188-comments')?.classList.remove('open');restore(a);return}const sh=e.target.closest?.('[data-bd188-share]');if(sh){e.preventDefault();const id=pid(sh.closest(CARD)),u=new URL(location.href);u.searchParams.set('post',id);try{if(navigator.share)await navigator.share({title:'ভুবনডাঙ্গার কবিতা',url:u.href});else await navigator.clipboard.writeText(u.href)}catch{}return}if(!e.target.closest('#bd188ReactionTray'))closeTray()},true);
-W.addEventListener('submit',async e=>{const f=e.target.closest?.('.bd188-comment-form');if(!f)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=f.closest(CARD),i=$('input',f),body=i?.value.trim();if(!card||!body)return;i.disabled=true;try{if(await addComment(card,body)){i.value='';await renderComments(card);await refresh(card)}}finally{i.disabled=false;try{i.focus({preventScroll:true})}catch{}}},true);
-/* Reels reactions use the same canonical store as feed reactions. */
+function ensureAuthor(card){if(!card)return;const a=$('.author-avatar',card),name=$('.author-name-row a,.author-meta a',card);if(a&&name?.href&&!a.href)a.href=name.href;if(a?.querySelector('img')){[...a.children].forEach(ch=>{if(ch.tagName!=='IMG')ch.remove()})}}
+
+const rxCache=new Map(),commentCache=new Map();
+async function reactionRows(id,force=false){if(!force&&rxCache.has(id))return rxCache.get(id);const c=client();let rows=[];if(c){try{const r=await c.rpc('get_post_social',{target_post:String(id)});if(!r.error){const d=Array.isArray(r.data)?r.data[0]:r.data;if(Array.isArray(d?.reactions))rows=d.reactions}}catch{}if(!rows.length)for(const t of ['post_reactions','reactions'])try{const r=await c.from(t).select('user_id,reaction').eq('post_id',id).limit(500);if(!r.error){rows=r.data||[];break}}catch{}}if(!rows.length)rows=localGet('bd193-rx-'+id,[]);rows=dedupe(rows);rxCache.set(String(id),rows);return rows}
+async function commentRows(id,force=false){if(!force&&commentCache.has(id))return commentCache.get(id);const c=client();let rows=[];if(c)try{let r=await c.from('comments').select('*').eq('post_id',id).eq('status','published').order('created_at',{ascending:true}).limit(300);if(r.error)r=await c.from('comments').select('*').eq('post_id',id).order('created_at',{ascending:true}).limit(300);if(!r.error)rows=r.data||[]}catch{}const local=localGet('bd193-comments-'+id,[]);if(local.length){const seen=new Set(rows.map(x=>String(x.id||'')));for(const x of local)if(!seen.has(String(x.id||''))){rows.push(x);seen.add(String(x.id||''))}}commentCache.set(String(id),rows);return rows}
+async function setPostReaction(id,type){const s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}const uid=String(s.user.id),old=await reactionRows(String(id)),mine=old.find(x=>String(x.user_id)===uid),next=old.filter(x=>String(x.user_id)!==uid);if(!mine||mine.reaction!==type)next.push({user_id:uid,reaction:type});rxCache.set(String(id),next);updateCardSocial(cardById(id),next,null,s);const c=client();let ok=false;if(c){try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:type});if(!r.error)ok=true}catch{}if(!ok)for(const t of ['post_reactions','reactions'])try{const cur=await c.from(t).select('reaction').eq('post_id',id).eq('user_id',uid).maybeSingle();let r;if(cur.data?.reaction===type)r=await c.from(t).delete().eq('post_id',id).eq('user_id',uid);else if(cur.data)r=await c.from(t).update({reaction:type}).eq('post_id',id).eq('user_id',uid);else r=await c.from(t).insert({post_id:id,user_id:uid,reaction:type});if(!r.error){ok=true;break}}catch{}}if(!ok)localSet('bd193-rx-'+id,next);setTimeout(()=>refresh(cardById(id),true),450);syncReel(id,next,s);return true}
+
+function markup(id){return `<section class="bd193-social" data-bd193-social="${esc(id)}"><div class="bd193-summary"><button type="button" data-bd193-summary><span class="bd193-stack"></span><span data-bd193-total></span></button><button type="button" data-bd193-comment-count></button></div><div class="bd193-actions"><button class="bd193-action" type="button" data-bd193-react><span data-bd193-main>${rxSvg('like')}</span><span data-bd193-label>লাইক</span></button><button class="bd193-action" type="button" data-bd193-comments>${actionSvg('comment')}<span>মন্তব্য</span></button><button class="bd193-action" type="button" data-bd193-share>${actionSvg('share')}<span>শেয়ার</span></button></div><section class="bd193-comments" data-bd193-panel><div class="bd193-comment-head"><strong>মন্তব্য</strong><button type="button" data-bd193-close aria-label="বন্ধ করুন">×</button></div><div class="bd193-comment-list"></div><form class="bd193-comment-form"><input maxlength="1200" autocomplete="off" placeholder="মন্তব্য লিখুন…"><button type="submit" aria-label="পাঠান">➤</button></form></section></section>`}
 function cardById(id){return cards().find(c=>pid(c)===String(id))||null}
-async function syncReel(id){const rows=await reactionRows(id),s=await session(),mine=s?.user&&rows.find(x=>String(x.user_id)===String(s.user.id));$$('#bd107Reels .bd107-reel').filter(r=>String(r.dataset.bd107Reel)===String(id)).forEach(r=>{const b=$('[data-bd107-like]',r);if(!b)return;const h=$('.ico',b),sm=$('small',b),k=mine?.reaction||'like';if(h)h.innerHTML=ico(k);if(sm)sm.textContent=mine?LABEL[k]:(rows.length?bn(rows.length):'লাইক');b.classList.toggle('selected',!!mine)})}
-W.__BD_SET_REACTION=async(id,type,card)=>{const c=card||cardById(id),a=c?anchor(c):null,ok=await setReaction(String(id),String(type||'like'),c);if(c)await refresh(c);await syncReel(String(id));if(a)restore(a);return ok};
-W.__BD_REFRESH_SOCIAL=async card=>{if(card)await refresh(card)};
-let reelHold=0,reelStartX=0,reelStartY=0,reelSuppress=0;
-W.addEventListener('pointerdown',e=>{const b=e.target.closest?.('#bd107Reels [data-bd107-like]');if(!b)return;const r=b.closest('.bd107-reel'),c=cardById(r?.dataset?.bd107Reel);if(!c)return;reelStartX=e.clientX;reelStartY=e.clientY;clearTimeout(reelHold);reelHold=setTimeout(()=>{reelSuppress=Date.now()+700;openTray(b,c)},390)},true);
-W.addEventListener('pointermove',e=>{if(reelHold&&Math.hypot(e.clientX-reelStartX,e.clientY-reelStartY)>11){clearTimeout(reelHold);reelHold=0}},true);['pointerup','pointercancel'].forEach(ev=>W.addEventListener(ev,()=>{clearTimeout(reelHold);reelHold=0},true));
-W.addEventListener('click',async e=>{const b=e.target.closest?.('#bd107Reels [data-bd107-like]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(Date.now()<reelSuppress)return;const r=b.closest('.bd107-reel'),id=String(r?.dataset?.bd107Reel||''),c=cardById(id);if(!id||!c)return;const rows=await reactionRows(id),ss=await session(),mine=ss?.user&&rows.find(x=>String(x.user_id)===String(ss.user.id)),k=mine?.reaction||'like';await W.__BD_SET_REACTION(id,k,c)},true);
-/* Reels close works even when an older click listener owns the sheet. */
-W.addEventListener('click',e=>{const b=e.target.closest?.('#bd107Reels [data-bd143-reel-comment-close],#bdxReels [data-bdx-reel-comments-close]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();b.closest('.bd143-reel-comments,.bdx-reel-comments')?.classList.remove('open')},true);
-/* Public five-character font signature. */
-function publicFonts(){const composer=$('#composer');if(!composer||$('#bd188PublicFonts'))return;const box=D.createElement('div');box.id='bd188PublicFonts';const rows=[['subha','অ'],['masud','আ'],['kobiguru','ক'],['bornomala','খ'],['jannati','ম']];box.innerHTML=rows.map(x=>`<button type="button" data-bd188-font="${x[0]}">${x[1]}</button>`).join('');const prompt=$('#composerPrompt',composer);(prompt||composer.firstElementChild)?.insertAdjacentElement('afterend',box)}
-D.addEventListener('click',e=>{const b=e.target.closest?.('[data-bd188-font]');if(!b)return;e.preventDefault();const key=b.dataset.bd188Font,c=$('#composer'),f=$('#composerForm');if(c)c.dataset.bd71Stage='font';if(f){f.hidden=false;f.removeAttribute('hidden')};const real=$(`#bd58FontToolbar [data-bd58-font="${CSS.escape(key)}"],#bd58FontToolbar [data-bd76-key="${CSS.escape(key)}"]`);real?.click()},true);
-/* Keep guest CTA and flowing welcome strip from the exact sidebar master. */
-function sidebarFix(){try{W.BhubondangaSidebars172?.refresh?.()}catch{}const right=$('.bd172-root[data-bd172-side="right"]');if(right){const g=$('.bd172-profile-create',right);if(g){const h=$('h3',g);if(h)h.textContent='আপন ভুবন তৈরি করুন'}}}
+async function updateCardSocial(card,rx=null,cc=null,s=null){if(!card?.isConnected)return;const id=pid(card),root=$('.bd193-social',card);if(!root)return;rx=rx||await reactionRows(id);cc=cc||await commentRows(id);s=s||await session();const counts={};rx.forEach(x=>{const k=ORDER.includes(x.reaction)?x.reaction:'like';counts[k]=(counts[k]||0)+1});const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]),stack=$('.bd193-stack',root);stack.innerHTML=top.map(k=>rxSvg(k,true)).join('');$('[data-bd193-total]',root).textContent=rx.length?bn(rx.length)+' জন প্রতিক্রিয়া':'';$('[data-bd193-comment-count]',root).textContent=cc.length?bn(cc.length)+' মন্তব্য':'';const mine=s?.user&&rx.find(x=>String(x.user_id)===String(s.user.id)),b=$('[data-bd193-react]',root),k=mine?.reaction||'like';b.dataset.current=mine?.reaction||'';b.classList.toggle('active',!!mine);b.style.setProperty('--bd193-active',COLOR[k]);$('[data-bd193-main]',b).innerHTML=rxSvg(k);$('[data-bd193-label]',b).textContent=mine?LABEL[k]:'লাইক'}
+async function refresh(card,force=false){if(!card?.isConnected)return;ensureAuthor(card);const id=pid(card);await updateCardSocial(card,await reactionRows(id,force),await commentRows(id,force),await session())}
+function install(card){if(!card||!pid(card))return;ensureAuthor(card);if(!$('.bd193-social',card))card.insertAdjacentHTML('beforeend',markup(pid(card)));card.dataset.bd193Ready='1';refresh(card)}function installAll(root=D){cards(root).forEach(install)}
 
-function drawerDirect(side){sidebarFix();const l=$('#mobileDrawer'),r=$('#rightMobileDrawer'),b=$('#drawerBackdrop,#backdrop,.drawer-backdrop');if(!l||!r)return;l.classList.toggle('open',side==='left');r.classList.toggle('open',side==='right');b?.classList.add('show');D.body.classList.add('bd172-drawer-open')}
-function drawerCloseDirect(){const b=$('#drawerBackdrop,#backdrop,.drawer-backdrop');$('#mobileDrawer')?.classList.remove('open');$('#rightMobileDrawer')?.classList.remove('open');b?.classList.remove('show');D.body.classList.remove('bd172-drawer-open','locked')}
-W.addEventListener('pointerup',e=>{const l=e.target.closest?.('#leftEdgeMenu,[data-bd9-handle="left"]'),r=e.target.closest?.('#rightEdgeMenu,[data-bd9-handle="right"]');if((l||r)&&innerWidth<=899){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();drawerDirect(l?'left':'right');return}const c=e.target.closest?.('#mobileDrawer [data-bd172-close],#rightMobileDrawer [data-bd172-close],#mobileDrawer [data-bd9-close],#rightMobileDrawer [data-bd9-close]');if(c){e.preventDefault();e.stopImmediatePropagation();drawerCloseDirect()}},true);
-/* Gentle vertical member flow without layout mutations. */
-let flowTimer=0;function flow(){clearInterval(flowTimer);flowTimer=setInterval(()=>{$$('.bd172-member-scroll').forEach(el=>{if(!el.isConnected||el.scrollHeight<=el.clientHeight+5)return;const first=el.querySelector('.bd172-person'),step=(first?.offsetHeight||50)+4;const max=el.scrollHeight-el.clientHeight;if(el.scrollTop>=max-4)el.scrollTo({top:0,behavior:'smooth'});else el.scrollBy({top:step,behavior:'smooth'})})},3100)}
-const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)installAll(n);publicFonts()});
-function boot(){installAll();publicFonts();sidebarFix();flow();mo.observe($('#postList')||D.body,{childList:true,subtree:true});[350,1100,2400].forEach(ms=>setTimeout(()=>{installAll();publicFonts();sidebarFix()},ms))}
+/* Shared post/comment reaction tray. */
+function tray(){let t=$('#bd193ReactionTray');if(t)return t;t=D.createElement('div');t.id='bd193ReactionTray';t.setAttribute('role','menu');t.innerHTML=ORDER.map(k=>`<button type="button" data-bd193-pick="${k}" aria-label="${LABEL[k]}">${rxSvg(k)}</button>`).join('');D.body.appendChild(t);return t}
+let trayCtx=null,hold=0,sx=0,sy=0,suppress=0,hoverClose=0;
+function openTray(btn,ctx){const t=tray(),r=btn.getBoundingClientRect();trayCtx={...ctx,btn};t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||290,h=t.offsetHeight||50;t.style.left=Math.round(Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2)))+'px';let top=r.top-h-8;if(top<6)top=r.bottom+8;t.style.top=Math.round(top)+'px'})}
+function closeTray(delay=0){clearTimeout(hoverClose);hoverClose=setTimeout(()=>{tray().classList.remove('open');trayCtx=null},delay)}
+function startHold(e,btn,ctx){sx=e.clientX;sy=e.clientY;clearTimeout(hold);hold=setTimeout(()=>{suppress=Date.now()+650;openTray(btn,ctx)},390)}
+W.addEventListener('pointerdown',e=>{const p=e.target.closest?.('[data-bd193-react]');if(p){const card=p.closest(CARD);startHold(e,p,{kind:'post',card,id:pid(card)});return}const c=e.target.closest?.('[data-bd193-comment-react]');if(c){startHold(e,c,{kind:'comment',card:c.closest(CARD),commentId:c.dataset.bd193CommentReact})}},true);
+W.addEventListener('pointermove',e=>{if(hold&&Math.hypot(e.clientX-sx,e.clientY-sy)>11){clearTimeout(hold);hold=0}},true);['pointerup','pointercancel'].forEach(ev=>W.addEventListener(ev,()=>{clearTimeout(hold);hold=0},true));
+D.addEventListener('pointerenter',e=>{const b=e.target.closest?.('[data-bd193-react]');if(!b||!matchMedia('(hover:hover) and (pointer:fine)').matches)return;clearTimeout(hoverClose);hold=setTimeout(()=>openTray(b,{kind:'post',card:b.closest(CARD),id:pid(b.closest(CARD))}),180)},true);D.addEventListener('pointerleave',e=>{if(e.target.closest?.('[data-bd193-react]')&&matchMedia('(hover:hover) and (pointer:fine)').matches)closeTray(260)},true);
+
+/* Comment reactions and replies. */
+const CRXKEY='bd193-comment-reactions';
+async function commentReactionMap(ids){const out=new Map(ids.map(id=>[String(id),[]]));const c=client();if(c&&ids.length)try{const r=await c.from('comment_reactions').select('comment_id,user_id,reaction').in('comment_id',ids).limit(1000);if(!r.error)(r.data||[]).forEach(x=>{const k=String(x.comment_id);if(!out.has(k))out.set(k,[]);out.get(k).push(x)})}catch{}const local=localGet(CRXKEY,{});for(const id of ids){const k=String(id),a=out.get(k)||[],seen=new Set(a.map(x=>String(x.user_id||'')+'|'+String(x.reaction||'')));for(const x of (Array.isArray(local[k])?local[k]:[])){const sig=String(x.user_id||'')+'|'+String(x.reaction||'');if(!seen.has(sig)){a.push(x);seen.add(sig)}}out.set(k,a)}return out}
+async function setCommentReaction(commentId,type){const s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}const uid=String(s.user.id),local=localGet(CRXKEY,{}),rows=Array.isArray(local[commentId])?local[commentId]:[],mine=rows.find(x=>String(x.user_id)===uid),next=rows.filter(x=>String(x.user_id)!==uid);if(!mine||mine.reaction!==type)next.push({comment_id:commentId,user_id:uid,reaction:type});local[commentId]=next;localSet(CRXKEY,local);const c=client();if(c)try{const cur=await c.from('comment_reactions').select('reaction').eq('comment_id',commentId).eq('user_id',uid).maybeSingle();let r;if(cur.data?.reaction===type)r=await c.from('comment_reactions').delete().eq('comment_id',commentId).eq('user_id',uid);else if(cur.data)r=await c.from('comment_reactions').update({reaction:type}).eq('comment_id',commentId).eq('user_id',uid);else r=await c.from('comment_reactions').insert({comment_id:commentId,user_id:uid,reaction:type});}catch{}return true}
+function parentOf(x){return String(x.parent_id||x.parent_comment_id||x.reply_to||x.reply_to_id||'')}
+function timeText(v){try{return new Intl.DateTimeFormat('bn-BD',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch{return''}}
+function commentHtml(x,map,s,isReply=false){const id=String(x.id||''),name=x.author_name||x.display_name||x.author_username||'সদস্য',av=x.author_avatar||x.avatar_url||'',href=personHref(x),rows=map.get(id)||[],mine=s?.user&&rows.find(r=>String(r.user_id)===String(s.user.id)),top=rows[0]?.reaction||'like';return `<article class="bd193-comment${isReply?' is-reply':''}" data-bd193-comment="${esc(id)}"><a class="bd193-comment-av" href="${esc(href)}">${av?`<img src="${esc(av)}" alt="">`:esc(name.slice(0,1))}</a><div class="bd193-comment-main"><div class="bd193-comment-bubble"><strong><a class="bd193-comment-author" href="${esc(href)}">${esc(name)}</a></strong>${esc(x.body||x.content||'')}</div><div class="bd193-comment-meta"><span>${esc(timeText(x.created_at))}</span><button type="button" data-bd193-comment-react="${esc(id)}" data-current="${esc(mine?.reaction||'')}" class="${mine?'active':''}">${mine?LABEL[mine.reaction]:'লাইক'}</button><button type="button" data-bd193-reply="${esc(id)}">রিপ্লাই</button>${rows.length?`<span class="bd193-comment-rxsum">${rxSvg(top,true)} ${bn(rows.length)}</span>`:''}</div><form class="bd193-reply-form" data-bd193-reply-form="${esc(id)}"><input maxlength="1200" placeholder="রিপ্লাই লিখুন…"><button type="submit">➤</button></form></div></article>`}
+async function renderComments(card){const list=$('.bd193-comment-list',card);if(!list)return;const rows=await commentRows(pid(card),true),ids=rows.map(x=>String(x.id||'')).filter(Boolean),map=await commentReactionMap(ids),s=await session(),roots=rows.filter(x=>!parentOf(x)),byParent=new Map();rows.filter(x=>parentOf(x)).forEach(x=>{const p=parentOf(x);if(!byParent.has(p))byParent.set(p,[]);byParent.get(p).push(x)});list.innerHTML=roots.length?roots.map(x=>commentHtml(x,map,s,false)+(byParent.get(String(x.id))||[]).map(r=>commentHtml(r,map,s,true)).join('')).join(''):'<div style="padding:10px;color:var(--bd193-soft);font-size:10px">এখনও কোনো মন্তব্য নেই।</div>';commentCache.set(pid(card),rows);updateCardSocial(card,null,rows,s)}
+async function addComment(card,body,parentId=''){body=String(body||'').trim();if(!body)return false;const s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}const hit=W.BhubondangaProfanity?.scan?.(body);if(hit?.flagged){(W.toast||W.bdV7Toast||alert)(W.BhubondangaProfanity?.commentMessage||'শব্দটি একটু ভদ্র করে লিখুন।');return false}let p={id:s.user.id,display_name:s.user.user_metadata?.full_name||s.user.user_metadata?.name||s.user.email?.split('@')[0]||'সদস্য',avatar_url:s.user.user_metadata?.avatar_url||'',username:s.user.user_metadata?.username||''},c=client();if(c)try{const r=await c.from('profiles').select('id,display_name,username,avatar_url').eq('id',s.user.id).maybeSingle();if(!r.error&&r.data)p={...p,...r.data}}catch{}const base={id:'comment-'+(crypto.randomUUID?.()||Date.now()),post_id:pid(card),author_id:s.user.id,user_id:s.user.id,author_name:p.display_name,author_username:p.username,author_avatar:p.avatar_url,body,status:'published',created_at:new Date().toISOString()};const variants=[];for(const userField of ['both','author','user'])for(const parentField of parentId?['parent_id','parent_comment_id','reply_to']:['']){const row={...base};if(userField==='author')delete row.user_id;if(userField==='user')delete row.author_id;if(parentField)row[parentField]=parentId;variants.push(row)}let ok=false;if(c)for(const row of variants)try{const r=await c.from('comments').insert(row);if(!r.error){ok=true;break}}catch{}if(!ok){const a=localGet('bd193-comments-'+pid(card),[]);const row={...base};if(parentId)row.parent_id=parentId;a.push(row);localSet('bd193-comments-'+pid(card),a);ok=true}commentCache.delete(pid(card));return ok}
+
+W.addEventListener('click',async e=>{
+ const pick=e.target.closest?.('[data-bd193-pick]');if(pick){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const c=trayCtx;if(!c)return;const k=pick.dataset.bd193Pick;closeTray();if(c.kind==='comment'){await setCommentReaction(c.commentId,k);if(c.card)await renderComments(c.card)}else await setPostReaction(c.id,k);return}
+ const rb=e.target.closest?.('[data-bd193-react]');if(rb){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(Date.now()<suppress)return;const card=rb.closest(CARD);await setPostReaction(pid(card),rb.dataset.current||'like');return}
+ const cr=e.target.closest?.('[data-bd193-comment-react]');if(cr){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();if(Date.now()<suppress)return;await setCommentReaction(cr.dataset.bd193CommentReact,cr.dataset.current||'like');await renderComments(cr.closest(CARD));return}
+ const rep=e.target.closest?.('[data-bd193-reply]');if(rep){e.preventDefault();e.stopPropagation();const f=$(`[data-bd193-reply-form="${CSS.escape(rep.dataset.bd193Reply)}"]`,rep.closest('.bd193-comment-main'));f?.classList.toggle('open');setTimeout(()=>{try{$('input',f)?.focus({preventScroll:true})}catch{}},10);return}
+ const cb=e.target.closest?.('[data-bd193-comments],[data-bd193-comment-count]');if(cb){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=cb.closest(CARD),p=$('[data-bd193-panel]',card);p.classList.toggle('open');if(p.classList.contains('open')){await renderComments(card);setTimeout(()=>{try{$('.bd193-comment-form input',p)?.focus({preventScroll:true})}catch{}},20)}return}
+ const x=e.target.closest?.('[data-bd193-close]');if(x){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();x.closest('.bd193-comments')?.classList.remove('open');return}
+ const sh=e.target.closest?.('[data-bd193-share]');if(sh){e.preventDefault();e.stopPropagation();const id=pid(sh.closest(CARD)),u=new URL(location.href);u.searchParams.set('post',id);try{if(navigator.share)await navigator.share({title:'ভুবনডাঙ্গার কবিতা',url:u.href});else await navigator.clipboard.writeText(u.href)}catch{}return}
+ if(!e.target.closest('#bd193ReactionTray'))closeTray()
+},true);
+W.addEventListener('submit',async e=>{const top=e.target.closest?.('.bd193-comment-form');if(top){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=top.closest(CARD),i=$('input',top),body=i?.value.trim();if(!body)return;i.disabled=true;try{if(await addComment(card,body)){i.value='';await renderComments(card)}}finally{i.disabled=false;try{i.focus({preventScroll:true})}catch{}}return}const rf=e.target.closest?.('.bd193-reply-form');if(rf){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=rf.closest(CARD),i=$('input',rf),body=i?.value.trim();if(!body)return;i.disabled=true;try{if(await addComment(card,body,rf.dataset.bd193ReplyForm)){i.value='';rf.classList.remove('open');await renderComments(card)}}finally{i.disabled=false}return}},true);
+
+/* Same canonical reaction state inside Reels. */
+function syncReel(id,rows=null,s=null){rows=rows||rxCache.get(String(id))||[];$$('#bd107Reels .bd107-reel').filter(r=>String(r.dataset.bd107Reel)===String(id)).forEach(r=>{const b=$('[data-bd107-like]',r);if(!b)return;const mine=s?.user&&rows.find(x=>String(x.user_id)===String(s.user.id)),k=mine?.reaction||'like',h=$('.ico',b),sm=$('small',b);if(h)h.innerHTML=rxSvg(k);if(sm)sm.textContent=mine?LABEL[k]:(rows.length?bn(rows.length):'লাইক');b.classList.toggle('selected',!!mine)})}
+W.addEventListener('click',async e=>{const b=e.target.closest?.('#bd107Reels [data-bd107-like]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const r=b.closest('.bd107-reel'),id=String(r?.dataset.bd107Reel||'');if(id)await setPostReaction(id,b.dataset.current||'like')},true);
+W.addEventListener('pointerdown',e=>{const b=e.target.closest?.('#bd107Reels [data-bd107-like]');if(!b)return;const r=b.closest('.bd107-reel'),id=String(r?.dataset.bd107Reel||''),card=cardById(id);if(card)startHold(e,b,{kind:'post',card,id})},true);
+
+/* Fullscreen vertical Reels must own every video tap. */
+W.addEventListener('click',e=>{const hit=e.target.closest?.('#postList .bd107-open-reel,#postList video');if(!hit||e.target.closest('#bd107Reels'))return;const card=hit.closest(CARD);if(!card||!card.querySelector('video'))return;const id=pid(card);if(!id)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{W.BhubondangaReels107?.open?.(id)}catch{}},true);
+
+/* Stable public five-letter font signature and theme-safe live template preview. */
+const GLYPH={subha:'অ',masud:'আ',kobiguru:'ক',bornomala:'খ',jannati:'ম'};
+function fontSignature(){D.querySelectorAll('#bd58FontToolbar .bd58-font-chip').forEach(b=>{const k=String(b.dataset.bd76Key||b.dataset.bd58Font||'');if(!GLYPH[k])return;b.dataset.bd76Key=k;b.dataset.bd193Glyph=GLYPH[k];b.removeAttribute('data-bd183-sample');b.removeAttribute('data-bd183-name');b.setAttribute('aria-label','ফন্ট '+GLYPH[k])})}
+function syncTemplate(){const f=$('#composerForm'),b=$('#postBody');if(!f||!b)return;const v=String(f.dataset.bd65Template||f.dataset.bd58Template||'none');const m=v.match(/^tpl([1-8])$/);f.classList.toggle('bd193-template-active',!!m);if(m){b.style.setProperty('background-image',`linear-gradient(rgba(255,255,255,.64),rgba(255,255,255,.64)),var(--bd65-tpl-${m[1]})`,'important');b.style.setProperty('background-size','100% 100%','important');b.style.setProperty('background-position','center','important');b.style.setProperty('background-repeat','no-repeat','important');b.style.setProperty('color','#152536','important');b.style.setProperty('-webkit-text-fill-color','#152536','important')}else{b.style.removeProperty('background-blend-mode');b.style.removeProperty('-webkit-text-fill-color')}}
+D.addEventListener('click',e=>{if(e.target.closest?.('#bd58TemplatePicker [data-bd58-template]'))setTimeout(syncTemplate,0)},true);D.addEventListener('change',e=>{if(e.target?.id==='cardStyle')setTimeout(syncTemplate,0)},true);
+function editorRepair(){for(const id of ['postTitle','postBody']){const el=$('#'+id);if(!el)continue;el.disabled=false;el.readOnly=false;el.removeAttribute('readonly');el.removeAttribute('disabled');el.setAttribute('lang','bn');el.setAttribute('inputmode','text')}}
+
+/* Guest-only login/register portal; authenticated users never see it. */
+function localUser(){for(const k of ['bhubondangaCurrentUser','currentUser','bdCurrentUser','bhubondangaUser'])try{const u=JSON.parse(localStorage.getItem(k)||'null');if(u&&(u.loggedIn===true||u.id||u.uid||u.email||u.username))return u}catch{}return null}
+function authPresent(){return !!(W.__BD_LIVE_SESSION?.user||sessionCache?.user||localUser())}
+function sidebarAuth(){try{W.BhubondangaSidebars172?.refresh?.()}catch{}const right=$('.bd172-root[data-bd172-side="right"]');if(!right)return;const logged=authPresent();right.querySelectorAll('.bd193-guest-auth').forEach(x=>x.remove());right.querySelectorAll('.bd172-profile-create').forEach(x=>{x.hidden=logged;const h=x.querySelector('h3');if(h)h.textContent='আপন ভুবন তৈরি করুন';const links=x.querySelectorAll('.bd172-auth-actions a');if(links[0])links[0].textContent='রেজিস্টার';if(links[1])links[1].textContent='লগইন'});if(!logged&&!$('.bd172-profile-create',right)){const sec=D.createElement('section');sec.className='bd172-card bd172-profile-create bd193-guest-auth';sec.innerHTML='<h3>আপন ভুবন তৈরি করুন</h3><p>লেখা, পাঠ ও সাহিত্যিক সংযোগের জন্য নিজের প্রোফাইল তৈরি করুন।</p><div class="bd172-auth-actions"><a href="register.html">রেজিস্টার</a><a href="login.html">লগইন</a></div>';const first=right.children[1]||right.firstElementChild;first?.insertAdjacentElement('afterend',sec)||right.appendChild(sec)}const own=$('.bd172-root[data-bd172-side="left"] .bd172-user');if(own)own.hidden=!logged}
+D.addEventListener('bd:auth-ready',e=>{sessionCache=e.detail?.session||W.__BD_LIVE_SESSION||sessionCache;sessionAt=Date.now();setTimeout(sidebarAuth,30)});
+
+/* Keep member flow lightweight — native scrollTop, no smooth animation/reflow. */
+let flowTimer=0;function flow(){clearInterval(flowTimer);flowTimer=setInterval(()=>{$$('.bd172-member-scroll').forEach(el=>{if(el.scrollHeight<=el.clientHeight+4)return;const first=el.querySelector('.bd172-person'),step=(first?.offsetHeight||44)+3,max=el.scrollHeight-el.clientHeight;el.scrollTop=el.scrollTop>=max-3?0:Math.min(max,el.scrollTop+step)})},3400)}
+
+let moQueued=false;const mo=new MutationObserver(ms=>{if(moQueued)return;moQueued=true;requestAnimationFrame(()=>{moQueued=false;for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)installAll(n);fontSignature();editorRepair()})});
+function boot(){installAll();fontSignature();editorRepair();syncTemplate();sidebarAuth();flow();mo.observe($('#postList')||D.body,{childList:true,subtree:true});[280,900,1800].forEach(ms=>setTimeout(()=>{installAll();fontSignature();editorRepair();syncTemplate();sidebarAuth()},ms))}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-W.Bhubondanga188={refresh:()=>cards().forEach(refresh),installAll};
+W.Bhubondanga193={refresh:()=>cards().forEach(c=>refresh(c,true)),installAll,renderComments,setReaction:setPostReaction};
 })();
-</script>
 
-<script id="bd-v8190-reaction-integrity-js">
-(()=>{'use strict';if(window.__BD_V8190__)return;window.__BD_V8190__=1;
-/* Remove any legacy broken reaction <img> left by cached/older markup; V8.188 renderer now owns inline SVG. */
-function clean(root=document){root.querySelectorAll?.('#postList .bd188-social img[src*="reaction"],#postList .bd188-social img[src^="data:image"],#bd188ReactionTray img').forEach(i=>i.remove())}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>clean(),{once:true});else clean();
-})();
 </script>
 
 
-<style id="bd-v8191-font-signature-lock-css">
-/* V8.191 — restore the public five-letter Bhubondanga font signature. */
-#composer #bd58FontToolbar{
-  display:block!important;
-  width:100%!important;
-  margin:8px auto 10px!important;
-  padding:9px 8px 8px!important;
-  text-align:center!important;
-  overflow:hidden!important;
-}
-#composer #bd58FontToolbar .bd58-tool-title{
-  display:block!important;width:100%!important;margin:0 0 8px!important;
-  text-align:center!important;font-size:15px!important;font-weight:700!important;
-}
-#composer #bd58FontToolbar .bd58-font-chips{
-  width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;
-  gap:9px!important;padding:2px 4px 4px!important;margin:0 auto!important;
-  overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;
-  flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x!important;
-  scrollbar-width:none!important;scroll-snap-type:x proximity!important;
-}
-#composer #bd58FontToolbar .bd58-font-chips::-webkit-scrollbar{display:none!important}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]{
-  flex:0 0 48px!important;width:48px!important;min-width:48px!important;max-width:48px!important;height:48px!important;
-  padding:0!important;margin:0!important;border-radius:12px!important;
-  display:grid!important;place-items:center!important;grid-template-rows:1fr!important;
-  font-size:0!important;line-height:1!important;overflow:hidden!important;
-  box-shadow:0 2px 7px rgba(42,63,104,.055)!important;
-  scroll-snap-align:center!important;touch-action:pan-x manipulation!important;
-}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]::before{
-  content:attr(data-bd191-glyph)!important;display:block!important;
-  font:800 26px/1 'Noto Serif Bengali','Noto Sans Bengali',serif!important;
-  color:currentColor!important;-webkit-text-fill-color:currentColor!important;
-}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]::after{display:none!important;content:none!important}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="subha"]{color:#16815c!important}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="masud"]{color:#d54858!important}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="kobiguru"]{color:#7650d5!important}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="bornomala"]{color:#2879c4!important}
-#composer #bd58FontToolbar .bd58-font-chip[data-bd76-key="jannati"]{color:#a97819!important}
-/* Custom/premium fonts stay available in the writing stage, but do not visually replace the public signature. */
-#composer:not([data-bd71-stage="write"]) #bd58FontToolbar .bd179-font-chip{display:none!important}
-#composer[data-bd71-stage="write"] #bd58FontToolbar .bd179-font-chip{display:flex!important}
-/* V8.188 public fallback is no longer needed when the canonical toolbar is forced visible. */
-#bd188PublicFonts{display:none!important}
-@media(max-width:520px){
-  #composer #bd58FontToolbar{padding:8px 5px 7px!important}
-  #composer #bd58FontToolbar .bd58-font-chips{gap:7px!important;padding-inline:2px!important}
-  #composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]{flex-basis:46px!important;width:46px!important;min-width:46px!important;max-width:46px!important;height:46px!important}
-  #composer #bd58FontToolbar .bd58-font-chip[data-bd76-key]::before{font-size:24px!important}
-}
-</style>
-<script id="bd-v8191-font-signature-lock-js">
-(()=>{'use strict';if(window.__BD_V8191__)return;window.__BD_V8191__=1;
-const D=document;
-const G={subha:'অ',masud:'আ',kobiguru:'ক',bornomala:'খ',jannati:'ম'};
-function key(b){return String(b?.dataset?.bd76Key||b?.dataset?.bd58Font||'')}
-function fix(){
-  D.querySelectorAll('#bd58FontToolbar .bd58-font-chip').forEach(b=>{const k=key(b);if(!G[k])return;b.dataset.bd76Key=k;b.dataset.bd191Glyph=G[k];b.removeAttribute('data-bd183-sample');b.removeAttribute('data-bd183-name');b.setAttribute('aria-label','ফন্ট '+G[k]);});
-  const pub=D.getElementById('bd188PublicFonts');if(pub)pub.setAttribute('aria-hidden','true');
-}
-let q=0;function schedule(){if(q)return;q=requestAnimationFrame(()=>{q=0;fix()})}
-const boot=()=>{fix();const row=D.querySelector('#bd58FontToolbar .bd58-font-chips');if(row)new MutationObserver(schedule).observe(row,{childList:true,subtree:false});[250,800,1600].forEach(ms=>setTimeout(fix,ms))};
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
 
 
-<style id="bd-v8192-social-visibility-lock-css">
-/* V8.192 — final social row must remain visible on every post. */
-#postList .bd188-social{display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;min-height:72px!important}
-#postList .bd188-social .bd188-summary{display:flex!important}
-#postList .bd188-social .bd188-actions{display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-#postList .bd188-social .bd188-action{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-</style>
-<script id="bd-v8192-social-recovery-js">
-(()=>{'use strict';if(window.__BD_V8192__)return;window.__BD_V8192__=1;
-function revive(){try{window.Bhubondanga188?.installAll?.();window.Bhubondanga188?.refresh?.()}catch(e){console.warn('V8.192 social recovery',e)}}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{revive();setTimeout(revive,350);setTimeout(revive,1100)},{once:true});else{revive();setTimeout(revive,350);setTimeout(revive,1100)}
-})();
-</script>
+
+
+
+
+
+
 
 </body>
 </html>
