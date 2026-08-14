@@ -6852,8 +6852,16 @@ const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Arr
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const safeKey=v=>/^[a-z0-9_-]{1,48}$/i.test(String(v||''))?String(v):'';
 function ident(){return W.__BD_IDENTITY||{}}
-function isFounder(){return String(ident().role||W.__BD_LIVE_ROLE||'').toLowerCase()==='founder'||String(ident().author_username||'').toLowerCase()==='mahmud-sohel'||W.__BD_NEWS_IS_FOUNDER===true}
-function uid(){return String(ident().author_id||W.__BD_LIVE_SESSION?.user?.id||'')}
+function isFounder(){
+ const rows=[ident(),W.__BD_LIVE_SESSION?.user||{}];
+ for(const k of ['bhubondangaCurrentUser','currentUser','bdCurrentUser','bhubondangaUser']){try{const v=JSON.parse(localStorage.getItem(k)||'null');if(v)rows.push(v)}catch(_){}}
+ return rows.some(v=>{const m=v?.user_metadata||{},role=String(v?.role||m.role||W.__BD_LIVE_ROLE||'').toLowerCase(),user=String(v?.author_username||v?.username||m.username||'').replace(/^@/,'').toLowerCase(),name=String(v?.author_name||v?.displayName||v?.display_name||v?.full_name||v?.name||m.full_name||m.name||'').trim();return role==='founder'||user==='mahmud-sohel'||name==='মাহমুদ সোহেল'})||W.__BD_NEWS_IS_FOUNDER===true
+}
+function uid(){
+ const i=ident();let id=i.author_id||W.__BD_LIVE_SESSION?.user?.id||'';if(id)return String(id);
+ for(const k of ['bhubondangaCurrentUser','currentUser','bdCurrentUser','bhubondangaUser']){try{const v=JSON.parse(localStorage.getItem(k)||'null');id=v?.id||v?.uid||v?.user_id||'';if(id)return String(id)}catch(_){}}
+ return''
+}
 function toast(s){try{W.toast?.(s)}catch(_){}}
 
 /* ========== Reels: preserve engine, replace only presentation ========== */
@@ -6906,12 +6914,12 @@ W.BhubondangaPremiumCards={allowed:cardAllowed,grant:grantCard,revoke:revokeCard
 
 /* Templates are JavaScript objects only. No physical card images are stored. */
 const CARD_TEMPLATES=[
- {id:'jscard-portrait-right',label:'Portrait Right',layout:'portrait-right',klass:''},
- {id:'jscard-portrait-left',label:'Portrait Left',layout:'portrait-left',klass:'reverse'},
- {id:'jscard-night',label:'Midnight Quote',layout:'night',klass:'dark'},
- {id:'jscard-rose',label:'Soft Rose',layout:'rose',klass:'rose'},
- {id:'jscard-gold',label:'Classic Gold',layout:'gold',klass:'gold'},
- {id:'jscard-wide-photo',label:'Photo Bottom',layout:'wide-photo',klass:''}
+ {id:'jscard-portrait-right',label:'ছবি ডানে',layout:'portrait-right',klass:''},
+ {id:'jscard-portrait-left',label:'ছবি বামে',layout:'portrait-left',klass:'reverse'},
+ {id:'jscard-night',label:'মধ্যরাত',layout:'night',klass:'dark'},
+ {id:'jscard-rose',label:'সফট রোজ',layout:'rose',klass:'rose'},
+ {id:'jscard-gold',label:'ক্লাসিক',layout:'gold',klass:'gold'},
+ {id:'jscard-wide-photo',label:'ছবি নিচে',layout:'wide-photo',klass:''}
 ];
 function composerForm(){return $('#composerForm')}
 function studio(){return $('#bd177CardStudio')}
@@ -7355,6 +7363,188 @@ const mo=new MutationObserver(ms=>{let cards=false,tray=false;for(const m of ms)
 function start(){boot();mo.observe(D.body,{childList:true,subtree:true})}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
 W.BhubondangaMasterLock180={settleReaction:settle,markSurfaces,normalizeTray};
+})();
+</script>
+
+
+
+<!-- =========================================================
+     BHUBONDANGA V8.181 — COMPOSER / SIDEBAR / CARD GESTURE MASTER LOCK
+     Keeps V8.180 reaction-zero-jump as the base.
+     - font letter row centered
+     - left personal profile card + login/logout
+     - publish action always visible while composer form is open
+     - JS Card Studio restored for Founder/premium
+     - horizontal card swipe never selects accidentally
+     ========================================================= -->
+<style id="bd-v8181-composer-sidebar-card-master-css">
+/* The five Bengali font preview letters stay visually centered. */
+#composer #bd58FontToolbar{align-items:center!important;text-align:center!important}
+#composer #bd58FontToolbar .bd58-tool-title{display:block!important;width:100%!important;text-align:center!important}
+#composer #bd58FontToolbar .bd58-font-chips{
+  width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  gap:9px!important;overflow-x:auto!important;overflow-y:hidden!important;padding:5px 7px 8px!important;
+  scroll-snap-type:x proximity!important;scrollbar-width:none!important;-webkit-overflow-scrolling:touch!important;
+  touch-action:pan-x!important;overscroll-behavior-x:contain!important
+}
+#composer #bd58FontToolbar .bd58-font-chips::-webkit-scrollbar{display:none!important}
+#composer #bd58FontToolbar .bd58-font-chip{flex:0 0 auto!important;display:grid!important;place-items:center!important;text-align:center!important}
+#composer #bd58FontToolbar .bd58-font-hint{display:block!important;width:100%!important;text-align:center!important}
+@media(max-width:520px){
+ #composer #bd58FontToolbar .bd58-font-chips{justify-content:center!important;gap:8px!important;padding-inline:3px!important}
+ #composer #bd58FontToolbar .bd58-font-chip{width:48px!important;min-width:48px!important;max-width:48px!important;height:48px!important;padding:0!important}
+ #composer #bd58FontToolbar .bd179-font-chip{width:auto!important;min-width:104px!important;max-width:150px!important;padding-inline:10px!important}
+}
+
+/* Logged-in user's own profile card: one clear green personal doorway on the LEFT. */
+.bd172-root[data-bd172-side="left"] .bd172-user{
+  background:radial-gradient(circle at 92% 0,rgba(92,201,164,.16),transparent 38%),linear-gradient(145deg,#f4fff9,#e7f7f0)!important;
+  border-color:rgba(37,137,99,.24)!important;box-shadow:0 12px 30px rgba(39,115,88,.10)!important
+}
+.bd172-root[data-bd172-side="left"] .bd172-user-avatar{
+  width:58px!important;height:58px!important;background:linear-gradient(135deg,#18805d,#55ad88)!important;
+  border:3px solid rgba(255,255,255,.9)!important;box-shadow:0 7px 18px rgba(25,113,83,.18)!important
+}
+.bd172-root[data-bd172-side="left"] .bd172-user-main{grid-template-columns:58px minmax(0,1fr)!important}
+.bd172-root[data-bd172-side="left"] .bd172-user strong{color:#155b45!important;font-size:13px!important}
+.bd172-root[data-bd172-side="left"] .bd172-user small{color:#4e7466!important}
+.bd172-root[data-bd172-side="left"] .bd172-user-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.bd172-root[data-bd172-side="left"] .bd172-user-actions :is(a,button){
+  min-height:43px!important;border:1px solid rgba(32,111,84,.20)!important;border-radius:12px!important;
+  display:grid!important;place-items:center!important;background:#116e51!important;color:#fff!important;
+  font:800 8.8px/1.2 'Noto Sans Bengali','Hind Siliguri',sans-serif!important;box-shadow:none!important
+}
+.bd172-root[data-bd172-side="left"] .bd172-user-actions :is(a,button):active{transform:scale(.985)!important}
+.bd181-left-login{padding:13px!important;background:linear-gradient(145deg,#f4fff9,#e8f7f0)!important;border-color:rgba(38,132,97,.22)!important}
+.bd181-left-login strong{display:block;color:#176b4e;font-size:12px!important;margin-bottom:7px}
+.bd181-left-login a{min-height:44px;border-radius:12px;display:grid;place-items:center;background:#147152;color:#fff!important;font-size:10px;font-weight:850}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd172-root[data-bd172-side="left"] .bd172-user,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd181-left-login{
+  background:radial-gradient(circle at 92% 0,rgba(63,166,132,.18),transparent 42%),linear-gradient(145deg,#0b2e28,#10253a)!important;
+  border-color:rgba(125,221,187,.22)!important
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd172-root[data-bd172-side="left"] .bd172-user strong,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd181-left-login strong{color:#9ce6cb!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd172-root[data-bd172-side="left"] .bd172-user small{color:#c4ddd4!important}
+
+/* The real publish controls can never disappear while the real composer form is open. */
+#composerForm:not([hidden]) .composer-actions{
+  display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+  align-items:center!important;justify-content:space-between!important;gap:9px!important;
+  position:sticky!important;bottom:max(6px,env(safe-area-inset-bottom))!important;z-index:85!important;
+  margin-top:12px!important;padding:9px!important;border:1px solid var(--border)!important;border-radius:13px!important;
+  background:color-mix(in srgb,var(--surface-solid) 94%,transparent)!important;
+  box-shadow:0 9px 24px rgba(40,54,91,.12)!important;backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important
+}
+#composerForm:not([hidden]) .composer-actions .action-group{display:flex!important;visibility:visible!important;opacity:1!important;gap:7px!important;flex:0 0 auto!important}
+#composerForm:not([hidden]) .composer-actions button[type="submit"]{display:inline-flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;min-width:112px!important}
+@media(max-width:520px){#composerForm:not([hidden]) .composer-actions{align-items:flex-end!important}.composer-hint{max-width:48%!important}}
+
+/* Runtime JS cards: genuine swipe carousel + image/drag preview. */
+#bd177CardStudio:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+#bd177CardStudio .bd177-card-strip{
+  scroll-snap-type:x proximity!important;touch-action:pan-x!important;overscroll-behavior-x:contain!important;
+  cursor:grab!important;user-select:none!important;-webkit-user-select:none!important
+}
+#bd177CardStudio .bd177-card-strip.bd181-card-swiping{cursor:grabbing!important;scroll-snap-type:none!important}
+#bd177CardStudio .bd177-card-choice{touch-action:pan-x!important;-webkit-tap-highlight-color:transparent!important}
+#bd177CardStudio .bd177-card-choice.bd181-no-click{pointer-events:none!important}
+#bd177CardStudio .bd177-card-head strong{font-size:12px!important}
+#bd177CardStudio .bd177-card-tools{display:flex!important;visibility:visible!important;opacity:1!important}
+#bd177CardStudio #bd177CardPreview:not([hidden]){display:block!important;visibility:visible!important;opacity:1!important}
+#bd177CardStudio .bd177-card-text{text-align:center!important}
+</style>
+<script id="bd-v8181-composer-sidebar-card-master-js">
+(()=>{'use strict';
+if(window.__BD_V8181_COMPOSER_SIDEBAR_CARD__)return;window.__BD_V8181_COMPOSER_SIDEBAR_CARD__=true;
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+const USER_KEYS=['bhubondangaCurrentUser','currentUser','bdCurrentUser','bhubondangaUser'];
+function localUser(){for(const k of USER_KEYS){try{const u=JSON.parse(localStorage.getItem(k)||'null');if(u&&(u.loggedIn===true||u.id||u.uid||u.email||u.username))return u}catch(_){}}return W.__BD_LIVE_SESSION?.user||null}
+function hasSession(){return !!(W.__BD_LIVE_SESSION?.user||localUser())}
+function profileHref(){const i=W.__BD_IDENTITY||{},u=localUser()||{},m=u.user_metadata||{},role=String(i.role||u.role||m.role||'').toLowerCase(),username=String(i.author_username||u.username||m.username||'').replace(/^@/,'').toLowerCase(),id=i.author_id||u.id||u.uid||username,name=String(i.author_name||u.displayName||u.display_name||u.name||m.full_name||m.name||'');if(role==='founder'||username==='mahmud-sohel'||name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id||username);return'profile.html?v=842&user='+encodeURIComponent(id||username)}
+function enhanceLeftRoot(root){if(!root||root.dataset.bd172Side!=='left')return;const user=root.querySelector('.bd172-user');if(user){root.querySelectorAll('.bd181-left-login').forEach(n=>n.remove());const actions=user.querySelector('.bd172-user-actions');if(actions&&!actions.querySelector('[data-bd181-logout]')){const b=D.createElement('button');b.type='button';b.dataset.bd181Logout='1';b.textContent='লগআউট';actions.appendChild(b)}const main=user.querySelector('.bd172-user-main');if(main)main.href=profileHref();return}
+ if(!root.querySelector('.bd181-left-login')){const theme=[...root.children].find(x=>x.querySelector?.('[data-bd172-theme]'))||null;const box=D.createElement('section');box.className='bd172-card bd181-left-login';box.innerHTML='<strong>আপন ভুবনে প্রবেশ</strong><a href="login.html">লগইন</a>';theme?root.insertBefore(box,theme):root.appendChild(box)}}
+function enhanceSidebars(){document.querySelectorAll('.bd172-root[data-bd172-side="left"]').forEach(enhanceLeftRoot)}
+async function logout(){const c=W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client;try{await c?.auth?.signOut?.()}catch(_){};for(const k of USER_KEYS)try{localStorage.removeItem(k)}catch(_){};try{sessionStorage.clear()}catch(_){};W.__BD_LIVE_SESSION=null;location.href='index.html'}
+D.addEventListener('click',e=>{const b=e.target.closest?.('[data-bd181-logout]');if(!b)return;e.preventDefault();e.stopPropagation();logout()},true);
+
+/* Publish action visibility follows the actual hidden state of composerForm. */
+function ensurePublish(){const f=$('#composerForm');if(!f||f.hidden||f.hasAttribute('hidden'))return;const a=f.querySelector('.composer-actions');if(!a)return;a.hidden=false;a.removeAttribute('hidden');const s=a.querySelector('button[type="submit"]');if(s){s.disabled=false;s.removeAttribute('disabled');s.style.pointerEvents='auto'}}
+D.addEventListener('click',e=>{if(e.target.closest?.('#composerPrompt,.quick-type,[data-open-type],.bd58-template-chip,[data-card-id]')){setTimeout(ensurePublish,0);setTimeout(ensurePublish,120);setTimeout(ensurePublish,420)}},true);
+
+/* Card swipe lock: horizontal movement means swipe, never selection. */
+let gesture=null,suppressClickUntil=0;
+function stripOf(t){return t?.closest?.('#bd177CardStudio .bd177-card-strip')||null}
+D.addEventListener('pointerdown',e=>{const choice=e.target.closest?.('#bd177CardStudio [data-card-id]');if(!choice||e.button>0)return;const strip=stripOf(choice);if(!strip)return;gesture={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,strip,moved:false,pointerType:e.pointerType}},true);
+D.addEventListener('pointermove',e=>{if(!gesture||gesture.id!==e.pointerId)return;const dx=e.clientX-gesture.x,dy=e.clientY-gesture.y;if(!gesture.moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){gesture.moved=true;gesture.strip.classList.add('bd181-card-swiping')}if(gesture.moved&&gesture.pointerType==='mouse'){e.preventDefault();gesture.strip.scrollLeft-=e.clientX-gesture.lastX}gesture.lastX=e.clientX},true);
+function finishGesture(e){if(!gesture||gesture.id!==e.pointerId)return;if(gesture.moved){suppressClickUntil=Date.now()+480;gesture.strip.classList.remove('bd181-card-swiping')}gesture=null}
+D.addEventListener('pointerup',finishGesture,true);D.addEventListener('pointercancel',finishGesture,true);
+D.addEventListener('click',e=>{if(Date.now()>suppressClickUntil)return;const c=e.target.closest?.('#bd177CardStudio [data-card-id]');if(!c)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()},true);
+
+/* If the user is Founder/premium and the old studio exists, keep it mounted in the real composer. */
+function ensureCardStudio(){try{W.BhubondangaCardStudio177?.mount?.()}catch(_){}const s=$('#bd177CardStudio');const f=$('#composerForm');if(!s||!f)return;if(s.parentElement!==f){const anchor=$('#bd58TemplatePicker',f)||$('#bd58FontToolbar',f)||$('#postTitle',f);anchor?.insertAdjacentElement('afterend',s)}if(!s.hidden){s.removeAttribute('hidden');s.style.pointerEvents='auto'}}
+function refresh(){enhanceSidebars();ensurePublish();ensureCardStudio()}
+const mo=new MutationObserver(ms=>{let side=false,composer=false;for(const m of ms){const t=m.target;if(t?.closest?.('#leftSidebar,#mobileDrawer')||[...m.addedNodes||[]].some(n=>n.nodeType===1&&(n.matches?.('.bd172-root')||n.querySelector?.('.bd172-root'))))side=true;if(t?.id==='composerForm'||t?.closest?.('#composer')||[...m.addedNodes||[]].some(n=>n.nodeType===1&&(n.id==='bd177CardStudio'||n.querySelector?.('#bd177CardStudio'))))composer=true}if(side)requestAnimationFrame(enhanceSidebars);if(composer)requestAnimationFrame(()=>{ensurePublish();ensureCardStudio()})});
+function start(){refresh();mo.observe(D.body,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','data-bd71-stage']});[250,700,1600].forEach(ms=>setTimeout(refresh,ms));}
+D.addEventListener('bd:auth-ready',()=>setTimeout(refresh,40));W.addEventListener('pageshow',()=>setTimeout(refresh,40),{passive:true});
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
+W.BhubondangaMasterLock181={refresh,logout,enhanceSidebars,ensurePublish,ensureCardStudio};
+})();
+</script>
+
+
+
+<!-- =========================================================
+     BHUBONDANGA V8.182 — FINAL COMPOSER ACCESS MASTER LOCK
+     Builds on V8.181 + V8.180. No layout redesign.
+     ========================================================= -->
+<style id="bd-v8182-final-composer-access-css">
+/* Card Studio belongs to the template-choice step too. Older staged CSS hid every child except the old template strip. */
+#composer[data-bd71-stage="template"] #composerForm > #bd177CardStudio{
+ display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;height:auto!important;
+ margin-top:9px!important
+}
+#composer[data-bd71-stage="template"] #composerForm > #bd177CardStudio .bd177-card-strip,
+#composer[data-bd71-stage="template"] #composerForm > #bd177CardStudio .bd177-card-head{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
+#composer[data-bd71-stage="template"] #composerForm > #bd177CardStudio .bd177-card-tools{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
+/* Once a JS card is chosen, the same Studio stays visible in the writing step with live image/text preview. */
+#composer[data-bd71-stage="write"] #composerForm > #bd177CardStudio{
+ display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
+/* Final publish lock applies specifically to the writing step, beating all old staged selectors. */
+#composer[data-bd71-stage="write"] #composerForm > .composer-actions{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
+#composer[data-bd71-stage="write"] #composerForm > .composer-actions .action-group,
+#composer[data-bd71-stage="write"] #composerForm > .composer-actions button[type="submit"]{
+ display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important
+}
+</style>
+<script id="bd-v8182-final-composer-access-js">
+(()=>{'use strict';
+if(window.__BD_V8182_FINAL_COMPOSER_ACCESS__)return;window.__BD_V8182_FINAL_COMPOSER_ACCESS__=true;
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null;
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+function identity(){const i=W.__BD_IDENTITY||{},s=W.__BD_LIVE_SESSION?.user||{},m=s.user_metadata||{};const id=i.author_id||s.id||'',username=String(i.author_username||m.username||'').replace(/^@/,''),name=i.author_name||m.full_name||m.name||username||'',avatar=i.author_avatar||m.avatar_url||m.picture||'',role=String(i.role||m.role||'');return{id,username,name,avatar,role}}
+function profileUrl(x){const role=x.role.toLowerCase(),u=x.username.toLowerCase();if(role==='founder'||u==='mahmud-sohel'||x.name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(x.id||u);return'profile.html?v=842&user='+encodeURIComponent(x.id||u)}
+function identityCard(root){if(!root||root.dataset.bd172Side!=='left'||root.querySelector('.bd172-user'))return false;const x=identity();if(!(x.id||x.username||x.name)||(!x.id&&!x.role&&!W.__BD_LIVE_SESSION?.user))return false;root.querySelectorAll('.bd181-left-login').forEach(n=>n.remove());const sec=D.createElement('section');sec.className='bd172-card bd172-user bd182-identity-user';const url=profileUrl(x);sec.innerHTML='<a class="bd172-user-main" href="'+esc(url)+'"><span class="bd172-user-avatar">'+(x.avatar?'<img src="'+esc(x.avatar)+'" alt="">':esc((x.name||'ভ').slice(0,1)))+'</span><span><strong>'+esc(x.name||'ভুবনডাঙ্গার সদস্য')+'</strong><small>আপনার ব্যক্তিগত ভুবন</small></span></a><div class="bd172-user-actions"><a href="'+esc(url)+'">প্রোফাইল</a><a href="notifications.html">নোটিফিকেশন</a><a href="messages.html">ইনবক্স</a><button type="button" data-bd181-logout>লগআউট</button></div>';
+ const identityBox=root.querySelector('.bd172-identity');identityBox?.insertAdjacentElement('afterend',sec);return true}
+function fixSidebar(){D.querySelectorAll('.bd172-root[data-bd172-side="left"]').forEach(root=>{if(identityCard(root))return;W.BhubondangaMasterLock181?.enhanceSidebars?.()})}
+function goWriteAfterCard(){const c=$('#composer'),f=$('#composerForm');if(!c||!f)return;c.dataset.bd71Stage='write';f.hidden=false;f.removeAttribute('hidden');requestAnimationFrame(()=>{W.BhubondangaMasterLock181?.ensurePublish?.();try{W.BhubondangaCardStudio177?.mount?.()}catch(_){}})}
+/* A real card tap selects; a swipe is already cancelled by V8.181 capture lock. */
+D.addEventListener('click',e=>{const b=e.target.closest?.('#bd177CardStudio [data-card-id]');if(!b)return;setTimeout(goWriteAfterCard,45)},false);
+/* Card image/center/off tools never collapse the writing surface. */
+D.addEventListener('click',e=>{if(e.target.closest?.('#bd177CardStudio [data-card-image],#bd177CardStudio [data-card-center]'))setTimeout(goWriteAfterCard,0)},false);
+function sync(){fixSidebar();const c=$('#composer');if(c?.dataset?.bd71Stage==='write')W.BhubondangaMasterLock181?.ensurePublish?.();try{W.BhubondangaCardStudio177?.mount?.()}catch(_){} }
+let syncQueued=false;function queueSync(){if(syncQueued)return;syncQueued=true;requestAnimationFrame(()=>{syncQueued=false;sync()})}
+const composerObserver=new MutationObserver(queueSync),sideObserver=new MutationObserver(queueSync);
+function start(){sync();const c=$('#composer');if(c)composerObserver.observe(c,{attributes:true,attributeFilter:['data-bd71-stage'],childList:true,subtree:false});for(const host of [$('#leftSidebar'),$('#mobileDrawer')])if(host)sideObserver.observe(host,{childList:true,subtree:false});[300,900,1800].forEach(ms=>setTimeout(sync,ms))}
+D.addEventListener('bd:auth-ready',()=>setTimeout(sync,30));if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
+W.BhubondangaMasterLock182={sync,goWriteAfterCard,fixSidebar};
 })();
 </script>
 
