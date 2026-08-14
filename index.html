@@ -783,13 +783,21 @@ function applyCurrentUser(){
 }
 applyCurrentUser();
 const baseMenuItems=[
-  ['home','হোম',ROUTES.home],['users','পেজ','index.html?pages=1'],['poem','কবিতা',ROUTES.poem],['mic','আবৃত্তি',ROUTES.recitation],['moon','মধ্যরাতের প্রলাপ',ROUTES.midnight],['star','খ্যাতিমান কবি',ROUTES.famous],['cloud','ছোট কথার প্রলাপ',ROUTES.prolap],['letter','চিঠিপত্র',ROUTES.letter],['quote','মনীষীদের বাণী',ROUTES.quotes],['chat','সাহিত্য আলোচনা',ROUTES.discussion],['tree','পরিবেশের কথা',ROUTES.environment],['users','ভুবনডাঙ্গার লেখক',ROUTES.authors]
+  ['poem','কবিতা',ROUTES.poem],
+  ['mic','আবৃত্তি',ROUTES.recitation],
+  ['cloud','ছোট কথার প্রলাপ',ROUTES.prolap],
+  ['letter','চিঠিপত্র',ROUTES.letter],
+  ['moon','মধ্যরাতের প্রলাপ',ROUTES.midnight],
+  ['star','খ্যাতিমান কবি',ROUTES.famous],
+  ['quote','বিখ্যাত মনীষীদের বাণী',ROUTES.quotes],
+  ['tree','পরিবেশ',ROUTES.environment],
+  ['chat','পরামর্শ',ROUTES.discussion+'?category=advice']
 ];
 function sessionMenuHtml(){
   if(loggedIn){return [
     ['message','ইনবক্স','messages.html'],['bell','নোটিফিকেশন','notifications.html'],['user','আপনার প্রোফাইল',currentProfileUrl],['archive','আর্কাইভ','archive.html'],['memory','মেমোরিজ','memories.html'],['settings','সেটিংস','settings.html']
   ].map(x=>'<a class="menu-item" href="'+esc(x[2])+'"><span class="menu-icon">'+icon(x[0])+'</span><strong>'+esc(x[1])+'</strong><span>›</span></a>').join('')+'<button class="menu-item sidebar-logout" type="button" data-logout><span class="menu-icon">'+icon('x')+'</span><strong>লগআউট</strong><span>›</span></button>'}
-  return '<a class="menu-item" href="poem.html"><span class="menu-icon">'+icon('poem')+'</span><strong>আজকের কবিতা</strong><span>›</span></a><a class="menu-item" href="famous-quotes.html"><span class="menu-icon">'+icon('quote')+'</span><strong>মনীষীদের বাণী</strong><span>›</span></a><a class="menu-item" href="bhubondangar-lekhok.html"><span class="menu-icon">'+icon('users')+'</span><strong>নতুন লেখকদের চিনুন</strong><span>›</span></a>'
+  return ''
 }
 function leftSidebarHtml(){return '<div class="side-box glass"><div class="apn-vhuban"><div class="apn-leaf" aria-hidden="true">🌿</div><h3><a href="index.html">আপন ভুবন</a></h3><p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p><div class="quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></div><div class="menu-card"><div class="menu-list">'+baseMenuItems.map(x=>'<a class="menu-item" href="'+esc(x[2])+'"><span class="menu-icon">'+icon(x[0])+'</span><strong>'+esc(x[1])+'</strong><span>›</span></a>').join('')+sessionMenuHtml()+'<button class="menu-item theme-switch-row" type="button" data-drawer-theme aria-pressed="false"><span class="menu-icon theme-mode-icon">'+icon('moon')+'</span><span class="theme-switch-copy"><strong class="theme-mode-title">ডার্ক মোড</strong><small class="theme-mode-subtitle">লাইট মোড চালু আছে</small></span><span class="theme-switch" aria-hidden="true"><span class="theme-switch-knob"></span></span></button></div></div></div>'}
 function accountHtml(){
@@ -800,7 +808,7 @@ function rightSidebarHtml(){return accountHtml()+'<section class="glass right-se
 document.getElementById('leftSidebar').innerHTML=leftSidebarHtml();
 document.getElementById('rightSidebar').innerHTML=rightSidebarHtml();
 document.getElementById('mobileDrawer').innerHTML='<div class="drawer-head"><span class="drawer-title"><span class="drawer-leaf" aria-hidden="true">🌿</span><strong>আপন ভুবন</strong></span><button class="drawer-close" id="closeDrawer" type="button" aria-label="মেনু বন্ধ করুন">'+icon('x')+'</button></div>'+leftSidebarHtml();
-document.getElementById('rightMobileDrawer').innerHTML='<div class="drawer-head"><strong>'+(loggedIn?'আপনার ভুবন':'সাহিত্যিক ভুবন')+'</strong><button class="drawer-close" id="closeRightDrawer" type="button" aria-label="ডান মেনু বন্ধ করুন">'+icon('x')+'</button></div>'+rightSidebarHtml();
+document.getElementById('rightMobileDrawer').innerHTML='<div class="drawer-head"><strong>সক্রিয় লেখক ও সহায়তা</strong><button class="drawer-close" id="closeRightDrawer" type="button" aria-label="ডান মেনু বন্ধ করুন">'+icon('x')+'</button></div>'+rightSidebarHtml();
 function normalizeType(value,item){const t=String(value||'').toLocaleLowerCase('bn-BD');if(t==='news-page'||t.includes('নিউজ পেজ'))return'news-page';if(t==='news'||t.includes('নিউজ')||t.includes('সংবাদ'))return'news';if(t.includes('midnight')||t.includes('মধ্যরাত'))return'midnight';if(t.includes('recitation')||t.includes('আবৃত্তি'))return'recitation';if(t.includes('letter')||t.includes('চিঠি'))return'letter';if(t.includes('environment')||t.includes('nature')||t.includes('পরিবেশ')||t.includes('প্রকৃতি'))return'environment';if(t.includes('discussion')||t.includes('আলোচনা'))return'discussion';if(t.includes('prolap')||t.includes('প্রলাপ'))return'prolap';if(t.includes('poem')||t.includes('কবিতা'))return'poem';if(item&&item.audioUrl)return'recitation';return'poem'}
 function typeLabel(type){return({poem:'কবিতা',prolap:'প্রলাপ',midnight:'মধ্যরাতের প্রলাপ',letter:'চিঠিপত্র',recitation:'আবৃত্তি',environment:'পরিবেশের কথা',news:'নিউজ','news-page':'নিউজ পেজ',discussion:'সাহিত্য আলোচনা'})[type]||'সাহিত্যকর্ম'}
 function poetProfileRoute(name){return 'poet-profile.html?poet='+encodeURIComponent(slug(name))}
@@ -1480,7 +1488,7 @@ const mobileMoreBtn=document.getElementById('mobileMoreBtn'),mobileMoreMenu=docu
   function cardHtml(rows,demo){const items=rows.map(memberItem).join('');return '<section class="glass right-section bd-new-members-card" data-new-members-card><div class="bd-new-members-head"><h3>আজকের নতুন সদস্য</h3><span class="bd-new-members-count">'+rows.length+'</span></div><div class="bd-welcome-flow"><div class="bd-welcome-flow-track"><span>স্বাগতম আপনার ভুবনে • আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।</span><span aria-hidden="true">স্বাগতম আপনার ভুবনে • আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।</span></div></div><div class="bd-member-window"><div class="bd-member-track" style="--member-speed:'+Math.max(18,rows.length*4)+'s"><div class="bd-member-group">'+items+'</div><div class="bd-member-group" aria-hidden="true">'+items+'</div></div></div>'+(demo?'<div class="bd-member-demo">ডেমো সদস্য—নিবন্ধন শুরু হলে বাস্তব সদস্য দেখাবে</div>':'')+'</section>'}
   async function installMembers(){
     const result=await fetchMembers();
-    ['#rightSidebar','#rightMobileDrawer'].forEach(sel=>{const root=q(sel);if(!root)return;root.querySelectorAll('[data-new-members-card]').forEach(x=>x.remove());const stack=q('.bd9-sidebar-stack',root)||root;const account=q('.account-card',stack);if(account)account.insertAdjacentHTML('afterend',cardHtml(result.rows,result.demo));else stack.insertAdjacentHTML('afterbegin',cardHtml(result.rows,result.demo))});
+    ['#rightSidebar','#rightMobileDrawer'].forEach(sel=>{const root=q(sel);if(!root)return;root.querySelectorAll('[data-new-members-card]').forEach(x=>x.remove());const stack=q('.bd9-sidebar-stack',root)||root;const account=q('.account-card',stack);if(account)account.insertAdjacentHTML('beforebegin',cardHtml(result.rows,result.demo));else stack.insertAdjacentHTML('afterbegin',cardHtml(result.rows,result.demo))});
   }
   function init(){addThemeButtons();bindPicker();installMembers();setTimeout(addThemeButtons,250);setTimeout(installMembers,1000)}
   if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',init,{once:true});else init();
@@ -1499,7 +1507,7 @@ function profileUrl(u){const r=roleOf(u),id=u?.username||u?.user_metadata?.usern
 function authMarkup(session){const u=session?.user;if(!u)return `<section class="bd9-card bd-r6-auth-card" data-r6-auth data-r6-state="guest"><div class="bd-r6-auth-title"><span>🌿</span><b>আপন ভুবনে প্রবেশ</b></div><p class="bd-r6-auth-copy">লেখা প্রকাশ, মন্তব্য, বার্তা ও নিজের সাহিত্যিক ভুবন সংরক্ষণ করতে লগইন করুন।</p><div class="bd-r6-auth-actions"><a class="primary" href="login.html">লগইন</a><a href="register.html">নিবন্ধন</a></div></section>`;
  const meta=u.user_metadata||{},name=meta.display_name||meta.full_name||u.display_name||u.name||u.username||u.email?.split('@')[0]||'সদস্য',avatar=meta.avatar_url||meta.picture||u.avatar_url||u.avatar||'',url=profileUrl(u);return `<section class="bd9-card bd-r6-auth-card" data-r6-auth data-r6-state="user"><div class="bd-r6-user-card">${avatar?`<img loading="lazy" decoding="async" src="${esc(avatar)}" alt="">`:`<div class="bd-r6-user-avatar">🌿</div>`}<span><strong>${esc(name)}</strong><small>${esc(roleOf(u))} · আপনার ব্যক্তিগত ভুবন</small></span><div class="bd-r6-user-links"><a href="${url}">প্রোফাইল</a><a href="#" data-r6-open="notifications">নোটিফিকেশন</a><a href="#" data-r6-open="messages">ইনবক্স</a></div></div></section>`}
 async function session(){let s=fallbackSession();try{const c=window.supabaseClient||window.sb||window.supabase?.createClient&&window.__BD_SUPABASE;if(c?.auth?.getSession){const r=await c.auth.getSession();if(r?.data?.session)s=r.data.session}}catch(_){}return s}
-function installAuth(sessionValue){const desired=sessionValue?.user?'user':'guest';for(const root of [$('#leftSidebar .bd9-sidebar-stack'),$('#mobileDrawer .bd9-sidebar-stack')]){if(!root)continue;const current=root.querySelector('[data-r6-auth]');if(current?.dataset.r6State===desired)continue;current?.remove();const identity=root.querySelector('.bd9-identity');if(identity)identity.insertAdjacentHTML('afterend',authMarkup(sessionValue));else root.insertAdjacentHTML('afterbegin',authMarkup(sessionValue))}}
+function installAuth(sessionValue){const desired=sessionValue?.user?'user':'guest';for(const root of [$('#leftSidebar .bd9-sidebar-stack'),$('#mobileDrawer .bd9-sidebar-stack')]){if(!root)continue;const current=root.querySelector('[data-r6-auth]');if(desired==='guest'){current?.remove();root.querySelectorAll('[data-bd112-guest],.bd-guest-profile-entry').forEach(x=>x.remove());continue}if(current?.dataset.r6State===desired)continue;current?.remove();const identity=root.querySelector('.bd9-identity');if(identity)identity.insertAdjacentHTML('afterend',authMarkup(sessionValue));else root.insertAdjacentHTML('afterbegin',authMarkup(sessionValue))}}
 function suggestions(){return `<section class="bd9-card" data-r6-suggest><div class="bd9-title"><h3>আপনার পরিচিত হতে পারে</h3><small>সাহিত্যিক সংযোগ</small></div><div class="bd-r6-suggest-grid"><a class="bd-r6-person" href="profile.html?user=samia-islam"><span class="avatar">সা</span><span><b>সামিয়া ইসলাম</b><small>কবিতা ও পরিবেশ</small></span><i>›</i></a><a class="bd-r6-person" href="poet-profile.html?user=ariful-haque"><span class="avatar">আ</span><span><b>আরিফুল হক</b><small>নতুন কবি সদস্য</small></span><i>›</i></a><a class="bd-r6-person" href="profile.html?user=nila-rahman"><span class="avatar">নী</span><span><b>নীলা রহমান</b><small>৩ জন পারস্পরিক বন্ধু</small></span><i>›</i></a></div></section>`}
 function installSuggest(){for(const root of [$('#rightSidebar .bd9-sidebar-stack'),$('#rightMobileDrawer .bd9-sidebar-stack')]){if(!root||root.querySelector('[data-r6-suggest]'))continue;root.insertAdjacentHTML('afterbegin',suggestions())}}
 function ensureSheets(){if($('#bdR6SheetBackdrop'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-r6-sheet-backdrop" id="bdR6SheetBackdrop"></div><section class="bd-r6-sheet" id="bdR6Sheet"><div class="bd-r6-sheet-head"><h2 id="bdR6SheetTitle">আপনার আপডেট</h2><button class="bd-r6-sheet-close" id="bdR6SheetClose">×</button></div><div id="bdR6SheetBody"></div></section>`)}
@@ -2940,10 +2948,10 @@ const backs=['#drawerBackdrop','#backdrop','#midnightDrawerBackdrop','.drawer-ba
 function anyDrawerOpen(){return drawers.some(sel=>$$(sel).some(x=>x.classList.contains('open')))}
 function reconcileBackdrop(){const open=anyDrawerOpen();for(const sel of backs)for(const b of $$(sel)){if(open){/* existing drawer code owns the visible state */}else{if(b.classList.contains('show')||b.classList.contains('open'))b.classList.remove('show','open');if(b.getAttribute('aria-hidden')!=='true')b.setAttribute('aria-hidden','true')}}if(!open)D.body.classList.remove('locked','drawer-open')}
 function guestMarkup(){const s=D.createElement('section');s.className='bd112-guest-entry';s.dataset.bd112Guest='1';s.innerHTML='<strong>আপনার প্রোফাইল তৈরি করুন</strong><p>ভুবনডাঙ্গায় নিজের সাহিত্যিক পরিচয়, লেখা, পাঠ ও সংযোগের জন্য একটি ব্যক্তিগত প্রোফাইল তৈরি করুন।</p><div class="bd112-guest-actions"><a href="register.html">প্রোফাইল তৈরি করুন</a><a href="login.html">লগইন</a></div>';return s}
-function roots(){return [$('#mobileDrawer .bd9-sidebar-stack'),$('#rightMobileDrawer .bd9-sidebar-stack'),$('#leftSidebar .bd9-sidebar-stack'),$('#rightSidebar .bd9-sidebar-stack')].filter(Boolean)}
+function roots(){return [$('#rightMobileDrawer .bd9-sidebar-stack'),$('#rightSidebar .bd9-sidebar-stack')].filter(Boolean)}
 function loggedFromDetail(detail){return !!detail?.session?.user}
 let logged=!!W.__BD_LIVE_SESSION?.user;
-function syncGuest(){for(const root of roots()){let g=$('[data-bd112-guest]',root);if(logged){g?.remove();continue}const existing=$('[data-r6-auth][data-r6-state="guest"]',root);if(existing){existing.hidden=false;existing.classList.remove('bd-auth-hidden');continue}if(!g){g=guestMarkup();const identity=$('.bd9-identity',root);if(identity)identity.insertAdjacentElement('afterend',g);else root.prepend(g)}}}
+function syncGuest(){for(const root of roots()){let g=$('[data-bd112-guest]',root);if(logged){g?.remove();continue}const account=$('.bd-guest-profile-entry,[data-bd-guest-auth="1"],.account-card',root);if(account){g?.remove();continue}const existing=$('[data-r6-auth][data-r6-state="guest"]',root);if(existing){existing.hidden=false;existing.classList.remove('bd-auth-hidden');continue}if(!g){g=guestMarkup();root.prepend(g)}}}
 D.addEventListener('bd:auth-ready',e=>{logged=loggedFromDetail(e.detail);syncGuest();reconcileBackdrop()});
 D.addEventListener('click',e=>{if(e.target.closest('[data-bd9-close],.drawer-close,#closeDrawer,#closeRightDrawer')||e.target.matches('#drawerBackdrop,#backdrop,#midnightDrawerBackdrop,.drawer-backdrop'))setTimeout(reconcileBackdrop,0)},true);
 W.addEventListener('pageshow',()=>{reconcileBackdrop();syncGuest()},{passive:true});
@@ -6387,6 +6395,111 @@ const mo=new MutationObserver(ms=>{
   if(reels)enhanceReels();
 });
 function boot(){ensureReactionTray();primeFeedVideos();safeReactionImages();enhanceReels();mo.observe(D.body,{childList:true,subtree:true});setTimeout(()=>{primeFeedVideos();safeReactionImages();enhanceReels()},500);setTimeout(()=>{primeFeedVideos();enhanceReels()},1600)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+</script>
+
+<style id="bd-v8165-reference-sidebars-css">
+:root{--bd-drawer-width:min(430px,max(228px,60.5vw))!important}
+@media(max-width:899px){
+  #mobileDrawer,#rightMobileDrawer,[data-bd9-drawer="left"],[data-bd9-drawer="right"]{
+    width:var(--bd-drawer-width)!important;max-width:86vw!important;
+    padding:12px 11px calc(18px + env(safe-area-inset-bottom))!important;
+    background:linear-gradient(165deg,#fbfdff 0%,#f1f5fb 58%,#f7f3fb 100%)!important
+  }
+  html[data-theme="dark"] #mobileDrawer,html[data-theme="dark"] #rightMobileDrawer,
+  html[data-bd-theme="dark"] #mobileDrawer,html[data-bd-theme="dark"] #rightMobileDrawer{
+    background:linear-gradient(165deg,#0b182a,#091426 58%,#151229)!important
+  }
+  #mobileDrawer .drawer-head,#rightMobileDrawer .drawer-head{
+    min-height:64px!important;margin:-12px -11px 12px!important;padding:13px 14px!important;
+    border-bottom:1px solid rgba(105,123,165,.16)!important;background:rgba(250,252,255,.97)!important
+  }
+  html[data-theme="dark"] #mobileDrawer .drawer-head,html[data-theme="dark"] #rightMobileDrawer .drawer-head{
+    background:rgba(9,22,40,.98)!important;border-color:rgba(183,199,235,.14)!important
+  }
+  #mobileDrawer .drawer-head strong,#rightMobileDrawer .drawer-head strong{font-size:15px!important;font-weight:850!important;letter-spacing:-.01em}
+  #mobileDrawer .drawer-close,#rightMobileDrawer .drawer-close{width:42px!important;height:42px!important;flex-basis:42px!important;font-size:23px!important;background:rgba(255,255,255,.92)!important;box-shadow:0 6px 18px rgba(36,53,92,.07)!important}
+  html[data-theme="dark"] #mobileDrawer .drawer-close,html[data-theme="dark"] #rightMobileDrawer .drawer-close{background:#13243b!important;color:#fff!important}
+}
+.bd165-stack{display:grid!important;gap:10px!important;padding:0 1px 12px!important}
+.bd165-card{border:1px solid rgba(105,123,165,.18)!important;border-radius:19px!important;padding:12px!important;background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(244,247,255,.91))!important;box-shadow:0 8px 24px rgba(56,70,112,.055),inset 0 1px 0 rgba(255,255,255,.95)!important;color:#1f3550!important;overflow:hidden!important}
+html[data-theme="dark"] .bd165-card,html[data-bd-theme="dark"] .bd165-card{background:linear-gradient(145deg,#10243d,#0c1b30)!important;border-color:rgba(173,190,231,.16)!important;color:#fff!important;box-shadow:0 12px 30px rgba(0,0,0,.22)!important}
+.bd165-identity{text-align:center!important;padding:16px 12px!important}
+.bd165-leaf{width:54px;height:54px;margin:0 auto 7px;border-radius:15px;display:grid;place-items:center;background:#fff;border:1px solid rgba(80,141,118,.16);font:35px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;box-shadow:0 9px 22px rgba(62,114,94,.10)}
+.bd165-identity h3{margin:0;color:#c85a97!important;font-size:19px!important;line-height:1.25!important}
+.bd165-identity p{margin:5px 0 0;color:#65748a!important;font-size:9px!important;line-height:1.6!important}
+.bd165-quote{margin-top:11px;padding:8px 9px;border-left:4px solid #d45e9d;border-radius:0 10px 10px 0;background:#f0f3fb;color:#5e6e86;font-size:8px;line-height:1.5;text-align:left}
+html[data-theme="dark"] .bd165-identity p,html[data-theme="dark"] .bd165-quote{color:#dbe5f5!important}
+html[data-theme="dark"] .bd165-quote{background:#142741!important}
+.bd165-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.bd165-title h3{margin:0;font-size:12.5px!important;line-height:1.3!important;font-weight:850!important}
+.bd165-title small{font-size:7px!important;color:#7c899e!important}
+.bd165-menu{display:grid;gap:6px}
+.bd165-menu a{min-height:44px;padding:6px 8px;border:1px solid rgba(105,123,165,.15);border-radius:12px;display:grid;grid-template-columns:34px minmax(0,1fr) 14px;align-items:center;gap:8px;background:#f6f8fd;color:#23384f;text-decoration:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.92);transition:transform .14s ease,border-color .14s ease,background .14s ease}
+.bd165-menu a:active{transform:scale(.985)}
+html[data-theme="dark"] .bd165-menu a,html[data-bd-theme="dark"] .bd165-menu a{background:#14263f;color:#fff;border-color:rgba(174,192,231,.13)}
+.bd165-menu .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font:17px/1 "Apple Color Emoji","Segoe UI Emoji",sans-serif;background:#eaf0fb;color:#586bd2}
+.bd165-menu a:nth-child(2) .ico{background:#eee7ff;color:#8b63dc}
+.bd165-menu a:nth-child(3) .ico{background:#e5f5f4;color:#338e83}
+.bd165-menu a:nth-child(4) .ico{background:#f6e7f0;color:#bb608b}
+.bd165-menu a:nth-child(5) .ico{background:#e9ecfb;color:#596ac7}
+.bd165-menu a:nth-child(6) .ico{background:#fff0da;color:#aa7627}
+.bd165-menu a:nth-child(7) .ico{background:#f0e7ff;color:#7c5bd0}
+.bd165-menu a:nth-child(8) .ico{background:#e4f4ec;color:#3b9270}
+.bd165-menu a:nth-child(9) .ico{background:#e8f0fa;color:#547bb8}
+.bd165-menu b{font-size:9.5px!important;font-weight:800!important;min-width:0}
+.bd165-menu i{font-style:normal;color:#7f8b9d;font-size:15px}
+.bd165-profile-cta{background:linear-gradient(145deg,#fbfffd,#effaf5)!important;border-color:rgba(45,135,96,.20)!important}
+.bd165-profile-cta h3{color:#17684b!important;font-size:14px!important;margin:0}
+.bd165-profile-cta p{margin:5px 0 10px;color:#647487!important;font-size:9px!important;line-height:1.55}
+.bd165-profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bd165-profile-actions a{min-height:42px;border:1px solid rgba(45,135,96,.18);border-radius:11px;display:flex;align-items:center;justify-content:center;background:#fff;color:#17684b;font-size:9px;font-weight:850}
+.bd165-profile-actions a:first-child{background:#16734f;color:#fff;border-color:#16734f}
+html[data-theme="dark"] .bd165-profile-cta{background:linear-gradient(145deg,#12382f,#10293a)!important}
+.bd165-person{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 4px;border-top:1px solid rgba(105,123,165,.10);text-decoration:none;color:inherit}
+.bd165-person:first-child{border-top:0}
+.bd165-avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#8065e7,#c05eaa);color:#fff;font-weight:850;font-size:13px;overflow:hidden}
+.bd165-avatar img{width:100%;height:100%;object-fit:cover}
+.bd165-person b{display:block;font-size:9.5px!important}
+.bd165-person small{display:block;margin-top:1px;color:#7c899e!important;font-size:7.4px!important}
+.bd165-person i{font-style:normal;color:#7a8798}
+.bd165-empty{padding:5px 1px;color:#7b899c;font-size:8px;line-height:1.6}
+.bd165-theme{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.bd165-theme button{min-height:34px;border:1px solid rgba(105,123,165,.16);border-radius:10px;background:#f6f8fd;color:#31465e;font-size:8px;font-weight:800}
+.bd165-theme button.active{border-color:var(--primary)!important;color:var(--primary)!important;box-shadow:0 0 0 2px rgba(122,127,220,.10)}
+html[data-theme="dark"] .bd165-theme button{background:#14263f;color:#fff}
+#leftSidebar :is([data-bd112-guest],[data-r6-auth][data-r6-state="guest"],.bd-guest-profile-entry,[data-bd-guest-auth="1"]),
+#mobileDrawer :is([data-bd112-guest],[data-r6-auth][data-r6-state="guest"],.bd-guest-profile-entry,[data-bd-guest-auth="1"]){display:none!important}
+</style>
+<script id="bd-v8165-reference-sidebars-js">
+(()=>{'use strict';
+if(window.__BD_V8165_SIDEBARS__)return;window.__BD_V8165_SIDEBARS__=true;
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null;
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const links=[
+ ['✒','কবিতা','poem.html'],['🎙','আবৃত্তি','recitation.html'],['❝','ছোট কথার প্রলাপ','small-prolap.html'],['✉','চিঠিপত্র','letter.html'],['☾','মধ্যরাতের প্রলাপ','madhyorater-prolap.html'],['★','খ্যাতিমান কবি','famous-poet.html'],['❝','বিখ্যাত মনীষীদের বাণী','famous-quotes.html'],['🌱','পরিবেশ','environment.html'],['💬','পরামর্শ','discussion.html?category=advice']
+];
+function readJSON(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}}
+function user(){for(const k of ['bhubondangaCurrentUser','currentUser','bdCurrentUser','bhubondangaUser']){const u=readJSON(k);if(u&&(u.id||u.uid||u.email||u.username))return u}return W.__BD_LIVE_SESSION?.user||null}
+function profileUrl(u){if(!u)return'login.html';const m=u.user_metadata||{},role=String(u.role||m.role||'').toLowerCase(),name=String(u.displayName||u.display_name||u.name||m.full_name||m.name||u.username||m.username||''),username=String(u.username||m.username||'').toLowerCase(),id=u.id||u.uid||username;if(role==='founder'||username==='mahmud-sohel'||name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id);return'profile.html?v=842&user='+encodeURIComponent(id||username)}
+function userCard(u){if(!u)return'';const m=u.user_metadata||{},name=u.displayName||u.display_name||u.name||m.full_name||m.name||u.username||m.username||u.email?.split('@')[0]||'সদস্য',avatar=u.avatar||u.avatar_url||u.photo||m.avatar_url||m.picture||'',role=String(u.role||m.role||'member');return `<section class="bd165-card"><a class="bd165-person" href="${esc(profileUrl(u))}"><span class="bd165-avatar">${avatar?`<img src="${esc(avatar)}" alt="">`:esc(name.slice(0,1))}</span><span><b>${esc(name)}</b><small>${esc(role)} · আপনার ব্যক্তিগত ভুবন</small></span><i>›</i></a><div class="bd165-profile-actions" style="margin-top:8px"><a href="${esc(profileUrl(u))}">প্রোফাইল</a><a href="notifications.html">নোটিফিকেশন</a></div></section>`}
+function identity(){return `<section class="bd165-card bd165-identity"><a class="bd165-leaf" href="index.html" aria-label="ভুবনডাঙ্গার কবিতা হোম">🌿</a><h3>আপন ভুবন</h3><p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p><div class="bd165-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></section>`}
+function directory(){return `<section class="bd165-card"><div class="bd165-title"><h3>সাহিত্য বিভাগ</h3><small>আপনার পথ</small></div><nav class="bd165-menu">${links.map(x=>`<a href="${x[2]}"><span class="ico">${x[0]}</span><b>${x[1]}</b><i>›</i></a>`).join('')}</nav></section>`}
+function themeCard(){return `<section class="bd165-card"><div class="bd165-title"><h3>গ্লাস থিম</h3><small>সরাসরি পরিবর্তন</small></div><div class="bd165-theme"><button type="button" data-bd9-mode="light">লাইট</button><button type="button" data-bd9-mode="middle">মিডল</button><button type="button" data-bd9-mode="dark">ডার্ক</button></div></section>`}
+function leftBody(){return `<div class="bd165-stack">${identity()}${userCard(user())}${directory()}${themeCard()}</div>`}
+function guestProfile(){return `<section class="bd165-card bd165-profile-cta account-card bd-guest-profile-entry" data-bd-guest-auth="1"><h3>আপনার প্রোফাইল তৈরি করুন</h3><p>ভুবনডাঙ্গায় নিজের সাহিত্যিক পরিচয়, লেখা, পাঠ ও সংযোগের জন্য একটি ব্যক্তিগত প্রোফাইল তৈরি করুন।</p><div class="bd165-profile-actions"><a href="register.html">প্রোফাইল তৈরি করুন</a><a href="login.html">লগইন</a></div></section>`}
+function loggedProfile(u){if(!u)return guestProfile();const m=u.user_metadata||{},name=u.displayName||u.display_name||u.name||m.full_name||m.name||u.username||m.username||'সদস্য',avatar=u.avatar||u.avatar_url||u.photo||m.avatar_url||'';return `<section class="bd165-card account-card"><a class="bd165-person" href="${esc(profileUrl(u))}"><span class="bd165-avatar">${avatar?`<img src="${esc(avatar)}" alt="">`:esc(name.slice(0,1))}</span><span><b>${esc(name)}</b><small>আপনার ব্যক্তিগত ভুবন</small></span><i>›</i></a><div class="bd165-profile-actions" style="margin-top:8px"><a href="${esc(profileUrl(u))}">প্রোফাইল</a><a href="messages.html">ইনবক্স</a></div></section>`}
+function suggestions(){return `<section class="bd165-card" data-r6-suggest><div class="bd165-title"><h3>আপনার পরিচিত হতে পারে</h3><small>সাহিত্যিক সংযোগ</small></div><div><a class="bd165-person" href="profile.html?user=samia-islam"><span class="bd165-avatar">সা</span><span><b>সামিয়া ইসলাম</b><small>কবিতা ও পরিবেশ</small></span><i>›</i></a><a class="bd165-person" href="poet-profile.html?user=ariful-haque"><span class="bd165-avatar">আ</span><span><b>আরিফুল হক</b><small>নতুন কবি সদস্য</small></span><i>›</i></a><a class="bd165-person" href="profile.html?user=nila-rahman"><span class="bd165-avatar">নী</span><span><b>নীলা রহমান</b><small>সাহিত্যিক সংযোগ</small></span><i>›</i></a></div></section>`}
+function active(){return `<section class="bd165-card"><div class="bd165-title"><h3>সক্রিয় লেখক</h3><small>সবুজ বাতি</small></div><div class="bd9-writers" data-bd9-active-writers><div class="bd165-empty">এখন কোনো বাস্তব সক্রিয় লেখক দেখা যাচ্ছে না।</div></div></section>`}
+function help(){const a=[['＋','যাচাইকৃত মানবিক নোটিস','humanitarian-notice.html'],['🌿','আমাদের সম্পর্কে','about.html'],['✉','যোগাযোগ','contact.html'],['⚑','অভিযোগ ও রিপোর্ট','complaint.html'],['◇','গোপনীয়তা ও নিরাপত্তা','privacy-security-policy.html'],['§','নীতিমালা','policy.html']];return `<section class="bd165-card"><div class="bd165-title"><h3>সহায়তা ও আস্থা</h3><small>গুরুত্বপূর্ণ</small></div><nav class="bd165-menu">${a.map(x=>`<a href="${x[2]}"><span class="ico">${x[0]}</span><b>${x[1]}</b><i>›</i></a>`).join('')}</nav></section>`}
+function rightBody(){const u=user();return `<div class="bd165-stack">${loggedProfile(u)}${suggestions()}${active()}${help()}</div>`}
+function setDrawer(aside,side){if(!aside)return;const title=side==='left'?'🌿 আপন ভুবন':'সক্রিয় লেখক ও সহায়তা';aside.innerHTML=`<div class="drawer-head"><strong>${title}</strong><button class="drawer-close" type="button" data-bd9-close aria-label="সাইডবার বন্ধ করুন">×</button></div>${side==='left'?leftBody():rightBody()}`}
+function render(){const l=$('#mobileDrawer'),r=$('#rightMobileDrawer'),ld=$('#leftSidebar'),rd=$('#rightSidebar');setDrawer(l,'left');setDrawer(r,'right');if(ld)ld.innerHTML=leftBody();if(rd)rd.innerHTML=rightBody();D.documentElement.querySelectorAll('[data-bd9-mode]').forEach(b=>b.classList.toggle('active',b.dataset.bd9Mode===D.documentElement.dataset.theme))}
+function cleanLeft(){for(const root of [$('#mobileDrawer'),$('#leftSidebar')])root?.querySelectorAll?.('[data-bd112-guest],[data-r6-auth][data-r6-state="guest"],.bd-guest-profile-entry,[data-bd-guest-auth="1"]').forEach(x=>x.remove())}
+let timer=0;function rerenderSoon(){clearTimeout(timer);timer=setTimeout(()=>{const l=$('#mobileDrawer'),ld=$('#leftSidebar');setDrawer(l,'left');if(ld)ld.innerHTML=leftBody();const u=user();for(const root of [$('#rightMobileDrawer'),$('#rightSidebar')]){if(!root)continue;const stack=$('.bd165-stack',root)||root,old=stack.querySelector('.account-card'),fresh=D.createElement('div');fresh.innerHTML=loggedProfile(u);const node=fresh.firstElementChild;if(old&&node)old.replaceWith(node);else if(node)stack.prepend(node)}cleanLeft()},30)}
+function boot(){render();cleanLeft();setTimeout(cleanLeft,300);setTimeout(cleanLeft,1200);const mo=new MutationObserver(()=>cleanLeft());for(const root of [$('#mobileDrawer'),$('#leftSidebar')])if(root)mo.observe(root,{childList:true,subtree:true})}
+D.addEventListener('bd:auth-ready',rerenderSoon);W.addEventListener('pageshow',()=>{cleanLeft();setTimeout(rerenderSoon,80)},{passive:true});
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
