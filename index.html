@@ -2,7 +2,7 @@
 
 <html data-bd-glass="pearl" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
-<meta content="V8.189-CANONICAL-INDEX-FEED-REPAIR-20260816" name="bhubondanga-safe-lite"/>
+<meta content="V8.200-CANONICAL-INDEX-FEED-REPAIR-20260816" name="bhubondanga-safe-lite"/>
 <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"/>
 <meta content="0" http-equiv="Expires"/>
 <meta content="#173153" name="theme-color"/>
@@ -490,19 +490,8 @@ html[data-theme="dark"] .bd162-comment-moderation-note{
 const D=document;
 const copyAttrs=(from,to)=>{for(const a of [...from.attributes])if(a.name!=='data-bd-runtime-order')to.setAttribute(a.name,a.value)};
 const cloneFromTemplate=(doc,id)=>doc.querySelector(id)?.content?.cloneNode(true)||null;
-const BD_COMPONENT_BUILD='20260816-final-staged-composer-inline-comments-v5';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
+const BD_COMPONENT_BUILD='20260816-staged-composer-v8202';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
 const parser=new DOMParser();
-// Only historical social/reaction/comment presentation layers are skipped at Index runtime.
-// sidebars.html itself remains untouched; its layout/theme/sidebar styles still load normally.
-const BD_SUPERSEDED_RUNTIME_STYLES=new Set([
-  'bd-v814-facebook-social','bd-v829-index-social-fix-css','bd-v831-final-social-css',
-  'bd-v833-facebook-social-final-lock','bd-v835-responsive-social-final','bd-v838-final-profile-reaction-comment-fix',
-  'bd-v845-modern-social-stable','bd-v847-master-lock-reaction-aurora','bd-v849-reaction-dark-visibility-master-lock',
-  'bd-v850-exact-user-reaction-reference','bd-v862-final-interaction-css','bd-v863-final-interaction-lock',
-  'bd-v864-reaction-stability-lock','bd-v864-index-exact-compact-tray','bd-v8139-reaction-news-canonical-css',
-  'bd-v8142-approved-reaction-visual-lock','bd-v8152-reaction-visual-stability-fix','bd-cobalt-final-social-hardlock',
-  'bd-cobalt-comment-write-no-shake-v2','bd-cobalt-comment-final-contrast-lock','bd-v8164-fb-reactions-reels-darkfix-css'
-]);
 async function boot(){
   D.body.classList.add('bd-components-loading');
   try{
@@ -546,7 +535,6 @@ async function boot(){
     runtime.sort((a,b)=>a[0]-b[0]);
     for(const [,node] of runtime){
       if(node.tagName==='STYLE'){
-        if(BD_SUPERSEDED_RUNTIME_STYLES.has(node.id||''))continue;
         const s=D.createElement('style');copyAttrs(node,s);s.textContent=node.textContent;D.head.appendChild(s);
       }else if(node.tagName==='SCRIPT'){
         const s=D.createElement('script');copyAttrs(node,s);
