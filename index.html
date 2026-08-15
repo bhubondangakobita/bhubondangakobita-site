@@ -2,7 +2,7 @@
 
 <html data-bd-glass="pearl" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
-<meta content="V8.200-CANONICAL-INDEX-FEED-REPAIR-20260816" name="bhubondanga-safe-lite"/>
+<meta content="V8.189-CANONICAL-INDEX-FEED-REPAIR-20260816" name="bhubondanga-safe-lite"/>
 <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"/>
 <meta content="0" http-equiv="Expires"/>
 <meta content="#173153" name="theme-color"/>
@@ -92,7 +92,7 @@ async function publishFrom(values){
 function prettyDate(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch(_){return String(v||'')}}
 function svgUser(){return'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor"/><path d="M4 21c.8-5 4-7 8-7s7.2 2 8 7" fill="none" stroke="currentColor"/></svg>'}
 function card(p,midnight=false){const founder=String(p.author_role||'').toLowerCase()==='founder'||String(p.author_username||'').toLowerCase()==='mahmud-sohel'||p.author_name==='মাহমুদ সোহেল'||(state.founderId&&String(p.author_id)===String(state.founderId)),admin=String(p.author_role||'').toLowerCase()==='admin',url=profileUrl(Object.assign({},p,{role:founder?'founder':admin?'admin':p.author_role||''})),avatar=p.author_avatar?'<img loading="lazy" decoding="async" src="'+esc(p.author_avatar)+'" alt="">':svgUser(),badge=founder?'<span class="bd-founder-badge">Founder</span>':admin?'<span class="bd-admin-badge">Admin</span>':'',time=prettyDate(p.created_at),body=esc(p.body||''),title=esc(p.title||'শিরোনামহীন'),cat=esc(p.category||typeLabel(p.type));if(midnight)return'<article class="card prolap-card bd-live-post" data-post-id="'+esc(p.id)+'"><div class="prolap-head"><div class="prolap-author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="prolap-author-copy"><a href="'+url+'">'+esc(p.author_name)+badge+'</a><p>'+time+'</p></div></div><span class="post-order">নতুন</span></div><div class="prolap-body"><div class="prolap-label-row"><span class="prolap-label">'+cat+'</span></div><h3 class="prolap-title"><a href="index.html?post='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="prolap-text">'+body+'</div></div></article>';return'<article class="glass post style-'+esc(p.card_style||'pearl')+' bd-live-post" data-post-id="'+esc(p.id)+'"><div class="post-head author"><div class="author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="author-meta"><div class="author-name-row"><a href="'+url+'"><strong>'+esc(p.author_name||'ভুবনডাঙ্গার সদস্য')+'</strong></a>'+badge+'</div><small class="bd-post-time">'+time+'</small></div></div><div class="three-dot"><button class="three-dot-btn post-menu" type="button" data-live-menu="'+esc(p.id)+'" aria-label="পোস্টের অপশন">•••</button></div></div><span class="pill tag">'+cat+'</span><h3 class="post-title"><a href="index.html?post='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="post-body">'+body+'</div>'+(p.media_url?'<img class="post-media" src="'+esc(p.media_url)+'" alt="'+title+'" loading="lazy">':'')+(p.caption?'<div class="bd-post-caption">'+esc(p.caption)+'</div>':'')+'<a class="post-read-more readmore" href="index.html?post='+encodeURIComponent(p.id)+'">পূর্ণ লেখা পড়ুন →</a><div class="post-footer actions"><div class="post-actions"><button class="action-btn action" type="button" data-live-like>♡ <span>ভালোবাসা</span></button><button class="action-btn action" type="button" data-comment>▱ <span>মন্তব্য</span></button><button class="action-btn action" type="button" data-live-share>↗ <span>শেয়ার</span></button><button class="action-btn action" type="button" data-live-save>▱ <span>সেভ</span></button></div></div><div class="comments comment-box"><div class="comment-list"></div><form class="comment-form" data-post-id="'+esc(p.id)+'"><textarea placeholder="মন্তব্য লিখুন..."></textarea><button type="submit">➤</button></form></div></article>'}
-async function pageFilter(){const f=canonicalFile(),o={limit:1000,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
+async function pageFilter(){const f=canonicalFile(),o={limit:1000,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){if(state.role!=='founder')return null;o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
 function targetFor(f){if(f==='index.html')return $('#postList');if(['today-poem.html','today-prolap.html','environment.html'].includes(f))return $('#feedList');if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))return $('#content');if(f==='madhyorater-prolap.html')return $('#prolapFeed');return null}
 async function loadFeed(){
   const f=canonicalFile();
@@ -476,7 +476,7 @@ html[data-theme="dark"] .bd162-comment-moderation-note{
 <div class="bd-national-honour">
 <a aria-label="হোমে যান" class="bd-national-shortcut home" href="index.html"><svg aria-hidden="true" class="icon"><use href="#i-home"></use></svg><span>হোম</span></a>
 <a aria-label="বাংলাদেশের ইতিহাস পড়ুন" class="bd-history-gateway" href="bangladesh.html" title="বাংলাদেশের ইতিহাস"><span aria-hidden="true" class="bd-history-mark"><i></i></span><span class="bd-history-copy"><b>বাংলাদেশ</b><small>ইতিহাস • ১৭৫৭—আজ</small></span></a>
-<a aria-label="মধ্যরাতের প্রলাপ পেজে যান" class="bd-national-shortcut midnight" href="madhyorater-prolap.html"><svg aria-hidden="true" class="bd-night-scene" viewbox="0 0 24 24"><rect height="15" rx="2" width="17" x="3.5" y="4"></rect><path d="M12 4v15M3.5 12h17"></path><path d="M6.5 8.1h.01M9 6.7h.01M15.2 7.7h.01M18 6.2h.01"></path><path d="M5.5 16.2c2-1.7 4.1-2.2 6.2-1.3 1.7.7 3.6.5 6.8-1.3"></path></svg><span>মধ্যরাতের প্রলাপ</span></a>
+<a aria-label="মধ্যরাতের প্রলাপ পেজে যান" class="bd-national-shortcut midnight" data-bd-founder-only hidden href="madhyorater-prolap.html"><svg aria-hidden="true" class="bd-night-scene" viewbox="0 0 24 24"><rect height="15" rx="2" width="17" x="3.5" y="4"></rect><path d="M12 4v15M3.5 12h17"></path><path d="M6.5 8.1h.01M9 6.7h.01M15.2 7.7h.01M18 6.2h.01"></path><path d="M5.5 16.2c2-1.7 4.1-2.2 6.2-1.3 1.7.7 3.6.5 6.8-1.3"></path></svg><span>মধ্যরাতের প্রলাপ</span></a>
 </div>
 </nav>
 <span hidden="" id="bdPreLayoutAnchor"></span>
@@ -490,8 +490,19 @@ html[data-theme="dark"] .bd162-comment-moderation-note{
 const D=document;
 const copyAttrs=(from,to)=>{for(const a of [...from.attributes])if(a.name!=='data-bd-runtime-order')to.setAttribute(a.name,a.value)};
 const cloneFromTemplate=(doc,id)=>doc.querySelector(id)?.content?.cloneNode(true)||null;
-const BD_COMPONENT_BUILD='20260816-staged-composer-v8202';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
+const BD_COMPONENT_BUILD='20260816-final-staged-composer-inline-comments-v5';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
 const parser=new DOMParser();
+// Only historical social/reaction/comment presentation layers are skipped at Index runtime.
+// sidebars.html itself remains untouched; its layout/theme/sidebar styles still load normally.
+const BD_SUPERSEDED_RUNTIME_STYLES=new Set([
+  'bd-v814-facebook-social','bd-v829-index-social-fix-css','bd-v831-final-social-css',
+  'bd-v833-facebook-social-final-lock','bd-v835-responsive-social-final','bd-v838-final-profile-reaction-comment-fix',
+  'bd-v845-modern-social-stable','bd-v847-master-lock-reaction-aurora','bd-v849-reaction-dark-visibility-master-lock',
+  'bd-v850-exact-user-reaction-reference','bd-v862-final-interaction-css','bd-v863-final-interaction-lock',
+  'bd-v864-reaction-stability-lock','bd-v864-index-exact-compact-tray','bd-v8139-reaction-news-canonical-css',
+  'bd-v8142-approved-reaction-visual-lock','bd-v8152-reaction-visual-stability-fix','bd-cobalt-final-social-hardlock',
+  'bd-cobalt-comment-write-no-shake-v2','bd-cobalt-comment-final-contrast-lock','bd-v8164-fb-reactions-reels-darkfix-css'
+]);
 async function boot(){
   D.body.classList.add('bd-components-loading');
   try{
@@ -535,6 +546,7 @@ async function boot(){
     runtime.sort((a,b)=>a[0]-b[0]);
     for(const [,node] of runtime){
       if(node.tagName==='STYLE'){
+        if(BD_SUPERSEDED_RUNTIME_STYLES.has(node.id||''))continue;
         const s=D.createElement('style');copyAttrs(node,s);s.textContent=node.textContent;D.head.appendChild(s);
       }else if(node.tagName==='SCRIPT'){
         const s=D.createElement('script');copyAttrs(node,s);
@@ -556,5 +568,15 @@ async function boot(){
   }
 }
 await boot();
-</script></body>
+</script>
+<style id="bd-founder-only-index-v6">[data-bd-founder-only][hidden]{display:none!important}body:not(.bd-founder-view) a[href*="madhyorater-prolap.html"]{display:none!important}</style>
+<script id="bd-founder-only-index-v6-js">
+(()=>{'use strict';
+ const D=document,W=window;
+ function isFounderNow(){const i=W.__BD_IDENTITY||{},role=String(i.role||W.__BD_LIVE_ROLE||'').toLowerCase(),u=String(i.author_username||'').replace(/^@/,'').toLowerCase(),n=String(i.author_name||'').trim();return role==='founder'||u==='mahmud-sohel'||n==='মাহমুদ সোহেল'||W.__BD_NEWS_IS_FOUNDER===true}
+ function sync(){const yes=isFounderNow();D.body?.classList.toggle('bd-founder-view',yes);D.querySelectorAll('[data-bd-founder-only]').forEach(el=>el.hidden=!yes)}
+ D.addEventListener('bd:auth-ready',()=>setTimeout(sync,0));D.addEventListener('DOMContentLoaded',sync,{once:true});setTimeout(sync,400);
+})();
+</script>
+</body>
 </html>
