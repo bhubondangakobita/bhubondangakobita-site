@@ -103,7 +103,74 @@
 </div>
 <div class="toast" id="toast"></div>
 <div aria-hidden="true" class="post-action-board" id="postActionBoard" role="menu"></div></template>
-<template id="bdBodyScripts"><script data-bd-runtime-order="1">
+<template id="bdBodyScripts">
+<script data-bd-runtime-order="-100" id="bd-feed-exclusive-social-composer-owner">
+(()=>{'use strict';
+if(window.__BD_FEED_EXCLUSIVE_OWNER__)return;window.__BD_FEED_EXCLUSIVE_OWNER__=1;
+const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
+const CARD='#postList [data-bd31-ready="1"],#postList [data-post-card],#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post,#postList .post-card';
+const ORDER=['like','love','care','haha','wow','sad','angry'];
+const BN={like:'লাইক',love:'ভালোবাসা',care:'কেয়ার',haha:'হাহা',wow:'ওয়াও',sad:'দুঃখিত',angry:'রাগান্বিত'};
+function cardOf(n){const c=n?.closest?.(CARD);if(c)return c;return n?.closest?.('#bd64ReactionTray,#bd31ReactionTray')?.__card||null}
+function pid(c){return String(c?.dataset?.post||c?.dataset?.postId||c?.getAttribute?.('data-post')||c?.getAttribute?.('data-post-id')||'').trim()}
+function stop(e,prevent=true){if(prevent&&e.cancelable)e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}
+function ensureStyle(){if($('#bdFeedExclusiveStyle'))return;const st=D.createElement('style');st.id='bdFeedExclusiveStyle';st.textContent=`
+#postList,.center-col{overflow-anchor:none!important}
+#postList :is(article.post,article.bd-live-post,.post-card,[data-post-card]){overflow-anchor:none!important}
+#postList .bd31-social,#postList .bd31-summary,#postList .bd31-actions,#postList [data-bd31-comment-panel]{overflow-anchor:none!important}
+#postList .bd31-summary{min-height:30px!important;box-sizing:border-box!important}
+#postList [data-bd31-react-main]{touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;transform:none!important;animation:none!important}
+#postList [data-bd31-react-main]:active{transform:none!important}
+#bd64ReactionTray{overflow-anchor:none!important}
+#postBody,#postTitle{caret-color:currentColor!important;touch-action:manipulation!important}
+`;D.head.appendChild(st)}
+
+/* ---------- COMPOSER: native Bengali/IME session owns input ---------- */
+let composing=false;
+function editorTarget(t){return t?.id==='postBody'||t?.id==='postTitle'}
+function keepWriting(){const c=$('#composer'),f=$('#composerForm');if(!c||!f)return;c.dataset.bdWriteSession='1';c.dataset.bd71Stage='write';c.hidden=false;c.removeAttribute('hidden');f.hidden=false;f.removeAttribute('hidden');f.classList.remove('bd-stage-selecting','bd-write-ready')}
+for(const ev of ['compositionstart','compositionupdate','compositionend','beforeinput','input']){
+ W.addEventListener(ev,e=>{if(!editorTarget(e.target))return;if(ev==='compositionstart')composing=true;keepWriting();/* never prevent native text/IME; only retire duplicate JS listeners */e.stopPropagation();e.stopImmediatePropagation();if(ev==='compositionend')composing=false},true)
+}
+for(const ev of ['blur','focusout'])W.addEventListener(ev,e=>{if(!editorTarget(e.target))return;e.stopPropagation();e.stopImmediatePropagation()},true);
+W.addEventListener('focusin',e=>{if(!editorTarget(e.target))return;keepWriting();e.stopPropagation();e.stopImmediatePropagation()},true);
+W.addEventListener('reset',e=>{if(e.target?.id!=='composerForm')return;const c=$('#composer');if(c)delete c.dataset.bdWriteSession;composing=false},true);
+W.addEventListener('pointerdown',e=>{if(e.target.closest?.('#cancelComposer')){const c=$('#composer');if(c)delete c.dataset.bdWriteSession;composing=false}},true);
+
+/* ---------- COMMENTS: one owner, one tap, inline only ---------- */
+let lastCommentPointer=0;
+async function commentIdentity(panel){try{await W.__BD_SYNC_COMMENT_AS?.(panel)}catch(_){}const input=$('.bd31-comment-form input,.bd31-comment-form textarea',panel);if(!input)return;let name=String(W.__BD_IDENTITY?.author_name||W.__BD_LIVE_SESSION?.user?.user_metadata?.full_name||W.__BD_LIVE_SESSION?.user?.user_metadata?.name||'').trim();if(!name)try{const s=(await (W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase)?.auth?.getSession?.())?.data?.session;name=String(s?.user?.user_metadata?.full_name||s?.user?.user_metadata?.name||s?.user?.email?.split('@')[0]||'').trim()}catch(_){}if(name)input.placeholder='Comment as '+name}
+async function openComments(card){if(!card)return false;card.dataset.commentsEnabled='1';const btn=$('[data-bd31-comments]',card);if(btn){btn.disabled=false;btn.removeAttribute('disabled');btn.classList.remove('disabled')}const panel=$('[data-bd31-comment-panel]',card);if(!panel)return false;panel.hidden=false;panel.removeAttribute('hidden');panel.dataset.bdRootOpen='1';panel.dataset.bd76CommentsOpen='1';panel.dataset.bd71CommentsOpen='1';panel.dataset.bd187Open='1';card.dataset.bd76CommentsOpen='1';card.dataset.bd71CommentsOpen='1';try{await W.__BD_RENDER_COMMENTS?.(card,false)}catch(_){}await commentIdentity(panel);const list=$('.bd31-comments',panel);if(list)list.hidden=false;const more=$('[data-bd31-more]',panel);if(more&&more.dataset.all!=='1')more.hidden=false;const form=$('.bd31-comment-form',panel),input=$('.bd31-comment-form input,.bd31-comment-form textarea',panel);form?.querySelectorAll('input,textarea,button[type="submit"]').forEach(x=>{x.disabled=false;x.removeAttribute('disabled');x.style.pointerEvents='auto'});setTimeout(()=>{try{input?.focus({preventScroll:true})}catch(_){}},20);return true}
+function closeComments(card){const panel=$('[data-bd31-comment-panel]',card);if(!panel)return;panel.hidden=true;panel.dataset.bdRootOpen='0';panel.dataset.bd76CommentsOpen='0';panel.dataset.bd71CommentsOpen='0';panel.dataset.bd187Open='0';card.dataset.bd76CommentsOpen='0';card.dataset.bd71CommentsOpen='0'}
+function commentHit(t){return t?.closest?.('[data-bd31-comments],[data-bd31-comment-summary]')}
+W.addEventListener('pointerup',e=>{const close=e.target.closest?.('[data-bd187-comment-close]');if(close){const c=cardOf(close);if(c){stop(e);lastCommentPointer=Date.now();closeComments(c)}return}const b=commentHit(e.target);if(!b)return;const c=cardOf(b);if(!c)return;stop(e);lastCommentPointer=Date.now();openComments(c)},true);
+W.addEventListener('click',e=>{const close=e.target.closest?.('[data-bd187-comment-close]');if(close){stop(e);if(Date.now()-lastCommentPointer>500){const c=cardOf(close);if(c)closeComments(c)}return}const b=commentHit(e.target);if(!b)return;stop(e);if(Date.now()-lastCommentPointer>500){const c=cardOf(b);if(c)openComments(c)}},true);
+
+/* ---------- REACTIONS: one pointer owner; no scroll correction ---------- */
+let press=null,holdTimer=0,holdOpened=false,lastRxPointer=0,hoverOpen=0,hoverClose=0;
+function tray(){let t=$('#bd64ReactionTray');if(!t){t=D.createElement('div');t.id='bd64ReactionTray';t.setAttribute('role','menu');const src=W.BD52_REACTION_SRC||{};for(const k of ORDER){const b=D.createElement('button');b.type='button';b.dataset.bd64Pick=k;b.setAttribute('aria-label',k);b.innerHTML=src[k]?'<span class="bd64-icon"><img class="bd52-reaction-img" src="'+src[k]+'" alt="" draggable="false"></span>':'<span class="bd64-icon">'+({like:'👍',love:'❤️',care:'🥰',haha:'😂',wow:'😮',sad:'😢',angry:'😡'}[k])+'</span>';t.appendChild(b)}D.body.appendChild(t)}return t}
+function closeTray(){const t=$('#bd64ReactionTray');if(!t)return;t.classList.remove('open');t.__card=null;t.__button=null}
+function openTray(main){const c=cardOf(main);if(!c)return;const t=tray(),r=main.getBoundingClientRect();t.__card=c;t.__button=main;t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||304,h=t.offsetHeight||52;const left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<6)top=Math.min(innerHeight-h-6,r.bottom+8);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'})}
+function optimistic(card,type){const main=$('[data-bd31-react-main]',card);if(!main)return;const h=$('.bd31-main-reaction',main);if(h&&!h.dataset.bdExclusiveNeutral)h.dataset.bdExclusiveNeutral=h.innerHTML;const cur=String(main.dataset.current||'').toLowerCase(),remove=cur===type,next=remove?'':type;main.dataset.current=next;main.classList.toggle('selected',!!next);main.classList.toggle('active',!!next);const lab=$('[data-bd31-label]',main);if(lab)lab.textContent=next?(BN[next]||'লাইক'):'লাইক';const src=W.BD52_REACTION_SRC?.[next];if(h){if(next&&src)h.innerHTML='<span class="bd31-r '+next+' bd31-mini" data-reaction="'+next+'"><img class="bd52-reaction-img" src="'+src+'" alt="" draggable="false"></span>';else if(!next&&h.dataset.bdExclusiveNeutral)h.innerHTML=h.dataset.bdExclusiveNeutral}}
+async function fallbackReaction(id,type){const db=W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null;let s=null;try{s=(await db?.auth?.getSession?.())?.data?.session||null}catch(_){}if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}if(!db)return false;try{const r=await db.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(type)});if(!r.error)return true}catch(_){}for(const table of ['post_reactions','reactions'])try{const cur=await db.from(table).select('reaction').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;if(cur.data?.reaction===type)r=await db.from(table).delete().eq('post_id',id).eq('user_id',s.user.id);else if(cur.data)r=await db.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);else r=await db.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});if(!r.error)return true}catch(_){}return false}
+async function setReaction(card,type){if(!card||!ORDER.includes(type))return;const id=pid(card);if(!id)return;optimistic(card,type);try{if(typeof W.__BD_SET_REACTION==='function')await W.__BD_SET_REACTION(id,type,card);else await fallbackReaction(id,type)}catch(_){await fallbackReaction(id,type)}try{await W.__BD_REFRESH_SOCIAL?.(card)}catch(_){}}
+W.addEventListener('pointerdown',e=>{const pick=e.target.closest?.('#bd64ReactionTray [data-bd64-pick]');const main=e.target.closest?.('[data-bd31-react-main]');if(!pick&&!main)return;e.stopPropagation();e.stopImmediatePropagation();if(pick)return;holdOpened=false;press={id:e.pointerId,x:e.clientX,y:e.clientY,main};clearTimeout(holdTimer);holdTimer=setTimeout(()=>{if(!press)return;holdOpened=true;openTray(main)},380)},true);
+W.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot(e.clientX-press.x,e.clientY-press.y)>12){clearTimeout(holdTimer);holdTimer=0;press=null}},true);
+W.addEventListener('pointerup',e=>{const pick=e.target.closest?.('#bd64ReactionTray [data-bd64-pick]');if(pick){const c=$('#bd64ReactionTray')?.__card,type=String(pick.dataset.bd64Pick||'like');stop(e);lastRxPointer=Date.now();clearTimeout(holdTimer);press=null;closeTray();if(c)setReaction(c,type);return}const main=e.target.closest?.('[data-bd31-react-main]');if(!main)return;stop(e);lastRxPointer=Date.now();clearTimeout(holdTimer);holdTimer=0;const wasHold=holdOpened;holdOpened=false;press=null;if(!wasHold){const c=cardOf(main),cur=String(main.dataset.current||'').toLowerCase();if(c)setReaction(c,ORDER.includes(cur)?cur:'like')}},true);
+W.addEventListener('pointercancel',()=>{clearTimeout(holdTimer);holdTimer=0;press=null;holdOpened=false},true);
+W.addEventListener('click',e=>{const pick=e.target.closest?.('#bd64ReactionTray [data-bd64-pick]');const main=e.target.closest?.('[data-bd31-react-main]');if(!pick&&!main)return;stop(e);if(Date.now()-lastRxPointer<650)return;if(pick){const c=$('#bd64ReactionTray')?.__card,type=String(pick.dataset.bd64Pick||'like');closeTray();if(c)setReaction(c,type);return}const c=cardOf(main),cur=String(main.dataset.current||'').toLowerCase();if(c)setReaction(c,ORDER.includes(cur)?cur:'like')},true);
+W.addEventListener('contextmenu',e=>{if(e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray'))stop(e)},true);
+W.addEventListener('pointerover',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;const main=e.target.closest?.('[data-bd31-react-main]');if(main){e.stopPropagation();e.stopImmediatePropagation();clearTimeout(hoverClose);clearTimeout(hoverOpen);hoverOpen=setTimeout(()=>openTray(main),220);return}if(e.target.closest?.('#bd64ReactionTray')){e.stopPropagation();e.stopImmediatePropagation();clearTimeout(hoverClose)}},true);
+W.addEventListener('pointerout',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;const from=e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray');if(!from)return;e.stopPropagation();e.stopImmediatePropagation();const to=e.relatedTarget?.closest?.('[data-bd31-react-main],#bd64ReactionTray');if(to)return;clearTimeout(hoverOpen);hoverClose=setTimeout(closeTray,240)},true);
+W.addEventListener('click',e=>{if(!e.target.closest?.('#bd64ReactionTray,[data-bd31-react-main]'))closeTray()},false);
+
+function normalize(root=D){root.querySelectorAll?.(CARD).forEach(c=>{c.dataset.commentsEnabled='1';const b=$('[data-bd31-comments]',c);if(b){b.disabled=false;b.removeAttribute('disabled');b.classList.remove('disabled')}})}
+let normTimer=0;function scheduleNormalize(){clearTimeout(normTimer);normTimer=setTimeout(()=>normalize(),60)}
+function start(){ensureStyle();normalize();const feed=$('#postList');if(feed)new MutationObserver(ms=>{if(ms.some(m=>m.addedNodes?.length))scheduleNormalize()}).observe(feed,{childList:true,subtree:true})}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
+W.BhubondangaFeedOwner={openComments,setReaction,openReactionTray:openTray,closeReactionTray:closeTray,keepWriting};
+})();
+</script><script data-bd-runtime-order="1">
 (function(){
 'use strict';
 /* Earliest social ownership: installed before any legacy routing/capture listener. */
@@ -1599,145 +1666,9 @@ const mo=new MutationObserver(()=>{bindControls();if(D.getElementById('bdPublish
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
-<script data-bd-runtime-order="67" id="bd-v864-reaction-engine">
-(()=>{'use strict';
-if(window.__BD_V864_REACTION__)return;window.__BD_V864_REACTION__=true;
-const D=document,W=window;
-const TYPES=['like','love','care','haha','wow','sad','angry'];
-const LABEL={like:'লাইক',love:'ভালোবাসা',care:'কেয়ার',haha:'হাহা',wow:'ওয়াও',sad:'দুঃখিত',angry:'রাগান্বিত'};
-const FALLBACK={like:'👍',love:'❤️',care:'🥰',haha:'😂',wow:'😮',sad:'😢',angry:'😡'};
-const q=(s,r=D)=>r?.querySelector?.(s)||null;
-function cardOf(n){return n?.closest?.('[data-bd31-ready="1"],[data-post-card],article.post,.bd-live-post,.post-card')||null}
-function postId(card){return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'').trim()}
-function getClient(){try{return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||((typeof sb!=='undefined')?sb:null)||null}catch{return null}}
-async function getSession(){const c=getClient();if(!c)return null;try{return (await c.auth.getSession()).data?.session||null}catch{return null}}
-function getMine(card){return String(q('[data-bd31-react-main]',card)?.dataset?.current||'')}
-function icon(type){
- const t=TYPES.includes(type)?type:'like';
- const src=W.BD52_REACTION_SRC?.[t]||W.BD52_REACTION_SRC?.like||'';
- return `<span class="bd64-icon"><img loading="lazy" decoding="async" class="bd52-reaction-img" src="${src}" alt="" draggable="false"></span>`;
-}
-function tray(){
- let t=D.getElementById('bd64ReactionTray');if(t)return t;
- t=D.createElement('div');t.id='bd64ReactionTray';t.setAttribute('role','menu');
-
- t.innerHTML=TYPES.map(type=>`<button type="button" data-bd64-pick="${type}" aria-label="${LABEL[type]}" title="${LABEL[type]}">${icon(type)}</button>`).join('');
- D.body.appendChild(t);return t;
-}
-function closeTray(){const t=tray();t.classList.remove('open');t.__card=null;t.__button=null}
-function openTray(btn){const card=cardOf(btn);if(!card)return;const t=tray(),r=btn.getBoundingClientRect();t.__card=card;t.__button=btn;t.classList.add('open');try{btn.blur?.()}catch(_){}
- requestAnimationFrame(()=>{const w=t.offsetWidth||286,h=t.offsetHeight||47;let left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+8);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'})
-}
-function setMain(card,type,remove=false){
- const main=q('[data-bd31-react-main]',card);if(!main)return;
- const next=remove?'':type;main.dataset.current=next;main.classList.toggle('selected',!!next);main.classList.toggle('active',!!next);
- const holder=q('.bd31-main-reaction',main);if(holder){if(next)holder.innerHTML=icon(next);else if(holder.dataset.bd64Neutral)holder.innerHTML=holder.dataset.bd64Neutral;}
- const lab=q('[data-bd31-label]',main);if(lab)lab.textContent=next?LABEL[next]:'লাইক';
-}
-function rememberNeutral(main){const holder=q('.bd31-main-reaction',main);if(holder&&!holder.dataset.bd64Neutral)holder.dataset.bd64Neutral=holder.innerHTML}
-function bumpCount(card,oldType,newType,remove){
- const sum=q('[data-bd31-react-summary]',card);if(!sum)return;
- let n=Number(card.dataset.bd64Count||'');
- if(!Number.isFinite(n))n=0;
- if(!card.dataset.bd64CountInit){const m=(sum.textContent||'').match(/[০-৯0-9]+/);if(m){n=Number(m[0].replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d)))||0}card.dataset.bd64CountInit='1'}
- if(!oldType&&!remove)n++;else if(oldType&&remove)n=Math.max(0,n-1);
- card.dataset.bd64Count=String(n);
- if(n>0){sum.hidden=false;sum.style.visibility='visible';const text=[...sum.querySelectorAll('span')].pop();if(text)text.textContent=String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])+' জন প্রতিক্রিয়া';else sum.textContent=String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])+' জন প্রতিক্রিয়া'}
- else{sum.hidden=true;sum.style.visibility='hidden'}
-}
-async function persist(card,type,remove,previous){
- const id=postId(card),c=getClient(),s=await getSession();if(!id)return;
- if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}
- let ok=false;
- if(c){
-  try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(type)});if(!r.error)ok=true}catch{}
-  if(!ok)for(const table of ['post_reactions','reactions']){
-   try{const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;
-    if(remove){r=cur.data?await c.from(table).delete().eq('post_id',id).eq('user_id',s.user.id):{error:null};}
-    else if(cur.data)r=await c.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);
-    else r=await c.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});
-    if(!r?.error){ok=true;break}
-   }catch{}
-  }
- }
- if(!ok)try{const k='bd64-react-'+id;localStorage.setItem(k,JSON.stringify({reaction:remove?'':type,at:Date.now()}))}catch{}
-}
-function bd152ReactionAnchor(card){
- let sc=card?.parentElement||null;
- while(sc&&sc!==D.body&&sc!==D.documentElement){
-  const cs=W.getComputedStyle(sc),oy=cs.overflowY;
-  if((oy==='auto'||oy==='scroll')&&sc.scrollHeight>sc.clientHeight+2)break;
-  sc=sc.parentElement;
- }
- const useWindow=!sc||sc===D.body||sc===D.documentElement;
- return {sc:useWindow?null:sc,y:useWindow?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop,top:card?.getBoundingClientRect?.().top||0};
-}
-function bd152RestoreReactionAnchor(a,card){/* hard no-op */}
-function apply(card,type,fromTray){
- if(!card||!TYPES.includes(type))return;const main=q('[data-bd31-react-main]',card);if(!main)return;rememberNeutral(main);
- const prev=getMine(card),remove=fromTray?(prev===type):!!prev;
- const persistType=remove?(prev||type):type;
- setMain(card,type,remove);bumpCount(card,prev,type,remove);closeTray();
- /* Geometry is pre-reserved; do not call scrollTo/scrollBy on reaction. */
- /* Persist after the in-place visual state. Never rerender the post or navigate the feed. */
- persist(card,persistType,remove,prev).catch(()=>{});
-}
-let press=null;
-function stop(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation()}
-W.addEventListener('pointerdown',e=>{
- const main=e.target.closest?.('[data-bd31-react-main]');if(!main)return;
- e.stopPropagation();e.stopImmediatePropagation();
- if(e.pointerType==='mouse')return;
- press={main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,t:setTimeout(()=>{if(!press||press.id!==e.pointerId)return;press.held=true;openTray(main)},320)};
-},{capture:true});
-W.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot(e.clientX-press.x,e.clientY-press.y)>12){clearTimeout(press.t);press=null}},{capture:true,passive:true});
-W.addEventListener('pointerup',e=>{
- const pick=e.target.closest?.('#bd64ReactionTray [data-bd64-pick]');
- if(pick&&e.pointerType!=='mouse'){
-  stop(e);const t=tray(),card=t.__card,type=pick.dataset.bd64Pick;
-  pick.dataset.bd64SkipClick='1';setTimeout(()=>delete pick.dataset.bd64SkipClick,700);
-  if(card)apply(card,type,true);return;
- }
- if(!press||press.id!==e.pointerId)return;
- const p=press;clearTimeout(p.t);press=null;
- if(p.held){stop(e);p.main.dataset.bd64SkipClick='1';setTimeout(()=>delete p.main.dataset.bd64SkipClick,700);return}
- if(e.pointerType!=='mouse'&&Math.hypot(e.clientX-p.x,e.clientY-p.y)<=12){
-  stop(e);p.main.dataset.bd64SkipClick='1';setTimeout(()=>delete p.main.dataset.bd64SkipClick,700);
-  apply(cardOf(p.main),'like',false);
- }
-},{capture:true});
-W.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId){clearTimeout(press.t);press=null}},{capture:true});
-W.addEventListener('click',e=>{
- const pick=e.target.closest?.('[data-bd64-pick]');if(pick){stop(e);if(pick.dataset.bd64SkipClick){delete pick.dataset.bd64SkipClick;return}const t=tray(),card=t.__card,type=pick.dataset.bd64Pick;if(card)apply(card,type,true);return}
- const main=e.target.closest?.('[data-bd31-react-main]');if(main){stop(e);if(main.dataset.bd64SkipClick){delete main.dataset.bd64SkipClick;return}apply(cardOf(main),'like',false);return}
- if(!e.target.closest?.('#bd64ReactionTray'))closeTray();
-},{capture:true});
-W.addEventListener('contextmenu',e=>{if(e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray'))stop(e)},{capture:true});
-/* Keep old document-level reaction systems from opening a second tray after mutations. */
-/* V8.103: match profile behavior — old trays are inert by CSS; no document-wide reaction observer. */
-})();
-</script>
-<script data-bd-runtime-order="70" id="bd-v866-requested-composer-only-js">
-(()=>{'use strict';
-const D=document,W=window;
-function isWrite(){return D.getElementById('composer')?.dataset?.bd71Stage==='write'}
-function fit(){const el=D.getElementById('postBody');if(!el||!isWrite())return;const min=W.innerWidth>=900?220:145,max=Math.max(min,Math.min(W.innerHeight*(W.innerWidth>=900?.60:.52),W.innerWidth>=900?640:520));el.style.height='auto';const wanted=Math.max(min,el.scrollHeight);el.style.height=Math.min(wanted,max)+'px';el.style.overflowY=wanted>max?'auto':'hidden'}
-function boot(){const c=D.getElementById('composer');if(c){c.hidden=false;c.removeAttribute('hidden');if(!c.dataset.bd71Stage)c.dataset.bd71Stage='compact'}}
-D.addEventListener('focusout',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);
-W.addEventListener('resize',()=>requestAnimationFrame(fit),{passive:true});
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
-<script data-bd-runtime-order="72" id="bd-v867-requested-only-js">
-(()=>{'use strict';
-const D=document,W=window;
-function isTemplate(){const f=D.getElementById('composerForm');return !!(f&&/^tpl(?:[1-9]|10)$/.test(f.dataset.bd65Template||''))}
-function lineCount(el){if(!el)return 0;const v=String(el.value||'').replace(/\r/g,'');return v?Math.max(v.split('\n').length,Math.ceil((el.scrollHeight||0)/Math.max(1,parseFloat(getComputedStyle(el).lineHeight)||28))):0}
-function guard(){const el=D.getElementById('postBody'),f=D.getElementById('composerForm');if(!el||!f||!isTemplate())return;if(lineCount(el)<=8)return;try{W.BD65ApplyTemplate?.('none','index')}catch(_){}f.dataset.bd65Template='none';f.dataset.bd58Template='none';const s=D.getElementById('cardStyle');if(s)s.value='none';if(typeof W.toast==='function')W.toast('৮ লাইনের বেশি হওয়ায় লেখাটি সাধারণ পোস্টে নেওয়া হয়েছে।')}
-D.addEventListener('focusout',e=>{if(e.target?.id==='postBody')guard()},true);
-D.addEventListener('submit',e=>{if(e.target?.id==='composerForm')guard()},true);
-})();
-</script>
+<script data-bd-runtime-order="67" id="bd-v864-reaction-engine">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
+<script data-bd-runtime-order="70" id="bd-v866-requested-composer-only-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
+<script data-bd-runtime-order="72" id="bd-v867-requested-only-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
 <script data-bd-runtime-order="74" id="bd-v868-targeted-only-js">
 (()=>{'use strict';
 const D=document,W=window;let logged=!!W.__BD_LIVE_SESSION?.user;
@@ -1750,39 +1681,8 @@ function boot(){refresh();setTimeout(refresh,500)}
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
-<script data-bd-runtime-order="76" id="bd-v869-targeted-only-js">
-(()=>{'use strict';
-const D=document,W=window;let realSession=null;
-function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null}
-function fit(){if(innerWidth<900)return;const f=D.getElementById('composerForm'),el=D.getElementById('postBody');if(!f||!el||!realSession?.user)return;if(/^tpl[1-8]$/.test(f.dataset.bd65Template||''))return;const min=300,max=Math.max(min,Math.min(innerHeight*.70,780));el.style.height='auto';const wanted=Math.max(min,el.scrollHeight);el.style.height=Math.min(wanted,max)+'px';el.style.overflowY=wanted>max?'auto':'hidden'}
-function apply(){const ok=!!realSession?.user;D.body.classList.toggle('bd869-authenticated',ok);D.body.classList.toggle('bd869-guest',!ok);const comp=D.getElementById('composer');if(comp){comp.hidden=false;comp.removeAttribute('hidden');if(!comp.dataset.bd71Stage)comp.dataset.bd71Stage='compact'}if(!ok)return;const f=D.getElementById('composerForm'),ch=D.getElementById('composerChoices'),n=D.getElementById('composerNote');if(f){f.hidden=false;f.classList.remove('bd-stage-selecting','bd-write-ready')}if(ch)ch.hidden=false;if(n)n.hidden=false;requestAnimationFrame(fit)}
-async function read(){try{realSession=(await client()?.auth?.getSession?.()).data?.session||null}catch(_){realSession=null}W.__BD_LIVE_SESSION=realSession;apply();lockComments()}
-function lockComments(root=D){const ok=!!realSession?.user;root.querySelectorAll?.('.comment-box textarea,.comment-box input,.comment-box [data-action="bd-submit-comment-v814"],.bd31-comment-form input,.bd31-comment-form button[type="submit"],.bd31-reply-form input,.bd31-reply-form button[type="submit"],.bd24-comment-form input,.bd24-comment-form button[type="submit"],.bd24-reply-form input,.bd24-reply-form button[type="submit"]').forEach(el=>{el.disabled=!ok;if('placeholder' in el){if(!el.dataset.bd869Placeholder)el.dataset.bd869Placeholder=el.getAttribute('placeholder')||'';el.setAttribute('placeholder',ok?el.dataset.bd869Placeholder:'মন্তব্য করতে লগইন করুন')}})}
-D.addEventListener('focusout',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);
-D.addEventListener('focusin',e=>{if(e.target?.id==='postBody')requestAnimationFrame(fit)},true);
-D.addEventListener('click',e=>{if(realSession?.user)return;const x=e.target.closest?.('[data-action="bd-submit-comment-v814"],.bd31-comment-form button[type="submit"],.bd31-reply-form button[type="submit"]');if(!x)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();location.href='login.html?next='+encodeURIComponent(location.href)},true);
-D.addEventListener('submit',e=>{if(realSession?.user)return;if(e.target?.matches?.('#composerForm,#bdPublishForm,.bd31-comment-form,.bd31-reply-form,.bd24-comment-form,.bd24-reply-form,.comment-form')){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();location.href='login.html?next='+encodeURIComponent(location.href)}},true);
-D.addEventListener('bd:auth-ready',e=>{realSession=e.detail?.session?.user?e.detail.session:realSession;apply();lockComments()});
-const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)lockComments(n)});mo.observe(D.body,{childList:true,subtree:true});
-addEventListener('resize',()=>requestAnimationFrame(fit),{passive:true});
-function boot(){read();setTimeout(read,400);setTimeout(read,1200);try{client()?.auth?.onAuthStateChange?.((_e,s)=>{realSession=s||null;W.__BD_LIVE_SESSION=realSession;apply();lockComments()})}catch(_){}}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})();
-</script>
-<script data-bd-runtime-order="78" id="bd-v870-targeted-master-lock-js">
-(()=>{'use strict';
-const D=document,W=window,q=(s,c=D)=>c.querySelector(s),qa=(s,c=D)=>Array.from(c.querySelectorAll(s));let session=null;
-const client=()=>W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null;
-function normalTemplate(f){const t=String(f?.dataset?.bd65Template||'none');return !/^tpl/.test(t)||t==='none'}
-function lines(b){if(!b)return 0;const text=String(b.value||'').replace(/\r/g,'');const manual=text?text.split('\n').length:0;const lh=Math.max(1,parseFloat(getComputedStyle(b).lineHeight)||28);return Math.max(manual,Math.ceil((b.scrollHeight||0)/lh))}
-function toNormalIfOverflow(){const f=q('#composerForm'),b=q('#postBody');if(!f||!b||normalTemplate(f)||lines(b)<=8)return false;try{W.BD65ApplyTemplate?.('none','index')}catch(_){}f.dataset.bd65Template='none';f.dataset.bd58Template='none';const s=q('#cardStyle');if(s)s.value='none';qa('[data-bd58-template]',f).forEach(x=>{const on=x.dataset.bd58Template==='none';x.classList.toggle('active',on);x.setAttribute('aria-selected',on?'true':'false')});if(typeof W.toast==='function')W.toast('৮ লাইনের বেশি হওয়ায় লেখাটি সাধারণ পোস্টে নেওয়া হয়েছে।');return true}
-async function auth(){try{session=(await client()?.auth?.getSession?.()).data?.session||null}catch(_){session=W.__BD_LIVE_SESSION||null}D.body.classList.remove('bd870-auth')}
-D.addEventListener('focusout',e=>{if(e.target?.id==='postBody')toNormalIfOverflow()},true);
-D.addEventListener('submit',e=>{if(e.target?.id==='composerForm')toNormalIfOverflow()},true);
-D.addEventListener('bd:auth-ready',e=>{session=e.detail?.session||null;D.body.classList.remove('bd870-auth')});
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',auth,{once:true});else auth();
-})();
-</script>
+<script data-bd-runtime-order="76" id="bd-v869-targeted-only-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
+<script data-bd-runtime-order="78" id="bd-v870-targeted-master-lock-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
 <script data-bd-runtime-order="80" id="bd-v871-masterlock-targeted-js">
 (()=>{'use strict';
 const D=document,W=window,BN='০১২৩৪৫৬৭৮৯';
@@ -2841,23 +2741,7 @@ window.BhubondangaCommentModerationScan=scan;
 })();
 </script>
 <script data-bd-runtime-order="131" src="profanity.js?v=20260813-final"></script>
-<script data-bd-runtime-order="133" id="bd-architect-runtime-v1">
-(()=>{'use strict';
-const D=document,W=window;
-const reactionSel='[data-bd31-react-main],[data-bd-react-main],[data-live-like],[data-like-post],[data-react],.bd31-action.react,.bd24-react-btn,.reaction-option,.bd-index-reaction-picker button,.bd24-picker button,.bd31-picker button';
-function cardOf(t){return t?.closest?.('[data-post],[data-post-id],[data-post-card],article.post,article.bd-live-post')||null}
-function scrollHost(el){let n=el?.parentElement;while(n&&n!==D.body&&n!==D.documentElement){const cs=getComputedStyle(n);if(/auto|scroll/.test(cs.overflowY)&&n.scrollHeight>n.clientHeight+8)return n;n=n.parentElement}return W}
-const anchors=new WeakMap();
-function mark(t){const c=cardOf(t);if(!c)return;const h=scrollHost(c);anchors.set(c,{top:c.getBoundingClientRect().top,host:h,scroll:h===W?W.scrollY:h.scrollTop});}
-function restore(c){/* hard no-op: never move viewport for reaction */}
-D.addEventListener('pointerdown',e=>{if(e.target.closest?.(reactionSel))mark(e.target)},true);
-D.addEventListener('click',e=>{const r=e.target.closest?.(reactionSel);if(!r)return;const a=r.closest('a[href]');if(a)e.preventDefault();const c=cardOf(r);if(!c)return;requestAnimationFrame(()=>restore(c));setTimeout(()=>restore(c),60);setTimeout(()=>restore(c),180);},true);
-/* Image fallback: never show broken/question reaction artwork. */
-const fallback={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};
-function repair(root=D){root.querySelectorAll?.('img.bd52-reaction-img,img[class*="reaction"]').forEach(img=>{if(img.dataset.archFallback)return;img.dataset.archFallback='1';img.addEventListener('error',()=>{const key=(img.alt||img.dataset.reaction||img.title||'like').toLowerCase();const sp=D.createElement('span');sp.className='bd-react-emoji';sp.textContent=fallback[key]||'👍';img.replaceWith(sp)},{once:true})})}
-repair();new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)repair(n)}).observe(D.body,{childList:true,subtree:true});
-})();
-</script>
+<script data-bd-runtime-order="133" id="bd-architect-runtime-v1">(()=>{'use strict';const D=document;const fallback={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};function repair(root=D){root.querySelectorAll?.('img.bd52-reaction-img,img[class*="reaction"]').forEach(img=>{if(img.dataset.archFallback)return;img.dataset.archFallback='1';img.addEventListener('error',()=>{const key=(img.alt||img.dataset.reaction||img.title||'like').toLowerCase();const sp=D.createElement('span');sp.className='bd-react-emoji';sp.textContent=fallback[key]||'👍';img.replaceWith(sp)},{once:true})})}repair();new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)repair(n)}).observe(D.body,{childList:true,subtree:true})})();</script>
 <script data-bd-runtime-order="136" id="bd-cobalt-porcelain-locked-refine-js">
 (function(){
   const D=document;
@@ -2883,64 +2767,8 @@ repair();new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes
   new MutationObserver(()=>{removeStrayBuildText();syncReadableContrast();}).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['data-theme']});
 })();
 </script>
-<script data-bd-runtime-order="140" id="bd-cobalt-final-social-hardlock-js">
-(function(){
-'use strict';
-if(window.__BD_COBALT_FINAL_SOCIAL_LOCK__)return;window.__BD_COBALT_FINAL_SOCIAL_LOCK__=true;
-const D=document,W=window;
-const actionSel='[data-bd31-react-main],[data-bd31-comments],[data-bd31-share],[data-bd31-react-summary],[data-bd31-comment-summary],[data-bd64-pick],[data-bd31-tray-pick]';
-const CM='[data-bd31-comments],[data-bd31-comment-summary]';
-function cardOf(n){return n?.closest?.('[data-bd31-ready="1"],[data-post],[data-post-id],article.post,article.bd-live-post')||null}
-async function openComments(card){const panel=card?.querySelector?.('[data-bd31-comment-panel]');if(!panel)return false;const opening=panel.hidden||panel.dataset.bdRootOpen!=='1';panel.hidden=!opening;panel.dataset.bdRootOpen=opening?'1':'0';panel.dataset.bd76CommentsOpen=opening?'1':'0';panel.dataset.bd71CommentsOpen=opening?'1':'0';card.dataset.bd76CommentsOpen=opening?'1':'0';card.dataset.bd71CommentsOpen=opening?'1':'0';if(!opening)return false;try{await W.__BD_RENDER_COMMENTS?.(card,false)}catch(_){}try{await W.__BD_SYNC_COMMENT_AS?.(panel)}catch(_){}const list=panel.querySelector('.bd31-comments');if(list)list.hidden=false;const input=panel.querySelector('.bd31-comment-form input,.bd31-comment-form textarea');if(input)setTimeout(()=>{try{input.focus({preventScroll:true})}catch(_){}},20);return true}
-/* Comment is owned here at capture phase so no older post/card handler can swallow it. */
-D.addEventListener('click',e=>{const b=e.target.closest?.(CM);if(!b)return;const card=cardOf(b);if(!card)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openComments(card)},true);
-/* Social taps never navigate the post. Other social actions stay owned by canonical reaction/share engines. */
-D.addEventListener('click',e=>{const a=e.target.closest?.(actionSel);if(!a||a.matches(CM))return;const href=a.closest?.('a[href]');if(href)e.preventDefault()},false);
-function normalize(root=D){root.querySelectorAll?.('.bd31-social').forEach(s=>{const actions=s.querySelector('.bd31-actions');if(!actions)return;actions.querySelectorAll('[data-live-save],[data-save]').forEach(x=>x.remove());const main=actions.querySelector('[data-bd31-react-main] [data-bd31-label]');if(main&&!main.textContent.trim())main.textContent='লাইক';const cm=actions.querySelector('[data-bd31-comments] span:last-child');if(cm)cm.textContent='মন্তব্য';const sh=actions.querySelector('[data-bd31-share] span:last-child');if(sh)sh.textContent='শেয়ার'})}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>normalize(),{once:true});else normalize();new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes||[])if(n.nodeType===1)normalize(n)}).observe(D.body||D.documentElement,{childList:true,subtree:true});
-W.BhubondangaInlineComments={toggle:openComments};
-})();
-</script>
-<script data-bd-runtime-order="142" id="bd-cobalt-comment-write-no-shake-v2-js">
-(function(){
-'use strict';
-if(window.__BD_COBALT_COMMENT_WRITE_V2__)return;window.__BD_COBALT_COMMENT_WRITE_V2__=1;
-const D=document,W=window;
-function clients(){return [W.bdProductionSupabase,W.bdSupabase,W.supabaseClient,W.bhubondangaSupabase,W.BhubondangaAuth?.client].filter(Boolean)}
-async function signedIn(){
-  if(W.__BD_LIVE_SESSION?.user)return true;
-  for(const c of clients())try{const s=(await c.auth?.getSession?.()).data?.session;if(s?.user){W.__BD_LIVE_SESSION=s;return true}}catch(_){ }
-  return false;
-}
-function enableForm(form){
-  if(!form)return;
-  delete form.dataset.bd68CommentLocked;
-  form.removeAttribute('data-bd68-comment-locked');
-  form.querySelectorAll('input,textarea,button[type="submit"]').forEach(el=>{
-    el.disabled=false;el.removeAttribute('disabled');el.style.pointerEvents='auto';el.style.opacity='1';
-    if('placeholder' in el&&/লগইন করুন/.test(el.placeholder||''))el.placeholder=el.dataset.bd68Placeholder||'মন্তব্য লিখুন…';
-  });
-}
-async function unlock(root=D){if(!(await signedIn()))return;root.querySelectorAll?.('.bd31-comment-form,.bd31-reply-form').forEach(enableForm)}
-D.addEventListener('pointerdown',e=>{
-  const field=e.target.closest?.('.bd31-comment-form input,.bd31-comment-form textarea,.bd31-reply-form input,.bd31-reply-form textarea');
-  if(!field)return;
-  e.stopPropagation();
-  if(field.disabled){signedIn().then(ok=>{if(ok){enableForm(field.closest('form'));try{field.focus({preventScroll:true})}catch(_){field.focus()}}})}
-},true);
-D.addEventListener('click',e=>{
-  const btn=e.target.closest?.('[data-bd31-comments]');if(!btn)return;
-  const card=btn.closest?.('[data-bd31-ready="1"],[data-post],[data-post-id],article.post,article.bd-live-post');
-  if(!card)return;
-  setTimeout(()=>{
-    const panel=card.querySelector('[data-bd31-comment-panel]');
-    if(panel&&!panel.hidden){const f=panel.querySelector('.bd31-comment-form');unlock(panel);enableForm(f)}
-  },30);
-},false);
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>unlock(),{once:true});else unlock();
-new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)unlock(n)}).observe(D.body||D.documentElement,{childList:true,subtree:true});
-})();
-</script>
+<script data-bd-runtime-order="140" id="bd-cobalt-final-social-hardlock-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
+<script data-bd-runtime-order="142" id="bd-cobalt-comment-write-no-shake-v2-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
 <script data-bd-runtime-order="144" id="bd-cobalt-comment-final-runtime-lock">
 (function(){'use strict';if(window.__BD_COMMENT_FIELD_FOCUS_LOCK__)return;window.__BD_COMMENT_FIELD_FOCUS_LOCK__=1;const D=document;for(const ev of ['pointerdown','touchstart','click'])D.addEventListener(ev,e=>{const f=e.target.closest?.('.bd31-comment-form input,.bd31-comment-form textarea,.bd31-reply-form input,.bd31-reply-form textarea');if(f)e.stopPropagation()},true)})();
 </script>
@@ -3256,63 +3084,7 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 W.BhubondangaSidebars172={open:openDrawer,close:closeDrawer,refresh:install};
 })();
 </script>
-<script data-bd-runtime-order="154" id="bd-v8173-index-master-stability-js">
-(()=>{'use strict';
-if(window.__BD_V8173_INDEX_MASTER_STABILITY__)return;window.__BD_V8173_INDEX_MASTER_STABILITY__=true;
-const D=document,W=window,H=D.documentElement;
-const CARD_SEL='#postList [data-bd31-ready="1"],#postList [data-post-card],#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post,#postList .post-card';
-const ORDER=['like','love','care','haha','wow','sad','angry'];
-const q=(s,r=D)=>r?.querySelector?.(s)||null,qq=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
-function scrollRootFor(card){
- let n=card?.parentElement||null;
- while(n&&n!==D.body&&n!==D.documentElement){try{const cs=getComputedStyle(n),oy=cs.overflowY;if((oy==='auto'||oy==='scroll')&&n.scrollHeight>n.clientHeight+2)return n}catch(_){}n=n.parentElement}
- return D.scrollingElement||D.documentElement;
-}
-function snap(card){const sc=scrollRootFor(card),doc=sc===D.scrollingElement||sc===D.documentElement||sc===D.body;return{sc,doc,y:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop,x:doc?(W.scrollX||0):sc.scrollLeft}}
-function restore(s){if(!s)return;try{if(s.doc)W.scrollTo(s.x,s.y);else if(s.sc?.isConnected){s.sc.scrollLeft=s.x;s.sc.scrollTop=s.y}}catch(_){}}
-let reactionSnap=null,reactionToken=0,reactionTimer=0;
-function holdReactionPosition(card){return}
-function cardForTarget(target){
- const direct=target?.closest?.(CARD_SEL);if(direct)return direct;
- const tray=target?.closest?.('#bd64ReactionTray,#bd31ReactionTray,.bd-index-reaction-picker');return tray?.__card||q('[data-bd31-react-main][aria-expanded="true"]')?.closest?.(CARD_SEL)||null;
-}
-D.addEventListener('pointerdown',e=>{
- const hit=e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray [data-bd64-pick],#bd31ReactionTray [data-bd31-tray-pick],.bd-index-reaction-picker [data-reaction]');
- if(!hit)return;const card=cardForTarget(hit);if(card)holdReactionPosition(card);
-},true);
-D.addEventListener('click',e=>{
- const hit=e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray [data-bd64-pick],#bd31ReactionTray [data-bd31-tray-pick],.bd-index-reaction-picker [data-reaction]');
- if(!hit)return;const card=cardForTarget(hit);if(card&&!reactionSnap)holdReactionPosition(card);
-},true);
-function canonicalTray(){
- const tray=q('#bd64ReactionTray');if(!tray)return false;
- const buttons=qq('[data-bd64-pick]',tray);if(!buttons.length)return false;
- const current=buttons.map(b=>String(b.dataset.bd64Pick||'').toLowerCase());
- const expected=ORDER.filter(t=>current.includes(t));
- if(current.join('|')!==expected.join('|')){
-   const map=new Map(buttons.map(b=>[String(b.dataset.bd64Pick||'').toLowerCase(),b]));
-   const frag=D.createDocumentFragment();for(const type of expected){const b=map.get(type);if(b)frag.appendChild(b)}tray.appendChild(frag);
- }
- const after=qq('[data-bd64-pick]',tray).map(b=>String(b.dataset.bd64Pick||'').toLowerCase());
- return expected.every((t,i)=>after[i]===t);
-}
-/* Preserve the feed position when leaving/returning from Reels. */
-let reelOpen=false,reelSnap=null;
-function mainFeedScroller(){const c=q('.center-col');if(c){try{const cs=getComputedStyle(c);if((cs.overflowY==='auto'||cs.overflowY==='scroll')&&c.scrollHeight>c.clientHeight+2)return c}catch(_){}}return D.scrollingElement||D.documentElement}
-function feedSnap(){const sc=mainFeedScroller(),doc=sc===D.scrollingElement||sc===D.documentElement||sc===D.body;return{sc,doc,y:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop,x:doc?(W.scrollX||0):sc.scrollLeft}}
-function watchReels(){
- const shell=q('#bd107Reels');if(!shell||shell.dataset.bd173Watch==='1')return;shell.dataset.bd173Watch='1';reelOpen=shell.classList.contains('open');
- new MutationObserver(()=>{const on=shell.classList.contains('open');if(on&&!reelOpen){reelSnap=feedSnap()}else if(!on&&reelOpen&&reelSnap){const s=reelSnap;requestAnimationFrame(()=>restore(s));setTimeout(()=>restore(s),80)}reelOpen=on}).observe(shell,{attributes:true,attributeFilter:['class']});
-}
-function audit(){const feed=q('#postList'),composer=q('#composer'),form=q('#composerForm'),reels=typeof W.BhubondangaReels107?.open==='function';const main=feed?.querySelector?.('[data-bd31-react-main]'),comments=feed?.querySelector?.('[data-bd31-comments],.bd31-comment-form');return{feed:!!feed,composer:!!composer,composerForm:!!form,reactionMain:!!main,reactionTray:!!q('#bd64ReactionTray'),reactionOrder:canonicalTray(),comments:!!comments,reels}}
-function boot(){canonicalTray();watchReels();setTimeout(()=>{canonicalTray();watchReels()},300);setTimeout(()=>{canonicalTray();watchReels()},1200)}
-/* Important: only react to insertion of the specific runtime shells. Never mutate the reaction tray on every body mutation. */
-const mo=new MutationObserver(ms=>{let tray=false,reels=false;for(const m of ms){for(const n of m.addedNodes||[]){if(n.nodeType!==1)continue;if(n.id==='bd64ReactionTray'||n.querySelector?.('#bd64ReactionTray'))tray=true;if(n.id==='bd107Reels'||n.querySelector?.('#bd107Reels'))reels=true}}if(tray)canonicalTray();if(reels)watchReels()});
-function start(){boot();mo.observe(D.body,{childList:true,subtree:true})}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
-W.BhubondangaMasterLock173={audit,settleReaction:holdReactionPosition,canonicalTray};
-})();
-</script>
+<script data-bd-runtime-order="154" id="bd-v8173-index-master-stability-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
 <script data-bd-runtime-order="156" id="bd-v8177-reels-font-card-studio-js">
 (()=>{'use strict';
 const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
@@ -3556,59 +3328,15 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 W.BhubondangaFontCompact179={refresh:renderCompactFonts,remove:removeFont,openAdd:openFontPicker};
 })();
 </script>
-<script data-bd-runtime-order="161" id="bd-v8180-master-lock-js">
-(()=>{'use strict';
+<script data-bd-runtime-order="161" id="bd-v8180-master-lock-js">(()=>{'use strict';
 if(window.__BD_V8180_MASTER_LOCK__)return;window.__BD_V8180_MASTER_LOCK__=true;
-const D=document,W=window,H=D.documentElement;
-const q=(s,r=D)=>r?.querySelector?.(s)||null,qq=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
-const CARD_SEL='#postList [data-bd31-ready="1"],#postList [data-post-card],#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post,#postList .post-card';
-const RX_SEL='[data-bd31-react-main],#bd64ReactionTray [data-bd64-pick],#bd31ReactionTray [data-bd31-tray-pick],.bd-index-reaction-picker [data-reaction]';
-function cardId(c){return String(c?.dataset?.post||c?.dataset?.postId||c?.getAttribute?.('data-post')||c?.getAttribute?.('data-post-id')||'').trim()}
-function cardOf(t){const c=t?.closest?.(CARD_SEL);if(c)return c;const tray=t?.closest?.('#bd64ReactionTray,#bd31ReactionTray,.bd-index-reaction-picker');return tray?.__card||null}
-function findCard(id,fallback){if(id){for(const c of qq(CARD_SEL)){if(cardId(c)===id)return c}}return fallback?.isConnected?fallback:null}
-function scrollRoot(c){let n=c?.parentElement;while(n&&n!==D.body&&n!==D.documentElement){try{const cs=getComputedStyle(n),oy=cs.overflowY;if((oy==='auto'||oy==='scroll')&&n.scrollHeight>n.clientHeight+2)return n}catch(_){}n=n.parentElement}return D.scrollingElement||D.documentElement}
-function isDoc(sc){return sc===D.scrollingElement||sc===D.documentElement||sc===D.body}
-function capture(c){if(!c)return null;const sc=scrollRoot(c),doc=isDoc(sc);return{id:cardId(c),card:c,sc,doc,top:c.getBoundingClientRect().top,scroll:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop}}
-let guard=null,token=0,restoring=false,settleTimer=0;
-function restoreVisual(g){if(!g||g.token!==token)return;const c=findCard(g.id,g.card);if(!c)return;const sc=g.sc?.isConnected!==false?g.sc:scrollRoot(c);const doc=isDoc(sc);const nowTop=c.getBoundingClientRect().top;const delta=nowTop-g.top;if(!Number.isFinite(delta)||Math.abs(delta)<.5)return;restoring=true;try{if(doc)W.scrollBy(0,delta);else sc.scrollTop+=delta}catch(_){}requestAnimationFrame(()=>{restoring=false})}
-function settle(c){return}
-function cancelSettle(){guard=null;++token;clearTimeout(settleTimer);H.classList.remove('bd180-rx-settling')}
-/* V8.64 owns pointerdown/click on window-capture and stops propagation.
-   So snapshot on pointerover/touchstart, which occur before its mutation path on mobile/desktop. */
-function armFromEvent(e){const hit=e.target?.closest?.(RX_SEL);if(!hit)return;const c=cardOf(hit);if(c)settle(c)}
-D.addEventListener('pointerover',armFromEvent,true);
-D.addEventListener('touchstart',armFromEvent,{capture:true,passive:true});
-D.addEventListener('mouseover',armFromEvent,true);
-/* pointerup is an extra safety path for short taps when it is not consumed by the legacy owner. */
-D.addEventListener('pointerup',e=>{const hit=e.target.closest?.(RX_SEL);if(!hit)return;const c=cardOf(hit);if(c&&!guard)settle(c)},true);
-/* During the short settle window, rerender/mutation cannot move the clicked post. */
-const feed=q('#postList');if(feed)new MutationObserver(()=>{if(guard)requestAnimationFrame(()=>restoreVisual(guard))}).observe(feed,{childList:true,subtree:true});
-/* User-initiated scrolling always wins; never fight the user. */
-W.addEventListener('wheel',()=>{if(guard&&!restoring)cancelSettle()},{passive:true,capture:true});
-D.addEventListener('pointerdown',e=>{if(guard&&!e.target.closest?.(RX_SEL)&&!e.target.closest?.('#bd64ReactionTray'))cancelSettle()},true);
-
-/* Template/card ink is tied to the card surface, not to site Dark Mode. */
-function markSurfaces(root=D){
- root.querySelectorAll?.('#postList :is(article.post,article.bd-live-post,.post-card)[class*="style-tpl"] .post-body').forEach(el=>el.setAttribute('data-bd180-surface','light'));
- const f=q('#composerForm');if(f){const b=q('#postBody',f);if(b&&/^tpl[1-8]$/.test(f.dataset.bd65Template||''))b.setAttribute('data-bd180-surface','light');else b?.removeAttribute('data-bd180-surface')}
- root.querySelectorAll?.('.bd177-card-preview,.bd177-published-card').forEach(el=>el.setAttribute('data-bd180-surface',el.dataset.layout==='night'?'dark':'light'));
-}
-D.addEventListener('click',e=>{if(e.target.closest?.('.bd58-template-chip,[data-bd58-template],[data-card-id]'))setTimeout(()=>markSurfaces(),0)},true);
-D.addEventListener('change',e=>{if(e.target?.id==='cardStyle'||e.target?.name==='cardStyle')setTimeout(()=>markSurfaces(),0)},true);
-
-/* Canonical tray is icon-only and always ordered like Facebook. */
-const ORDER=['like','love','care','haha','wow','sad','angry'];
-function normalizeTray(){const t=q('#bd64ReactionTray');if(!t)return;const map=new Map(qq('[data-bd64-pick]',t).map(b=>[String(b.dataset.bd64Pick||'').toLowerCase(),b]));if(!map.size)return;const frag=D.createDocumentFragment();for(const k of ORDER){const b=map.get(k);if(!b)continue;b.removeAttribute('title');b.setAttribute('aria-label',k);frag.appendChild(b)}t.appendChild(frag)}
-/* Remove only visible helper labels from the tray; accessibility names remain. */
-D.addEventListener('pointerover',e=>{if(e.target.closest?.('#bd64ReactionTray'))normalizeTray()},true);
-
-function boot(){markSurfaces();normalizeTray();setTimeout(()=>{markSurfaces();normalizeTray()},300);setTimeout(()=>{markSurfaces();normalizeTray()},1100)}
-const mo=new MutationObserver(ms=>{let cards=false,tray=false;for(const m of ms)for(const n of m.addedNodes||[]){if(n.nodeType!==1)continue;if(n.id==='bd64ReactionTray'||n.querySelector?.('#bd64ReactionTray'))tray=true;if(n.matches?.(CARD_SEL+'.bd177-js-card-post')||n.querySelector?.(CARD_SEL+',.bd177-published-card'))cards=true}if(cards)markSurfaces();if(tray)normalizeTray()});
-function start(){boot();mo.observe(D.body,{childList:true,subtree:true})}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:true});else start();
-W.BhubondangaMasterLock180={settleReaction:settle,markSurfaces,normalizeTray};
-})();
-</script>
+const D=document,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]),ORDER=['like','love','care','haha','wow','sad','angry'];
+function markSurfaces(root=D){root.querySelectorAll?.('#postList :is(article.post,article.bd-live-post,.post-card)[class*="style-tpl"] .post-body').forEach(el=>el.setAttribute('data-bd180-surface','light'));const f=$('#composerForm');if(f){const b=$('#postBody',f);if(b&&/^tpl[1-8]$/.test(f.dataset.bd65Template||''))b.setAttribute('data-bd180-surface','light');else b?.removeAttribute('data-bd180-surface')}root.querySelectorAll?.('.bd177-card-preview,.bd177-published-card').forEach(el=>el.setAttribute('data-bd180-surface',el.dataset.layout==='night'?'dark':'light'))}
+function normalizeTray(){const t=$('#bd64ReactionTray');if(!t)return;const map=new Map($$('[data-bd64-pick]',t).map(b=>[String(b.dataset.bd64Pick||'').toLowerCase(),b]));if(!map.size)return;const f=D.createDocumentFragment();for(const k of ORDER){const b=map.get(k);if(b){b.removeAttribute('title');b.setAttribute('aria-label',k);f.appendChild(b)}}t.appendChild(f)}
+D.addEventListener('click',e=>{if(e.target.closest?.('.bd58-template-chip,[data-bd58-template],[data-card-id]'))setTimeout(markSurfaces,0)},true);D.addEventListener('change',e=>{if(e.target?.id==='cardStyle'||e.target?.name==='cardStyle')setTimeout(markSurfaces,0)},true);
+function boot(){markSurfaces();normalizeTray();setTimeout(()=>{markSurfaces();normalizeTray()},400)}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();window.BhubondangaMasterLock180={settleReaction:()=>{},markSurfaces,normalizeTray};
+})();</script>
 <script data-bd-runtime-order="163" id="bd-v8181-composer-sidebar-card-master-js">
 (()=>{'use strict';
 if(window.__BD_V8181_COMPOSER_SIDEBAR_CARD__)return;window.__BD_V8181_COMPOSER_SIDEBAR_CARD__=true;
@@ -3761,52 +3489,7 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 W.BhubondangaMasterLock184={patchReactionImages,ensureTray,enhanceSidebars,syncRealAuth};
 })();
 </script>
-<script data-bd-runtime-order="171" id="bd-v8185-canonical-reaction-js">
-(()=>{'use strict';
-const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);
-if(W.__BD_V8185_CANONICAL_RX__)return;W.__BD_V8185_CANONICAL_RX__=1;
-const ORDER=['like','love','care','haha','wow','sad','angry'];
-const CARD='#postList [data-bd31-ready="1"],#postList [data-post-card],#postList [data-post],#postList [data-post-id],#postList article.post,#postList article.bd-live-post,#postList .post-card';
-/* Embedded artwork: no GitHub asset dependency. */
-const A={
-like:'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Ccircle cx="32" cy="32" r="30" fill="%231877F2"/%3E%3Cpath fill="white" d="M25 50H15c-2 0-3.5-1.5-3.5-3.5v-20c0-2 1.5-3.5 3.5-3.5h10v27Zm5-27c3-4 5-9 5-14 0-2 1-3 2.7-3 4.7 0 7.3 4.2 6.2 9.3L42.5 22H51c4.4 0 7.4 4.1 6.2 8.3l-4.1 14.2A7.4 7.4 0 0 1 46 50H29V25.5c0-1 .3-1.8 1-2.5Z"/%3E%3C/svg%3E',
-love:'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Ccircle cx="32" cy="32" r="30" fill="%23F55368"/%3E%3Cpath fill="white" d="M32 49 15.8 33.6C7.5 25.7 12.8 13 22.4 13c4.2 0 7.5 2.3 9.6 5.2 2.1-2.9 5.4-5.2 9.6-5.2 9.6 0 14.9 12.7 6.6 20.6L32 49Z"/%3E%3C/svg%3E',
-care:'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Ccircle cx="32" cy="32" r="30" fill="%23F7B928"/%3E%3Ccircle cx="22" cy="25" r="3" fill="%235b3b19"/%3E%3Ccircle cx="42" cy="25" r="3" fill="%235b3b19"/%3E%3Cpath d="M21 35c6 6 16 6 22 0" fill="none" stroke="%235b3b19" stroke-width="3.5" stroke-linecap="round"/%3E%3Cpath fill="%23f55368" d="M32 52C15 42 13 32 20 28c5-3 10 0 12 4 2-4 7-7 12-4 7 4 5 14-12 24Z"/%3E%3C/svg%3E',
-haha:'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Ccircle cx="32" cy="32" r="30" fill="%23FFD84F"/%3E%3Cpath d="M15 24c4-5 9-5 13 0M36 24c4-5 9-5 13 0" fill="none" stroke="%23654500" stroke-width="3.5" stroke-linecap="round"/%3E%3Cpath fill="%236b3200" d="M17 34h30c-1.3 12-7 19-15 19S18.3 46 17 34Z"/%3E%3Cpath fill="white" d="M20 34h24c-.6 3-2.2 5.5-4 7H24c-2-1.7-3.4-4-4-7Z"/%3E%3Cpath fill="%23ef6a7f" d="M26 48c3-4 9-4 12 0-1.8 2-3.8 3-6 3s-4.2-1-6-3Z"/%3E%3C/svg%3E',
-wow:'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Ccircle cx="32" cy="32" r="30" fill="%23FFD84F"/%3E%3Ccircle cx="21" cy="25" r="4" fill="%235C4200"/%3E%3Ccircle cx="43" cy="25" r="4" fill="%235C4200"/%3E%3Cellipse cx="32" cy="43" rx="8" ry="11" fill="%236B3500"/%3E%3C/svg%3E',
-sad:'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Ccircle cx="32" cy="32" r="30" fill="%23FFD84F"/%3E%3Ccircle cx="22" cy="29" r="2.5" fill="%23654500"/%3E%3Ccircle cx="42" cy="29" r="2.5" fill="%23654500"/%3E%3Cpath d="M22 47c6-6 14-6 20 0" fill="none" stroke="%23654500" stroke-width="3.5" stroke-linecap="round"/%3E%3Cpath fill="%234DA4FF" d="M48 32c0 7-3.8 11-7 11s-4.7-3.8-2.4-7.5L43 29l5 3Z"/%3E%3C/svg%3E',
-angry:'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Ccircle cx="32" cy="32" r="30" fill="%23E95B38"/%3E%3Cpath d="m15 21 13 5M49 21l-13 5" fill="none" stroke="%235B250F" stroke-width="4" stroke-linecap="round"/%3E%3Ccircle cx="23" cy="31" r="3" fill="%235B250F"/%3E%3Ccircle cx="41" cy="31" r="3" fill="%235B250F"/%3E%3Cpath d="M21 48c6-7 16-7 22 0" fill="none" stroke="%235B250F" stroke-width="4" stroke-linecap="round"/%3E%3C/svg%3E'};
-W.BD52_REACTION_SRC=W.BD52_REACTION_SRC||{};Object.assign(W.BD52_REACTION_SRC,A);
-function cardOf(n){const c=n?.closest?.(CARD);if(c)return c;return n?.closest?.('#bd64ReactionTray')?.__card||null}
-function pid(c){return String(c?.dataset?.post||c?.dataset?.postId||c?.getAttribute?.('data-post')||c?.getAttribute?.('data-post-id')||'').trim()}
-function icon(k){return `<span class="bd64-icon"><img class="bd52-reaction-img" src="${A[k]}" alt="" draggable="false"></span>`}
-function tray(){let t=$('#bd64ReactionTray');if(!t){t=D.createElement('div');t.id='bd64ReactionTray';t.setAttribute('role','menu');D.body.appendChild(t)}const frag=D.createDocumentFragment();for(const k of ORDER){const b=D.createElement('button');b.type='button';b.dataset.bd64Pick=k;b.setAttribute('aria-label',k);b.innerHTML=icon(k);frag.appendChild(b)}t.replaceChildren(frag);return t}
-function closeTray(){const t=$('#bd64ReactionTray');if(!t)return;t.classList.remove('open');t.__card=null;t.__button=null}
-function openTray(main){const c=cardOf(main);if(!c)return;const t=tray(),r=main.getBoundingClientRect();t.__card=c;t.__button=main;t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||304,h=t.offsetHeight||50;let left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<6)top=Math.min(innerHeight-h-6,r.bottom+8);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'})}
-function anchor(c){const top=c?.getBoundingClientRect?.().top??0;let sc=c?.parentElement;while(sc&&sc!==D.body&&sc!==D.documentElement){const cs=getComputedStyle(sc);if(/auto|scroll/.test(cs.overflowY)&&sc.scrollHeight>sc.clientHeight+2)break;sc=sc.parentElement}const win=!sc||sc===D.body||sc===D.documentElement;return{c,top,sc:win?null:sc}}
-function settle(a){return}
-function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null}
-async function fallbackSet(id,type,c){const db=client();let s=null;try{s=(await db?.auth?.getSession?.())?.data?.session||null}catch(_){}if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}let ok=false;if(db){try{const r=await db.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:type});if(!r.error)ok=true}catch(_){}if(!ok)for(const table of ['post_reactions','reactions']){try{const cur=await db.from(table).select('reaction').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;if(cur.data?.reaction===type)r=await db.from(table).delete().eq('post_id',id).eq('user_id',s.user.id);else if(cur.data)r=await db.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);else r=await db.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});if(!r.error){ok=true;break}}catch(_){}}}
- if(!ok){try{let rows=JSON.parse(localStorage.getItem('bd31-react-'+id)||'[]')||[];const old=rows.find(x=>String(x.user_id)===String(s.user.id));rows=rows.filter(x=>String(x.user_id)!==String(s.user.id));if(!old||old.reaction!==type)rows.push({user_id:s.user.id,reaction:type});localStorage.setItem('bd31-react-'+id,JSON.stringify(rows));ok=true}catch(_){}}
- try{await W.__BD_REFRESH_SOCIAL?.(c)}catch(_){}return ok}
-async function setRx(c,type){const id=pid(c);if(!id)return false;const a=anchor(c);let ok=false;try{if(typeof W.__BD_SET_REACTION==='function')ok=await W.__BD_SET_REACTION(id,type,c);else ok=await fallbackSet(id,type,c)}catch(_){ok=await fallbackSet(id,type,c)}settle(a);return ok}
-/* Put final self-contained art into all existing summaries / active buttons too. */
-function repair(root=D){$$('.bd52-reaction-img',root).forEach(img=>{let k='';const p=img.closest?.('[data-bd64-pick],[data-bd31-tray-pick]');if(p)k=String(p.dataset.bd64Pick||p.dataset.bd31TrayPick||'').toLowerCase();if(!k){const r=img.closest?.('.bd31-r');if(r)k=ORDER.find(x=>r.classList.contains(x))||''}if(!k){const m=img.closest?.('[data-bd31-react-main]');k=String(m?.dataset?.current||'').toLowerCase()}if(A[k]&&img.getAttribute('src')!==A[k])img.src=A[k]})}
-/* This WINDOW-capture owner runs before every document legacy reaction handler. */
-let hold=0,startX=0,startY=0,opened=false,suppressUntil=0,hoverOpen=0,hoverClose=0;
-W.addEventListener('pointerdown',e=>{const main=e.target.closest?.('[data-bd31-react-main]');const pick=e.target.closest?.('#bd64ReactionTray [data-bd64-pick]');if(!main&&!pick)return;e.stopImmediatePropagation();if(!main)return;opened=false;startX=e.clientX;startY=e.clientY;clearTimeout(hold);hold=setTimeout(()=>{opened=true;suppressUntil=Date.now()+700;openTray(main)},380)},true);
-W.addEventListener('pointermove',e=>{if(!hold)return;if(Math.hypot(e.clientX-startX,e.clientY-startY)>11){clearTimeout(hold);hold=0}},true);
-W.addEventListener('pointerup',e=>{if(e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray'))e.stopImmediatePropagation();clearTimeout(hold);hold=0},true);
-W.addEventListener('pointercancel',()=>{clearTimeout(hold);hold=0},true);
-W.addEventListener('click',e=>{const pick=e.target.closest?.('#bd64ReactionTray [data-bd64-pick]');if(pick){e.preventDefault();e.stopImmediatePropagation();const t=$('#bd64ReactionTray'),c=t?.__card,type=String(pick.dataset.bd64Pick||'like');closeTray();if(c)setRx(c,type);return}const main=e.target.closest?.('[data-bd31-react-main]');if(main){e.preventDefault();e.stopImmediatePropagation();if(opened||Date.now()<suppressUntil){opened=false;return}const c=cardOf(main),cur=String(main.dataset.current||'').toLowerCase();if(c)setRx(c,ORDER.includes(cur)?cur:'like');return}if(!e.target.closest?.('#bd64ReactionTray'))closeTray()},true);
-D.addEventListener('pointerover',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;const m=e.target.closest?.('[data-bd31-react-main]');if(m){clearTimeout(hoverClose);clearTimeout(hoverOpen);hoverOpen=setTimeout(()=>openTray(m),180);return}if(e.target.closest?.('#bd64ReactionTray'))clearTimeout(hoverClose)},true);
-D.addEventListener('pointerout',e=>{if(e.pointerType&&e.pointerType!=='mouse')return;const f=e.target.closest?.('[data-bd31-react-main],#bd64ReactionTray');if(!f)return;const to=e.relatedTarget?.closest?.('[data-bd31-react-main],#bd64ReactionTray');if(to)return;clearTimeout(hoverOpen);hoverClose=setTimeout(closeTray,240)},true);
-const mo=new MutationObserver(ms=>{let need=false;for(const m of ms)if(m.addedNodes?.length){need=true;break}if(need)requestAnimationFrame(()=>repair())});
-function boot(){tray();repair();const feed=$('#postList');if(feed)mo.observe(feed,{subtree:true,childList:true});[250,800,1800].forEach(ms=>setTimeout(repair,ms))}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-W.BhubondangaMasterLock185={setReaction:setRx,openReactionTray:openTray,closeReactionTray:closeTray,repairReactions:repair};
-})();
-</script>
+<script data-bd-runtime-order="171" id="bd-v8185-canonical-reaction-js">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script>
 <script data-bd-runtime-order="173" id="bd-v8186-public-font-reels-comments-js">
 (()=>{'use strict';if(window.__BD_V8186_PUBLIC_FONT_REELS_COMMENTS__)return;window.__BD_V8186_PUBLIC_FONT_REELS_COMMENTS__=true;const D=document,W=window,$=(s,r=D)=>r?.querySelector?.(s)||null,$$=(s,r=D)=>Array.from(r?.querySelectorAll?.(s)||[]);const LETTERS={subha:'অ',masud:'আ',kobiguru:'ক',bornomala:'খ',jannati:'ম'};
 function restoreSignature(){const bar=$('#bd58FontToolbar');if(!bar)return;bar.hidden=false;bar.removeAttribute('hidden');for(const b of $$('.bd58-font-chip',bar)){const k=String(b.dataset.bd76Key||b.dataset.bd58Font||'');if(LETTERS[k]&&b.textContent!==LETTERS[k])b.textContent=LETTERS[k]}}
@@ -3950,5 +3633,5 @@ W.BhubondangaMasterLock187={syncGuest};
 #postList [data-bd31-react-main],#bd64ReactionTray [data-bd64-pick]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 #postList [data-bd31-react-main]:active{transform:none!important}
 </style>
-<script data-bd-runtime-order="1001" id="bd-final-ime-session-guard">(()=>{'use strict';if(window.__BD_FINAL_IME_SESSION_GUARD__)return;window.__BD_FINAL_IME_SESSION_GUARD__=true;const D=document,$=s=>D.querySelector(s);let composing=false;function keep(){const c=$('#composer'),f=$('#composerForm'),a=D.activeElement;if(!c||!f)return;const editing=composing||a?.id==='postBody'||a?.id==='postTitle'||c.dataset.bdWriteSession==='1';if(!editing)return;c.dataset.bdWriteSession='1';if(c.dataset.bd71Stage!=='write')c.dataset.bd71Stage='write';if(f.hidden)f.hidden=false;f.removeAttribute('hidden')}D.addEventListener('compositionstart',e=>{if(e.target?.id==='postBody'||e.target?.id==='postTitle'){composing=true;keep()}},true);D.addEventListener('beforeinput',e=>{if(e.target?.id==='postBody'||e.target?.id==='postTitle')keep()},true);D.addEventListener('input',e=>{if(e.target?.id==='postBody'||e.target?.id==='postTitle')keep()},true);D.addEventListener('compositionend',e=>{if(e.target?.id==='postBody'||e.target?.id==='postTitle'){composing=false;keep()}},true);D.addEventListener('focusin',e=>{if(e.target?.id==='postBody'||e.target?.id==='postTitle')keep()},true);const mo=new MutationObserver(()=>{const a=D.activeElement;if(composing||a?.id==='postBody'||a?.id==='postTitle')queueMicrotask(keep)});D.addEventListener('pointerdown',e=>{if(e.target.closest?.('#cancelComposer')){const c=$('#composer');if(c)delete c.dataset.bdWriteSession;composing=false}},true);D.addEventListener('reset',e=>{if(e.target?.id==='composerForm'){const c=$('#composer');if(c)delete c.dataset.bdWriteSession;composing=false}},true);function boot(){const c=$('#composer'),f=$('#composerForm');if(c&&f){mo.observe(c,{attributes:true,attributeFilter:['data-bd71-stage']});mo.observe(f,{attributes:true,attributeFilter:['hidden']})}}if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();})();</script></template>
+<script data-bd-runtime-order="1001" id="bd-final-ime-session-guard">/* retired: handled by bd-feed-exclusive-social-composer-owner */</script></template>
 </body></html>
