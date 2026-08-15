@@ -1691,10 +1691,24 @@ W.addEventListener('pointerdown',e=>{
  press={main,id:e.pointerId,x:e.clientX,y:e.clientY,held:false,t:setTimeout(()=>{if(!press||press.id!==e.pointerId)return;press.held=true;openTray(main)},320)};
 },{capture:true});
 W.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot(e.clientX-press.x,e.clientY-press.y)>12){clearTimeout(press.t);press=null}},{capture:true,passive:true});
-W.addEventListener('pointerup',e=>{if(!press||press.id!==e.pointerId)return;const p=press;clearTimeout(p.t);press=null;if(p.held){stop(e);p.main.dataset.bd64SkipClick='1';setTimeout(()=>delete p.main.dataset.bd64SkipClick,500)}},{capture:true});
+W.addEventListener('pointerup',e=>{
+ const pick=e.target.closest?.('#bd64ReactionTray [data-bd64-pick]');
+ if(pick&&e.pointerType!=='mouse'){
+  stop(e);const t=tray(),card=t.__card,type=pick.dataset.bd64Pick;
+  pick.dataset.bd64SkipClick='1';setTimeout(()=>delete pick.dataset.bd64SkipClick,700);
+  if(card)apply(card,type,true);return;
+ }
+ if(!press||press.id!==e.pointerId)return;
+ const p=press;clearTimeout(p.t);press=null;
+ if(p.held){stop(e);p.main.dataset.bd64SkipClick='1';setTimeout(()=>delete p.main.dataset.bd64SkipClick,700);return}
+ if(e.pointerType!=='mouse'&&Math.hypot(e.clientX-p.x,e.clientY-p.y)<=12){
+  stop(e);p.main.dataset.bd64SkipClick='1';setTimeout(()=>delete p.main.dataset.bd64SkipClick,700);
+  apply(cardOf(p.main),'like',false);
+ }
+},{capture:true});
 W.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId){clearTimeout(press.t);press=null}},{capture:true});
 W.addEventListener('click',e=>{
- const pick=e.target.closest?.('[data-bd64-pick]');if(pick){stop(e);const t=tray(),card=t.__card,type=pick.dataset.bd64Pick;if(card)apply(card,type,true);return}
+ const pick=e.target.closest?.('[data-bd64-pick]');if(pick){stop(e);if(pick.dataset.bd64SkipClick){delete pick.dataset.bd64SkipClick;return}const t=tray(),card=t.__card,type=pick.dataset.bd64Pick;if(card)apply(card,type,true);return}
  const main=e.target.closest?.('[data-bd31-react-main]');if(main){stop(e);if(main.dataset.bd64SkipClick){delete main.dataset.bd64SkipClick;return}apply(cardOf(main),'like',false);return}
  if(!e.target.closest?.('#bd64ReactionTray'))closeTray();
 },{capture:true});
@@ -3257,12 +3271,7 @@ function scrollRootFor(card){
 function snap(card){const sc=scrollRootFor(card),doc=sc===D.scrollingElement||sc===D.documentElement||sc===D.body;return{sc,doc,y:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop,x:doc?(W.scrollX||0):sc.scrollLeft}}
 function restore(s){if(!s)return;try{if(s.doc)W.scrollTo(s.x,s.y);else if(s.sc?.isConnected){s.sc.scrollLeft=s.x;s.sc.scrollTop=s.y}}catch(_){}}
 let reactionSnap=null,reactionToken=0,reactionTimer=0;
-function holdReactionPosition(card){
- if(!card)return;reactionSnap=snap(card);const token=++reactionToken;H.classList.add('bd173-reaction-settling');
- const apply=()=>{if(token===reactionToken&&reactionSnap)restore(reactionSnap)};
- apply();queueMicrotask(apply);requestAnimationFrame(()=>{apply();requestAnimationFrame(apply)});[48,120,280,650].forEach(ms=>setTimeout(apply,ms));
- clearTimeout(reactionTimer);reactionTimer=setTimeout(()=>{if(token===reactionToken){apply();reactionSnap=null;H.classList.remove('bd173-reaction-settling')}},760);
-}
+function holdReactionPosition(card){return}
 function cardForTarget(target){
  const direct=target?.closest?.(CARD_SEL);if(direct)return direct;
  const tray=target?.closest?.('#bd64ReactionTray,#bd31ReactionTray,.bd-index-reaction-picker');return tray?.__card||q('[data-bd31-react-main][aria-expanded="true"]')?.closest?.(CARD_SEL)||null;
@@ -3562,7 +3571,7 @@ function isDoc(sc){return sc===D.scrollingElement||sc===D.documentElement||sc===
 function capture(c){if(!c)return null;const sc=scrollRoot(c),doc=isDoc(sc);return{id:cardId(c),card:c,sc,doc,top:c.getBoundingClientRect().top,scroll:doc?(W.scrollY||D.documentElement.scrollTop||0):sc.scrollTop}}
 let guard=null,token=0,restoring=false,settleTimer=0;
 function restoreVisual(g){if(!g||g.token!==token)return;const c=findCard(g.id,g.card);if(!c)return;const sc=g.sc?.isConnected!==false?g.sc:scrollRoot(c);const doc=isDoc(sc);const nowTop=c.getBoundingClientRect().top;const delta=nowTop-g.top;if(!Number.isFinite(delta)||Math.abs(delta)<.5)return;restoring=true;try{if(doc)W.scrollBy(0,delta);else sc.scrollTop+=delta}catch(_){}requestAnimationFrame(()=>{restoring=false})}
-function settle(c){const snap=capture(c);if(!snap)return;const t=++token;guard={...snap,token:t};H.classList.add('bd180-rx-settling');const run=()=>{if(guard?.token===t)restoreVisual(guard)};run();queueMicrotask(run);requestAnimationFrame(()=>{run();requestAnimationFrame(run)});[32,72,130,220,360,560,820,1150].forEach(ms=>setTimeout(run,ms));clearTimeout(settleTimer);settleTimer=setTimeout(()=>{if(guard?.token===t){run();guard=null;H.classList.remove('bd180-rx-settling')}},1250)}
+function settle(c){return}
 function cancelSettle(){guard=null;++token;clearTimeout(settleTimer);H.classList.remove('bd180-rx-settling')}
 /* V8.64 owns pointerdown/click on window-capture and stops propagation.
    So snapshot on pointerover/touchstart, which occur before its mutation path on mobile/desktop. */
@@ -3775,7 +3784,7 @@ function tray(){let t=$('#bd64ReactionTray');if(!t){t=D.createElement('div');t.i
 function closeTray(){const t=$('#bd64ReactionTray');if(!t)return;t.classList.remove('open');t.__card=null;t.__button=null}
 function openTray(main){const c=cardOf(main);if(!c)return;const t=tray(),r=main.getBoundingClientRect();t.__card=c;t.__button=main;t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||304,h=t.offsetHeight||50;let left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<6)top=Math.min(innerHeight-h-6,r.bottom+8);t.style.left=Math.round(left)+'px';t.style.top=Math.round(top)+'px'})}
 function anchor(c){const top=c?.getBoundingClientRect?.().top??0;let sc=c?.parentElement;while(sc&&sc!==D.body&&sc!==D.documentElement){const cs=getComputedStyle(sc);if(/auto|scroll/.test(cs.overflowY)&&sc.scrollHeight>sc.clientHeight+2)break;sc=sc.parentElement}const win=!sc||sc===D.body||sc===D.documentElement;return{c,top,sc:win?null:sc}}
-function settle(a){if(!a?.c?.isConnected)return;let n=0;const run=()=>{if(!a.c.isConnected)return;const now=a.c.getBoundingClientRect().top,d=now-a.top;if(Math.abs(d)>.5){if(a.sc)a.sc.scrollTop+=d;else W.scrollBy(0,d)}if(++n<5)requestAnimationFrame(run)};requestAnimationFrame(run)}
+function settle(a){return}
 function client(){return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||null}
 async function fallbackSet(id,type,c){const db=client();let s=null;try{s=(await db?.auth?.getSession?.())?.data?.session||null}catch(_){}if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}let ok=false;if(db){try{const r=await db.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:type});if(!r.error)ok=true}catch(_){}if(!ok)for(const table of ['post_reactions','reactions']){try{const cur=await db.from(table).select('reaction').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;if(cur.data?.reaction===type)r=await db.from(table).delete().eq('post_id',id).eq('user_id',s.user.id);else if(cur.data)r=await db.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);else r=await db.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});if(!r.error){ok=true;break}}catch(_){}}}
  if(!ok){try{let rows=JSON.parse(localStorage.getItem('bd31-react-'+id)||'[]')||[];const old=rows.find(x=>String(x.user_id)===String(s.user.id));rows=rows.filter(x=>String(x.user_id)!==String(s.user.id));if(!old||old.reaction!==type)rows.push({user_id:s.user.id,reaction:type});localStorage.setItem('bd31-react-'+id,JSON.stringify(rows));ok=true}catch(_){}}
@@ -3936,5 +3945,10 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',start,{once:tr
 W.BhubondangaComments187={};
 W.BhubondangaMasterLock187={syncGuest};
 })();
-</script></template>
+</script>
+<style data-bd-runtime-order="999" id="bd-rx-one-tap-zero-jump">
+#postList [data-bd31-react-main],#bd64ReactionTray [data-bd64-pick]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#postList [data-bd31-react-main]:active{transform:none!important}
+</style>
+</template>
 </body></html>
