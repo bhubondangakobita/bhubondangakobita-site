@@ -2208,6 +2208,140 @@ body.bd-clean-reels-open{overflow:hidden!important;touch-action:none!important}
 .bd31-r.rx-fallback > .bd31-rx-fallback{display:grid!important}
 .bd31-mini .bd31-rx-fallback{font-size:18px!important}
 .bd31-main-reaction .bd31-rx-fallback{font-size:24px!important}
+
+/* V8.31 INDEX FINAL INTERACTION LOCK — native emoji / one social surface */
+#bd31ReactionTray{
+  position:fixed!important;
+  z-index:2147483646!important;
+  display:none!important;
+  width:max-content!important;
+  max-width:calc(100vw - 12px)!important;
+  min-height:54px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  padding:6px 7px!important;
+  overflow:visible!important;
+  border:1px solid rgba(80,88,125,.18)!important;
+  border-radius:999px!important;
+  background:rgba(255,255,255,.98)!important;
+  box-shadow:0 14px 38px rgba(15,22,48,.25)!important;
+  backdrop-filter:blur(18px) saturate(135%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(135%)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none!important;
+}
+html[data-theme="dark"] #bd31ReactionTray{
+  background:rgba(14,28,52,.97)!important;
+  border-color:rgba(190,200,240,.20)!important;
+}
+#bd31ReactionTray.open{display:flex!important;pointer-events:auto!important}
+#bd31ReactionTray button{
+  display:grid!important;
+  place-items:center!important;
+  width:40px!important;height:40px!important;
+  min-width:40px!important;min-height:40px!important;
+  padding:0!important;margin:0!important;
+  border:0!important;border-radius:50%!important;
+  background:transparent!important;
+  overflow:visible!important;
+}
+#bd31ReactionTray .bd31-r,
+.bd31-main-reaction .bd31-r,
+.bd31-stack .bd31-r,
+.bd31-reactor .bd31-r{
+  display:grid!important;
+  place-items:center!important;
+  width:auto!important;height:auto!important;
+  min-width:0!important;max-width:none!important;
+  margin:0!important;padding:0!important;
+  border:0!important;background:none!important;
+  background-image:none!important;
+  box-shadow:none!important;filter:none!important;
+  overflow:visible!important;
+  color:initial!important;font-size:initial!important;
+  transform:none!important;
+}
+#bd31ReactionTray .bd31-r::before,
+#bd31ReactionTray .bd31-r::after,
+.bd31-main-reaction .bd31-r::before,
+.bd31-main-reaction .bd31-r::after,
+.bd31-stack .bd31-r::before,
+.bd31-stack .bd31-r::after,
+.bd31-reactor .bd31-r::before,
+.bd31-reactor .bd31-r::after{display:none!important;content:none!important}
+.bd31-emoji{
+  display:block!important;
+  color:initial!important;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:34px!important;
+  line-height:1!important;
+  width:auto!important;height:auto!important;
+}
+.bd31-main-reaction .bd31-emoji{font-size:23px!important}
+.bd31-stack{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:2px!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+.bd31-stack .bd31-mini{
+  margin:0!important;
+  border:0!important;
+  width:auto!important;height:auto!important;min-width:0!important;
+}
+.bd31-stack .bd31-emoji{font-size:18px!important}
+.bd31-reactor .bd31-emoji{font-size:21px!important}
+#bd31ReactionTray button:active .bd31-emoji{transform:scale(.92)!important}
+@media (hover:hover){
+  #bd31ReactionTray button:hover .bd31-emoji{transform:translateY(-5px) scale(1.12)!important}
+}
+[data-bd31-comment-panel]:not([hidden]),
+[data-bd31-comment-panel].bd31-open{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  min-height:60px!important;
+}
+.bd31-comment-form{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 40px!important;
+  align-items:center!important;
+  gap:7px!important;
+}
+.bd31-comment-form input{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  height:42px!important;
+  font-size:16px!important;
+  pointer-events:auto!important;
+  -webkit-user-select:text!important;
+  user-select:text!important;
+}
+#composer,#composerPrompt,#composerForm,#composerChoices,#composerNote{
+  pointer-events:auto!important;
+}
+#composerForm.bd-force-open{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
+#composerForm.bd-force-open #postTitle,
+#composerForm.bd-force-open #postBody{
+  display:block!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  -webkit-user-select:text!important;
+  user-select:text!important;
+}
+
+#bd64ReactionTray{display:none!important;visibility:hidden!important;pointer-events:none!important}
 </style>
 <script id="bd-profile-moderation-adapter" data-bd-runtime-order="36.5">
 (()=>{'use strict';
@@ -2236,18 +2370,10 @@ function pid(card){return String(card?.dataset?.post||card?.dataset?.postId||car
 function profileHref(p={}){const id=p.id||p.user_id||p.author_id||'',u=String(p.username||p.author_username||'').replace(/^@/,'').toLowerCase(),role=String(p.role||p.author_role||'').toLowerCase(),name=String(p.display_name||p.author_name||p.name||'');if(role==='founder'||u==='mahmud-sohel'||name==='মাহমুদ সোহেল')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);return'profile.html?user='+encodeURIComponent(id||u)}
 const RX_EMOJI={like:'👍',love:'❤️',care:'🥰',sad:'😢',haha:'😂',wow:'😮',angry:'😡'};
 function rIcon(type,mini=false){
-  const t=R[type]?type:'like',src=W.BD52_REACTION_SRC?.[t]||'';
-  return `<span class="bd31-r ${t}${mini?' bd31-mini':''}" aria-hidden="true">${src?`<img class="bd52-reaction-img" src="${esc(src)}" alt="${esc(R[t][0])}" draggable="false">`:''}<span class="bd31-rx-fallback">${RX_EMOJI[t]}</span></span>`;
+  const t=R[type]?type:'like';
+  return `<span class="bd31-r ${t}${mini?' bd31-mini':''}" aria-hidden="true"><span class="bd31-emoji">${RX_EMOJI[t]}</span></span>`;
 }
-function armReactionFallbacks(root=D){
-  root.querySelectorAll?.('.bd31-r > img.bd52-reaction-img').forEach(img=>{
-    if(img.dataset.bd31FallbackBound==='1')return;
-    img.dataset.bd31FallbackBound='1';
-    const fail=()=>img.parentElement?.classList.add('rx-fallback');
-    img.addEventListener('error',fail,{once:true});
-    if(img.complete && img.naturalWidth===0)fail();
-  });
-}
+function armReactionFallbacks(){/* native emoji: no external asset dependency */}
 function thumbSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 21H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3.5v11Z"></path><path d="M7.5 11 11 4.5c.7-1.4 2.7-1.1 3 .4l.4 2.1c.1.7.7 1.2 1.4 1.2H20a2 2 0 0 1 1.9 2.6l-2.2 7.3a4 4 0 0 1-3.8 2.9H7.5V11Z"></path></svg>'}
 function commentSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a4 4 0 0 1-4 4H8l-5 3v-7a4 4 0 0 1-1-3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"></path></svg>'}
 function shareSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 21 11l-6 6"></path><path d="M20 11H9a6 6 0 0 0-6 6v2"></path></svg>'}
@@ -2270,24 +2396,15 @@ function ensureTray(){let t=D.getElementById('bd31ReactionTray');if(t)return t;t
 function closeTray(){const t=ensureTray();t.classList.remove('open');t.removeAttribute('data-pid');t.__card=null}
 function openTray(button,card){const t=ensureTray(),r=button.getBoundingClientRect();t.__card=card;t.dataset.pid=pid(card);t.classList.add('open');requestAnimationFrame(()=>{const w=t.offsetWidth||310,h=t.offsetHeight||55;let left=Math.max(9,Math.min(innerWidth-w-9,r.left+r.width/2-w/2));let top=r.top-h-8;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+8);t.style.left=left+'px';t.style.top=top+'px'})}
 W.__bd45OpenReactionTray=openTray;W.__bd45CloseReactionTray=closeTray;
-let bd31HoldTimer=0,bd31HoldMain=null,bd31Held=false;
-W.addEventListener('pointerdown',e=>{
-  const b=e.target.closest?.('[data-bd31-react-main]');if(!b)return;
-  bd31HoldMain=b;bd31Held=false;clearTimeout(bd31HoldTimer);
-  if(e.pointerType!=='mouse')bd31HoldTimer=setTimeout(()=>{
-    if(bd31HoldMain!==b)return;
-    bd31Held=true;b.dataset.bd45Hold='1';
-    openTray(b,b.closest('[data-bd31-ready="1"]'));
-  },330);
-},true);
-for(const ev of ['pointerup','pointercancel'])W.addEventListener(ev,e=>{
-  if(bd31HoldMain){clearTimeout(bd31HoldTimer);bd31HoldMain=null}
-},true);
+/* Reaction choices: one tap on touch; hover preview on mouse. */
 W.addEventListener('mouseover',e=>{
-  const b=e.target.closest?.('[data-bd31-react-main]');if(!b||e.relatedTarget?.closest?.('[data-bd31-react-main]')===b)return;
-  clearTimeout(bd31HoldTimer);bd31HoldTimer=setTimeout(()=>openTray(b,b.closest('[data-bd31-ready="1"]')),420);
+  const b=e.target.closest?.('[data-bd31-react-main]');
+  if(!b||e.relatedTarget?.closest?.('[data-bd31-react-main]')===b)return;
+  if(matchMedia?.('(hover:hover)')?.matches){
+    clearTimeout(b.__bd31HoverTimer);
+    b.__bd31HoverTimer=setTimeout(()=>openTray(b,b.closest('[data-bd31-ready="1"]')),260);
+  }
 },true);
-
 function bd47ScrollSnapshot(card){
   const anchor=card?.querySelector?.('[data-bd31-react-main]')||card;
   const scroller=card?.closest?.('.center-col,.center,.main-content,.page-main')||D.scrollingElement||D.documentElement;
@@ -2320,15 +2437,36 @@ async function insertComment(id,body,parent=''){const me=await meProfile();if(!m
 async function toggleCLike(id){const me=await meProfile();if(!me){location.href='login.html?next='+encodeURIComponent(location.href);return}const c=client();if(c)try{const cur=await c.from('comment_reactions').select('*').eq('comment_id',id).eq('user_id',me.id).maybeSingle();if(cur.data){const r=await c.from('comment_reactions').delete().eq('comment_id',id).eq('user_id',me.id);if(!r.error)return}else{const r=await c.from('comment_reactions').insert({comment_id:id,user_id:me.id,reaction:'like'});if(!r.error)return}}catch{}let a=localGet('bd31-clike-'+id,[]),has=a.some(x=>String(x.user_id)===String(me.id));a=has?a.filter(x=>String(x.user_id)!==String(me.id)):[...a,{user_id:me.id,reaction:'like'}];localSet('bd31-clike-'+id,a)}
 async function share(id){const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('post',id);if(navigator.share){try{await navigator.share({title:'ভুবনডাঙ্গার কবিতা',url:url.href});return}catch{}}try{await navigator.clipboard.writeText(url.href);if(typeof W.toast==='function')W.toast('পোস্টের লিংক কপি হয়েছে')}catch{}}
 W.addEventListener('pointerdown',e=>{if(e.target.closest('.bd31-social,#bd31ReactionTray'))return;if(!e.target.closest('#bd31ReactionTray'))closeTray()},true);
-W.addEventListener('click',async e=>{
-  /* V8.31 is the one and only Index social owner. */
+W.addEventListener('pointerup',async e=>{
+  /* V8.31 is the one and only Index social owner — pointerup prevents iPhone double-click conflicts. */
   const main=e.target.closest('[data-bd31-react-main]'),pick=e.target.closest('[data-bd31-tray-pick]'),rs=e.target.closest('[data-bd31-react-summary]'),cs=e.target.closest('[data-bd31-comments],[data-bd31-comment-summary]'),sh=e.target.closest('[data-bd31-share]'),more=e.target.closest('[data-bd31-more]'),cl=e.target.closest('[data-bd31-comment-like]'),reply=e.target.closest('[data-bd31-reply]'),viewReplies=e.target.closest('[data-bd54-view-replies]');
   if(!(main||pick||rs||cs||sh||more||cl||reply||viewReplies))return;
   e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  if(main){const card=main.closest('[data-bd31-ready="1"]');if(main.dataset.bd45Hold==='1'){delete main.dataset.bd45Hold;return}const snap=bd47ScrollSnapshot(card),id=pid(card);try{main.blur?.()}catch(_){}if(id){await toggleReaction(id,'like');await refresh(card)}bd47RestoreScroll(snap);return}
+  if(main){
+    const card=main.closest('[data-bd31-ready="1"]');if(!card)return;
+    delete main.dataset.bd45Hold;
+    openTray(main,card);
+    return
+  }
   if(pick){const t=ensureTray(),card=t.__card,id=t.dataset.pid,type=pick.dataset.bd31TrayPick,snap=bd47ScrollSnapshot(card);closeTray();try{pick.blur?.()}catch(_){}if(card&&id){await toggleReaction(id,type);await refresh(card)}bd47RestoreScroll(snap);return}
   if(rs){const card=rs.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await showReactors(card);bd47RestoreScroll(snap);return}
-  if(cs){const card=cs.closest('[data-bd31-ready="1"]');if(!card)return;const snap=bd47ScrollSnapshot(card),p=card.querySelector('[data-bd31-comment-panel]');if(p){p.hidden=!p.hidden;if(!p.hidden){await renderComments(card,false);const input=p.querySelector('.bd31-comment-form input');if(input){try{input.focus({preventScroll:true})}catch(_){input.focus()}}}}bd47RestoreScroll(snap);return}
+  if(cs){
+    const card=cs.closest('[data-bd31-ready="1"]');if(!card)return;
+    const p=card.querySelector('[data-bd31-comment-panel]');if(!p)return;
+    const opening=p.hidden;
+    p.hidden=!opening;
+    p.classList.toggle('bd31-open',opening);
+    if(opening){
+      const host=p.querySelector('.bd31-comments');
+      if(host&&!host.children.length)host.innerHTML='<div class="bd31-empty">মন্তব্য লোড হচ্ছে…</div>';
+      renderComments(card,false).catch(()=>{if(host)host.innerHTML='<div class="bd31-empty">এখনও কোনো মন্তব্য নেই।</div>'});
+      requestAnimationFrame(()=>{
+        const input=p.querySelector('.bd31-comment-form input');
+        if(input){try{input.focus({preventScroll:true})}catch(_){input.focus()}}
+      });
+    }
+    return
+  }
   if(sh){await share(sh.dataset.bd31Share);return}
   if(more){const card=more.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await renderComments(card,true);bd47RestoreScroll(snap);return}
   if(cl){const card=cl.closest('[data-bd31-ready="1"]'),snap=bd47ScrollSnapshot(card);await toggleCLike(cl.dataset.bd31CommentLike);await renderComments(card,card.querySelector('[data-bd31-more]')?.dataset.all==='1');bd47RestoreScroll(snap);return}
@@ -2337,6 +2475,9 @@ W.addEventListener('click',async e=>{
 },true);
 W.addEventListener('submit',async e=>{const f=e.target.closest('.bd31-comment-form,.bd31-reply-form');if(!f)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const card=f.closest('[data-bd31-ready="1"]'),input=f.querySelector('input'),body=input?.value.trim();if(!card||!body)return;try{await insertComment(pid(card),body,f.dataset.parent||'');input.value='';card.querySelector('[data-bd31-comment-panel]').hidden=false;await renderComments(card,true);await refresh(card)}catch(err){if(err?.message!=='login')alert(err?.message||'মন্তব্য করা যায়নি')}},true);
 D.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.closest('[data-bd31-react-main]')){e.preventDefault();const b=e.target.closest('[data-bd31-react-main]');openTray(b,b.closest('[data-bd31-ready="1"]'))}},true);
+W.BhubondangaIndexSocial=Object.freeze({
+  openTray,closeTray,refresh,renderComments,insertComment,toggleReaction
+});
 allCards();const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){allCards(n);const c=n.matches?.('article.post,article.bd-live-post,.post-card')?n:null;if(c)install(c)}});mo.observe(D.body,{childList:true,subtree:true});setInterval(()=>allCards(),2500);
 })();
 
@@ -2399,22 +2540,35 @@ W.BhubondangaCleanFeed={openReels,closeReels,copyEnabled};
 
 <script id="bd-final-index-interaction-safety" data-bd-runtime-order="950">
 (()=>{'use strict';
-if(window.__BD_FINAL_INDEX_INTERACTION_SAFETY__)return;window.__BD_FINAL_INDEX_INTERACTION_SAFETY__=1;
-const D=document;
-function forceComposerOpen(){
- const f=D.getElementById('composerForm'),c=D.getElementById('composerChoices'),n=D.getElementById('composerNote'),p=D.getElementById('composerPrompt');
- if(!f)return;
- f.hidden=false;if(c)c.hidden=false;if(n)n.hidden=false;if(p)p.setAttribute('aria-expanded','true');
+if(window.__BD_FINAL_INDEX_INTERACTION_SAFETY_V2__)return;
+window.__BD_FINAL_INDEX_INTERACTION_SAFETY_V2__=1;
+const D=document,W=window;
+function openComposerNow(){
+  const f=D.getElementById('composerForm');
+  const c=D.getElementById('composerChoices');
+  const n=D.getElementById('composerNote');
+  const p=D.getElementById('composerPrompt');
+  if(!f)return;
+  f.hidden=false;
+  f.classList.add('bd-force-open');
+  if(c)c.hidden=false;
+  if(n)n.hidden=false;
+  if(p)p.setAttribute('aria-expanded','true');
 }
-const prompt=D.getElementById('composerPrompt');
-if(prompt){
- prompt.addEventListener('pointerup',e=>{if(e.pointerType==='mouse'&&e.button!==0)return;forceComposerOpen()},{passive:true});
+function closeComposerForce(){
+  D.getElementById('composerForm')?.classList.remove('bd-force-open');
 }
+W.addEventListener('pointerdown',e=>{
+  if(e.target.closest?.('#composerPrompt,.composer-prompt,#composerAvatar,.composer-top')){
+    openComposerNow();
+  }
+},true);
 D.addEventListener('focusin',e=>{
- if(!e.target.matches?.('#postTitle,#postBody'))return;
- forceComposerOpen();
-},{passive:true});
-/* Never touch beforeinput/input/composition events. Browser keyboard owns the editor. */
+  if(e.target.matches?.('#postTitle,#postBody'))openComposerNow();
+},true);
+D.getElementById('cancelComposer')?.addEventListener('click',closeComposerForce,true);
+D.getElementById('composerForm')?.addEventListener('submit',()=>setTimeout(closeComposerForce,0),false);
+/* Never intercept beforeinput/input/composition events. */
 })();
 </script>
 </template>
