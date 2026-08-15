@@ -1,16 +1,123 @@
 <!DOCTYPE html>
 <html data-bd-glass="pearl" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
-<meta name="bhubondanga-build" content="20260815-2018-profile-engine-clean-v1">
 <meta content="V8.178-RUNTIME-RECOVERY-MASTER-20260814" name="bhubondanga-safe-lite"/>
 <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"/>
 <meta content="0" http-equiv="Expires"/>
 <meta content="#173153" name="theme-color">
 <script onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2'" src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="profanity.js?v=20260815-2305-final-lock-v920" data-bd-master-profanity></script>
+<script id="bd-v8146-video-reels-capture">
+(function(){
+'use strict';
+if(window.__BD_V8146_VIDEO_REELS_CAPTURE__)return;
+window.__BD_V8146_VIDEO_REELS_CAPTURE__=true;
+const D=document,W=window;
 
+function cardOf(node){
+  return node?.closest?.(
+    '#postList [data-post],#postList [data-post-id],#postList [data-post-card],'+
+    '#postList article.post,#postList article.bd-live-post,#postList .post-card'
+  )||null;
+}
+function idOf(card){
+  return String(card?.dataset?.post||card?.dataset?.postId||
+    card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'');
+}
+function mediaFromEvent(e){
+  const path=typeof e.composedPath==='function'?e.composedPath():[];
+  for(const n of path){
+    if(!(n instanceof Element))continue;
+    if(n.closest?.('#bd107Reels'))return null;
+    const direct=n.closest?.(
+      '#postList video,#postList .bd138-open-reel,#postList .bd107-open-reel,'+
+      '#postList .bd107-video-preview,#postList .composer-media-render,#postList .post-media'
+    );
+    if(!direct)continue;
+    if(direct.matches?.('video')||direct.querySelector?.('video'))return direct;
+  }
+  return null;
+}
+function openReels(card){
+  const id=idOf(card),v=card?.querySelector?.('video');
+  if(!id||!v)return false;
+  const fresh=W.BhubondangaFreshLaunch;
+  if(fresh?.openReel){try{fresh.openReel(card,v);return true}catch(_){}}
+  // Fresh-launch fallback: stay inside the same post card; never open a fixed viewer.
+  card.classList.add('bd-launch-card','bd-launch-reel-active');
+  const host=v.closest('.post-media,.media,.post-video,figure,.video-wrap')||v.parentElement;
+  host?.classList.add('bd-launch-video-host');
+  v.controls=true;v.playsInline=true;v.setAttribute('playsinline','');
+  try{v.play()}catch(_){}
+  return true;
+}
 
+let lastPointerOpen=0,lastMediaTapAt=0,lastMediaTapId='';
 
+D.addEventListener('pointerup',e=>{
+  const media=mediaFromEvent(e);
+  if(!media)return;
+  const card=cardOf(media);
+  if(!card)return;
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  const now=Date.now(),cid=idOf(card);
+  if(card.classList.contains('bd-launch-reel-active')&&cid&&lastMediaTapId===cid&&now-lastMediaTapAt<330){
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();lastMediaTapAt=0;lastMediaTapId='';
+    W.BhubondangaFreshLaunch?.forceLove?.(card);return;
+  }
+  lastMediaTapAt=now;lastMediaTapId=cid;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  lastPointerOpen=Date.now();
+  const v=media.matches?.('video')?media:media.querySelector?.('video');
+  if(v){
+    v.controls=false;
+    v.removeAttribute('controls');
+    v.setAttribute('playsinline','');
+    v.setAttribute('webkit-playsinline','');
+  }
+  openReels(card);
+},true);
+
+D.addEventListener('click',e=>{
+  const media=mediaFromEvent(e);
+  if(!media)return;
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  if(Date.now()-lastPointerOpen<700)return;
+  const card=cardOf(media);
+  if(!card)return;
+  openReels(card);
+},true);
+
+function retireLegacyVideoViewers(){
+  const list=[
+    '#bd45Reels',
+    '.bd45-post-shell',
+    '#masterPostShell',
+    '[data-media-viewer="video"]',
+    '.legacy-video-viewer'
+  ];
+  for(const sel of list){
+    D.querySelectorAll?.(sel).forEach(el=>{
+      if(el.id==='bd107Reels')return;
+      const hasVideo=!!el.querySelector?.('video');
+      if(!hasVideo&&sel!=='#bd45Reels')return;
+      try{el.querySelectorAll('video').forEach(v=>{v.pause();v.muted=true})}catch(_){}
+      el.classList.remove('open','active','show');
+      el.setAttribute('aria-hidden','true');
+      el.style.setProperty('display','none','important');
+      el.style.setProperty('pointer-events','none','important');
+    });
+  }
+}
+new MutationObserver(retireLegacyVideoViewers).observe(
+  D.documentElement,
+  {subtree:true,childList:true,attributes:true,attributeFilter:['class','style','aria-hidden']}
+);
+})();
+</script>
 <script id="bd-fresh-early-anchor-stability">/* Disabled: reaction must never write viewport position. */</script>
 <style id="bd-supabase-boot-visibility">html,body{visibility:visible!important;opacity:1!important}</style>
 <meta charset="utf-8"/>
@@ -321,7 +428,12 @@ html[data-theme="dark"] #bd64ReactionTray,html[data-bd-theme="dark"] #bd64Reacti
 @media(max-width:430px){#bd64ReactionTray,#bd64ReactionTray.bd64-exact-reference{gap:2px!important;padding:4px 6px!important;max-width:282px!important}#bd64ReactionTray button,#bd64ReactionTray.bd64-exact-reference button{width:35px!important;height:35px!important;min-width:35px!important;min-height:35px!important;flex-basis:35px!important}#bd64ReactionTray button .bd64-icon,#bd64ReactionTray .bd64-icon img,#bd64ReactionTray .bd64-icon .bd31-r{width:30px!important;height:30px!important;min-width:30px!important;max-width:30px!important}.bd31-action,[data-bd31-react-main]{min-height:36px!important}.bd-national-flag::after{font-size:6.3px}}
 @media(prefers-reduced-motion:reduce){.bd-flag-cloth{animation:none!important}}
 </style>
-
+<script id="bd-v8142-approved-profile-reaction-assets">
+(function(){
+'use strict';
+window.BD52_REACTION_SRC=window.BD52_REACTION_SRC||{like:'assets/index-lite/img-01-3f4a6926d8.bin',love:'assets/index-lite/img-02-062fc6d64d.bin',care:'assets/index-lite/img-03-4c5cae56b3.bin',sad:'assets/index-lite/img-04-d3f1b8e9b4.bin',haha:'assets/index-lite/img-05-863fcc326f.bin',wow:'assets/index-lite/img-06-fb5c38208e.bin',angry:'assets/index-lite/img-07-1abac64ef8.bin'};
+})();
+</script>
 <style id="bd-v8162-dark-readability-and-comment-moderation-css">
 /* V8.162 — final dark-mode readability lock. Keeps media untouched but prevents pale post surfaces + pale text. */
 html[data-theme="dark"] :is(
@@ -488,7 +600,7 @@ html[data-theme="dark"] .bd162-comment-moderation-note{
 const D=document;
 const copyAttrs=(from,to)=>{for(const a of [...from.attributes])if(a.name!=='data-bd-runtime-order')to.setAttribute(a.name,a.value)};
 const cloneFromTemplate=(doc,id)=>doc.querySelector(id)?.content?.cloneNode(true)||null;
-const BD_COMPONENT_BUILD='20260815-2305-final-lock-v920';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
+const BD_COMPONENT_BUILD='20260815-2357-only-comment-composer';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
 const parser=new DOMParser();
 async function boot(){
   D.body.classList.add('bd-components-loading');
