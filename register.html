@@ -1936,6 +1936,15 @@ window.BhubondangaRegisterRemote=async function(v){
   const email=cleanEmail(v.email);
   const requestedUsername=safeHandle(v.username);
 
+  /* A registration page must never be locked to the previously signed-in account.
+     Only when the visitor actually submits a NEW registration do we release the
+     current browser session; this does not delete or modify the old account. */
+  try{
+    const cur=(await sb.auth.getSession()).data?.session||null;
+    if(cur?.user)await sb.auth.signOut({scope:'local'});
+  }catch(_){}
+  for(const k of ['bhubondangaCurrentUser','bd_current_user','bd_supabase_user_id','bhubondangaSessionUser']){try{localStorage.removeItem(k)}catch(_){}}
+
   const r=await sb.auth.signUp({
     email,
     password:v.password,
@@ -3447,7 +3456,7 @@ if(isLoggedIn){
   document
     .getElementById("registerForm")
     .hidden =
-      true;
+      false;
 }
 
 /* SETTINGS */
@@ -5041,7 +5050,7 @@ document.addEventListener(
    const roleKey=String(role).toLowerCase(),identity=uid;const url=roleKey==='founder'?'founder-profile.html?user='+encodeURIComponent(identity):roleKey==='admin'?'admin-profile.html?user='+encodeURIComponent(identity):'profile.html?user='+encodeURIComponent(identity);
    const a=document.getElementById('headerAvatar');if(a){a.hidden=false;a.href=url;a.innerHTML=avatar?'<img src="'+String(avatar).replace(/"/g,'&quot;')+'" alt="">':String(name).replace(/\s+/g,'').slice(0,2)}
    const anon=document.getElementById('anonymousActions');if(anon)anon.hidden=true;
-   const card=document.getElementById('loggedCard');if(card){card.classList.add('show');const title=document.getElementById('loggedCardTitle');if(title)title.textContent=name+', আপনি ইতোমধ্যে লগইন করেছেন';const link=document.getElementById('loggedProfileLink');if(link)link.href=url;const form=document.getElementById('registerForm');if(form)form.hidden=true}
+   const card=document.getElementById('loggedCard');if(card){card.classList.add('show');const title=document.getElementById('loggedCardTitle');if(title)title.textContent=name+', আপনি ইতোমধ্যে লগইন করেছেন';const link=document.getElementById('loggedProfileLink');if(link)link.href=url;const form=document.getElementById('registerForm');if(form)form.hidden=false}
    if(new URLSearchParams(location.search).get('oauth')==='1'){location.replace(url);return}
  }catch(_){ }
 })();
@@ -5212,6 +5221,18 @@ pageTab?.addEventListener('click',()=>{
 
 <script id="bd-register-force-black-v1">
 try{document.documentElement.dataset.theme='dark';localStorage.setItem('bd-theme','dark');localStorage.setItem('bhubondangaTheme','dark')}catch(e){}
+</script>
+
+<script id="bd-register-never-lock-clean-v1">
+(()=>{'use strict';
+const D=document;
+function unlock(){const f=D.getElementById('registerForm'),success=D.getElementById('successPanel');if(f&&!success?.classList.contains('show'))f.hidden=false}
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',unlock,{once:true});else unlock();
+D.addEventListener('pageshow',unlock);
+D.addEventListener('visibilitychange',()=>{if(!D.hidden)unlock()});
+/* A real current session may be shown as information, never as a registration lock. */
+window.addEventListener('storage',e=>{if(!e.key||/bhubondangaCurrentUser|bd_current_user|bd_supabase_user_id/.test(e.key))unlock()});
+})();
 </script>
 </body>
 </html>
