@@ -1936,15 +1936,6 @@ window.BhubondangaRegisterRemote=async function(v){
   const email=cleanEmail(v.email);
   const requestedUsername=safeHandle(v.username);
 
-  /* A registration page must never be locked to the previously signed-in account.
-     Only when the visitor actually submits a NEW registration do we release the
-     current browser session; this does not delete or modify the old account. */
-  try{
-    const cur=(await sb.auth.getSession()).data?.session||null;
-    if(cur?.user)await sb.auth.signOut({scope:'local'});
-  }catch(_){}
-  for(const k of ['bhubondangaCurrentUser','bd_current_user','bd_supabase_user_id','bhubondangaSessionUser']){try{localStorage.removeItem(k)}catch(_){}}
-
   const r=await sb.auth.signUp({
     email,
     password:v.password,
@@ -2169,68 +2160,6 @@ html[data-theme="dark"] .social-entry{background:linear-gradient(145deg,rgba(15,
 @media(max-width:560px){.social-entry{padding:8px;border-radius:13px}.social-entry-actions{grid-template-columns:1fr}.social-entry-btn{min-height:47px;font-size:9.5px}.social-entry-note{font-size:7px}}
 </style>
 
-
-<script id="bd-theme-bootstrap">try{const t=localStorage.getItem('bd-theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;}catch(e){}</script>
-<style id="bd-black-warm-dark-lock">
-/* Bhubondanga black controls + warm readable dark mode */
-:root{--bd-black:#050506;--bd-black-soft:#111113;--bd-dark-bg:#17110f;--bd-dark-card:#2a1f1b;--bd-dark-card2:#352721;--bd-dark-text:#fffaf6;--bd-dark-soft:#eaded5;--bd-dark-muted:#cbb9ae}
-.bd-black-primary,.bd-section-history .bd-history-chip{background:var(--bd-black)!important;color:#fff!important;border-color:rgba(255,255,255,.10)!important}
-:is(.btn-primary,.primary-btn,.action-primary,.primary-action,.composer-submit,.publish-btn,.save-btn)[class]{background:var(--bd-black)!important;color:#fff!important;border-color:var(--bd-black)!important}
-html[data-theme="dark"],html.dark,body.dark-mode{color-scheme:dark}
-html[data-theme="dark"] body,html.dark body,body.dark-mode{background:radial-gradient(circle at 10% 4%,rgba(117,78,59,.16),transparent 26%),radial-gradient(circle at 92% 8%,rgba(80,53,45,.18),transparent 27%),linear-gradient(155deg,#120d0b 0%,#1a1210 48%,#211612 100%)!important;color:var(--bd-dark-text)!important}
-html[data-theme="dark"] :is(.glass,.card,.panel,.sheet,.post,.side-card,.feed-head,.composer,.profile-card,.history-card,.hero),html.dark :is(.glass,.card,.panel,.sheet,.post,.side-card,.feed-head,.composer,.profile-card,.history-card,.hero),body.dark-mode :is(.glass,.card,.panel,.sheet,.post,.side-card,.feed-head,.composer,.profile-card,.history-card,.hero){background-color:rgba(42,31,27,.94)!important;border-color:rgba(255,244,235,.13)!important;box-shadow:0 14px 34px rgba(0,0,0,.24)!important}
-html[data-theme="dark"] :is(h1,h2,h3,h4,h5,h6,strong,b,.title,.post-title,.name,.brand-title),html.dark :is(h1,h2,h3,h4,h5,h6,strong,b,.title,.post-title,.name,.brand-title),body.dark-mode :is(h1,h2,h3,h4,h5,h6,strong,b,.title,.post-title,.name,.brand-title){color:var(--bd-dark-text)!important}
-html[data-theme="dark"] :is(p,small,.muted,.meta,.subtitle,.lead,.desc,.description,.post-meta,.bio,.caption),html.dark :is(p,small,.muted,.meta,.subtitle,.lead,.desc,.description,.post-meta,.bio,.caption),body.dark-mode :is(p,small,.muted,.meta,.subtitle,.lead,.desc,.description,.post-meta,.bio,.caption){color:var(--bd-dark-soft)!important}
-html[data-theme="dark"] :is(input,textarea,select),html.dark :is(input,textarea,select),body.dark-mode :is(input,textarea,select){background:#241a17!important;color:#fffaf6!important;border-color:rgba(255,244,235,.16)!important}
-html[data-theme="dark"] :is(input,textarea)::placeholder,html.dark :is(input,textarea)::placeholder,body.dark-mode :is(input,textarea)::placeholder{color:#cbb9ae!important;opacity:1}
-html[data-theme="dark"] a,html.dark a,body.dark-mode a{color:inherit}
-html[data-theme="dark"] .bd-section-history,html.dark .bd-section-history,body.dark-mode .bd-section-history{background:linear-gradient(145deg,rgba(53,39,33,.98),rgba(39,28,24,.96))!important;border-color:rgba(255,244,235,.14)!important}
-html[data-theme="dark"] .bd-section-history p,html.dark .bd-section-history p,body.dark-mode .bd-section-history p{color:#eaded5!important}
-@media (prefers-reduced-motion:reduce){.cloth,.cloth::before{animation:none!important}}
-</style>
-
-<style id="bd-section-history-style">
-.bd-section-history{position:relative;margin:12px 0 14px;padding:16px 18px;border:1px solid rgba(23,50,79,.10);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(247,247,249,.92));box-shadow:0 10px 28px rgba(23,50,79,.07);overflow:hidden}
-.bd-section-history::after{content:"";position:absolute;right:-42px;top:-54px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(0,0,0,.055),transparent 68%);pointer-events:none}
-.bd-history-top{display:flex;align-items:center;gap:9px;margin-bottom:6px}.bd-history-chip{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:999px;background:#050506;color:#fff;font-size:10px;font-weight:900;letter-spacing:.02em}.bd-section-history h2{margin:0;font-size:clamp(20px,3.1vw,29px);line-height:1.25}.bd-section-history p{margin:7px 0 0;color:#5e6879;font-size:12px;line-height:1.8}.bd-section-history details{margin-top:8px}.bd-section-history summary{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:900;font-size:11px;color:#111;list-style:none}.bd-section-history summary::-webkit-details-marker{display:none}.bd-section-history summary::after{content:"⌄";font-size:14px}.bd-section-history details[open] summary::after{content:"⌃"}.bd-section-history .bd-history-more{padding-top:3px}
-@media(max-width:720px){.bd-section-history{margin:10px 0 12px;padding:14px;border-radius:16px}.bd-section-history p{font-size:11.5px}.bd-section-history h2{font-size:22px}}
-</style>
-
-<style id="bd-black-register-reference-v1">
-
-:root{
- --bd-black:#030405;--bd-panel:#090b0e;--bd-panel2:#0e1115;--bd-panel3:#14181d;
- --bd-silver:#eef2f6;--bd-soft:#b9c0c8;--bd-muted:#7f8994;--bd-line:rgba(235,240,246,.13);
- --bd-green:#74c79f;--bd-shadow:0 20px 60px rgba(0,0,0,.36);
-}
-html,body{background:#030405!important;color:var(--bd-silver)!important}
-body{background:radial-gradient(circle at 78% -8%,rgba(210,218,229,.09),transparent 26%),radial-gradient(circle at 8% 28%,rgba(94,202,155,.07),transparent 24%),#030405!important}
-.site-header{background:rgba(3,4,5,.95)!important;border-color:var(--bd-line)!important;backdrop-filter:blur(22px) saturate(125%)!important}
-.header-inner{max-width:1500px!important}.brand,.brand-copy h1,.welcome-brand,.welcome-brand-copy strong{color:#fff!important}.brand-copy p,.welcome-brand-copy span{color:#97a2ad!important}
-.brand-leaf,.welcome-brand-icon{background:#0d1115!important;border:1px solid var(--bd-line)!important;box-shadow:none!important}
-.header-search,.date-ticker,.category-bar{display:none!important}
-.header-actions>a:not(.auth-link),.header-actions>button{display:none!important}.auth-links{gap:8px!important}
-.auth-link{border:1px solid var(--bd-line)!important;background:#0b0e12!important;color:#fff!important}.auth-link.primary{background:#fff!important;color:#050607!important;border-color:#fff!important}
-.register-page{padding-top:96px!important;background:transparent!important}.register-shell{max-width:1420px!important;gap:18px!important;align-items:stretch!important}
-.welcome-panel,.form-panel{background:linear-gradient(155deg,#080a0d,#0c1014 58%,#0a0d11)!important;border:1px solid var(--bd-line)!important;box-shadow:var(--bd-shadow)!important;color:#fff!important}
-.welcome-panel{position:relative;overflow:hidden!important}.welcome-panel:after{content:"✒";position:absolute;right:36px;top:94px;font:700 190px/1 Georgia,serif;color:rgba(235,240,246,.055);transform:rotate(-10deg);pointer-events:none}
-.welcome-label{background:#11161b!important;border:1px solid var(--bd-line)!important;color:#d9e0e7!important}
-.register-slogan,.register-slogan span,.form-heading h2{color:#fff!important}.register-lead,.welcome-note,.form-heading p{color:var(--bd-soft)!important}
-.benefit-banner,.master-identity-card,.bd137-register-catalogue details,.logged-card,.page-access-box,.register-form,.form-group,.password-rules,.photo-uploader{background:#0d1115!important;border-color:var(--bd-line)!important;color:#eef2f6!important;box-shadow:none!important}
-.master-identity-card.page{background:#101419!important}.master-identity-card b,.benefit-banner strong,.bd137-catalogue-body b,.form-label,.field-note,.password-rule{color:#eef2f6!important}
-.master-identity-card span,.benefit-banner span,.bd137-catalogue-body small,.bd137-steps,.bd137-topic-pills span{color:#aeb7c1!important}
-.bd137-topic-pills span{background:#11161b!important;border-color:var(--bd-line)!important}
-.form-panel{padding:26px!important}.form-emblem{background:#10151a!important;border:1px solid var(--bd-line)!important;color:#fff!important}
-.form-control,.input-wrap,input,textarea,select{background:#080b0e!important;color:#f7f9fb!important;border-color:var(--bd-line)!important;box-shadow:none!important}.form-control::placeholder,input::placeholder,textarea::placeholder{color:#77828d!important;opacity:1!important}
-.input-icon,.input-action{color:#cfd6de!important}.input-action{background:#11161b!important;border-color:var(--bd-line)!important}
-.primary-button,.submit-button,.page-access-button,.photo-button:not(.remove){background:#fff!important;color:#050607!important;border-color:#fff!important;box-shadow:none!important}.secondary-button,.photo-button,.auth-link{border-color:var(--bd-line)!important}
-.social-button{background:#0c1014!important;border:1px solid var(--bd-line)!important;color:#fff!important}
-.password-rule.ok,.field-note.ok{color:#7bd7a9!important}.strength-track{background:#171c21!important}.strength-fill{background:linear-gradient(90deg,#8a949e,#f0f4f8)!important}
-.drawer-backdrop{background:rgba(0,0,0,.7)!important}.mobile-drawer{background:#050607!important;color:#fff!important}.drawer-head{border-color:var(--bd-line)!important}.drawer-link{color:#e9edf2!important;border-color:var(--bd-line)!important}
-footer,.site-footer{background:#050607!important;color:#aab4be!important;border-color:var(--bd-line)!important}
-@media(max-width:900px){.register-page{padding:82px 12px 40px!important}.register-shell{display:block!important}.welcome-panel{margin-bottom:14px!important}.welcome-content{padding:24px 20px!important}.register-slogan{font-size:34px!important;line-height:1.18!important}.welcome-panel:after{font-size:116px;right:8px;top:118px}.form-panel{padding:18px!important}}
-
-</style>
 </head>
 
 <body>
@@ -3456,7 +3385,7 @@ if(isLoggedIn){
   document
     .getElementById("registerForm")
     .hidden =
-      false;
+      true;
 }
 
 /* SETTINGS */
@@ -5050,7 +4979,7 @@ document.addEventListener(
    const roleKey=String(role).toLowerCase(),identity=uid;const url=roleKey==='founder'?'founder-profile.html?user='+encodeURIComponent(identity):roleKey==='admin'?'admin-profile.html?user='+encodeURIComponent(identity):'profile.html?user='+encodeURIComponent(identity);
    const a=document.getElementById('headerAvatar');if(a){a.hidden=false;a.href=url;a.innerHTML=avatar?'<img src="'+String(avatar).replace(/"/g,'&quot;')+'" alt="">':String(name).replace(/\s+/g,'').slice(0,2)}
    const anon=document.getElementById('anonymousActions');if(anon)anon.hidden=true;
-   const card=document.getElementById('loggedCard');if(card){card.classList.add('show');const title=document.getElementById('loggedCardTitle');if(title)title.textContent=name+', আপনি ইতোমধ্যে লগইন করেছেন';const link=document.getElementById('loggedProfileLink');if(link)link.href=url;const form=document.getElementById('registerForm');if(form)form.hidden=false}
+   const card=document.getElementById('loggedCard');if(card){card.classList.add('show');const title=document.getElementById('loggedCardTitle');if(title)title.textContent=name+', আপনি ইতোমধ্যে লগইন করেছেন';const link=document.getElementById('loggedProfileLink');if(link)link.href=url;const form=document.getElementById('registerForm');if(form)form.hidden=true}
    if(new URLSearchParams(location.search).get('oauth')==='1'){location.replace(url);return}
  }catch(_){ }
 })();
@@ -5216,23 +5145,7 @@ pageTab?.addEventListener('click',()=>{
 </script>
 
 
-<script src="profanity.js?v=20260814-prod1"></script>
-<script src="reaction-assets.js?v=20260814-prod1" defer></script>
-
-<script id="bd-register-force-black-v1">
-try{document.documentElement.dataset.theme='dark';localStorage.setItem('bd-theme','dark');localStorage.setItem('bhubondangaTheme','dark')}catch(e){}
-</script>
-
-<script id="bd-register-never-lock-clean-v1">
-(()=>{'use strict';
-const D=document;
-function unlock(){const f=D.getElementById('registerForm'),success=D.getElementById('successPanel');if(f&&!success?.classList.contains('show'))f.hidden=false}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',unlock,{once:true});else unlock();
-D.addEventListener('pageshow',unlock);
-D.addEventListener('visibilitychange',()=>{if(!D.hidden)unlock()});
-/* A real current session may be shown as information, never as a registration lock. */
-window.addEventListener('storage',e=>{if(!e.key||/bhubondangaCurrentUser|bd_current_user|bd_supabase_user_id/.test(e.key))unlock()});
-})();
-</script>
+<script src="profanity.js?v=20260813-final"></script>
+<script src="reaction-assets.js?v=20260813-fresh" defer></script>
 </body>
 </html>
