@@ -92,7 +92,7 @@ async function publishFrom(values){
 function prettyDate(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch(_){return String(v||'')}}
 function svgUser(){return'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor"/><path d="M4 21c.8-5 4-7 8-7s7.2 2 8 7" fill="none" stroke="currentColor"/></svg>'}
 function card(p,midnight=false){const founder=String(p.author_role||'').toLowerCase()==='founder'||String(p.author_username||'').toLowerCase()==='mahmud-sohel'||p.author_name==='মাহমুদ সোহেল'||(state.founderId&&String(p.author_id)===String(state.founderId)),admin=String(p.author_role||'').toLowerCase()==='admin',url=profileUrl(Object.assign({},p,{role:founder?'founder':admin?'admin':p.author_role||''})),avatar=p.author_avatar?'<img loading="lazy" decoding="async" src="'+esc(p.author_avatar)+'" alt="">':svgUser(),badge=founder?'<span class="bd-founder-badge">Founder</span>':admin?'<span class="bd-admin-badge">Admin</span>':'',time=prettyDate(p.created_at),body=esc(p.body||''),title=esc(p.title||'শিরোনামহীন'),cat=esc(p.category||typeLabel(p.type));if(midnight)return'<article class="card prolap-card bd-live-post" data-post-id="'+esc(p.id)+'"><div class="prolap-head"><div class="prolap-author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="prolap-author-copy"><a href="'+url+'">'+esc(p.author_name)+badge+'</a><p>'+time+'</p></div></div><span class="post-order">নতুন</span></div><div class="prolap-body"><div class="prolap-label-row"><span class="prolap-label">'+cat+'</span></div><h3 class="prolap-title"><a href="index.html?post='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="prolap-text">'+body+'</div></div></article>';return'<article class="glass post style-'+esc(p.card_style||'pearl')+' bd-live-post" data-post-id="'+esc(p.id)+'"><div class="post-head author"><div class="author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="author-meta"><div class="author-name-row"><a href="'+url+'"><strong>'+esc(p.author_name||'ভুবনডাঙ্গার সদস্য')+'</strong></a>'+badge+'</div><small class="bd-post-time">'+time+'</small></div></div><div class="three-dot"><button class="three-dot-btn post-menu" type="button" data-live-menu="'+esc(p.id)+'" aria-label="পোস্টের অপশন">•••</button></div></div><span class="pill tag">'+cat+'</span><h3 class="post-title"><a href="index.html?post='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="post-body">'+body+'</div>'+(p.media_url?'<img class="post-media" src="'+esc(p.media_url)+'" alt="'+title+'" loading="lazy">':'')+(p.caption?'<div class="bd-post-caption">'+esc(p.caption)+'</div>':'')+'<div class="post-footer actions"><div class="post-actions"><button class="action-btn action" type="button" data-live-like aria-label="রিঅ্যাকশন">♡</button><button class="action-btn action" type="button" data-comment aria-label="মন্তব্য">▱</button><button class="action-btn action" type="button" data-live-share aria-label="শেয়ার">↗</button><button class="action-btn action" type="button" data-live-save aria-label="সেভ">▱</button></div></div><div class="comments comment-box"><div class="comment-list"></div><form class="comment-form" data-post-id="'+esc(p.id)+'"><textarea placeholder="মন্তব্য লিখুন..."></textarea><button type="submit">➤</button></form></div></article>'}
-async function pageFilter(){const f=canonicalFile(),o={limit:1000,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){if(state.role!=='founder')return null;o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
+async function pageFilter(){const f=canonicalFile(),o={limit:1000,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
 function targetFor(f){if(f==='index.html')return $('#postList');if(['today-poem.html','today-prolap.html','environment.html'].includes(f))return $('#feedList');if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))return $('#content');if(f==='madhyorater-prolap.html')return $('#prolapFeed');return null}
 async function loadFeed(){
   const f=canonicalFile();
@@ -108,11 +108,16 @@ async function loadFeed(){
   state.feedBusy=true;
   if(f==='index.html'&&!Array.isArray(W.__BD_SUPABASE_POSTS))D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows:[],status:'loading'}}));
   try{
-    let q=client.from('posts').select('*').order('created_at',{ascending:false}).limit(opt.limit||1000);
-    if(opt.authorId)q=q.eq('author_id',opt.authorId);else if(opt.authorUsername)q=q.eq('author_username',opt.authorUsername);
-    if(opt.type)q=q.eq('type',opt.type);
-    const r=await q;if(r.error)throw r.error;
-    let rows=(r.data||[]).filter(isPublicPostRow).filter(x=>String(x.type||'').toLowerCase()!=='news-page');if(state.role!=='founder')rows=rows.filter(x=>normalizeType(x.type||x.category)!=='midnight');
+    const pageSize=1000,maxRows=5000,allRows=[];
+    for(let from=0;from<maxRows;from+=pageSize){
+      let q=client.from('posts').select('*').order('created_at',{ascending:false}).range(from,from+pageSize-1);
+      if(opt.authorId)q=q.eq('author_id',opt.authorId);else if(opt.authorUsername)q=q.eq('author_username',opt.authorUsername);
+      if(opt.type)q=q.eq('type',opt.type);
+      const r=await q;if(r.error)throw r.error;
+      const batch=r.data||[];allRows.push(...batch);
+      if(batch.length<pageSize)break;
+    }
+    let rows=allRows.filter(isPublicPostRow).filter(x=>String(x.type||'').toLowerCase()!=='news-page');
     if(f==='index.html'){const pageId=new URLSearchParams(location.search).get('news_page');if(pageId)rows=rows.filter(x=>String(x.type||'').toLowerCase()==='news'&&String(x.original_author||'')==='news-page:'+pageId);
       W.__BD_SUPABASE_POSTS=rows;
       D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows,status:'ready'}}));
@@ -493,6 +498,54 @@ html[data-theme="dark"] .logo-mark.bd-new-brand-symbol{background:transparent!im
  #leftEdgeMenu,#rightEdgeMenu{display:none!important}
 }
 </style>
+
+<style id="bd-v22-architect-final">
+/* V22: sidebars stay compact and locked; ONLY the center column scrolls on desktop.
+   Composer belongs to the center scroll and is never pinned. */
+@media (min-width:900px){
+  html,body{height:100%!important;overflow:hidden!important}
+  body{padding-top:var(--bd-top)!important}
+  main.layout{
+    height:calc(100dvh - var(--bd-top))!important;max-height:calc(100dvh - var(--bd-top))!important;
+    width:min(1480px,100%)!important;max-width:1480px!important;
+    grid-template-columns:178px minmax(0,1fr) 190px!important;gap:10px!important;padding:9px 10px 10px!important;
+    align-items:stretch!important;overflow:hidden!important
+  }
+  main.layout>#leftSidebar,main.layout>#rightSidebar{
+    position:relative!important;top:auto!important;height:100%!important;max-height:100%!important;
+    min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important
+  }
+  main.layout>.center-col{
+    position:relative!important;top:auto!important;height:100%!important;max-height:100%!important;min-height:0!important;
+    overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;scrollbar-gutter:stable!important;padding-bottom:28px!important
+  }
+  main.layout>.center-col>#composer,main.layout>.center-col>.composer{
+    position:relative!important;top:auto!important;bottom:auto!important;inset:auto!important;transform:none!important
+  }
+  #leftEdgeMenu,#rightEdgeMenu{display:none!important}
+  .site-footer{display:none!important}
+}
+@media (min-width:900px) and (max-width:1120px){
+  main.layout{grid-template-columns:160px minmax(0,1fr) 170px!important;gap:8px!important;padding:8px!important}
+}
+@media (min-width:1500px){
+  main.layout{grid-template-columns:188px minmax(0,1fr) 200px!important}
+}
+/* Never allow historical per-post side-open arrows/buttons to reappear. */
+#postList :is(.bd-post-side-open,[data-bd-post-side-open],[data-open-post-side],.post-side-open,.bd45-side-open){
+  display:none!important;visibility:hidden!important;pointer-events:none!important;width:0!important;height:0!important
+}
+/* Header's exact user-supplied BDK mark. */
+.logo-mark.bd-new-brand-symbol{overflow:hidden!important;background:#075238!important;border:0!important}
+.logo-mark.bd-new-brand-symbol img{width:100%!important;height:100%!important;object-fit:cover!important}
+.bd22-shortcut-art{width:24px!important;height:24px!important;flex:0 0 24px!important;object-fit:contain!important;border-radius:8px!important;background:#fff!important;padding:1px!important;box-shadow:0 3px 9px rgba(25,45,75,.08)!important}
+@media(max-width:520px){.bd22-shortcut-art{width:20px!important;height:20px!important;flex-basis:20px!important}}
+/* Home and Midnight Prolap are the two permanent honour shortcuts. */
+.bd-national-honour{grid-template-columns:minmax(96px,1fr) minmax(150px,1.15fr) minmax(130px,1fr)!important}
+/* Keep glass restrained on mobile/low power. */
+.glass{backdrop-filter:blur(4px) saturate(105%)!important;-webkit-backdrop-filter:blur(4px) saturate(105%)!important}
+</style>
 </head>
 <body><svg aria-hidden="true" class="svg-sprite" focusable="false">
 <symbol id="i-leaf" viewbox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"></path><path d="M4 20c3-6 7-9 13-12"></path></symbol>
@@ -554,9 +607,9 @@ html[data-theme="dark"] .logo-mark.bd-new-brand-symbol{background:transparent!im
 </section>
 <nav aria-label="সম্মানিত দ্রুত লিংক ও বাংলাদেশের জাতীয় পতাকা" class="topnav bd-national-nav">
 <div class="bd-national-honour">
-<a aria-label="হোমে যান" class="bd-national-shortcut home" href="index.html"><svg aria-hidden="true" class="icon"><use href="#i-home"></use></svg><span>হোম</span></a>
+<a aria-label="হোমে যান" class="bd-national-shortcut home" href="index.html"><img aria-hidden="true" class="bd22-shortcut-art" src="assets/brand/bdk-logo.webp" alt=""><span>হোম</span></a>
 <a aria-label="বাংলাদেশের ইতিহাস পড়ুন" class="bd-history-gateway" href="bangladesh.html" title="বাংলাদেশের ইতিহাস"><span aria-hidden="true" class="bd-history-mark"><i></i></span><span class="bd-history-copy"><b>বাংলাদেশ</b><small>ইতিহাস • ১৭৫৭—আজ</small></span></a>
-<a aria-label="মধ্যরাতের প্রলাপ পেজে যান" class="bd-national-shortcut midnight" href="madhyorater-prolap.html"><svg aria-hidden="true" class="bd-night-scene" viewbox="0 0 24 24"><rect height="15" rx="2" width="17" x="3.5" y="4"></rect><path d="M12 4v15M3.5 12h17"></path><path d="M6.5 8.1h.01M9 6.7h.01M15.2 7.7h.01M18 6.2h.01"></path><path d="M5.5 16.2c2-1.7 4.1-2.2 6.2-1.3 1.7.7 3.6.5 6.8-1.3"></path></svg><span>মধ্যরাতের প্রলাপ</span></a>
+<a aria-label="মধ্যরাতের প্রলাপ পেজে যান" class="bd-national-shortcut midnight" href="madhyorater-prolap.html"><img aria-hidden="true" class="bd22-shortcut-art" src="assets/categories/midnight.webp" alt=""><span>মধ্যরাতের প্রলাপ</span></a>
 </div>
 </nav>
 <span hidden="" id="bdPreLayoutAnchor"></span>
@@ -570,7 +623,7 @@ html[data-theme="dark"] .logo-mark.bd-new-brand-symbol{background:transparent!im
 const D=document;
 const copyAttrs=(from,to)=>{for(const a of [...from.attributes])if(a.name!=='data-bd-runtime-order')to.setAttribute(a.name,a.value)};
 const cloneFromTemplate=(doc,id)=>doc.querySelector(id)?.content?.cloneNode(true)||null;
-const BD_COMPONENT_BUILD='20260816-v21-stable-original-index';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
+const BD_COMPONENT_BUILD='20260816-v22-architect-master-templates-rx';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
 const parser=new DOMParser();
 async function boot(){
   D.body.classList.add('bd-components-loading');
