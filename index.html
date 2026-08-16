@@ -2,7 +2,7 @@
 
 <html data-bd-glass="pearl" data-bd-theme="light" data-theme="light" lang="bn">
 <head>
-<meta content="V8.210-MASTER-LIGHTWEIGHT-20260816" name="bhubondanga-safe-lite"/>
+<meta content="V8.200-GITHUB-TEMPLATE-LIBRARY-STABLE-20260816" name="bhubondanga-safe-lite"/>
 <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"/>
 <meta content="0" http-equiv="Expires"/>
 <meta content="#173153" name="theme-color"/>
@@ -92,7 +92,7 @@ async function publishFrom(values){
 function prettyDate(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch(_){return String(v||'')}}
 function svgUser(){return'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor"/><path d="M4 21c.8-5 4-7 8-7s7.2 2 8 7" fill="none" stroke="currentColor"/></svg>'}
 function card(p,midnight=false){const founder=String(p.author_role||'').toLowerCase()==='founder'||String(p.author_username||'').toLowerCase()==='mahmud-sohel'||p.author_name==='মাহমুদ সোহেল'||(state.founderId&&String(p.author_id)===String(state.founderId)),admin=String(p.author_role||'').toLowerCase()==='admin',url=profileUrl(Object.assign({},p,{role:founder?'founder':admin?'admin':p.author_role||''})),avatar=p.author_avatar?'<img loading="lazy" decoding="async" src="'+esc(p.author_avatar)+'" alt="">':svgUser(),badge=founder?'<span class="bd-founder-badge">Founder</span>':admin?'<span class="bd-admin-badge">Admin</span>':'',time=prettyDate(p.created_at),body=esc(p.body||''),title=esc(p.title||'শিরোনামহীন'),cat=esc(p.category||typeLabel(p.type));if(midnight)return'<article class="card prolap-card bd-live-post" data-post-id="'+esc(p.id)+'"><div class="prolap-head"><div class="prolap-author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="prolap-author-copy"><a href="'+url+'">'+esc(p.author_name)+badge+'</a><p>'+time+'</p></div></div><span class="post-order">নতুন</span></div><div class="prolap-body"><div class="prolap-label-row"><span class="prolap-label">'+cat+'</span></div><h3 class="prolap-title"><a href="index.html?post='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="prolap-text">'+body+'</div></div></article>';return'<article class="glass post style-'+esc(p.card_style||'pearl')+' bd-live-post" data-post-id="'+esc(p.id)+'"><div class="post-head author"><div class="author"><a class="author-avatar" href="'+url+'">'+avatar+'</a><div class="author-meta"><div class="author-name-row"><a href="'+url+'"><strong>'+esc(p.author_name||'ভুবনডাঙ্গার সদস্য')+'</strong></a>'+badge+'</div><small class="bd-post-time">'+time+'</small></div></div><div class="three-dot"><button class="three-dot-btn post-menu" type="button" data-live-menu="'+esc(p.id)+'" aria-label="পোস্টের অপশন">•••</button></div></div><span class="pill tag">'+cat+'</span><h3 class="post-title"><a href="index.html?post='+encodeURIComponent(p.id)+'">'+title+'</a></h3><div class="post-body">'+body+'</div>'+(p.media_url?'<img class="post-media" src="'+esc(p.media_url)+'" alt="'+title+'" loading="lazy">':'')+(p.caption?'<div class="bd-post-caption">'+esc(p.caption)+'</div>':'')+'<div class="post-footer actions"><div class="post-actions"><button class="action-btn action" type="button" data-live-like aria-label="রিঅ্যাকশন">♡</button><button class="action-btn action" type="button" data-comment aria-label="মন্তব্য">▱</button><button class="action-btn action" type="button" data-live-share aria-label="শেয়ার">↗</button><button class="action-btn action" type="button" data-live-save aria-label="সেভ">▱</button></div></div><div class="comments comment-box"><div class="comment-list"></div><form class="comment-form" data-post-id="'+esc(p.id)+'"><textarea placeholder="মন্তব্য লিখুন..."></textarea><button type="submit">➤</button></form></div></article>'}
-async function pageFilter(){const f=canonicalFile(),o={limit:1000,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
+async function pageFilter(){const f=canonicalFile(),o={limit:1000,midnight:false,target:null};if(f==='today-poem.html')o.type='poem';else if(f==='today-prolap.html')o.type='prolap';else if(f==='environment.html')o.type='environment';else if(f==='madhyorater-prolap.html'){if(state.role!=='founder')return null;o.type='midnight';o.midnight=true}else if(f==='founder-profile.html'){const id=await founderId();if(id)o.authorId=id;else o.authorUsername='mahmud-sohel'}else if(f==='admin-profile.html'){if(state.session&&['admin','founder'].includes(state.role))o.authorId=state.session.user.id;else return null}else if(f==='profile.html'){const q=new URLSearchParams(location.search),target=q.get('user');if(target){if(/^[0-9a-f-]{36}$/i.test(target))o.authorId=target;else if(client){try{const r=await client.from('profiles').select('id,username').eq('username',target.toLowerCase()).maybeSingle();if(r.data?.id)o.authorId=r.data.id;else o.authorUsername=target.toLowerCase()}catch(_){o.authorUsername=target.toLowerCase()}}}else if(state.session)o.authorId=state.session.user.id;else return null}else if(f!=='index.html')return null;return o}
 function targetFor(f){if(f==='index.html')return $('#postList');if(['today-poem.html','today-prolap.html','environment.html'].includes(f))return $('#feedList');if(['founder-profile.html','admin-profile.html','profile.html'].includes(f))return $('#content');if(f==='madhyorater-prolap.html')return $('#prolapFeed');return null}
 async function loadFeed(){
   const f=canonicalFile();
@@ -112,7 +112,7 @@ async function loadFeed(){
     if(opt.authorId)q=q.eq('author_id',opt.authorId);else if(opt.authorUsername)q=q.eq('author_username',opt.authorUsername);
     if(opt.type)q=q.eq('type',opt.type);
     const r=await q;if(r.error)throw r.error;
-    let rows=(r.data||[]).filter(isPublicPostRow).filter(x=>String(x.type||'').toLowerCase()!=='news-page');
+    let rows=(r.data||[]).filter(isPublicPostRow).filter(x=>String(x.type||'').toLowerCase()!=='news-page');if(state.role!=='founder')rows=rows.filter(x=>normalizeType(x.type||x.category)!=='midnight');
     if(f==='index.html'){const pageId=new URLSearchParams(location.search).get('news_page');if(pageId)rows=rows.filter(x=>String(x.type||'').toLowerCase()==='news'&&String(x.original_author||'')==='news-page:'+pageId);
       W.__BD_SUPABASE_POSTS=rows;
       D.dispatchEvent(new CustomEvent('bd:supabase-posts',{detail:{rows,status:'ready'}}));
@@ -413,7 +413,7 @@ html[data-theme="dark"] .bd162-comment-moderation-note{
 @media(max-width:720px){.bd-section-history{margin:10px 0 12px;padding:14px;border-radius:16px}.bd-section-history p{font-size:11.5px}.bd-section-history h2{font-size:22px}}
 </style>
 <!-- V8.185: reaction artwork is embedded; no external reaction-assets.js dependency. -->
-</meta></meta><style id="bd-three-part-bootstrap">body.bd-components-loading .layout{visibility:visible}body.bd-components-failed .layout{visibility:visible}.bd-component-error{max-width:760px;margin:30px auto;padding:18px;border:1px solid #d7ddea;border-radius:16px;background:#fff;color:#173153;font:600 14px/1.6 system-ui,sans-serif}</style>
+</meta></meta><style id="bd-three-part-bootstrap">body.bd-components-loading .layout{visibility:hidden}body.bd-components-failed .layout{visibility:visible}.bd-component-error{max-width:760px;margin:30px auto;padding:18px;border:1px solid #d7ddea;border-radius:16px;background:#fff;color:#173153;font:600 14px/1.6 system-ui,sans-serif}</style>
 <style id="bd-v12-desktop-classic-layout">
 /* Desktop lock: sidebars stay visible; ONLY center feed scrolls. */
 @media (min-width:900px){
@@ -481,44 +481,6 @@ html[data-theme="dark"] .logo-mark.bd-new-brand-symbol{background:transparent!im
 }
 @media (max-width:899px){#leftEdgeMenu,#rightEdgeMenu{display:flex!important}}
 </style>
-
-<style id="bd-v21-master-authority">
-/* V21 MASTER: zero-skeleton shell, inexpensive glass, exact BDK asset, desktop center-only scroll. */
-html{scroll-behavior:auto!important}
-.logo-mark.bd-new-brand-symbol{background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;animation:bd21NavLogo 5.6s ease-in-out infinite;transform-origin:center}
-.logo-mark.bd-new-brand-symbol img{width:40px!important;height:40px!important;border-radius:50%!important;object-fit:cover!important;filter:none!important;box-shadow:0 5px 13px rgba(12,62,47,.12)!important}
-@keyframes bd21NavLogo{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1px) scale(1.025)}}
-@media(prefers-reduced-motion:reduce){.logo-mark.bd-new-brand-symbol{animation:none!important}}
-.glass{backdrop-filter:blur(4px) saturate(106%)!important;-webkit-backdrop-filter:blur(4px) saturate(106%)!important;box-shadow:0 8px 21px rgba(61,74,126,.065),inset 0 1px 0 rgba(255,255,255,.68)!important;transform:none!important;will-change:auto!important}.glass::before{opacity:.14!important}.glass::after{opacity:.035!important}html[data-theme="dark"] .glass::before{opacity:.055!important}html[data-theme="dark"] .glass::after{opacity:.02!important}
-/* Exactly three national shortcuts: Home | Bangladesh history | Madhyorater Prolap. */
-.bd-national-honour{grid-template-columns:minmax(100px,1fr) auto minmax(132px,1fr)!important}.bd-national-shortcut.midnight{display:inline-flex!important;visibility:visible!important;opacity:1!important}
-/* Composer letter dock is slightly smaller. */
-.bd-compact-font-dock button,.bd-letter-key,.composer-letter-key{transform:none!important}
-@media(max-width:899px){.bd-compact-font-dock button{width:38px!important;height:38px!important;font-size:19px!important}.brand-copy h1{font-size:17px!important}.brand-copy p{font-size:8px!important}.searchbar input{font-size:10px!important}}
-/* Desktop: page never scrolls; sidebars stay in place and may independently scroll; only center feed is primary scroller. */
-@media(min-width:900px){
- html,body{height:100dvh!important;min-height:0!important;overflow:hidden!important;overscroll-behavior:none!important}
- body{display:flex!important;flex-direction:column!important}
- .site-header,.date-bar,.topnav{flex:0 0 auto!important}
- main.layout{flex:1 1 auto!important;min-height:0!important;height:auto!important;width:min(1500px,100%)!important;margin:0 auto!important;display:grid!important;grid-template-areas:"left center right"!important;grid-template-columns:clamp(250px,19vw,315px) minmax(560px,1fr) clamp(265px,20vw,330px)!important;gap:12px!important;align-items:stretch!important;overflow:hidden!important}
- main.layout>#leftSidebar,main.layout>#rightSidebar{position:relative!important;inset:auto!important;height:100%!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
- main.layout>.center-col{grid-area:center!important;position:relative!important;height:100%!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior-y:contain!important;-webkit-overflow-scrolling:touch!important;scroll-behavior:auto!important;overflow-anchor:auto!important}
- #leftSidebar{grid-area:left!important}#rightSidebar{grid-area:right!important}
- .site-footer{display:none!important}
- #leftEdgeMenu,#rightEdgeMenu,.mobile-drawer,.drawer-backdrop{display:none!important}
-}
-@media(max-width:899px){html,body{overflow-x:hidden!important;overflow-y:auto!important}.site-footer{display:block}.edge-menu{display:flex!important}}
-</style>
-<script id="bd-v21-shell-stability">
-(()=>{'use strict';if(window.__BD21_SHELL__)return;window.__BD21_SHELL__=true;const D=document,W=window;let lastY=0;
-/* Never let reactions/comments/menus create body scrolling on desktop. */
-function desktopLock(){if(innerWidth<900)return;D.documentElement.style.overflow='hidden';D.body.style.overflow='hidden';const c=D.querySelector('.center-col');if(c){c.style.overflowY='auto';c.style.scrollBehavior='auto'}}
-/* Logo uses the exact external file; no question-mark broken image. */
-function logo(){D.querySelectorAll('.logo-mark img').forEach(im=>{im.src='bdk-logo.webp';im.hidden=false;im.onerror=()=>{im.onerror=null;im.removeAttribute('src');im.alt='BDK'}})}
-D.addEventListener('bd:three-part-ready',()=>{desktopLock();logo()});W.addEventListener('resize',desktopLock,{passive:true});W.addEventListener('pageshow',()=>{desktopLock();logo()},{passive:true});setTimeout(()=>{desktopLock();logo()},20);
-})();
-</script>
-<link rel="stylesheet" href="./v22-fixes.css?v=20260816-v22">
 </head>
 <body><svg aria-hidden="true" class="svg-sprite" focusable="false">
 <symbol id="i-leaf" viewbox="0 0 24 24"><path d="M20 4C12 4 6 8 5 16c4 1 8 0 11-3 3-3 4-6 4-9Z"></path><path d="M4 20c3-6 7-9 13-12"></path></symbol>
@@ -554,7 +516,6 @@ D.addEventListener('bd:three-part-ready',()=>{desktopLock();logo()});W.addEventL
 <header class="site-header">
 <div class="header-inner">
 <div class="header-left">
-<button class="bd22-mobile-drawer-btn bd22-left-open" type="button" data-bd22-open-drawer="left" aria-label="আপন ভুবন খুলুন"><svg class="icon"><use href="#i-menu"></use></svg></button>
 <a aria-label="ভুবনডাঙ্গার কবিতা হোম" class="brand-wrap" href="index.html">
 <span class="logo-mark bd-new-brand-symbol"><img src="bdk-logo.webp" alt="BDK" width="40" height="40" decoding="async" fetchpriority="high" onerror="this.hidden=true;this.parentElement.classList.add('bd-logo-fallback')"></span>
 <span class="brand-copy"><h1><span class="bd-brand-main">ভুবনডাঙ্গার</span> <span class="bd-brand-red">কবিতা</span></h1><p>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</p></span>
@@ -568,7 +529,6 @@ D.addEventListener('bd:three-part-ready',()=>{desktopLock();logo()});W.addEventL
 <div class="header-actions">
 <a class="icon-btn auth-only" hidden="" href="notifications.html" id="headerNotifications" title="নোটিফিকেশন"><svg class="icon"><use href="#i-bell"></use></svg><span class="header-unread-badge" hidden="" id="headerUnreadBadge"></span></a>
 <a class="icon-btn auth-only" hidden="" href="messages.html" id="headerMessages" title="বার্তা"><svg class="icon"><use href="#i-message"></use></svg></a>
-<button class="icon-btn bd22-mobile-drawer-btn bd22-right-open" type="button" data-bd22-open-drawer="right" aria-label="ডান ভুবন খুলুন"><svg class="icon"><use href="#i-user"></use></svg></button>
 <button class="icon-btn" id="themeToggle" title="থিম পরিবর্তন" type="button"><svg class="icon"><use href="#i-moon" id="themeUse"></use></svg></button>
 <a class="avatar header-login-state" href="login.html" id="headerAvatar" title="লগইন করুন">লগইন</a>
 </div>
@@ -584,7 +544,7 @@ D.addEventListener('bd:three-part-ready',()=>{desktopLock();logo()});W.addEventL
 <div class="bd-national-honour">
 <a aria-label="হোমে যান" class="bd-national-shortcut home" href="index.html"><svg aria-hidden="true" class="icon"><use href="#i-home"></use></svg><span>হোম</span></a>
 <a aria-label="বাংলাদেশের ইতিহাস পড়ুন" class="bd-history-gateway" href="bangladesh.html" title="বাংলাদেশের ইতিহাস"><span aria-hidden="true" class="bd-history-mark"><i></i></span><span class="bd-history-copy"><b>বাংলাদেশ</b><small>ইতিহাস • ১৭৫৭—আজ</small></span></a>
-<a aria-label="মধ্যরাতের প্রলাপ পেজে যান" class="bd-national-shortcut midnight" href="madhyorater-prolap.html"><svg aria-hidden="true" class="bd-night-scene" viewbox="0 0 24 24"><rect height="15" rx="2" width="17" x="3.5" y="4"></rect><path d="M12 4v15M3.5 12h17"></path><path d="M6.5 8.1h.01M9 6.7h.01M15.2 7.7h.01M18 6.2h.01"></path><path d="M5.5 16.2c2-1.7 4.1-2.2 6.2-1.3 1.7.7 3.6.5 6.8-1.3"></path></svg><span>মধ্যরাতের প্রলাপ</span></a>
+<a aria-label="মধ্যরাতের প্রলাপ পেজে যান" class="bd-national-shortcut midnight" data-founder-only hidden href="madhyorater-prolap.html"><svg aria-hidden="true" class="bd-night-scene" viewbox="0 0 24 24"><rect height="15" rx="2" width="17" x="3.5" y="4"></rect><path d="M12 4v15M3.5 12h17"></path><path d="M6.5 8.1h.01M9 6.7h.01M15.2 7.7h.01M18 6.2h.01"></path><path d="M5.5 16.2c2-1.7 4.1-2.2 6.2-1.3 1.7.7 3.6.5 6.8-1.3"></path></svg><span>মধ্যরাতের প্রলাপ</span></a>
 </div>
 </nav>
 <span hidden="" id="bdPreLayoutAnchor"></span>
@@ -594,12 +554,12 @@ D.addEventListener('bd:three-part-ready',()=>{desktopLock();logo()});W.addEventL
 <div class="footer-links"><a href="index.html">হোম</a><a href="about.html">আমাদের সম্পর্কে</a><a href="contact.html">যোগাযোগ</a><a href="complaint.html">অভিযোগ</a><a href="privacy-security-policy.html">গোপনীয়তা</a><a href="policy.html">নীতিমালা</a><a href="policy.html#creative-work-protection">লেখার সুরক্ষা</a></div>
 </footer>
 <span hidden="" id="bdFeedGlobalsAnchor"></span>
-<script defer src="./template-library.js?v=20260816-v22" id="bd-template-library-loader"></script>
+<script defer src="./template-library.js?v=20260816-v20" id="bd-template-library-loader"></script>
 <script id="bd-three-part-loader" type="module">
 const D=document;
 const copyAttrs=(from,to)=>{for(const a of [...from.attributes])if(a.name!=='data-bd-runtime-order')to.setAttribute(a.name,a.value)};
 const cloneFromTemplate=(doc,id)=>doc.querySelector(id)?.content?.cloneNode(true)||null;
-const BD_COMPONENT_BUILD='20260816-v22-master-lightweight';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
+const BD_COMPONENT_BUILD='20260816-v20-template-library-fixed';const loadText=async url=>{const sep=url.includes('?')?'&':'?';const r=await fetch(url+sep+'v='+encodeURIComponent(BD_COMPONENT_BUILD),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.text()};
 const parser=new DOMParser();
 async function boot(){
   D.body.classList.add('bd-components-loading');
@@ -634,7 +594,7 @@ async function boot(){
 
     // Recreate original BODY style/script cascade and execution order exactly.
     const runtime=[];
-    for(const tpl of [sideDoc.querySelector('#bdBodyStyles'),sideDoc.querySelector('#bdBodyScripts'),feedDoc.querySelector('#bdBodyScripts')]){
+    for(const tpl of [sideDoc.querySelector('#bdBodyStyles'),feedDoc.querySelector('#bdBodyScripts')]){
       if(!tpl)continue;
       for(const n of [...tpl.content.children]){
         const ord=Number(n.getAttribute('data-bd-runtime-order')||0);
@@ -665,6 +625,5 @@ async function boot(){
   }
 }
 await boot();
-</script><script defer src="./v22-fixes.js?v=20260816-v22"></script>
-</body>
+</script></body>
 </html>
