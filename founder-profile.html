@@ -3999,16 +3999,7 @@ D.addEventListener('submit',e=>{if(e.target?.id==='bdPremiumPinDispute'){e.stopP
 W.BDComposerAccess={chooseType,openMode,premiumChoice,disablePremium,isPremium:()=>D.body.classList.contains('is-premium')};
 })();
 </script></template>
-<script id="bd-profile-index-composer-mount">
-(()=>{'use strict';
-const D=document;
-function attrs(a,b){for(const x of [...a.attributes])if(x.name!=='data-bd-runtime-order')b.setAttribute(x.name,x.value)}
-function mountStyles(){const t=D.getElementById('bdProfileIndexComposerStyles');if(!t)return;for(const n of [...t.content.children])if(n.tagName==='STYLE'){const s=D.createElement('style');attrs(n,s);s.textContent=n.textContent;D.head.appendChild(s)}}
-async function runScripts(){const t=D.getElementById('bdProfileIndexComposerScripts');if(!t)return;const jobs=[...t.content.children].filter(n=>n.tagName==='SCRIPT').sort((a,b)=>Number(a.dataset.bdRuntimeOrder||0)-Number(b.dataset.bdRuntimeOrder||0));for(const n of jobs){const s=D.createElement('script');attrs(n,s);if(n.src){s.src=n.src;await new Promise(ok=>{s.onload=ok;s.onerror=ok;D.body.appendChild(s)})}else{s.textContent=n.textContent;D.body.appendChild(s)}}}
-async function mount(){const slot=D.getElementById('bdProfileComposerSlot'),t=D.getElementById('bdProfileIndexComposerComponent');if(!slot||!t)return;const frag=t.content.cloneNode(true),composer=frag.querySelector('#composer');if(!composer)return;slot.replaceWith(composer);mountStyles();await runScripts();D.documentElement.dataset.bdProfileComposer='index-parity';D.dispatchEvent(new CustomEvent('bd:profile-index-composer-ready'))}
-if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>setTimeout(mount,0),{once:true});else setTimeout(mount,0);
-})();
-</script>
+<script id="bd-profile-index-composer-mount">/* disabled: current compose-box.html mounts once through canonical loader */</script>
 
 <style id="bd-vnext-profile-sidebar-reaction-story-lock">
 /* 2026-08-16 — Index-look profile rails + privacy-safe analytics + owner reaction animation. */
@@ -4077,29 +4068,11 @@ setTimeout(installRails,40);setTimeout(installRails,700);setTimeout(()=>{syncOur
 })();</script>
 
 <script id="bd-vnext-owner-compose-role-fix">
-(function(W,D){'use strict';
-/* Theme follows the saved choice; if none exists, follow the device. */
-try{let t=localStorage.getItem('bd-theme');if(!t&&W.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark'||t==='light')D.documentElement.dataset.theme=t}catch(_){ }
-async function installCompose(){
-  if(!D.body.classList.contains('is-owner'))return;
-  const legacy=D.getElementById('composer');if(!legacy)return;
-  legacy.classList.add('bd-canonical-hidden');
-  let host=D.getElementById('bdProfileCanonicalCompose');if(!host){host=D.createElement('section');host.id='bdProfileCanonicalCompose';legacy.insertAdjacentElement('afterend',host)}
-  host.hidden=false;if(host.dataset.mounted==='1')return;
-  W.BD_MODULES=W.BD_MODULES||{};
-  try{
-    if(!W.BD_MODULES.compose){
-      const r=await fetch('compose-box.html?v=20260817-profile-canonical',{cache:'no-store'});if(!r.ok)throw Error(r.status);const txt=await r.text(),doc=new DOMParser().parseFromString(txt,'text/html');
-      doc.querySelectorAll('style[data-bd-component-style],style[id]').forEach(s=>{const id=s.id||s.dataset.bdComponentStyle;if(id&&D.getElementById(id))return;const c=D.createElement('style');if(id)c.id=id;c.dataset.bdComponentStyle=id||'1';c.textContent=s.textContent;D.head.appendChild(c)});
-      doc.querySelectorAll('script[data-bd-module]').forEach(sc=>{Function(sc.textContent)()});
-    }
-    if(W.BD_MODULES.compose?.mount){host.dataset.mounted='1';await W.BD_MODULES.compose.mount(host,{context:'profile'})}
-  }catch(e){host.innerHTML='<button type="button" class="prompt" onclick="location.href=\'index.html\'">আজ আপনার ভেতরে কী কথা জমে আছে?</button>'}
-}
-function sync(){const owner=D.body.classList.contains('is-owner'),legacy=D.getElementById('composer'),host=D.getElementById('bdProfileCanonicalCompose');if(owner){installCompose()}else{if(legacy)legacy.classList.remove('bd-canonical-hidden');if(host)host.hidden=true}}
-const mo=new MutationObserver(sync);mo.observe(D.body,{attributes:true,attributeFilter:['class']});
-D.addEventListener('DOMContentLoaded',()=>{setTimeout(sync,80);setTimeout(sync,650);setTimeout(sync,1500)});
-if(D.readyState!=='loading'){setTimeout(sync,80);setTimeout(sync,650)}
+(function(W,D){'use strict';if(W.__BD_PROFILE_CANONICAL_COMPOSER__)return;W.__BD_PROFILE_CANONICAL_COMPOSER__=1;
+try{let t=localStorage.getItem('bd-theme');if(!t&&W.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark'||t==='light')D.documentElement.dataset.theme=t}catch(_){}
+async function loadModule(){if(W.BD_MODULES?.compose?.mount)return W.BD_MODULES.compose;const r=await fetch('compose-box.html?v=20260817-profile-single',{cache:'no-store'});if(!r.ok)throw Error(r.status);const txt=await r.text(),doc=new DOMParser().parseFromString(txt,'text/html');doc.querySelectorAll('style').forEach(src=>{const id=src.id;if(id&&D.getElementById(id))return;const st=D.createElement('style');if(id)st.id=id;st.textContent=src.textContent;D.head.appendChild(st)});for(const sc of doc.querySelectorAll('script[data-bd-module]')){Function(sc.textContent)()}return W.BD_MODULES?.compose}
+async function sync(){const slot=D.getElementById('bdProfileComposerSlot');if(!slot)return;const owner=D.body.classList.contains('is-owner')||D.body.classList.contains('bd-final-self-owner');slot.hidden=!owner;if(!owner)return;if(slot.dataset.mounted==='1'||slot.dataset.mounting==='1')return;slot.dataset.mounting='1';try{const mod=await loadModule();if(mod?.mount){slot.dataset.mounted='1';await mod.mount(slot,{context:'profile'})}}catch(e){slot.innerHTML='<button type="button" class="prompt" onclick="location.href=\'index.html\'">আজ আপনার ভেতরে কী কথা জমে আছে?</button>'}finally{delete slot.dataset.mounting}}
+new MutationObserver(sync).observe(D.body,{attributes:true,attributeFilter:['class']});if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>{setTimeout(sync,60);setTimeout(sync,600)},{once:true});else{setTimeout(sync,60);setTimeout(sync,600)}
 })(window,document);
 </script>
 
@@ -4155,6 +4128,60 @@ if(D.readyState!=='loading'){setTimeout(sync,80);setTimeout(sync,650)}
  if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',run,{once:true});else run();
  W.addEventListener('bd:supabase-ready',()=>setTimeout(repair,220));
  setTimeout(async()=>{try{const c=await readyClient();c?.auth?.onAuthStateChange?.(()=>setTimeout(repair,180))}catch(_){}},300);
+})(document,window);
+</script>
+
+<style id="bd-profile-final-dup-update-reaction-20260817">
+/* Keep exactly one owner composer; external canonical slot is the only active source. */
+#bdProfileCanonicalCompose{display:none!important}
+.profile-update-post>.tag,.profile-update-post>.post-title,.profile-update-post>.post-body{display:none!important}
+.bd-profile-event-inline{margin-left:6px;color:var(--muted,#7f8a9c);font-weight:600;font-size:10px;white-space:normal}
+html[data-theme="dark"] .bd-profile-event-inline{color:#bdc9d9!important}
+/* Remove every legacy/duplicate reaction surface. The canonical bd31 row remains. */
+.post>.post-actions,.post>.bd24-social,.post>.bd-v814-social-summary,.post>.bd-index-reaction-picker,.post>.post-footer{display:none!important}
+.bd31-social{position:relative!important;z-index:2!important;overflow:visible!important;overflow-anchor:none!important}
+.bd31-summary,.bd31-actions{overflow-anchor:none!important}
+/* Bhubondanga-owned seven-reaction artwork only. */
+#bd31ReactionTray .bd31-r,.bd31-main-reaction .bd31-r,.bd31-stack .bd31-r,.bd31-reactor .bd31-r,
+#bdCanonicalReactionTray .bd-rx-visual>*{background-image:url('reaction-pyrise-static.webp')!important;background-size:700% 100%!important;background-repeat:no-repeat!important;background-color:transparent!important;border-radius:0!important;color:transparent!important;text-shadow:none!important;box-shadow:none!important}
+#bd31ReactionTray .bd31-r::before,#bd31ReactionTray .bd31-r::after,.bd31-main-reaction .bd31-r::before,.bd31-main-reaction .bd31-r::after,.bd31-stack .bd31-r::before,.bd31-stack .bd31-r::after,.bd31-reactor .bd31-r::before,.bd31-reactor .bd31-r::after{display:none!important;content:none!important}
+.bd31-r img,.bd31-r .bd52-reaction-img,.bd31-r .bd-rx-art{display:none!important}
+.bd31-r.like{background-position:0 center!important}.bd31-r.love{background-position:16.6667% center!important}.bd31-r.care{background-position:33.3333% center!important}.bd31-r.haha{background-position:50% center!important}.bd31-r.wow{background-position:66.6667% center!important}.bd31-r.sad{background-position:83.3333% center!important}.bd31-r.angry{background-position:100% center!important}
+#bd31ReactionTray .bd31-r{width:39px!important;height:39px!important}.bd31-main-reaction .bd31-r{width:27px!important;height:27px!important}.bd31-stack .bd31-r,.bd31-reactor .bd31-r{width:21px!important;height:21px!important}
+#bd31ReactionTray,#bdCanonicalReactionTray{z-index:70000!important;overflow:visible!important;overflow-anchor:none!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important}
+.post,.post *{scroll-anchor:none}.bd31-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+</style>
+
+<script id="bd-profile-final-runtime-cleaner-20260817">
+(function(D,W){'use strict';if(W.__BD_PROFILE_FINAL_CLEANER__)return;W.__BD_PROFILE_FINAL_CLEANER__=1;
+function isOwner(){return D.body.classList.contains('is-owner')||D.body.classList.contains('bd-final-self-owner')}
+function dedupeComposer(){
+  const slot=D.getElementById('bdProfileComposerSlot');
+  const old=D.getElementById('bdProfileCanonicalCompose');if(old)old.remove();
+  const all=[...D.querySelectorAll('main.center .bdc-root')];
+  if(all.length>1)all.slice(1).forEach(x=>x.remove());
+  if(!isOwner())all.forEach(x=>x.hidden=true);else all.forEach((x,i)=>x.hidden=i>0);
+}
+function updateEvents(root=D){
+ root.querySelectorAll?.('article.post').forEach(card=>{
+   const title=(card.querySelector('.post-title')?.textContent||'').trim();
+   const update=card.classList.contains('profile-update-post')||/প্রোফাইল ছবি পরিবর্তন|কভার ছবি পরিবর্তন/.test(title);if(!update)return;card.classList.add('profile-update-post');
+   const strong=card.querySelector('.author-meta strong');if(!strong)return;
+   let ev=strong.querySelector('.bd-profile-event-inline');
+   const label=/কভার/.test(title)?'কভার ছবি পরিবর্তন করেছেন':'প্রোফাইল ছবি পরিবর্তন করেছেন';
+   if(!ev){ev=D.createElement('span');ev.className='bd-profile-event-inline';strong.appendChild(ev)}ev.textContent=label;
+ });
+}
+function cleanSocial(root=D){
+ root.querySelectorAll?.('article.post').forEach(card=>{
+   card.querySelectorAll(':scope > .bd24-social,:scope > .post-actions,:scope > .bd-v814-social-summary,:scope > .bd-index-reaction-picker,:scope > .post-footer').forEach(x=>x.remove());
+   const rows=[...card.querySelectorAll(':scope > .bd31-social')];rows.slice(1).forEach(x=>x.remove());
+ });
+}
+function run(root=D){dedupeComposer();updateEvents(root);cleanSocial(root)}
+const mo=new MutationObserver(ms=>{for(const m of ms){if(m.type==='attributes'||m.addedNodes.length){run(D);break}}});
+mo.observe(D.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+D.addEventListener('DOMContentLoaded',()=>{run();setTimeout(run,120);setTimeout(run,700)},{once:true});if(D.readyState!=='loading'){run();setTimeout(run,150)}
 })(document,window);
 </script>
 </body>
