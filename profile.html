@@ -593,7 +593,26 @@ D.addEventListener('selectstart',e=>{if(P(e.target)&&!E(e.target)){e.preventDefa
 D.addEventListener('dragstart',e=>{if(P(e.target))e.preventDefault()},true);
 D.addEventListener('pointerdown',e=>{if(R(e.target)){e.preventDefault();C()}},true);
 })(document,window);
-</script></head>
+</script>
+<style id="bd-final-owner-love-selfheal-css-20260817">
+/* Final owner state visual guard. This changes behavior, not profile geometry. */
+body.bd-final-self-owner #profileActions .bd-v842-visitor,
+body.bd-final-self-owner #profileActions .bd-v841-visitor-actions{display:none!important}
+/* Bhubondanga Love: red disc with white heart across profile reaction surfaces. */
+#bd31ReactionTray .bd31-r.love::before,
+.bd31-main-reaction .bd31-r.love::before,
+.bd31-stack .bd31-r.love::before,
+.bd31-reactor .bd31-r.love::before{
+ content:"♥"!important;color:#fff!important;background:linear-gradient(145deg,#ff5367,#d91f38)!important;
+ border-radius:50%!important;display:grid!important;place-items:center!important;font-family:Arial,sans-serif!important;font-weight:900!important;
+ box-shadow:0 2px 6px rgba(188,25,52,.24),inset 0 1px 0 rgba(255,255,255,.25)!important
+}
+#bd31ReactionTray .bd31-r.love::before{width:40px!important;height:40px!important;font-size:27px!important}
+.bd31-main-reaction .bd31-r.love::before{width:22px!important;height:22px!important;font-size:15px!important}
+.bd31-stack .bd31-r.love::before,.bd31-reactor .bd31-r.love::before{width:24px!important;height:24px!important;font-size:16px!important}
+.bd31-r.love img,.bd31-r.love .bd52-reaction-img{display:none!important}
+</style>
+</head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
 <div class="shell">
@@ -2876,5 +2895,60 @@ if(D.readyState!=='loading'){setTimeout(sync,80);setTimeout(sync,650)}
 </script>
 <script id="bd-vnext-self-role-route">
 (function(W,D){'use strict';async function run(){try{if(!/\bprofile\.html$/i.test(location.pathname.split('/').pop()||''))return;let c=W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase;if(!c){await W.__BD_SUPABASE_SDK_PROMISE__;c=W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase;if(!c&&W.supabase?.createClient)c=W.supabase.createClient('https://ihjiisysrwgxxkuywuhc.supabase.co','sb_publishable_2ofR9FO078M1Eu-m0Q8FLg_WqN6iIxz',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}if(!c)return;const ss=(await c.auth.getSession()).data?.session;if(!ss?.user)return;const raw=new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id')||'';const my=ss.user.id,meta=ss.user.user_metadata||{},uname=String(meta.username||meta.user_name||meta.slug||ss.user.email?.split('@')[0]||'').replace(/^@/,'').toLowerCase();const self=!raw||['me','self','owner','my-profile','your-profile',my,uname,'@'+uname].includes(String(raw).toLowerCase());if(!self)return;let role='user';try{const r=await c.from('user_roles').select('role,active').eq('user_id',my).eq('active',true);if(!r.error&&Array.isArray(r.data)){if(r.data.some(x=>String(x.role).toLowerCase()==='founder'))role='founder';else if(r.data.some(x=>String(x.role).toLowerCase()==='admin'))role='admin'}}catch(_){}if(role==='user')role=String(ss.user.app_metadata?.role||meta.role||'user').toLowerCase();if(role==='founder')location.replace('founder-profile.html');else if(role==='admin')location.replace('admin-profile.html?user='+encodeURIComponent(my))}catch(_){}}if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>setTimeout(run,30),{once:true});else setTimeout(run,30)})(window,document);
-</script></body>
+</script>
+<script id="bd-final-owner-selfheal-20260817">
+(function(D,W){'use strict';
+ if(W.__BD_FINAL_OWNER_SELFHEAL__)return;W.__BD_FINAL_OWNER_SELFHEAL__=1;
+ const norm=v=>String(v||'').trim().replace(/^@/,'').toLowerCase();
+ const selfAliases=new Set(['','me','self','owner','my-profile','your-profile']);
+ async function readyClient(){
+   try{if(W.__BD_SUPABASE_SDK_PROMISE__)await Promise.race([W.__BD_SUPABASE_SDK_PROMISE__,new Promise(r=>setTimeout(r,2600))])}catch(_){}
+   try{if(typeof initSupabaseClient==='function')initSupabaseClient()}catch(_){}
+   return (typeof sb!=='undefined'&&sb)||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||null;
+ }
+ async function roleOf(c,uid,p){
+   try{if(typeof getRole==='function')return String(await getRole(uid,p)||'user').toLowerCase()}catch(_){}
+   try{const r=await c.from('user_roles').select('role,active').eq('user_id',uid).eq('active',true);if(!r.error&&r.data?.length){if(r.data.some(x=>norm(x.role)==='founder'))return'founder';if(r.data.some(x=>norm(x.role)==='admin'))return'admin';return norm(r.data[0].role)||'user'}}catch(_){}
+   return norm(p?.role)||'user';
+ }
+ async function ownProfile(c,uid,user){
+   try{if(typeof fetchProfileById==='function'){const p=await fetchProfileById(uid);if(p)return p}}catch(_){}
+   try{const r=await c.from('profiles').select('*').eq('id',uid).maybeSingle();if(!r.error&&r.data)return r.data}catch(_){}
+   const m=user?.user_metadata||{};return {id:uid,username:m.username||m.slug||user?.email?.split('@')[0]||'',display_name:m.full_name||m.name||m.display_name||user?.email?.split('@')[0]||'ভুবনডাঙ্গার সদস্য',avatar_url:m.avatar_url||m.avatar||m.picture||'',cover_url:m.cover_url||m.cover||'',bio:m.bio||'',location:m.location||'বাংলাদেশ'};
+ }
+ function requested(){const q=new URLSearchParams(location.search);return q.get('user')||q.get('id')||''}
+ function selfRequest(req,user,p){if(selfAliases.has(norm(req)))return true;const ids=[user?.id,p?.id,p?.user_id,p?.auth_user_id,p?.owner_id].filter(Boolean).map(String);if(req&&ids.includes(String(req)))return true;const mine=norm(user?.user_metadata?.username||user?.user_metadata?.slug||user?.email?.split('@')[0]||'');const pu=norm(p?.username||p?.slug||'');return !!(req&&mine&&norm(req)===mine)||!!(req&&pu&&norm(req)===pu)}
+ async function repair(){
+   try{
+     const c=await readyClient();if(!c)return;
+     const ss=(await c.auth.getSession()).data?.session;if(!ss?.user)return;
+     const uid=String(ss.user.id),p=await ownProfile(c,uid,ss.user),role=await roleOf(c,uid,p),req=requested(),isSelf=selfRequest(req,ss.user,p);
+     const page=String(typeof PAGE_ROLE!=='undefined'?PAGE_ROLE:(D.documentElement.dataset.pageRole||'user')).toLowerCase();
+     if(new URLSearchParams(location.search).get('view')==='visitor')return;
+     if(!isSelf&&req)return; // visitor profile: never convert to owner.
+     /* Signed-in Founder/Admin always lands in the correct self profile variant. */
+     const path=location.pathname.split('/').pop()||'';
+     if(page==='user'&&role==='founder'&&path==='profile.html'){location.replace('founder-profile.html');return}
+     if(page==='user'&&role==='admin'&&path==='profile.html'){location.replace('admin-profile.html');return}
+     if(page==='founder'&&role!=='founder')return;
+     if(page==='admin'&&role!=='admin')return;
+     if(typeof state==='undefined')return;
+     state.session=ss;state.me=ss.user;
+     state.target={...(state.target||{}),...(p||{}),id:uid,role:role,roleResolved:role,__unresolved:false};
+     state.owner=true;
+     D.body.classList.add('is-owner','bd-final-self-owner');D.body.classList.remove('bd-v842-visitor');
+     const h=D.getElementById('profileActions');if(h){h.classList.remove('bd-v842-visitor','bd-v841-visitor-actions')}
+     try{if(typeof renderProfile==='function')renderProfile();else if(typeof renderActions==='function')renderActions()}catch(_){}
+     try{if(typeof loadPosts==='function')await loadPosts()}catch(e){console.warn('self profile posts',e)}
+     try{if(typeof loadStats==='function')await loadStats()}catch(_){}
+     try{if(typeof syncDrawers==='function')syncDrawers()}catch(_){}
+   }catch(e){console.warn('Owner self-heal:',e)}
+ }
+ const run=()=>{repair();setTimeout(repair,650);setTimeout(repair,1850)};
+ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',run,{once:true});else run();
+ W.addEventListener('bd:supabase-ready',()=>setTimeout(repair,220));
+ setTimeout(async()=>{try{const c=await readyClient();c?.auth?.onAuthStateChange?.(()=>setTimeout(repair,180))}catch(_){}},300);
+})(document,window);
+</script>
+</body>
 </html>
