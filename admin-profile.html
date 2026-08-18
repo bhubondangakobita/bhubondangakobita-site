@@ -4304,7 +4304,7 @@ function avatarDrag(){const host=q('#avatarMain');if(!host||host.dataset.bd27Dra
 function cardId(c){return String(c?.dataset?.post||c?.dataset?.postId||c?.getAttribute?.('data-post-id')||'')}
 function client(){try{return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||((typeof sb!=='undefined')?sb:null)||null}catch(_){return null}}
 async function session(){try{return (await client()?.auth?.getSession()).data?.session||null}catch(_){return null}}
-function setLove(card){const main=q('[data-bd31-react-main]',card);if(!main)return;const prev=main.dataset.current||'';main.dataset.current='love';main.classList.add('selected','active');const holder=q('.bd31-main-reaction',main);if(holder)holder.innerHTML=`<span class="bd31-r love">${svg('love')}</span>`;const label=q('[data-bd31-label]',main);if(label)label.textContent='ভালোবাসা';if(!prev){const sum=q('[data-bd31-react-summary]',card);const m=sum?latin(sum.textContent).match(/[\d,.]+/):null;const n=(m?Number(m[0].replace(/,/g,'')):0)+1;if(sum){sum.hidden=false;let last=qa('span',sum).at(-1);if(!last){last=D.createElement('span');sum.appendChild(last)}last.textContent=compact(n)}}}
+function setLove(card){const main=q('[data-bd31-react-main]',card);if(!main)return;const prev=main.dataset.current||'';main.dataset.current='love';main.classList.add('selected','active');const holder=q('.bd31-main-reaction',main);if(holder)holder.innerHTML=`<span class="bd31-r love">${svg('love')}</span>`;const label=q('[data-bd31-label]',main);if(label)label.textContent='Love';if(!prev){const sum=q('[data-bd31-react-summary]',card);const m=sum?latin(sum.textContent).match(/[\d,.]+/):null;const n=(m?Number(m[0].replace(/,/g,'')):0)+1;if(sum){sum.hidden=false;let last=qa('span',sum).at(-1);if(!last){last=D.createElement('span');sum.appendChild(last)}last.textContent=compact(n)}}}
 async function love(card){const id=cardId(card),s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}setLove(card);const c=client(),uid=s.user.id;if(c)for(const table of ['post_reactions','reactions'])try{const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',uid).maybeSingle();const r=cur.data?await c.from(table).update({reaction:'love'}).eq('post_id',id).eq('user_id',uid):await c.from(table).insert({post_id:id,user_id:uid,reaction:'love'});if(!r.error)break}catch(_){}try{W.dispatchEvent(new CustomEvent('bd:reaction-changed',{detail:{post_id:id,user_id:uid,reaction:'love'}}))}catch(_){}}
 function burst(card,x,y){let e=q(':scope > .bd27-love-burst',card);if(!e){e=D.createElement('span');e.className='bd27-love-burst';e.innerHTML=svg('love');card.appendChild(e)}const r=card.getBoundingClientRect();e.style.left=(x-r.left)+'px';e.style.top=(y-r.top)+'px';e.classList.remove('show');void e.offsetWidth;e.classList.add('show')}
 let tap={id:'',t:0,x:0,y:0};W.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'&&e.pointerType!=='pen')return;if(e.target.closest?.('.bd31-social,button,a,input,textarea,select,label,audio,video,[contenteditable]'))return;const card=e.target.closest?.('[data-bd31-ready="1"],article.post,.bd-live-post,.post-card');if(!card)return;const id=cardId(card),now=Date.now();if(tap.id===id&&now-tap.t<330&&Math.hypot(e.clientX-tap.x,e.clientY-tap.y)<34){e.preventDefault();e.stopImmediatePropagation();love(card);burst(card,e.clientX,e.clientY);tap={id:'',t:0,x:0,y:0}}else tap={id,t:now,x:e.clientX,y:e.clientY}},{capture:true,passive:false});
@@ -4312,5 +4312,67 @@ function scan(){installFlag();upgrade();avatarDrag();const bio=q('#bio');if(bio)
 let queued=false;const mo=new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;scan()})});function boot(){scan();mo.observe(D.body,{childList:true,subtree:true,characterData:true});q('#location')?.addEventListener('blur',()=>setTimeout(installFlag,40),true)}if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 </script>
-<script src="profile-runtime-v28.js?v=20260818-v28" defer></script><script src="editor-awards-v28.js?v=20260818-v28" defer></script></body>
+<script src="profile-runtime-v28.js?v=20260818-v28" defer></script><script src="editor-awards-v28.js?v=20260818-v28" defer></script>
+<style id="bd-v30-profile-exact-reaction-facebook-lock">
+/* Exact 7 authored reactions — no synthetic SVG/emoji art may be visible. */
+.bd31-r,.bd31-mini,.bd31-main-reaction .bd31-r,.bd31-stack .bd31-r,.bd31-reactor .bd31-r{
+  display:inline-block!important;position:relative!important;flex:0 0 auto!important;
+  width:24px!important;height:24px!important;min-width:24px!important;max-width:24px!important;
+  border:0!important;border-radius:50%!important;overflow:hidden!important;
+  background-color:transparent!important;background-image:url('reaction-pyrise-static.webp')!important;
+  background-size:700% 100%!important;background-repeat:no-repeat!important;background-position-y:center!important;
+  box-shadow:none!important;filter:none!important;color:transparent!important;font-size:0!important
+}
+.bd31-r.like{background-position-x:0%!important}.bd31-r.love{background-position-x:16.666667%!important}.bd31-r.care{background-position-x:33.333333%!important}.bd31-r.haha{background-position-x:50%!important}.bd31-r.wow{background-position-x:66.666667%!important}.bd31-r.sad{background-position-x:83.333333%!important}.bd31-r.angry{background-position-x:100%!important}
+.bd31-r>svg,.bd31-r>img,.bd31-r>.bd52-reaction-img,.bd31-r::before,.bd31-r::after{display:none!important;content:none!important}
+.bd31-stack{display:flex!important;align-items:center!important;gap:0!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.bd31-stack .bd31-r{width:20px!important;height:20px!important;min-width:20px!important;max-width:20px!important;margin-left:-4px!important}.bd31-stack .bd31-r:first-child{margin-left:0!important}
+.bd31-main-reaction .bd31-r{width:25px!important;height:25px!important;min-width:25px!important;max-width:25px!important}
+.bd31-reactor .bd31-r{width:22px!important;height:22px!important;min-width:22px!important;max-width:22px!important}
+
+/* The legacy picker, when present, gets the same exact circles in a Facebook-like white pill. */
+#bd31ReactionTray,#bd64ReactionTray{
+  display:none;grid-template-columns:repeat(7,40px)!important;gap:3px!important;
+  padding:6px 7px!important;border:0!important;border-radius:999px!important;background:#fff!important;
+  box-shadow:0 4px 13px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.12)!important;
+  overflow:visible!important;backdrop-filter:none!important;filter:none!important
+}
+#bd31ReactionTray.open,#bd31ReactionTray.show,#bd31ReactionTray[style*="display: block"],#bd31ReactionTray[style*="display:grid"],
+#bd64ReactionTray.open,#bd64ReactionTray.show,#bd64ReactionTray[style*="display: block"],#bd64ReactionTray[style*="display:grid"]{display:grid!important}
+#bd31ReactionTray [data-bd31-tray-pick],#bd64ReactionTray [data-bd64-pick]{
+  display:grid!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;
+  place-items:center!important;border:0!important;border-radius:50%!important;background:transparent!important;padding:0!important
+}
+#bd31ReactionTray [data-bd31-tray-pick] .bd31-r,#bd64ReactionTray [data-bd64-pick] .bd31-r{width:38px!important;height:38px!important;min-width:38px!important;max-width:38px!important}
+#bd31ReactionTray [data-bd31-tray-pick="care"]{display:grid!important}
+#bd31ReactionTray button:hover,#bd64ReactionTray button:hover{transform:translateY(-4px) scale(1.05)!important}
+
+/* Exact Love on double-tap burst. */
+.bd27-love-burst,.bd24-double-love{width:84px!important;height:84px!important;border-radius:50%!important;overflow:hidden!important;background-image:url('reaction-pyrise-static.webp')!important;background-size:700% 100%!important;background-position:16.666667% center!important;background-repeat:no-repeat!important;background-color:transparent!important}
+.bd27-love-burst>svg,.bd27-love-burst>*{display:none!important}
+.bd24-double-love:before,.bd24-double-love:after{display:none!important;content:none!important}
+
+/* Facebook-like legacy profile social row. Canonical feed uses feed.html's same lock. */
+.bd31-social{margin-top:10px!important;padding-top:0!important;border-top:1px solid rgba(96,103,112,.18)!important;background:transparent!important}
+.bd31-summary{min-height:40px!important;padding:6px 3px!important;border-bottom:1px solid rgba(96,103,112,.18)!important;color:#65676b!important;font:500 13px/1.2 Arial,"Noto Sans Bengali",sans-serif!important}
+.bd31-summary button,.bd31-summary span{font:inherit!important;color:inherit!important;background:transparent!important;border:0!important;box-shadow:none!important}
+.bd31-actions{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;padding:2px 0!important;background:transparent!important}
+.bd31-action{min-height:46px!important;border:0!important;border-radius:6px!important;background:transparent!important;color:#65676b!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;font:600 14px/1 Arial,"Noto Sans Bengali",sans-serif!important;box-shadow:none!important}
+.bd31-action:hover{background:rgba(0,0,0,.035)!important}.bd31-action:active{transform:none!important;background:rgba(0,0,0,.06)!important}
+.bd31-action svg{width:28px!important;height:28px!important;stroke-width:1.65!important}.bd31-action [data-bd31-label]{font-family:Arial,"Noto Sans Bengali",sans-serif!important}
+.bd31-comment-panel{margin-top:0!important;padding:8px 0 2px!important;border:0!important;border-top:1px solid rgba(96,103,112,.16)!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.bd31-comments{display:grid!important;gap:8px!important}.bd31-comment{grid-template-columns:34px minmax(0,1fr)!important;gap:7px!important}
+.bd31-c-avatar{width:34px!important;height:34px!important;border-radius:50%!important}
+.bd31-c-bubble{display:inline-flex!important;flex-direction:column!important;max-width:min(92%,560px)!important;padding:7px 11px 8px!important;border:0!important;border-radius:18px!important;background:#f0f2f5!important;color:#050505!important;box-shadow:none!important;font:400 13px/1.38 Arial,"Noto Sans Bengali",sans-serif!important}
+.bd31-c-bubble>a{color:#050505!important;font:700 12.5px/1.25 Arial,"Noto Sans Bengali",sans-serif!important}
+.bd31-c-meta{padding:3px 9px 0!important;gap:9px!important;color:#65676b!important;font:600 11px/1.2 Arial,sans-serif!important}.bd31-c-meta button{font:700 11px/1.2 Arial,sans-serif!important}
+.bd31-comment-form,.bd31-reply-form{grid-template-columns:minmax(0,1fr) 40px!important;gap:7px!important;margin-top:9px!important}
+.bd31-comment-form input,.bd31-reply-form input{height:40px!important;border:0!important;border-radius:999px!important;background:#f0f2f5!important;color:#050505!important;padding:0 14px!important;box-shadow:none!important;font:400 13px/1 Arial,"Noto Sans Bengali",sans-serif!important}
+.bd31-comment-form button,.bd31-reply-form button{width:40px!important;height:40px!important;border:0!important;border-radius:50%!important;background:#1877f2!important;color:#fff!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-summary,:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-action{color:#b0b3b8!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-c-bubble,:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-comment-form input,:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-reply-form input{background:#3a3b3c!important;color:#e4e6eb!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-c-bubble>a{color:#e4e6eb!important}
+@media(max-width:430px){#bd31ReactionTray,#bd64ReactionTray{grid-template-columns:repeat(7,36px)!important;padding:5px 6px!important}#bd31ReactionTray [data-bd31-tray-pick],#bd64ReactionTray [data-bd64-pick]{width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important}#bd31ReactionTray [data-bd31-tray-pick] .bd31-r,#bd64ReactionTray [data-bd64-pick] .bd31-r{width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important}.bd31-action{font-size:13px!important;gap:6px!important}}
+</style>
+</body>
 </html>
