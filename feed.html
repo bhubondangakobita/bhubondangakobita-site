@@ -304,14 +304,10 @@ function bdDeepBadTerms(text){
   }
   return [...new Set(found)];
 }
-function bdDeepModerationLocal(kind,payload,terms){
+function bdDeepModerationLocal(kind,payload,terms,contentId){
   try{
-    const item={id:"mod-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),kind,status:"pending_review",
-      matched_terms:[...terms],payload,created_at:new Date().toISOString()};
-    for(const key of ["bhubondangaAdminModerationQueue","bhubondangaFounderModerationQueue"]){
-      const a=JSON.parse(localStorage.getItem(key)||"[]");a.unshift(item);localStorage.setItem(key,JSON.stringify(a.slice(0,1000)));
-    }
-    return item;
+    const item={id:"mod-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),kind,status:"pending_review",content_id:contentId||payload?.comment_id||payload?.post_id||"",matched_terms:[...terms],payload,route:["founder","admin"],created_at:new Date().toISOString()};
+    for(const key of ["bhubondangaAdminModerationQueue","bhubondangaFounderModerationQueue"]){const a=JSON.parse(localStorage.getItem(key)||"[]");a.unshift(item);localStorage.setItem(key,JSON.stringify(a.slice(0,1000)))}return item
   }catch(_){return null}
 }
 
@@ -323,7 +319,7 @@ const id=String(card.dataset.postId),terms=bdDeepBadTerms(text),status=terms.len
 const md=ss.user.user_metadata||{},row={id:'local-c-'+Date.now(),post_id:id,parent_id:parentId,user_id:ss.user.id,
 author_name:md.full_name||md.name||ss.user.email?.split('@')[0]||'আপনি',content:text,status,created_at:new Date().toISOString()};
 let saved=row;const c=client();
-if(terms.length)bdDeepModerationLocal('comment',{post_id:id,parent_id:parentId,user_id:ss.user.id,content:text},terms);
+
 if(c){
   const payload={post_id:id,user_id:ss.user.id,content:text,parent_id:parentId,status};
   try{
@@ -340,9 +336,10 @@ if(c){
   }catch(_){}
 }
 saveLocalComment(id,saved);
+if(terms.length){bdDeepModerationLocal('comment',{comment_id:saved.id,post_id:id,parent_id:parentId,user_id:ss.user.id,content:text},terms,saved.id);try{if(c)await c.from('moderation_queue').insert({content_type:'comment',content_id:saved.id,submitted_by:ss.user.id,matched_terms:terms,status:'pending'})}catch(_){}}
 const mapped=mapComment(saved,s.userId),arr=s.comments.get(id)||[];arr.push(mapped);s.comments.set(id,arr);
 drawComments(card,card.querySelector('.bd-comment-toolbar .active')?.dataset.sort||'relevant');
-toast(terms.length?'আপত্তিকর ভাষা শনাক্ত হয়েছে—মন্তব্যটি পর্যালোচনায় পাঠানো হয়েছে':'মন্তব্য যোগ হয়েছে')
+toast(terms.length?'গালি-রাডার শব্দ ধরেছে 😄 মন্তব্যটি Founder/Admin রিভিউতে গেছে':'মন্তব্য যোগ হয়েছে')
 }
 function findComment(card,cid){return (stateOf(card)?.comments.get(String(card.dataset.postId))||[]).find(x=>String(x.id)===String(cid))}
 function installMenu(){if(D.getElementById('bdCommentMenu'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-comment-menu-back" id="bdCommentBack"></div><div class="bd-comment-menu" id="bdCommentMenu"><button data-menu-edit>✎ <span>সম্পাদনা করুন</span></button><button data-menu-delete>⌫ <span>মুছুন</span></button><button data-menu-report>⚑ <span>রিপোর্ট করুন</span></button></div>`);const back=D.getElementById('bdCommentBack'),menu=D.getElementById('bdCommentMenu');const close=()=>{back.classList.remove('open');menu.classList.remove('open');menuTarget=null};back.onclick=close;menu.querySelector('[data-menu-edit]').onclick=()=>{if(menuTarget)startEditComment(menuTarget.card,menuTarget.el,menuTarget.comment);close()};menu.querySelector('[data-menu-delete]').onclick=async()=>{if(!menuTarget)return;const {card,comment}=menuTarget,s=stateOf(card),id=String(card.dataset.postId);s.comments.set(id,(s.comments.get(id)||[]).filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id)!==String(comment.id)));drawComments(card);try{await client()?.from('comments').delete().eq('id',comment.id)}catch(_){}toast('মন্তব্য মুছে ফেলা হয়েছে');close()};menu.querySelector('[data-menu-report]').onclick=async()=>{if(!menuTarget)return;try{const ss=await session();await client()?.from('comment_reports').insert({comment_id:menuTarget.comment.id,reporter_id:ss?.user?.id||null,reason:'user_report'})}catch(_){}toast('রিপোর্ট পাঠানো হয়েছে');close()}}

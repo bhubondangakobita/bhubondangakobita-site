@@ -347,34 +347,28 @@ function bdDeepBadTerms(text){
   }
   return [...new Set(found)];
 }
-function bdDeepModerationLocal(kind,payload,terms){
+function bdDeepModerationLocal(kind,payload,terms,contentId){
   try{
-    const item={id:"mod-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),kind,status:"pending_review",
-      matched_terms:[...terms],payload,created_at:new Date().toISOString()};
-    for(const key of ["bhubondangaAdminModerationQueue","bhubondangaFounderModerationQueue"]){
-      const a=JSON.parse(localStorage.getItem(key)||"[]");a.unshift(item);localStorage.setItem(key,JSON.stringify(a.slice(0,1000)));
-    }
-    return item;
+    const item={id:"mod-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),kind,status:"pending_review",content_id:contentId||payload?.post_id||payload?.comment_id||"",matched_terms:[...terms],payload,route:["founder","admin"],created_at:new Date().toISOString()};
+    for(const key of ["bhubondangaAdminModerationQueue","bhubondangaFounderModerationQueue"]){const a=JSON.parse(localStorage.getItem(key)||"[]");a.unshift(item);localStorage.setItem(key,JSON.stringify(a.slice(0,1000)))}return item
   }catch(_){return null}
 }
 
+function bdDetectorNotice(message){let box=document.getElementById('bdDeepDetectorNotice');if(!box){box=document.createElement('div');box.id='bdDeepDetectorNotice';box.style.cssText='position:fixed;z-index:999999;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(520px,calc(100vw - 26px));padding:15px 16px;border-radius:18px;background:linear-gradient(145deg,#101713,#1c2a21);color:#f2fff7;border:1px solid rgba(111,232,168,.22);box-shadow:0 20px 60px rgba(0,0,0,.30);font:600 12px/1.72 "Noto Sans Bengali",sans-serif;opacity:0;transition:.2s;pointer-events:none';document.body.appendChild(box)}box.textContent=message;box.style.opacity='1';clearTimeout(box._t);box._t=setTimeout(()=>box.style.opacity='0',6500)}
 async function publish(s){const mp=Q('[data-media-studio]',s.editor);if(mp&&!mp.hidden){const mt=Q('[data-media-title]',s.editor),mb=Q('[data-media-body]',s.editor);if(mt)s.title=mt.value.trimStart();if(mb)s.body=mb.value;const op=Q('[data-panel="ordinary"]',s.editor);const ot=op&&Q('[data-title]',op),ob=op&&Q('[data-body]',op);if(ot)ot.value=s.title;if(ob)ob.value=s.body;s.mediaAccepted=!!(s.audioFile||s.videoFile)}saveVisible(s);if(!s.title.trim()){toast(s,'শিরোনাম ছাড়া পোস্ট করা যাবে না');Q('[data-title]',visiblePanel(s))?.focus({preventScroll:true});return}if(!s.body.trim()){toast(s,'লেখা লিখুন');return}if(s.category!=='news'&&s.mode==='template'&&lineCount(s.body)>10){toast(s,'দীর্ঘ লেখা সাধারণ পোস্টে নেওয়া হচ্ছে');setMode(s,'ordinary');return}if(!s.session)s.session=await session();if(!s.session){toast(s,'পোস্ট করতে লগইন করুন');return}s.role=await roleOf(s.session);s.privileged=isPrivileged(s.role);if(s.category==='news'&&!canNews(s.role)){toast(s,'নিউজ কেবল অনুমোদিত Page/Founder প্রকাশ করতে পারবেন');return}if(s.category==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ কেবল Founder মাহমুদ সোহেল লিখতে পারবেন');return}if(requiresCopyright(s)&&!s.copyrightOk){toast(s,'ফন্ট/BG Music ব্যবহারের আগে কপিরাইট দায় স্বীকার করুন');return}
 const moderationTerms=bdDeepBadTerms((s.title||'')+'\n'+(s.body||''));
-const status=moderationTerms.length?'pending_review':'published';
-if(moderationTerms.length){
-  bdDeepModerationLocal('post',{title:s.title,body:s.body,category:s.category,user_id:s.session.user.id},moderationTerms);
-}
+const literaryPoem=(s.category==='poem');
+const status=(moderationTerms.length&&!literaryPoem)?'pending_review':'published';
 const image_url=await upload(s),audio_url=await uploadOne(s,s.mediaAccepted?s.audioFile:null,'audio'),video_url=await uploadOne(s,s.mediaAccepted?s.videoFile:null,'video'),media_url=video_url||audio_url||image_url||'',news_images=s.category==='news'?await Promise.all(s.newsImageFiles.filter(Boolean).map((f,i)=>uploadOne(s,f,'news-'+i))):[],bgm_url=await uploadOne(s,s.bgmFile,'bgm');const typography={title_font:s.mode==='premium'?s.titleFontFamily:'Noto Serif Bengali',body_font:s.mode==='premium'?s.bodyFontFamily:'Noto Serif Bengali',title_color:s.mode==='premium'?s.titleColor:'#102b4b',body_color:s.mode==='premium'?s.bodyColor:'#102b4b',title_bold:s.mode==='premium'?!!s.titleBold:true,body_bold:s.mode==='premium'?!!s.bodyBold:false};const mdUser=s.session.user.user_metadata||{},author_name=mdUser.full_name||mdUser.name||mdUser.display_name||mdUser.username||s.session.user.email?.split('@')[0]||'সদস্য',author_avatar=mdUser.avatar_url||mdUser.picture||'';const p={id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),author_id:s.session.user.id,author_name,author_avatar,title:s.title.trim(),body:s.body.trim(),type:s.category,status,template:s.category==='news'?('news-card-'+s.newsTemplate):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),font:typography.body_font,title_font:typography.title_font,body_font:typography.body_font,title_color:typography.title_color,body_color:typography.body_color,title_bold:typography.title_bold,body_bold:typography.body_bold,metadata:{...typography,composer_mode:s.mode,template:s.category==='news'?('news-card-'+s.newsTemplate):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),news_template:s.category==='news'?s.newsTemplate:null,news_images,bgm_url:bgm_url||'',bgm_volume:s.bgmVolume||0,copyright_ack:!!s.copyrightOk,media_committed:!!s.mediaAccepted,audio_processing:{media:s.videoFile?'video':'audio',noise_reduction:!!s.noiseReduced,mastering:!!s.mastered,music_mix:!!s.mixedBgm,processed:!!(s.audioProcessed||s.videoAudioProcessed),preview_chain:!!s.videoAudioProcessed}},image_url,audio_url,video_url,bgm_url,media_url,media_type:video_url?'video':audio_url?'audio':image_url?'image':'',created_at:new Date().toISOString(),composer_mode:s.mode};const editing=!!s.editingId;if(editing)p.id=s.editingId;const db=editing?await updateExistingPost(s,p):await insertPost(s,p),final={...p,...(db||{})};if(status==='pending_review'){
-  try{
-    const a=JSON.parse(localStorage.getItem('bhubondangaPendingReviewPosts')||'[]');
-    a.unshift(final);localStorage.setItem('bhubondangaPendingReviewPosts',JSON.stringify(a.slice(0,1000)));
-  }catch(_){}
+  bdDeepModerationLocal('post',{post_id:final.id,title:final.title,body:final.body,category:final.type,user_id:final.author_id},moderationTerms,final.id);
+  try{const a=JSON.parse(localStorage.getItem('bhubondangaPendingReviewPosts')||'[]');a.unshift(final);localStorage.setItem('bhubondangaPendingReviewPosts',JSON.stringify(a.slice(0,1000)))}catch(_){}
+  try{const mc=await supa();if(mc)await mc.from('moderation_queue').insert({content_type:'post',content_id:final.id,submitted_by:final.author_id,matched_terms:moderationTerms,status:'pending'})}catch(_){}
   W.dispatchEvent(new CustomEvent('bd:post-pending-review',{detail:final}));
-  toast(s,'আপত্তিকর ভাষা শনাক্ত হয়েছে—পোস্টটি Founder/Admin পর্যালোচনায় পাঠানো হয়েছে')
+  bdDetectorNotice('বস, আপনার লেখাটা অত্যন্ত সুন্দর! তবে আমার গালি-রাডারে কিছু আপত্তিকর শব্দ ধরা পড়েছে। আমি যেহেতু গালি ডিটেক্টর, গালি দেখলেই আমার মাথা একটু গরম হয়ে যায় 😄 তাই নিজের মাথা ঠান্ডা রাখতে লেখাটা Founder আর Admin-এর ড্যাশবোর্ডে পাঠিয়ে দিলাম। তারা শব্দগুলোর প্রেক্ষাপট দেখে হজম করতে পারলেই আপনার লেখাটি অতি শীঘ্রই সবখানে প্রকাশ হয়ে যাবে। কবিতার চরিত্র বা সাহিত্যিক প্রয়োজনে ব্যবহৃত শব্দকে আমরা এই আটকে রাখার নিয়মে ফেলি না।')
 }else if(editing){
   saveLocalUpdate(final);W.dispatchEvent(new CustomEvent('bd:post-updated',{detail:final}));toast(s,'পোস্ট সম্পাদনা হয়েছে')
 }else{
-  saveLocal(final);W.dispatchEvent(new CustomEvent('bd:post-published',{detail:final}));toast(s,'পোস্ট প্রকাশিত হয়েছে')
+  saveLocal(final);W.dispatchEvent(new CustomEvent('bd:post-published',{detail:final}));if(moderationTerms.length&&literaryPoem)toast(s,'কবিতার সাহিত্যিক প্রেক্ষাপট রাখা হয়েছে—পোস্ট প্রকাশিত হয়েছে');else toast(s,'পোস্ট প্রকাশিত হয়েছে')
 }s.editingId=null;setTimeout(()=>closeEditor(s),500)}
 function copyProtection(e){if(e.type==='contextmenu'||e.type==='copy'||e.type==='cut'||e.type==='dragstart'){e.preventDefault();e.stopPropagation()}}
 D.addEventListener('contextmenu',copyProtection,true);D.addEventListener('copy',copyProtection,true);D.addEventListener('cut',copyProtection,true);D.addEventListener('dragstart',copyProtection,true);

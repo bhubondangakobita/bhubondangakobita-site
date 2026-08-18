@@ -1124,7 +1124,34 @@ async function loadPosts(){
   state.posts=rows;renderContent();loadStats()
 }
 function mediaHtml(p){if(!p.media_url)return'';const t=String(p.media_type||'');if(t.includes('audio')||p.type==='recitation'&&/\.(mp3|wav|m4a|aac|ogg)(\?|$)/i.test(p.media_url))return'<div class="post-media"><audio controls preload="metadata" src="'+esc(p.media_url)+'"></audio></div>';if(t.includes('video')||/\.(mp4|webm|mov)(\?|$)/i.test(p.media_url))return'<div class="post-media"><video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video></div>';return'<div class="post-media"><img loading="lazy" src="'+esc(p.media_url)+'" alt="'+esc(p.caption||p.title)+'"></div>'}
-function postCard(p){const news=!!p.news_card||String(p.card_style||'').includes('news-card'),news2=p.news_image_2||'';const role=String(p.author_role||state.target?.roleResolved||'user').toLowerCase(),authorRoute=profileRoute({id:p.author_id,role}),badge=(role==='founder'?'<span class="mini-role">প্রতিষ্ঠাতা</span>':role==='admin'?'<span class="mini-role" style="background:#2488e9">অ্যাডমিন</span>':''),poet=p.original_author?'<a class="tag" href="poet-profile.html?poet='+encodeURIComponent(slug(p.original_author))+'">মূল কবি: '+esc(p.original_author)+'</a>':'';const menu=state.owner?'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↕ পূর্ণ লেখা দেখুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="edit">✎ পোস্ট সম্পাদনা</button><button type="button" data-post-option="caption">▧ ক্যাপশন পরিবর্তন</button><button type="button" data-post-option="privacy">◉ প্রাইভেসি পরিবর্তন</button><button type="button" data-post-option="archive">▦ আর্কাইভ</button><button class="danger" type="button" data-post-option="delete">⌫ মুছুন</button></div>':'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↕ পূর্ণ লেখা দেখুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="report">⚑ রিপোর্ট</button></div>';return '<article class="post glass style-'+esc(p.card_style||'pearl')+' '+((p.type==='cover-update'||p.type==='profile-update')?'profile-update-post ':'')+(news?'bd104-news-post ':'')+'" data-post="'+esc(p.id)+'" data-comments-enabled="'+(p.comments_enabled===false?'0':'1')+'" data-copy-protected="'+(p.copy_protected===false?'0':'1')+'"><div class="post-head"><div class="author"><a class="avatar44" href="'+esc(authorRoute)+'">'+(p.author_avatar?'<img src="'+esc(p.author_avatar)+'" alt="">':esc(initials(p.author_name)))+'</a><div class="author-meta"><strong><a href="'+esc(authorRoute)+'">'+esc(p.author_name)+'</a>'+badge+'</strong><small>'+esc(formatDate(p.created_at))+'</small></div></div><button class="dots" type="button" data-click="post-menu" aria-label="পোস্ট অপশন">•••</button></div>'+menu+'<a class="tag" href="'+esc(typeRoute(p))+'">'+esc(typeLabels[p.type]||p.category||'প্রকাশনা')+'</a>'+poet+'<h3 class="post-title"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a></h3><div class="post-body" data-expand>'+esc(p.body)+'</div>'+mediaHtml(p)+(news2?'<div class="bd104-news-image2"><img loading="lazy" src="'+esc(news2)+'" alt="সংবাদের অতিরিক্ত ছবি"></div>':'')+(p.caption?'<div class="post-caption">'+esc(p.caption)+'</div>':'')+'<div class="post-summary"><button class="reactors" type="button" data-reactors="'+esc(p.id)+'">প্রতিক্রিয়া দেখুন</button><span>'+bn(p.comments_count)+' মন্তব্য</span></div><div class="post-actions"><div class="react-wrap"><button class="social-btn" type="button" data-react="'+esc(p.id)+'">👍 লাইক</button><div class="picker" data-picker="'+esc(p.id)+'"><button data-pick="like" title="লাইক">👍</button><button data-pick="love" title="ভালোবাসা">❤️</button><button data-pick="care" title="কেয়ার">🥰</button><button data-pick="sad" title="দুঃখিত">😢</button><button data-pick="haha" title="হাহা">😂</button><button data-pick="wow" title="ওয়াও">😮</button><button data-pick="angry" title="রাগান্বিত">😡</button></div></div><button class="social-btn" type="button" data-comment="'+esc(p.id)+'">▱ মন্তব্য</button><button class="social-btn" type="button" data-share="'+esc(p.id)+'">↗ শেয়ার</button><button class="social-btn" type="button" data-save="'+esc(p.id)+'">▣ সেভ</button></div><div class="comments"><div class="comment-list" data-comment-list="'+esc(p.id)+'"></div><form class="comment-form" data-comment-form="'+esc(p.id)+'"><input maxlength="1200" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></article>'}
+
+function bdV24AutoCardStyle(p){
+  const explicit=String(p?.card_style||p?.cardStyle||'').trim().toLowerCase();
+  if(explicit && !['pearl','none','plain','default'].includes(explicit)) return explicit;
+  const type=String(p?.type||p?.category||'').toLowerCase();
+  const title=String(p?.title||'');
+  const body=String(p?.body||'');
+  const text=(title+' '+body).toLowerCase();
+  const lines=body.split(/\n+/).map(x=>x.trim()).filter(Boolean).length;
+  const has=(a)=>a.some(w=>text.includes(w));
+  if(type.includes('news')||type.includes('নিউজ')) return explicit||'pearl';
+  if(type.includes('environment')||type.includes('পরিবেশ')||has(['প্রকৃতি','নদী','গাছ','সবুজ','মাটি','আকাশ','বৃষ্টি','পাখি'])) return 'tpl4';
+  if(type.includes('midnight')||type.includes('মধ্যরাত')||has(['রাত','অন্ধকার','নিঃসঙ্গ','নিঃশব্দ','শূন্যতা'])) return 'tpl6';
+  if(type.includes('child')||type.includes('শিশু')||has(['শিশু','খোকা','খুকি','ছোট্ট','রূপকথা'])) return 'tpl5';
+  if(type.includes('letter')||type.includes('চিঠি')) return 'tpl7';
+  if(type.includes('prolap')||type.includes('প্রলাপ')) return 'tpl8';
+  if(type.includes('poem')||type.includes('কবিতা')){
+    if(has(['তুমি','ভালোবাস','মায়া','মায়া','হৃদয়','হৃদয়','চোখ','ফুল','স্পর্শ','প্রেম'])) return 'tpl3';
+    if(has(['বিরহ','কষ্ট','ব্যথা','অশ্রু','হারিয়ে','হারিয়ে','একাকী','বিদায়','বিদায়'])) return 'tpl6';
+    if(has(['স্বপ্ন','আলো','ভোর','আশা','জীবন'])) return 'tpl2';
+    if(lines && lines<=5) return 'tpl1';
+    return 'tpl2';
+  }
+  if(body.length<260) return 'tpl1';
+  return explicit||'pearl';
+}
+
+function postCard(p){const news=!!p.news_card||String(p.card_style||'').includes('news-card'),news2=p.news_image_2||'';const role=String(p.author_role||state.target?.roleResolved||'user').toLowerCase(),authorRoute=profileRoute({id:p.author_id,role}),badge=(role==='founder'?'<span class="mini-role">প্রতিষ্ঠাতা</span>':role==='admin'?'<span class="mini-role" style="background:#2488e9">অ্যাডমিন</span>':''),poet=p.original_author?'<a class="tag" href="poet-profile.html?poet='+encodeURIComponent(slug(p.original_author))+'">মূল কবি: '+esc(p.original_author)+'</a>':'';const menu=state.owner?'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↕ পূর্ণ লেখা দেখুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="edit">✎ পোস্ট সম্পাদনা</button><button type="button" data-post-option="caption">▧ ক্যাপশন পরিবর্তন</button><button type="button" data-post-option="privacy">◉ প্রাইভেসি পরিবর্তন</button><button type="button" data-post-option="archive">▦ আর্কাইভ</button><button class="danger" type="button" data-post-option="delete">⌫ মুছুন</button></div>':'<div class="post-menu-panel" hidden><button type="button" data-post-option="open">↕ পূর্ণ লেখা দেখুন</button><button type="button" data-post-option="copy">⧉ লিংক কপি</button><button type="button" data-post-option="save">▣ সেভ</button><button type="button" data-post-option="report">⚑ রিপোর্ট</button></div>';return '<article class="post glass style-'+esc(bdV24AutoCardStyle(p))+' '+((p.type==='cover-update'||p.type==='profile-update')?'profile-update-post ':'')+(news?'bd104-news-post ':'')+'" data-post="'+esc(p.id)+'" data-share-count="'+esc(p.shares_count||p.share_count||0)+'" data-comments-enabled="'+(p.comments_enabled===false?'0':'1')+'" data-copy-protected="'+(p.copy_protected===false?'0':'1')+'"><div class="post-head"><div class="author"><a class="avatar44" href="'+esc(authorRoute)+'">'+(p.author_avatar?'<img src="'+esc(p.author_avatar)+'" alt="">':esc(initials(p.author_name)))+'</a><div class="author-meta"><strong><a href="'+esc(authorRoute)+'">'+esc(p.author_name)+'</a>'+badge+'</strong><small>'+esc(formatDate(p.created_at))+'</small></div></div><button class="dots" type="button" data-click="post-menu" aria-label="পোস্ট অপশন">•••</button></div>'+menu+'<a class="tag" href="'+esc(typeRoute(p))+'">'+esc(typeLabels[p.type]||p.category||'প্রকাশনা')+'</a>'+poet+'<h3 class="post-title"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a></h3><div class="post-body" data-expand>'+esc(p.body)+'</div>'+mediaHtml(p)+(news2?'<div class="bd104-news-image2"><img loading="lazy" src="'+esc(news2)+'" alt="সংবাদের অতিরিক্ত ছবি"></div>':'')+(p.caption?'<div class="post-caption">'+esc(p.caption)+'</div>':'')+'<div class="post-summary"><button class="reactors" type="button" data-reactors="'+esc(p.id)+'">প্রতিক্রিয়া দেখুন</button><span>'+bn(p.comments_count)+' মন্তব্য</span></div><div class="post-actions"><div class="react-wrap"><button class="social-btn" type="button" data-react="'+esc(p.id)+'">👍 লাইক</button><div class="picker" data-picker="'+esc(p.id)+'"><button data-pick="like" title="লাইক">👍</button><button data-pick="love" title="ভালোবাসা">❤️</button><button data-pick="care" title="কেয়ার">🥰</button><button data-pick="sad" title="দুঃখিত">😢</button><button data-pick="haha" title="হাহা">😂</button><button data-pick="wow" title="ওয়াও">😮</button><button data-pick="angry" title="রাগান্বিত">😡</button></div></div><button class="social-btn" type="button" data-comment="'+esc(p.id)+'">▱ মন্তব্য</button><button class="social-btn" type="button" data-share="'+esc(p.id)+'">↗ শেয়ার</button><button class="social-btn" type="button" data-save="'+esc(p.id)+'">▣ সেভ</button></div><div class="comments"><div class="comment-list" data-comment-list="'+esc(p.id)+'"></div><form class="comment-form" data-comment-form="'+esc(p.id)+'"><input maxlength="1200" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></article>'}
 function renderContent(){const feed=$('#feed'),archive=$('#archiveList');$$('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===state.tab));if(state.tab==='home'){feed.hidden=false;archive.hidden=true;feed.innerHTML=state.posts.slice(0,45).map(postCard).join('')||'<section class="post glass">এখনও কোনো পোস্ট নেই।</section>';return}const type=state.tab;const list=state.posts.filter(p=>p.type===type);feed.hidden=true;archive.hidden=false;archive.innerHTML='<h3 style="padding:8px 2px 4px;font-family:Noto Serif Bengali,serif">'+esc(typeLabels[type]||'শিরোনাম')+'</h3>'+list.slice(0,20).map(p=>'<div class="archive-item"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a><small>'+esc(formatDate(p.created_at))+'</small></div>').join('')+(list.length?'<button class="wide" type="button" data-click="more-archive">আরও দেখুন</button>':'<div style="padding:18px 2px;color:#8d96a5">এখনও কোনো লেখা নেই।</div>')}
 async function loadStats(){const posts=state.posts,poem=posts.filter(p=>p.type==='poem').length,rec=posts.filter(p=>p.type==='recitation').length,letter=posts.filter(p=>p.type==='letter').length;$('#postsCount').textContent=bn(posts.length);$('#chartPoem').textContent=bn(poem);$('#chartRec').textContent=bn(rec);$('#chartLetter').textContent=bn(letter);$('#metricPosts').textContent=bn(posts.length);$('#metricLikes').textContent=bn(posts.reduce((a,p)=>a+p.likes_count,0));$('#metricComments').textContent=bn(posts.reduce((a,p)=>a+p.comments_count,0));const rate=Math.min(99,posts.length?Math.round((poem+rec+letter)/Math.max(1,posts.length)*100):0);$('#chartRate').textContent=rate+'%';$('#completion').textContent=rate+'%';if(sb&&state.target?.id){try{const [f1,f2]=await Promise.all([sb.from('follows').select('*',{count:'exact',head:true}).eq('following_id',state.target.id),sb.from('follows').select('*',{count:'exact',head:true}).eq('follower_id',state.target.id)]);$('#followersCount').textContent=bn(f1.count||0);$('#followingCount').textContent=bn(f2.count||0);$('#friendsCount').textContent=bn(Math.min(f1.count||0,f2.count||0))}catch{}}}
 function writeCrosspost(p){const keys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts',...(typeKeys[p.type]||[])];keys.forEach(k=>pushUnique(k,p));if(p.originalAuthor){const rec={postId:p.id,title:p.title,type:p.type,url:'poet-profile.html?poet='+encodeURIComponent(slug(p.originalAuthor)),originalAuthor:p.originalAuthor,originalAuthorSlug:slug(p.originalAuthor),contributorName:p.authorName,contributorUsername:p.authorUsername,createdAt:p.createdAt,status:p.status};pushUnique('bhubondangaPoetContributions',rec);if(p.type==='poem'){const canon={canonicalId:'canonical-'+slug(p.originalAuthor)+'-'+Date.now(),poetName:p.originalAuthor,poetSlug:slug(p.originalAuthor),title:p.title,body:p.body,firstEditorName:p.authorName,firstEditorUsername:p.authorUsername,firstEditedAt:p.createdAt,createdAt:p.createdAt,status:'published'};const list=localArr('bhubondangaCanonicalPoems');if(!list.some(x=>slug(x.poetName||x.originalAuthor)===slug(p.originalAuthor)&&slug(x.title)===slug(p.title))){list.unshift(canon);localSave('bhubondangaCanonicalPoems',list.slice(0,5000))}}}}
@@ -1587,14 +1614,61 @@ function localGet(k,d=[]){try{const x=JSON.parse(localStorage.getItem(k)||'null'
 function localSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 async function session(){try{return (await client()?.auth?.getSession?.()).data?.session||null}catch{return null}}
 async function meProfile(){const s=await session();if(!s?.user)return null;let p={id:s.user.id,username:s.user.user_metadata?.username||'',display_name:s.user.user_metadata?.full_name||s.user.user_metadata?.name||s.user.email?.split('@')[0]||'সদস্য',avatar_url:s.user.user_metadata?.avatar_url||'',role:s.user.user_metadata?.role||''};const c=client();if(c)try{const r=await c.from('profiles').select('id,username,display_name,avatar_url,role').eq('id',s.user.id).maybeSingle();if(!r.error&&r.data)p={...p,...r.data}}catch{}return p}
-async function reactionRows(id){const c=client();if(c){try{const r=await c.rpc('get_post_social',{target_post:String(id)});if(!r.error){const d=Array.isArray(r.data)?r.data[0]:r.data;if(Array.isArray(d?.reactions))return d.reactions}}catch{}for(const table of ['post_reactions','reactions'])try{const r=await c.from(table).select('user_id,reaction').eq('post_id',id).limit(250);if(!r.error)return r.data||[]}catch{}}return localGet('bd31-react-'+id,[])}
+async function reactionRows(id){
+ const local=localGet('bd31-react-'+id,[]);
+ const merge=(rows)=>{
+   const map=new Map();
+   (Array.isArray(rows)?rows:[]).forEach(x=>{if(x?.user_id)map.set(String(x.user_id),x)});
+   (Array.isArray(local)?local:[]).forEach(x=>{if(x?.user_id&&!map.has(String(x.user_id)))map.set(String(x.user_id),x)});
+   return [...map.values()];
+ };
+ const c=client();
+ if(c){
+   try{
+     const r=await c.rpc('get_post_social',{target_post:String(id)});
+     if(!r.error){
+       const d=Array.isArray(r.data)?r.data[0]:r.data;
+       if(Array.isArray(d?.reactions))return merge(d.reactions)
+     }
+   }catch(_){}
+   for(const table of ['post_reactions','reactions'])try{
+     const r=await c.from(table).select('user_id,reaction').eq('post_id',id).limit(250);
+     if(!r.error)return merge(r.data||[])
+   }catch(_){}
+ }
+ return merge([])
+}
 function parentId(x){return x.parent_id||x.parent_comment_id||x.reply_to||''}
 async function commentRows(id){let rows=[];const c=client();if(c)try{let r=await c.from('comments').select('*').eq('post_id',id).eq('status','published').order('created_at',{ascending:true}).limit(150);if(r.error)r=await c.from('comments').select('*').eq('post_id',id).order('created_at',{ascending:true}).limit(150);if(!r.error)rows=r.data||[]}catch{}const loc=localGet('bd31-comments-'+id,[]),seen=new Set(rows.map(x=>String(x.id)));loc.forEach(x=>{if(!seen.has(String(x.id)))rows.push(x)});return rows}
 async function toggleReaction(id,type){const c=client(),s=await session();if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return false}let ok=false;if(c){try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:type});if(!r.error)ok=true}catch{}if(!ok)for(const table of ['post_reactions','reactions']){try{const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();if(cur.data){const r=cur.data.reaction===type?await c.from(table).delete().eq('post_id',id).eq('user_id',s.user.id):await c.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);if(!r.error){ok=true;break}}else{const r=await c.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});if(!r.error){ok=true;break}}}catch{}}}
 if(!ok){let a=localGet('bd31-react-'+id,[]),old=a.find(x=>String(x.user_id)===String(s.user.id));a=a.filter(x=>String(x.user_id)!==String(s.user.id));if(!old||old.reaction!==type)a.push({user_id:s.user.id,reaction:type});localSet('bd31-react-'+id,a)}return true}
 async function profiles(ids){const map={};if(!ids.length)return map;const c=client();if(c)try{const r=await c.from('profiles').select('id,username,display_name,avatar_url,role').in('id',ids);if(!r.error)(r.data||[]).forEach(p=>map[p.id]=p)}catch{}return map}
-async function refresh(card){const id=pid(card);if(!id)return;const [rr,cc,s]=await Promise.all([reactionRows(id),commentRows(id),session()]);const roots=cc.filter(x=>!parentId(x));const sumR=card.querySelector('[data-bd31-react-summary]'),sumC=card.querySelector('[data-bd31-comment-summary]');if(sumR){sumR.hidden=!rr.length;if(rr.length){const counts={};rr.forEach(x=>counts[x.reaction]=(counts[x.reaction]||0)+1);const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);sumR.innerHTML=`<span class="bd31-stack">${top.map(t=>rIcon(t,true)).join('')}</span><span>${bn(rr.length)} জন প্রতিক্রিয়া</span>`}}if(sumC){sumC.hidden=!roots.length;if(roots.length)sumC.textContent=bn(roots.length)+' মন্তব্য'}const main=card.querySelector('[data-bd31-react-main]');if(main){const mine=s?.user&&rr.find(x=>String(x.user_id)===String(s.user.id));main.classList.toggle('selected',!!mine);main.dataset.current=mine?.reaction||'';main.querySelector('.bd31-main-reaction').innerHTML=mine?rIcon(mine.reaction,true):thumbSvg();main.querySelector('[data-bd31-label]').textContent=mine?(R[mine.reaction]||R.like)[0]:'লাইক'}card.__bd31Rows={reactions:rr,comments:cc}}
-function socialHTML(id){return `<div class="bd31-social" data-bd31-social="${esc(id)}"><div class="bd31-summary"><button type="button" data-bd31-react-summary="${esc(id)}" hidden></button><button type="button" data-bd31-comment-summary="${esc(id)}" hidden></button></div><div class="bd31-actions"><button class="bd31-action" type="button" data-bd31-react-main="${esc(id)}"><span class="bd31-main-reaction">${thumbSvg()}</span><span data-bd31-label>লাইক</span></button><button class="bd31-action" type="button" data-bd31-comments="${esc(id)}">${commentSvg()}<span>মন্তব্য</span></button><button class="bd31-action" type="button" data-bd31-share="${esc(id)}">${shareSvg()}<span>শেয়ার</span></button></div><div class="bd31-reactor-panel" data-bd31-reactor-panel hidden><div class="bd31-reactor-list"></div></div><div class="bd31-comment-panel" data-bd31-comment-panel hidden><div class="bd31-comments"></div><button class="bd31-more-comments" type="button" data-bd31-more hidden>আরও মন্তব্য দেখুন</button><form class="bd31-comment-form"><input maxlength="1200" autocomplete="off" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></div>`}
+async function refresh(card){
+ const id=pid(card);if(!id)return;
+ const [rr,cc,s]=await Promise.all([reactionRows(id),commentRows(id),session()]);
+ const roots=cc.filter(x=>!parentId(x));
+ const sumR=card.querySelector('[data-bd31-react-summary]'),sumC=card.querySelector('[data-bd31-comment-summary]'),sumS=card.querySelector('[data-bd31-share-summary]');
+ if(sumR){
+   sumR.hidden=!rr.length;
+   if(rr.length){
+     const counts={};rr.forEach(x=>counts[x.reaction]=(counts[x.reaction]||0)+1);
+     const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);
+     sumR.innerHTML=`<span class="bd31-stack">${top.map(t=>rIcon(t,true)).join('')}</span><span>${bn(rr.length)}</span>`;
+   }
+ }
+ if(sumC){sumC.hidden=!roots.length;if(roots.length)sumC.textContent=bn(roots.length)+' মন্তব্য'}
+ if(sumS){const n=Math.max(0,Number(card.dataset.shareCount||0));sumS.hidden=!n;if(n)sumS.textContent=bn(n)+' শেয়ার'}
+ const main=card.querySelector('[data-bd31-react-main]');
+ if(main){
+   const mine=s?.user&&rr.find(x=>String(x.user_id)===String(s.user.id));
+   main.classList.toggle('selected',!!mine);
+   main.dataset.current=mine?.reaction||'';
+   main.querySelector('.bd31-main-reaction').innerHTML=mine?rIcon(mine.reaction,true):thumbSvg();
+   main.querySelector('[data-bd31-label]').textContent=mine?(R[mine.reaction]||R.like)[0]:'লাইক'
+ }
+ card.__bd31Rows={reactions:rr,comments:cc}
+}
+function socialHTML(id){return `<div class="bd31-social" data-bd31-social="${esc(id)}"><div class="bd31-summary"><button type="button" data-bd31-react-summary="${esc(id)}" hidden></button><div class="bd24-summary-right"><button type="button" data-bd31-comment-summary="${esc(id)}" hidden></button><span data-bd31-share-summary hidden></span></div></div><div class="bd31-actions"><button class="bd31-action" type="button" data-bd31-react-main="${esc(id)}"><span class="bd31-main-reaction">${thumbSvg()}</span><span data-bd31-label>লাইক</span></button><button class="bd31-action" type="button" data-bd31-comments="${esc(id)}">${commentSvg()}<span>মন্তব্য</span></button><button class="bd31-action" type="button" data-bd31-share="${esc(id)}">${shareSvg()}<span>শেয়ার</span></button></div><div class="bd31-reactor-panel" data-bd31-reactor-panel hidden><div class="bd31-reactor-list"></div></div><div class="bd31-comment-panel" data-bd31-comment-panel hidden><div class="bd31-comments"></div><button class="bd31-more-comments" type="button" data-bd31-more hidden>আরও মন্তব্য দেখুন</button><form class="bd31-comment-form"><input maxlength="1200" autocomplete="off" placeholder="মন্তব্য লিখুন…"><button type="submit">➤</button></form></div></div>`}
 function cleanOld(card){card.querySelectorAll(':scope > .bd24-social,:scope > .bd-v814-social-summary,:scope > .bd-v814-picker,:scope > .bd-index-reaction-picker,:scope > .post-footer,:scope > .post-summary,:scope > .post-actions').forEach(x=>x.remove());card.querySelectorAll(':scope > .comments,:scope > .comment-box').forEach(x=>x.style.display='none')}
 function install(card){if(!card||!pid(card))return;cleanOld(card);if(!card.querySelector(':scope > .bd31-social'))card.insertAdjacentHTML('beforeend',socialHTML(pid(card)));card.dataset.bd31Ready='1';refresh(card)}
 function allCards(root=D){root.querySelectorAll?.('article.post[data-post],article.post[data-post-id],article.bd-live-post[data-post-id],article.bd-live-post[data-post],.post-card[data-post],.post-card[data-post-id]').forEach(install)}
@@ -2841,7 +2915,7 @@ const q=(s,r=D)=>r?.querySelector?.(s)||null;
 function cardOf(n){return n?.closest?.('[data-bd31-ready="1"],[data-post-card],article.post,.bd-live-post,.post-card')||null}
 function postId(card){return String(card?.dataset?.post||card?.dataset?.postId||card?.getAttribute?.('data-post')||card?.getAttribute?.('data-post-id')||'').trim()}
 function getClient(){try{return W.bdProductionSupabase||W.bdSupabase||W.supabaseClient||W.bhubondangaSupabase||W.BhubondangaAuth?.client||((typeof sb!=='undefined')?sb:null)||null}catch{return null}}
-async function getSession(){const c=getClient();if(!c)return null;try{return (await c.auth.getSession()).data?.session||null}catch{return null}}
+async function getSession(){try{const known=W.state?.session||((typeof state!=='undefined')?state.session:null);if(known?.user)return known}catch(_){}const c=getClient();if(c)try{const s=(await c.auth.getSession()).data?.session;if(s?.user)return s}catch(_){}try{const me=W.state?.me||((typeof state!=='undefined')?state.me:null);if(me?.id)return{user:{id:me.id,email:me.email||'',user_metadata:me.user_metadata||{}}}}catch(_){}return null}
 function getMine(card){return String(q('[data-bd31-react-main]',card)?.dataset?.current||'')}
 function icon(type){const t=TYPES.includes(type)?type:'like';return `<span class="bd64-icon"><span class="bd31-r ${t} bd31-mini" aria-hidden="true"></span></span>`}
 function tray(){
@@ -2872,26 +2946,43 @@ function bumpCount(card,oldType,newType,remove){
  if(n>0){sum.hidden=false;sum.style.visibility='visible';const text=[...sum.querySelectorAll('span')].pop();if(text)text.textContent=String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])+' জন প্রতিক্রিয়া';else sum.textContent=String(n).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])+' জন প্রতিক্রিয়া'}
  else{sum.hidden=true;sum.style.visibility='hidden'}
 }
+function bdV24MirrorReaction(id,userId,type,remove){
+  const keys=['bd31-react-'+id,'bd24-reactions-'+id];
+  for(const k of keys)try{
+    let a=JSON.parse(localStorage.getItem(k)||'[]');if(!Array.isArray(a))a=[];
+    a=a.filter(x=>String(x.user_id)!==String(userId));
+    if(!remove)a.push({user_id:userId,reaction:type,updated_at:new Date().toISOString()});
+    localStorage.setItem(k,JSON.stringify(a));
+  }catch(_){}
+}
 async function persist(card,type,remove,previous){
- const id=postId(card),c=getClient(),s=await getSession();if(!id)return;
- if(!s?.user){location.href='login.html?next='+encodeURIComponent(location.href);return}
+ const id=postId(card),c=getClient(),s=await getSession(),uid=String(s?.user?.id||'');
+ if(!id)return false;
+ if(!uid){location.href='login.html?next='+encodeURIComponent(location.href);return false}
  let ok=false;
  if(c){
-  try{const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(type)});if(!r.error)ok=true}catch{}
+  try{
+   const r=await c.rpc('toggle_post_reaction',{target_post:String(id),chosen_reaction:String(type)});
+   if(!r.error)ok=true
+  }catch(_){}
   if(!ok)for(const table of ['post_reactions','reactions']){
-   try{const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',s.user.id).maybeSingle();let r;
-    if(remove){r=cur.data?await c.from(table).delete().eq('post_id',id).eq('user_id',s.user.id):{error:null};}
-    else if(cur.data)r=await c.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',s.user.id);
-    else r=await c.from(table).insert({post_id:id,user_id:s.user.id,reaction:type});
+   try{
+    const cur=await c.from(table).select('*').eq('post_id',id).eq('user_id',uid).maybeSingle();
+    let r;
+    if(remove)r=cur.data?await c.from(table).delete().eq('post_id',id).eq('user_id',uid):{error:null};
+    else if(cur.data)r=await c.from(table).update({reaction:type}).eq('post_id',id).eq('user_id',uid);
+    else r=await c.from(table).insert({post_id:id,user_id:uid,reaction:type});
     if(!r?.error){ok=true;break}
-   }catch{}
+   }catch(_){}
   }
  }
- if(!ok)try{const k='bd64-react-'+id;localStorage.setItem(k,JSON.stringify({reaction:remove?'':type,at:Date.now()}))}catch{}
+ bdV24MirrorReaction(id,uid,type,remove);
+ try{W.dispatchEvent(new CustomEvent('bd:reaction-changed',{detail:{post_id:id,user_id:uid,reaction:remove?'':type}}))}catch(_){}
+ return ok
 }
 function apply(card,type,fromTray){
  if(!card||!TYPES.includes(type))return;const main=q('[data-bd31-react-main]',card);if(!main)return;rememberNeutral(main);
- const prev=getMine(card),remove=!fromTray&&prev==='like'&&type==='like';
+ const prev=getMine(card);if(fromTray&&prev===type){closeTray();return}const remove=!fromTray&&prev==='like'&&type==='like';
  setMain(card,type,remove);bumpCount(card,prev,type,remove);closeTray();
  /* Persist after the visual state is already set. No refresh(), no scrollTo(), no rerender. */
  persist(card,type,remove,prev).catch(()=>{});
@@ -2907,6 +2998,37 @@ W.addEventListener('pointerdown',e=>{
 W.addEventListener('pointermove',e=>{if(!press||press.id!==e.pointerId)return;if(Math.hypot(e.clientX-press.x,e.clientY-press.y)>12){clearTimeout(press.t);press=null}},{capture:true,passive:true});
 W.addEventListener('pointerup',e=>{if(!press||press.id!==e.pointerId)return;const p=press;clearTimeout(p.t);press=null;if(p.held){stop(e);p.main.dataset.bd64SkipClick='1';setTimeout(()=>delete p.main.dataset.bd64SkipClick,500)}},{capture:true});
 W.addEventListener('pointercancel',e=>{if(press&&press.id===e.pointerId){clearTimeout(press.t);press=null}},{capture:true});
+
+if(!W.__BD_V24_DOUBLE_LOVE__){
+ W.__BD_V24_DOUBLE_LOVE__=true;
+ let last={t:0,id:'',x:0,y:0,expanded:false};
+ function loveBurst(card,x,y){
+   let el=card.querySelector(':scope > .bd24-double-love');
+   if(!el){el=D.createElement('span');el.className='bd24-double-love';card.appendChild(el)}
+   const r=card.getBoundingClientRect();el.style.left=(x-r.left)+'px';el.style.top=(y-r.top)+'px';
+   el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+ }
+ W.addEventListener('pointerup',e=>{
+   if(e.pointerType!=='touch'&&e.pointerType!=='pen')return;
+   if(e.target.closest?.('.bd31-social,button,a,input,textarea,select,label,audio,video,[contenteditable]'))return;
+   const card=cardOf(e.target);if(!card)return;
+   const id=postId(card),now=Date.now(),x=e.clientX,y=e.clientY;
+   if(last.id===id&&now-last.t<340&&Math.hypot(x-last.x,y-last.y)<34){
+     card.dataset.bd24SuppressNextClick='1';
+     card.classList.toggle('bd63-expanded',last.expanded);
+     card.classList.toggle('expanded',last.expanded);
+     const body=card.querySelector('.post-body');if(body)body.classList.toggle('collapsed',!last.expanded);
+     apply(card,'love',true);loveBurst(card,x,y);
+     last={t:0,id:'',x:0,y:0,expanded:false};
+   }else last={t:now,id,x,y,expanded:card.classList.contains('bd63-expanded')||card.classList.contains('expanded')};
+ },{capture:true,passive:true});
+ W.addEventListener('click',e=>{
+   const card=cardOf(e.target);if(!card||card.dataset.bd24SuppressNextClick!=='1')return;
+   if(e.target.closest?.('.bd31-social,button,a,input,textarea,select,label,audio,video,[contenteditable]'))return;
+   delete card.dataset.bd24SuppressNextClick;stop(e);
+ },{capture:true});
+}
+
 W.addEventListener('click',e=>{
  const pick=e.target.closest?.('[data-bd64-pick]');if(pick){stop(e);const t=tray(),card=t.__card,type=pick.dataset.bd64Pick;if(card)apply(card,type,true);return}
  const main=e.target.closest?.('[data-bd31-react-main]');if(main){stop(e);if(main.dataset.bd64SkipClick){delete main.dataset.bd64SkipClick;return}apply(cardOf(main),'like',false);return}
@@ -4089,6 +4211,210 @@ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',boot,{once:tru
 .bd31-reactor .bd31-r{width:22px!important;height:22px!important}
 #bd64ReactionTray .bd31-r{width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important}
 [data-bd31-react-summary],.bd31-summary [data-bd31-react-summary],.bd31-stack,.bd31-main-reaction{background:transparent!important;border:0!important;box-shadow:none!important}
+</style>
+
+
+<style id="bd-v24-profile-social-template-css">
+/* V24 — profile social bar follows the clean reference: reactions/count on top,
+   three simple actions below, no coating behind reaction artwork. */
+:root{
+  --bd24-ref-line:rgba(73,91,126,.15);
+  --bd24-ref-ink:#656d77;
+  --bd24-ref-hover:rgba(88,101,130,.055);
+}
+.bd31-social{
+  margin-top:11px!important;
+  padding-top:0!important;
+  border-top:1px solid var(--bd24-ref-line)!important;
+  background:transparent!important;
+  overflow:visible!important;
+  box-shadow:none!important;
+}
+.bd31-summary{
+  min-height:38px!important;
+  padding:6px 6px 5px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:10px!important;
+  border-bottom:1px solid var(--bd24-ref-line)!important;
+  color:var(--bd24-ref-ink)!important;
+  font-size:11px!important;
+}
+.bd31-summary button,.bd31-summary span{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.bd31-summary button{
+  min-height:28px!important;
+  padding:0!important;
+  color:inherit!important;
+  font-size:11px!important;
+  font-weight:600!important;
+}
+.bd24-summary-right{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:12px!important;
+  white-space:nowrap!important;
+}
+.bd31-stack{
+  display:inline-flex!important;
+  align-items:center!important;
+  margin-right:5px!important;
+}
+.bd31-stack .bd31-mini,.bd31-stack .bd105-rx-art{
+  width:21px!important;height:21px!important;
+  min-width:21px!important;max-width:21px!important;
+  margin-left:-4px!important;
+  border:0!important;border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  filter:drop-shadow(0 1.5px 2px rgba(18,28,47,.14))!important;
+  overflow:visible!important;
+}
+.bd31-stack>*:first-child{margin-left:0!important}
+.bd31-actions{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:0!important;
+  min-height:51px!important;
+  padding:3px 2px 2px!important;
+  border-top:0!important;
+}
+.bd31-action{
+  width:100%!important;
+  min-height:46px!important;
+  border:0!important;
+  border-radius:8px!important;
+  background:transparent!important;
+  color:var(--bd24-ref-ink)!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  padding:0 8px!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+.bd31-action:hover{background:var(--bd24-ref-hover)!important}
+.bd31-action:active{transform:none!important;background:rgba(95,108,141,.08)!important}
+.bd31-action svg{width:25px!important;height:25px!important;stroke-width:1.8!important}
+.bd31-main-reaction{width:25px!important;height:25px!important;display:grid!important;place-items:center!important}
+.bd31-main-reaction .bd105-rx-art,.bd31-main-reaction .bd31-r,
+.bd31-main-reaction img{width:25px!important;height:25px!important;min-width:25px!important;max-width:25px!important}
+.bd31-action.selected{background:transparent!important}
+.bd31-reactor-panel{background:transparent!important;border:0!important;box-shadow:none!important;padding:8px 2px!important}
+.bd31-comment-panel{
+  background:transparent!important;
+  border:0!important;
+  border-top:1px solid var(--bd24-ref-line)!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  padding:10px 2px 2px!important;
+}
+.bd31-comments{display:grid!important;gap:9px!important}
+.bd31-comment{display:grid!important;grid-template-columns:36px minmax(0,1fr)!important;gap:7px!important}
+.bd31-c-avatar{width:36px!important;height:36px!important;border-radius:50%!important;overflow:hidden!important}
+.bd31-c-bubble{
+  display:inline-block!important;
+  width:auto!important;
+  max-width:min(92%,560px)!important;
+  padding:8px 11px!important;
+  border:0!important;
+  border-radius:18px!important;
+  background:#f0f2f5!important;
+  color:#1d2635!important;
+  box-shadow:none!important;
+  font-size:11px!important;
+  line-height:1.5!important;
+}
+.bd31-c-bubble>a{
+  display:block!important;
+  margin-bottom:1px!important;
+  color:#1a273a!important;
+  font-size:10.5px!important;
+  font-weight:800!important;
+  text-decoration:none!important;
+}
+.bd31-c-meta{
+  display:flex!important;
+  gap:12px!important;
+  align-items:center!important;
+  padding:3px 9px 0!important;
+  color:#687386!important;
+  font-size:8.5px!important;
+  font-weight:800!important;
+}
+.bd31-c-meta button{background:transparent!important;border:0!important;color:inherit!important;padding:0!important}
+.bd31-replies{margin:6px 0 0 7px!important;padding-left:10px!important;border-left:2px solid rgba(97,111,143,.11)!important}
+.bd31-comment-form,.bd31-reply-form{
+  grid-template-columns:minmax(0,1fr) 40px!important;
+  gap:7px!important;
+  margin-top:9px!important;
+}
+.bd31-comment-form input,.bd31-reply-form input{
+  height:41px!important;
+  padding:0 13px!important;
+  border:0!important;
+  border-radius:999px!important;
+  background:#f0f2f5!important;
+  color:#1f2c3e!important;
+  box-shadow:none!important;
+  font-size:16px!important;
+}
+.bd31-comment-form button,.bd31-reply-form button{
+  width:40px!important;height:40px!important;border:0!important;border-radius:50%!important;
+  background:linear-gradient(135deg,#377aec,#765be0)!important;color:#fff!important
+}
+/* Automatic profile template application. Explicitly selected templates still win. */
+.post.style-tpl1 .post-body,.bd-live-post.style-tpl1 .post-body{background-image:var(--bd65-tpl-1)!important}
+.post.style-tpl2 .post-body,.bd-live-post.style-tpl2 .post-body{background-image:var(--bd65-tpl-2)!important}
+.post.style-tpl3 .post-body,.bd-live-post.style-tpl3 .post-body{background-image:var(--bd65-tpl-3)!important}
+.post.style-tpl4 .post-body,.bd-live-post.style-tpl4 .post-body{background-image:var(--bd65-tpl-4)!important}
+.post.style-tpl5 .post-body,.bd-live-post.style-tpl5 .post-body{background-image:var(--bd65-tpl-5)!important}
+.post.style-tpl6 .post-body,.bd-live-post.style-tpl6 .post-body{background-image:var(--bd65-tpl-6)!important}
+.post.style-tpl7 .post-body,.bd-live-post.style-tpl7 .post-body{background-image:var(--bd65-tpl-7)!important}
+.post.style-tpl8 .post-body,.bd-live-post.style-tpl8 .post-body{background-image:var(--bd65-tpl-8)!important}
+.post.style-tpl1 .post-body,.post.style-tpl2 .post-body,.post.style-tpl3 .post-body,.post.style-tpl4 .post-body,
+.post.style-tpl5 .post-body,.post.style-tpl6 .post-body,.post.style-tpl7 .post-body,.post.style-tpl8 .post-body{
+  background-color:#fff!important;background-position:center!important;background-repeat:no-repeat!important;background-size:100% 100%!important;
+}
+.bd24-double-love{
+  position:absolute!important;z-index:999!important;pointer-events:none!important;
+  width:84px!important;height:84px!important;display:grid!important;place-items:center!important;
+  transform:translate(-50%,-50%) scale(.35);opacity:0;
+}
+.bd24-double-love:before{
+  content:'❤';width:64px;height:64px;border-radius:50%;display:grid;place-items:center;
+  background:#e91e3a;color:#fff;font-size:37px;line-height:1;
+  box-shadow:0 8px 24px rgba(211,29,57,.28);
+}
+.bd24-double-love.show{animation:bd24LovePop .7s cubic-bezier(.2,.85,.2,1)}
+@keyframes bd24LovePop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}
+  28%{opacity:1;transform:translate(-50%,-50%) scale(1.14)}
+  68%{opacity:1;transform:translate(-50%,-54%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-70%) scale(.78)}
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-social{--bd24-ref-line:rgba(174,192,220,.15);--bd24-ref-ink:#b8c6d8;--bd24-ref-hover:rgba(143,166,201,.075)}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-c-bubble{background:#253044!important;color:#eef5ff!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-c-bubble>a{color:#fff!important}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-comment-form input,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-reply-form input{background:#202b3e!important;color:#fff!important}
+@media(max-width:520px){
+ .bd31-summary{font-size:10px!important;min-height:36px!important}
+ .bd31-summary button{font-size:10px!important}
+ .bd24-summary-right{gap:8px!important}
+ .bd31-action{font-size:11px!important;gap:6px!important;padding:0 4px!important}
+ .bd31-action svg{width:24px!important;height:24px!important}
+ .bd31-comment{grid-template-columns:34px minmax(0,1fr)!important}
+ .bd31-c-avatar{width:34px!important;height:34px!important}
+}
 </style>
 
 </body>
