@@ -320,7 +320,7 @@ async function initialPosts(opt={}){const uid=String(opt.authorId||'');let local
 async function refreshRemote(root){const s=STATES.get(root);if(!s||s.remoteRefreshing)return;s.remoteRefreshing=true;try{const page=await loadRemotePage(0,20,{authorId:s.authorId});s.remoteOffset=page.length;s.remoteHasMore=page.length===20;s.posts=mergePosts(s.posts,page);await render(root,s.filter,{ensure:false})}catch(_){s.remoteHasMore=false}finally{s.remoteRefreshing=false}}
 function socialCount(n){n=Number(n)||0;if(n>=1000000)return (Math.round(n/100000)/10).toFixed(n%1000000?1:0)+'M';if(n>=1000)return (Math.round(n/100)/10).toFixed(n%1000?1:0)+'K';return String(n)}
 function rxMini(type){const t=RX.includes(type)?type:'like';return `<span class="bd-rx-mini" data-rx="${t}" role="img" aria-label="${t}"></span>`}
-function tray(){return `<div class="bd-rx-tray" data-rx-tray aria-label="রিঅ্যাকশন নির্বাচন"><div class="bd-rx-zones">${RX.map((x,i)=>`<button class="bd-rx-zone bd-rx-pick" data-rx-pick="${x}" aria-label="${x}" style="--rx-order:${i}"><span class="bd-rx-art" data-rx-art="${x}" aria-hidden="true"></span></button>`).join('')}</div></div>`}
+function tray(){return `<div class="bd-rx-tray" data-rx-tray aria-label="রিঅ্যাকশন নির্বাচন"><div class="bd-rx-zones">${RX.map((x,i)=>`<button class="bd-rx-zone bd-rx-pick" data-rx-pick="${x}" aria-label="${x}" style="--rx-order:${i}"><img class="bd-rx-pick-img" src="rx-${x}.webp" alt="" draggable="false"></button>`).join('')}</div></div>`}
 function typeLabel(t){return ({poem:'কবিতা',prolap:'প্রলাপ',letter:'চিঠিপত্র',recitation:'আবৃত্তি',reels:'রিলস',environment:'পরিবেশ',children:'শিশুতোষ',midnight:'মধ্যরাতের প্রলাপ',news:'নিউজ'})[t]||'লেখা'}
 function isLightHex(v){const x=colorCSS(v);if(!x)return false;let h=x.slice(1);if(h.length===3)h=h.split('').map(c=>c+c).join('');if(h.length<6)return false;const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return (0.2126*r+0.7152*g+0.0722*b)>172}
 function premiumTemplateBG(p){if(!/^p\d+$/i.test(String(p.template||'')))return '';const light=isLightHex(p.bodyColor)||isLightHex(p.titleColor);if(light)return 'radial-gradient(circle at 82% 14%,rgba(255,231,151,.9) 0 4%,transparent 4.5%),linear-gradient(150deg,#10294b,#171c3f)';const n=parseInt(String(p.template).replace(/\D/g,''),10)||1;const h=(178+n*37)%360,h2=(h+52+n%29)%360;return `linear-gradient(145deg,hsl(${h} 72% 96%),hsl(${h2} 56% 88%))`}
@@ -541,5 +541,120 @@ html[data-theme="dark"] .bd-post{background:linear-gradient(158deg,#102239,#0c1c
  D.addEventListener('focusin',e=>{if(!e.target.matches?.(SEL))return;const s=lock||snap(e.target);hold(s)},true);
  if(W.visualViewport)W.visualViewport.addEventListener('resize',()=>{if(lock)restore(lock)},{passive:true});
 })();
-</script></body></html>
+</script>
+<style id="bd-v55-reaction-picker-final">
+/* ONLY reaction-picker repair */
+.bd-rx-tray,
+.bd-rx-tray.bd-rx-floating{
+  width:min(302px,calc(100vw - 24px))!important;
+  max-width:302px!important;
+  height:50px!important;
+  min-height:50px!important;
+  aspect-ratio:auto!important;
+  padding:4px 7px!important;
+  display:none;
+  border-radius:999px!important;
+  border:1px solid rgba(86,103,144,.17)!important;
+  background:rgba(255,255,255,.985)!important;
+  box-shadow:0 8px 22px rgba(24,34,67,.18),0 2px 6px rgba(24,34,67,.08)!important;
+  filter:none!important;
+  overflow:visible!important;
+}
+html[data-theme="dark"] .bd-rx-tray,
+html[data-theme="dark"] .bd-rx-tray.bd-rx-floating{
+  background:rgba(18,32,52,.985)!important;
+  border-color:rgba(190,205,234,.18)!important;
+}
+.bd-rx-tray.open{display:block!important}
+.bd-rx-tray>img{display:none!important}
+.bd-rx-zones{
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  height:100%!important;
+  display:grid!important;
+  grid-template-columns:repeat(7,minmax(0,1fr))!important;
+  align-items:center!important;
+  justify-items:center!important;
+  gap:1px!important;
+}
+.bd-rx-zone,
+.bd-rx-pick{
+  position:relative!important;
+  inset:auto!important;
+  width:40px!important;
+  max-width:40px!important;
+  height:40px!important;
+  min-height:40px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  display:grid!important;
+  place-items:center!important;
+  background:transparent!important;
+  opacity:1!important;
+  transform:none!important;
+  overflow:visible!important;
+  touch-action:manipulation!important;
+}
+.bd-rx-pick-img{
+  display:block!important;
+  width:34px!important;
+  height:34px!important;
+  max-width:34px!important;
+  max-height:34px!important;
+  object-fit:contain!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
+  filter:drop-shadow(0 2px 3px rgba(18,26,54,.15))!important;
+  transform-origin:50% 100%!important;
+  will-change:transform,opacity!important;
+}
+.bd-rx-tray.open .bd-rx-zone{
+  animation:bdV55RxPop .34s cubic-bezier(.18,.9,.28,1.25) both!important;
+  animation-delay:calc(var(--rx-order) * 27ms)!important;
+}
+@keyframes bdV55RxPop{
+  0%{opacity:0;transform:translateY(8px) scale(.66)}
+  62%{opacity:1;transform:translateY(-3px) scale(1.08)}
+  100%{opacity:1;transform:translateY(0) scale(1)}
+}
+@media(hover:hover){
+  .bd-rx-zone:hover .bd-rx-pick-img{transform:translateY(-5px) scale(1.12)!important}
+}
+.bd-rx-zone:active .bd-rx-pick-img{transform:translateY(-1px) scale(.93)!important}
+
+/* No big circle/burst on double tap. */
+.bd-love-burst,.bd24-double-love,.bd27-love-burst{display:none!important}
+
+@media(max-width:430px){
+  .bd-rx-tray,.bd-rx-tray.bd-rx-floating{
+    width:min(292px,calc(100vw - 20px))!important;
+    max-width:292px!important;
+    height:48px!important;
+    min-height:48px!important;
+    padding:4px 6px!important;
+  }
+  .bd-rx-zone,.bd-rx-pick{
+    width:38px!important;
+    max-width:38px!important;
+    height:38px!important;
+    min-height:38px!important;
+  }
+  .bd-rx-pick-img{
+    width:32px!important;
+    height:32px!important;
+    max-width:32px!important;
+    max-height:32px!important;
+  }
+}
+</style>
+
+</body></html>
 <style id="bd-v48-fixed-category">.bd-fixed-category-feed>.bd-feed-filter{display:none!important}.bd-fixed-category-feed>.bd-human{display:none!important}</style>
