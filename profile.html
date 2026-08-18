@@ -3956,5 +3956,116 @@ const mo=new MutationObserver(ms=>{for(const m of ms){for(const n of m.addedNode
 })(document,window);
 </script>
 
+
+
+<!-- BHUBONDANGA V30 TARGETED FIX: profile reaction assets + visible comment send icon -->
+<style id="bd-v30-profile-reaction-comment-fix">
+/* Final override: use the seven standalone transparent WebP reaction files everywhere on profile pages. */
+.bd31-r{
+  display:inline-block!important;
+  width:38px!important;height:38px!important;min-width:38px!important;max-width:38px!important;
+  padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+  background-color:transparent!important;
+  background-position:center!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  box-shadow:none!important;filter:none!important;
+  color:transparent!important;font-size:0!important;line-height:0!important;
+  overflow:visible!important;
+}
+.bd31-r::before,.bd31-r::after{content:none!important;display:none!important}
+.bd31-r.like{background-image:url('rx-like.webp')!important}
+.bd31-r.love{background-image:url('rx-love.webp')!important}
+.bd31-r.care{background-image:url('rx-care.webp')!important}
+.bd31-r.haha{background-image:url('rx-haha.webp')!important}
+.bd31-r.wow{background-image:url('rx-wow.webp')!important}
+.bd31-r.sad{background-image:url('rx-sad.webp')!important}
+.bd31-r.angry{background-image:url('rx-angry.webp')!important}
+
+/* Main selected reaction: same small, fully visible artwork as Index. */
+.bd31-main-reaction{width:24px!important;height:24px!important;min-width:24px!important;display:grid!important;place-items:center!important;overflow:visible!important}
+.bd31-main-reaction>.bd31-r,.bd31-main-reaction>.bd31-r.bd31-mini{
+  width:23px!important;height:23px!important;min-width:23px!important;max-width:23px!important;
+  background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
+  transform:none!important;border:0!important
+}
+/* Summary stack must show complete icons, not clipped sprite pieces. */
+.bd31-stack{display:inline-flex!important;align-items:center!important;padding-left:2px!important}
+.bd31-stack .bd31-r,.bd31-stack .bd31-mini{
+  width:21px!important;height:21px!important;min-width:21px!important;max-width:21px!important;
+  margin-left:-4px!important;border:2px solid #fff!important;border-radius:50%!important;
+  background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;
+}
+.bd31-stack .bd31-r:first-child{margin-left:0!important}
+
+/* Reaction tray: seven visible items, one white floating capsule, never hidden/cropped. */
+#bd31ReactionTray,#bd64ReactionTray{
+  position:fixed!important;z-index:2147483000!important;
+  display:none!important;grid-template-columns:repeat(7,44px)!important;align-items:center!important;
+  gap:2px!important;padding:6px 8px!important;border:1px solid rgba(64,72,92,.13)!important;
+  border-radius:999px!important;background:rgba(255,255,255,.99)!important;
+  box-shadow:0 8px 24px rgba(20,28,52,.20),0 1px 4px rgba(20,28,52,.08)!important;
+  overflow:visible!important;max-width:calc(100vw - 12px)!important;
+  backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;
+}
+#bd31ReactionTray.open,#bd31ReactionTray.show,#bd64ReactionTray.open,#bd64ReactionTray.show{display:grid!important}
+#bd31ReactionTray [data-bd31-tray-pick],#bd64ReactionTray [data-bd64-pick]{
+  display:grid!important;place-items:center!important;width:44px!important;height:44px!important;min-width:44px!important;
+  padding:1px!important;border:0!important;border-radius:50%!important;background:transparent!important;overflow:visible!important
+}
+#bd31ReactionTray [data-bd31-tray-pick="care"]{display:grid!important}
+#bd31ReactionTray .bd31-r,#bd64ReactionTray .bd31-r{
+  width:42px!important;height:42px!important;min-width:42px!important;max-width:42px!important;
+  background-size:contain!important;overflow:visible!important
+}
+#bd31ReactionTray button:active .bd31-r,#bd64ReactionTray button:active .bd31-r{transform:scale(.94)!important}
+@media(hover:hover) and (pointer:fine){#bd31ReactionTray button:hover .bd31-r,#bd64ReactionTray button:hover .bd31-r{transform:translateY(-6px) scale(1.12)!important}}
+
+/* Comment composer: keep the Index-style pill, but never show an empty blue/purple circle. */
+.bd31-comment-form,.bd31-reply-form{grid-template-columns:minmax(0,1fr) 42px!important;gap:7px!important;align-items:center!important}
+.bd31-comment-form input,.bd31-reply-form input{
+  height:44px!important;border:0!important;border-radius:999px!important;background:#f0f2f5!important;
+  color:#27364b!important;padding:0 15px!important;box-shadow:none!important;font-size:16px!important
+}
+.bd31-comment-form button,.bd31-reply-form button{
+  position:relative!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+  padding:0!important;border:0!important;border-radius:50%!important;
+  background:linear-gradient(135deg,#367bf0,#7458e9)!important;color:transparent!important;font-size:0!important;
+  display:grid!important;place-items:center!important;overflow:hidden!important;box-shadow:0 5px 13px rgba(62,91,211,.18)!important
+}
+.bd31-comment-form button>svg,.bd31-reply-form button>svg{display:none!important}
+.bd31-comment-form button::before,.bd31-reply-form button::before{
+  content:""!important;display:block!important;width:21px!important;height:21px!important;background:#fff!important;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M3.4 3.2 21 11.3c.8.4.8 1.5 0 1.9L3.4 21.3c-.8.4-1.7-.4-1.4-1.3l2.3-6.2 9.2-1.8-9.2-1.8L2 4.5c-.3-.9.6-1.7 1.4-1.3Z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M3.4 3.2 21 11.3c.8.4.8 1.5 0 1.9L3.4 21.3c-.8.4-1.7-.4-1.4-1.3l2.3-6.2 9.2-1.8-9.2-1.8L2 4.5c-.3-.9.6-1.7 1.4-1.3Z'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-comment-form input,
+:is(html[data-theme="dark"],html[data-bd-theme="dark"]) .bd31-reply-form input{background:#3a3b3c!important;color:#f2f3f5!important}
+@media(max-width:430px){
+  #bd31ReactionTray,#bd64ReactionTray{grid-template-columns:repeat(7,39px)!important;padding:5px 6px!important;gap:1px!important}
+  #bd31ReactionTray [data-bd31-tray-pick],#bd64ReactionTray [data-bd64-pick]{width:39px!important;height:39px!important;min-width:39px!important}
+  #bd31ReactionTray .bd31-r,#bd64ReactionTray .bd31-r{width:37px!important;height:37px!important;min-width:37px!important;max-width:37px!important}
+}
+</style>
+<script id="bd-v30-profile-reaction-comment-js">
+(()=>{'use strict';
+ if(window.__BD_V30_PROFILE_RX__)return;window.__BD_V30_PROFILE_RX__=1;
+ const D=document,W=window;
+ /* Ensure legacy text-arrow submit buttons also get an accessible label while CSS paints a real plane. */
+ const repairSend=(root=D)=>root.querySelectorAll?.('.bd31-comment-form button[type="submit"],.bd31-reply-form button[type="submit"]').forEach(b=>{b.setAttribute('aria-label',b.closest('.bd31-reply-form')?'রিপ্লাই পাঠান':'মন্তব্য পাঠান')});
+ const repairRx=(root=D)=>root.querySelectorAll?.('.bd31-r').forEach(el=>{const t=['like','love','care','haha','wow','sad','angry'].find(k=>el.classList.contains(k));if(t)el.dataset.bdRxAsset=t});
+ function repair(root=D){repairSend(root);repairRx(root)}
+ const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)repair(n)});mo.observe(D.documentElement,{subtree:true,childList:true});
+ if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>repair(),{once:true});else repair();
+ /* Bulletproof mobile hold: profile uses the same behaviour as Index — tap Like, hold for full tray. */
+ let hold=null,opened=false;
+ const cancel=()=>{if(hold?.t)clearTimeout(hold.t);hold=null};
+ D.addEventListener('pointerdown',e=>{const b=e.target.closest?.('[data-bd31-react-main]');if(!b||e.pointerType==='mouse')return;cancel();opened=false;hold={b,id:e.pointerId,x:e.clientX,y:e.clientY,t:setTimeout(()=>{if(!hold||hold.id!==e.pointerId)return;const card=b.closest('[data-bd31-ready="1"]');if(card&&typeof W.__bd45OpenReactionTray==='function'){W.__bd45OpenReactionTray(b,card);opened=true;b.dataset.bd30Held='1'}},220)}},true);
+ D.addEventListener('pointermove',e=>{if(!hold||hold.id!==e.pointerId)return;if(Math.hypot(e.clientX-hold.x,e.clientY-hold.y)>11)cancel()},true);
+ D.addEventListener('pointerup',e=>{if(!hold||hold.id!==e.pointerId)return;const b=hold.b;clearTimeout(hold.t);hold=null;if(opened){e.preventDefault();e.stopPropagation();setTimeout(()=>{delete b.dataset.bd30Held;opened=false},500)}},true);
+ D.addEventListener('pointercancel',cancel,true);
+})();
+</script>
+
 </body>
 </html>
