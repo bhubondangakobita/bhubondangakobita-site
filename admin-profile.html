@@ -797,7 +797,7 @@ html[data-theme="dark"] .bd-v34-profile-update .bd-v34-change-label{color:#bcc9d
 .bd-rx-commit [data-bd40-react-main]{animation:bd44commit .34s cubic-bezier(.2,.9,.25,1.18)}
 @keyframes bd44commit{0%{transform:scale(.92)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
 </style>
-</head>
+<script src="signals.js?v=20260818-v51" defer></script></head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
 <div class="shell">
@@ -1146,7 +1146,7 @@ function renderActions(){
   renderProfileMenu();
 }
 async function loadFollowState(){if(!sb||!state.me||!state.target||state.owner)return;try{const r=await sb.from('follows').select('follower_id').eq('follower_id',state.me.id).eq('following_id',state.target.id).maybeSingle();state.followed=!!r.data}catch{}renderActions()}
-async function toggleFollow(){if(!state.me){toast('অনুসরণ করতে লগইন করুন');return}if(state.owner)return;try{if(state.followed){const r=await sb.from('follows').delete().eq('follower_id',state.me.id).eq('following_id',state.target.id);if(r.error)throw r.error;state.followed=false}else{const r=await sb.from('follows').insert({follower_id:state.me.id,following_id:state.target.id});if(r.error)throw r.error;state.followed=true}renderActions();await loadStats();toast(state.followed?'অনুসরণ করা হয়েছে':'অনুসরণ বাতিল করা হয়েছে')}catch(e){toast(e.message||'অনুসরণ আপডেট হয়নি')}}
+async function toggleFollow(){if(!state.me){toast('অনুসরণ করতে লগইন করুন');return}if(state.owner)return;try{if(state.followed){const r=await sb.from('follows').delete().eq('follower_id',state.me.id).eq('following_id',state.target.id);if(r.error)throw r.error;state.followed=false}else{const r=await sb.from('follows').insert({follower_id:state.me.id,following_id:state.target.id});if(r.error)throw r.error;state.followed=true;try{await window.BD_SIGNAL_CENTER?.sendNotification?.({recipientId:state.target.id,actorId:state.me.id,actorName:state.me.display_name||state.me.username||'একজন সদস্য',type:'follow',title:(state.me.display_name||state.me.username||'একজন সদস্য')+' আপনাকে অনুসরণ করেছেন',message:'আপনার প্রোফাইলে নতুন অনুসরণকারী',url:'profile.html?user='+encodeURIComponent(state.me.id)})}catch(_){}}renderActions();await loadStats();toast(state.followed?'অনুসরণ করা হয়েছে':'অনুসরণ বাতিল করা হয়েছে')}catch(e){toast(e.message||'অনুসরণ আপডেট হয়নি')}}
 async function loadPoets(){const names=new Map();try{if(sb){const [a,b]=await Promise.all([sb.from('poets').select('id,slug,display_name').order('display_name').limit(500),sb.from('famous_poets').select('id,slug,display_name,name').order('display_name').limit(500)]);for(const r of [a,b])if(!r.error)(r.data||[]).forEach(x=>{const n=x.display_name||x.name;if(n)names.set(slug(n),{...x,display_name:n})})}}catch{}state.poets=[...names.values()];$('#poetDirectory').innerHTML=state.poets.map(x=>'<option value="'+esc(x.display_name)+'"></option>').join('')}
 function normalizePost(x){
   const meta=(x.metadata&&typeof x.metadata==='object')?x.metadata:{};
