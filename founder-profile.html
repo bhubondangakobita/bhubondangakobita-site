@@ -2338,8 +2338,8 @@ async function boot(){
     initSupabaseClient();
     if(!bdV841Bound){bind();bdV841Bound=true}
     setStatus(sb?'Supabase সংযোগ হচ্ছে…':'প্রোফাইল প্রস্তুত হচ্ছে…');
-    state.session=await bdV34Timeout(getSession(),3000,null);state.me=state.session?.user||null;
-    state.target=await bdV34Timeout(resolveTarget(),4200,null);
+    state.session=await bdV34Timeout(getSession(),9000,null);state.me=state.session?.user||null;
+    state.target=await bdV34Timeout(resolveTarget(),12000,null);
     if(!state.target){const requested=new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id')||'',legacy=legacyProfileUser();state.target={id:(PAGE_ROLE==='user'?(state.me?.id||legacy?.id||legacy?.uid||''):state.me?.id)||'',display_name:PAGE_ROLE==='founder'?'মাহমুদ সোহেল':PAGE_ROLE==='admin'?'ভুবনডাঙ্গা অ্যাডমিন':(requested||legacy?.name||legacy?.displayName||legacy?.username||'ভুবনডাঙ্গার সদস্য'),username:PAGE_ROLE==='user'?String(requested||legacy?.username||legacy?.slug||'').replace(/^@/,''):'member',avatar_url:legacy?.avatar||legacy?.profileImage||legacy?.photo||'',cover_url:legacy?.cover||legacy?.cover_url||'',bio:legacy?.bio||'বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।',location:PAGE_ROLE==='founder'?'কুমিল্লা, বাংলাদেশ':(legacy?.location||'বাংলাদেশ'),role:PAGE_ROLE==='user'?(legacy?.role||'user'):PAGE_ROLE}}
     let resolved=await bdV34Timeout(getRole(state.target.id,state.target),2600,String(state.target?.role||'user'));if(PAGE_ROLE==='founder')resolved='founder';else if(PAGE_ROLE==='admin')resolved='admin';state.target.roleResolved=resolved;
     let myRole='user';if(state.me)myRole=await bdV34Timeout(getRole(state.me.id,await bdV34Timeout(fetchProfileById(state.me.id),2200,null)),2600,'user');
@@ -2359,7 +2359,7 @@ async function boot(){
     if(localPreview&&!state.me&&q.get('view')==='owner'&&PAGE_ROLE==='user')state.owner=true;
     renderProfile();
     // Home must render even when one optional remote query is slow/offline.
-    await bdV34Timeout(loadPosts(),5200,null);
+    await bdV34Timeout(loadPosts(),10000,null);
     Promise.allSettled([
       bdV34Timeout(loadPoets(),3200,null),
       bdV34Timeout(loadFollowState(),2800,null),
@@ -2372,7 +2372,47 @@ async function boot(){
     try{renderActions();setStatus('প্রোফাইল প্রস্তুত — Supabase সংযোগ পুনরায় চেষ্টা করুন')}catch(_){ }
   }
 }
+
+async function bdV90HydrateProfile(){
+  if(state.__bdV90Hydrating)return;
+  state.__bdV90Hydrating=true;
+  try{
+    if(!state.session){
+      const sess=await bdV34Timeout(getSession(),12000,null);
+      if(sess){state.session=sess;state.me=sess.user||null}
+    }
+    const fresh=await bdV34Timeout(resolveTarget(),15000,null);
+    if(fresh){
+      const oldId=String(state.target?.id||''),newId=String(fresh.id||'');
+      const wasFallback=!oldId||state.target?.__unresolved||profileName(state.target)==='ভুবনডাঙ্গার সদস্য'||(!state.target?.avatar_url&&!state.target?.cover_url&&!!fresh.avatar_url);
+      if(wasFallback||oldId!==newId){
+        state.target={...(state.target||{}),...fresh};
+        let resolved=await bdV34Timeout(getRole(state.target.id,state.target),5000,String(state.target?.role||'user'));
+        if(PAGE_ROLE==='founder')resolved='founder';else if(PAGE_ROLE==='admin')resolved='admin';
+        state.target.roleResolved=resolved;
+        const q=new URLSearchParams(location.search),requested=q.get('user')||q.get('id')||'';
+        const myId=String(state.me?.id||''),targetId=String(state.target?.id||'');
+        const myUser=String(state.me?.user_metadata?.username||state.me?.user_metadata?.slug||state.me?.email?.split('@')[0]||'').replace(/^@/,'').toLowerCase();
+        const targetUser=String(state.target?.username||'').replace(/^@/,'').toLowerCase();
+        state.owner=!!(state.me&&((myId&&targetId&&myId===targetId)||(myUser&&targetUser&&myUser===targetUser)));
+        if(requested&&!state.owner)state.owner=false;
+        if(PAGE_ROLE==='founder'&&state.me){const r=await bdV34Timeout(getRole(state.me.id,await bdV34Timeout(fetchProfileById(state.me.id),5000,null)),5000,'user');if(r==='founder')state.owner=true}
+        if(PAGE_ROLE==='admin'&&state.me){const r=await bdV34Timeout(getRole(state.me.id,await bdV34Timeout(fetchProfileById(state.me.id),5000,null)),5000,'user');if(r==='admin'&&(!requested||String(state.target.id)===myId))state.owner=true}
+        renderProfile();
+      }
+    }
+    if(state.target?.id){
+      await bdV34Timeout(loadPosts(),14000,null);
+      Promise.allSettled([loadFollowState(),loadFriends(),loadStats()]).then(()=>{try{syncDrawers()}catch(_){}});
+      installRealtime();
+    }
+    setStatus(state.session?'Supabase Sync ✓':'Visitor View');
+  }catch(e){console.warn('V90 profile hydrate retry',e)}
+  finally{state.__bdV90Hydrating=false}
+}
+
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+setTimeout(bdV90HydrateProfile,700);setTimeout(bdV90HydrateProfile,2800);setTimeout(bdV90HydrateProfile,7000);
 window.addEventListener('bd:supabase-ready',()=>{if(!state.session)boot()});
 </script>
 
@@ -2569,7 +2609,7 @@ html[data-theme="dark"] .bd-rx-tray,html[data-theme="dark"] .bd-rx-tray.bd-rx-fl
 (()=>{'use strict';const D=document;function info(){const el=D.getElementById('location'),v=String(el?.textContent||'').toLowerCase();if(/india|ভারত|পশ্চিমবঙ্গ|west bengal|kolkata|কলকাতা/.test(v))return{code:'IN',flag:'🇮🇳',href:'west-bengal-history.html',label:'পশ্চিমবঙ্গের ইতিহাস'};return{code:'BD',flag:'🇧🇩',href:'bangladesh-history.html',label:'বাংলাদেশের ইতিহাস'}}function sync(){const loc=D.getElementById('location');if(!loc)return;let a=D.getElementById('bdCountryHistory');const x=info();if(!a){a=D.createElement('a');a.id='bdCountryHistory';a.className='bd-country-history';loc.insertAdjacentElement('afterend',a)}a.dataset.country=x.code;a.href=x.href;a.textContent=x.flag;a.title=x.label;a.setAttribute('aria-label',x.label);a.onclick=e=>e.stopPropagation()}const loc=()=>D.getElementById('location');sync();new MutationObserver(sync).observe(D.documentElement,{subtree:true,childList:true,characterData:true});D.addEventListener('DOMContentLoaded',sync,{once:true});setTimeout(sync,250);setTimeout(sync,1100)})();
 </script>
 
-<script id="bd-v89-profile-message-target-bridge">
+<script id="bd-v90-profile-message-target-bridge">
 (()=>{'use strict';const D=document;function target(){const id=D.body?.dataset?.bdProfileId||new URLSearchParams(location.search).get('user')||new URLSearchParams(location.search).get('id')||'';return String(id||'').trim()}function sync(){const id=target();if(!id)return false;D.querySelectorAll('#profileActions a.action').forEach(a=>{const txt=(a.textContent||'').toLowerCase();if(txt.includes('message')||txt.includes('বার্তা')){a.href='messages.html?user='+encodeURIComponent(id);a.dataset.bdDirectMessage=id}});return true}D.addEventListener('click',e=>{const a=e.target.closest('#profileActions a.action');if(!a)return;const txt=(a.textContent||'').toLowerCase();if(!(txt.includes('message')||txt.includes('বার্তা')))return;const id=target();if(!id)return;e.preventDefault();location.href='messages.html?user='+encodeURIComponent(id)},true);let n=0;const iv=setInterval(()=>{n++;sync();if(n>50)clearInterval(iv)},160);new MutationObserver(sync).observe(D.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['data-bd-profile-id']});if(D.readyState!=='loading')sync();else D.addEventListener('DOMContentLoaded',sync,{once:true})})();
 </script>
 </body>
