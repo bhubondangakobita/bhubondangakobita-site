@@ -1096,6 +1096,84 @@ html[data-theme="dark"] .bd-v34-profile-update .bd-v34-change-label{color:#d5e1d
 #profileMenu.bd75-profile-menu{position:fixed!important;left:12px!important;right:12px!important;bottom:max(12px,env(safe-area-inset-bottom))!important;top:auto!important;width:auto!important;max-width:520px!important;margin:0 auto!important;z-index:2147483600!important}
 @media(min-width:761px){#profileMenu.bd75-profile-menu{left:auto!important;right:24px!important;width:360px!important}}
 </style>
+
+<style id="bd-v77-follow-connections-css">
+/* V77 — canonical followers/following list and privacy UI */
+.bd77-connections{
+  position:fixed;inset:0;z-index:2147483630;display:none;
+  background:rgba(5,13,10,.42);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  padding:12px;
+}
+.bd77-connections.open{display:grid;place-items:center}
+.bd77-connections-panel{
+  width:min(560px,100%);max-height:min(78dvh,720px);overflow:hidden;
+  border:1px solid rgba(23,107,86,.14);border-radius:22px;background:#fff;
+  box-shadow:0 28px 80px rgba(0,0,0,.24);display:grid;grid-template-rows:auto minmax(0,1fr);
+}
+.bd77-connections-head{
+  min-height:62px;padding:0 12px 0 16px;display:grid;grid-template-columns:1fr 42px;
+  align-items:center;border-bottom:1px solid rgba(23,107,86,.10);
+}
+.bd77-connections-head b{display:block;font-size:16px;color:#101c18}
+.bd77-connections-head small{display:block;margin-top:2px;color:#7b8d84;font-size:8px}
+.bd77-connections-close{
+  width:40px;height:40px;border:0;border-radius:11px;background:#eff5f2;color:#14261f;
+  font-size:24px;line-height:1;display:grid;place-items:center
+}
+.bd77-connections-list{overflow:auto;padding:7px 9px 12px}
+.bd77-person{
+  min-height:64px;padding:7px 6px;display:grid;grid-template-columns:50px minmax(0,1fr) auto;
+  align-items:center;gap:9px;border-bottom:1px solid rgba(23,107,86,.075)
+}
+.bd77-person:last-child{border-bottom:0}
+.bd77-person-avatar{
+  width:48px;height:48px;border-radius:50%;overflow:hidden;display:grid;place-items:center;
+  background:linear-gradient(145deg,#d8ebe2,#e5eef4);color:#176b56;font-weight:900;font-size:15px
+}
+.bd77-person-avatar img{width:100%;height:100%;object-fit:cover}
+.bd77-person-copy{min-width:0;text-decoration:none;color:#12231c}
+.bd77-person-copy b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}
+.bd77-person-copy span{display:block;margin-top:2px;color:#84938c;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd77-person-open{
+  min-height:36px;padding:0 10px;border:1px solid rgba(23,107,86,.13);border-radius:10px;
+  background:#f0f6f3;color:#176b56;text-decoration:none;display:grid;place-items:center;
+  font-size:8px;font-weight:900
+}
+.bd77-empty{padding:34px 14px;text-align:center;color:#7e8f87;font-size:9px;line-height:1.65}
+.bd77-empty b{display:block;margin-bottom:4px;color:#1b3329;font-size:14px}
+.bd77-loading{padding:28px 14px;text-align:center;color:#698078;font-size:9px}
+.bd77-social-private{opacity:.76}
+.bd77-social-private b{color:#6f8078!important}
+#bd75SocialLine button,[data-click="followers"],[data-click="following"]{cursor:pointer!important}
+#bd75SocialLine button:focus-visible,[data-click="followers"]:focus-visible,[data-click="following"]:focus-visible{
+  outline:2px solid #35b98d!important;outline-offset:3px!important
+}
+html[data-theme="dark"] .bd77-connections-panel{background:#101e18;border-color:rgba(53,185,141,.17)}
+html[data-theme="dark"] .bd77-connections-head b,html[data-theme="dark"] .bd77-person-copy{color:#f2faf6}
+html[data-theme="dark"] .bd77-connections-close,html[data-theme="dark"] .bd77-person-open{background:#172a22;color:#c8f3df}
+html[data-theme="dark"] .bd77-empty b{color:#f2faf6}
+@media(max-width:620px){
+ .bd77-connections{padding:0}
+ .bd77-connections-panel{width:100%;max-height:78dvh;align-self:end;border-radius:22px 22px 0 0}
+ .bd77-person{grid-template-columns:48px minmax(0,1fr) auto}
+}
+</style>
+
+
+<style id="bd-v79-profile-social-photo-viewer">
+#profileActions.bd-v842-visitor{grid-template-columns:1fr 1fr auto!important}
+#profileActions.bd-v842-visitor .action[data-click="followers"]{display:none!important}
+.bd79-profile-photo-viewer{position:fixed;inset:0;z-index:2147483600;background:#000;color:#fff;display:none;grid-template-rows:auto minmax(0,1fr) auto}
+.bd79-profile-photo-viewer.open{display:grid}
+.bd79-pv-head{height:66px;padding:env(safe-area-inset-top) 14px 0;display:grid;grid-template-columns:48px 1fr 48px;align-items:center}
+.bd79-pv-head button{height:44px;border:0;background:transparent;color:#fff;font-size:31px}.bd79-pv-head b{text-align:center;font:600 16px/1 system-ui}
+.bd79-pv-stage{min-height:0;display:grid;place-items:center;overflow:hidden;touch-action:pan-y}.bd79-pv-stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.bd79-pv-foot{padding:10px 15px calc(13px + env(safe-area-inset-bottom));border-top:1px solid #24272b;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#e8eaed}
+.bd79-pv-foot span{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bd79-pv-foot small{color:#aeb4bb}
+.post-media.bd79-multi-photo{position:relative}.bd79-photo-count{position:absolute;right:10px;bottom:10px;padding:5px 8px;border-radius:9px;background:rgba(0,0,0,.68);color:#fff;font:800 11px/1 system-ui}
+.post-media img,.bd104-news-image2 img{cursor:pointer;-webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important}
+</style>
+
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
@@ -1304,7 +1382,7 @@ async function getSession(){initSupabaseClient();if(!sb)return null;try{const r=
 async function getRole(uid,profile){if(!uid)return String(profile?.role||'user');try{const r=await sb.from('user_roles').select('role,active').eq('user_id',uid).eq('active',true);if(!r.error&&r.data?.length){if(r.data.some(x=>x.role==='founder'))return'founder';if(r.data.some(x=>x.role==='admin'))return'admin'} }catch{}return String(profile?.role||'user')}
 async function fetchProfileById(id){if(!sb||!id)return null;try{const r=await sb.from('profiles').select('*').eq('id',id).maybeSingle();if(!r.error&&r.data)return r.data}catch{}return null}
 async function fetchProfileTarget(ref){if(!sb||!ref)return null;const raw=String(ref).trim();if(!raw)return null;if(/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(raw)){const byId=await fetchProfileById(raw);if(byId)return byId}const username=raw.replace(/^@/,'').toLowerCase();try{let r=await sb.from('profiles').select('*').eq('username',username).maybeSingle();if(!r.error&&r.data)return r.data}catch{}try{const r=await sb.from('profiles').select('*').ilike('display_name',raw).limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}return null}
-async function resolveTarget(){const q=new URLSearchParams(location.search),requested=q.get('user')||q.get('id');if(PAGE_ROLE==='user'){const legacy=legacyProfileUser(),ref=requested||state.session?.user?.id||legacy?.id||legacy?.uid||legacy?.username||legacy?.slug;if(!ref)return null;const found=await fetchProfileTarget(ref);if(found)return found;if(requested)return{id:/^[0-9a-f-]{36}$/i.test(String(requested))?String(requested):'',username:/^[0-9a-f-]{36}$/i.test(String(requested))?'':String(requested).replace(/^@/,''),display_name:String(requested).replace(/^@/,''),bio:'',location:'বাংলাদেশ',role:'user',__unresolved:true};if(state.session?.user){const u=state.session.user,m=u.user_metadata||{};return{id:u.id,username:m.username||m.slug||u.email?.split('@')[0]||'',display_name:m.full_name||m.name||m.display_name||u.email?.split('@')[0]||'ভুবনডাঙ্গার সদস্য',avatar_url:m.avatar_url||m.avatar||m.picture||'',cover_url:m.cover_url||m.cover||'',bio:m.bio||'',location:m.location||'বাংলাদেশ',role:m.role||'user'}}if(legacy)return{id:legacy.id||legacy.uid||'',username:legacy.username||legacy.slug||'',display_name:legacy.name||legacy.displayName||legacy.full_name||legacy.username||'ভুবনডাঙ্গার সদস্য',avatar_url:legacy.avatar||legacy.profileImage||legacy.photo||'',cover_url:legacy.cover||legacy.cover_url||'',bio:legacy.bio||'',location:legacy.location||'বাংলাদেশ',role:legacy.role||'user'};return null}if(PAGE_ROLE==='founder'){try{const r=await sb.rpc('get_founder_profile');const d=Array.isArray(r.data)?r.data[0]:r.data;if(!r.error&&d)return d}catch{}try{const r=await sb.from('profiles').select('*').eq('role','founder').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='founder')return p}return null}if(PAGE_ROLE==='admin'){if(requested){const p=await fetchProfileTarget(requested);if(p&&(await getRole(p.id,p))==='admin')return p}try{const r=await sb.from('profiles').select('*').eq('role','admin').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='admin')return p}return null}}
+async function resolveTarget(){const q=new URLSearchParams(location.search),requested=q.get('user')||q.get('id');if(PAGE_ROLE==='user'){const legacy=legacyProfileUser(),ref=requested||state.session?.user?.id||legacy?.id||legacy?.uid||legacy?.username||legacy?.slug;if(!ref)return null;const found=await fetchProfileTarget(ref);if(found)return found;if(requested)return{id:/^[0-9a-f-]{36}$/i.test(String(requested))?String(requested):'',username:/^[0-9a-f-]{36}$/i.test(String(requested))?'':String(requested).replace(/^@/,''),display_name:String(requested).replace(/^@/,''),bio:'',location:'বাংলাদেশ',role:'user',__unresolved:true};if(state.session?.user){const u=state.session.user,m=u.user_metadata||{};return{id:u.id,username:m.username||m.slug||u.email?.split('@')[0]||'',display_name:m.full_name||m.name||m.display_name||u.email?.split('@')[0]||'ভুবনডাঙ্গার সদস্য',avatar_url:m.avatar_url||m.avatar||m.picture||'',cover_url:m.cover_url||m.cover||'',bio:m.bio||'',location:m.location||'বাংলাদেশ',role:m.role||'user',followers_visibility:'public',following_visibility:'public'}}if(legacy)return{id:legacy.id||legacy.uid||'',username:legacy.username||legacy.slug||'',display_name:legacy.name||legacy.displayName||legacy.full_name||legacy.username||'ভুবনডাঙ্গার সদস্য',avatar_url:legacy.avatar||legacy.profileImage||legacy.photo||'',cover_url:legacy.cover||legacy.cover_url||'',bio:legacy.bio||'',location:legacy.location||'বাংলাদেশ',role:legacy.role||'user',followers_visibility:'public',following_visibility:'public'};return null}if(PAGE_ROLE==='founder'){try{const r=await sb.rpc('get_founder_profile');const d=Array.isArray(r.data)?r.data[0]:r.data;if(!r.error&&d)return d}catch{}try{const r=await sb.from('profiles').select('*').eq('role','founder').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='founder')return p}return null}if(PAGE_ROLE==='admin'){if(requested){const p=await fetchProfileTarget(requested);if(p&&(await getRole(p.id,p))==='admin')return p}try{const r=await sb.from('profiles').select('*').eq('role','admin').limit(1).maybeSingle();if(!r.error&&r.data)return r.data}catch{}if(state.session?.user){const p=await fetchProfileById(state.session.user.id);if((await getRole(state.session.user.id,p))==='admin')return p}return null}}
 function profileName(p){return p?.display_name||p?.full_name||p?.name||p?.username||'ভুবনডাঙ্গার সদস্য'}
 function profileAvatar(p){return p?.avatar_url||p?.avatar||p?.photo_url||''}
 function profileCover(p){return p?.cover_url||p?.cover||''}
@@ -1432,7 +1510,7 @@ function renderActions(){
     const dash=role==='founder'?'founder-dashboard.html':role==='admin'?'admin-dashboard.html':'edit-profile.html';
     h.innerHTML='<button class="action primary'+(role==='admin'?' blue':'')+'" type="button" data-click="edit-profile">✎ প্রোফাইল সম্পাদনা</button><a class="action" href="'+dash+'">▥ ড্যাশবোর্ড</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }else{
-    h.classList.add('bd-v842-visitor','bd-v841-visitor-actions');h.innerHTML='<button class="action primary" type="button" data-click="follow">＋ '+(state.followed?'অনুসরণ করছেন':'অনুসরণ করুন')+'</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">💬 বার্তা পাঠান</a><button class="action" type="button" data-click="followers">👥 ফলোয়ার্স</button><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
+    h.classList.add('bd-v842-visitor','bd-v841-visitor-actions');h.innerHTML='<button class="action primary" type="button" data-click="follow">'+(state.followed?'✓ Friend':'＋ Follow')+'</button><a class="action" href="messages.html?user='+encodeURIComponent(targetId)+'">Message</a><button class="action more" type="button" data-click="more" aria-label="আরও">•••</button>';
   }
   document.body.classList.toggle('is-owner',owner);
   const cover=$('#cover'),avatar=$('#avatarMain'),avatarEdit=$('#avatarEdit'),coverHint=$('#coverHint'),bio=$('#bio'),bioHint=$('#bioHint'),composer=$('#composer');
@@ -1446,7 +1524,7 @@ function renderActions(){
   renderProfileMenu();
 }
 async function loadFollowState(){if(!sb||!state.me||!state.target||state.owner)return;try{const r=await sb.from('follows').select('follower_id').eq('follower_id',state.me.id).eq('following_id',state.target.id).maybeSingle();state.followed=!!r.data}catch{}renderActions()}
-async function toggleFollow(){if(!state.me){toast('অনুসরণ করতে লগইন করুন');return}if(state.owner)return;try{if(state.followed){const r=await sb.from('follows').delete().eq('follower_id',state.me.id).eq('following_id',state.target.id);if(r.error)throw r.error;state.followed=false}else{const r=await sb.from('follows').insert({follower_id:state.me.id,following_id:state.target.id});if(r.error)throw r.error;state.followed=true;try{await window.BD_SIGNAL_CENTER?.sendNotification?.({recipientId:state.target.id,actorId:state.me.id,actorName:state.me.display_name||state.me.username||'একজন সদস্য',type:'follow',title:(state.me.display_name||state.me.username||'একজন সদস্য')+' আপনাকে অনুসরণ করেছেন',message:'আপনার প্রোফাইলে নতুন অনুসরণকারী',url:'profile.html?user='+encodeURIComponent(state.me.id)})}catch(_){}}renderActions();await loadStats();toast(state.followed?'অনুসরণ করা হয়েছে':'অনুসরণ বাতিল করা হয়েছে')}catch(e){toast(e.message||'অনুসরণ আপডেট হয়নি')}}
+async function toggleFollow(){if(!state.me){toast('Follow করতে লগইন করুন');return}if(state.owner)return;try{const me=state.me.id,other=state.target.id;if(state.followed){const r=await sb.from('follows').delete().eq('follower_id',me).eq('following_id',other);if(r.error)throw r.error;state.followed=false;try{const rev=await sb.from('follows').select('follower_id').eq('follower_id',other).eq('following_id',me).maybeSingle();if(!rev.data)await sb.from('friendships').delete().or('and(user_a.eq.'+me+',user_b.eq.'+other+'),and(user_a.eq.'+other+',user_b.eq.'+me+')')}catch(_){}}else{const r=await sb.from('follows').upsert({follower_id:me,following_id:other},{onConflict:'follower_id,following_id'});if(r.error)throw r.error;state.followed=true;try{const a=String(me)<String(other)?me:other,b=String(me)<String(other)?other:me;await sb.from('friendships').upsert({user_a:a,user_b:b,status:'accepted',source:'follow'},{onConflict:'user_a,user_b'})}catch(_){}try{await window.BD_SIGNAL_CENTER?.sendNotification?.({recipientId:other,actorId:me,actorName:state.me.display_name||state.me.username||'একজন সদস্য',type:'follow',title:(state.me.display_name||state.me.username||'একজন সদস্য')+' আপনাকে Follow করেছেন',message:'আপনারা এখন বন্ধু',url:'profile.html?user='+encodeURIComponent(me)})}catch(_){}}renderActions();await loadStats();await loadFriends();toast(state.followed?'আপনারা এখন বন্ধু':'Follow বাতিল করা হয়েছে')}catch(e){toast(e.message||'Follow আপডেট হয়নি')}}
 async function loadPoets(){const names=new Map();try{if(sb){const [a,b]=await Promise.all([sb.from('poets').select('id,slug,display_name').order('display_name').limit(500),sb.from('famous_poets').select('id,slug,display_name,name').order('display_name').limit(500)]);for(const r of [a,b])if(!r.error)(r.data||[]).forEach(x=>{const n=x.display_name||x.name;if(n)names.set(slug(n),{...x,display_name:n})})}}catch{}state.poets=[...names.values()];$('#poetDirectory').innerHTML=state.poets.map(x=>'<option value="'+esc(x.display_name)+'"></option>').join('')}
 function normalizePost(x){
   const meta=(x.metadata&&typeof x.metadata==='object')?x.metadata:{};
@@ -1524,7 +1602,7 @@ async function loadPosts(){
   rows=rows.map(p=>({...p,author_name:profileName(state.target)||p.author_name,author_avatar:profileAvatar(state.target)||p.author_avatar,author_role:forcedRole(state.target)||p.author_role}));
   state.posts=rows;renderContent();loadStats()
 }
-function mediaHtml(p){if(!p.media_url)return'';const t=String(p.media_type||'');if(t.includes('audio')||p.type==='recitation'&&/\.(mp3|wav|m4a|aac|ogg)(\?|$)/i.test(p.media_url))return'<div class="post-media"><audio controls preload="metadata" src="'+esc(p.media_url)+'"></audio></div>';if(t.includes('video')||/\.(mp4|webm|mov)(\?|$)/i.test(p.media_url))return'<div class="post-media"><video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video></div>';return'<div class="post-media"><img loading="lazy" src="'+esc(p.media_url)+'" alt="'+esc(p.caption||p.title)+'"></div>'}
+function mediaHtml(p){if(!p.media_url)return'';const t=String(p.media_type||'');if(t.includes('audio')||p.type==='recitation'&&/\.(mp3|wav|m4a|aac|ogg)(\?|$)/i.test(p.media_url))return'<div class="post-media"><audio controls preload="metadata" src="'+esc(p.media_url)+'"></audio></div>';if(t.includes('video')||/\.(mp4|webm|mov)(\?|$)/i.test(p.media_url))return'<div class="post-media"><video controls playsinline preload="metadata" src="'+esc(p.media_url)+'"></video></div>';const imgs=Array.isArray(p.images)&&p.images.length?p.images:[p.media_url].filter(Boolean);return'<div class="post-media '+(imgs.length>1?'bd79-multi-photo':'')+'"><img loading="lazy" src="'+esc(imgs[0]||p.media_url)+'" alt="'+esc(p.caption||p.title)+'">'+(imgs.length>1?'<span class="bd79-photo-count">+'+(imgs.length-1)+'</span>':'')+'</div>'}
 
 function bdV24AutoCardStyle(p){
   const explicit=String(p?.card_style||p?.cardStyle||'').trim().toLowerCase();
@@ -1566,7 +1644,7 @@ function renderContent(){const feed=$('#feed'),archive=$('#archiveList');$$('.ta
   feed.innerHTML=list.slice(0,limit).map(postCard).join('')+(list.length>limit?'<div class="bd104-load-wrap"><button class="bd104-load-more" type="button" data-click="more-home-posts">আরও দেখুন</button></div>':'');
   return
 }if(state.tab==='edited'){feed.hidden=true;archive.hidden=false;let c=[];try{c=JSON.parse(localStorage.getItem('bhubondangaPoetContributions')||'[]')}catch(_){};if(!Array.isArray(c))c=[];const targetId=String(state.target?.id||''),targetName=String(state.target?.full_name||state.target?.display_name||state.target?.name||state.target?.username||'').trim().toLocaleLowerCase('bn-BD');c=c.filter(x=>(targetId&&String(x.editorId||x.contributorId||'')===targetId)||(!targetId&&targetName&&String(x.editorName||x.contributorName||'').trim().toLocaleLowerCase('bn-BD')===targetName));archive.innerHTML='<div class="bd92-archive-head"><span class="bd92-archive-label">সম্পাদিত কাজ</span><i class="bd92-archive-dot"></i></div>'+ (c.length?c.map(x=>'<div class="archive-item bd29-edited-item"><a href="famous-poet.html?q='+encodeURIComponent(x.poet||x.originalAuthor||'')+'">'+esc(x.title||'কবিতা')+'</a><small>'+esc(x.poet||x.originalAuthor||'খ্যাতিমান কবি')+' · প্রথম সম্পাদক: '+esc(x.editorName||x.contributorName||'')+'</small></div>').join(''):'<div style="padding:18px 2px;color:#8d96a5">এখনও কোনো সম্পাদিত কবিতা নেই।</div>');return}const type=state.tab;const list=state.posts.filter(p=>p.type===type);feed.hidden=true;archive.hidden=false;archive.innerHTML='<h3 style="padding:8px 2px 4px;font-family:Noto Serif Bengali,serif">'+esc(typeLabels[type]||'শিরোনাম')+'</h3>'+list.slice(0,20).map(p=>'<div class="archive-item"><a href="'+esc(typeRoute(p))+'">'+esc(p.title)+'</a><small>'+esc(formatDate(p.created_at))+'</small></div>').join('')+(list.length?'<button class="wide" type="button" data-click="more-archive">আরও দেখুন</button>':'<div style="padding:18px 2px;color:#8d96a5">এখনও কোনো লেখা নেই।</div>')}
-async function loadStats(){const posts=state.posts,poem=posts.filter(p=>p.type==='poem').length,rec=posts.filter(p=>p.type==='recitation').length,letter=posts.filter(p=>p.type==='letter').length;$('#postsCount').textContent=bn(posts.length);$('#chartPoem').textContent=bn(poem);$('#chartRec').textContent=bn(rec);$('#chartLetter').textContent=bn(letter);$('#metricPosts').textContent=bn(posts.length);$('#metricLikes').textContent=bn(posts.reduce((a,p)=>a+p.likes_count,0));$('#metricComments').textContent=bn(posts.reduce((a,p)=>a+p.comments_count,0));const rate=Math.min(99,posts.length?Math.round((poem+rec+letter)/Math.max(1,posts.length)*100):0);$('#chartRate').textContent=rate+'%';$('#completion').textContent=rate+'%';if(sb&&state.target?.id){try{const [f1,f2]=await Promise.all([sb.from('follows').select('*',{count:'exact',head:true}).eq('following_id',state.target.id),sb.from('follows').select('*',{count:'exact',head:true}).eq('follower_id',state.target.id)]);$('#followersCount').textContent=bn(f1.count||0);$('#followingCount').textContent=bn(f2.count||0);$('#friendsCount').textContent=bn(Math.min(f1.count||0,f2.count||0))}catch{}}}
+async function loadStats(){const posts=state.posts,poem=posts.filter(p=>p.type==='poem').length,rec=posts.filter(p=>p.type==='recitation').length,letter=posts.filter(p=>p.type==='letter').length;$('#postsCount').textContent=bn(posts.length);$('#chartPoem').textContent=bn(poem);$('#chartRec').textContent=bn(rec);$('#chartLetter').textContent=bn(letter);$('#metricPosts').textContent=bn(posts.length);$('#metricLikes').textContent=bn(posts.reduce((a,p)=>a+p.likes_count,0));$('#metricComments').textContent=bn(posts.reduce((a,p)=>a+p.comments_count,0));const rate=Math.min(99,posts.length?Math.round((poem+rec+letter)/Math.max(1,posts.length)*100):0);$('#chartRate').textContent=rate+'%';$('#completion').textContent=rate+'%';if(sb&&state.target?.id){try{const [f1,f2]=await Promise.all([sb.from('follows').select('*',{count:'exact',head:true}).eq('following_id',state.target.id),sb.from('follows').select('*',{count:'exact',head:true}).eq('follower_id',state.target.id)]);const followersPrivate=!state.owner&&String(state.target?.followers_visibility||'public').toLowerCase()==='private';const followingPrivate=!state.owner&&String(state.target?.following_visibility||'public').toLowerCase()==='private';$('#followersCount').textContent=bn(followersPrivate?0:(f1.count||0));$('#followingCount').textContent=bn(followingPrivate?0:(f2.count||0));let fc=null;try{const fr=await sb.from('friendships').select('*',{count:'exact',head:true}).or('user_a.eq.'+state.target.id+',user_b.eq.'+state.target.id);if(!fr.error)fc=fr.count}catch(_){}$('#friendsCount').textContent=bn(fc==null?Math.min(followersPrivate?0:(f1.count||0),followingPrivate?0:(f2.count||0)):fc)}catch{}}}
 function writeCrosspost(p){const keys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts',...(typeKeys[p.type]||[])];keys.forEach(k=>pushUnique(k,p));if(p.originalAuthor){const rec={postId:p.id,title:p.title,type:p.type,url:'poet-profile.html?poet='+encodeURIComponent(slug(p.originalAuthor)),originalAuthor:p.originalAuthor,originalAuthorSlug:slug(p.originalAuthor),contributorName:p.authorName,contributorUsername:p.authorUsername,createdAt:p.createdAt,status:p.status};pushUnique('bhubondangaPoetContributions',rec);if(p.type==='poem'){const canon={canonicalId:'canonical-'+slug(p.originalAuthor)+'-'+Date.now(),poetName:p.originalAuthor,poetSlug:slug(p.originalAuthor),title:p.title,body:p.body,firstEditorName:p.authorName,firstEditorUsername:p.authorUsername,firstEditedAt:p.createdAt,createdAt:p.createdAt,status:'published'};const list=localArr('bhubondangaCanonicalPoems');if(!list.some(x=>slug(x.poetName||x.originalAuthor)===slug(p.originalAuthor)&&slug(x.title)===slug(p.title))){list.unshift(canon);localSave('bhubondangaCanonicalPoems',list.slice(0,5000))}}}}
 async function uploadMedia(file,type,uid){if(!file)return{url:'',kind:''};const ext=(file.name.split('.').pop()||'bin').replace(/[^a-zA-Z0-9]/g,'').slice(0,8)||'bin',path=uid+'/posts/'+Date.now()+'-'+Math.random().toString(36).slice(2,7)+'.'+ext;const preferred=type==='recitation'&&(/^(audio|video)\//.test(file.type))?'recitations':'post-media';let bucket=preferred;let up=await sb.storage.from(bucket).upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});if(up.error&&bucket!=='post-media'){bucket='post-media';up=await sb.storage.from(bucket).upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false})}if(up.error)throw up.error;return{url:sb.storage.from(bucket).getPublicUrl(path).data.publicUrl,kind:file.type||''}}
 async function insertPostCompat(post){const base={id:post.id,author_id:post.authorId,author_username:post.authorUsername,author_name:post.authorName,author_avatar:post.authorAvatar,type:post.type,category:typeLabels[post.type]||'প্রকাশনা',title:post.title,body:post.body,original_author:post.originalAuthor||'',media_url:post.media||'',card_style:post.cardStyle||post.card_style||'pearl',status:post.status||'published',created_at:post.createdAt,updated_at:new Date().toISOString()};const variants=[{...base,media_type:post.mediaKind||'',visibility:'public'},{...base,media_kind:post.mediaKind||'',caption:post.caption||'',privacy:'public',author_role:post.authorRole||'user'}];let last=null;for(const payload of variants){try{const r=await sb.from('posts').upsert(payload,{onConflict:'id'}).select('*').single();if(!r.error)return r.data;last=r.error}catch(e){last=e}}throw last||new Error('Supabase post insert failed')}
@@ -1604,7 +1682,7 @@ async function submitComment(form){
 }
 async function sharePost(id){const url=new URL('index.html?post='+encodeURIComponent(id),location.href).href;if(navigator.share){try{await navigator.share({title:'ভুবনডাঙ্গার কবিতা',url});return}catch{}}try{await navigator.clipboard.writeText(url);toast('পোস্টের লিংক কপি হয়েছে')}catch{toast('শেয়ার লিংক: '+url)}}
 function savePost(id){const a=localArr('bhubondangaSavedPosts');if(!a.some(x=>String(x.id||x)===String(id)))a.unshift({id,savedAt:new Date().toISOString()});localSave('bhubondangaSavedPosts',a);toast('পোস্ট সেভ হয়েছে')}
-async function loadFriends(){if(!sb||!state.target?.id)return;try{const r=await sb.from('follows').select('follower_id').eq('following_id',state.target.id).limit(4);if(r.error||!r.data?.length)return;const ids=r.data.map(x=>x.follower_id);const p=await sb.from('profiles').select('id,display_name,avatar_url').in('id',ids);if(!p.error&&p.data?.length)$('#friendRow').innerHTML=p.data.map(x=>'<a class="friend" href="profile.html?user='+encodeURIComponent(x.id)+'">'+(x.avatar_url?'<img src="'+esc(x.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':esc(initials(x.display_name)))+'</a>').join('')+'<button class="more-friend" type="button" data-click="friends">+</button>'}catch{}}
+async function loadFriends(){if(!sb||!state.target?.id)return;try{let ids=[];try{const r=await sb.from('friendships').select('user_a,user_b').or('user_a.eq.'+state.target.id+',user_b.eq.'+state.target.id).limit(8);if(!r.error)ids=(r.data||[]).map(x=>String(x.user_a)===String(state.target.id)?x.user_b:x.user_a).filter(Boolean)}catch(_){}if(!ids.length){const r=await sb.from('follows').select('follower_id').eq('following_id',state.target.id).limit(4);if(!r.error)ids=(r.data||[]).map(x=>x.follower_id)}if(!ids.length)return;const p=await sb.from('profiles').select('id,display_name,avatar_url').in('id',ids.slice(0,8));if(!p.error&&p.data?.length)$('#friendRow').innerHTML=p.data.map(x=>'<a class="friend" href="profile.html?user='+encodeURIComponent(x.id)+'">'+(x.avatar_url?'<img src="'+esc(x.avatar_url)+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':esc(initials(x.display_name)))+'</a>').join('')+'<button class="more-friend" type="button" data-click="friends">+</button>'}catch(_){}}
 function installRealtime(){if(!sb||!state.target?.id)return;try{if(state.channel)sb.removeChannel(state.channel);state.channel=sb.channel('profile-'+state.target.id).on('postgres_changes',{event:'*',schema:'public',table:'posts',filter:'author_id=eq.'+state.target.id},()=>loadPosts()).subscribe()}catch{}}
 function syncDrawers(){const left=$('#leftDrawerBody'),right=$('#rightDrawerBody');const self=$('#leftNav [data-self-profile-link]');if(self){try{self.href=state.me?profileRoute({id:state.me.id,username:state.me.username,display_name:state.me.display_name,role:state.me.roleResolved||state.me.role}):(PAGE_ROLE==='founder'?'founder-profile.html':PAGE_ROLE==='admin'?'admin-profile.html':'profile.html')}catch(_){}}left.innerHTML='<section class="bd59-drawer-identity"><div class="bd59-drawer-leaf"></div><h3>আপন ভুবন</h3><p>আপনার লেখা, পাঠ ও সাহিত্যিক পথচলার নিজস্ব জায়গা।</p><div class="bd59-drawer-quote">“আপনার ক্ষতগুলোকে জ্ঞানে পরিণত করুন।”</div></section><nav class="nav">'+$('#leftNav').innerHTML+'</nav>';right.innerHTML=$('#rightRail').innerHTML;$$('a',left).forEach(x=>x.addEventListener('click',()=>closeDrawers()));$$('[data-tab]',left).forEach(x=>x.addEventListener('click',()=>{state.tab=x.dataset.tab;renderContent();closeDrawers()}))}
 function openDrawer(side){closeDrawers();$('#'+side+'Drawer').classList.add('open');$('#backdrop').classList.add('open');document.body.style.overflow='hidden'}function closeDrawers(){$$('.drawer').forEach(x=>x.classList.remove('open'));$('#backdrop').classList.remove('open');document.body.style.overflow=''}
@@ -1648,7 +1726,7 @@ document.addEventListener('click',async e=>{
  const pOpt=e.target.closest('[data-profile-option]');if(pOpt){e.stopPropagation();const op=pOpt.dataset.profileOption;if(op==='copy')await copyText(location.href,'প্রোফাইল লিংক কপি হয়েছে');else if(op==='share'){if(navigator.share){try{await navigator.share({title:profileName(state.target),url:location.href})}catch{}}else await copyText(location.href,'প্রোফাইল লিংক কপি হয়েছে')}else if(op==='archive'){state.tab='archive';handleTab('archive');$('#profileMenu').hidden=true}else if(op==='report')toast('রিপোর্ট অপশন নির্বাচন করা হয়েছে');return}
  const postOpt=e.target.closest('[data-post-option]');if(postOpt){e.stopPropagation();await handlePostOption(postOpt);closePopovers();return}
  const x=e.target.closest('[data-click]');
- if(x){const a=x.dataset.click;if(a==='edit-profile')openInlineProfileEditor();else if(a==='follow')toggleFollow();else if(a==='drawer-left')openDrawer('left');else if(a==='followers'||a==='following'||a==='friends')toast('তালিকা খুলতে প্রোফাইলের পরিচিতি ব্যবহার করুন');else if(a==='story-touch')toast('স্টোরি টাচ');else if(a==='magic-touch')toast('ম্যাজিক টাচ');else if(a==='posts'){state.tab='home';renderContent()}else if(a==='more-home-posts'){state.homeVisible=Number(state.homeVisible||20)+20;renderContent()}else if(a==='more-archive'){state.archiveVisible=state.archiveVisible||{};state.archiveVisible[state.tab]=Number(state.archiveVisible[state.tab]||20)+20;renderContent()}else if(a==='more'){e.stopPropagation();const m=$('#profileMenu');const willOpen=m.hidden;closePopovers(m);m.hidden=!willOpen}else if(a==='post-menu'){e.stopPropagation();const card=x.closest('.post'),m=$('.post-menu-panel',card),willOpen=m.hidden;closePopovers(m);m.hidden=!willOpen;x.classList.toggle('menu-open',willOpen)}else if(a==='account')toast('অ্যাকাউন্ট');}
+ if(x){const a=x.dataset.click;if(a==='edit-profile')openInlineProfileEditor();else if(a==='follow')toggleFollow();else if(a==='drawer-left')openDrawer('left');else if(a==='friends')toast('পারস্পরিক পরিচিতির তালিকা শিগগিরই যুক্ত হবে');else if(a==='story-touch')toast('স্টোরি টাচ');else if(a==='magic-touch')toast('ম্যাজিক টাচ');else if(a==='posts'){state.tab='home';renderContent()}else if(a==='more-home-posts'){state.homeVisible=Number(state.homeVisible||20)+20;renderContent()}else if(a==='more-archive'){state.archiveVisible=state.archiveVisible||{};state.archiveVisible[state.tab]=Number(state.archiveVisible[state.tab]||20)+20;renderContent()}else if(a==='more'){e.stopPropagation();const m=$('#profileMenu');const willOpen=m.hidden;closePopovers(m);m.hidden=!willOpen}else if(a==='post-menu'){e.stopPropagation();const card=x.closest('.post'),m=$('.post-menu-panel',card),willOpen=m.hidden;closePopovers(m);m.hidden=!willOpen;x.classList.toggle('menu-open',willOpen)}else if(a==='account')toast('অ্যাকাউন্ট');}
  if(!e.target.closest('.profile-popover')&&!e.target.closest('[data-click="more"]')&&!e.target.closest('.post-menu-panel')&&!e.target.closest('[data-click="post-menu"]'))closePopovers();
  const exp=e.target.closest('[data-expand]');if(exp&&!e.target.closest('a,button'))exp.closest('.post').classList.toggle('expanded');
  const rb=e.target.closest('[data-react]');if(rb){const p=$('[data-picker="'+CSS.escape(rb.dataset.react)+'"]');p.classList.toggle('open')}
@@ -5201,5 +5279,194 @@ obs.observe(D.documentElement,{childList:true,subtree:true});
 socialLine();modernMenu();addPinButtons();decoratePins();
 })();
 </script>
+
+<script id="bd-v77-follow-connections-js">
+(()=>{
+'use strict';
+if(window.__BD_V77_CONNECTIONS__)return;window.__BD_V77_CONNECTIONS__=1;
+const D=document,q=(s,r=D)=>r.querySelector(s),qa=(s,r=D)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+const bn=n=>{try{return new Intl.NumberFormat('en-US').format(Number(n)||0)}catch(_){return String(Number(n)||0)}};
+
+function client(){try{return window.sb||window.supabaseClient||window.bdSupabase||window.BhubondangaAuth?.client||null}catch(_){return null}}
+function target(){try{return window.state?.target||state?.target||{}}catch(_){return{}}}
+function me(){try{return window.state?.me||state?.me||null}catch(_){return null}}
+function owner(){try{return !!(window.state?.owner??state?.owner)}catch(_){return false}}
+function targetId(){return String(target()?.id||'')}
+function visibility(kind){
+  const p=target();
+  if(kind==='following')return String(p.following_visibility||'public').toLowerCase();
+  return String(p.followers_visibility||'public').toLowerCase();
+}
+function canView(kind){
+  if(owner())return true;
+  const v=visibility(kind);
+  if(v==='private')return false;
+  /* "followers" means only people already following this profile may see it.
+     We keep this future-ready; public/private are the primary V77 settings. */
+  return true;
+}
+function route(p){
+  const ref=p?.username||p?.id||'';
+  return 'profile.html?user='+encodeURIComponent(ref);
+}
+function initials(name){return String(name||'ভূ').trim().slice(0,1)||'ভূ'}
+
+function ensureModal(){
+  if(q('#bd77Connections'))return;
+  D.body.insertAdjacentHTML('beforeend',`<section class="bd77-connections" id="bd77Connections" aria-hidden="true">
+    <div class="bd77-connections-panel" role="dialog" aria-modal="true" aria-labelledby="bd77ConnectionsTitle">
+      <header class="bd77-connections-head"><div><b id="bd77ConnectionsTitle">পরিচিতি</b><small id="bd77ConnectionsSub">প্রোফাইল তালিকা</small></div><button type="button" class="bd77-connections-close" data-bd77-close aria-label="Close">×</button></header>
+      <div class="bd77-connections-list" id="bd77ConnectionsList"></div>
+    </div>
+  </section>`);
+}
+function closeModal(){q('#bd77Connections')?.classList.remove('open');D.body.classList.remove('bd77-connections-open')}
+function openShell(kind){
+  ensureModal();
+  const modal=q('#bd77Connections'),title=q('#bd77ConnectionsTitle'),sub=q('#bd77ConnectionsSub'),list=q('#bd77ConnectionsList');
+  title.textContent=kind==='followers'?'Followers':'Following';
+  sub.textContent=kind==='followers'?'যারা এই প্রোফাইল অনুসরণ করছেন':'এই প্রোফাইল যাদের অনুসরণ করছে';
+  list.innerHTML='<div class="bd77-loading">তালিকা লোড হচ্ছে…</div>';
+  modal.classList.add('open');D.body.classList.add('bd77-connections-open');
+}
+async function profiles(ids){
+  const c=client();if(!c||!ids.length)return[];
+  try{
+    const r=await c.from('profiles').select('id,username,display_name,avatar_url,role').in('id',ids);
+    if(!r.error&&r.data?.length){
+      const map=new Map(r.data.map(x=>[String(x.id),x]));
+      return ids.map(id=>map.get(String(id))).filter(Boolean);
+    }
+  }catch(_){}
+  return[];
+}
+function renderRows(rows,kind){
+  const list=q('#bd77ConnectionsList');if(!list)return;
+  if(!rows.length){
+    list.innerHTML='<div class="bd77-empty"><b>কোনো প্রোফাইল দেখানো হচ্ছে না</b>এই তালিকায় এখন দেখানোর মতো কোনো সদস্য নেই।</div>';
+    return;
+  }
+  list.innerHTML=rows.map(p=>`<article class="bd77-person">
+    <div class="bd77-person-avatar">${p.avatar_url?`<img loading="lazy" src="${esc(p.avatar_url)}" alt="">`:esc(initials(p.display_name||p.username))}</div>
+    <a class="bd77-person-copy" href="${route(p)}"><b>${esc(p.display_name||p.username||'ভুবনডাঙ্গার সদস্য')}</b><span>${p.username?'@'+esc(p.username):'ভুবনডাঙ্গার সদস্য'}</span></a>
+    <a class="bd77-person-open" href="${route(p)}">প্রোফাইল</a>
+  </article>`).join('');
+}
+async function openConnections(kind){
+  openShell(kind);
+  if(kind==='following'&&!canView('following')){
+    renderRows([],kind);
+    return;
+  }
+  if(kind==='followers'&&!canView('followers')){
+    renderRows([],kind);
+    return;
+  }
+  const c=client(),id=targetId();if(!c||!id){renderRows([],kind);return}
+  try{
+    let r;
+    if(kind==='followers'){
+      r=await c.from('follows').select('follower_id').eq('following_id',id).limit(500);
+      if(r.error)throw r.error;
+      const ids=[...new Set((r.data||[]).map(x=>String(x.follower_id||'')).filter(Boolean))];
+      renderRows(await profiles(ids),kind);
+    }else{
+      r=await c.from('follows').select('following_id').eq('follower_id',id).limit(500);
+      if(r.error)throw r.error;
+      const ids=[...new Set((r.data||[]).map(x=>String(x.following_id||'')).filter(Boolean))];
+      renderRows(await profiles(ids),kind);
+    }
+  }catch(e){
+    const list=q('#bd77ConnectionsList');if(list)list.innerHTML='<div class="bd77-empty"><b>তালিকা লোড হয়নি</b>সংযোগ ফিরে এলে আবার চেষ্টা করুন।</div>';
+  }
+}
+
+/* Canonical privacy-aware count refresh.
+   Owner sees their real Following even when the public setting is private.
+   Visitors see 0 when private, exactly as requested. */
+async function refreshCounts(){
+  const c=client(),id=targetId();if(!c||!id)return;
+  try{
+    const [a,b]=await Promise.all([
+      c.from('follows').select('*',{count:'exact',head:true}).eq('following_id',id),
+      c.from('follows').select('*',{count:'exact',head:true}).eq('follower_id',id)
+    ]);
+    const realFollowers=Number(a.count||0),realFollowing=Number(b.count||0);
+    const showFollowers=owner()||canView('followers');
+    const showFollowing=owner()||canView('following');
+    const f1=q('#followersCount'),f2=q('#followingCount');
+    if(f1)f1.textContent=bn(showFollowers?realFollowers:0);
+    if(f2)f2.textContent=bn(showFollowing?realFollowing:0);
+    const s1=q('[data-v75-followers-count]'),s2=q('[data-v75-following-count]');
+    if(s1)s1.textContent=bn(showFollowers?realFollowers:0);
+    if(s2)s2.textContent=bn(showFollowing?realFollowing:0);
+    q('[data-v75-followers]')?.classList.toggle('bd77-social-private',!showFollowers);
+    q('[data-v75-following]')?.classList.toggle('bd77-social-private',!showFollowing);
+  }catch(_){}
+}
+
+/* Replace old toast-only behaviour before it reaches legacy listener. */
+D.addEventListener('click',e=>{
+  const socialFollower=e.target.closest('[data-v75-followers]');
+  const socialFollowing=e.target.closest('[data-v75-following]');
+  const legacy=e.target.closest('[data-click="followers"],[data-click="following"]');
+  if(!socialFollower&&!socialFollowing&&!legacy)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  const kind=(socialFollowing||legacy?.dataset.click==='following')?'following':'followers';
+  openConnections(kind);
+},true);
+
+D.addEventListener('click',e=>{
+  if(e.target.closest('[data-bd77-close]')||e.target.id==='bd77Connections')closeModal();
+},true);
+D.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* After profile load/rerender, read newest profile privacy and refresh counts. */
+let timer;
+const obs=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(refreshCounts,180)});
+obs.observe(D.documentElement,{childList:true,subtree:true});
+setTimeout(refreshCounts,650);
+window.addEventListener('bd:profile-privacy-updated',refreshCounts);
+window.BD77_CONNECTIONS={open:openConnections,refresh:refreshCounts};
+})();
+</script>
+
+
+<script id="bd-v78-latin-social-counts">
+(()=>{
+ if(window.__BD_V78_LATIN_SOCIAL__)return;window.__BD_V78_LATIN_SOCIAL__=1;
+ const D=document;
+ const latin=v=>{
+   const map={'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+   const raw=String(v??'0').replace(/[০-৯]/g,x=>map[x]||x).replace(/,/g,'');
+   const n=Number(raw);return Number.isFinite(n)?new Intl.NumberFormat('en-US').format(n):raw
+ };
+ function run(){
+   ['followersCount','followingCount'].forEach(id=>{const e=D.getElementById(id);if(e)e.textContent=latin(e.textContent)});
+   D.querySelectorAll('[data-v75-followers-count],[data-v75-following-count]').forEach(e=>e.textContent=latin(e.textContent));
+ }
+ new MutationObserver(()=>requestAnimationFrame(run)).observe(D.documentElement,{childList:true,subtree:true,characterData:true});
+ run();window.BD78_LATIN_COUNT=latin;
+})();
+</script>
+
+
+<script id="bd-v79-profile-photo-viewer-js">
+(()=>{'use strict';if(window.__BD_V79_PROFILE_VIEWER__)return;window.__BD_V79_PROFILE_VIEWER__=1;
+ const D=document,q=(s,r=D)=>r.querySelector(s);let cur=null;
+ function esc(v){return String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]))}
+ function stateObj(){try{return window.state||state}catch(_){return null}}
+ function imagesFor(card){const id=card?.dataset.post,st=stateObj(),p=st?.posts?.find(x=>String(x.id)===String(id));if(!p)return[...card.querySelectorAll('.post-media img,.bd104-news-image2 img')].map(x=>x.currentSrc||x.src).filter(Boolean);const raw=[];if(Array.isArray(p.images))raw.push(...p.images);if(p.media_url)raw.unshift(p.media_url);if(p.news_image_2)raw.push(p.news_image_2);return [...new Set(raw.filter(Boolean))]}
+ function ensure(){if(q('#bd79ProfilePhotoViewer'))return;D.body.insertAdjacentHTML('beforeend','<section class="bd79-profile-photo-viewer" id="bd79ProfilePhotoViewer" aria-hidden="true"><header class="bd79-pv-head"><button type="button" data-bd79-close aria-label="Close">×</button><b data-bd79-count></b><span></span></header><div class="bd79-pv-stage"><img data-bd79-image alt=""></div><footer class="bd79-pv-foot"><span data-bd79-title>ছবি</span><small>Swipe ← →</small></footer></section>');const v=q('#bd79ProfilePhotoViewer');q('[data-bd79-close]',v).onclick=close;let sx=0,sy=0;const stage=q('.bd79-pv-stage',v);stage.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY},{passive:true});stage.addEventListener('pointerup',e=>{const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy))step(dx<0?1:-1)},{passive:true});v.addEventListener('contextmenu',e=>e.preventDefault())}
+ function paint(){ensure();const v=q('#bd79ProfilePhotoViewer');if(!cur||!v)return;q('[data-bd79-image]',v).src=cur.images[cur.index];q('[data-bd79-count]',v).textContent=(cur.index+1)+' of '+cur.images.length;q('[data-bd79-title]',v).textContent=cur.title||'ছবি'}
+ function open(card,index=0){const images=imagesFor(card);if(!images.length)return;const title=card.querySelector('.post-title')?.textContent.trim()||card.querySelector('.bd-v34-change-label')?.textContent.trim()||'ছবি';cur={images,index:Math.max(0,Math.min(images.length-1,index)),title};ensure();const v=q('#bd79ProfilePhotoViewer');v.classList.add('open');v.setAttribute('aria-hidden','false');D.documentElement.style.overflow='hidden';paint()}
+ function close(){const v=q('#bd79ProfilePhotoViewer');v?.classList.remove('open');v?.setAttribute('aria-hidden','true');D.documentElement.style.overflow='';cur=null}
+ function step(d){if(!cur)return;cur.index=(cur.index+d+cur.images.length)%cur.images.length;paint()}
+ D.addEventListener('click',e=>{const img=e.target.closest('.post[data-post] .post-media img,.post[data-post] .bd104-news-image2 img');if(!img)return;e.preventDefault();e.stopPropagation();const card=img.closest('.post[data-post]'),all=[...card.querySelectorAll('.post-media img,.bd104-news-image2 img')],idx=Math.max(0,all.indexOf(img));open(card,idx)},true);
+ D.addEventListener('keydown',e=>{if(!cur)return;if(e.key==='Escape')close();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1)});
+})();
+</script>
+
 </body>
 </html>
