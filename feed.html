@@ -39,13 +39,13 @@ input,textarea,[contenteditable="true"]{
 (function(D,W){'use strict';
   if(W.__BD_FEED_COPY_LOCK__)return;W.__BD_FEED_COPY_LOCK__=1;
   const editable=t=>!!t.closest?.('input,textarea,select,[contenteditable="true"]');
-  const protectedZone=t=>!!t.closest?.('.bd-post,.bd-rx-tray,[data-react-main],[data-rx-pick]');
-  const reactionZone=t=>!!t.closest?.('[data-react-main],[data-rx-pick],.bd-rx-tray,.bd-react-host');
+  const protectedZone=t=>!!t.closest?.('.bd-post,.bd-rx-tray,[data-react-main],[data-rx-pick],.bd-photo-viewer,.bd-photo-actions,.bd-photo-rx-picker');
+  const reactionZone=t=>!!t.closest?.('[data-react-main],[data-rx-pick],.bd-rx-tray,.bd-react-host,[data-photo-like],.bd-photo-rx-picker');
   const clearSel=()=>{try{const s=W.getSelection?.();if(s&&s.rangeCount)s.removeAllRanges()}catch(_){}};
   D.addEventListener('contextmenu',e=>{if(!editable(e.target)){e.preventDefault();clearSel()}},true);
   D.addEventListener('selectstart',e=>{if(protectedZone(e.target)&&!editable(e.target)){e.preventDefault();clearSel()}},true);
   D.addEventListener('dragstart',e=>{if(protectedZone(e.target)){e.preventDefault()}},true);
-  D.addEventListener('pointerdown',e=>{if(reactionZone(e.target)){e.preventDefault();clearSel()}},true);
+  D.addEventListener('pointerdown',e=>{if(reactionZone(e.target))clearSel()},true);
   D.addEventListener('pointerup',e=>{if(reactionZone(e.target))clearSel()},true);
 })(document,window);
 </script>
@@ -681,6 +681,79 @@ html[data-theme="dark"] .bd75-suggest{background:#0f1c17!important}
 html[data-theme="dark"] .bd75-person{background:#15251f!important}
 html[data-theme="dark"] .bd75-suggest-head b,html[data-theme="dark"] .bd75-person-body b{color:#f2faf6!important}
 </style>
+
+<style id="bd-v78-feed-interaction-lock">
+/* Ensure media buttons receive taps directly. */
+.bd-photo-cell{
+  position:relative!important;z-index:2!important;touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent!important;cursor:pointer!important
+}
+.bd-photo-cell>img{pointer-events:none!important}
+.bd-photo-cell>.bd-photo-more{pointer-events:none!important}
+[data-react-main],[data-rx-pick]{
+  touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important
+}
+/* Viewers must always sit above sidebars, drawers, headers and reaction capsule. */
+.bd-photo-viewer,.bd-full-post-viewer{z-index:2147483500!important}
+.bd-photo-viewer.open,.bd-full-post-viewer.open{pointer-events:auto!important}
+.bd-photo-viewer:not(.open),.bd-full-post-viewer:not(.open){pointer-events:none!important}
+/* no hidden sidebar/backdrop can intercept the center feed */
+.bd-drawer-back:not(.open),.bd-drawer:not(.open){pointer-events:none!important}
+.bd-drawer.open,.bd-drawer-back.open{pointer-events:auto!important}
+</style>
+
+
+<style id="bd-v79-feed-comment-photo-reaction-lock">
+.bd-photo-actions,.bd-photo-actions *,[data-react-main],.bd-rx-tray,.bd-rx-tray *,.bd-photo-rx-picker,.bd-photo-rx-picker *{
+ -webkit-user-select:none!important;user-select:none!important;-webkit-touch-callout:none!important;-webkit-user-drag:none!important
+}
+.bd-photo-like-host{position:relative!important;display:grid!important;place-items:center!important}
+.bd-photo-actions>.bd-photo-like-host{min-width:0!important}
+.bd-photo-like-host>[data-photo-like]{width:100%!important;height:100%!important}
+.bd-photo-rx-picker{
+ position:absolute!important;left:8px!important;bottom:55px!important;z-index:2147483640!important;
+ width:min(350px,calc(100vw - 28px))!important;padding:7px 8px!important;
+ display:grid!important;grid-template-columns:repeat(7,1fr)!important;gap:3px!important;
+ border:1px solid rgba(255,255,255,.16)!important;border-radius:18px!important;
+ background:rgba(17,20,22,.96)!important;box-shadow:0 18px 46px rgba(0,0,0,.38)!important;
+ backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important
+}
+.bd-photo-rx-picker[hidden]{display:none!important}
+.bd-photo-rx-picker button{min-width:0!important;height:45px!important;border:0!important;border-radius:10px!important;background:transparent!important;padding:2px!important;display:grid!important;place-items:center!important}
+.bd-photo-rx-picker button:active{transform:translateY(-4px) scale(1.06)!important;background:rgba(255,255,255,.07)!important}
+.bd-photo-rx-picker img{width:38px!important;height:38px!important;object-fit:contain!important;pointer-events:none!important}
+/* Like stays a thumb + Like in the viewer even after Love or another reaction. */
+[data-photo-like] .bd-v74-icon{display:block!important;fill:none!important;stroke:currentColor!important}
+[data-photo-like] span{display:inline!important}
+[data-photo-like]::before,[data-photo-like]::after{content:none!important}
+.bd-comment-detector{margin:0 5px 5px!important;padding:6px 8px!important;border-radius:8px!important;background:rgba(205,49,70,.10)!important;color:#a62a3d!important;font-size:11px!important;font-weight:750!important;line-height:1.35!important}
+.bd-comment-detector[hidden]{display:none!important}
+.bd-comment-flagged{outline:1.5px solid rgba(205,49,70,.55)!important;outline-offset:-1px!important}
+/* Comment/photo toolbar uses clean outline SVG controls, never glyph circles. */
+.bd-dock-camera,.bd-dock-plus,.bd-dock-send{border-radius:6px!important;border:0!important;background:transparent!important}
+.bd-dock-camera::before,.bd-dock-plus::before,.bd-dock-send::before{content:none!important}
+@media(max-width:520px){.bd-photo-rx-picker{left:-4px!important;bottom:52px!important}.bd-photo-rx-picker img{width:34px!important;height:34px!important}}
+</style>
+
+
+<style id="bd-v79-final-comment-shape-lock">
+/* No round placeholder/send controls in comment UI. */
+.bd-comment-form button,.bd-reply-form button{
+  border-radius:8px!important;
+  background:transparent!important;
+  color:#176b56!important;
+  box-shadow:none!important;
+}
+.bd-comment-form button .bd-icon,.bd-reply-form button .bd-icon{
+  stroke:#176b56!important;
+}
+.bd-full-comment-dock .bd-dock-tool{
+  border-radius:6px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+</style>
+
 </head><body><svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="bd-i-search" viewbox="0 0 24 24"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></symbol><symbol id="bd-i-home" viewbox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"></path><path d="M5.5 10.5V20h13v-9.5M9.5 20v-6h5v6"></path></symbol><symbol id="bd-i-spirit" viewbox="0 0 24 24"><path d="M5 18c4-6 7-10 14-12-1.5 6-5 10-11 12H5Z"></path><path d="M7.5 17c3-3.5 6-6 10-8.5M4 6l.6 1.5L6 8l-1.4.5L4 10l-.6-1.5L2 8l1.4-.5L4 6ZM19 15l.7 1.7 1.8.8-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.8L19 15Z"></path></symbol><symbol id="bd-i-comment" viewbox="0 0 24 24"><path d="M4 5.5h16v11H9l-5 3v-14Z"></path></symbol><symbol id="bd-i-share" viewbox="0 0 24 24"><path d="M8 12h9M14 8l4 4-4 4"></path><path d="M5 6.5v11h9"></path></symbol><symbol id="bd-i-react" viewbox="0 0 24 24"><path d="M8.2 10.3 11 4.8c.55-1.08 2.2-.7 2.2.52v3.25h4.45c1.2 0 2.08 1.12 1.78 2.28l-1.42 5.62A2 2 0 0 1 16.07 18H8.2V10.3Z"></path><path d="M8.2 10.3H4.6A1.6 1.6 0 0 0 3 11.9v4.5A1.6 1.6 0 0 0 4.6 18h3.6v-7.7Z"></path></symbol><symbol id="bd-i-more" viewbox="0 0 24 24"><circle cx="5" cy="12" fill="currentColor" r="1"></circle><circle cx="12" cy="12" fill="currentColor" r="1"></circle><circle cx="19" cy="12" fill="currentColor" r="1"></circle></symbol><symbol id="bd-i-send" viewbox="0 0 24 24"><path d="m3 4 18 8-18 8 3-8-3-8Z"></path><path d="M6 12h15"></path></symbol><symbol id="bd-i-close" viewbox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"></path></symbol><symbol id="bd-i-back" viewbox="0 0 24 24"><path d="m14.5 5-7 7 7 7"></path></symbol><symbol id="bd-i-template" viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="4"></rect><path d="M8 4v16M8 9h13"></path></symbol><symbol id="bd-i-font" viewbox="0 0 24 24"><path d="M5 19 10 5h4l5 14M7.5 13h9"></path></symbol><symbol id="bd-i-color" viewbox="0 0 24 24"><path d="M12 3c5 0 9 3.5 9 8 0 2.4-1.4 3.5-3 3.5h-1.8c-1.1 0-1.6.9-1.2 1.8.7 1.8-.7 4.7-4.5 4.7C6 21 3 17.5 3 12.5 3 7 7 3 12 3Z"></path><circle cx="8" cy="9" r="1"></circle><circle cx="12" cy="7" r="1"></circle><circle cx="16" cy="9" r="1"></circle></symbol><symbol id="bd-i-image" viewbox="0 0 24 24"><rect height="16" rx="2" width="18" x="3" y="4"></rect><circle cx="9" cy="9" r="2"></circle><path d="m4 18 5-5 3 3 3-3 5 5"></path></symbol><symbol id="bd-i-filter" viewbox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"></path></symbol><symbol id="bd-i-adjust" viewbox="0 0 24 24"><path d="M4 6h8M16 6h4M4 12h3M11 12h9M4 18h10M18 18h2"></path><circle cx="14" cy="6" r="2"></circle><circle cx="9" cy="12" r="2"></circle><circle cx="16" cy="18" r="2"></circle></symbol><symbol id="bd-i-trash" viewbox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"></path></symbol><symbol id="bd-i-copy" viewbox="0 0 24 24"><rect height="11" rx="2" width="11" x="8" y="8"></rect><path d="M5 16H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></symbol><symbol id="bd-i-edit" viewbox="0 0 24 24"><path d="m4 20 4-1 11-11-3-3L5 16l-1 4ZM14 6l3 3"></path></symbol><symbol id="bd-i-report" viewbox="0 0 24 24"><path d="M5 21V4M5 5h12l-2 4 2 4H5"></path></symbol></svg><div class="bd-feed-demo" id="bdFeedDemo"></div><script data-bd-module="feed">
 (()=>{'use strict';
 const D=document,W=window;W.BD_MODULES=W.BD_MODULES||{};if(W.BD_MODULES.feed)return;W.BD_BUS=W.BD_BUS||new EventTarget();
@@ -806,7 +879,7 @@ function updateViewerViewport(){
 }
 function installViewers(){
  if(!D.getElementById('bdFullPostViewer')){
-  D.body.insertAdjacentHTML('beforeend',`<section class="bd-full-post-viewer" id="bdFullPostViewer" aria-hidden="true"><header class="bd-full-post-head"><button type="button" data-full-close aria-label="Close">‹</button><b>Post</b><span></span></header><div class="bd-full-post-scroll" data-full-scroll><div class="bd-feed-root bd-viewer-feed-root" data-full-feed-root></div></div><form class="bd-full-comment-dock" data-full-comment-dock><div class="bd-dock-preview" data-dock-preview hidden></div><div class="bd-dock-row"><input type="text" inputmode="text" autocomplete="off" placeholder="Comment as আপনি" data-full-comment-input><button type="button" class="bd-dock-tool bd-dock-camera" data-full-camera aria-label="ছবি তুলুন"><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7.2 9 5h6l1.5 2.2H19A2.5 2.5 0 0 1 21.5 9.7v7.8A2.5 2.5 0 0 1 19 20H5a2.5 2.5 0 0 1-2.5-2.5V9.7A2.5 2.5 0 0 1 5 7.2h2.5Z"/><circle cx="12" cy="13.2" r="3.6"/></svg></button><button type="button" class="bd-dock-tool bd-dock-plus" data-full-plus aria-label="ছবি যোগ করুন"><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button type="submit" class="bd-dock-tool bd-dock-send" aria-label="কমেন্ট পাঠান"><svg class="bd-v74-icon bd-v74-send-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 4 17 8-17 8 2.8-8L3.5 4Z"/><path d="M6.3 12h13.8"/></svg></button></div><input type="file" hidden accept="image/*" capture="environment" data-full-camera-file><input type="file" hidden accept="image/*" data-full-photo-file></form></section>`);
+  D.body.insertAdjacentHTML('beforeend',`<section class="bd-full-post-viewer" id="bdFullPostViewer" aria-hidden="true"><header class="bd-full-post-head"><button type="button" data-full-close aria-label="Close">‹</button><b>Post</b><span></span></header><div class="bd-full-post-scroll" data-full-scroll><div class="bd-feed-root bd-viewer-feed-root" data-full-feed-root></div></div><form class="bd-full-comment-dock" data-full-comment-dock><div class="bd-dock-preview" data-dock-preview hidden></div><div class="bd-comment-detector" data-comment-detector hidden></div><div class="bd-dock-row"><input type="text" inputmode="text" autocomplete="off" placeholder="Comment as আপনি" data-full-comment-input><button type="button" class="bd-dock-tool bd-dock-camera" data-full-camera aria-label="ছবি তুলুন"><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 7.2 9 5h6l1.5 2.2H19A2.5 2.5 0 0 1 21.5 9.7v7.8A2.5 2.5 0 0 1 19 20H5a2.5 2.5 0 0 1-2.5-2.5V9.7A2.5 2.5 0 0 1 5 7.2h2.5Z"/><circle cx="12" cy="13.2" r="3.6"/></svg></button><button type="button" class="bd-dock-tool bd-dock-plus" data-full-plus aria-label="ছবি যোগ করুন"><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button type="submit" class="bd-dock-tool bd-dock-send" aria-label="কমেন্ট পাঠান"><svg class="bd-v74-icon bd-v74-send-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 4 17 8-17 8 2.8-8L3.5 4Z"/><path d="M6.3 12h13.8"/></svg></button></div><input type="file" hidden accept="image/*" capture="environment" data-full-camera-file><input type="file" hidden accept="image/*" data-full-photo-file></form></section>`);
   const v=D.getElementById('bdFullPostViewer');v.querySelector('[data-full-close]').onclick=closeFullPostViewer;
   const form=v.querySelector('[data-full-comment-dock]');form.onsubmit=e=>{e.preventDefault();submitFullViewerComment()};
   v.querySelector('[data-full-camera]').onclick=()=>v.querySelector('[data-full-camera-file]').click();
@@ -815,8 +888,17 @@ function installViewers(){
   v.querySelector('[data-full-camera-file]').onchange=pick;v.querySelector('[data-full-photo-file]').onchange=pick;
  }
  if(!D.getElementById('bdPhotoViewer')){
-  D.body.insertAdjacentHTML('beforeend',`<section class="bd-photo-viewer" id="bdPhotoViewer" aria-hidden="true"><header class="bd-photo-top"><button type="button" data-photo-close aria-label="Close">×</button><b data-photo-count></b><button type="button" class="bd-photo-dots">•••</button></header><div class="bd-photo-stage"><img data-photo-view alt=""></div><footer class="bd-photo-foot"><div class="bd-photo-author" data-photo-author></div><div class="bd-photo-social-row"><button data-photo-summary></button><span data-photo-comments></span></div><div class="bd-photo-actions"><button type="button" data-photo-like><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 10.2 11.2 5c.6-1.2 2.3-.75 2.3.55V8.7h4.3c1.3 0 2.25 1.2 1.92 2.45l-1.4 5.4A2 2 0 0 1 16.4 18H8.5v-7.8Z"/><path d="M8.5 10.2H5.2A1.7 1.7 0 0 0 3.5 11.9v4.4A1.7 1.7 0 0 0 5.2 18h3.3v-7.8Z"/></svg><span>Like</span></button><button type="button" data-photo-comment><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 5.5h13.6A2.2 2.2 0 0 1 21 7.7v7.6a2.2 2.2 0 0 1-2.2 2.2H10l-5.8 3.2 1.1-3.2h-.1A2.2 2.2 0 0 1 3 15.3V7.7a2.2 2.2 0 0 1 2.2-2.2Z"/></svg><span>Comment</span></button><button type="button" data-photo-share><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.2 5.2 21 12l-6.8 6.8v-4.1C8.8 14.7 5.4 16.3 3 20c.7-7.4 4.6-10.6 11.2-10.6V5.2Z"/></svg><span>Share</span></button></div></footer></section>`);
+  D.body.insertAdjacentHTML('beforeend',`<section class="bd-photo-viewer" id="bdPhotoViewer" aria-hidden="true"><header class="bd-photo-top"><button type="button" data-photo-close aria-label="Close">×</button><b data-photo-count></b><button type="button" class="bd-photo-dots">•••</button></header><div class="bd-photo-stage"><img data-photo-view alt=""></div><footer class="bd-photo-foot"><div class="bd-photo-author" data-photo-author></div><div class="bd-photo-social-row"><button data-photo-summary></button><span data-photo-comments></span></div><div class="bd-photo-actions"><div class="bd-photo-like-host"><button type="button" data-photo-like><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 10.2 11.2 5c.6-1.2 2.3-.75 2.3.55V8.7h4.3c1.3 0 2.25 1.2 1.92 2.45l-1.4 5.4A2 2 0 0 1 16.4 18H8.5v-7.8Z"/><path d="M8.5 10.2H5.2A1.7 1.7 0 0 0 3.5 11.9v4.4A1.7 1.7 0 0 0 5.2 18h3.3v-7.8Z"/></svg><span>Like</span></button><div class="bd-photo-rx-picker" data-photo-rx-picker hidden><button data-photo-rx="like" aria-label="Like"><img src="rx-like.webp" alt=""></button><button data-photo-rx="love" aria-label="Love"><img src="rx-love.webp" alt=""></button><button data-photo-rx="care" aria-label="Care"><img src="rx-care.webp" alt=""></button><button data-photo-rx="haha" aria-label="Haha"><img src="rx-haha.webp" alt=""></button><button data-photo-rx="wow" aria-label="Wow"><img src="rx-wow.webp" alt=""></button><button data-photo-rx="sad" aria-label="Sad"><img src="rx-sad.webp" alt=""></button><button data-photo-rx="angry" aria-label="Angry"><img src="rx-angry.webp" alt=""></button></div></div><button type="button" data-photo-comment><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5.2 5.5h13.6A2.2 2.2 0 0 1 21 7.7v7.6a2.2 2.2 0 0 1-2.2 2.2H10l-5.8 3.2 1.1-3.2h-.1A2.2 2.2 0 0 1 3 15.3V7.7a2.2 2.2 0 0 1 2.2-2.2Z"/></svg><span>Comment</span></button><button type="button" data-photo-share><svg class="bd-v74-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.2 5.2 21 12l-6.8 6.8v-4.1C8.8 14.7 5.4 16.3 3 20c.7-7.4 4.6-10.6 11.2-10.6V5.2Z"/></svg><span>Share</span></button></div></footer></section>`);
   const pv=D.getElementById('bdPhotoViewer');pv.querySelector('[data-photo-close]').onclick=closePhotoViewer;
+  const likeBtn=pv.querySelector('[data-photo-like]'),photoPicker=pv.querySelector('[data-photo-rx-picker]');let pHold=null,pTouch=null,pHeld=false,pClickGuard=0;
+  const closePhotoPicker=()=>{if(photoPicker)photoPicker.hidden=true};
+  likeBtn.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;e.preventDefault();const t=e.touches[0];pTouch={x:t.clientX,y:t.clientY};pHeld=false;clearTimeout(pHold);pHold=setTimeout(()=>{pHeld=true;if(photoPicker)photoPicker.hidden=false},310)},{passive:false});
+  likeBtn.addEventListener('touchmove',e=>{if(!pTouch||!e.touches[0])return;const t=e.touches[0];if(Math.hypot(t.clientX-pTouch.x,t.clientY-pTouch.y)>12){clearTimeout(pHold);pTouch=null}},{passive:true});
+  likeBtn.addEventListener('touchend',e=>{if(!pTouch&&!pHeld)return;e.preventDefault();clearTimeout(pHold);pClickGuard=Date.now()+650;const heldNow=pHeld;pTouch=null;pHeld=false;if(!heldNow&&BD_PHOTO_VIEW?.card)applyRx(BD_PHOTO_VIEW.card,'like')},{passive:false});
+  likeBtn.addEventListener('touchcancel',()=>{clearTimeout(pHold);pTouch=null;pHeld=false},{passive:true});
+  likeBtn.addEventListener('click',e=>{e.preventDefault();if(Date.now()<pClickGuard)return;if(BD_PHOTO_VIEW?.card)applyRx(BD_PHOTO_VIEW.card,'like')});
+  likeBtn.addEventListener('contextmenu',e=>e.preventDefault());
+  photoPicker?.querySelectorAll('[data-photo-rx]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(BD_PHOTO_VIEW?.card)applyRx(BD_PHOTO_VIEW.card,b.dataset.photoRx);closePhotoPicker()}));
   let sx=0,sy=0,pt=0,px=0,py=0;const stage=pv.querySelector('.bd-photo-stage');stage.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY},{passive:true});stage.addEventListener('pointerup',e=>{const d=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(d)>55&&Math.abs(d)>Math.abs(dy)){stepPhoto(d<0?1:-1);return}const now=Date.now();if(now-pt<330&&Math.hypot(e.clientX-px,e.clientY-py)<32&&BD_PHOTO_VIEW?.card){applyRx(BD_PHOTO_VIEW.card,'love');pt=0}else{pt=now;px=e.clientX;py=e.clientY}},{passive:true})
  }
  updateViewerViewport()
@@ -843,7 +925,7 @@ async function openFullPostViewer(card,focus=false){
  vc.querySelector('[data-comment-open]').onclick=()=>preserveViewerScrollWhileFocus(v.querySelector('[data-full-comment-input]'));
  vc.querySelector('[data-comment-count]').onclick=()=>preserveViewerScrollWhileFocus(v.querySelector('[data-full-comment-input]'));
  BD_FULL_VIEW={sourceCard:card,root,card:vc,state:data.state,post:data.post,commentFile:null};sc.scrollTop=0;v.classList.add('open');v.setAttribute('aria-hidden','false');lockViewerPage(true);updateViewerViewport();
- const inp=v.querySelector('[data-full-comment-input]');inp.value='';try{const ss=await session(),md=ss?.user?.user_metadata||{},nm=md.full_name||md.name||md.display_name||ss?.user?.email?.split('@')[0]||'আপনি';inp.placeholder='Comment as '+nm}catch(_){}setFullViewerCommentFile(null);if(focus)setTimeout(()=>preserveViewerScrollWhileFocus(inp),60)
+ const inp=v.querySelector('[data-full-comment-input]');inp.value='';bdBindCommentDetector(inp);try{const ss=await session(),md=ss?.user?.user_metadata||{},nm=md.full_name||md.name||md.display_name||ss?.user?.email?.split('@')[0]||'আপনি';inp.placeholder='Comment as '+nm}catch(_){}setFullViewerCommentFile(null);if(focus)setTimeout(()=>preserveViewerScrollWhileFocus(inp),60)
 }
 function closeFullPostViewer(unlock=true){
  const v=D.getElementById('bdFullPostViewer');if(!v?.classList.contains('open'))return;
@@ -875,10 +957,10 @@ function renderPhotoViewer(){
  pv.querySelector('[data-photo-author]').innerHTML=`${p.avatar?`<img src="${esc(p.avatar)}" alt="">`:`<span>${esc((p.author||'ভ')[0])}</span>`}<b>${esc(p.author)}</b>`;
  pv.querySelector('[data-photo-summary]').innerHTML=`${p.reactionCount?rxMini('like')+rxMini('love'):''}<span>${socialCount(p.reactionCount)}</span>`;
  pv.querySelector('[data-photo-comments]').textContent=`${socialCount(p.commentCount)} comments`;
- pv.querySelector('[data-photo-like]').onclick=()=>applyRx(o.card,'like');
  pv.querySelector('[data-photo-comment]').onclick=()=>openFullPostViewer(o.card,true);
  pv.querySelector('[data-photo-share]').onclick=()=>sharePostAction(o.card)
 }
+D.addEventListener('pointerdown',e=>{const p=D.querySelector('[data-photo-rx-picker]');if(p&&!p.hidden&&!e.target.closest('[data-photo-rx-picker],[data-photo-like]'))p.hidden=true},true);
 function stepPhoto(delta){if(!BD_PHOTO_VIEW)return;BD_PHOTO_VIEW.index=(BD_PHOTO_VIEW.index+delta+BD_PHOTO_VIEW.imgs.length)%BD_PHOTO_VIEW.imgs.length;renderPhotoViewer()}
 function closePhotoViewer(unlock=true){const pv=D.getElementById('bdPhotoViewer');if(!pv?.classList.contains('open'))return;pv.classList.remove('open');pv.setAttribute('aria-hidden','true');BD_PHOTO_VIEW=null;if(unlock)lockViewerPage(false)}
 W.visualViewport?.addEventListener('resize',updateViewerViewport,{passive:true});
@@ -942,6 +1024,13 @@ function bdDeepModerationLocal(kind,payload,terms,contentId){
   }catch(_){return null}
 }
 
+function bdBindCommentDetector(input){
+ if(!input||input.dataset.bdDetector==='1')return;input.dataset.bdDetector='1';
+ let hint=input.closest('form')?.querySelector('[data-comment-detector]');
+ if(!hint){hint=D.createElement('div');hint.className='bd-comment-detector';hint.dataset.commentDetector='1';hint.hidden=true;input.closest('form')?.prepend(hint)}
+ const run=()=>{const terms=bdDeepBadTerms(input.value);input.classList.toggle('bd-comment-flagged',!!terms.length);input.setAttribute('aria-invalid',terms.length?'true':'false');if(hint){hint.hidden=!terms.length;hint.textContent=terms.length?'⚠ আপত্তিকর শব্দ শনাক্ত হয়েছে — পোস্ট করলে review-এ যাবে':''}};
+ input.addEventListener('input',run);run()
+}
 function saveLocalComment(id,row){try{const a=JSON.parse(localStorage.getItem('bd-comments-'+id)||'[]');a.push(row);localStorage.setItem('bd-comments-'+id,JSON.stringify(a.slice(-250)))}catch(_){}}
 async function submitComment(card,text,parentId=null,mediaFile=null){
 text=String(text||'').trim();const st=stateOf(card),ss=await session();if(!ss){toast('মন্তব্য করতে লগইন করুন');return}
@@ -1019,8 +1108,8 @@ async function showCommentReactors(card,el){
 }
 async function hydrateCommentReactions(card){const els=[...card.querySelectorAll('[data-comment-id]')];for(const el of els)syncCommentReaction(card,el)}
 function bindCommentInteractions(card){
- card.querySelectorAll('[data-reply]').forEach(b=>b.onclick=()=>{const c=b.closest('[data-comment-id]'),f=c.querySelector('.bd-reply-form');f.classList.toggle('open');if(f.classList.contains('open')){try{f.querySelector('input').focus({preventScroll:true})}catch(_){f.querySelector('input').focus()}}});
- card.querySelectorAll('.bd-reply-form').forEach(f=>f.onsubmit=e=>{e.preventDefault();const el=f.closest('[data-comment-id]'),inp=f.querySelector('input');submitComment(card,inp.value,el.dataset.commentId).then(()=>{inp.value='';f.classList.remove('open')})});
+ card.querySelectorAll('[data-reply]').forEach(b=>b.onclick=()=>{const c=b.closest('[data-comment-id]'),f=c.querySelector('.bd-reply-form'),inp=f.querySelector('input');f.classList.toggle('open');bdBindCommentDetector(inp);if(f.classList.contains('open')){try{inp.focus({preventScroll:true})}catch(_){inp.focus()}}});
+ card.querySelectorAll('.bd-reply-form').forEach(f=>{const inp=f.querySelector('input');bdBindCommentDetector(inp);f.onsubmit=e=>{e.preventDefault();const el=f.closest('[data-comment-id]');submitComment(card,inp.value,el.dataset.commentId).then(()=>{inp.value='';inp.dispatchEvent(new Event('input',{bubbles:true}));f.classList.remove('open')})}});
  card.querySelectorAll('[data-c-like]').forEach(b=>{let timer=0,long=false;const el=b.closest('[data-comment-id]');b.onclick=e=>{e.preventDefault();e.stopPropagation();if(long){long=false;return}toggleCommentReaction(card,el)};b.onpointerdown=e=>{if(e.pointerType==='mouse'&&e.button!==0)return;clearTimeout(timer);long=false;timer=setTimeout(()=>{long=true;openCommentRxPicker(card,el,b)},420)};['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,()=>clearTimeout(timer)))});
  card.querySelectorAll('[data-c-reactors]').forEach(b=>b.onclick=e=>{e.preventDefault();const el=b.closest('[data-comment-id]');showCommentReactors(card,el)});
  card.querySelectorAll('[data-c-more]').forEach(b=>b.onclick=()=>{const el=b.closest('[data-comment-id]'),c=findComment(card,el.dataset.commentId);if(c)openCommentMenu(card,el,c)});
@@ -1047,10 +1136,133 @@ async function removeFromFeed(card){const s=stateOf(card),id=card.dataset.postId
 async function deletePostAction(card){if(!isPostOwner(card))return;if(!W.confirm('পোস্টটি স্থায়ীভাবে মুছবেন?'))return;const s=stateOf(card),id=card.dataset.postId;try{await client()?.from('posts').delete().eq('id',id)}catch(_){}for(const k of ['bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts'])try{const a=JSON.parse(localStorage.getItem(k)||'[]');localStorage.setItem(k,JSON.stringify((Array.isArray(a)?a:[]).filter(x=>String(x.id)!==String(id))))}catch(_){}if(s)s.posts=s.posts.filter(x=>String(x.id)!==String(id));stableHideCard(card);toast('পোস্ট মুছে ফেলা হয়েছে')}
 async function setPrivacy(card,value){if(!isPostOwner(card))return;const id=card.dataset.postId,p=stateOf(card)?.posts.find(x=>String(x.id)===String(id));if(p)p.privacy=value;try{await client()?.from('posts').update({privacy:value}).eq('id',id)}catch(_){}try{localStorage.setItem('bd-post-privacy-'+id,value)}catch(_){}toast(value==='public'?'Public করা হয়েছে':value==='friends'?'Friends করা হয়েছে':'Only Me করা হয়েছে')}
 function startPostEdit(card){if(!isPostOwner(card))return;const p=stateOf(card)?.posts.find(x=>String(x.id)===String(card.dataset.postId));if(!p)return;W.dispatchEvent(new CustomEvent('bd:edit-post',{detail:p}));card.querySelector('.bd-post-menu').hidden=true}
-function bindPost(card){let hold=null,held=false,lastTap=0,lastX=0,lastY=0;configurePostMenu(card);const bodies=[...card.querySelectorAll('.bd-post-body,.bd-template-card p,.bd-news p')];bodies.forEach(body=>{requestAnimationFrame(()=>{if(body.scrollHeight>body.clientHeight+6)body.classList.add('bd-collapsible')});body.addEventListener('click',e=>{if(e.target.closest('a,button,input,textarea,select'))return;anchor(card,()=>body.classList.toggle('bd-expanded'))})});const main=card.querySelector('[data-react-main]'),trayEl=card.querySelector('[data-rx-tray]');let rxStart=null;main.addEventListener('pointerdown',e=>{held=false;clearTimeout(hold);rxStart={id:e.pointerId,x:e.clientX,y:e.clientY};hold=setTimeout(()=>{held=true;openFloatingTray(card,trayEl,main)},220)});main.addEventListener('pointermove',e=>{if(rxStart&&rxStart.id===e.pointerId&&Math.hypot(e.clientX-rxStart.x,e.clientY-rxStart.y)>12){clearTimeout(hold);rxStart=null}});main.addEventListener('pointerup',e=>{clearTimeout(hold);rxStart=null;if(!held)applyRx(card,'like')});main.addEventListener('pointercancel',()=>{clearTimeout(hold);rxStart=null});main.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){clearTimeout(hold);hold=setTimeout(()=>{held=true;openFloatingTray(card,trayEl,main)},280)}});main.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'&&!BD_FLOATING_TRAY)clearTimeout(hold)});card.querySelectorAll('[data-rx-pick]').forEach(b=>{let picked=false;const choose=e=>{if(picked)return;picked=true;e?.preventDefault?.();e?.stopPropagation?.();applyRx(card,b.dataset.rxPick);closeFloatingTray();setTimeout(()=>picked=false,180)};b.addEventListener('pointerup',choose);b.addEventListener('click',choose);b.addEventListener('touchend',choose,{passive:false})});card.querySelector('[data-comment-open]').onclick=()=>openFullPostViewer(card,true);card.querySelector('[data-comment-count]').onclick=()=>openFullPostViewer(card,true);card.querySelector('[data-share]').onclick=()=>sharePostAction(card);const fb=card.querySelector('[data-follow]');if(fb){const go=e=>{e.preventDefault();e.stopPropagation();toggleFollow(card,fb)};fb.onclick=go;fb.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleFollow(card,fb)}};syncFollowButton(card)}card.querySelectorAll('[data-photo-open]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();openPhotoViewer(card,Number(b.dataset.photoOpen)||0)});card.querySelectorAll('[data-comment-photo]').forEach(b=>b.onclick=e=>{e.preventDefault();const url=b.dataset.commentPhoto;if(url){const p=stateOf(card)?.posts.find(x=>String(x.id)===String(card.dataset.postId));const fake={...p,photo:url,images:[url]};const st=stateOf(card);st.posts.push(fake);openPhotoViewer(card,0);st.posts.pop()}});card.querySelector('[data-post-more]').onclick=e=>{e.stopPropagation();const m=card.querySelector('.bd-post-menu');configurePostMenu(card);D.querySelectorAll('.bd-post-menu:not([hidden])').forEach(x=>{if(x!==m)x.hidden=true});m.hidden=!m.hidden};card.querySelector('[data-save]').onclick=()=>savePostAction(card);card.querySelector('[data-menu-share]')?.addEventListener('click',()=>sharePostAction(card));card.querySelector('[data-report]')?.addEventListener('click',()=>reportPostAction(card));card.querySelector('[data-notify-post]')?.addEventListener('click',e=>notifyPostAction(card,e.currentTarget));card.querySelector('[data-edit-post]')?.addEventListener('click',()=>startPostEdit(card));card.querySelector('[data-card-post]')?.addEventListener('click',()=>openCardEditor(card));card.querySelector('[data-pin-profile]')?.addEventListener('click',()=>togglePinProfile(card));card.querySelector('[data-feed-visibility]')?.addEventListener('click',()=>toggleFeedVisibility(card));card.querySelector('[data-delete-post]')?.addEventListener('click',()=>deletePostAction(card));card.querySelector('[data-privacy]')?.addEventListener('click',()=>{const b=card.querySelector('[data-privacy-box]');b.hidden=!b.hidden});card.querySelectorAll('[data-privacy-value]').forEach(b=>b.onclick=()=>{setPrivacy(card,b.dataset.privacyValue);card.querySelector('[data-privacy-box]').hidden=true});card.querySelector('.bd-comment-form').onsubmit=e=>{e.preventDefault();const inp=e.currentTarget.querySelector('input');submitComment(card,inp.value).then(()=>inp.value='')};card.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{card.querySelectorAll('[data-sort]').forEach(x=>x.classList.toggle('active',x===b));drawComments(card,b.dataset.sort)});const sortSel=card.querySelector('[data-comment-sort]');if(sortSel)sortSel.onchange=()=>drawComments(card,sortSel.value);const zone=card.querySelector('[data-double-love-zone]');zone.addEventListener('pointerup',e=>{if(e.target.closest('button,a,input,textarea,select'))return;const now=Date.now(),x=e.clientX,y=e.clientY;if(now-lastTap<330&&Math.hypot(x-lastX,y-lastY)<30){doubleLove(card);lastTap=0}else{lastTap=now;lastX=x;lastY=y}});zone.addEventListener('dblclick',e=>{if(!e.target.closest('button,a,input,textarea,select'))doubleLove(card)})}
-function filteredPosts(s,filter){return s.posts.filter(p=>{if(localHas('bd-hidden-feed-posts',p.id))return false;if(s.authorId&&String(p.authorId||'')!==String(s.authorId))return false;if(filter==='all')return true;if(filter==='reels')return p.type==='reels'||p.type==='recitation';return p.type===filter})}
-async function ensureCount(s,filter,count){let guard=0;while(filteredPosts(s,filter).length<count&&s.remoteHasMore&&guard<12){guard++;const page=await loadRemotePage(s.remoteOffset,20,{authorId:s.authorId});s.remoteOffset+=page.length;s.remoteHasMore=page.length===20;s.posts=mergePosts(s.posts,page);if(!page.length)break}}
-async function render(root,filter='all',opt={}){const s=STATES.get(root);filter=s?.lockedFilter||filter;s.filter=filter;if(!s.initialized){const first=await initialPosts();s.posts=first.posts;s.remoteOffset=first.remoteCount;s.remoteHasMore=first.remoteCount===20;s.initialized=true}if(opt.ensure!==false)await ensureCount(s,filter,s.displayLimit);const all=filteredPosts(s,filter),posts=all.slice(0,s.displayLimit),box=root.querySelector('[data-posts]'),sentinel=root.querySelector('[data-see-more]');const sc=findScroller(root),anchorEl=box.querySelector('.bd-post[data-post-id]'),anchorId=anchorEl?.dataset.postId||'',anchorTop=anchorEl?.getBoundingClientRect().top;box.innerHTML=posts.length?posts.map(postMarkup).join(''):'<div class="bd-feed-empty bd-glass">এখনও কোনো প্রকাশিত পোস্ট পাওয়া যায়নি।</div>';box.querySelectorAll('.bd-post').forEach(bindPost);if(anchorId&&Number.isFinite(anchorTop)){const same=box.querySelector(`.bd-post[data-post-id="${CSS.escape(anchorId)}"]`);if(same){requestAnimationFrame(()=>{const d=same.getBoundingClientRect().top-anchorTop;if(Math.abs(d)>1&&Math.abs(d)<innerHeight*.9){if(sc===W)W.scrollBy(0,d);else sc.scrollTop+=d}})}}if(sentinel){const canMore=all.length>s.displayLimit||s.remoteHasMore;sentinel.hidden=!canMore;sentinel.disabled=false;sentinel.innerHTML='See More'}await hydrateReactions(root);hydrateFollows(root)}
+function bindPost(card){
+ if(!card||card.dataset.bd78Bound==='1')return;card.dataset.bd78Bound='1';
+ let hold=null,held=false,rxSuppressUntil=0,lastTap=0,lastX=0,lastY=0;
+ configurePostMenu(card);
+
+ /* Long body expand */
+ [...card.querySelectorAll('.bd-post-body,.bd-template-card p,.bd-news p')].forEach(body=>{
+   requestAnimationFrame(()=>{if(body.scrollHeight>body.clientHeight+6)body.classList.add('bd-collapsible')});
+   body.addEventListener('click',e=>{if(e.target.closest('a,button,input,textarea,select'))return;anchor(card,()=>body.classList.toggle('bd-expanded'))})
+ });
+
+ /* Canonical reaction input:
+    pointer = only long-press detection; CLICK = normal Like.
+    This avoids Safari pointerdown-preventDefault/click suppression. */
+ const main=card.querySelector('[data-react-main]'),trayEl=card.querySelector('[data-rx-tray]');
+ if(main){
+   let rxStart=null,touchStart=null,touchHeld=false,touchSuppress=0;
+   /* iOS touch path: stop native text/copy callout, synthesize short-tap Like ourselves. */
+   main.addEventListener('touchstart',e=>{
+     if(e.touches.length!==1)return;e.preventDefault();held=false;touchHeld=false;clearTimeout(hold);
+     const t=e.touches[0];touchStart={x:t.clientX,y:t.clientY};
+     hold=setTimeout(()=>{touchHeld=true;held=true;rxSuppressUntil=Date.now()+750;openFloatingTray(card,trayEl,main)},310)
+   },{passive:false});
+   main.addEventListener('touchmove',e=>{
+     if(!touchStart||!e.touches[0])return;const t=e.touches[0];
+     if(Math.hypot(t.clientX-touchStart.x,t.clientY-touchStart.y)>12){clearTimeout(hold);touchStart=null}
+   },{passive:true});
+   main.addEventListener('touchend',e=>{
+     if(!touchStart&&!touchHeld)return;e.preventDefault();clearTimeout(hold);touchSuppress=Date.now()+650;
+     const wasHeld=touchHeld;touchStart=null;touchHeld=false;
+     if(!wasHeld)applyRx(card,'like')
+   },{passive:false});
+   main.addEventListener('touchcancel',()=>{clearTimeout(hold);touchStart=null;touchHeld=false},{passive:true});
+   /* Desktop / pen path. Touch is handled above. */
+   main.addEventListener('pointerdown',e=>{
+     if(e.pointerType==='touch')return;held=false;clearTimeout(hold);rxStart={id:e.pointerId,x:e.clientX,y:e.clientY};
+     hold=setTimeout(()=>{held=true;rxSuppressUntil=Date.now()+650;openFloatingTray(card,trayEl,main)},300)
+   },{passive:true});
+   main.addEventListener('pointermove',e=>{
+     if(e.pointerType==='touch')return;
+     if(rxStart&&rxStart.id===e.pointerId&&Math.hypot(e.clientX-rxStart.x,e.clientY-rxStart.y)>12){clearTimeout(hold);rxStart=null}
+   },{passive:true});
+   main.addEventListener('pointerup',e=>{if(e.pointerType!=='touch'){clearTimeout(hold);rxStart=null}},{passive:true});
+   main.addEventListener('pointercancel',e=>{if(e.pointerType!=='touch'){clearTimeout(hold);rxStart=null}},{passive:true});
+   main.addEventListener('click',e=>{
+     e.preventDefault();e.stopPropagation();
+     if(Date.now()<touchSuppress||held||Date.now()<rxSuppressUntil){held=false;return}
+     applyRx(card,'like')
+   });
+   main.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){clearTimeout(hold);hold=setTimeout(()=>{held=true;rxSuppressUntil=Date.now()+650;openFloatingTray(card,trayEl,main)},320)}});
+   main.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'&&!BD_FLOATING_TRAY)clearTimeout(hold)})
+ }
+
+ card.querySelectorAll('[data-rx-pick]').forEach(b=>{
+   let lock=0;
+   const choose=e=>{
+     e?.preventDefault?.();e?.stopPropagation?.();
+     if(Date.now()<lock)return;lock=Date.now()+220;
+     applyRx(card,b.dataset.rxPick);closeFloatingTray()
+   };
+   b.addEventListener('click',choose);
+   b.addEventListener('pointerup',e=>{if(e.pointerType==='touch'||e.pointerType==='pen')choose(e)});
+ });
+
+ const commentOpen=()=>openFullPostViewer(card,true);
+ card.querySelector('[data-comment-open]')?.addEventListener('click',commentOpen);
+ card.querySelector('[data-comment-count]')?.addEventListener('click',commentOpen);
+ card.querySelector('[data-share]')?.addEventListener('click',()=>sharePostAction(card));
+
+ const fb=card.querySelector('[data-follow]');
+ if(fb){
+   const go=e=>{e.preventDefault();e.stopPropagation();toggleFollow(card,fb)};
+   fb.addEventListener('click',go);
+   fb.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleFollow(card,fb)}});
+   syncFollowButton(card)
+ }
+
+ /* Canonical photo viewer path.
+    IMG itself cannot steal pointer events; button receives the event. */
+ card.querySelectorAll('[data-photo-open]').forEach(b=>{
+   const open=e=>{
+     e.preventDefault();e.stopPropagation();
+     openPhotoViewer(card,Number(b.dataset.photoOpen)||0)
+   };
+   b.addEventListener('click',open);
+   b.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open(e)}})
+ });
+ card.querySelectorAll('[data-comment-photo]').forEach(b=>b.addEventListener('click',e=>{
+   e.preventDefault();e.stopPropagation();const url=b.dataset.commentPhoto;if(!url)return;
+   const st=stateOf(card),p=st?.posts.find(x=>String(x.id)===String(card.dataset.postId));if(!st||!p)return;
+   const fake={...p,id:String(p.id)+'-comment-photo-'+Date.now(),photo:url,images:[url]};
+   st.posts.push(fake);try{openPhotoViewer(card,0)}finally{st.posts.pop()}
+ }));
+
+ card.querySelector('[data-post-more]')?.addEventListener('click',e=>{
+   e.stopPropagation();const m=card.querySelector('.bd-post-menu');configurePostMenu(card);
+   D.querySelectorAll('.bd-post-menu:not([hidden])').forEach(x=>{if(x!==m)x.hidden=true});m.hidden=!m.hidden
+ });
+ card.querySelector('[data-save]')?.addEventListener('click',()=>savePostAction(card));
+ card.querySelector('[data-menu-share]')?.addEventListener('click',()=>sharePostAction(card));
+ card.querySelector('[data-report]')?.addEventListener('click',()=>reportPostAction(card));
+ card.querySelector('[data-notify-post]')?.addEventListener('click',e=>notifyPostAction(card,e.currentTarget));
+ card.querySelector('[data-edit-post]')?.addEventListener('click',()=>startPostEdit(card));
+ card.querySelector('[data-card-post]')?.addEventListener('click',()=>openCardEditor(card));
+ card.querySelector('[data-pin-profile]')?.addEventListener('click',()=>togglePinProfile(card));
+ card.querySelector('[data-feed-visibility]')?.addEventListener('click',()=>toggleFeedVisibility(card));
+ card.querySelector('[data-delete-post]')?.addEventListener('click',()=>deletePostAction(card));
+ card.querySelector('[data-privacy]')?.addEventListener('click',()=>{const b=card.querySelector('[data-privacy-box]');if(b)b.hidden=!b.hidden});
+ card.querySelectorAll('[data-privacy-value]').forEach(b=>b.addEventListener('click',()=>{setPrivacy(card,b.dataset.privacyValue);const x=card.querySelector('[data-privacy-box]');if(x)x.hidden=true}));
+
+ const cf=card.querySelector('.bd-comment-form');
+ if(cf){bdBindCommentDetector(cf.querySelector('input,textarea'));cf.addEventListener('submit',e=>{e.preventDefault();const inp=e.currentTarget.querySelector('input');submitComment(card,inp.value).then(()=>{inp.value='';inp.dispatchEvent(new Event('input',{bubbles:true}))})});}
+ card.querySelectorAll('[data-sort]').forEach(b=>b.addEventListener('click',()=>{card.querySelectorAll('[data-sort]').forEach(x=>x.classList.toggle('active',x===b));drawComments(card,b.dataset.sort)}));
+ const sortSel=card.querySelector('[data-comment-sort]');if(sortSel)sortSel.addEventListener('change',()=>drawComments(card,sortSel.value));
+
+ /* Double tap Love only on non-interactive post content. */
+ const zone=card.querySelector('[data-double-love-zone]');
+ if(zone){
+   zone.addEventListener('pointerup',e=>{
+     if(e.target.closest('button,a,input,textarea,select,label'))return;
+     const now=Date.now(),x=e.clientX,y=e.clientY;
+     if(now-lastTap<330&&Math.hypot(x-lastX,y-lastY)<30){doubleLove(card);lastTap=0}
+     else{lastTap=now;lastX=x;lastY=y}
+   },{passive:true});
+   zone.addEventListener('dblclick',e=>{if(!e.target.closest('button,a,input,textarea,select,label'))doubleLove(card)})
+ }
+}
 async function showMore(root){const s=STATES.get(root),sentinel=root.querySelector('[data-see-more]');if(!s||s.loadingMore||sentinel?.hidden)return;s.loadingMore=true;if(sentinel){sentinel.disabled=true;sentinel.innerHTML='<span class="spin"></span> Loading 20…'}try{const box=root.querySelector('[data-posts]'),rendered=box.querySelectorAll('.bd-post').length;if(rendered<s.displayLimit){await ensureCount(s,s.filter,s.displayLimit);await render(root,s.filter,{ensure:false});return}const oldLimit=s.displayLimit,next=oldLimit+20;await ensureCount(s,s.filter,next);const all=filteredPosts(s,s.filter),batch=all.slice(oldLimit,next);if(batch.length){const frag=D.createElement('div');frag.innerHTML=batch.map(postMarkup).join('');const cards=[...frag.children];cards.forEach(card=>{box.appendChild(card);bindPost(card)});s.displayLimit=next;await hydrateReactions(root);hydrateFollows(root)}else{s.displayLimit=Math.min(next,all.length)}const canMore=all.length>s.displayLimit||s.remoteHasMore;if(sentinel){sentinel.hidden=!canMore;sentinel.textContent=canMore?'See More':''}}finally{s.loadingMore=false}}
 W.addEventListener('resize',closeFloatingTray,{passive:true});W.addEventListener('scroll',closeFloatingTray,{passive:true,capture:true});D.addEventListener('pointerdown',e=>{if(BD_FLOATING_TRAY&&!e.target.closest('.bd-rx-tray,[data-react-main]'))closeFloatingTray();if(!e.target.closest('.bd-post-menu,[data-post-more]'))D.querySelectorAll('.bd-post-menu:not([hidden])').forEach(x=>x.hidden=true)},true);
 async function mount(target,opt={}){installMenu();const wrap=D.createElement('div');wrap.innerHTML=rootTpl();const root=wrap.firstElementChild;target.appendChild(root);let ss=W.BD_SESSION||null;try{if(!ss){ss=await bdTimeout(session(),120);if(ss?.__bdTimeout)ss=null}}catch(_){}const authorId=String(opt.authorId||'').trim();const rawLocal=localPosts(),me=ss?.user||null,md=me?.user_metadata||{};let local=rawLocal.map(p=>String(p.authorId||'')===String(me?.id||'')?{...p,author:(p.author&&p.author!=='ভুবনডাঙ্গার সদস্য')?p.author:(md.full_name||md.name||md.display_name||md.username||me?.email?.split('@')[0]||p.author),avatar:p.avatar||md.avatar_url||md.picture||''}:p);if(authorId)local=local.filter(p=>String(p.authorId||'')===authorId);const context=String(opt.context||'index').toLowerCase();const contextFilter={environment:'environment',poem:'poem',recitation:'recitation',prolap:'prolap',letter:'letter',midnight:'midnight',page:'news',news:'news',children:'children'}[context]||'';const urlFeed=new URLSearchParams(location.search).get('feed');const requestedFilter=String(contextFilter||opt.filter||urlFeed||'all').toLowerCase();const initialFilter=['all','poem','recitation','reels','children','prolap','letter','environment','news','midnight'].includes(requestedFilter)?requestedFilter:'all';const lockedFilter=!!contextFilter;const s={root,posts:local,authorId,context,comments:new Map(),commentReactions:new Map(),reactions:new Map(),userId:ss?.user?.id||W.BD_SESSION?.user?.id||'',role:String(W.BD_ROLE||document.documentElement.dataset.role||localStorage.getItem('bd-role')||'user').toLowerCase(),displayLimit:20,remoteOffset:0,remoteHasMore:true,remoteRefreshing:false,initialized:true,loadingMore:false,filter:initialFilter,lockedFilter:lockedFilter?initialFilter:''};STATES.set(root,s);const human=root.querySelector('.bd-human');if(human)human.hidden=(context!=='index')||!!opt.hideHumanitarian;const filterBox=root.querySelector('.bd-feed-filter');if(filterBox&&(lockedFilter||opt.hideFilters)){filterBox.hidden=true;filterBox.setAttribute('aria-hidden','true');root.classList.add('bd-fixed-category-feed')}if(opt.heading){const h=root.querySelector('.bd-feed-filter h3');if(h)h.textContent=opt.heading}root.classList.toggle('bd-feed-profile-context',s.context==='profile');const ff=root.querySelector('[data-feed-filter]');if(ff)ff.value=initialFilter;await render(root,initialFilter,{ensure:false});enrichPostAuthors(rawLocal).then(enriched=>{if(!enriched?.length)return;s.posts=mergePosts(authorId?enriched.filter(p=>String(p.authorId||'')===authorId):enriched,s.posts);render(root,s.filter,{ensure:false})}).catch(()=>{});const startRemote=()=>{let tries=0;const run=()=>{if(client()){refreshRemote(root);return}if(++tries<24)setTimeout(run,125)};run()};if('requestIdleCallback'in W)W.requestIdleCallback(startRemote,{timeout:260});else setTimeout(startRemote,40);const onSupaReady=()=>refreshRemote(root);W.addEventListener('bd:supabase-ready',onSupaReady,{once:true});const onUpdated=async e=>{const d=e.detail;if(!d)return;const enriched=(await enrichPostAuthors([mapPost(d)]))[0];const i=s.posts.findIndex(x=>String(x.id)===String(d.id));if(i>=0)s.posts[i]={...s.posts[i],...enriched};else s.posts.unshift(enriched);render(root,s.filter,{ensure:false})};W.addEventListener('bd:post-updated',onUpdated);if(root.querySelector('[data-feed-filter]'))root.querySelector('[data-feed-filter]').onchange=async e=>{if(s.lockedFilter){e.target.value=s.lockedFilter;return}s.displayLimit=20;await render(root,e.target.value,{ensure:false});if(s.posts.length<20)refreshRemote(root)};const sentinel=root.querySelector('[data-see-more]');if(sentinel){sentinel.onclick=()=>showMore(root)}const warmRx=()=>{try{const im=new Image();im.decoding='async';im.src='reaction-pyrise.webp'}catch(_){}};if('requestIdleCallback'in W)W.requestIdleCallback(warmRx,{timeout:1600});else setTimeout(warmRx,900);root.querySelector('[data-feed-top]').onclick=()=>{const sc=findScroller(root);if(sc===W)W.scrollTo({top:0,behavior:'smooth'});else sc.scrollTo({top:0,behavior:'smooth'})};W.BD_BUS.addEventListener('bd:post-published',async e=>{const d=e?.detail;if(d){const mapped=(await enrichPostAuthors([mapPost(d)]))[0];s.posts=mergePosts([mapped],s.posts);s.displayLimit=Math.max(20,s.displayLimit);await render(root,s.filter,{ensure:false})}else refreshRemote(root)});return root}
