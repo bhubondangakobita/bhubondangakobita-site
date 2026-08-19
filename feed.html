@@ -728,6 +728,37 @@ function setFullViewerCommentFile(file){
  const p=v.querySelector('[data-dock-preview]');if(!file){p.hidden=true;p.innerHTML='';return}
  const url=URL.createObjectURL(file);p.hidden=false;p.innerHTML=`<span><img src="${url}" alt=""><button type="button" data-remove-comment-photo>×</button></span>`;p.querySelector('button').onclick=()=>setFullViewerCommentFile(null)
 }
+
+function bdFixFullViewerActions(vc,viewer){
+ if(!vc||!viewer)return;
+ const source=()=>BD_FULL_VIEW?.sourceCard||null;
+ const mainOld=vc.querySelector('[data-react-main]');
+ if(mainOld){
+   const main=mainOld.cloneNode(true);mainOld.replaceWith(main);
+   let hold=0,held=false,start=null,suppress=0;
+   const trayEl=vc.querySelector('[data-rx-tray]');
+   const quickLike=async()=>{await applyRx(vc,'like');const src=source();if(src?.isConnected)syncRxCard(src)};
+   main.addEventListener('touchstart',e=>{if(e.touches.length!==1)return;e.preventDefault();const t=e.touches[0];start={x:t.clientX,y:t.clientY};held=false;clearTimeout(hold);hold=setTimeout(()=>{held=true;suppress=Date.now()+700;openFloatingTray(vc,trayEl,main)},320)},{passive:false});
+   main.addEventListener('touchmove',e=>{if(!start||!e.touches[0])return;const t=e.touches[0];if(Math.hypot(t.clientX-start.x,t.clientY-start.y)>12){clearTimeout(hold);start=null}},{passive:true});
+   main.addEventListener('touchend',e=>{if(!start&&!held)return;e.preventDefault();clearTimeout(hold);const wasHeld=held;start=null;held=false;suppress=Date.now()+550;if(!wasHeld)quickLike()},{passive:false});
+   main.addEventListener('touchcancel',()=>{clearTimeout(hold);start=null;held=false},{passive:true});
+   main.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(Date.now()<suppress)return;quickLike()});
+   main.addEventListener('contextmenu',e=>e.preventDefault());
+   trayEl?.querySelectorAll('[data-rx-pick]').forEach(b=>{
+     const nb=b.cloneNode(true);b.replaceWith(nb);nb.addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();await applyRx(vc,nb.dataset.rxPick);const src=source();if(src?.isConnected)syncRxCard(src);closeFloatingTray()})
+   });
+ }
+ vc.querySelectorAll('[data-c-more]').forEach(old=>{
+   const b=old.cloneNode(true);old.replaceWith(b);
+   b.addEventListener('click',async e=>{
+     e.preventDefault();e.stopPropagation();
+     const el=b.closest('[data-comment-id]');if(!el)return;
+     const c=findComment(vc,el.dataset.commentId);if(!c)return;
+     try{const ss=await session();if(ss?.user?.id&&String(c.user_id||'')===String(ss.user.id))c.owner=true}catch(_){}
+     openCommentMenu(vc,el,c)
+   })
+ });
+}
 async function openFullPostViewer(card,focus=false,opts={}){
  installViewers();const keepPhoto=!!opts.keepPhoto;if(!keepPhoto)closePhotoViewer(false);const data=viewerStateFrom(card);if(!data.post)return;
  const v=D.getElementById('bdFullPostViewer'),root=v.querySelector('[data-full-feed-root]'),sc=v.querySelector('[data-full-scroll]');
@@ -735,6 +766,7 @@ async function openFullPostViewer(card,focus=false,opts={}){
  root.innerHTML=postMarkup(data.post);STATES.set(root,data.state);const vc=root.querySelector('.bd-post');vc.classList.add('bd-viewer-card');bindPost(vc);syncFollowButton(vc);
  vc.querySelector('.bd-comment-form')?.remove();const cm=vc.querySelector('[data-comments]');cm.classList.add('open');vc.classList.add('bd-comments-open');
  await loadComments(vc);drawComments(vc,'relevant');
+ bdFixFullViewerActions(vc,v);
  vc.querySelector('[data-comment-open]').onclick=()=>preserveViewerScrollWhileFocus(v.querySelector('[data-full-comment-input]'));
  vc.querySelector('[data-comment-count]').onclick=()=>preserveViewerScrollWhileFocus(v.querySelector('[data-full-comment-input]'));
  BD_FULL_VIEW={sourceCard:card,root,card:vc,state:data.state,post:data.post,commentFile:null,keepPhoto};sc.scrollTop=0;v.classList.toggle('bd-photo-comment-sheet',keepPhoto);v.classList.add('open');v.setAttribute('aria-hidden','false');lockViewerPage(true);updateViewerViewport();
@@ -886,8 +918,8 @@ try{await bdNotifyPostOwner(card,'comment',text||'ছবি মন্তব্�
 toast(terms.length?'গালি-রাডার শব্দ ধরেছে 😄 মন্তব্যটি Founder/Admin রিভিউতে গেছে':mediaUrl?'ছবি মন্তব্য যোগ হয়েছে':'মন্তব্য যোগ হয়েছে')
 }
 function findComment(card,cid){return (stateOf(card)?.comments.get(String(card.dataset.postId))||[]).find(x=>String(x.id)===String(cid))}
-function installMenu(){if(D.getElementById('bdCommentMenu'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-comment-menu-back" id="bdCommentBack"></div><div class="bd-comment-menu" id="bdCommentMenu"><button data-menu-edit>✎ <span>সম্পাদনা করুন</span></button><button data-menu-delete>⌫ <span>মুছুন</span></button><button data-menu-report>⚑ <span>রিপোর্ট করুন</span></button></div>`);const back=D.getElementById('bdCommentBack'),menu=D.getElementById('bdCommentMenu');const close=()=>{back.classList.remove('open');menu.classList.remove('open');menuTarget=null};back.onclick=close;menu.querySelector('[data-menu-edit]').onclick=()=>{if(menuTarget)startEditComment(menuTarget.card,menuTarget.el,menuTarget.comment);close()};menu.querySelector('[data-menu-delete]').onclick=async()=>{if(!menuTarget)return;const {card,comment}=menuTarget,s=stateOf(card),id=String(card.dataset.postId);s.comments.set(id,(s.comments.get(id)||[]).filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id)!==String(comment.id)));anchor(card,()=>drawComments(card));try{await client()?.from('comments').delete().eq('id',comment.id)}catch(_){}toast('মন্তব্য মুছে ফেলা হয়েছে');close()};menu.querySelector('[data-menu-report]').onclick=async()=>{if(!menuTarget)return;try{const ss=await session();await client()?.from('comment_reports').insert({comment_id:menuTarget.comment.id,reporter_id:ss?.user?.id||null,reason:'user_report'})}catch(_){}toast('রিপোর্ট পাঠানো হয়েছে');close()}}
-function openCommentMenu(card,el,c){installMenu();menuTarget={card,el,comment:c};const menu=D.getElementById('bdCommentMenu');menu.querySelector('[data-menu-edit]').hidden=!c.owner;menu.querySelector('[data-menu-delete]').hidden=!c.owner;menu.querySelector('[data-menu-report]').hidden=c.owner;D.getElementById('bdCommentBack').classList.add('open');menu.classList.add('open')}
+function installMenu(){if(D.getElementById('bdCommentMenu'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-comment-menu-back" id="bdCommentBack"></div><div class="bd-comment-menu" id="bdCommentMenu"><button data-menu-edit>✎ <span>সম্পাদনা করুন</span></button><button data-menu-delete>⌫ <span>মুছুন</span></button><button data-menu-report>⚑ <span>রিপোর্ট করুন</span></button></div>`);const back=D.getElementById('bdCommentBack'),menu=D.getElementById('bdCommentMenu');const close=()=>{back.classList.remove('open');menu.classList.remove('open');menuTarget=null};back.onclick=close;menu.querySelector('[data-menu-edit]').onclick=()=>{if(menuTarget)startEditComment(menuTarget.card,menuTarget.el,menuTarget.comment);close()};menu.querySelector('[data-menu-delete]').onclick=async()=>{if(!menuTarget)return;const {card,comment}=menuTarget,s=stateOf(card),id=String(card.dataset.postId);s.comments.set(id,(s.comments.get(id)||[]).filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id)!==String(comment.id)));anchor(card,()=>drawComments(card));try{await client()?.from('comments').delete().eq('id',comment.id)}catch(_){}try{const key='bd-comments-'+id,a=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id||'')!==String(comment.id));localStorage.setItem(key,JSON.stringify(a))}catch(_){}const src=BD_FULL_VIEW?.sourceCard;if(src?.isConnected&&String(src.dataset.postId)===id){try{drawComments(src,src.querySelector('[data-comment-sort]')?.value||'relevant')}catch(_){}}toast('মন্তব্য মুছে ফেলা হয়েছে');close()};menu.querySelector('[data-menu-report]').onclick=async()=>{if(!menuTarget)return;try{const ss=await session();await client()?.from('comment_reports').insert({comment_id:menuTarget.comment.id,reporter_id:ss?.user?.id||null,reason:'user_report'})}catch(_){}toast('রিপোর্ট পাঠানো হয়েছে');close()}}
+async function openCommentMenu(card,el,c){installMenu();try{const ss=await session();if(ss?.user?.id&&String(c.user_id||'')===String(ss.user.id))c.owner=true}catch(_){}menuTarget={card,el,comment:c};const menu=D.getElementById('bdCommentMenu');menu.querySelector('[data-menu-edit]').hidden=!c.owner;menu.querySelector('[data-menu-delete]').hidden=!c.owner;menu.querySelector('[data-menu-report]').hidden=!!c.owner;D.getElementById('bdCommentBack').classList.add('open');menu.classList.add('open')}
 function startEditComment(card,el,c){const bubble=el.querySelector('[data-comment-bubble]');bubble.innerHTML=`<input class="bd-comment-edit-input" value="${esc(c.text)}" aria-label="মন্তব্য সম্পাদনা"><span class="bd-comment-edit-actions"><button data-edit-save>সংরক্ষণ</button><button data-edit-cancel>বাতিল</button></span>`;const inp=bubble.querySelector('input');inp.focus({preventScroll:true});bubble.querySelector('[data-edit-cancel]').onclick=()=>drawComments(card);bubble.querySelector('[data-edit-save]').onclick=async()=>{const text=inp.value.trim();if(!text)return;c.text=text;c.pending=false;anchor(card,()=>drawComments(card));try{await client()?.from('comments').update({content:text,status:'published'}).eq('id',c.id)}catch(_){}toast('মন্তব্য সম্পাদিত হয়েছে')}}
 
 function installReactorSheet(){if(D.getElementById('bdReactorSheet'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-reactor-sheet-back" id="bdReactorBack"></div><section class="bd-reactor-sheet" id="bdReactorSheet"><div class="bd-reactor-sheet-head"><h3>রিঅ্যাক্ট করেছেন</h3><button type="button" data-reactor-close aria-label="বন্ধ করুন">×</button></div><div class="bd-reactor-list" data-reactor-list></div></section>`);const close=()=>{D.getElementById('bdReactorBack')?.classList.remove('open');D.getElementById('bdReactorSheet')?.classList.remove('open')};D.getElementById('bdReactorBack').onclick=close;D.querySelector('#bdReactorSheet [data-reactor-close]').onclick=close}
