@@ -614,7 +614,37 @@ function bdTimeout(p,ms=4500){return Promise.race([Promise.resolve(p),new Promis
 async function loadRemotePage(offset=0,size=20,opt={}){const c=client();if(!c)return[];const uid=String(opt.authorId||'').trim();const attempts=[];if(uid){attempts.push(()=>c.from('posts').select('*').eq('author_id',uid).order('created_at',{ascending:false}).range(offset,offset+size-1));attempts.push(()=>c.from('posts').select('*').eq('user_id',uid).order('created_at',{ascending:false}).range(offset,offset+size-1))}attempts.push(()=>c.from('posts').select('*').order('created_at',{ascending:false}).range(offset,offset+size-1));attempts.push(()=>c.from('posts').select('*').order('created_at',{ascending:false}).limit(size));for(const q of attempts){try{const r=await bdTimeout(q(),4500);if(r?.__bdTimeout)continue;if(!r?.error&&Array.isArray(r?.data)){let rows=r.data.filter(x=>!x.status||['published','approved','active'].includes(x.status));if(uid)rows=rows.filter(x=>String(x.author_id||x.user_id||x.profile_id||'')===uid);const mapped=rows.map(mapPost);return await enrichPostAuthors(mapped)}}catch(_){}}return[]}
 function humanFeedPins(){try{return new Set(JSON.parse(localStorage.getItem('bd-humanitarian-feed-pins')||'[]').map(String))}catch(_){return new Set()}}
 function isHumanFeedPinned(p){const pins=humanFeedPins();return !!(p?.humanitarianPinned||p?.feedPinned||pins.has(String(p?.id||'')))}
-function mergePosts(base,extra){const seen=new Set(),out=[];for(const p of [...base,...extra]){const k=String(p.id);if(!k||seen.has(k))continue;seen.add(k);out.push(p)}return out.sort((a,b)=>Number(isHumanFeedPinned(b))-Number(isHumanFeedPinned(a))||Date.parse(b.createdAt)-Date.parse(a.createdAt))}
+function bdProfileUpdateMediaKey(p){
+ const raw=String(p?.photo||((Array.isArray(p?.images)&&p.images[0])||'')||'').trim();
+ if(!raw)return '';
+ try{const u=new URL(raw,location.href);u.search='';u.hash='';return u.href}catch(_){return raw.split('?')[0].split('#')[0]}
+}
+function bdSameProfileUpdate(a,b){
+ if(!a||!b)return false;
+ const ta=String(a.type||''),tb=String(b.type||'');
+ if(!['profile-update','cover-update'].includes(ta)||ta!==tb)return false;
+ if(String(a.authorId||'')!==String(b.authorId||''))return false;
+ const ma=bdProfileUpdateMediaKey(a),mb=bdProfileUpdateMediaKey(b);
+ if(ma&&mb&&ma!==mb)return false;
+ const at=Date.parse(a.createdAt||0)||0,bt=Date.parse(b.createdAt||0)||0;
+ return !!(at&&bt&&Math.abs(at-bt)<=5*60*1000);
+}
+function bdSocialWeight(p){return Number(p?.commentCount||0)*10000+Number(p?.reactionCount||0)*100+Number(p?.shareCount||0)}
+function bdMergeDuplicatePosts(a,b){
+ const ids=[String(a.id||''),...(a._aliasIds||[]).map(String),String(b.id||''),...(b._aliasIds||[]).map(String)].filter(Boolean);
+ const prefer=bdSocialWeight(b)>bdSocialWeight(a)?b:(bdSocialWeight(b)<bdSocialWeight(a)?a:((Date.parse(b.createdAt||0)||0)>(Date.parse(a.createdAt||0)||0)?b:a));
+ const other=prefer===a?b:a;
+ return {...other,...prefer,_aliasIds:[...new Set(ids)],reactionCount:Math.max(Number(a.reactionCount||0),Number(b.reactionCount||0)),commentCount:Math.max(Number(a.commentCount||0),Number(b.commentCount||0)),shareCount:Math.max(Number(a.shareCount||0),Number(b.shareCount||0))};
+}
+function mergePosts(base,extra){
+ const exact=new Set(),out=[];
+ for(const p0 of [...base,...extra]){
+  if(!p0)continue;const p={...p0};const id=String(p.id||'');if(!id||exact.has(id))continue;exact.add(id);
+  if(['profile-update','cover-update'].includes(String(p.type||''))){const i=out.findIndex(x=>bdSameProfileUpdate(x,p));if(i>=0){out[i]=bdMergeDuplicatePosts(out[i],p);continue}}
+  p._aliasIds=[...new Set([id,...((p._aliasIds||[]).map(String))])];out.push(p)
+ }
+ return out.sort((a,b)=>Number(isHumanFeedPinned(b))-Number(isHumanFeedPinned(a))||Date.parse(b.createdAt)-Date.parse(a.createdAt))
+}
 async function initialPosts(opt={}){const uid=String(opt.authorId||'');let local=await enrichPostAuthors(localPosts());if(uid)local=local.filter(p=>String(p.authorId||'')===uid);const remote=await loadRemotePage(0,20,opt);return{posts:mergePosts(local,remote),remoteCount:remote.length}}
 async function refreshRemote(root){const s=STATES.get(root);if(!s||s.remoteRefreshing)return;s.remoteRefreshing=true;try{const page=await loadRemotePage(0,20,{authorId:s.authorId});s.remoteOffset=page.length;s.remoteHasMore=page.length===20;s.posts=mergePosts(s.posts,page);await render(root,s.filter,{ensure:false})}catch(_){s.remoteHasMore=false}finally{s.remoteRefreshing=false}}
 function socialCount(n){n=Number(n)||0;if(n>=1000000)return (Math.round(n/100000)/10).toFixed(n%1000000?1:0)+'M';if(n>=1000)return (Math.round(n/100)/10).toFixed(n%1000?1:0)+'K';return String(n)}
@@ -626,11 +656,14 @@ function premiumTemplateBG(p){if(!/^p\d+$/i.test(String(p.template||'')))return 
 function fontCSS(v){return String(v||'').replace(/[;{}]/g,'').slice(0,120)}function colorCSS(v){return /^#[0-9a-f]{3,8}$/i.test(String(v||''))?String(v):''}function profileUpdateCaption(p){
  let body=String(p?.body||'').trim();
  if(!body)return '';
+ const who='(?:.+?\\s+)?';
  const auto=[
-  /^(?:.+?\s+)?প্রোফাইল\s*ছবি\s*পরিবর্তন\s*করেছেন[।.!]?$/i,
-  /^(?:.+?\s+)?কভার\s*ছবি\s*পরিবর্তন\s*করেছেন[।.!]?$/i,
-  /^(?:.+?\s+)?updated\s+(?:his|her|their)\s+profile\s+picture[.!]?$/i,
-  /^(?:.+?\s+)?updated\s+(?:his|her|their)\s+cover\s+photo[.!]?$/i
+  new RegExp('^'+who+'(?:নতুন\\s+)?প্রোফাইল\\s*ছবি\\s*(?:পরিবর্তন|যোগ|আপডেট)\\s*করেছেন[।.!]?$','i'),
+  new RegExp('^'+who+'(?:নতুন\\s+)?কভার\\s*ছবি\\s*(?:পরিবর্তন|যোগ|আপডেট)\\s*করেছেন[।.!]?$','i'),
+  /^(?:.+?\s+)?updated\s+(?:his|her|their)\s+profile\s+(?:photo|picture)[.!]?$/i,
+  /^(?:.+?\s+)?updated\s+(?:his|her|their)\s+cover\s+photo[.!]?$/i,
+  /^(?:.+?\s+)?added\s+a\s+new\s+profile\s+(?:photo|picture)[.!]?$/i,
+  /^(?:.+?\s+)?added\s+a\s+new\s+cover\s+photo[.!]?$/i
  ];
  if(auto.some(rx=>rx.test(body)))return '';
  return body;
@@ -826,36 +859,36 @@ function syncRxCard(card){const s=stateOf(card),id=String(card?.dataset?.postId|
 function localReactionRows(ids){try{const a=JSON.parse(localStorage.getItem('bd-local-reactions')||'[]');return Array.isArray(a)?a.filter(x=>ids.includes(String(x.post_id))):[]}catch(_){return []}}
 function saveLocalReaction(postId,userId,reaction){try{let a=JSON.parse(localStorage.getItem('bd-local-reactions')||'[]');if(!Array.isArray(a))a=[];a=a.filter(x=>!(String(x.post_id)===String(postId)&&String(x.user_id)===String(userId)));if(reaction)a.push({post_id:String(postId),user_id:String(userId),reaction:String(reaction),updated_at:new Date().toISOString()});localStorage.setItem('bd-local-reactions',JSON.stringify(a.slice(-5000)))}catch(_){}}
 async function bdNotifyPostOwner(card,kind,label,ss){try{const recipient=String(card?.dataset?.authorId||''),actor=String(ss?.user?.id||'');if(!recipient||!actor||recipient===actor)return;const md=ss.user.user_metadata||{},name=md.full_name||md.name||ss.user.email?.split('@')[0]||'একজন সদস্য',postId=String(card.dataset.postId||''),type=kind==='comment'?'post_comment':'post_reaction',title=kind==='comment'?`${name} আপনার পোস্টে মন্তব্য করেছেন`:`${name} আপনার পোস্টে ${label||'রিঅ্যাক্ট'} করেছেন`,message=kind==='comment'?String(label||'').slice(0,160):`${label||'Reaction'} reaction`,url=`index.html?post=${encodeURIComponent(postId)}`;if(W.BD_SIGNAL_CENTER?.sendNotification){await W.BD_SIGNAL_CENTER.sendNotification({recipientId:recipient,actorId:actor,actorName:name,type,title,message,url,postId});return}const now=new Date().toISOString(),base={recipient_id:recipient,actor_id:actor,type,title,message,url,post_id:postId,created_at:now,read:false};try{const a=JSON.parse(localStorage.getItem('bhubondangaNotifications')||'[]');a.unshift({...base,id:'local-n-'+Date.now()});localStorage.setItem('bhubondangaNotifications',JSON.stringify(a.slice(0,1200)))}catch(_){}const c=client();if(!c)return;for(const row of [base,{user_id:recipient,actor_id:actor,type,title,message,url,post_id:postId,created_at:now,read:false},{recipient_id:recipient,actor_id:actor,type,title,created_at:now},{user_id:recipient,actor_id:actor,type,title,created_at:now}]){try{const r=await c.from('notifications').insert(row);if(!r.error)break}catch(_){}}}catch(_){}}
-async function hydrateReactions(root){const st=STATES.get(root),ids=[...root.querySelectorAll('.bd-post[data-post-id]')].map(x=>String(x.dataset.postId)).filter(Boolean);if(!ids.length)return;st.reactions.clear();const local=localReactionRows(ids);local.forEach(x=>{const k=String(x.post_id),a=st.reactions.get(k)||[];a.push(x);st.reactions.set(k,a)});const c=client();if(c){try{const r=await c.from('post_reactions').select('post_id,user_id,reaction').in('post_id',ids);if(!r.error&&Array.isArray(r.data)){r.data.forEach(x=>{const k=String(x.post_id),a=st.reactions.get(k)||[],i=a.findIndex(y=>String(y.user_id)===String(x.user_id));if(i>=0)a[i]=x;else a.push(x);st.reactions.set(k,a)})}}catch(_){}}root.querySelectorAll('.bd-post').forEach(syncRxCard)}
+async function hydrateReactions(root){
+ const st=STATES.get(root),cards=[...root.querySelectorAll('.bd-post[data-post-id]')];if(!cards.length)return;st.reactions.clear();
+ const aliasToCanonical=new Map(),queryIds=[];for(const card of cards){const id=String(card.dataset.postId),ids=bdPostAliasIds(card);ids.forEach(x=>{aliasToCanonical.set(String(x),id);queryIds.push(String(x))})}
+ const ids=[...new Set(queryIds.filter(Boolean))];
+ const add=x=>{const canonical=aliasToCanonical.get(String(x.post_id))||String(x.post_id),row={...x,post_id:canonical},a=st.reactions.get(canonical)||[],i=a.findIndex(y=>String(y.user_id)===String(row.user_id));if(i>=0)a[i]=row;else a.push(row);st.reactions.set(canonical,a)};
+ localReactionRows(ids).forEach(add);const c=client();if(c){try{const r=await c.from('post_reactions').select('post_id,user_id,reaction').in('post_id',ids);if(!r.error&&Array.isArray(r.data))r.data.forEach(add)}catch(_){}}
+ cards.forEach(syncRxCard)
+}
 async function applyRx(card,type,opt={}){const s=stateOf(card);if(!s)return;let uid=s.userId;if(!uid){const ss=await session();uid=ss?.user?.id||'';if(uid)s.userId=uid}if(!uid){toast('রিঅ্যাক্ট করতে লগইন করুন');return}const id=String(card.dataset.postId);let arr=s.reactions.get(id)||[];const old=arr.find(x=>String(x.user_id)===String(uid));if(old?.reaction===type&&!opt.force){arr=arr.filter(x=>String(x.user_id)!==String(uid));s.reactions.set(id,arr);saveLocalReaction(id,uid,'');syncRxCard(card);try{await client()?.from('post_reactions').delete().eq('post_id',id).eq('user_id',uid)}catch(_){}return}if(old?.reaction===type&&opt.force){syncRxCard(card);closeFloatingTray();return}arr=arr.filter(x=>String(x.user_id)!==String(uid));arr.push({post_id:id,user_id:uid,reaction:type});s.reactions.set(id,arr);saveLocalReaction(id,uid,type);syncRxCard(card);closeFloatingTray();try{await client()?.from('post_reactions').upsert({post_id:id,user_id:uid,reaction:type},{onConflict:'post_id,user_id'})}catch(_){};try{const ss=await session();await bdNotifyPostOwner(card,'reaction',({like:'Like',love:'Love',care:'Care',haha:'Haha',wow:'Wow',sad:'Sad',angry:'Angry'})[type]||type,ss)}catch(_){}}
 function doubleLove(card){const b=card.querySelector('.bd-love-burst');applyRx(card,'love',{force:true});b.classList.remove('show');void b.offsetWidth;b.classList.add('show')}
 function mapComment(r,uid){const md=(r&&typeof r.metadata==='object'&&r.metadata)||{};return {id:r.id||('c-'+Date.now()),post_id:r.post_id,parent_id:r.parent_id||r.reply_to||null,user_id:r.user_id||r.author_id||'',name:r.author_name||r.user_name||r.profile?.full_name||r.profiles?.full_name||'সদস্য',avatar:r.author_avatar||r.avatar_url||r.profile?.avatar_url||r.profiles?.avatar_url||'',text:r.content||r.text||r.body||'',media:r.media_url||r.image_url||md.media_url||md.image_url||'',at:Date.parse(r.created_at||r.createdAt||new Date())||Date.now(),score:Number(r.score||r.reaction_count||0),owner:String(r.user_id||r.author_id||'')===String(uid||''),pending:(r.status||'')==='pending_review'}}
 function localComments(id,uid){try{return (JSON.parse(localStorage.getItem('bd-comments-'+id)||'[]')||[]).map(x=>mapComment(x,uid))}catch(_){return []}}
-async function loadComments(card){const st=stateOf(card),id=String(card.dataset.postId);if(st.comments.has(id))return st.comments.get(id);let rows=[];const c=client();if(c){try{const r=await c.from('comments').select('*').eq('post_id',id).order('created_at',{ascending:true}).limit(200);if(!r.error&&Array.isArray(r.data))rows=r.data.map(x=>mapComment(x,st.userId))}catch(_){}if(rows.length){try{const ids=rows.map(x=>x.id).filter(Boolean),mr=await c.from('comment_media').select('comment_id,media_url,image_url').in('comment_id',ids);if(!mr.error&&Array.isArray(mr.data)){const mm=new Map(mr.data.map(x=>[String(x.comment_id),x.media_url||x.image_url||'']));rows=rows.map(x=>x.media?x:{...x,media:mm.get(String(x.id))||''})}}catch(_){}}}if(!rows.length)rows=localComments(id,st.userId);st.comments.set(id,rows);return rows}
-function commentMarkup(c,reply=false){const href=c.user_id?`profile.html?user=${encodeURIComponent(c.user_id)}`:'profile.html';return `<div class="bd-comment" data-comment-id="${esc(c.id)}" data-owner="${c.owner?'1':'0'}"><a class="bd-comment-avatar-link" href="${href}" aria-label="${esc(c.name)} profile"><span class="bd-comment-avatar">${c.avatar?`<img src="${esc(c.avatar)}" alt="">`:esc((c.name||'M')[0])}</span></a><div class="bd-comment-main"><div class="bd-bubble" data-comment-bubble tabindex="0"><a class="bd-comment-name" href="${href}">${esc(c.name)}</a><span data-comment-text>${esc(c.text)}</span>${c.media?`<button type="button" class="bd-comment-photo" data-comment-photo="${esc(c.media)}"><img src="${esc(c.media)}" alt="" loading="lazy" decoding="async"></button>`:''}${c.pending?'<small class="bd-pending"> · review pending</small>':''}</div><div class="bd-cmeta"><button data-c-like aria-label="Like comment">Like <span class="bd-c-rx-count" data-c-rx-count></span></button>${reply?'':'<button data-reply>Reply</button>'}<span>${timeAgo(c.at)}</span><button class="bd-c-reactors" data-c-reactors hidden>Reactions</button><button data-c-more aria-label="Comment options">•••</button></div>${!reply?'<div class="bd-replies" data-replies></div><form class="bd-reply-form"><input placeholder="Write a reply…" autocomplete="off"><button aria-label="Send reply"><svg class="bd-icon"><use href="#bd-i-send"/></svg></button></form>':''}</div></div>`}
-function timeAgo(t){const m=Math.max(1,Math.round((Date.now()-t)/60000));if(m<60)return m+'m';const h=Math.round(m/60);if(h<24)return h+'h';return Math.round(h/24)+'d'}
-function nestedComments(rows){const top=rows.filter(x=>!x.parent_id),replies=rows.filter(x=>x.parent_id);return {top,replies}}
-function drawComments(card,sort='relevant'){const s=stateOf(card),rows=s.comments.get(String(card.dataset.postId))||[],{top,replies}=nestedComments(rows);let arr=[...top];if(sort==='new')arr.sort((a,b)=>b.at-a.at);else if(sort==='old')arr.sort((a,b)=>a.at-b.at);else arr.sort((a,b)=>(b.score+replies.filter(r=>String(r.parent_id)===String(b.id)).length)-(a.score+replies.filter(r=>String(r.parent_id)===String(a.id)).length));const list=card.querySelector('[data-comment-list]');list.innerHTML=arr.length?arr.map(commentMarkup).join(''):'<div class="bd-feed-empty bd-no-comments">No comments yet.</div>';arr.forEach(c=>{const host=list.querySelector(`[data-comment-id="${CSS.escape(String(c.id))}"] [data-replies]`);if(host)host.innerHTML=replies.filter(r=>String(r.parent_id)===String(c.id)).map(r=>commentMarkup(r,true)).join('')});card.querySelector('[data-comment-count]').textContent=`${socialCount(rows.length)} comments`;bindCommentInteractions(card)}
-async function openComments(card){return openFullPostViewer(card,true)}
-
-const BD_DEEP_BAD_TERMS=[
-"শালা","শালী","হারামজাদা","হারামজাদী","হারামির বাচ্চা","শুয়োর","শুয়োর","শুয়ার","শুয়ার",
-"শুয়োরের বাচ্চা","শুয়োরের বাচ্চা","কুত্তা","কুত্তার বাচ্চা","খানকি","খানকির পোলা","খানকির ছেলে",
-"মাগী","বেশ্যা","চোদা","চুদি","চুদ","চোদন","চোদাচুদি","মাদারচোদ","মাদারচোদা","বাঞ্চোদ","বাইনচোদ",
-"বাইঞ্চোদ","বোকাচোদা","বাল","গুদ","লাউড়া","লাউড়া","হারামি",
-"fuck","fuck you","fuck off","fucking","fucker","motherfucker","mother fucker","asshole","bitch",
-"son of a bitch","dickhead","bullshit","bastard","cunt"
-];
-function bdDeepNormalize(v){
-  return String(v||"").normalize("NFKC")
-    .replace(/[\u200B-\u200D\uFEFF\u2060]/g,"")
-    .toLocaleLowerCase("bn-BD")
-    .replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d))
-    .replace(/[@4]/g,"a").replace(/[3]/g,"e").replace(/[1!|]/g,"i").replace(/[0]/g,"o").replace(/[5$]/g,"s").replace(/[7]/g,"t")
-    .replace(/([a-z])\1{2,}/g,"$1$1")
-    .replace(/([অ-হড়ঢ়য়])\1{2,}/g,"$1$1")
-    .replace(/[^\p{L}\p{M}\p{N}]+/gu," ")
-    .replace(/\s+/g," ").trim();
+function bdPostAliasIds(card){
+ const st=stateOf(card),id=String(card?.dataset?.postId||'');
+ const p=st?.posts?.find?.(x=>String(x.id)===id);
+ return [...new Set([id,...((p?._aliasIds||[]).map(String))].filter(Boolean))]
+}
+function bdMergeCommentRows(a,b,uid){
+ const m=new Map();for(const x of [...(a||[]),...(b||[])]){const c=mapComment(x,uid),k=String(c.id||'');if(!k)continue;const old=m.get(k);m.set(k,old?{...old,...c}:c)}
+ return [...m.values()].sort((x,y)=>x.at-y.at)
+}
+async function loadComments(card){
+ const st=stateOf(card),id=String(card.dataset.postId);if(st.comments.has(id))return st.comments.get(id);
+ const ids=bdPostAliasIds(card);let rows=[];const c=client();
+ if(c){
+  try{let q=c.from('comments').select('*');q=ids.length>1?q.in('post_id',ids):q.eq('post_id',id);const r=await q.order('created_at',{ascending:true}).limit(400);if(!r.error&&Array.isArray(r.data))rows=r.data.map(x=>mapComment(x,st.userId))}catch(_){}
+  if(rows.length){try{const cids=rows.map(x=>x.id).filter(Boolean),mr=await c.from('comment_media').select('comment_id,media_url,image_url').in('comment_id',cids);if(!mr.error&&Array.isArray(mr.data)){const mm=new Map(mr.data.map(x=>[String(x.comment_id),x.media_url||x.image_url||'']));rows=rows.map(x=>x.media?x:{...x,media:mm.get(String(x.id))||''})}}catch(_){}}
+ }
+ let local=[];for(const pid of ids)local.push(...localComments(pid,st.userId));rows=bdMergeCommentRows(rows,local,st.userId);
+ st.comments.set(id,rows);const p=st.posts?.find?.(x=>String(x.id)===id);if(p&&rows.length>Number(p.commentCount||0))p.commentCount=rows.length;return rows
 }
 function bdDeepBadTerms(text){
   const n=bdDeepNormalize(text), words=n.split(" ").filter(Boolean), compact=n.replace(/\s+/g,""), found=[];
@@ -911,9 +944,9 @@ try{await bdNotifyPostOwner(card,'comment',text||'ছবি মন্তব্�
 toast(terms.length?'গালি-রাডার শব্দ ধরেছে 😄 মন্তব্যটি Founder/Admin রিভিউতে গেছে':mediaUrl?'ছবি মন্তব্য যোগ হয়েছে':'মন্তব্য যোগ হয়েছে')
 }
 function findComment(card,cid){return (stateOf(card)?.comments.get(String(card.dataset.postId))||[]).find(x=>String(x.id)===String(cid))}
-function installMenu(){if(D.getElementById('bdCommentMenu'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-comment-menu-back" id="bdCommentBack"></div><div class="bd-comment-menu" id="bdCommentMenu"><button data-menu-edit>✎ <span>সম্পাদনা করুন</span></button><button data-menu-delete>⌫ <span>মুছুন</span></button><button data-menu-report>⚑ <span>রিপোর্ট করুন</span></button></div>`);const back=D.getElementById('bdCommentBack'),menu=D.getElementById('bdCommentMenu');const close=()=>{back.classList.remove('open');menu.classList.remove('open');menuTarget=null};back.onclick=close;menu.querySelector('[data-menu-edit]').onclick=()=>{if(menuTarget)startEditComment(menuTarget.card,menuTarget.el,menuTarget.comment);close()};menu.querySelector('[data-menu-delete]').onclick=async()=>{if(!menuTarget)return;const {card,comment}=menuTarget,s=stateOf(card),id=String(card.dataset.postId);s.comments.set(id,(s.comments.get(id)||[]).filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id)!==String(comment.id)));anchor(card,()=>drawComments(card));try{await client()?.from('comments').delete().eq('id',comment.id)}catch(_){}try{const key='bd-comments-'+id,a=JSON.parse(localStorage.getItem(key)||'[]');localStorage.setItem(key,JSON.stringify((Array.isArray(a)?a:[]).filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id||'')!==String(comment.id))))}catch(_){}toast('মন্তব্য মুছে ফেলা হয়েছে');close()};menu.querySelector('[data-menu-report]').onclick=async()=>{if(!menuTarget)return;try{const ss=await session();await client()?.from('comment_reports').insert({comment_id:menuTarget.comment.id,reporter_id:ss?.user?.id||null,reason:'user_report'})}catch(_){}toast('রিপোর্ট পাঠানো হয়েছে');close()}}
+function installMenu(){if(D.getElementById('bdCommentMenu'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-comment-menu-back" id="bdCommentBack"></div><div class="bd-comment-menu" id="bdCommentMenu"><button data-menu-edit>✎ <span>সম্পাদনা করুন</span></button><button data-menu-delete>⌫ <span>মুছুন</span></button><button data-menu-report>⚑ <span>রিপোর্ট করুন</span></button></div>`);const back=D.getElementById('bdCommentBack'),menu=D.getElementById('bdCommentMenu');const close=()=>{back.classList.remove('open');menu.classList.remove('open');menuTarget=null};back.onclick=close;menu.querySelector('[data-menu-edit]').onclick=()=>{if(menuTarget)startEditComment(menuTarget.card,menuTarget.el,menuTarget.comment);close()};menu.querySelector('[data-menu-delete]').onclick=async()=>{if(!menuTarget)return;const {card,comment}=menuTarget,s=stateOf(card),id=String(card.dataset.postId);s.comments.set(id,(s.comments.get(id)||[]).filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id)!==String(comment.id)));anchor(card,()=>drawComments(card));try{await client()?.from('comments').delete().eq('id',comment.id)}catch(_){}for(const pid of bdPostAliasIds(card)){try{const key='bd-comments-'+pid,a=JSON.parse(localStorage.getItem(key)||'[]');localStorage.setItem(key,JSON.stringify((Array.isArray(a)?a:[]).filter(x=>String(x.id)!==String(comment.id)&&String(x.parent_id||'')!==String(comment.id))))}catch(_){}}toast('মন্তব্য মুছে ফেলা হয়েছে');close()};menu.querySelector('[data-menu-report]').onclick=async()=>{if(!menuTarget)return;try{const ss=await session();await client()?.from('comment_reports').insert({comment_id:menuTarget.comment.id,reporter_id:ss?.user?.id||null,reason:'user_report'})}catch(_){}toast('রিপোর্ট পাঠানো হয়েছে');close()}}
 function openCommentMenu(card,el,c){installMenu();menuTarget={card,el,comment:c};const menu=D.getElementById('bdCommentMenu');menu.querySelector('[data-menu-edit]').hidden=!c.owner;menu.querySelector('[data-menu-delete]').hidden=!c.owner;menu.querySelector('[data-menu-report]').hidden=c.owner;D.getElementById('bdCommentBack').classList.add('open');menu.classList.add('open')}
-function startEditComment(card,el,c){const bubble=el.querySelector('[data-comment-bubble]');bubble.innerHTML=`<input class="bd-comment-edit-input" value="${esc(c.text)}" aria-label="মন্তব্য সম্পাদনা"><span class="bd-comment-edit-actions"><button data-edit-save>সংরক্ষণ</button><button data-edit-cancel>বাতিল</button></span>`;const inp=bubble.querySelector('input');inp.focus({preventScroll:true});bubble.querySelector('[data-edit-cancel]').onclick=()=>drawComments(card);bubble.querySelector('[data-edit-save]').onclick=async()=>{const text=inp.value.trim();if(!text)return;c.text=text;c.pending=false;anchor(card,()=>drawComments(card));try{await client()?.from('comments').update({content:text,status:'published'}).eq('id',c.id)}catch(_){}try{const key='bd-comments-'+String(card.dataset.postId),a=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(a)){const x=a.find(v=>String(v.id)===String(c.id));if(x){x.content=text;x.text=text}localStorage.setItem(key,JSON.stringify(a))}}catch(_){}toast('মন্তব্য সম্পাদিত হয়েছে')}}
+function startEditComment(card,el,c){const bubble=el.querySelector('[data-comment-bubble]');bubble.innerHTML=`<input class="bd-comment-edit-input" value="${esc(c.text)}" aria-label="মন্তব্য সম্পাদনা"><span class="bd-comment-edit-actions"><button data-edit-save>সংরক্ষণ</button><button data-edit-cancel>বাতিল</button></span>`;const inp=bubble.querySelector('input');inp.focus({preventScroll:true});bubble.querySelector('[data-edit-cancel]').onclick=()=>drawComments(card);bubble.querySelector('[data-edit-save]').onclick=async()=>{const text=inp.value.trim();if(!text)return;c.text=text;c.pending=false;anchor(card,()=>drawComments(card));try{await client()?.from('comments').update({content:text,status:'published'}).eq('id',c.id)}catch(_){}for(const pid of bdPostAliasIds(card)){try{const key='bd-comments-'+pid,a=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(a)){const x=a.find(v=>String(v.id)===String(c.id));if(x){x.content=text;x.text=text;x.body=text}localStorage.setItem(key,JSON.stringify(a))}}catch(_){}}toast('মন্তব্য সম্পাদিত হয়েছে')}}
 
 function installReactorSheet(){if(D.getElementById('bdReactorSheet'))return;D.body.insertAdjacentHTML('beforeend',`<div class="bd-reactor-sheet-back" id="bdReactorBack"></div><section class="bd-reactor-sheet" id="bdReactorSheet"><div class="bd-reactor-sheet-head"><h3>রিঅ্যাক্ট করেছেন</h3><button type="button" data-reactor-close aria-label="বন্ধ করুন">×</button></div><div class="bd-reactor-list" data-reactor-list></div></section>`);const close=()=>{D.getElementById('bdReactorBack')?.classList.remove('open');D.getElementById('bdReactorSheet')?.classList.remove('open')};D.getElementById('bdReactorBack').onclick=close;D.querySelector('#bdReactorSheet [data-reactor-close]').onclick=close}
 const PROFILE_CACHE=new Map();async function profileRowsFor(ids){ids=[...new Set((ids||[]).map(String).filter(Boolean))];const out=new Map();ids.forEach(id=>{if(PROFILE_CACHE.has(id))out.set(id,PROFILE_CACHE.get(id))});const need=ids.filter(id=>!PROFILE_CACHE.has(id)),c=client();if(!c||!need.length)return out;for(const col of ['id','user_id']){try{const r=await bdTimeout(c.from('profiles').select('*').in(col,need),1600);if(r?.__bdTimeout)continue;if(!r?.error&&Array.isArray(r?.data)){r.data.forEach(x=>{const k=String(x.id||x.user_id||'');if(k){PROFILE_CACHE.set(k,x);out.set(k,x)}});break}}catch(_){}}return out}
