@@ -707,7 +707,7 @@ const norm=s=>String(s||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'
 function badTerms(s){return[]}
 const toBn=n=>String(n??0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d]);
 function toast(m){if(W.BDToast)return W.BDToast(m);let t=D.getElementById('bdFeedToast');if(!t){t=D.createElement('div');t.id='bdFeedToast';t.className='bd-feed-toast';D.body.appendChild(t)}t.textContent=m;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2100)}
-function client(){return W.BD_SUPABASE||W.supabaseClient||null}
+function client(){return W.BD_SUPABASE||W.supabaseClient||W.bhubondangaSupabase||W.__supabaseClient||((W.supabase&&W.supabase.auth)?W.supabase:null)||null}
 async function session(){try{return (await client()?.auth?.getSession?.()).data?.session||null}catch(_){return null}}
 function rootTpl(){return `<section class="bd-feed-root"><section class="bd-human bd-human-v94 bd-glass" aria-label="মানবিক আবেদন ও জরুরি সহায়তা"><div class="bd-human-v94-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.7 4.8a5.4 5.4 0 0 0-7.6 0L12 5.9l-1.1-1.1a5.4 5.4 0 0 0-7.6 7.6L12 21l8.7-8.6a5.4 5.4 0 0 0 0-7.6Z"/></svg></div><div class="bd-human-v94-copy"><strong>মানবিক আবেদন ও জরুরি সহায়তা</strong><small>প্রয়োজনের আবেদন করুন অথবা আজকের জরুরি আবেদন দেখুন</small></div><div class="bd-human-v94-actions"><a href="humanitarian-request.html" class="primary">+ আবেদন করুন</a><a href="humanitarian.html#urgentFeed">জরুরি আবেদন দেখুন</a></div></section><section class="bd-feed-filter bd-feed-filter-v94 bd-glass"><h3>আপনার নিউজফিড</h3><select data-feed-filter aria-hidden="true" tabindex="-1" class="bd-feed-filter-native"><option value="all">সব</option><option value="poem">কবিতা</option><option value="recitation">আবৃত্তি</option><option value="reels">রিলস</option><option value="children">শিশুতোষ</option><option value="prolap">প্রলাপ</option><option value="letter">চিঠিপত্র</option><option value="environment">পরিবেশ</option><option value="news">নিউজ</option></select><div class="bd-feed-category-strip" data-feed-category-strip role="tablist" aria-label="নিউজফিড বিভাগ"><button type="button" data-feed-filter-button="all">সব</button><button type="button" data-feed-filter-button="poem">কবিতা</button><button type="button" data-feed-filter-button="recitation">আবৃত্তি</button><button type="button" data-feed-filter-button="reels">রিলস</button><button type="button" data-feed-filter-button="children">শিশুতোষ</button><button type="button" data-feed-filter-button="prolap">প্রলাপ</button><button type="button" data-feed-filter-button="letter">চিঠিপত্র</button><button type="button" data-feed-filter-button="environment">পরিবেশ</button><button type="button" data-feed-filter-button="news">নিউজ</button></div></section><div class="bd-posts" data-posts><div class="bd-feed-loading">পোস্ট লোড হচ্ছে…</div></div><button class="bd-see-more bd-see-more-v8" type="button" data-see-more hidden>See More</button><button class="bd-feed-top" type="button" data-feed-top aria-label="উপরে যান">⌃</button></section>`}
 function mapPost(r){
@@ -737,7 +737,7 @@ images:[...new Set([
   ...(Array.isArray(r.media_images)?r.media_images:[]),
   ...(Array.isArray(r.images)?r.images:[])
 ].filter(Boolean).map(String))],
-newsImages:Array.isArray(meta.news_images)?meta.news_images:(Array.isArray(r.news_images)?r.news_images:[]),audio:r.audio_url||meta.audio_url||((r.media_type==='audio')?r.media_url:'')||'',video:r.video_url||meta.video_url||((r.media_type==='video')?r.media_url:'')||'',mediaCommitted:(r.media_committed===true||meta.media_committed===true),bgm:r.bgm_url||meta.bgm_url||'',bgmVolume:Number(meta.bgm_volume||28),audioProcessing:(meta.audio_processing&&typeof meta.audio_processing==='object')?meta.audio_processing:{},author:meta.page_name||meta.author_name||meta.author_display_name||r.author_name||r.display_name||r.profile?.full_name||r.profiles?.full_name||r.user_name||meta.author_username||'ভুবনডাঙ্গার সদস্য',authorId:r.author_id||r.user_id||r.profile_id||meta.author_id||'',avatar:meta.page_logo_url||meta.author_avatar||r.author_avatar||r.avatar_url||r.profile?.avatar_url||r.profiles?.avatar_url||'',mediaTemplate:!!(meta.media_template||r.media_template),profileUpdate:!!profileUpdateKind,canonicalPoet:!!(meta.canonical_poet||r.canonical_poet),originalAuthor:meta.original_author||r.original_author||'',editorName:meta.editor_name||r.editor_name||'',editorId:meta.editor_id||r.editor_id||'',role:meta.author_type==='page'?'অনুমোদিত সংবাদ প্রকাশনা':(r.author_role||r.role||r.profile?.role||r.profiles?.role||'সদস্য'),authorType:meta.author_type||'user',pageId:meta.page_id||'',pageUsername:meta.page_username||'',pagePortal:meta.page_portal_url||'',createdAt:r.created_at||r.createdAt||r.published_at||new Date().toISOString(),status,reactionCount:Number(r.reaction_count||r.reactions_count||0),commentCount:Number(r.comment_count||r.comments_count||0),shareCount:Number(r.share_count||r.shares_count||meta.share_count||0),humanitarianPinned:!!(r.humanitarian_pinned||r.feed_pinned||r.priority_pin||meta.humanitarian_pinned),feedPinned:!!(r.feed_pinned||r.priority_pin||meta.feed_pinned),showInFeed:(r.show_in_feed??r.feed_visible??meta.show_in_feed??true)!==false,feedVisible:(r.feed_visible??r.show_in_feed??meta.feed_visible??true)!==false,profileOnly:(r.profile_only??meta.profile_only??false)===true,privacy:String(r.privacy||meta.privacy||'public')}
+newsImages:Array.isArray(meta.news_images)?meta.news_images:(Array.isArray(r.news_images)?r.news_images:[]),audio:r.audio_url||meta.audio_url||((r.media_type==='audio')?r.media_url:'')||'',video:r.video_url||meta.video_url||((r.media_type==='video')?r.media_url:'')||'',mediaCommitted:(r.media_committed===true||meta.media_committed===true),bgm:r.bgm_url||meta.bgm_url||'',bgmVolume:Number(meta.bgm_volume||28),audioProcessing:(meta.audio_processing&&typeof meta.audio_processing==='object')?meta.audio_processing:{},author:meta.page_name||meta.author_name||meta.author_display_name||r.author_name||r.display_name||r.profile?.full_name||r.profiles?.full_name||r.user_name||meta.author_username||'ভুবনডাঙ্গার সদস্য',authorId:r.author_id||r.user_id||r.profile_id||r.created_by||r.created_by_id||r.owner_id||r.account_id||meta.author_id||meta.user_id||meta.owner_id||meta.created_by||'',avatar:meta.page_logo_url||meta.author_avatar||r.author_avatar||r.avatar_url||r.profile?.avatar_url||r.profiles?.avatar_url||'',mediaTemplate:!!(meta.media_template||r.media_template),profileUpdate:!!profileUpdateKind,canonicalPoet:!!(meta.canonical_poet||r.canonical_poet),originalAuthor:meta.original_author||r.original_author||'',editorName:meta.editor_name||r.editor_name||'',editorId:meta.editor_id||r.editor_id||'',role:meta.author_type==='page'?'অনুমোদিত সংবাদ প্রকাশনা':(r.author_role||r.role||r.profile?.role||r.profiles?.role||'সদস্য'),authorType:meta.author_type||'user',pageId:meta.page_id||'',pageUsername:meta.page_username||'',pagePortal:meta.page_portal_url||'',createdAt:r.created_at||r.createdAt||r.published_at||new Date().toISOString(),status,reactionCount:Number(r.reaction_count||r.reactions_count||0),commentCount:Number(r.comment_count||r.comments_count||0),shareCount:Number(r.share_count||r.shares_count||meta.share_count||0),humanitarianPinned:!!(r.humanitarian_pinned||r.feed_pinned||r.priority_pin||meta.humanitarian_pinned),feedPinned:!!(r.feed_pinned||r.priority_pin||meta.feed_pinned),showInFeed:(r.show_in_feed??r.feed_visible??meta.show_in_feed??true)!==false,feedVisible:(r.feed_visible??r.show_in_feed??meta.feed_visible??true)!==false,profileOnly:(r.profile_only??meta.profile_only??false)===true,privacy:String(r.privacy||meta.privacy||'public')}
 }
 function localPosts(){const out=[];for(const key of ['bd-local-posts','bd-posts','bhubondanga-posts','bhubondanga_posts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts']){try{const a=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(a))out.push(...a.map(x=>({...x,__bdLocalOrigin:true,__bdLocalKey:key})))}catch(_){}}for(const a of [W.BD_CANONICAL_POSTS,W.BD_POSTS,W.BhubondangaPosts])if(Array.isArray(a))out.push(...a.map(x=>({...x,__bdLocalOrigin:true,__bdLocalKey:'window'})));return out.filter(p=>!p.status||['published','approved','active'].includes(p.status)).map(r=>({...mapPost(r),_localOrigin:!!r.__bdLocalOrigin,_localKey:r.__bdLocalKey||''}))}
 function bdTimeout(p,ms=4500){return Promise.race([Promise.resolve(p),new Promise(resolve=>setTimeout(()=>resolve({__bdTimeout:true}),ms))])}
@@ -843,7 +843,7 @@ function saveFollowStore(set){try{localStorage.setItem('bd-following',JSON.strin
 function syncFollowButton(card){
  const b=card.querySelector('[data-follow]');if(!b)return;
  const st=stateOf(card),target=String(card.dataset.authorId||''),mine=String(st?.userId||'');
- if(card.dataset.ownPost==='1'||!target||target===mine){b.hidden=true;b.setAttribute('aria-hidden','true');return}
+ if(card.dataset.ownPost==='1'||W.__BD_IS_OWN_CARD?.(card)||!target||target===mine){b.hidden=true;b.setAttribute('aria-hidden','true');return}
  b.hidden=false;b.removeAttribute('aria-hidden');const on=followStore().has(target);b.classList.toggle('following',on);b.textContent=on?'Following':'Follow';b.setAttribute('aria-pressed',on?'true':'false')
 }
 async function toggleFollow(card,btn){
@@ -897,7 +897,7 @@ function installViewers(){
   likeBtn.addEventListener('click',e=>{e.preventDefault();if(Date.now()<pClickGuard)return;if(BD_PHOTO_VIEW?.card)photoApplyReaction('like')});
   likeBtn.addEventListener('contextmenu',e=>e.preventDefault());
   photoPicker?.querySelectorAll('[data-photo-rx]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(BD_PHOTO_VIEW?.card)photoApplyReaction(b.dataset.photoRx);closePhotoPicker()}));
-  let sx=0,sy=0,pt=0,px=0,py=0;const stage=pv.querySelector('.bd-photo-stage');stage.addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY},{passive:true});stage.addEventListener('pointerup',e=>{const d=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(d)>55&&Math.abs(d)>Math.abs(dy)){stepPhoto(d<0?1:-1);return}const now=Date.now();if(now-pt<330&&Math.hypot(e.clientX-px,e.clientY-py)<32&&BD_PHOTO_VIEW?.card){photoApplyReaction('love');pt=0}else{pt=now;px=e.clientX;py=e.clientY}},{passive:true});
+  let sx=0,sy=0,pt=0,px=0,py=0;const stage=pv.querySelector('.bd-photo-stage');stage.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')return;sx=e.clientX;sy=e.clientY},{passive:true});stage.addEventListener('pointerup',e=>{if(e.pointerType==='touch')return;const d=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(d)>55&&Math.abs(d)>Math.abs(dy)){stepPhoto(d<0?1:-1);return}const now=Date.now();if(now-pt<330&&Math.hypot(e.clientX-px,e.clientY-py)<32&&BD_PHOTO_VIEW?.card){photoApplyReaction('love');pt=0}else{pt=now;px=e.clientX;py=e.clientY}},{passive:true});
   pv.querySelector('[data-photo-menu-open]').onclick=e=>{e.stopPropagation();const m=pv.querySelector('[data-photo-menu-sheet]');m.hidden=!m.hidden;renderPhotoViewerMenu()};
   pv.querySelector('[data-photo-comments-close]').onclick=()=>{pv.querySelector('[data-photo-comments-panel]').hidden=true};
   pv.querySelector('[data-photo-edit-cancel]').onclick=()=>{pv.querySelector('[data-photo-edit-panel]').hidden=true;renderPhotoViewer()};
@@ -1192,6 +1192,7 @@ async function enrichPostAuthors(posts){
    const identityMatch=!!(me&&(ownNames.has(pn)||(pa&&ownAvatars.has(pa))||((p.profileUpdate||p._localOrigin)&&myRole==='founder'&&String(p.role||'').toLowerCase().includes('founder'))));
    if(me&&String(authorId)===String(me.id))own=true;
    else if(me&&legacyId&&(p._localOrigin||p.profileUpdate)&&identityMatch){authorId=String(me.id);own=true}
+   else if(me&&p.profileUpdate&&identityMatch){authorId=String(me.id);own=true}
    const pr=prof.get(String(authorId||''))||{},mine=me&&String(authorId)===String(me.id),selfmd=mine?md:{};
    if(mine)own=true;
    const name=pr.display_name||pr.full_name||pr.name||pr.username||selfmd.full_name||selfmd.name||selfmd.display_name||selfmd.username||(mine?me.email?.split('@')[0]:'')||p.author;
@@ -1263,7 +1264,7 @@ function closeFloatingTray(){const t=BD_FLOATING_TRAY;if(!t)return;const im=t.qu
 function openFloatingTray(card,t,main){if(!t||!main)return;if(BD_FLOATING_TRAY&&BD_FLOATING_TRAY!==t)closeFloatingTray();t._bdHome=t.parentElement;t.dataset.forPost=String(card.dataset.postId);D.body.appendChild(t);t.classList.add('open','bd-rx-floating');const r=main.getBoundingClientRect(),w=Math.min(350,Math.max(286,innerWidth-16)),h=Math.max(56,w*136/700);let left=Math.max(8,Math.min(r.left-(w-r.width)*.08,innerWidth-w-8)),top=r.top-h-10;if(top<8)top=Math.min(innerHeight-h-8,r.bottom+8);Object.assign(t.style,{width:w+'px',height:h+'px',left:left+'px',top:top+'px'});BD_FLOATING_TRAY=t}
 function localSet(name,id,val=true){try{const a=JSON.parse(localStorage.getItem(name)||'[]'),set=new Set(Array.isArray(a)?a.map(String):[]);if(val)set.add(String(id));else set.delete(String(id));localStorage.setItem(name,JSON.stringify([...set]));return true}catch(_){return false}}
 function localHas(name,id){try{return (JSON.parse(localStorage.getItem(name)||'[]')||[]).map(String).includes(String(id))}catch(_){return false}}
-function isPostOwner(card){const s=stateOf(card),role=String(s?.role||W.BD_ROLE||'').toLowerCase(),type=String(card.dataset.type||'').toLowerCase();if(type==='midnight')return role==='founder';if(card?.dataset?.ownPost==='1')return true;return !!(s?.userId&&String(s.userId)===String(card.dataset.authorId||''))}
+function isPostOwner(card){const s=stateOf(card),role=String(s?.role||W.BD_ROLE||'').toLowerCase(),type=String(card.dataset.type||'').toLowerCase();if(type==='midnight')return role==='founder';if(card?.dataset?.ownPost==='1')return true;if(W.__BD_IS_OWN_CARD?.(card))return true;return !!(s?.userId&&String(s.userId)===String(card.dataset.authorId||''))}
 function configurePostMenu(card){const owner=isPostOwner(card);const a=card.querySelector('[data-owner-menu]'),v=card.querySelector('[data-visitor-menu]');if(a)a.hidden=!owner;if(v)v.hidden=owner;const n=card.querySelector('[data-notify-post]');if(n){const on=localHas('bd-post-notify',card.dataset.postId);n.classList.toggle('active',on);n.textContent=on?'পোস্ট নোটিফিকেশন বন্ধ করুন':'এই পোস্টের নোটিফিকেশন নিন'}const pin=card.querySelector('[data-pin-profile]');if(pin){const on=localHas('bd-profile-pinned-posts',card.dataset.postId);pin.classList.toggle('active',on);pin.textContent=on?'প্রোফাইল থেকে আনপিন করুন':'প্রোফাইলে পিন করুন'}const vis=card.querySelector('[data-feed-visibility]');if(vis){const only=localHas('bd-profile-only-posts',card.dataset.postId);vis.classList.toggle('active',only);vis.textContent=only?'News Feed-এও দেখান':'শুধু প্রোফাইলে রাখুন'}}
 async function savePostAction(card){const ss=await session();if(!ss){toast('সংরক্ষণ করতে লগইন করুন');return}localSet('bd-saved-posts',card.dataset.postId,true);try{await client()?.from('saved_posts').upsert({user_id:ss.user.id,post_id:card.dataset.postId},{onConflict:'user_id,post_id'})}catch(_){}toast('পোস্ট সংরক্ষিত হয়েছে')}
 async function reportPostAction(card){const ss=await session();if(!ss){toast('রিপোর্ট করতে লগইন করুন');return}try{await client()?.from('post_reports').insert({post_id:card.dataset.postId,reporter_id:ss.user.id,reason:'user_report'})}catch(_){}toast('রিপোর্ট পাঠানো হয়েছে')}
@@ -1728,69 +1729,6 @@ html[data-theme="dark"] .bd-viewer-card .bd-comments,html[data-theme="dark"] .bd
 </script>
 
 <script id="bd-v99-parser-safety">(()=>{const clean=()=>{for(const n of [...document.body.childNodes]){if(n.nodeType===3&&/^(?:\s|\\n)+$/.test(n.nodeValue||''))n.remove()}};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',clean,{once:true});else clean()})();</script>
-<script id="bd-v103-persist-zoom-align-js">
-(()=>{
-  if(window.__BD_V103__)return;window.__BD_V103__=1;
-  const D=document;
-  const KEY='bd-v103-reaction-mirror';
-  const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(_){return{}}};
-  const write=o=>{try{localStorage.setItem(KEY,JSON.stringify(o))}catch(_){}};
-  const keysFor=card=>{
-    const out=[];
-    const a=card?.dataset?.canonicalPostId,b=card?.dataset?.postId;
-    if(a)out.push(String(a));if(b&&b!==a)out.push(String(b));
-    return out;
-  };
-  const mirrorReaction=(card,type)=>{
-    if(!card)return;const m=read();for(const k of keysFor(card)){if(type)m[k]=type;else delete m[k]}write(m);
-  };
-  const restoreVisual=card=>{
-    if(!card)return;const m=read();let type='';for(const k of keysFor(card)){if(m[k]){type=m[k];break}}
-    if(!type)return;
-    const main=card.querySelector('[data-react-main]');if(!main||main.dataset.reaction)return;
-    main.dataset.reaction=type;main.classList.add('selected');
-  };
-  const restoreAll=()=>D.querySelectorAll('.bd-post[data-post-id]').forEach(restoreVisual);
-  new MutationObserver(()=>requestAnimationFrame(restoreAll)).observe(D.documentElement,{childList:true,subtree:true});
-  D.addEventListener('click',e=>{
-    const pick=e.target.closest?.('[data-rx-pick]');if(pick){const card=pick.closest('.bd-post');mirrorReaction(card,pick.dataset.rxPick||'like');return}
-    const main=e.target.closest?.('[data-react-main]');if(main){const card=main.closest('.bd-post');setTimeout(()=>mirrorReaction(card,main.dataset.reaction||''),60)}
-  },true);
-  D.addEventListener('dblclick',e=>{const card=e.target.closest?.('.bd-post');if(card)mirrorReaction(card,'love')},true);
-  restoreAll();
-
-  /* Pinch zoom + pan + double-tap zoom for current fullscreen photo. */
-  let scale=1,tx=0,ty=0,startDist=0,startScale=1,startX=0,startY=0,lastTap=0;
-  const stage=()=>D.querySelector('#bdPhotoViewer.open .bd-photo-stage');
-  const img=()=>stage()?.querySelector('img');
-  const apply=()=>{const im=img();if(im)im.style.transform=`translate3d(${tx}px,${ty}px,0) scale(${scale})`};
-  const reset=()=>{scale=1;tx=0;ty=0;apply()};
-  const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
-  D.addEventListener('touchstart',e=>{
-    const st=e.target.closest?.('.bd-photo-stage');if(!st||!st.closest('#bdPhotoViewer.open'))return;
-    const im=img();if(im)im.classList.add('bd103-zooming');
-    if(e.touches.length===2){startDist=dist(e.touches);startScale=scale;e.preventDefault()}
-    else if(e.touches.length===1){startX=e.touches[0].clientX-tx;startY=e.touches[0].clientY-ty}
-  },{passive:false,capture:true});
-  D.addEventListener('touchmove',e=>{
-    const st=e.target.closest?.('.bd-photo-stage');if(!st||!st.closest('#bdPhotoViewer.open'))return;
-    if(e.touches.length===2&&startDist){scale=Math.max(1,Math.min(5,startScale*dist(e.touches)/startDist));e.preventDefault();apply()}
-    else if(e.touches.length===1&&scale>1){tx=e.touches[0].clientX-startX;ty=e.touches[0].clientY-startY;e.preventDefault();apply()}
-  },{passive:false,capture:true});
-  D.addEventListener('touchend',e=>{
-    const st=e.target.closest?.('.bd-photo-stage');if(!st||!st.closest('#bdPhotoViewer.open'))return;
-    const im=img();if(im)im.classList.remove('bd103-zooming');
-    if(scale<1.03)reset();startDist=0;
-  },{passive:true,capture:true});
-  D.addEventListener('click',e=>{
-    const st=e.target.closest?.('.bd-photo-stage');if(!st||!st.closest('#bdPhotoViewer.open'))return;
-    const now=Date.now();if(now-lastTap<300){if(scale>1)reset();else{scale=2;tx=ty=0;apply()}lastTap=0}else lastTap=now;
-  },true);
-  new MutationObserver(()=>{if(!D.querySelector('#bdPhotoViewer.open'))reset()}).observe(D.documentElement,{attributes:true,subtree:true,attributeFilter:['class']});
-})();
-</script>
-
-
 <style id="bd-v104-final-absolute-lock">
 /* V104 FINAL OVERRIDE — deliberately last. Earlier legacy rules must not win. */
 
@@ -1988,101 +1926,168 @@ html[data-theme="dark"] .bd-human-v94-actions a.primary{
 </style>
 
 
-<script id="bd-v104-final-runtime-lock">
+
+<style id="bd-v105-photo-owner-gesture-lock">
+/* V105 — Facebook-like individual media interaction, no extra photo frame. */
+#bdPhotoViewer .bd-photo-stage{
+  overflow:hidden!important;
+  touch-action:none!important;
+  overscroll-behavior:none!important;
+  -webkit-user-select:none!important;
+  user-select:none!important;
+  -webkit-touch-callout:none!important;
+  cursor:grab;
+}
+#bdPhotoViewer .bd-photo-stage.bd-v105-dragging{cursor:grabbing}
+#bdPhotoViewer .bd-photo-stage>img[data-photo-view]{
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+  transform-origin:50% 50%!important;
+  will-change:transform,opacity!important;
+  -webkit-user-drag:none!important;
+  -webkit-user-select:none!important;
+  user-select:none!important;
+  touch-action:none!important;
+}
+#bdPhotoViewer.bd-v105-dismissing .bd-photo-top,
+#bdPhotoViewer.bd-v105-dismissing .bd-photo-foot{transition:opacity .12s linear}
+#bdPhotoViewer .bd-photo-menu-sheet [data-photo-owner-menu][hidden],
+#bdPhotoViewer .bd-photo-menu-sheet [data-photo-visitor-menu][hidden]{display:none!important}
+</style>
+
+
+<script id="bd-v105-owner-pinch-swipe-runtime">
 (()=>{'use strict';
- if(window.__BD_V104_FINAL_LOCK__)return;window.__BD_V104_FINAL_LOCK__=1;
+ if(window.__BD_V105_OWNER_GESTURE__)return;window.__BD_V105_OWNER_GESTURE__=1;
  const D=document,W=window;
- const norm=s=>String(s||'').trim().toLocaleLowerCase('bn-BD');
- const RX_LABEL={like:'Like',love:'Love',care:'Care',haha:'Haha',wow:'Wow',sad:'Sad',angry:'Angry'};
-
- /* Strong local visual restore: refresh must not visually forget the selected reaction. */
- const reactionStore=()=>{try{return JSON.parse(localStorage.getItem('bd-v103-reaction-mirror')||'{}')||{}}catch(_){return{}}};
- const cardKeys=card=>[card?.dataset?.canonicalPostId,card?.dataset?.postId].filter(Boolean).map(String);
- function restoreReactionCard(card){
-   if(!card)return;const store=reactionStore();let type='';for(const k of cardKeys(card)){if(store[k]){type=String(store[k]);break}}
-   if(!RX_LABEL[type])return;
-   const main=card.querySelector('[data-react-main]');
-   if(main){
-     main.dataset.reaction=type;main.classList.add('selected');main.setAttribute('aria-label',RX_LABEL[type]+' selected');
-     main.innerHTML=`<span class="bd-rx-mini" data-rx="${type}" role="img" aria-label="${RX_LABEL[type]}"></span><span class="bd-rx-label">${RX_LABEL[type]}</span>`;
-   }
-   const icons=card.querySelector('[data-summary-icons]'),count=card.querySelector('[data-rx-count]');
-   const n=parseInt(String(count?.textContent||'0').replace(/\D/g,''),10)||0;
-   if(icons&&n===0)icons.innerHTML=`<span class="bd-rx-mini" data-rx="${type}" role="img" aria-label="${RX_LABEL[type]}"></span><span data-rx-count>1</span>`;
+ const clean=s=>String(s||'').trim().normalize('NFKC').toLocaleLowerCase('bn-BD');
+ const cleanUrl=s=>{try{const u=new URL(String(s||''),location.href);u.search='';u.hash='';return u.href}catch(_){return String(s||'').split('?')[0].split('#')[0]}};
+ const C=()=>W.BD_SUPABASE||W.supabaseClient||W.bhubondangaSupabase||W.__supabaseClient||((W.supabase&&W.supabase.auth)?W.supabase:null)||null;
+ let ME={id:'',names:new Set(),avatars:new Set(),ready:false};
+ const addName=v=>{v=clean(v);if(v)ME.names.add(v)};
+ const addAvatar=v=>{v=cleanUrl(v);if(v)ME.avatars.add(v)};
+ async function currentSession(){
+   try{if(W.BD_SESSION?.user)return W.BD_SESSION;const c=C();return (await c?.auth?.getSession?.())?.data?.session||null}catch(_){return null}
  }
- function restoreAll(){D.querySelectorAll('.bd-post[data-post-id]').forEach(restoreReactionCard)}
- const mo=new MutationObserver(()=>requestAnimationFrame(()=>{restoreAll();fixOwnFollow()}));
- mo.observe(D.documentElement,{childList:true,subtree:true});
- setTimeout(restoreAll,60);setTimeout(restoreAll,450);setTimeout(restoreAll,1200);
-
- /* Never suggest Follow on the logged-in person's own post, including legacy posts without author_id. */
- let myNames=new Set(),myId='';
- async function loadIdentity(){
-   try{
-     const ss=window.BD_SESSION||((await (window.BD_SUPABASE||window.supabaseClient)?.auth?.getSession?.())?.data?.session)||null;
-     const u=ss?.user;if(!u)return false;myId=String(u.id||'');const md=u.user_metadata||{};
-     [md.full_name,md.name,md.display_name,md.username,u.email?.split('@')[0]].filter(Boolean).forEach(x=>myNames.add(norm(x)));
-     return true
-   }catch(_){return false}
- }
- function fixOwnFollow(){
-   D.querySelectorAll('.bd-post').forEach(card=>{
-     const follow=card.querySelector('[data-follow]');if(!follow)return;
-     const aid=String(card.dataset.authorId||''),name=norm(card.querySelector('.bd-author-name')?.childNodes?.[0]?.textContent||card.querySelector('.bd-author-name')?.textContent||'');
-     const own=card.dataset.ownPost==='1'||(myId&&aid===myId)||(name&&myNames.has(name));
-     if(own){follow.hidden=true;follow.setAttribute('aria-hidden','true');card.dataset.ownPost='1'}
-   })
- }
- (async()=>{for(let i=0;i<12;i++){if(await loadIdentity()){fixOwnFollow();break}await new Promise(r=>setTimeout(r,250))}})();
-
- /* True two-finger pinch zoom + one-finger pan when zoomed; downward swipe closes. */
- const pts=new Map();let scale=1,panX=0,panY=0,baseScale=1,baseDist=0,baseMid={x:0,y:0},panStart=null,verticalStart=null,consumed=false,baseTransform='';
- const viewer=()=>D.getElementById('bdPhotoViewer');
- const stage=()=>viewer()?.querySelector('.bd-photo-stage');
- const image=()=>stage()?.querySelector('[data-photo-view],img');
- const distance=()=>{const a=[...pts.values()];return a.length<2?0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)};
- const midpoint=()=>{const a=[...pts.values()];return a.length<2?{x:0,y:0}:{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}};
- function captureBase(){const im=image();if(!im)return;baseTransform=im.dataset.bd104BaseTransform||im.style.transform||'';im.dataset.bd104BaseTransform=baseTransform}
- function applyZoom(){const im=image();if(!im)return;const base=im.dataset.bd104BaseTransform||baseTransform||'';im.style.transition='none';im.style.transform=`${base} translate3d(${panX}px,${panY}px,0) scale(${scale})`.trim()}
- function resetZoom(){scale=1;panX=panY=0;pts.clear();baseDist=0;panStart=verticalStart=null;consumed=false;const im=image();if(im){im.style.transition='transform .14s ease-out';im.style.transform=im.dataset.bd104BaseTransform||baseTransform||''}}
- function isPhotoStage(e){const st=e.target.closest?.('#bdPhotoViewer.open .bd-photo-stage');return st||null}
- D.addEventListener('pointerdown',e=>{
-   const st=isPhotoStage(e);if(!st||e.pointerType!=='touch')return;
-   captureBase();try{st.setPointerCapture(e.pointerId)}catch(_){}pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-   if(pts.size===1){panStart={x:e.clientX-panX,y:e.clientY-panY};verticalStart={x:e.clientX,y:e.clientY};consumed=false}
-   if(pts.size===2){baseDist=distance();baseScale=scale;baseMid=midpoint();consumed=true;e.preventDefault();e.stopPropagation()}
- },true);
- D.addEventListener('pointermove',e=>{
-   const st=isPhotoStage(e);if(!st||e.pointerType!=='touch'||!pts.has(e.pointerId))return;
-   pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-   if(pts.size>=2){
-     const d=distance();if(baseDist>0)scale=Math.max(1,Math.min(5,baseScale*(d/baseDist)));
-     const m=midpoint();panX+=(m.x-baseMid.x);panY+=(m.y-baseMid.y);baseMid=m;consumed=true;applyZoom();e.preventDefault();e.stopImmediatePropagation();return
+ async function loadMe(force=false){
+   if(ME.ready&&!force)return ME;
+   const ss=await currentSession(),u=ss?.user;if(!u)return ME;
+   ME.id=String(u.id||'');ME.names=new Set();ME.avatars=new Set();
+   const md=u.user_metadata||{};[md.full_name,md.name,md.display_name,md.username,md.nickname,u.email?.split('@')[0]].forEach(addName);[md.avatar_url,md.picture,md.avatar].forEach(addAvatar);
+   const c=C();if(c&&ME.id){
+     for(const [col,val] of [['id',ME.id],['user_id',ME.id]]){
+       try{const r=await c.from('profiles').select('*').eq(col,val).limit(1);const p=Array.isArray(r?.data)?r.data[0]:null;if(p){[p.full_name,p.display_name,p.name,p.username,p.nickname].forEach(addName);[p.avatar_url,p.avatar,p.profile_photo_url].forEach(addAvatar);break}}catch(_){}
+     }
    }
-   if(pts.size===1&&scale>1.001&&panStart){panX=e.clientX-panStart.x;panY=e.clientY-panStart.y;consumed=true;applyZoom();e.preventDefault();e.stopImmediatePropagation()}
- },true);
- D.addEventListener('pointerup',e=>{
-   const st=isPhotoStage(e);if(!st||e.pointerType!=='touch')return;
-   const start=verticalStart,wasZoomed=scale>1.001||consumed;pts.delete(e.pointerId);
-   if(pts.size===1&&scale>1.001){const p=[...pts.values()][0];panStart={x:p.x-panX,y:p.y-panY}}
-   if(pts.size===0){
-     if(scale<1.02)resetZoom();
-     if(!wasZoomed&&start){const dx=e.clientX-start.x,dy=e.clientY-start.y;if(dy>95&&Math.abs(dy)>Math.abs(dx)*1.35){e.preventDefault();e.stopImmediatePropagation();viewer()?.querySelector('[data-photo-close]')?.click();resetZoom();return}}
-     if(wasZoomed){e.preventDefault();e.stopImmediatePropagation()}
+   ME.ready=!!ME.id;return ME
+ }
+ function cardName(card){
+   const n=card?.querySelector?.('.bd-author-name');if(!n)return'';
+   const first=[...n.childNodes].find(x=>x.nodeType===Node.TEXT_NODE&&String(x.textContent||'').trim());
+   return clean(first?.textContent||n.textContent||'')
+ }
+ function cardAvatar(card){return cleanUrl(card?.querySelector?.('.bd-author-avatar img')?.currentSrc||card?.querySelector?.('.bd-author-avatar img')?.src||'')}
+ function legacyAuthor(a){a=String(a||'').trim().toLowerCase();return !a||!/^([0-9a-f]{8}-[0-9a-f-]{27,})$/i.test(a)||['founder','admin','me','self'].includes(a)}
+ function isOwn(card){
+   if(!card)return false;if(card.dataset.ownPost==='1')return true;
+   const aid=String(card.dataset.authorId||'');if(ME.id&&aid===ME.id)return true;
+   if(!ME.id)return false;
+   const name=cardName(card),avatar=cardAvatar(card),identity=(name&&ME.names.has(name))||(avatar&&ME.avatars.has(avatar));
+   const profileUpdate=/profile-update|cover-update/i.test(String(card.dataset.type||''))||/ছবি পরিবর্তন করেছেন/.test(card.querySelector('.bd-author-name')?.textContent||'');
+   return !!(identity&&(legacyAuthor(aid)||profileUpdate))
+ }
+ W.__BD_IS_OWN_CARD=isOwn;
+ function applyOwner(card){
+   if(!card||!isOwn(card))return false;
+   card.dataset.ownPost='1';if(ME.id)card.dataset.authorId=ME.id;
+   const f=card.querySelector('[data-follow]');if(f){f.hidden=true;f.setAttribute('aria-hidden','true')}
+   return true
+ }
+ function applyOwners(){D.querySelectorAll('.bd-post').forEach(applyOwner)}
+ async function refreshOwner(force=false){await loadMe(force);applyOwners();if(D.getElementById('bdPhotoViewer')?.classList.contains('open'))fixPhotoMenu()}
+ 
+ /* Photo menu is resolved from the authenticated owner, not from display text alone. */
+ function fixPhotoMenu(){
+   const pv=D.getElementById('bdPhotoViewer');if(!pv)return;
+   let card=null;
+   /* Prefer the card that owns the currently displayed photo by matching author + source URL. */
+   const author=clean(pv.querySelector('[data-photo-author] b')?.textContent||'');
+   const src=cleanUrl(pv.querySelector('[data-photo-view]')?.currentSrc||pv.querySelector('[data-photo-view]')?.src||'');
+   for(const c of D.querySelectorAll('.bd-post')){
+     if(author&&cardName(c)!==author)continue;
+     const urls=[...c.querySelectorAll('img')].map(x=>cleanUrl(x.currentSrc||x.src));
+     if(src&&urls.includes(src)){card=c;break}
    }
- },true);
- D.addEventListener('pointercancel',e=>{if(pts.has(e.pointerId)){pts.delete(e.pointerId);if(!pts.size&&scale<1.02)resetZoom()}},true);
-
- /* Double tap in fullscreen toggles 2x zoom without browser zoom. */
- let lastTap=0;
- D.addEventListener('touchend',e=>{
-   if(!isPhotoStage(e)||e.touches?.length)return;const now=Date.now();
-   if(now-lastTap<290){e.preventDefault();e.stopImmediatePropagation();captureBase();if(scale>1.05)resetZoom();else{scale=2;panX=panY=0;applyZoom()}lastTap=0}else lastTap=now
- },{capture:true,passive:false});
-
- /* New photo => reset interactive zoom while preserving the photo's saved edit transform. */
- const watchImage=()=>{const im=image();if(!im||im.dataset.bd104Watch)return;im.dataset.bd104Watch='1';new MutationObserver(()=>{im.dataset.bd104BaseTransform=im.style.transform||'';baseTransform=im.dataset.bd104BaseTransform;scale=1;panX=panY=0;pts.clear()}).observe(im,{attributes:true,attributeFilter:['src']})};
- new MutationObserver(()=>watchImage()).observe(D.documentElement,{childList:true,subtree:true});watchImage();
+   const own=!!card&&applyOwner(card);
+   const om=pv.querySelector('[data-photo-owner-menu]'),vm=pv.querySelector('[data-photo-visitor-menu]');
+   if(om)om.hidden=!own;if(vm)vm.hidden=own;
+ }
+ D.addEventListener('click',e=>{if(e.target.closest?.('[data-photo-menu-open]')){applyOwners();fixPhotoMenu();refreshOwner(false).then(fixPhotoMenu)}},true);
+ 
+ /* One canonical touch engine: pinch-to-zoom, pan, horizontal photo swipe, pull-down-to-dismiss, double-tap Love. */
+ let boundStage=null;
+ function bindStage(){
+   const pv=D.getElementById('bdPhotoViewer'),st=pv?.querySelector('.bd-photo-stage'),im=st?.querySelector('[data-photo-view]');
+   if(!st||!im||st===boundStage)return;boundStage=st;
+   let scale=1,tx=0,ty=0,baseScale=1,startDist=0,startMid=null,startPan=null,startOne=null,mode='',lastTap=0,lastTapPoint=null,baseTransform='',srcToken='';
+   const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+   const mid=t=>({x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2});
+   const setBase=()=>{const now=cleanUrl(im.currentSrc||im.src||'');if(srcToken!==now){srcToken=now;baseTransform=im.style.transform||'';scale=1;tx=ty=0}if(!im.dataset.bd105Base||im.dataset.bd105Src!==now){im.dataset.bd105Base=im.style.transform||'';im.dataset.bd105Src=now;baseTransform=im.dataset.bd105Base}}
+   const transform=(extraY=0,opacity=1)=>{setBase();im.style.transition='none';im.style.opacity=String(opacity);im.style.transform=`${baseTransform} translate3d(${tx}px,${ty+extraY}px,0) scale(${scale})`.trim()}
+   const restore=(animate=true)=>{setBase();scale=1;tx=ty=0;mode='';st.classList.remove('bd-v105-dragging');pv.classList.remove('bd-v105-dismissing');im.style.transition=animate?'transform .18s ease,opacity .18s ease':'none';im.style.opacity='1';im.style.transform=baseTransform}
+   const close=()=>{restore(false);pv.querySelector('[data-photo-close]')?.click()}
+   const step=dir=>{
+     const countText=pv.querySelector('[data-photo-count]')?.textContent||'';const m=countText.match(/(\d+)\s+of\s+(\d+)/i);if(!m)return false;const i=+m[1],n=+m[2];if(n<=1)return false;
+     /* Reuse the existing viewer's desktop pointer swipe by dispatching mouse-like pointer events is unreliable; use keyboard navigation if installed, otherwise click visible grid is not available. */
+     const ev=new KeyboardEvent('keydown',{key:dir>0?'ArrowRight':'ArrowLeft',bubbles:true});D.dispatchEvent(ev);return true
+   }
+   st.addEventListener('touchstart',e=>{
+     if(!pv.classList.contains('open'))return;setBase();
+     if(e.touches.length===2){mode='pinch';startDist=dist(e.touches);baseScale=scale;startMid=mid(e.touches);e.preventDefault();e.stopPropagation();return}
+     if(e.touches.length===1){const t=e.touches[0];mode=scale>1.001?'pan':'candidate';startOne={x:t.clientX,y:t.clientY,time:Date.now()};startPan={x:t.clientX-tx,y:t.clientY-ty};st.classList.add('bd-v105-dragging')}
+   },{passive:false});
+   st.addEventListener('touchmove',e=>{
+     if(!pv.classList.contains('open'))return;
+     if(e.touches.length===2&&startDist){
+       mode='pinch';const m=mid(e.touches),d=dist(e.touches);scale=Math.max(1,Math.min(5,baseScale*d/startDist));if(startMid){tx+=m.x-startMid.x;ty+=m.y-startMid.y;startMid=m}transform();e.preventDefault();e.stopPropagation();return
+     }
+     if(e.touches.length!==1||!startOne)return;const t=e.touches[0],dx=t.clientX-startOne.x,dy=t.clientY-startOne.y;
+     if(scale>1.001){mode='pan';tx=t.clientX-startPan.x;ty=t.clientY-startPan.y;transform();e.preventDefault();e.stopPropagation();return}
+     if(mode==='candidate'&&(Math.abs(dx)>8||Math.abs(dy)>8))mode=Math.abs(dy)>Math.abs(dx)*1.05?'dismiss':'swipe';
+     if(mode==='dismiss'){const y=Math.max(-20,dy),fade=Math.max(.34,1-Math.abs(y)/(innerHeight*.85));transform(y,fade);pv.classList.add('bd-v105-dismissing');e.preventDefault();e.stopPropagation()}
+     else if(mode==='swipe'){tx=dx*.18;transform();e.preventDefault();e.stopPropagation()}
+   },{passive:false});
+   st.addEventListener('touchend',e=>{
+     if(!pv.classList.contains('open'))return;const t=e.changedTouches?.[0],now=Date.now();
+     if(e.touches.length){if(e.touches.length===1&&scale>1.001){const p=e.touches[0];startPan={x:p.clientX-tx,y:p.clientY-ty};mode='pan'}return}
+     const dx=t&&startOne?t.clientX-startOne.x:0,dy=t&&startOne?t.clientY-startOne.y:0,duration=startOne?now-startOne.time:999;
+     st.classList.remove('bd-v105-dragging');
+     if(mode==='pinch'||scale>1.001){if(scale<1.04)restore();else transform();startDist=0;startOne=null;mode='';e.preventDefault();return}
+     if(mode==='dismiss'){
+       if(Math.abs(dy)>100&&(dy>75||Math.abs(dy)>150)){im.style.transition='transform .16s ease,opacity .16s ease';im.style.opacity='0';im.style.transform=`${baseTransform} translate3d(0,${Math.sign(dy||1)*Math.max(innerHeight*.65,420)}px,0) scale(.92)`;setTimeout(close,150)}else restore();startOne=null;e.preventDefault();return
+     }
+     if(mode==='swipe'&&Math.abs(dx)>65){restore(false);
+       /* Reuse the canonical viewer's existing non-touch stepPhoto path without exposing a second gallery state. */
+       try{const x=innerWidth/2,y=innerHeight/2,delta=dx<0?-90:90;st.dispatchEvent(new PointerEvent('pointerdown',{pointerType:'mouse',pointerId:991,clientX:x,clientY:y,bubbles:true}));st.dispatchEvent(new PointerEvent('pointerup',{pointerType:'mouse',pointerId:991,clientX:x+delta,clientY:y,bubbles:true}))}catch(_){}
+       startOne=null;e.preventDefault();return
+     }
+     restore();
+     if(t&&duration<260&&Math.hypot(dx,dy)<18){
+       const p={x:t.clientX,y:t.clientY};if(lastTapPoint&&now-lastTap<310&&Math.hypot(p.x-lastTapPoint.x,p.y-lastTapPoint.y)<34){pv.querySelector('[data-photo-rx="love"]')?.click();lastTap=0;lastTapPoint=null}else{lastTap=now;lastTapPoint=p}
+     }
+     startOne=null;mode=''
+   },{passive:false});
+   st.addEventListener('touchcancel',()=>restore(),{passive:true});
+   new MutationObserver(()=>{restore(false);setTimeout(()=>{baseTransform=im.style.transform||'';im.dataset.bd105Base=baseTransform;im.dataset.bd105Src=cleanUrl(im.currentSrc||im.src||'')},0)}).observe(im,{attributes:true,attributeFilter:['src']});
+ }
+ const obs=new MutationObserver(()=>{bindStage();applyOwners()});obs.observe(D.documentElement,{childList:true,subtree:true});bindStage();
+ 
+ /* Auth can become available after the feed has already rendered. Reconcile again instead of leaving visitor UI behind. */
+ (async()=>{for(let i=0;i<24;i++){await refreshOwner(i>0);if(ME.ready)break;await new Promise(r=>setTimeout(r,250))}})();
+ try{C()?.auth?.onAuthStateChange?.(()=>{ME.ready=false;setTimeout(()=>refreshOwner(true),0)})}catch(_){}
+ W.addEventListener('bd:supabase-ready',()=>{ME.ready=false;refreshOwner(true)});
+ setTimeout(()=>refreshOwner(false),800);setTimeout(()=>refreshOwner(false),2200);
 })();
 </script>
 
