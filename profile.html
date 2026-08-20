@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="bn" data-page-role="user">
-<head><script>window.__BD_V69_DOUBLE_TAP_LOVE__=1;</script>
+<head><meta name="bhubondanga-patch" content="bhubondanga-v101-interaction-20260820"><script>window.__BD_V69_DOUBLE_TAP_LOVE__=1;</script>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -1232,6 +1232,25 @@ html[data-theme="dark"] .bd77-empty b{color:#f2faf6}
 .post-media img,.bd104-news-image2 img{cursor:pointer;-webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important}
 </style>
 
+
+<style id="bd-v102-light-profile-top-arrow">
+#bd897TopArrow{
+ right:max(12px,env(safe-area-inset-right))!important;left:auto!important;
+ bottom:max(88px,calc(env(safe-area-inset-bottom) + 78px))!important;
+ width:43px!important;height:43px!important;border-radius:50%!important;
+ border:1px solid rgba(18,122,91,.16)!important;
+ background:rgba(242,250,246,.88)!important;color:#176f55!important;
+ box-shadow:0 8px 20px rgba(37,91,72,.12)!important;
+ backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;
+ font:800 22px/1 Arial,sans-serif!important;
+ z-index:8900!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent!important;
+}
+#bd897TopArrow.show{opacity:.72!important;visibility:visible!important;transform:none!important}
+#bd897TopArrow.show:hover{transform:translateY(-3px)!important;opacity:.94!important}
+#bd897TopArrow.show:active{transform:translateY(1px) scale(.93)!important;opacity:1!important}
+html[data-theme="dark"] #bd897TopArrow{background:rgba(22,43,37,.82)!important;color:#c6eedf!important;border-color:rgba(105,196,164,.18)!important}
+@media(max-width:960px){#bd897TopArrow{display:grid!important;right:max(10px,env(safe-area-inset-right))!important;bottom:max(84px,calc(env(safe-area-inset-bottom) + 74px))!important;width:41px!important;height:41px!important}.bd-feed-top,.bd31-feed-top,.scroll-top,.back-to-top{display:grid!important}}
+</style>
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
@@ -4930,6 +4949,75 @@ async function showCommentReactors(cid){const c=client();let rows=[];try{const r
 function bindLongPress(){qa('[data-v100-comment-id]').forEach(el=>{if(el.dataset.bdV100Press==='1')return;el.dataset.bdV100Press='1';let t=0;const bubble=q('.bd-v100-bubble',el);bubble?.addEventListener('pointerdown',e=>{if(e.target.closest('a,button,input'))return;t=setTimeout(()=>{const row=el._row||findRow(postId(el.closest('.post')),el.dataset.v100CommentId);if(row)openCMenu(el.closest('.post'),el,row)},560)});['pointerup','pointercancel','pointerleave'].forEach(ev=>bubble?.addEventListener(ev,()=>clearTimeout(t)))})}
 const mo=new MutationObserver(()=>{decorateMenus();bindZoom();bindLongPress();qa('.feed .post').forEach(card=>{if(card.dataset.bdV100Decorated==='1')return;card.dataset.bdV100Decorated='1';const p=postObj(card),nameLink=q('.author-meta strong>a',card);if(nameLink&&p&&state?.me?.id&&String(p.author_id||p.authorId)!==String(state.me.id)){let set;try{set=new Set(JSON.parse(localStorage.getItem('bd-following')||'[]').map(String))}catch(_){set=new Set()}if(!set.has(String(p.author_id||p.authorId))){const b=D.createElement('button');b.type='button';b.className='bd-v100-follow';b.textContent='Follow';b.onclick=e=>{e.preventDefault();e.stopPropagation();toggleFollow(p.author_id||p.authorId,b)};nameLink.after(b)}}})});mo.observe(D.body,{childList:true,subtree:true});decorateMenus();bindZoom();bindLongPress();
 W.BDProfileV100={openFocus,closeFocus,openShare,showPostReactors,bindCommentRx};
+})();
+</script>
+
+<style id="bd-v101-press-feedback-lock">
+/* V101 interaction-only patch: preserve approved colors/layout. */
+:where(button,a,[role="button"],[tabindex="0"]){-webkit-tap-highlight-color:transparent}
+:where(button,a,[role="button"],[tabindex="0"]):not([disabled]){
+  transition:transform .13s cubic-bezier(.2,.75,.25,1),box-shadow .13s ease,filter .13s ease,background-color .13s ease,opacity .13s ease!important;
+  transform-origin:center center;
+}
+@media(hover:hover) and (pointer:fine){
+  :where(button,a,[role="button"],[tabindex="0"]):not([disabled]):hover{
+    transform:translateY(-2px)!important;
+    filter:brightness(1.018) saturate(1.025);
+  }
+}
+:where(button,a,[role="button"],[tabindex="0"]):not([disabled]):active,
+:where(button,a,[role="button"],[tabindex="0"]).bd-v101-pressed{
+  transform:translateY(1px) scale(.975)!important;
+  filter:brightness(.965)!important;
+}
+.bd-v101-busy{pointer-events:none!important;opacity:.78!important;position:relative!important}
+.bd-v101-busy::after{content:"";display:inline-block;width:14px;height:14px;margin-left:9px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-2px;animation:bdV101Spin .62s linear infinite}
+@keyframes bdV101Spin{to{transform:rotate(360deg)}}
+[data-menu-delete].bd-v101-busy,[data-cm-delete].bd-v101-busy,[data-delete-post].bd-v101-busy,.danger.bd-v101-busy{color:#cf2638!important;background:rgba(207,38,56,.065)!important}
+.bd-v101-delete-signal{position:fixed;z-index:2147483640;left:50%;top:calc(50% - 18px);transform:translate(-50%,-50%) scale(.92);min-width:132px;min-height:44px;padding:0 16px;border-radius:999px;background:rgba(15,24,31,.94);color:#fff;display:flex;align-items:center;justify-content:center;gap:9px;font:800 12px/1 system-ui,-apple-system,sans-serif;box-shadow:0 16px 45px rgba(0,0,0,.24);opacity:0;pointer-events:none;animation:bdV101Signal .28s ease forwards}
+.bd-v101-delete-signal .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.92);border-right-color:transparent;border-radius:50%;animation:bdV101Spin .62s linear infinite}
+.bd-v101-delete-signal.done{background:rgba(12,112,81,.96)}
+.bd-v101-delete-signal.done .spin{display:none}
+@keyframes bdV101Signal{to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.bd-v101-removing{animation:bdV101Removing .24s ease forwards!important;pointer-events:none!important}
+@keyframes bdV101Removing{to{opacity:.38;transform:scale(.985)}}
+/* Comment/menu buttons must visibly behave like real controls without changing layout. */
+.bd-comment-menu button,.bd-post-menu button,.post-menu-panel button,.bd-v100-comment-menu button,.bd-v100-share-sheet button,
+.bd-cmeta button,.bd-comment-meta button,.bd-v100-cmeta button,.bd-action,.bd40-action,.bd-more,.circle,.action{
+  cursor:pointer!important;
+}
+/* iOS input zoom lock: keep text input at 16px. */
+.bd-comment-form input,.bd-reply-form input,.bd-comment-edit-input,.bd-dock-row input,.comment-form input,.bd31-comment-form input,.bd31-reply-form input,.bd-v100-focus-dock input,.bd-v100-reply-form input{font-size:16px!important}
+</style>
+
+<script id="bd-v101-press-feedback-js">
+(()=>{'use strict';if(window.__BD_V101_PRESS__)return;window.__BD_V101_PRESS__=1;const D=document;
+const actionable='button,a,[role="button"],[tabindex="0"]';
+function pressOn(el){if(!el||el.hasAttribute?.('disabled'))return;el.classList.add('bd-v101-pressed')}
+function pressOff(el){el?.classList?.remove('bd-v101-pressed')}
+D.addEventListener('pointerdown',e=>{const el=e.target.closest?.(actionable);if(!el)return;pressOn(el)},{capture:true,passive:true});
+['pointerup','pointercancel','pointerleave'].forEach(ev=>D.addEventListener(ev,e=>pressOff(e.target.closest?.(actionable)),{capture:true,passive:true}));
+D.addEventListener('keydown',e=>{if(e.key!=='Enter'&&e.key!==' ')return;const el=e.target.closest?.(actionable);if(el)pressOn(el)},true);
+D.addEventListener('keyup',e=>{const el=e.target.closest?.(actionable);if(el)pressOff(el)},true);
+function signal(text='মুছছে…'){
+ let s=D.querySelector('.bd-v101-delete-signal');if(s)s.remove();s=D.createElement('div');s.className='bd-v101-delete-signal';s.innerHTML='<span class="spin"></span><span></span>';s.lastElementChild.textContent=text;D.body.appendChild(s);return s
+}
+function done(s,text='মুছে ফেলা হয়েছে'){if(!s?.isConnected)return;s.classList.add('done');s.lastElementChild.textContent=text;setTimeout(()=>s.remove(),850)}
+function busy(btn,label='মুছছে…'){
+ if(!btn||btn.classList.contains('bd-v101-busy'))return null;btn.classList.add('bd-v101-busy');btn.dataset.bdV101OldText=btn.textContent||'';const span=btn.querySelector('span');if(span){span.dataset.bdV101OldText=span.textContent||'';span.textContent=label}else btn.textContent=label;return signal(label)
+}
+function restore(btn){if(!btn)return;btn.classList.remove('bd-v101-busy');const span=btn.querySelector('span');if(span&&span.dataset.bdV101OldText!==undefined){span.textContent=span.dataset.bdV101OldText;delete span.dataset.bdV101OldText}else if(btn.dataset.bdV101OldText!==undefined){btn.textContent=btn.dataset.bdV101OldText}delete btn.dataset.bdV101OldText}
+D.addEventListener('click',e=>{
+ const del=e.target.closest?.('[data-menu-delete],[data-cm-delete],[data-delete-post],button.danger[data-delete-post]');if(!del)return;
+ const sig=busy(del,'মুছছে…');
+ const menu=del.closest('.bd-comment-menu,.bd-v100-comment-menu,.bd-post-menu,.post-menu-panel');
+ const comment=menu?null:e.target.closest?.('.bd-comment,.bd-v100-comment,[data-comment-id],[data-v100-comment-id]');
+ if(comment)comment.classList.add('bd-v101-removing');
+ setTimeout(()=>{if(sig?.isConnected)done(sig);restore(del)},1100);
+},{capture:true});
+// Show progress immediately for destructive menu action even while network deletion completes.
+D.addEventListener('bd:delete-start',()=>signal('মুছছে…'));
+window.BDV101DeleteFeedback={signal,done,busy,restore};
 })();
 </script>
 </body>
