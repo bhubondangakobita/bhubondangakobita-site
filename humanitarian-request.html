@@ -24,14 +24,20 @@ body{background:radial-gradient(circle at 7% 0,rgba(48,154,120,.08),transparent 
 <style id="bd-request-sos-v150">
 .bd-sos-host{margin:13px 0}
 </style>
-<script id="bd-regional-runtime-v152-inline">
+
+<style id="bd-v153-rescue-note">.bd-v153-rescue-note{margin:8px 0;padding:8px 10px;border:1px solid rgba(25,120,88,.11);border-radius:11px;background:rgba(236,249,244,.72);font-size:8px;color:#58736a}.bd-v153-rescue-note b{color:#146b51}</style><script id="bd-regional-runtime-v161-inline">
 (() => {
 'use strict';
-if (window.__BD_REGIONAL_RUNTIME_V150__) return;
-window.__BD_REGIONAL_RUNTIME_V150__ = 1;
+if (window.__BD_REGIONAL_RUNTIME_V161__) return;
+window.__BD_REGIONAL_RUNTIME_V161__ = 1;
 
 const W=window,D=document,H=D.documentElement;
-const STORE='bd-operational-location-v1';
+const HOME_STORE='bd-home-country-v1';
+const RESCUE_STORE='bd-rescue-location-v1';
+const FEED_MODE_STORE='bd-feed-region-mode-v1';
+const UI_LANG_STORE='bd-ui-language-v2';
+const LEGACY_MODE_STORE='bd-experience-mode-v1';
+const LEGACY_OPERATIONAL_STORE='bd-operational-location-v1';
 const VOICE_DB='bongdang-sos-v1';
 const ME_CODES=new Set(['AE','SA','QA','KW','OM','BH','JO','LB','IQ','YE']);
 const HI_STATES=/delhi|uttar pradesh|madhya pradesh|rajasthan|bihar|jharkhand|haryana|uttarakhand|chhattisgarh|himachal|new delhi/i;
@@ -39,9 +45,17 @@ const WB=/west\s*bengal|kolkata|calcutta|পশ্চিম\s*বঙ্গ|ক�
 
 const PRESETS={
   BD:{key:'BD',countryCode:'BD',countryName:'Bangladesh',locale:'bn-BD',lang:'bn',dir:'ltr',domestic:true,letters:['অ','আ','ক','খ','ম'],history:'bangladesh.html',label:'বাংলাদেশ'},
-  IN_WB:{key:'IN_WB',countryCode:'IN',countryName:'India',locale:'bn-IN',lang:'bn',dir:'ltr',domestic:true,letters:['অ','আ','ক','খ','ম'],history:'west-bengal.html',label:'পশ্চিমবঙ্গ'},
-  AR:{key:'AR',countryCode:'AE',countryName:'Middle East',locale:'ar-AE',lang:'ar',dir:'rtl',domestic:false,letters:['أ','ب','ت','ث','ج'],history:'#',label:'Middle East'},
+  IN_WB:{key:'IN_WB',countryCode:'IN',countryName:'India',region:'West Bengal',locale:'bn-IN',lang:'bn',dir:'ltr',domestic:true,letters:['অ','আ','ক','খ','ম'],history:'west-bengal.html',label:'পশ্চিমবঙ্গ'},
   IN_HI:{key:'IN_HI',countryCode:'IN',countryName:'India',locale:'hi-IN',lang:'hi',dir:'ltr',domestic:false,letters:['अ','आ','क','ख','ग'],history:'#',label:'India'},
+  AE:{key:'AE',countryCode:'AE',countryName:'United Arab Emirates',locale:'ar-AE',lang:'ar',dir:'rtl',domestic:false,letters:['أ','ب','ت','ث','ج'],history:'#',label:'UAE'},
+  SA:{key:'SA',countryCode:'SA',countryName:'Saudi Arabia',locale:'ar-SA',lang:'ar',dir:'rtl',domestic:false,letters:['أ','ب','ت','ث','ج'],history:'#',label:'Saudi Arabia'},
+  QA:{key:'QA',countryCode:'QA',countryName:'Qatar',locale:'ar-QA',lang:'ar',dir:'rtl',domestic:false,letters:['أ','ب','ت','ث','ج'],history:'#',label:'Qatar'},
+  KW:{key:'KW',countryCode:'KW',countryName:'Kuwait',locale:'ar-KW',lang:'ar',dir:'rtl',domestic:false,letters:['أ','ب','ت','ث','ج'],history:'#',label:'Kuwait'},
+  OM:{key:'OM',countryCode:'OM',countryName:'Oman',locale:'ar-OM',lang:'ar',dir:'rtl',domestic:false,letters:['أ','ب','ت','ث','ج'],history:'#',label:'Oman'},
+  BH:{key:'BH',countryCode:'BH',countryName:'Bahrain',locale:'ar-BH',lang:'ar',dir:'rtl',domestic:false,letters:['أ','ب','ت','ث','ج'],history:'#',label:'Bahrain'},
+  PK:{key:'PK',countryCode:'PK',countryName:'Pakistan',locale:'ur-PK',lang:'ur',dir:'rtl',domestic:false,letters:['ا','ب','پ','ت','ج'],history:'#',label:'Pakistan'},
+  ID:{key:'ID',countryCode:'ID',countryName:'Indonesia',locale:'id-ID',lang:'id',dir:'ltr',domestic:false,letters:['A','B','C','D','E'],history:'#',label:'Indonesia'},
+  PH:{key:'PH',countryCode:'PH',countryName:'Philippines',locale:'fil-PH',lang:'fil',dir:'ltr',domestic:false,letters:['A','B','C','D','E'],history:'#',label:'Philippines'},
   INTL:{key:'INTL',countryCode:'',countryName:'International',locale:'en',lang:'en',dir:'ltr',domestic:false,letters:['A','B','C','D','E'],history:'#',label:'International'}
 };
 
@@ -110,6 +124,40 @@ const TEXT={
 'স্টোরি টাচ':{en:'Story Touch',ar:'Story Touch',hi:'Story Touch'},
 'ম্যাজিক টাচ':{en:'Magic Touch',ar:'Magic Touch',hi:'Magic Touch'}
 };
+
+const TEXT_EXTRA={
+'হোম':{ur:'ہوم',id:'Beranda',fil:'Home'},
+'কবিতা':{ur:'شاعری',id:'Puisi',fil:'Tula'},
+'আবৃত্তি':{ur:'تلاوت',id:'Resitasi',fil:'Pagbigkas'},
+'রিলস':{ur:'ریلز',id:'Reels',fil:'Reels'},
+'শিশুতোষ':{ur:'بچوں کے لیے',id:'Anak',fil:'Pambata'},
+'প্রলাপ':{ur:'خیالات',id:'Prosa',fil:'Kaisipan'},
+'মধ্যরাতের প্রলাপ':{ur:'آدھی رات کے خیالات',id:'Renungan Tengah Malam',fil:'Hatinggabing Kaisipan'},
+'ছোট কথার প্রলাপ':{ur:'مختصر خیالات',id:'Pikiran Singkat',fil:'Maikling Kaisipan'},
+'চিঠিপত্র':{ur:'خطوط',id:'Surat',fil:'Mga Liham'},
+'পরিবেশ':{ur:'ماحول',id:'Lingkungan',fil:'Kapaligiran'},
+'মানবিক আবেদন ও জরুরি সহায়তা':{ur:'انسانی اور ہنگامی مدد',id:'Bantuan Kemanusiaan & Darurat',fil:'Humanitarian at Emergency Help'},
+'প্রয়োজনের আবেদন করুন অথবা আজকের জরুরি আবেদন দেখুন':{ur:'مدد کی درخواست کریں یا آج کی ہنگامی درخواستیں دیکھیں',id:'Minta bantuan atau lihat permintaan darurat hari ini',fil:'Humingi ng tulong o tingnan ang mga urgent request ngayon'},
+'+ আবেদন করুন':{ur:'+ مدد کی درخواست',id:'+ Minta Bantuan',fil:'+ Humingi ng Tulong'},
+'জরুরি আবেদন দেখুন':{ur:'ہنگامی درخواستیں',id:'Lihat Darurat',fil:'Tingnan ang Urgent'},
+'আপনার নিউজফিড':{ur:'آپ کی نیوز فیڈ',id:'Feed Anda',fil:'Iyong Feed'},
+'সব':{ur:'سب',id:'Semua',fil:'Lahat'},
+'নিউজ':{ur:'خبریں',id:'Berita',fil:'Balita'},
+'আরও দেখুন':{ur:'مزید دیکھیں',id:'Lihat Lagi',fil:'Tingnan Pa'},
+'Like':{ur:'پسند',id:'Suka',fil:'Like'},
+'Comment':{ur:'تبصرہ',id:'Komentar',fil:'Komento'},
+'Share':{ur:'شیئر',id:'Bagikan',fil:'I-share'},
+'Follow':{ur:'فالو',id:'Ikuti',fil:'Follow'},
+'Message':{ur:'پیغام',id:'Pesan',fil:'Mensahe'},
+'Messages':{ur:'پیغامات',id:'Pesan',fil:'Mga Mensahe'},
+'Notifications':{ur:'اطلاعات',id:'Notifikasi',fil:'Notifications'},
+'সার্চ':{ur:'تلاش',id:'Cari',fil:'Hanapin'},
+'সেটিংস':{ur:'ترتیبات',id:'Pengaturan',fil:'Settings'},
+'ফ্রেন্ড লিস্ট':{ur:'دوستوں کی فہرست',id:'Daftar Teman',fil:'Friend List'},
+'ব্লক লিস্ট':{ur:'بلاک لسٹ',id:'Daftar Blokir',fil:'Block List'},
+'মেমোরি':{ur:'یادیں',id:'Kenangan',fil:'Memories'}
+};
+
 const PLACEHOLDERS={
 'কবিতা, লেখক বা বিষয় খুঁজুন…':{en:'Search poetry, writers or topics…',ar:'ابحث عن الشعر أو الكتّاب أو المواضيع…',hi:'कविता, लेखक या विषय खोजें…'},
 'আজ আপনার ভেতরে কী কথা জমে আছে?':{en:"What's on your mind today?",ar:'ما الذي يدور في بالك اليوم؟',hi:'आज आपके मन में क्या है?'},
@@ -119,260 +167,277 @@ const PLACEHOLDERS={
 };
 
 function safeJSON(v,f={}){try{return JSON.parse(v)||f}catch{return f}}
-function stored(){return safeJSON(localStorage.getItem(STORE)||'{}',{})}
-function infer(){
-  const s=stored(); if(s && (s.countryCode||s.preset)) return normalize(s);
-  const tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
-  const langs=(navigator.languages||[navigator.language||'']).join(' ').toLowerCase();
-  if(/dhaka/i.test(tz)||/\bbn-bd\b/.test(langs)) return {...PRESETS.BD};
-  if(/kolkata|calcutta/i.test(tz)){
-    if(/\bbn\b|bn-in/.test(langs)) return {...PRESETS.IN_WB};
-    return {...PRESETS.IN_HI};
-  }
-  if(/dubai|riyadh|qatar|kuwait|muscat|bahrain|amman|baghdad|beirut/i.test(tz)||/\bar\b/.test(langs)) return {...PRESETS.AR};
-  if(/\bhi\b|hi-in/.test(langs)) return {...PRESETS.IN_HI};
-  return {...PRESETS.INTL};
+function readStore(key){return safeJSON(localStorage.getItem(key)||'{}',{})}
+function writeStore(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch(_){}}
+function langList(){return (navigator.languages||[navigator.language||'']).join(' ').toLowerCase()}
+function timezone(){try{return Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(_){return''}}
+function countryPreset(code,area='',hint=''){
+  code=String(code||'').toUpperCase();area=String(area||'');hint=String(hint||'');
+  if(hint==='IN_WB'||(code==='IN'&&WB.test(area)))return {...PRESETS.IN_WB};
+  if(code==='BD')return {...PRESETS.BD};
+  if(code==='IN')return {...PRESETS.IN_HI};
+  if(PRESETS[code])return {...PRESETS[code]};
+  if(ME_CODES.has(code))return {...(PRESETS[code]||PRESETS.AE),countryCode:code,key:code};
+  return {...PRESETS.INTL,countryCode:code,key:code||'INTL'};
 }
-function normalize(x={}){
-  const code=String(x.countryCode||x.country_code||'').toUpperCase();
-  const area=[x.region,x.state,x.adminArea1,x.admin_area1,x.city,x.countryName,x.country_name].filter(Boolean).join(' ');
-  if(code==='BD') return {...PRESETS.BD,...x,key:'BD'};
-  if(code==='IN'&&WB.test(area)) return {...PRESETS.IN_WB,...x,key:'IN_WB'};
-  if(code==='IN'&&(HI_STATES.test(area)||x.preset==='IN_HI')) return {...PRESETS.IN_HI,...x,key:'IN_HI'};
-  if(ME_CODES.has(code)||x.preset==='AR') return {...PRESETS.AR,...x,key:'AR',countryCode:code||'AE'};
-  if(x.preset&&PRESETS[x.preset]) return {...PRESETS[x.preset],...x,key:x.preset};
-  if(code==='IN') return {...PRESETS.IN_HI,...x,key:'IN_HI'};
-  return {...PRESETS.INTL,...x,key:'INTL',countryCode:code};
+function normalizeRegion(x={}){
+  const code=String(x.countryCode||x.country_code||x.home_country_code||'').toUpperCase();
+  const area=[x.region,x.state,x.adminArea1,x.admin_area1,x.district,x.city,x.countryName,x.country_name].filter(Boolean).join(' ');
+  const hint=String(x.preset||x.key||'');
+  const base=countryPreset(code,area,hint);
+  return {...base,...x,key:hint==='IN_WB'?'IN_WB':(base.key||code||'INTL'),countryCode:code||base.countryCode||'',countryName:x.countryName||x.country_name||base.countryName||base.label,region:x.region||x.state||x.adminArea1||x.admin_area1||base.region||'',city:x.city||''};
 }
-let active=infer();
+function inferRescue(){
+  const saved=readStore(RESCUE_STORE);if(saved.countryCode||saved.preset||saved.key)return normalizeRegion(saved);
+  const legacy=readStore(LEGACY_OPERATIONAL_STORE);if(legacy.countryCode||legacy.preset||legacy.key)return normalizeRegion(legacy);
+  const tz=timezone(),langs=langList();
+  const map=[[/dubai/i,'AE'],[/riyadh/i,'SA'],[/qatar/i,'QA'],[/kuwait/i,'KW'],[/muscat/i,'OM'],[/bahrain/i,'BH'],[/dhaka/i,'BD'],[/karachi|islamabad/i,'PK'],[/jakarta/i,'ID'],[/manila/i,'PH'],[/kolkata|calcutta/i,'IN']];
+  for(const [rx,code] of map)if(rx.test(tz))return normalizeRegion({countryCode:code,region:code==='IN'?'West Bengal':''});
+  if(/\bur\b/.test(langs))return normalizeRegion({countryCode:'PK'});
+  if(/\bid\b/.test(langs))return normalizeRegion({countryCode:'ID'});
+  if(/\bfil\b|\btl\b/.test(langs))return normalizeRegion({countryCode:'PH'});
+  if(/\bar\b/.test(langs))return normalizeRegion({countryCode:'AE'});
+  if(/\bhi\b/.test(langs))return normalizeRegion({countryCode:'IN'});
+  if(/\bbn\b/.test(langs))return normalizeRegion({countryCode:'BD'});
+  return normalizeRegion({});
+}
+function inferHome(){
+  const saved=readStore(HOME_STORE);if(saved.countryCode||saved.preset||saved.key)return normalizeRegion(saved);
+  const langs=langList(),docLang=String(H.lang||'').toLowerCase();
+  if(/\bbn\b/.test(langs)||docLang.startsWith('bn'))return normalizeRegion({countryCode:'BD'});
+  if(/\bur\b/.test(langs))return normalizeRegion({countryCode:'PK'});
+  if(/\bid\b/.test(langs))return normalizeRegion({countryCode:'ID'});
+  if(/\bfil\b|\btl\b/.test(langs))return normalizeRegion({countryCode:'PH'});
+  if(/\bhi\b/.test(langs))return normalizeRegion({countryCode:'IN'});
+  return inferRescue();
+}
 
-function tr(base){
-  if(active.lang==='bn') return base;
-  const lang=active.lang==='ar'?'ar':active.lang==='hi'?'hi':'en';
-  return TEXT[base]?.[lang]||base;
+const LANGS={
+ en:{name:'English',native:'English',dir:'ltr',letters:['A','B','C','D','E']},
+ bn:{name:'Bengali',native:'বাংলা',dir:'ltr',letters:['অ','আ','ক','খ','ম']},
+ ar:{name:'Arabic',native:'العربية',dir:'rtl',letters:['أ','ب','ت','ث','ج']},
+ hi:{name:'Hindi',native:'हिन्दी',dir:'ltr',letters:['अ','आ','क','ख','ग']},
+ ur:{name:'Urdu',native:'اردو',dir:'rtl',letters:['ا','ب','پ','ت','ج']},
+ id:{name:'Indonesian',native:'Bahasa Indonesia',dir:'ltr',letters:['A','B','C','D','E']},
+ fil:{name:'Filipino',native:'Filipino',dir:'ltr',letters:['A','B','C','D','E']},
+ ms:{name:'Malay',native:'Bahasa Melayu',dir:'ltr',letters:['A','B','C','D','E']},
+ fr:{name:'French',native:'Français',dir:'ltr',letters:['A','B','C','D','E']},
+ de:{name:'German',native:'Deutsch',dir:'ltr',letters:['A','B','C','D','E']},
+ es:{name:'Spanish',native:'Español',dir:'ltr',letters:['A','B','C','D','E']},
+ pt:{name:'Portuguese',native:'Português',dir:'ltr',letters:['A','B','C','D','E']},
+ it:{name:'Italian',native:'Italiano',dir:'ltr',letters:['A','B','C','D','E']},
+ nl:{name:'Dutch',native:'Nederlands',dir:'ltr',letters:['A','B','C','D','E']},
+ tr:{name:'Turkish',native:'Türkçe',dir:'ltr',letters:['A','B','C','D','E']},
+ ru:{name:'Russian',native:'Русский',dir:'ltr',letters:['А','Б','В','Г','Д']},
+ uk:{name:'Ukrainian',native:'Українська',dir:'ltr',letters:['А','Б','В','Г','Ґ']},
+ pl:{name:'Polish',native:'Polski',dir:'ltr',letters:['A','B','C','D','E']},
+ sv:{name:'Swedish',native:'Svenska',dir:'ltr',letters:['A','B','C','D','E']},
+ no:{name:'Norwegian',native:'Norsk',dir:'ltr',letters:['A','B','C','D','E']},
+ da:{name:'Danish',native:'Dansk',dir:'ltr',letters:['A','B','C','D','E']},
+ fi:{name:'Finnish',native:'Suomi',dir:'ltr',letters:['A','B','C','D','E']},
+ el:{name:'Greek',native:'Ελληνικά',dir:'ltr',letters:['Α','Β','Γ','Δ','Ε']},
+ he:{name:'Hebrew',native:'עברית',dir:'rtl',letters:['א','ב','ג','ד','ה']},
+ fa:{name:'Persian',native:'فارسی',dir:'rtl',letters:['ا','ب','پ','ت','ث']},
+ th:{name:'Thai',native:'ไทย',dir:'ltr',letters:['ก','ข','ค','ง','จ']},
+ vi:{name:'Vietnamese',native:'Tiếng Việt',dir:'ltr',letters:['A','B','C','D','E']},
+ ja:{name:'Japanese',native:'日本語',dir:'ltr',letters:['あ','い','う','え','お']},
+ ko:{name:'Korean',native:'한국어',dir:'ltr',letters:['가','나','다','라','마']},
+ zh:{name:'Chinese',native:'中文',dir:'ltr',letters:['一','二','三','四','五']},
+ ne:{name:'Nepali',native:'नेपाली',dir:'ltr',letters:['अ','आ','क','ख','ग']},
+ si:{name:'Sinhala',native:'සිංහල',dir:'ltr',letters:['අ','ආ','ක','ග','ච']},
+ ta:{name:'Tamil',native:'தமிழ்',dir:'ltr',letters:['அ','ஆ','க','ங','ச']},
+ te:{name:'Telugu',native:'తెలుగు',dir:'ltr',letters:['అ','ఆ','క','ఖ','గ']},
+ ml:{name:'Malayalam',native:'മലയാളം',dir:'ltr',letters:['അ','ആ','ക','ഖ','ഗ']},
+ kn:{name:'Kannada',native:'ಕನ್ನಡ',dir:'ltr',letters:['ಅ','ಆ','ಕ','ಖ','ಗ']},
+ gu:{name:'Gujarati',native:'ગુજરાતી',dir:'ltr',letters:['અ','આ','ક','ખ','ગ']},
+ pa:{name:'Punjabi',native:'ਪੰਜਾਬੀ',dir:'ltr',letters:['ਅ','ਆ','ਕ','ਖ','ਗ']},
+ mr:{name:'Marathi',native:'मराठी',dir:'ltr',letters:['अ','आ','क','ख','ग']},
+ sw:{name:'Swahili',native:'Kiswahili',dir:'ltr',letters:['A','B','C','D','E']},
+ af:{name:'Afrikaans',native:'Afrikaans',dir:'ltr',letters:['A','B','C','D','E']},
+ ro:{name:'Romanian',native:'Română',dir:'ltr',letters:['A','B','C','D','E']},
+ cs:{name:'Czech',native:'Čeština',dir:'ltr',letters:['A','B','C','D','E']},
+ hu:{name:'Hungarian',native:'Magyar',dir:'ltr',letters:['A','B','C','D','E']},
+ bg:{name:'Bulgarian',native:'Български',dir:'ltr',letters:['А','Б','В','Г','Д']},
+ sr:{name:'Serbian',native:'Српски',dir:'ltr',letters:['А','Б','В','Г','Д']},
+ hr:{name:'Croatian',native:'Hrvatski',dir:'ltr',letters:['A','B','C','D','E']},
+ sk:{name:'Slovak',native:'Slovenčina',dir:'ltr',letters:['A','B','C','D','E']},
+ sl:{name:'Slovenian',native:'Slovenščina',dir:'ltr',letters:['A','B','C','D','E']}
+};
+const LANG_OPTIONS=Object.entries(LANGS).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([code,x])=>`<option value="${code}">${x.native} · ${x.name}</option>`).join('');
+
+let home=inferHome(),rescue=inferRescue();
+let feedMode=String(localStorage.getItem(FEED_MODE_STORE)||'');
+if(!['home','local'].includes(feedMode)){
+  const legacy=String(localStorage.getItem(LEGACY_MODE_STORE)||'');
+  feedMode=(legacy==='local'||legacy==='local_en')?'local':'home';
 }
-function ph(base){
-  if(active.lang==='bn') return base;
-  const lang=active.lang==='ar'?'ar':active.lang==='hi'?'hi':'en';
-  return PLACEHOLDERS[base]?.[lang]||base;
+let uiLang=String(localStorage.getItem(UI_LANG_STORE)||'en').toLowerCase();
+if(!LANGS[uiLang])uiLang='en';
+
+function feedRegion(){return feedMode==='local'?rescue:home}
+function langInfo(lang=uiLang){return LANGS[lang]||LANGS.en}
+function experience(){
+  const base=feedRegion(),li=langInfo();
+  return {...base,lang:uiLang,dir:li.dir,locale:uiLang==='en'?(base.countryCode?`en-${base.countryCode}`:'en'):(base.locale||uiLang),letters:li.letters,domestic:uiLang==='bn'&&(base.key==='BD'||base.key==='IN_WB')};
 }
-function isUserContent(el){
-  return !!el.closest?.('.bd-post,.post,.post-card,.bd-live-post,.req,.chat-message,.message-bubble,.comment,.bd24-comment-bubble,[data-post-id],[data-comment-id]');
+let active=experience();
+function sameRegion(a,b){return !!a&&!!b&&String(a.countryCode||'')===String(b.countryCode||'')&&(a.key!=='IN_WB'||b.key==='IN_WB')&&(b.key!=='IN_WB'||a.key==='IN_WB')}
+function languageName(lang){return (LANGS[lang]||LANGS.en).native}
+function translated(base,lang=uiLang){
+  if(lang==='bn')return base;
+  if(['en','ar','hi'].includes(lang)&&TEXT[base]?.[lang])return TEXT[base][lang];
+  if(TEXT_EXTRA[base]?.[lang])return TEXT_EXTRA[base][lang];
+  return TEXT[base]?.en||base;
 }
+function tr(base){return translated(base,uiLang)}
+function ph(base){if(uiLang==='bn')return base;return PLACEHOLDERS[base]?.[uiLang]||PLACEHOLDERS[base]?.en||base}
+function isUserContent(el){return !!el.closest?.('.bd-post,.post,.post-card,.bd-live-post,.req,.chat-message,.message-bubble,.comment,.bd24-comment-bubble,[data-post-id],[data-comment-id]')}
 function translateElement(el){
   if(!el||el.nodeType!==1||isUserContent(el))return;
   if(el.matches('input,textarea')){
-    const p=el.getAttribute('placeholder'); if(p&&PLACEHOLDERS[p]) el.setAttribute('placeholder',ph(p));
-    const a=el.getAttribute('aria-label'); if(a&&TEXT[a]) el.setAttribute('aria-label',tr(a));
+    let p=el.dataset.bdI18nPlaceholder;
+    if(!p){const now=el.getAttribute('placeholder')||'';if(PLACEHOLDERS[now]){p=now;el.dataset.bdI18nPlaceholder=now}}
+    if(p)el.setAttribute('placeholder',ph(p));
+    let a=el.dataset.bdI18nAria;
+    if(!a){const now=el.getAttribute('aria-label')||'';if(TEXT[now]||TEXT_EXTRA[now]){a=now;el.dataset.bdI18nAria=now}}
+    if(a)el.setAttribute('aria-label',tr(a));
     return;
   }
-  if(el.matches('option,button,a,label,h1,h2,h3,strong,small,span,.bdc-prompt')){
-    const txt=(el.textContent||'').trim();
-    if(txt&&TEXT[txt]){
-      const v=tr(txt);
-      if(el.children.length===0) el.textContent=v;
-    }
+  if(el.matches('option,button,a,label,h1,h2,h3,strong,small,span,.bdc-prompt')&&el.children.length===0){
+    let base=el.dataset.bdI18nSource;
+    if(!base){const now=(el.textContent||'').trim();if(TEXT[now]||TEXT_EXTRA[now]){base=now;el.dataset.bdI18nSource=now}}
+    if(base)el.textContent=tr(base);
   }
-  const a=el.getAttribute?.('aria-label'); if(a&&TEXT[a])el.setAttribute('aria-label',tr(a));
-  const title=el.getAttribute?.('title'); if(title&&TEXT[title])el.setAttribute('title',tr(title));
+  let a=el.dataset.bdI18nAria;
+  if(!a){const now=el.getAttribute?.('aria-label')||'';if(TEXT[now]||TEXT_EXTRA[now]){a=now;el.dataset.bdI18nAria=now}}
+  if(a)el.setAttribute('aria-label',tr(a));
 }
-function translateTree(root=D){
-  if(root.nodeType===1) translateElement(root);
-  root.querySelectorAll?.('input,textarea,option,button,a,label,h1,h2,h3,strong,small,span,.bdc-prompt').forEach(translateElement);
-}
-function applyAlphabet(root=D){
-  const letters=active.letters||PRESETS.INTL.letters;
-  root.querySelectorAll?.('.bdc-letters').forEach(row=>{
-    [...row.querySelectorAll('.bdc-letter')].slice(0,5).forEach((b,i)=>{
-      b.textContent=letters[i]||'';
-      b.dataset.regionLetter=letters[i]||'';
-      b.lang=active.lang;
-      b.dir=active.dir;
-    });
-  });
-}
+function translateTree(root=D){if(root.nodeType===1)translateElement(root);root.querySelectorAll?.('input,textarea,option,button,a,label,h1,h2,h3,strong,small,span,.bdc-prompt').forEach(translateElement)}
+function applyAlphabet(root=D){const letters=langInfo().letters;root.querySelectorAll?.('.bdc-letters').forEach(row=>[...row.querySelectorAll('.bdc-letter')].slice(0,5).forEach((b,i)=>{b.textContent=letters[i]||'';b.dataset.regionLetter=letters[i]||'';b.lang=uiLang;b.dir=langInfo().dir}))}
+function isDomesticBrand(){return uiLang==='bn'&&(feedRegion().key==='BD'||feedRegion().key==='IN_WB')}
 function brand(root=D){
-  const title=root.querySelector?.('.bd-brand-copy h1');
-  const sub=root.querySelector?.('.bd-brand-copy p');
+  const title=root.querySelector?.('.bd-brand-copy h1'),sub=root.querySelector?.('.bd-brand-copy p');
   if(title){
-    if(active.domestic){
-      title.innerHTML='<b>ভুবনডাঙ্গার</b> <em>কবিতা</em>';
-      if(sub)sub.textContent='বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন';
-    }else{
-      title.innerHTML='<b class="bd-bongdang">BongDang</b> <sup class="bd-sos-miniword">sos</sup>';
-      if(sub)sub.textContent=active.lang==='ar'?'مجتمع إنساني وإبداعي عالمي':active.lang==='hi'?'एक वैश्विक रचनात्मक और मानवीय मंच':'A global creative & humanitarian community';
-    }
+    if(isDomesticBrand()){title.innerHTML='<b>ভুবনডাঙ্গার</b> <em>কবিতা</em>';if(sub)sub.textContent='বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন'}
+    else{title.innerHTML='<b class="bd-bongdang">BongDang</b> <sup class="bd-sos-miniword">sos</sup>';if(sub)sub.textContent=uiLang==='ar'?'مجتمع إنساني وإبداعي عالمي':uiLang==='hi'?'एक वैश्विक रचनात्मक और मानवीय मंच':uiLang==='ur'?'ایک عالمی تخلیقی اور انسانی پلیٹ فارم':uiLang==='id'?'Komunitas kreatif & kemanusiaan global':uiLang==='fil'?'Isang pandaigdigang malikhaing at makataong komunidad':'A global creative & humanitarian community'}
   }
-  const generic=root.querySelector?.('.brand h1');
-  if(generic && !active.domestic && !/BongDang/i.test(generic.textContent)){
-    generic.innerHTML='BongDang <sup class="bd-sos-miniword">sos</sup>';
-  }
-  if(D===root||root===D) D.title=active.domestic?'ভুবনডাঙ্গার কবিতা':'BongDang sos';
+  const generic=root.querySelector?.('.brand h1');if(generic)generic.innerHTML=isDomesticBrand()?'ভুবনডাঙ্গার কবিতা':'BongDang <sup class="bd-sos-miniword">sos</sup>';
+  if(root===D)D.title=isDomesticBrand()?'ভুবনডাঙ্গার কবিতা':'BongDang sos';
 }
 function historyCard(root=D){
-  const a=root.querySelector?.('.bd-history'); if(!a)return;
-  const b=a.querySelector('b'),sm=a.querySelector('small'),flag=a.querySelector('.bd-flag');
-  if(active.domestic){
-    const wb=active.key==='IN_WB';
-    if(b)b.textContent=wb?'পশ্চিমবঙ্গ':'বাংলাদেশ';
-    if(sm)sm.textContent=wb?'ইতিহাস · বাংলা সংস্কৃতি':'ইতিহাস · ১৭৫৭—আজ';
-    a.href=wb?'west-bengal.html':'bangladesh.html';
-    flag?.classList.remove('bd-flag-emoji');
-    if(flag)flag.textContent='';
+  const a=root.querySelector?.('.bd-history');if(!a)return;
+  const region=feedRegion(),b=a.querySelector('b'),sm=a.querySelector('small'),flag=a.querySelector('.bd-flag');
+  if(feedMode==='home'&&(region.key==='BD'||region.key==='IN_WB')){
+    const wb=region.key==='IN_WB';if(b)b.textContent=uiLang==='bn'?(wb?'পশ্চিমবঙ্গ':'বাংলাদেশ'):(wb?'West Bengal':'Bangladesh');if(sm)sm.textContent=uiLang==='bn'?(wb?'ইতিহাস · বাংলা সংস্কৃতি':'ইতিহাস · ১৭৫৭—আজ'):'Home literature & history';a.href=wb?'west-bengal.html':'bangladesh.html';flag?.classList.remove('bd-flag-emoji');if(flag)flag.textContent='';
   }else{
-    if(b)b.textContent=active.countryName||active.label||'BongDang';
-    if(sm)sm.textContent=active.lang==='ar'?'الموقع التشغيلي':active.lang==='hi'?'सक्रिय क्षेत्र':'Active region · local time';
-    a.href='#';
-    if(flag){
-      flag.classList.add('bd-flag-emoji');
-      flag.textContent=flagEmoji(active.countryCode)||'🌐';
-    }
+    if(b)b.textContent=region.label||region.countryName||'BongDang';if(sm)sm.textContent=feedMode==='local'?'Local feed':'Home feed';
+    a.href='#';if(flag){flag.classList.add('bd-flag-emoji');flag.textContent=flagEmoji(region.countryCode)||'🌐'}
   }
 }
-function flagEmoji(code){
-  code=String(code||'').toUpperCase();
-  if(!/^[A-Z]{2}$/.test(code))return'🌐';
-  return String.fromCodePoint(...[...code].map(c=>127397+c.charCodeAt()));
-}
+function flagEmoji(code){code=String(code||'').toUpperCase();if(!/^[A-Z]{2}$/.test(code))return'🌐';return String.fromCodePoint(...[...code].map(c=>127397+c.charCodeAt()))}
 function dateHTML(){
-  const now=new Date();
-  if(active.domestic){
-    const tz=active.key==='IN_WB'?'Asia/Kolkata':'Asia/Dhaka';
-    const greg=new Intl.DateTimeFormat(active.key==='IN_WB'?'bn-IN':'bn-BD',{day:'numeric',month:'long',year:'numeric',timeZone:tz}).format(now).replace(/,/g,'');
-    const wd=new Intl.DateTimeFormat(active.key==='IN_WB'?'bn-IN':'bn-BD',{weekday:'long',timeZone:tz}).format(now);
+  const now=new Date(),region=feedRegion();
+  if(isDomesticBrand()){
+    const tz=home.key==='IN_WB'?'Asia/Kolkata':'Asia/Dhaka',loc=home.key==='IN_WB'?'bn-IN':'bn-BD';
+    const greg=new Intl.DateTimeFormat(loc,{day:'numeric',month:'long',year:'numeric',timeZone:tz}).format(now).replace(/,/g,''),wd=new Intl.DateTimeFormat(loc,{weekday:'long',timeZone:tz}).format(now);
     let hijri='';try{hijri=new Intl.DateTimeFormat('bn-BD-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric',timeZone:tz}).format(now).replace(/,/g,'')+' হিজরি'}catch(_){}
     let bangla='';try{bangla=W.BD_BANGLA_DATE?.(now)||''}catch(_){}
-    const h=Number(new Intl.DateTimeFormat('en-GB',{hour:'2-digit',hour12:false,timeZone:tz}).format(now));
-    const greet=h<5?'শুভ রাত্রি—শব্দের সঙ্গে থাকুন':h<12?'শুভ সকাল—সবার দিন সুন্দর হোক':h<17?'শুভ দুপুর—পড়া ও লেখার সময়':h<20?'শুভ সন্ধ্যা—আপন ভুবনে স্বাগতম':'শুভ রাত্রি—শব্দের সঙ্গে থাকুন';
-    const parts=[greg+' খ্রিস্টাব্দ',greet,wd,bangla,hijri].filter(Boolean);
-    return parts.map((x,i)=>`${i?'<i>✦</i>':''}<span class="${i===1?'greet':''}">${x}</span>`).join('');
+    const h=Number(new Intl.DateTimeFormat('en-GB',{hour:'2-digit',hour12:false,timeZone:tz}).format(now)),greet=h<5?'শুভ রাত্রি—শব্দের সঙ্গে থাকুন':h<12?'শুভ সকাল—সবার দিন সুন্দর হোক':h<17?'শুভ দুপুর—পড়া ও লেখার সময়':h<20?'শুভ সন্ধ্যা—আপন ভুবনে স্বাগতম':'শুভ রাত্রি—শব্দের সঙ্গে থাকুন';
+    return [greg,greet,wd,bangla,hijri].filter(Boolean).map((x,i)=>`${i?'<i>✦</i>':''}<span class="${i===1?'greet':''}">${x}</span>`).join('');
   }
-  const locale=active.locale||'en';
-  const date=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
-  const time=new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(now);
-  const place=[active.city,active.region,active.countryName].filter(Boolean).join(' · ')||active.label||'International';
+  const locale=uiLang==='en'?(region.countryCode?`en-${region.countryCode}`:'en'):(region.locale||uiLang),date=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now),time=new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(now),place=[region.city,region.region,region.countryName].filter(Boolean).join(' · ')||region.label||'International';
   return `<span class="greg">${date}</span><i>✦</i><span class="greet">${time}</span><i>✦</i><span>${place}</span>`;
 }
-function renderDateTicker(){
-  const groups=[...D.querySelectorAll('.bd-date-group')];if(!groups.length)return false;
-  const seq=dateHTML(),long=seq+'<i>✦</i>'+seq+'<i>✦</i>'+seq+'<i>✦</i>';
-  groups.forEach(g=>g.innerHTML=long);
-  return true;
-}
+function renderDateTicker(){const groups=[...D.querySelectorAll('.bd-date-group')];if(!groups.length)return false;const seq=dateHTML(),long=seq+'<i>✦</i>'+seq+'<i>✦</i>'+seq+'<i>✦</i>';groups.forEach(g=>g.innerHTML=long);return true}
 
-function injectStyle(){
-  if(D.getElementById('bd-regional-runtime-style'))return;
-  const s=D.createElement('style');s.id='bd-regional-runtime-style';s.textContent=`
-    .bd-sos-miniword{font:800 .42em/1 system-ui,sans-serif;letter-spacing:.4px;color:#c64250;vertical-align:super;margin-left:4px}
-    .bd-bongdang{color:#176b56!important}
-    .bd-flag.bd-flag-emoji{background:#fff!important;color:#173153!important;font-size:20px;box-shadow:0 0 0 3px #fff,0 5px 12px rgba(0,0,0,.10)!important}
-    .bd-flag.bd-flag-emoji:after{display:none!important}
-    html[dir="rtl"] .bd-head-inner,html[dir="rtl"] .bd-quick-inner{direction:rtl}
-    .bd-region-modal{position:fixed;inset:0;z-index:2147483000;display:none;place-items:center;padding:18px;background:rgba(8,14,22,.42);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-    .bd-region-modal.open{display:grid}.bd-region-sheet{width:min(520px,96vw);max-height:min(84dvh,760px);overflow:auto;border:1px solid rgba(70,93,130,.18);border-radius:24px;background:#fff;color:#173153;box-shadow:0 28px 90px rgba(18,30,55,.28);padding:17px}
-    html[data-theme="dark"] .bd-region-sheet{background:#102033;color:#edf5ff;border-color:rgba(200,218,244,.16)}
-    .bd-region-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.bd-region-head h3{margin:0;font-size:17px}.bd-region-x{width:38px;height:38px;border:1px solid rgba(70,93,130,.16);border-radius:50%;background:transparent;color:inherit;font-size:22px}
-    .bd-region-note{margin:7px 0 12px;color:#728096;font-size:10px;line-height:1.65}.bd-region-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.bd-region-field{display:grid;gap:5px}.bd-region-field.full{grid-column:1/-1}.bd-region-field label{font-size:9px;font-weight:800;color:#718097}.bd-region-field input,.bd-region-field select{height:42px;border:1px solid rgba(70,93,130,.16);border-radius:12px;background:#f8fafc;color:#173153;padding:0 11px;font-size:16px;outline:none}
-    html[data-theme="dark"] .bd-region-field input,html[data-theme="dark"] .bd-region-field select{background:#162a40;color:#f1f7ff;border-color:rgba(210,225,248,.14)}
-    .bd-region-actions{margin-top:13px;display:flex;justify-content:flex-end;gap:8px}.bd-region-actions button{min-height:42px;padding:0 15px;border-radius:12px;border:1px solid rgba(70,93,130,.16);background:#fff;color:#173153;font-weight:850}.bd-region-actions .save{border:0;background:#176b56;color:#fff}
-    .bd-history-body{white-space:pre-wrap;color:#53627a;font-size:11px;line-height:1.8}.bd-history-link{display:inline-flex;margin-top:12px;min-height:39px;padding:0 13px;align-items:center;border-radius:11px;background:#176b56;color:#fff;font-weight:850;text-decoration:none}
-    .bd27-country-flag{touch-action:manipulation!important;-webkit-touch-callout:none!important;user-select:none!important}
-    .bd-sos-panel{margin:12px 0;padding:13px;border:1px solid rgba(201,63,80,.15);border-radius:18px;background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(255,246,247,.90));box-shadow:0 9px 24px rgba(114,42,51,.06)}
-    .bd-sos-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.bd-sos-brand{font-weight:950;color:#18332c}.bd-sos-brand small{font-size:.62em;color:#c93f50}.bd-sos-head>b{font-size:9px;color:#5d6b67}
-    .bd-sos-features{margin-top:10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-    .bd-sos-feature{min-width:0;min-height:58px;padding:9px 10px;border:1px solid rgba(42,78,67,.11);border-radius:13px;background:rgba(255,255,255,.90);display:flex;align-items:center;gap:9px;text-align:left;color:#17372e;text-decoration:none}
-    .bd-sos-feature-icon{width:31px;height:31px;min-width:31px;border-radius:10px;display:grid;place-items:center;background:#edf7f3;color:#0b7658;font-size:15px;font-weight:900}.bd-sos-feature.life .bd-sos-feature-icon{background:#fff0f2;color:#c83f50}
-    .bd-sos-feature b{display:block;font-size:9px;line-height:1.25}.bd-sos-feature small{display:block;margin-top:2px;color:#7a8782;font-size:7px;line-height:1.45}
-    .bd-sos-offline{margin-top:9px;padding:9px 10px;border-radius:12px;background:rgba(21,104,77,.055);border:1px solid rgba(21,104,77,.09);color:#5f7069;font-size:7.4px;line-height:1.55}
-    .bd-sos-routing{margin-top:8px;padding:9px 10px;border-radius:12px;background:#fff;border:1px solid rgba(72,92,133,.10);font-size:7.4px;line-height:1.58;color:#607087}.bd-sos-routing b{color:#1c3e35}
-    .bd-sos-actions{margin-top:9px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:7px}.bd-sos-actions button,.bd-sos-actions a{min-height:39px;border:1px solid rgba(40,76,65,.12);border-radius:11px;background:#fff;color:#17352d;font-size:8px;font-weight:900;display:flex;align-items:center;justify-content:center;text-decoration:none}.bd-sos-actions .sos{border:0;background:linear-gradient(135deg,#c93f50,#8f2232);color:#fff}
-    .bd-sos-status{margin-top:8px;color:#78847f;font-size:7.3px;line-height:1.55}
-    .bd-sos-policy{margin-top:8px;border-top:1px solid rgba(82,104,154,.10);padding-top:7px}.bd-sos-policy summary{cursor:pointer;list-style:none;font-size:7.4px;font-weight:900;color:#9a3744}.bd-sos-policy summary::-webkit-details-marker{display:none}.bd-sos-policy p{margin:6px 0 0;color:#697773;font-size:7px;line-height:1.6}
-    .bd-sos-mini{grid-column:1/-1;margin-top:3px;padding:9px;border-top:1px solid rgba(82,104,154,.10);border-radius:13px;background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(255,248,249,.64))}
-    .bd-sos-mini-title{display:flex;align-items:center;justify-content:space-between;gap:8px}.bd-sos-mini-title b{font-size:8.2px;color:#17352d}.bd-sos-mini-title small{font-size:6.4px;color:#9a4650}
-    .bd-sos-mini-grid{margin-top:7px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.bd-sos-mini-grid button,.bd-sos-mini-grid a{min-width:0;min-height:37px;border:1px solid rgba(84,103,145,.12);border-radius:10px;background:#fff;color:#173153;font-size:6.6px;font-weight:900;text-decoration:none;display:flex;align-items:center;justify-content:center;text-align:center;padding:5px 6px;line-height:1.25}.bd-sos-mini-grid .life{background:#c64250;border-color:#c64250;color:#fff}.bd-sos-mini-grid .rescue{background:#eff8f4;color:#0c6c51}
-    .bd-sos-mini-note{margin-top:6px;color:#78857f;font-size:6.3px;line-height:1.45}.bd-sos-mini-policy{display:inline-block;margin-top:4px;color:#a13a48;font-size:6.3px;font-weight:900;text-decoration:none}
-    @media(max-width:620px){.bd-region-grid{grid-template-columns:1fr}.bd-region-field.full{grid-column:auto}.bd-sos-features{grid-template-columns:1fr 1fr}.bd-sos-actions{grid-template-columns:1fr 1fr}.bd-sos-actions .sos{grid-column:1/-1}.bd-sos-mini-grid{grid-template-columns:1fr 1fr}.bd-sos-mini-grid>*{min-height:34px}}
-  `;D.head.appendChild(s);
+function injectExperienceStyle(){
+  if(D.getElementById('bd-experience-style-v161'))return;
+  const s=D.createElement('style');s.id='bd-experience-style-v161';s.textContent=`
+  .bd-experience-card{--bd-mode-accent:#147a59}.bd-experience-card .bd-mode-section{display:grid;gap:6px}.bd-mode-caption{display:flex;justify-content:space-between;align-items:end;gap:8px}.bd-mode-caption b{font-size:8px}.bd-mode-caption small{font-size:6.2px;color:var(--bd-muted,#8494a7)}.bd-feed-toggle{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bd-feed-mode{min-height:34px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.76);color:var(--bd-text,#173153);font-size:7.6px;font-weight:900}.bd-feed-mode.active{background:#10251d;color:#fff;border-color:#10251d}.bd-lang-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.bd-lang-btn{min-width:0;min-height:40px;padding:5px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.76);color:var(--bd-text,#173153);font-size:6.6px;font-weight:900;line-height:1.25}.bd-lang-btn.active{border-color:rgba(20,122,89,.35);box-shadow:inset 0 0 0 1px rgba(20,122,89,.18);background:rgba(232,247,240,.94);color:#0d704f}.bd-language-select{width:100%;min-height:38px;margin-top:5px;padding:0 9px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.82);color:var(--bd-text,#173153);font-size:7px}.bd-mode-rescue{margin-top:8px;padding-top:8px;border-top:1px solid rgba(86,104,147,.10);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}.bd-mode-rescue b{display:block;font-size:7.5px}.bd-mode-rescue small{display:block;color:var(--bd-muted,#8b99ad);font-size:6.1px}.bd-mode-rescue button{min-height:32px;padding:0 8px;border-radius:9px;border:1px solid rgba(198,66,80,.18);background:#fff;color:#a23947;font-size:6.8px;font-weight:900}.bd-region-state-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:99px;background:rgba(20,128,95,.08);color:#147759;font-size:6.4px;font-weight:900}
+  html[data-theme="dark"] .bd-feed-mode,html[data-theme="dark"] .bd-lang-btn,html[data-theme="dark"] .bd-language-select,html[data-theme="dark"] .bd-mode-rescue button{background:#14263e;color:#eef5ff;border-color:rgba(170,191,227,.14)}html[data-theme="dark"] .bd-feed-mode.active{background:#0d5e46}html[data-theme="dark"] .bd-lang-btn.active{background:#183b31;color:#c9f4e2}
+  `;
+  D.head.appendChild(s);
 }
+function sideLabels(){
+  if(uiLang==='bn')return{head:'ভাষা ও নিউজফিড',feed:'নিউজফিড দেশ',home:'আমার দেশ',local:'লোকাল',lang:'ভাষা',en:'English (ডিফল্ট)',mine:'আমার ভাষা',loc:'লোকাল ভাষা',all:'সব ভাষা',rescue:'Emergency / Rescue Location',change:'পরিবর্তন'};
+  return{head:'Language & News Feed',feed:'Feed region',home:'Home',local:'Local',lang:'Interface language',en:'English · Default',mine:'My Language',loc:'Local Language',all:'All languages',rescue:'Emergency / Rescue Location',change:'Change'};
+}
+function experienceCardInnerHTML(){
+  const L=sideLabels(),homeLang=home.lang||'en',localLang=rescue.lang||'en',rr=[rescue.city,rescue.region,rescue.countryName].filter(Boolean).join(', ')||rescue.label||'Not set';
+  return `<div class="bd-side-head"><div><small>${L.feed}</small><h3>${L.head}</h3></div><span class="bd-region-state-chip">${feedMode==='home'?'HOME':'LOCAL'} · ${uiLang.toUpperCase()}</span></div>
+  <div class="bd-mode-section">
+    <div class="bd-feed-toggle"><button type="button" class="bd-feed-mode ${feedMode==='home'?'active':''}" data-bd-feed-mode="home">${flagEmoji(home.countryCode)} ${L.home}</button><button type="button" class="bd-feed-mode ${feedMode==='local'?'active':''}" data-bd-feed-mode="local">${flagEmoji(rescue.countryCode)} ${L.local}</button></div>
+    <div class="bd-mode-caption"><b>${L.lang}</b><small>${L.en}</small></div>
+    <div class="bd-lang-quick">
+      <button type="button" class="bd-lang-btn ${uiLang==='en'?'active':''}" data-bd-ui-lang="en">English<br><small>Default</small></button>
+      <button type="button" class="bd-lang-btn ${uiLang===homeLang?'active':''}" data-bd-ui-lang="${homeLang}">${languageName(homeLang)}<br><small>${L.mine}</small></button>
+      <button type="button" class="bd-lang-btn ${uiLang===localLang?'active':''}" data-bd-ui-lang="${localLang}">${languageName(localLang)}<br><small>${L.loc}</small></button>
+    </div>
+    <select class="bd-language-select" data-bd-language-all aria-label="${L.all}"><option value="">${L.all}…</option>${LANG_OPTIONS}</select>
+  </div>
+  <div class="bd-mode-rescue"><span><b>${L.rescue}</b><small data-bd-rescue-label>${rr}</small></span><button type="button" data-bd-open-rescue>${L.change}</button></div>`;
+}
+function experienceCardHTML(){return `<section class="bd-side-card bd-experience-card">${experienceCardInnerHTML()}</section>`}
+function syncExperienceCards(){D.querySelectorAll('.bd-experience-card').forEach(c=>c.innerHTML=experienceCardInnerHTML());D.querySelectorAll('[data-bd-language-all]').forEach(s=>s.value=uiLang);syncRescueLabels()}
+function rescueLabel(){return [rescue.city,rescue.region,rescue.countryName].filter(Boolean).join(', ')||rescue.label||'Not set'}
+function syncRescueLabels(){D.querySelectorAll('[data-bd-rescue-label]').forEach(x=>x.textContent=rescueLabel())}
 
-function modal(kind){
-  let m=D.getElementById(kind==='history'?'bdHistoryModal':'bdRegionModal');
-  if(m)return m;
-  m=D.createElement('div');m.className='bd-region-modal';m.id=kind==='history'?'bdHistoryModal':'bdRegionModal';
-  D.body.appendChild(m);return m;
+function modal(kind){let id=kind==='history'?'bdHistoryModal':kind==='home'?'bdHomeRegionModal':'bdRescueRegionModal',m=D.getElementById(id);if(m)return m;m=D.createElement('div');m.className='bd-region-modal';m.id=id;D.body.appendChild(m);return m}
+function historyInfo(code,name){if(code==='BD')return {title:'বাংলাদেশের ইতিহাস',href:'bangladesh.html',body:'১৭৫৭ থেকে ভাষা আন্দোলন, ১৯৬৯-এর গণঅভ্যুত্থান, ১৯৭১-এর মুক্তিযুদ্ধ ও স্বাধীনতা—বাংলাদেশের ইতিহাস সংগ্রাম, ভাষা, সংস্কৃতি ও মানুষের আত্মপরিচয়ের ধারাবাহিক যাত্রা।'};if(code==='IN')return {title:'বাংলা ও ভারতের ইতিহাস',href:'west-bengal.html',body:'বাংলা ভাষা, সাহিত্য, সংস্কৃতি ও উপমহাদেশের ঐতিহাসিক ধারাবাহিকতার পরিচয়।'};return {title:(name||'Country')+' · History',href:'#',body:'This flag represents profile/home identity. Emergency rescue location is stored separately.'}}
+function openHistory(flag){const c=flag?.dataset?.country||'',info=historyInfo(c,flag?.title?.split('—')[0]?.trim());const m=modal('history');m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>${info.title}</h3><button class="bd-region-x" data-bd-close>×</button></div><div class="bd-history-body">${info.body}</div>${info.href!=='#'?`<a class="bd-history-link" href="${info.href}">Open full history</a>`:''}</section>`;m.classList.add('open');m.querySelector('[data-bd-close]').onclick=()=>m.classList.remove('open');m.onclick=e=>{if(e.target===m)m.classList.remove('open')}}
+const REGION_OPTIONS=`<option value="BD">Bangladesh</option><option value="IN_WB">West Bengal / Kolkata</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="QA">Qatar</option><option value="KW">Kuwait</option><option value="OM">Oman</option><option value="BH">Bahrain</option><option value="PK">Pakistan</option><option value="ID">Indonesia</option><option value="PH">Philippines</option><option value="IN_HI">India / Hindi</option><option value="INTL">International / English</option>`;
+function presetToRegion(key,fields={}){if(key==='IN_WB')return normalizeRegion({...PRESETS.IN_WB,...fields,preset:key,key});if(key==='IN_HI')return normalizeRegion({...PRESETS.IN_HI,...fields,preset:key,key});if(PRESETS[key])return normalizeRegion({...PRESETS[key],...fields,preset:key,key});return normalizeRegion({...fields,preset:key,key})}
+function openHomeModal(){
+  const cur=home,m=modal('home');
+  m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>Home Country / Profile Region</h3><button class="bd-region-x" data-bd-close>×</button></div><p class="bd-region-note">This controls your permanent profile identity and Home feed. SOS/Rescue location remains separate.</p><div class="bd-region-grid"><div class="bd-region-field full"><label>Home preset</label><select data-home-preset>${REGION_OPTIONS}</select></div><div class="bd-region-field"><label>Country code</label><input data-home-code maxlength="2" value="${cur.countryCode||''}"></div><div class="bd-region-field"><label>Country</label><input data-home-country value="${cur.countryName||''}"></div><div class="bd-region-field"><label>State / Region</label><input data-home-region value="${cur.region||''}"></div><div class="bd-region-field"><label>Home city / district</label><input data-home-city value="${cur.city||''}"></div></div><div class="bd-region-actions"><button type="button" data-bd-close>Cancel</button><button type="button" class="save" data-home-save>Save Home</button></div></section>`;
+  const p=m.querySelector('[data-home-preset]');p.value=cur.key==='IN_WB'?'IN_WB':cur.key==='IN_HI'?'IN_HI':(PRESETS[cur.countryCode]?cur.countryCode:'INTL');m.classList.add('open');m.querySelectorAll('[data-bd-close]').forEach(x=>x.onclick=()=>m.classList.remove('open'));m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
+  m.querySelector('[data-home-save]').onclick=async()=>{const key=p.value,v=presetToRegion(key,{countryCode:m.querySelector('[data-home-code]').value.trim().toUpperCase(),countryName:m.querySelector('[data-home-country]').value.trim(),region:m.querySelector('[data-home-region]').value.trim(),city:m.querySelector('[data-home-city]').value.trim()});setHome(v);m.classList.remove('open');await persistHome(v)}
 }
-function historyInfo(code,name){
-  if(code==='BD')return {title:'বাংলাদেশের ইতিহাস',href:'bangladesh.html',body:'১৭৫৭ থেকে ভাষা আন্দোলন, ১৯৬৯-এর গণঅভ্যুত্থান, ১৯৭১-এর মুক্তিযুদ্ধ ও স্বাধীনতা—বাংলাদেশের ইতিহাস সংগ্রাম, ভাষা, সংস্কৃতি ও মানুষের আত্মপরিচয়ের ধারাবাহিক যাত্রা।'};
-  if(code==='IN')return {title:'বাংলা ও পশ্চিমবঙ্গের ইতিহাস',href:'west-bengal.html',body:'বাংলার সাহিত্য, ভাষা, নবজাগরণ, উপমহাদেশের রাজনৈতিক পরিবর্তন এবং পশ্চিমবঙ্গের সাংস্কৃতিক উত্তরাধিকার—এই পরিচয়ের মূল ভিত্তি।'};
-  return {title:(name||'Country')+' · History',href:'#',body:'Your home profile location remains unchanged. Operational location is separate and can be changed with a 2-second hold on the flag.'};
-}
-function openHistory(flag){
-  const c=flag?.dataset?.country||'';const info=historyInfo(c,flag?.title?.split('—')[0]?.trim());
-  const m=modal('history');m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>${info.title}</h3><button class="bd-region-x" data-bd-close>×</button></div><div class="bd-history-body">${info.body}</div>${info.href!=='#'?`<a class="bd-history-link" href="${info.href}">Open full history</a>`:''}</section>`;
-  m.classList.add('open');m.querySelector('[data-bd-close]').onclick=()=>m.classList.remove('open');m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
-}
-function openRegionModal(flag){
-  const cur=stored(),home=D.querySelector('#location')?.textContent?.trim()||'Home profile location';
-  const m=modal('region');
-  m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>Active operational location</h3><button class="bd-region-x" data-bd-close>×</button></div><p class="bd-region-note">Home profile: <b>${home}</b><br>This does not change your home district. It only changes BongDang's active operating region, language and emergency routing.</p><div class="bd-region-grid">
-  <div class="bd-region-field full"><label>Region preset</label><select data-op-preset><option value="BD">Bangladesh</option><option value="IN_WB">West Bengal / Kolkata</option><option value="AR">Middle East / Arabic</option><option value="IN_HI">India / Hindi</option><option value="INTL">International / English</option></select></div>
-  <div class="bd-region-field"><label>Country code (ISO-2)</label><input data-op-code maxlength="2" value="${cur.countryCode||active.countryCode||''}"></div>
-  <div class="bd-region-field"><label>Country</label><input data-op-country value="${cur.countryName||active.countryName||''}"></div>
-  <div class="bd-region-field"><label>State / Province / Region</label><input data-op-region value="${cur.region||''}"></div>
-  <div class="bd-region-field"><label>City</label><input data-op-city value="${cur.city||''}"></div>
-  <div class="bd-region-field full"><label>Hardware GPS</label><input data-op-gps readonly value="${Number.isFinite(cur.lat)?cur.lat.toFixed(5)+', '+cur.lng.toFixed(5):'Not captured'}"></div>
-  </div><div class="bd-region-actions"><button type="button" data-op-gps-btn>Use GPS</button><button type="button" data-bd-close>Cancel</button><button type="button" class="save" data-op-save>Save active region</button></div></section>`;
-  const preset=m.querySelector('[data-op-preset]');preset.value=cur.preset||active.key||'INTL';
-  m.classList.add('open');
-  m.querySelectorAll('[data-bd-close]').forEach(x=>x.onclick=()=>m.classList.remove('open'));
-  m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
-  m.querySelector('[data-op-gps-btn]').onclick=async()=>{
-    try{const g=await gps();m.querySelector('[data-op-gps]').value=`${g.lat.toFixed(5)}, ${g.lng.toFixed(5)}`;m.dataset.lat=g.lat;m.dataset.lng=g.lng;m.dataset.acc=g.accuracy||''}catch(e){status('Location permission unavailable',m)}
-  };
-  m.querySelector('[data-op-save]').onclick=async()=>{
-    const v={preset:preset.value,countryCode:m.querySelector('[data-op-code]').value.trim().toUpperCase(),countryName:m.querySelector('[data-op-country]').value.trim(),region:m.querySelector('[data-op-region]').value.trim(),city:m.querySelector('[data-op-city]').value.trim()};
-    if(m.dataset.lat){v.lat=+m.dataset.lat;v.lng=+m.dataset.lng;v.accuracy=+m.dataset.acc||null}
-    setOperational(v);m.classList.remove('open');await persistOperational(v);
-  };
+function openRescueModal(){
+  const cur=rescue,m=modal('rescue');
+  m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>Emergency / Rescue Location</h3><button class="bd-region-x" data-bd-close>×</button></div><p class="bd-region-note">Used for SOS, emergency help, nearby rescue routing and Local feed only. It never replaces your Home country.</p><div class="bd-region-grid"><div class="bd-region-field full"><label>Current country preset</label><select data-rescue-preset>${REGION_OPTIONS}</select></div><div class="bd-region-field"><label>Country code</label><input data-rescue-code maxlength="2" value="${cur.countryCode||''}"></div><div class="bd-region-field"><label>Country</label><input data-rescue-country value="${cur.countryName||''}"></div><div class="bd-region-field"><label>State / Region</label><input data-rescue-region value="${cur.region||''}"></div><div class="bd-region-field"><label>City</label><input data-rescue-city value="${cur.city||''}"></div><div class="bd-region-field full"><label>Hardware GPS</label><input data-rescue-gps readonly value="${Number.isFinite(cur.lat)?cur.lat.toFixed(5)+', '+cur.lng.toFixed(5):'Not captured'}"></div></div><div class="bd-region-actions"><button type="button" data-rescue-gps-btn>Use GPS</button><button type="button" data-bd-close>Cancel</button><button type="button" class="save" data-rescue-save>Save Rescue Location</button></div></section>`;
+  const p=m.querySelector('[data-rescue-preset]');p.value=cur.key==='IN_WB'?'IN_WB':cur.key==='IN_HI'?'IN_HI':(PRESETS[cur.countryCode]?cur.countryCode:'INTL');m.classList.add('open');m.querySelectorAll('[data-bd-close]').forEach(x=>x.onclick=()=>m.classList.remove('open'));m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
+  m.querySelector('[data-rescue-gps-btn]').onclick=async()=>{try{const g=await gps();m.querySelector('[data-rescue-gps]').value=`${g.lat.toFixed(5)}, ${g.lng.toFixed(5)}`;m.dataset.lat=g.lat;m.dataset.lng=g.lng;m.dataset.acc=g.accuracy||''}catch(e){status('Location permission unavailable',m)}};
+  m.querySelector('[data-rescue-save]').onclick=async()=>{const key=p.value,v=presetToRegion(key,{countryCode:m.querySelector('[data-rescue-code]').value.trim().toUpperCase(),countryName:m.querySelector('[data-rescue-country]').value.trim(),region:m.querySelector('[data-rescue-region]').value.trim(),city:m.querySelector('[data-rescue-city]').value.trim()});if(m.dataset.lat){v.lat=+m.dataset.lat;v.lng=+m.dataset.lng;v.accuracy=+m.dataset.acc||null}setRescue(v);m.classList.remove('open');await persistRescue(v)}
 }
 function attachFlag(flag){
-  if(!flag||flag.dataset.bdRegionBound)return;flag.dataset.bdRegionBound='1';
-  let timer=0,long=false;
-  const clear=()=>{if(timer)clearTimeout(timer);timer=0};
-  flag.addEventListener('pointerdown',e=>{long=false;clear();timer=setTimeout(()=>{long=true;try{navigator.vibrate?.(35)}catch(_){};openRegionModal(flag)},2000)},{passive:true});
-  ['pointerup','pointercancel','pointerleave'].forEach(ev=>flag.addEventListener(ev,clear,{passive:true}));
-  flag.addEventListener('contextmenu',e=>e.preventDefault());
-  flag.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(long){long=false;return}openHistory(flag)},true);
+  if(!flag||flag.dataset.bdRegionBound)return;flag.dataset.bdRegionBound='1';let timer=0,long=false;const clear=()=>{if(timer)clearTimeout(timer);timer=0};
+  flag.addEventListener('pointerdown',()=>{long=false;clear();timer=setTimeout(()=>{long=true;try{navigator.vibrate?.(35)}catch(_){};openHomeModal()},2000)},{passive:true});
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>flag.addEventListener(ev,clear,{passive:true}));flag.addEventListener('contextmenu',e=>e.preventDefault());flag.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();if(long){long=false;return}openHistory(flag)},true)
 }
 function attachFlags(root=D){root.querySelectorAll?.('#bd27CountryFlag,.bd27-country-flag').forEach(attachFlag)}
-
-function setOperational(v){
-  const x=normalize(v);x.preset=v.preset||x.key;
-  localStorage.setItem(STORE,JSON.stringify(x));active=x;apply(D);
-  W.dispatchEvent(new CustomEvent('bd:regionchange',{detail:{...active}}));
-}
-async function persistOperational(v){
-  try{
-    const c=getClient();if(!c?.auth)return;
-    const u=(await c.auth.getUser()).data?.user;if(!u)return;
-    await c.auth.updateUser({data:{...(u.user_metadata||{}),bd_operational_location:v}});
-  }catch(_){}
-}
 function getClient(){return W.BD_SUPABASE||W.supabaseClient||W.bhubondangaSupabase||W.__BD_SUPABASE_CLIENT__||((W.supabase&&W.supabase.auth)?W.supabase:null)}
-async function hydrateOperational(){
-  if(localStorage.getItem(STORE))return;
-  try{const c=getClient();const u=(await c?.auth?.getUser?.()).data?.user;const v=u?.user_metadata?.bd_operational_location;if(v)setOperational(v)}catch(_){}
+function setFeedMode(v,{persist=true}={}){v=v==='local'?'local':'home';feedMode=v;try{localStorage.setItem(FEED_MODE_STORE,v)}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistPrefs()}
+function setUiLanguage(v,{persist=true}={}){v=String(v||'en').toLowerCase();uiLang=LANGS[v]?v:'en';try{localStorage.setItem(UI_LANG_STORE,uiLang)}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:languagechange',{detail:{language:uiLang}}));W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistPrefs()}
+function setHome(v,{persist=false}={}){home=normalizeRegion(v);writeStore(HOME_STORE,home);active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:homechange',{detail:{...home}}));W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistHome(home)}
+function setRescue(v,{persist=false}={}){rescue=normalizeRegion(v);writeStore(RESCUE_STORE,rescue);writeStore(LEGACY_OPERATIONAL_STORE,rescue);if(Number.isFinite(rescue.lat)&&Number.isFinite(rescue.lng))writeStore('bd-humanitarian-location',{lat:rescue.lat,lng:rescue.lng,accuracy:rescue.accuracy||0,countryCode:rescue.countryCode,countryName:rescue.countryName,region:rescue.region,city:rescue.city,saved_at:new Date().toISOString()});active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:rescuechange',{detail:{...rescue}}));if(feedMode==='local')W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistRescue(rescue)}
+async function persistPrefs(){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(u)await c.auth.updateUser({data:{...(u.user_metadata||{}),preferred_language:uiLang,bd_ui_language:uiLang,bd_feed_region_mode:feedMode}})}catch(_){}}
+async function persistHome(v){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(!u)return;await c.auth.updateUser({data:{...(u.user_metadata||{}),bd_home_country:v,home_country_code:v.countryCode,home_country_name:v.countryName,home_city:v.city||''}});for(const row of [{home_country_code:v.countryCode,home_country_name:v.countryName,home_region:v.region||null,home_city:v.city||null},{country_code:v.countryCode,country:v.countryName,region:v.region||null,city:v.city||null}]){try{const r=await c.from('profiles').update(row).eq('id',u.id);if(!r.error)break}catch(_){} }}catch(_){}}
+async function persistRescue(v){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(u)await c.auth.updateUser({data:{...(u.user_metadata||{}),bd_rescue_location:v,bd_operational_location:v}})}catch(_){}}
+function regionFromProfile(p={}){const md=p.metadata||{},code=p.home_country_code||p.country_code||p.countryCode||md.home_country_code||md.country_code||'',name=p.home_country_name||p.country||p.country_name||md.home_country_name||md.country_name||'',region=p.home_region||p.region||p.state||p.district||md.home_region||md.region||'',city=p.home_city||p.city||md.home_city||md.city||'';return code||name?normalizeRegion({countryCode:code,countryName:name,region,city}):null}
+async function hydrateAccountState(){
+  for(let attempt=0;attempt<24;attempt++){
+    const c=getClient();if(!c){await new Promise(r=>setTimeout(r,150));continue}
+    try{
+      const u=(await c.auth?.getUser?.()).data?.user;if(!u)return;
+      const md=u.user_metadata||{};
+      if(!localStorage.getItem(HOME_STORE)){
+        let hv=md.bd_home_country||regionFromProfile(md);
+        if(!hv)try{const r=await c.from('profiles').select('*').eq('id',u.id).maybeSingle();hv=regionFromProfile(r.data||{})}catch(_){}
+        if(hv)setHome(hv,{persist:false})
+      }
+      if(!localStorage.getItem(RESCUE_STORE)){const rv=md.bd_rescue_location||md.bd_operational_location;if(rv)setRescue(rv,{persist:false})}
+      if(!localStorage.getItem(UI_LANG_STORE)){const pref=String(md.bd_ui_language||md.preferred_language||'en').toLowerCase();setUiLanguage(LANGS[pref]?pref:'en',{persist:false})}
+      if(!localStorage.getItem(FEED_MODE_STORE)){const fm=String(md.bd_feed_region_mode||'home');setFeedMode(fm==='local'?'local':'home',{persist:false})}
+      return
+    }catch(_){return}
+  }
 }
-function apply(root=D){
-  active=normalize(stored().countryCode||stored().preset?stored():active);
-  H.lang=active.lang;H.dir=active.dir;H.dataset.bdRegion=active.key;
-  brand(root);historyCard(root);applyAlphabet(root);translateTree(root);attachFlags(root);renderDateTicker();
-}
-function observe(){
-  const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){applyAlphabet(n);translateTree(n);attachFlags(n);brand(n);historyCard(n)}});
-  mo.observe(D.documentElement,{subtree:true,childList:true});
-}
+function getExperience(){return {mode:feedMode,feedMode,uiLanguage:uiLang,region:{...feedRegion()},home:{...home},rescue:{...rescue},branding:isDomesticBrand()?'bhubondanga':'bongdang'}}
+function apply(root=D){active=experience();H.lang=uiLang;H.dir=langInfo().dir;H.dataset.bdRegion=feedRegion().key;H.dataset.bdFeedMode=feedMode;H.dataset.bdUiLanguage=uiLang;H.dataset.bdFeedCountry=feedRegion().countryCode||'';brand(root);historyCard(root);applyAlphabet(root);translateTree(root);attachFlags(root);renderDateTicker();if(root===D){syncExperienceCards();syncRescueLabels()}}
+function observe(){const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){applyAlphabet(n);translateTree(n);attachFlags(n);brand(n);historyCard(n)}});mo.observe(D.documentElement,{subtree:true,childList:true})}
+D.addEventListener('click',e=>{const f=e.target.closest?.('[data-bd-feed-mode]');if(f){e.preventDefault();setFeedMode(f.dataset.bdFeedMode);return}const l=e.target.closest?.('[data-bd-ui-lang]');if(l){e.preventDefault();setUiLanguage(l.dataset.bdUiLang);return}if(e.target.closest?.('[data-bd-open-rescue]')){e.preventDefault();openRescueModal();return}if(e.target.closest?.('[data-bd-open-home]')){e.preventDefault();openHomeModal();return}},true);
+D.addEventListener('change',e=>{const s=e.target.closest?.('[data-bd-language-all]');if(s&&s.value){setUiLanguage(s.value);s.value=uiLang}},true);
 
 /* ============================ SOS ============================ */
 function capability(){
@@ -471,7 +536,7 @@ async function quickSOS(scope=D){
   const button=scope.closest?.('.bd-sos-panel,.bd-sos-mini')||scope;
   status('জরুরি জীবনরক্ষা বার্তা প্রস্তুত হচ্ছে · লোকেশন নেওয়া হচ্ছে…',button);
   let g=null;try{g=await gps();status('লোকেশন পাওয়া গেছে · জরুরি বার্তা পাঠানোর চেষ্টা হচ্ছে…',button)}catch(_){status('লাইভ লোকেশন পাওয়া যায়নি · সংরক্ষিত অপারেশনাল লোকেশন ব্যবহার করা হচ্ছে…',button)}
-  const op=normalize(stored().countryCode||stored().preset?stored():active);
+  const op={...rescue};
   const caps=capability(),voiceId=localStorage.getItem('bd-sos-last-voice')||null;
   const payload={kind:'bongdang_sos',createdAt:new Date().toISOString(),region:op,gps:g,voiceId,
   protocols:{nearby_device:caps.bluetooth,rescue_gateway:caps.lora,remote_hardware:caps.satellite},
@@ -516,20 +581,33 @@ function sosPanelHTML(){
 
 W.BDRegion={
   get current(){return {...active}},
-  getOperationalLocation:()=>({...normalize(stored().countryCode||stored().preset?stored():active)}),
-  setOperationalLocation:setOperational,
-  apply,
-  t:tr,
-  letters:()=>[...(active.letters||[])],
-  renderDateTicker,
-  openOperationalLocation:openRegionModal
+  get mode(){return feedMode},
+  get uiLanguage(){return uiLang},
+  getExperience,
+  getFeedRegion:()=>({...feedRegion()}),
+  getHomeCountry:()=>({...home}),
+  getRescueLocation:()=>({...rescue}),
+  getOperationalLocation:()=>({...rescue}),
+  setFeedMode,
+  setUiLanguage,
+  setExperienceMode:(v)=>setFeedMode(v==='local'||v==='local_en'?'local':'home'),
+  setHomeCountry:(v)=>setHome(v,{persist:true}),
+  setRescueLocation:(v)=>setRescue(v,{persist:true}),
+  setOperationalLocation:(v)=>setRescue(v,{persist:true}),
+  apply,t:tr,letters:()=>[...langInfo().letters],renderDateTicker,
+  openHomeCountry:openHomeModal,
+  openRescueLocation:openRescueModal,
+  openOperationalLocation:openRescueModal,
+  experienceCardHTML,
+  rescueLabel,
+  languages:()=>JSON.parse(JSON.stringify(LANGS))
 };
 W.BongDangSOS={capability,gps,recordVoice30,quickSOS,panelHTML:sosPanelHTML,update:updateSOS};
 
-injectStyle();
-apply(D);observe();updateSOS(D);hydrateOperational();
+injectStyle();injectExperienceStyle();apply(D);observe();updateSOS(D);hydrateAccountState();
 setInterval(()=>renderDateTicker(),60000);
-W.addEventListener('bd:regionchange',()=>{apply(D);updateSOS(D)});
+W.addEventListener('bd:experiencechange',()=>{apply(D);updateSOS(D)});
+W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 })();
 </script>
 </head>
@@ -538,7 +616,7 @@ W.addEventListener('bd:regionchange',()=>{apply(D);updateSOS(D)});
 <header class="top"><div class="top-in"><a class="brand" href="humanitarian.html"><span class="logo">BDK</span><span><h1>মানবিক আবেদন করুন</h1><small>দ্রুত, নির্ভুল ও লোকেশনভিত্তিক তথ্য দিন</small></span></a><div class="top-actions"><a class="round" href="humanitarian.html" aria-label="মানবিক সহায়তা"><svg class="icon"><use href="#i-list"/></svg></a><a class="round" href="index.html" aria-label="হোম"><svg class="icon"><use href="#i-home"/></svg></a><button class="round" id="themeBtn" aria-label="থিম"><svg class="icon"><use href="#i-theme"/></svg></button></div></div></header>
 <main class="wrap">
 <section class="hero"><div class="hero-top"><div class="hero-ico"><svg class="icon"><use href="#i-heart"/></svg></div><div><h2>একটি সঠিক তথ্য কারও কাছে কয়েক মিনিট আগে পৌঁছানো মানেই বড় সহায়তা</h2><p>আবেদনটি প্রকাশ হলে একই জেলার মানবিক বার্তা গ্রহণকারী সদস্যদের Messenger তালিকায় সতর্কতা যাবে। কাছের মানুষ আগে দেখতে পাবে। ব্যক্তিগত নম্বরের বদলে হাসপাতাল/কর্তৃপক্ষের নম্বর ব্যবহার করুন।</p></div></div><div class="steps"><div class="step on">১ · জরুরিতা</div><div class="step on">২ · লোকেশন</div><div class="step on">৩ · যাচাইযোগ্য তথ্য</div><div class="step on">৪ · প্রকাশ</div></div></section>
-<div id="sosMisusePolicy"></div><div id="bdSOSRequestPanel" class="bd-sos-host"></div>
+<div id="sosMisusePolicy"></div><div class="bd-v153-rescue-note">SOS routing location: <b data-bd-rescue-label>Emergency / Rescue Location</b>. এটি Home profile country পরিবর্তন করে না।</div><div id="bdSOSRequestPanel" class="bd-sos-host"></div>
 <div class="layout"><form class="card form" id="requestForm">
 <section class="section"><div class="section-title"><span class="num">01</span><div><h3>আবেদনের ধরন ও জরুরিতা</h3><small>কিসের সহায়তা প্রয়োজন, কতটা জরুরি</small></div></div><div class="grid2"><div class="field"><label>আবেদনের ধরন <span class="reqmark">*</span></label><select id="category" required><option value="blood">রক্তের আবেদন</option><option value="medical">চিকিৎসা সহায়তা</option><option value="missing">নিখোঁজ ব্যক্তি</option><option value="urgent">জরুরি সহায়তা</option><option value="sos">BongDang sos</option><option value="shelter">আশ্রয়</option><option value="food">খাদ্য সহায়তা</option><option value="other">অন্যান্য</option></select></div><div class="field"><label>জরুরিতা <span class="reqmark">*</span></label><select id="urgency" required><option value="critical">অতিজরুরি</option><option value="urgent" selected>জরুরি</option><option value="normal">সাধারণ</option></select></div><div class="field full"><label>শিরোনাম <span class="reqmark">*</span></label><input id="title" maxlength="180" required placeholder="যেমন: Cumilla Medical College-এ O+ রক্ত জরুরি প্রয়োজন"></div><div class="field full"><label>বিস্তারিত <span class="reqmark">*</span></label><textarea id="description" maxlength="4000" required placeholder="প্রয়োজনটি সংক্ষেপে ও যাচাইযোগ্যভাবে লিখুন। রোগীর ব্যক্তিগত/সংবেদনশীল তথ্য অপ্রয়োজনে দেবেন না।"></textarea></div></div></section>
 <section class="section blood-extra show" id="bloodSection"><div class="section-title"><span class="num">02</span><div><h3>রক্ত ও হাসপাতালের তথ্য</h3><small>রক্তের আবেদন হলে এই অংশ বাধ্যতামূলক</small></div></div><div class="grid2"><div class="field"><label>ব্লাড গ্রুপ <span class="reqmark">*</span></label><select id="bloodGroup"><option value="">বেছে নিন</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select></div><div class="field"><label>হাসপাতাল / ক্লিনিক</label><input id="hospitalName" maxlength="180" placeholder="হাসপাতালের নাম"></div><div class="field"><label>ওয়ার্ড / ইউনিট</label><input id="ward" maxlength="80" placeholder="যেমন: Cardiac Ward"></div><div class="field"><label>বেড নম্বর</label><input id="bed" maxlength="50" placeholder="যেমন: Bed 12"></div></div></section>

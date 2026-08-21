@@ -188,16 +188,51 @@ html[data-theme="aurora"] .bd130-tool{color:#fff!important}
 .bd27-country-flag{cursor:pointer!important}
 .bd27-country-flag:active{transform:scale(.97)!important}
 </style>
-<script id="bd-regional-runtime-v153-inline">
+
+<style id="bd-v155-dynamic-media-only">
+/* Canonical profile-media lock:
+   cover/avatar must come from that profile's live data only. */
+.cover-art{
+  background-image:none!important;
+  background:
+    linear-gradient(135deg,rgba(236,241,249,.78),rgba(248,246,251,.80))!important;
+}
+.cover-art img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  display:block!important;
+}
+.avatar-main{
+  background:linear-gradient(145deg,#eef3f8,#fafbfd)!important;
+}
+.avatar-main img{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  display:block!important;
+}
+html[data-theme="dark"] .cover-art{
+  background:linear-gradient(135deg,rgba(39,53,70,.88),rgba(25,35,49,.92))!important;
+}
+html[data-theme="dark"] .avatar-main{
+  background:linear-gradient(145deg,#263647,#172433)!important;
+}
+</style>
+<script id="bd-regional-runtime-v161-inline">
 (() => {
 'use strict';
-if (window.__BD_REGIONAL_RUNTIME_V153__) return;
-window.__BD_REGIONAL_RUNTIME_V153__ = 1;
+if (window.__BD_REGIONAL_RUNTIME_V161__) return;
+window.__BD_REGIONAL_RUNTIME_V161__ = 1;
 
 const W=window,D=document,H=D.documentElement;
 const HOME_STORE='bd-home-country-v1';
 const RESCUE_STORE='bd-rescue-location-v1';
-const MODE_STORE='bd-experience-mode-v1';
+const FEED_MODE_STORE='bd-feed-region-mode-v1';
+const UI_LANG_STORE='bd-ui-language-v2';
+const LEGACY_MODE_STORE='bd-experience-mode-v1';
 const LEGACY_OPERATIONAL_STORE='bd-operational-location-v1';
 const VOICE_DB='bongdang-sos-v1';
 const ME_CODES=new Set(['AE','SA','QA','KW','OM','BH','JO','LB','IQ','YE']);
@@ -372,29 +407,86 @@ function inferHome(){
   if(/\bhi\b/.test(langs))return normalizeRegion({countryCode:'IN'});
   return inferRescue();
 }
-let home=inferHome(),rescue=inferRescue(),mode=String(localStorage.getItem(MODE_STORE)||'home');
-if(!['home','local','local_en'].includes(mode))mode='home';
 
-function contentRegion(){return mode==='home'?home:rescue}
+const LANGS={
+ en:{name:'English',native:'English',dir:'ltr',letters:['A','B','C','D','E']},
+ bn:{name:'Bengali',native:'বাংলা',dir:'ltr',letters:['অ','আ','ক','খ','ম']},
+ ar:{name:'Arabic',native:'العربية',dir:'rtl',letters:['أ','ب','ت','ث','ج']},
+ hi:{name:'Hindi',native:'हिन्दी',dir:'ltr',letters:['अ','आ','क','ख','ग']},
+ ur:{name:'Urdu',native:'اردو',dir:'rtl',letters:['ا','ب','پ','ت','ج']},
+ id:{name:'Indonesian',native:'Bahasa Indonesia',dir:'ltr',letters:['A','B','C','D','E']},
+ fil:{name:'Filipino',native:'Filipino',dir:'ltr',letters:['A','B','C','D','E']},
+ ms:{name:'Malay',native:'Bahasa Melayu',dir:'ltr',letters:['A','B','C','D','E']},
+ fr:{name:'French',native:'Français',dir:'ltr',letters:['A','B','C','D','E']},
+ de:{name:'German',native:'Deutsch',dir:'ltr',letters:['A','B','C','D','E']},
+ es:{name:'Spanish',native:'Español',dir:'ltr',letters:['A','B','C','D','E']},
+ pt:{name:'Portuguese',native:'Português',dir:'ltr',letters:['A','B','C','D','E']},
+ it:{name:'Italian',native:'Italiano',dir:'ltr',letters:['A','B','C','D','E']},
+ nl:{name:'Dutch',native:'Nederlands',dir:'ltr',letters:['A','B','C','D','E']},
+ tr:{name:'Turkish',native:'Türkçe',dir:'ltr',letters:['A','B','C','D','E']},
+ ru:{name:'Russian',native:'Русский',dir:'ltr',letters:['А','Б','В','Г','Д']},
+ uk:{name:'Ukrainian',native:'Українська',dir:'ltr',letters:['А','Б','В','Г','Ґ']},
+ pl:{name:'Polish',native:'Polski',dir:'ltr',letters:['A','B','C','D','E']},
+ sv:{name:'Swedish',native:'Svenska',dir:'ltr',letters:['A','B','C','D','E']},
+ no:{name:'Norwegian',native:'Norsk',dir:'ltr',letters:['A','B','C','D','E']},
+ da:{name:'Danish',native:'Dansk',dir:'ltr',letters:['A','B','C','D','E']},
+ fi:{name:'Finnish',native:'Suomi',dir:'ltr',letters:['A','B','C','D','E']},
+ el:{name:'Greek',native:'Ελληνικά',dir:'ltr',letters:['Α','Β','Γ','Δ','Ε']},
+ he:{name:'Hebrew',native:'עברית',dir:'rtl',letters:['א','ב','ג','ד','ה']},
+ fa:{name:'Persian',native:'فارسی',dir:'rtl',letters:['ا','ب','پ','ت','ث']},
+ th:{name:'Thai',native:'ไทย',dir:'ltr',letters:['ก','ข','ค','ง','จ']},
+ vi:{name:'Vietnamese',native:'Tiếng Việt',dir:'ltr',letters:['A','B','C','D','E']},
+ ja:{name:'Japanese',native:'日本語',dir:'ltr',letters:['あ','い','う','え','お']},
+ ko:{name:'Korean',native:'한국어',dir:'ltr',letters:['가','나','다','라','마']},
+ zh:{name:'Chinese',native:'中文',dir:'ltr',letters:['一','二','三','四','五']},
+ ne:{name:'Nepali',native:'नेपाली',dir:'ltr',letters:['अ','आ','क','ख','ग']},
+ si:{name:'Sinhala',native:'සිංහල',dir:'ltr',letters:['අ','ආ','ක','ග','ච']},
+ ta:{name:'Tamil',native:'தமிழ்',dir:'ltr',letters:['அ','ஆ','க','ங','ச']},
+ te:{name:'Telugu',native:'తెలుగు',dir:'ltr',letters:['అ','ఆ','క','ఖ','గ']},
+ ml:{name:'Malayalam',native:'മലയാളം',dir:'ltr',letters:['അ','ആ','ക','ഖ','ഗ']},
+ kn:{name:'Kannada',native:'ಕನ್ನಡ',dir:'ltr',letters:['ಅ','ಆ','ಕ','ಖ','ಗ']},
+ gu:{name:'Gujarati',native:'ગુજરાતી',dir:'ltr',letters:['અ','આ','ક','ખ','ગ']},
+ pa:{name:'Punjabi',native:'ਪੰਜਾਬੀ',dir:'ltr',letters:['ਅ','ਆ','ਕ','ਖ','ਗ']},
+ mr:{name:'Marathi',native:'मराठी',dir:'ltr',letters:['अ','आ','क','ख','ग']},
+ sw:{name:'Swahili',native:'Kiswahili',dir:'ltr',letters:['A','B','C','D','E']},
+ af:{name:'Afrikaans',native:'Afrikaans',dir:'ltr',letters:['A','B','C','D','E']},
+ ro:{name:'Romanian',native:'Română',dir:'ltr',letters:['A','B','C','D','E']},
+ cs:{name:'Czech',native:'Čeština',dir:'ltr',letters:['A','B','C','D','E']},
+ hu:{name:'Hungarian',native:'Magyar',dir:'ltr',letters:['A','B','C','D','E']},
+ bg:{name:'Bulgarian',native:'Български',dir:'ltr',letters:['А','Б','В','Г','Д']},
+ sr:{name:'Serbian',native:'Српски',dir:'ltr',letters:['А','Б','В','Г','Д']},
+ hr:{name:'Croatian',native:'Hrvatski',dir:'ltr',letters:['A','B','C','D','E']},
+ sk:{name:'Slovak',native:'Slovenčina',dir:'ltr',letters:['A','B','C','D','E']},
+ sl:{name:'Slovenian',native:'Slovenščina',dir:'ltr',letters:['A','B','C','D','E']}
+};
+const LANG_OPTIONS=Object.entries(LANGS).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([code,x])=>`<option value="${code}">${x.native} · ${x.name}</option>`).join('');
+
+let home=inferHome(),rescue=inferRescue();
+let feedMode=String(localStorage.getItem(FEED_MODE_STORE)||'');
+if(!['home','local'].includes(feedMode)){
+  const legacy=String(localStorage.getItem(LEGACY_MODE_STORE)||'');
+  feedMode=(legacy==='local'||legacy==='local_en')?'local':'home';
+}
+let uiLang=String(localStorage.getItem(UI_LANG_STORE)||'en').toLowerCase();
+if(!LANGS[uiLang])uiLang='en';
+
+function feedRegion(){return feedMode==='local'?rescue:home}
+function langInfo(lang=uiLang){return LANGS[lang]||LANGS.en}
 function experience(){
-  const base=contentRegion();
-  if(mode==='local_en')return {...base,lang:'en',dir:'ltr',locale:base.countryCode?`en-${base.countryCode}`:'en',letters:['A','B','C','D','E'],domestic:false};
-  return {...base};
+  const base=feedRegion(),li=langInfo();
+  return {...base,lang:uiLang,dir:li.dir,locale:uiLang==='en'?(base.countryCode?`en-${base.countryCode}`:'en'):(base.locale||uiLang),letters:li.letters,domestic:uiLang==='bn'&&(base.key==='BD'||base.key==='IN_WB')};
 }
 let active=experience();
-
 function sameRegion(a,b){return !!a&&!!b&&String(a.countryCode||'')===String(b.countryCode||'')&&(a.key!=='IN_WB'||b.key==='IN_WB')&&(b.key!=='IN_WB'||a.key==='IN_WB')}
-function languageName(lang){
-  return ({bn:'বাংলা',ar:'العربية',hi:'हिन्दी',ur:'اردو',id:'Bahasa Indonesia',fil:'Filipino',en:'English'})[lang]||'English';
-}
-function translated(base,lang=active.lang){
+function languageName(lang){return (LANGS[lang]||LANGS.en).native}
+function translated(base,lang=uiLang){
   if(lang==='bn')return base;
   if(['en','ar','hi'].includes(lang)&&TEXT[base]?.[lang])return TEXT[base][lang];
   if(TEXT_EXTRA[base]?.[lang])return TEXT_EXTRA[base][lang];
   return TEXT[base]?.en||base;
 }
-function tr(base){return translated(base,active.lang)}
-function ph(base){if(active.lang==='bn')return base;return PLACEHOLDERS[base]?.[active.lang]||PLACEHOLDERS[base]?.en||base}
+function tr(base){return translated(base,uiLang)}
+function ph(base){if(uiLang==='bn')return base;return PLACEHOLDERS[base]?.[uiLang]||PLACEHOLDERS[base]?.en||base}
 function isUserContent(el){return !!el.closest?.('.bd-post,.post,.post-card,.bd-live-post,.req,.chat-message,.message-bubble,.comment,.bd24-comment-bubble,[data-post-id],[data-comment-id]')}
 function translateElement(el){
   if(!el||el.nodeType!==1||isUserContent(el))return;
@@ -417,69 +509,72 @@ function translateElement(el){
   if(a)el.setAttribute('aria-label',tr(a));
 }
 function translateTree(root=D){if(root.nodeType===1)translateElement(root);root.querySelectorAll?.('input,textarea,option,button,a,label,h1,h2,h3,strong,small,span,.bdc-prompt').forEach(translateElement)}
-function applyAlphabet(root=D){
-  const letters=active.letters||['A','B','C','D','E'];
-  root.querySelectorAll?.('.bdc-letters').forEach(row=>[...row.querySelectorAll('.bdc-letter')].slice(0,5).forEach((b,i)=>{b.textContent=letters[i]||'';b.dataset.regionLetter=letters[i]||'';b.lang=active.lang;b.dir=active.dir}));
-}
-function isDomesticBrand(){return mode==='home'&&active.lang==='bn'&&(home.key==='BD'||home.key==='IN_WB')}
+function applyAlphabet(root=D){const letters=langInfo().letters;root.querySelectorAll?.('.bdc-letters').forEach(row=>[...row.querySelectorAll('.bdc-letter')].slice(0,5).forEach((b,i)=>{b.textContent=letters[i]||'';b.dataset.regionLetter=letters[i]||'';b.lang=uiLang;b.dir=langInfo().dir}))}
+function isDomesticBrand(){return uiLang==='bn'&&(feedRegion().key==='BD'||feedRegion().key==='IN_WB')}
 function brand(root=D){
   const title=root.querySelector?.('.bd-brand-copy h1'),sub=root.querySelector?.('.bd-brand-copy p');
   if(title){
     if(isDomesticBrand()){title.innerHTML='<b>ভুবনডাঙ্গার</b> <em>কবিতা</em>';if(sub)sub.textContent='বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন'}
-    else{title.innerHTML='<b class="bd-bongdang">BongDang</b> <sup class="bd-sos-miniword">sos</sup>';if(sub)sub.textContent=active.lang==='ar'?'مجتمع إنساني وإبداعي عالمي':active.lang==='hi'?'एक वैश्विक रचनात्मक और मानवीय मंच':active.lang==='ur'?'ایک عالمی تخلیقی اور انسانی پلیٹ فارم':active.lang==='id'?'Komunitas kreatif & kemanusiaan global':active.lang==='fil'?'Isang pandaigdigang malikhaing at makataong komunidad':'A global creative & humanitarian community'}
+    else{title.innerHTML='<b class="bd-bongdang">BongDang</b> <sup class="bd-sos-miniword">sos</sup>';if(sub)sub.textContent=uiLang==='ar'?'مجتمع إنساني وإبداعي عالمي':uiLang==='hi'?'एक वैश्विक रचनात्मक और मानवीय मंच':uiLang==='ur'?'ایک عالمی تخلیقی اور انسانی پلیٹ فارم':uiLang==='id'?'Komunitas kreatif & kemanusiaan global':uiLang==='fil'?'Isang pandaigdigang malikhaing at makataong komunidad':'A global creative & humanitarian community'}
   }
-  const generic=root.querySelector?.('.brand h1');if(generic){generic.innerHTML=isDomesticBrand()?'ভুবনডাঙ্গার কবিতা':'BongDang <sup class="bd-sos-miniword">sos</sup>'}
+  const generic=root.querySelector?.('.brand h1');if(generic)generic.innerHTML=isDomesticBrand()?'ভুবনডাঙ্গার কবিতা':'BongDang <sup class="bd-sos-miniword">sos</sup>';
   if(root===D)D.title=isDomesticBrand()?'ভুবনডাঙ্গার কবিতা':'BongDang sos';
 }
 function historyCard(root=D){
   const a=root.querySelector?.('.bd-history');if(!a)return;
-  const region=contentRegion(),b=a.querySelector('b'),sm=a.querySelector('small'),flag=a.querySelector('.bd-flag');
-  if(mode==='home'&&(region.key==='BD'||region.key==='IN_WB')){
-    const wb=region.key==='IN_WB';if(b)b.textContent=wb?'পশ্চিমবঙ্গ':'বাংলাদেশ';if(sm)sm.textContent=wb?'ইতিহাস · বাংলা সংস্কৃতি':'ইতিহাস · ১৭৫৭—আজ';a.href=wb?'west-bengal.html':'bangladesh.html';flag?.classList.remove('bd-flag-emoji');if(flag)flag.textContent='';
+  const region=feedRegion(),b=a.querySelector('b'),sm=a.querySelector('small'),flag=a.querySelector('.bd-flag');
+  if(feedMode==='home'&&(region.key==='BD'||region.key==='IN_WB')){
+    const wb=region.key==='IN_WB';if(b)b.textContent=uiLang==='bn'?(wb?'পশ্চিমবঙ্গ':'বাংলাদেশ'):(wb?'West Bengal':'Bangladesh');if(sm)sm.textContent=uiLang==='bn'?(wb?'ইতিহাস · বাংলা সংস্কৃতি':'ইতিহাস · ১৭৫৭—আজ'):'Home literature & history';a.href=wb?'west-bengal.html':'bangladesh.html';flag?.classList.remove('bd-flag-emoji');if(flag)flag.textContent='';
   }else{
-    if(b)b.textContent=region.label||region.countryName||'BongDang';if(sm)sm.textContent=mode==='home'?'Home feed':mode==='local_en'?'Local feed · English':'Local feed · '+languageName(region.lang);
+    if(b)b.textContent=region.label||region.countryName||'BongDang';if(sm)sm.textContent=feedMode==='local'?'Local feed':'Home feed';
     a.href='#';if(flag){flag.classList.add('bd-flag-emoji');flag.textContent=flagEmoji(region.countryCode)||'🌐'}
   }
 }
 function flagEmoji(code){code=String(code||'').toUpperCase();if(!/^[A-Z]{2}$/.test(code))return'🌐';return String.fromCodePoint(...[...code].map(c=>127397+c.charCodeAt()))}
 function dateHTML(){
-  const now=new Date(),region=contentRegion();
+  const now=new Date(),region=feedRegion();
   if(isDomesticBrand()){
     const tz=home.key==='IN_WB'?'Asia/Kolkata':'Asia/Dhaka',loc=home.key==='IN_WB'?'bn-IN':'bn-BD';
     const greg=new Intl.DateTimeFormat(loc,{day:'numeric',month:'long',year:'numeric',timeZone:tz}).format(now).replace(/,/g,''),wd=new Intl.DateTimeFormat(loc,{weekday:'long',timeZone:tz}).format(now);
     let hijri='';try{hijri=new Intl.DateTimeFormat('bn-BD-u-ca-islamic-umalqura',{day:'numeric',month:'long',year:'numeric',timeZone:tz}).format(now).replace(/,/g,'')+' হিজরি'}catch(_){}
     let bangla='';try{bangla=W.BD_BANGLA_DATE?.(now)||''}catch(_){}
     const h=Number(new Intl.DateTimeFormat('en-GB',{hour:'2-digit',hour12:false,timeZone:tz}).format(now)),greet=h<5?'শুভ রাত্রি—শব্দের সঙ্গে থাকুন':h<12?'শুভ সকাল—সবার দিন সুন্দর হোক':h<17?'শুভ দুপুর—পড়া ও লেখার সময়':h<20?'শুভ সন্ধ্যা—আপন ভুবনে স্বাগতম':'শুভ রাত্রি—শব্দের সঙ্গে থাকুন';
-    return [greg+' খ্রিস্টাব্দ',greet,wd,bangla,hijri].filter(Boolean).map((x,i)=>`${i?'<i>✦</i>':''}<span class="${i===1?'greet':''}">${x}</span>`).join('');
+    return [greg,greet,wd,bangla,hijri].filter(Boolean).map((x,i)=>`${i?'<i>✦</i>':''}<span class="${i===1?'greet':''}">${x}</span>`).join('');
   }
-  const locale=active.locale||'en',date=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now),time=new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(now),place=[region.city,region.region,region.countryName].filter(Boolean).join(' · ')||region.label||'International';
+  const locale=uiLang==='en'?(region.countryCode?`en-${region.countryCode}`:'en'):(region.locale||uiLang),date=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now),time=new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(now),place=[region.city,region.region,region.countryName].filter(Boolean).join(' · ')||region.label||'International';
   return `<span class="greg">${date}</span><i>✦</i><span class="greet">${time}</span><i>✦</i><span>${place}</span>`;
 }
 function renderDateTicker(){const groups=[...D.querySelectorAll('.bd-date-group')];if(!groups.length)return false;const seq=dateHTML(),long=seq+'<i>✦</i>'+seq+'<i>✦</i>'+seq+'<i>✦</i>';groups.forEach(g=>g.innerHTML=long);return true}
 
 function injectExperienceStyle(){
-  if(D.getElementById('bd-experience-style-v153'))return;
-  const s=D.createElement('style');s.id='bd-experience-style-v153';s.textContent=`
-  .bd-experience-card .bd-mode-grid{display:grid;gap:6px}.bd-mode-btn{width:100%;min-height:46px;padding:6px 8px;border:1px solid rgba(83,109,99,.12);border-radius:13px;background:rgba(255,255,255,.68);display:grid;grid-template-columns:34px minmax(0,1fr) 18px;align-items:center;gap:8px;text-align:left;color:var(--bd-text,#173153)}.bd-mode-btn.active{border-color:rgba(13,130,92,.34);background:linear-gradient(90deg,rgba(13,130,92,.10),rgba(255,255,255,.78));box-shadow:inset 3px 0 #14805f}.bd-mode-flag{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#fff;font-size:18px}.bd-mode-btn b{display:block;font-size:9.4px}.bd-mode-btn small{display:block;margin-top:1px;color:var(--bd-muted,#8b99ad);font-size:6.6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bd-mode-btn i{font-style:normal;color:#16805f}.bd-mode-rescue{margin-top:8px;padding-top:8px;border-top:1px solid rgba(86,104,147,.10);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}.bd-mode-rescue b{display:block;font-size:8px}.bd-mode-rescue small{display:block;color:var(--bd-muted,#8b99ad);font-size:6.3px}.bd-mode-rescue button{min-height:34px;padding:0 9px;border-radius:10px;border:1px solid rgba(198,66,80,.18);background:#fff;color:#a23947;font-size:7px;font-weight:900}.bd-region-state-chip{display:inline-flex;align-items:center;gap:4px;margin-left:5px;padding:2px 6px;border-radius:99px;background:rgba(20,128,95,.08);color:#147759;font-size:7px;font-weight:900}
-  html[data-theme="dark"] .bd-mode-btn,html[data-theme="dark"] .bd-mode-rescue button{background:#14263e;color:#eef5ff;border-color:rgba(170,191,227,.14)}html[data-theme="dark"] .bd-mode-btn.active{background:linear-gradient(90deg,rgba(33,159,112,.15),rgba(20,38,62,.9))}
+  if(D.getElementById('bd-experience-style-v161'))return;
+  const s=D.createElement('style');s.id='bd-experience-style-v161';s.textContent=`
+  .bd-experience-card{--bd-mode-accent:#147a59}.bd-experience-card .bd-mode-section{display:grid;gap:6px}.bd-mode-caption{display:flex;justify-content:space-between;align-items:end;gap:8px}.bd-mode-caption b{font-size:8px}.bd-mode-caption small{font-size:6.2px;color:var(--bd-muted,#8494a7)}.bd-feed-toggle{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bd-feed-mode{min-height:34px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.76);color:var(--bd-text,#173153);font-size:7.6px;font-weight:900}.bd-feed-mode.active{background:#10251d;color:#fff;border-color:#10251d}.bd-lang-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.bd-lang-btn{min-width:0;min-height:40px;padding:5px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.76);color:var(--bd-text,#173153);font-size:6.6px;font-weight:900;line-height:1.25}.bd-lang-btn.active{border-color:rgba(20,122,89,.35);box-shadow:inset 0 0 0 1px rgba(20,122,89,.18);background:rgba(232,247,240,.94);color:#0d704f}.bd-language-select{width:100%;min-height:38px;margin-top:5px;padding:0 9px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.82);color:var(--bd-text,#173153);font-size:7px}.bd-mode-rescue{margin-top:8px;padding-top:8px;border-top:1px solid rgba(86,104,147,.10);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}.bd-mode-rescue b{display:block;font-size:7.5px}.bd-mode-rescue small{display:block;color:var(--bd-muted,#8b99ad);font-size:6.1px}.bd-mode-rescue button{min-height:32px;padding:0 8px;border-radius:9px;border:1px solid rgba(198,66,80,.18);background:#fff;color:#a23947;font-size:6.8px;font-weight:900}.bd-region-state-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:99px;background:rgba(20,128,95,.08);color:#147759;font-size:6.4px;font-weight:900}
+  html[data-theme="dark"] .bd-feed-mode,html[data-theme="dark"] .bd-lang-btn,html[data-theme="dark"] .bd-language-select,html[data-theme="dark"] .bd-mode-rescue button{background:#14263e;color:#eef5ff;border-color:rgba(170,191,227,.14)}html[data-theme="dark"] .bd-feed-mode.active{background:#0d5e46}html[data-theme="dark"] .bd-lang-btn.active{background:#183b31;color:#c9f4e2}
   `;
   D.head.appendChild(s);
 }
-function modeLabel(m){
-  if(m==='home')return {title:languageName(home.lang),sub:`Home · ${home.label||home.countryName}`,flag:flagEmoji(home.countryCode)};
-  if(m==='local')return {title:`Local · ${languageName(rescue.lang)}`,sub:`${rescue.label||rescue.countryName} feed`,flag:flagEmoji(rescue.countryCode)};
-  return {title:'Local · English',sub:`${rescue.label||rescue.countryName} feed`,flag:flagEmoji(rescue.countryCode)};
+function sideLabels(){
+  if(uiLang==='bn')return{head:'ভাষা ও নিউজফিড',feed:'নিউজফিড দেশ',home:'আমার দেশ',local:'লোকাল',lang:'ভাষা',en:'English (ডিফল্ট)',mine:'আমার ভাষা',loc:'লোকাল ভাষা',all:'সব ভাষা',rescue:'Emergency / Rescue Location',change:'পরিবর্তন'};
+  return{head:'Language & News Feed',feed:'Feed region',home:'Home',local:'Local',lang:'Interface language',en:'English · Default',mine:'My Language',loc:'Local Language',all:'All languages',rescue:'Emergency / Rescue Location',change:'Change'};
 }
 function experienceCardInnerHTML(){
-  const same=sameRegion(home,rescue),opts=['home'];
-  if(!same||home.lang!==rescue.lang)opts.push('local');
-  if(!(same&&home.lang==='en'))opts.push('local_en');
-  const buttons=opts.map(m=>{const x=modeLabel(m);return `<button type="button" class="bd-mode-btn ${mode===m?'active':''}" data-bd-experience-mode="${m}"><span class="bd-mode-flag">${x.flag}</span><span><b>${x.title}</b><small>${x.sub}</small></span><i>${mode===m?'✓':'›'}</i></button>`}).join('');
-  const rr=[rescue.city,rescue.region,rescue.countryName].filter(Boolean).join(', ')||rescue.label||'Not set';
-  return `<div class="bd-side-head"><div><small>Feed + language</small><h3>আপনার ভিউ</h3></div><span class="bd-region-state-chip">${mode==='home'?'HOME':mode==='local'?'LOCAL':'EN'}</span></div><div class="bd-mode-grid">${buttons}</div><div class="bd-mode-rescue"><span><b>Emergency / Rescue Location</b><small data-bd-rescue-label>${rr}</small></span><button type="button" data-bd-open-rescue>Change</button></div>`;
+  const L=sideLabels(),homeLang=home.lang||'en',localLang=rescue.lang||'en',rr=[rescue.city,rescue.region,rescue.countryName].filter(Boolean).join(', ')||rescue.label||'Not set';
+  return `<div class="bd-side-head"><div><small>${L.feed}</small><h3>${L.head}</h3></div><span class="bd-region-state-chip">${feedMode==='home'?'HOME':'LOCAL'} · ${uiLang.toUpperCase()}</span></div>
+  <div class="bd-mode-section">
+    <div class="bd-feed-toggle"><button type="button" class="bd-feed-mode ${feedMode==='home'?'active':''}" data-bd-feed-mode="home">${flagEmoji(home.countryCode)} ${L.home}</button><button type="button" class="bd-feed-mode ${feedMode==='local'?'active':''}" data-bd-feed-mode="local">${flagEmoji(rescue.countryCode)} ${L.local}</button></div>
+    <div class="bd-mode-caption"><b>${L.lang}</b><small>${L.en}</small></div>
+    <div class="bd-lang-quick">
+      <button type="button" class="bd-lang-btn ${uiLang==='en'?'active':''}" data-bd-ui-lang="en">English<br><small>Default</small></button>
+      <button type="button" class="bd-lang-btn ${uiLang===homeLang?'active':''}" data-bd-ui-lang="${homeLang}">${languageName(homeLang)}<br><small>${L.mine}</small></button>
+      <button type="button" class="bd-lang-btn ${uiLang===localLang?'active':''}" data-bd-ui-lang="${localLang}">${languageName(localLang)}<br><small>${L.loc}</small></button>
+    </div>
+    <select class="bd-language-select" data-bd-language-all aria-label="${L.all}"><option value="">${L.all}…</option>${LANG_OPTIONS}</select>
+  </div>
+  <div class="bd-mode-rescue"><span><b>${L.rescue}</b><small data-bd-rescue-label>${rr}</small></span><button type="button" data-bd-open-rescue>${L.change}</button></div>`;
 }
 function experienceCardHTML(){return `<section class="bd-side-card bd-experience-card">${experienceCardInnerHTML()}</section>`}
-function syncExperienceCards(){D.querySelectorAll('.bd-experience-card').forEach(c=>c.innerHTML=experienceCardInnerHTML());syncRescueLabels()}
+function syncExperienceCards(){D.querySelectorAll('.bd-experience-card').forEach(c=>c.innerHTML=experienceCardInnerHTML());D.querySelectorAll('[data-bd-language-all]').forEach(s=>s.value=uiLang);syncRescueLabels()}
 function rescueLabel(){return [rescue.city,rescue.region,rescue.countryName].filter(Boolean).join(', ')||rescue.label||'Not set'}
 function syncRescueLabels(){D.querySelectorAll('[data-bd-rescue-label]').forEach(x=>x.textContent=rescueLabel())}
 
@@ -490,13 +585,13 @@ const REGION_OPTIONS=`<option value="BD">Bangladesh</option><option value="IN_WB
 function presetToRegion(key,fields={}){if(key==='IN_WB')return normalizeRegion({...PRESETS.IN_WB,...fields,preset:key,key});if(key==='IN_HI')return normalizeRegion({...PRESETS.IN_HI,...fields,preset:key,key});if(PRESETS[key])return normalizeRegion({...PRESETS[key],...fields,preset:key,key});return normalizeRegion({...fields,preset:key,key})}
 function openHomeModal(){
   const cur=home,m=modal('home');
-  m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>Home Country / Profile Region</h3><button class="bd-region-x" data-bd-close>×</button></div><p class="bd-region-note">এটি আপনার স্থায়ী profile identity ও Home feed নির্ধারণ করবে। SOS/Rescue location আলাদা থাকবে।</p><div class="bd-region-grid"><div class="bd-region-field full"><label>Home preset</label><select data-home-preset>${REGION_OPTIONS}</select></div><div class="bd-region-field"><label>Country code</label><input data-home-code maxlength="2" value="${cur.countryCode||''}"></div><div class="bd-region-field"><label>Country</label><input data-home-country value="${cur.countryName||''}"></div><div class="bd-region-field"><label>State / Region</label><input data-home-region value="${cur.region||''}"></div><div class="bd-region-field"><label>Home city / district</label><input data-home-city value="${cur.city||''}"></div></div><div class="bd-region-actions"><button type="button" data-bd-close>Cancel</button><button type="button" class="save" data-home-save>Save Home</button></div></section>`;
+  m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>Home Country / Profile Region</h3><button class="bd-region-x" data-bd-close>×</button></div><p class="bd-region-note">This controls your permanent profile identity and Home feed. SOS/Rescue location remains separate.</p><div class="bd-region-grid"><div class="bd-region-field full"><label>Home preset</label><select data-home-preset>${REGION_OPTIONS}</select></div><div class="bd-region-field"><label>Country code</label><input data-home-code maxlength="2" value="${cur.countryCode||''}"></div><div class="bd-region-field"><label>Country</label><input data-home-country value="${cur.countryName||''}"></div><div class="bd-region-field"><label>State / Region</label><input data-home-region value="${cur.region||''}"></div><div class="bd-region-field"><label>Home city / district</label><input data-home-city value="${cur.city||''}"></div></div><div class="bd-region-actions"><button type="button" data-bd-close>Cancel</button><button type="button" class="save" data-home-save>Save Home</button></div></section>`;
   const p=m.querySelector('[data-home-preset]');p.value=cur.key==='IN_WB'?'IN_WB':cur.key==='IN_HI'?'IN_HI':(PRESETS[cur.countryCode]?cur.countryCode:'INTL');m.classList.add('open');m.querySelectorAll('[data-bd-close]').forEach(x=>x.onclick=()=>m.classList.remove('open'));m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
   m.querySelector('[data-home-save]').onclick=async()=>{const key=p.value,v=presetToRegion(key,{countryCode:m.querySelector('[data-home-code]').value.trim().toUpperCase(),countryName:m.querySelector('[data-home-country]').value.trim(),region:m.querySelector('[data-home-region]').value.trim(),city:m.querySelector('[data-home-city]').value.trim()});setHome(v);m.classList.remove('open');await persistHome(v)}
 }
 function openRescueModal(){
   const cur=rescue,m=modal('rescue');
-  m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>Emergency / Rescue Location</h3><button class="bd-region-x" data-bd-close>×</button></div><p class="bd-region-note">এই লোকেশন শুধু SOS, জরুরি সহায়তা, কাছের rescue routing এবং Local feed mode-এ ব্যবহার হবে। Home profile country বদলাবে না।</p><div class="bd-region-grid"><div class="bd-region-field full"><label>Current country preset</label><select data-rescue-preset>${REGION_OPTIONS}</select></div><div class="bd-region-field"><label>Country code</label><input data-rescue-code maxlength="2" value="${cur.countryCode||''}"></div><div class="bd-region-field"><label>Country</label><input data-rescue-country value="${cur.countryName||''}"></div><div class="bd-region-field"><label>State / Region</label><input data-rescue-region value="${cur.region||''}"></div><div class="bd-region-field"><label>City</label><input data-rescue-city value="${cur.city||''}"></div><div class="bd-region-field full"><label>Hardware GPS</label><input data-rescue-gps readonly value="${Number.isFinite(cur.lat)?cur.lat.toFixed(5)+', '+cur.lng.toFixed(5):'Not captured'}"></div></div><div class="bd-region-actions"><button type="button" data-rescue-gps-btn>Use GPS</button><button type="button" data-bd-close>Cancel</button><button type="button" class="save" data-rescue-save>Save Rescue Location</button></div></section>`;
+  m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>Emergency / Rescue Location</h3><button class="bd-region-x" data-bd-close>×</button></div><p class="bd-region-note">Used for SOS, emergency help, nearby rescue routing and Local feed only. It never replaces your Home country.</p><div class="bd-region-grid"><div class="bd-region-field full"><label>Current country preset</label><select data-rescue-preset>${REGION_OPTIONS}</select></div><div class="bd-region-field"><label>Country code</label><input data-rescue-code maxlength="2" value="${cur.countryCode||''}"></div><div class="bd-region-field"><label>Country</label><input data-rescue-country value="${cur.countryName||''}"></div><div class="bd-region-field"><label>State / Region</label><input data-rescue-region value="${cur.region||''}"></div><div class="bd-region-field"><label>City</label><input data-rescue-city value="${cur.city||''}"></div><div class="bd-region-field full"><label>Hardware GPS</label><input data-rescue-gps readonly value="${Number.isFinite(cur.lat)?cur.lat.toFixed(5)+', '+cur.lng.toFixed(5):'Not captured'}"></div></div><div class="bd-region-actions"><button type="button" data-rescue-gps-btn>Use GPS</button><button type="button" data-bd-close>Cancel</button><button type="button" class="save" data-rescue-save>Save Rescue Location</button></div></section>`;
   const p=m.querySelector('[data-rescue-preset]');p.value=cur.key==='IN_WB'?'IN_WB':cur.key==='IN_HI'?'IN_HI':(PRESETS[cur.countryCode]?cur.countryCode:'INTL');m.classList.add('open');m.querySelectorAll('[data-bd-close]').forEach(x=>x.onclick=()=>m.classList.remove('open'));m.onclick=e=>{if(e.target===m)m.classList.remove('open')};
   m.querySelector('[data-rescue-gps-btn]').onclick=async()=>{try{const g=await gps();m.querySelector('[data-rescue-gps]').value=`${g.lat.toFixed(5)}, ${g.lng.toFixed(5)}`;m.dataset.lat=g.lat;m.dataset.lng=g.lng;m.dataset.acc=g.accuracy||''}catch(e){status('Location permission unavailable',m)}};
   m.querySelector('[data-rescue-save]').onclick=async()=>{const key=p.value,v=presetToRegion(key,{countryCode:m.querySelector('[data-rescue-code]').value.trim().toUpperCase(),countryName:m.querySelector('[data-rescue-country]').value.trim(),region:m.querySelector('[data-rescue-region]').value.trim(),city:m.querySelector('[data-rescue-city]').value.trim()});if(m.dataset.lat){v.lat=+m.dataset.lat;v.lng=+m.dataset.lng;v.accuracy=+m.dataset.acc||null}setRescue(v);m.classList.remove('open');await persistRescue(v)}
@@ -508,11 +603,12 @@ function attachFlag(flag){
 }
 function attachFlags(root=D){root.querySelectorAll?.('#bd27CountryFlag,.bd27-country-flag').forEach(attachFlag)}
 function getClient(){return W.BD_SUPABASE||W.supabaseClient||W.bhubondangaSupabase||W.__BD_SUPABASE_CLIENT__||((W.supabase&&W.supabase.auth)?W.supabase:null)}
-function setMode(v,{persist=true}={}){v=['home','local','local_en'].includes(v)?v:'home';mode=v;try{localStorage.setItem(MODE_STORE,v)}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistMode(v)}
+function setFeedMode(v,{persist=true}={}){v=v==='local'?'local':'home';feedMode=v;try{localStorage.setItem(FEED_MODE_STORE,v)}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistPrefs()}
+function setUiLanguage(v,{persist=true}={}){v=String(v||'en').toLowerCase();uiLang=LANGS[v]?v:'en';try{localStorage.setItem(UI_LANG_STORE,uiLang)}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:languagechange',{detail:{language:uiLang}}));W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistPrefs()}
 function setHome(v,{persist=false}={}){home=normalizeRegion(v);writeStore(HOME_STORE,home);active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:homechange',{detail:{...home}}));W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistHome(home)}
-function setRescue(v,{persist=false}={}){rescue=normalizeRegion(v);writeStore(RESCUE_STORE,rescue);writeStore(LEGACY_OPERATIONAL_STORE,rescue);if(Number.isFinite(rescue.lat)&&Number.isFinite(rescue.lng))writeStore('bd-humanitarian-location',{lat:rescue.lat,lng:rescue.lng,accuracy:rescue.accuracy||0,countryCode:rescue.countryCode,countryName:rescue.countryName,region:rescue.region,city:rescue.city,saved_at:new Date().toISOString()});active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:rescuechange',{detail:{...rescue}}));if(mode!=='home')W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistRescue(rescue)}
-async function persistMode(v){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(u)await c.auth.updateUser({data:{...(u.user_metadata||{}),bd_experience_mode:v}})}catch(_){}}
-async function persistHome(v){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(!u)return;await c.auth.updateUser({data:{...(u.user_metadata||{}),bd_home_country:v}});for(const row of [{home_country_code:v.countryCode,home_country_name:v.countryName,home_region:v.region||null,home_city:v.city||null},{country_code:v.countryCode,country:v.countryName,region:v.region||null,city:v.city||null}]){try{const r=await c.from('profiles').update(row).eq('id',u.id);if(!r.error)break}catch(_){} }}catch(_){}}
+function setRescue(v,{persist=false}={}){rescue=normalizeRegion(v);writeStore(RESCUE_STORE,rescue);writeStore(LEGACY_OPERATIONAL_STORE,rescue);if(Number.isFinite(rescue.lat)&&Number.isFinite(rescue.lng))writeStore('bd-humanitarian-location',{lat:rescue.lat,lng:rescue.lng,accuracy:rescue.accuracy||0,countryCode:rescue.countryCode,countryName:rescue.countryName,region:rescue.region,city:rescue.city,saved_at:new Date().toISOString()});active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:rescuechange',{detail:{...rescue}}));if(feedMode==='local')W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistRescue(rescue)}
+async function persistPrefs(){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(u)await c.auth.updateUser({data:{...(u.user_metadata||{}),preferred_language:uiLang,bd_ui_language:uiLang,bd_feed_region_mode:feedMode}})}catch(_){}}
+async function persistHome(v){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(!u)return;await c.auth.updateUser({data:{...(u.user_metadata||{}),bd_home_country:v,home_country_code:v.countryCode,home_country_name:v.countryName,home_city:v.city||''}});for(const row of [{home_country_code:v.countryCode,home_country_name:v.countryName,home_region:v.region||null,home_city:v.city||null},{country_code:v.countryCode,country:v.countryName,region:v.region||null,city:v.city||null}]){try{const r=await c.from('profiles').update(row).eq('id',u.id);if(!r.error)break}catch(_){} }}catch(_){}}
 async function persistRescue(v){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(u)await c.auth.updateUser({data:{...(u.user_metadata||{}),bd_rescue_location:v,bd_operational_location:v}})}catch(_){}}
 function regionFromProfile(p={}){const md=p.metadata||{},code=p.home_country_code||p.country_code||p.countryCode||md.home_country_code||md.country_code||'',name=p.home_country_name||p.country||p.country_name||md.home_country_name||md.country_name||'',region=p.home_region||p.region||p.state||p.district||md.home_region||md.region||'',city=p.home_city||p.city||md.home_city||md.city||'';return code||name?normalizeRegion({countryCode:code,countryName:name,region,city}):null}
 async function hydrateAccountState(){
@@ -526,18 +622,18 @@ async function hydrateAccountState(){
         if(!hv)try{const r=await c.from('profiles').select('*').eq('id',u.id).maybeSingle();hv=regionFromProfile(r.data||{})}catch(_){}
         if(hv)setHome(hv,{persist:false})
       }
-      if(!localStorage.getItem(RESCUE_STORE)){
-        const rv=md.bd_rescue_location||md.bd_operational_location;if(rv)setRescue(rv,{persist:false})
-      }
-      if(!localStorage.getItem(MODE_STORE)&&['home','local','local_en'].includes(md.bd_experience_mode))setMode(md.bd_experience_mode,{persist:false});
+      if(!localStorage.getItem(RESCUE_STORE)){const rv=md.bd_rescue_location||md.bd_operational_location;if(rv)setRescue(rv,{persist:false})}
+      if(!localStorage.getItem(UI_LANG_STORE)){const pref=String(md.bd_ui_language||md.preferred_language||'en').toLowerCase();setUiLanguage(LANGS[pref]?pref:'en',{persist:false})}
+      if(!localStorage.getItem(FEED_MODE_STORE)){const fm=String(md.bd_feed_region_mode||'home');setFeedMode(fm==='local'?'local':'home',{persist:false})}
       return
     }catch(_){return}
   }
 }
-function getExperience(){return {mode,uiLanguage:active.lang,region:{...contentRegion()},home:{...home},rescue:{...rescue},branding:isDomesticBrand()?'bhubondanga':'bongdang'}}
-function apply(root=D){active=experience();H.lang=active.lang;H.dir=active.dir;H.dataset.bdRegion=contentRegion().key;H.dataset.bdExperience=mode;H.dataset.bdFeedCountry=contentRegion().countryCode||'';brand(root);historyCard(root);applyAlphabet(root);translateTree(root);attachFlags(root);renderDateTicker();if(root===D){syncExperienceCards();syncRescueLabels()}}
+function getExperience(){return {mode:feedMode,feedMode,uiLanguage:uiLang,region:{...feedRegion()},home:{...home},rescue:{...rescue},branding:isDomesticBrand()?'bhubondanga':'bongdang'}}
+function apply(root=D){active=experience();H.lang=uiLang;H.dir=langInfo().dir;H.dataset.bdRegion=feedRegion().key;H.dataset.bdFeedMode=feedMode;H.dataset.bdUiLanguage=uiLang;H.dataset.bdFeedCountry=feedRegion().countryCode||'';brand(root);historyCard(root);applyAlphabet(root);translateTree(root);attachFlags(root);renderDateTicker();if(root===D){syncExperienceCards();syncRescueLabels()}}
 function observe(){const mo=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){applyAlphabet(n);translateTree(n);attachFlags(n);brand(n);historyCard(n)}});mo.observe(D.documentElement,{subtree:true,childList:true})}
-D.addEventListener('click',e=>{const b=e.target.closest?.('[data-bd-experience-mode]');if(b){e.preventDefault();setMode(b.dataset.bdExperienceMode);return}if(e.target.closest?.('[data-bd-open-rescue]')){e.preventDefault();openRescueModal();return}if(e.target.closest?.('[data-bd-open-home]')){e.preventDefault();openHomeModal();return}},true);
+D.addEventListener('click',e=>{const f=e.target.closest?.('[data-bd-feed-mode]');if(f){e.preventDefault();setFeedMode(f.dataset.bdFeedMode);return}const l=e.target.closest?.('[data-bd-ui-lang]');if(l){e.preventDefault();setUiLanguage(l.dataset.bdUiLang);return}if(e.target.closest?.('[data-bd-open-rescue]')){e.preventDefault();openRescueModal();return}if(e.target.closest?.('[data-bd-open-home]')){e.preventDefault();openHomeModal();return}},true);
+D.addEventListener('change',e=>{const s=e.target.closest?.('[data-bd-language-all]');if(s&&s.value){setUiLanguage(s.value);s.value=uiLang}},true);
 
 /* ============================ SOS ============================ */
 function capability(){
@@ -681,22 +777,26 @@ function sosPanelHTML(){
 
 W.BDRegion={
   get current(){return {...active}},
-  get mode(){return mode},
+  get mode(){return feedMode},
+  get uiLanguage(){return uiLang},
   getExperience,
-  getFeedRegion:()=>({...contentRegion()}),
+  getFeedRegion:()=>({...feedRegion()}),
   getHomeCountry:()=>({...home}),
   getRescueLocation:()=>({...rescue}),
   getOperationalLocation:()=>({...rescue}),
-  setExperienceMode:setMode,
+  setFeedMode,
+  setUiLanguage,
+  setExperienceMode:(v)=>setFeedMode(v==='local'||v==='local_en'?'local':'home'),
   setHomeCountry:(v)=>setHome(v,{persist:true}),
   setRescueLocation:(v)=>setRescue(v,{persist:true}),
   setOperationalLocation:(v)=>setRescue(v,{persist:true}),
-  apply,t:tr,letters:()=>[...(active.letters||[])],renderDateTicker,
+  apply,t:tr,letters:()=>[...langInfo().letters],renderDateTicker,
   openHomeCountry:openHomeModal,
   openRescueLocation:openRescueModal,
   openOperationalLocation:openRescueModal,
   experienceCardHTML,
-  rescueLabel
+  rescueLabel,
+  languages:()=>JSON.parse(JSON.stringify(LANGS))
 };
 W.BongDangSOS={capability,gps,recordVoice30,quickSOS,panelHTML:sosPanelHTML,update:updateSOS};
 
@@ -706,39 +806,10 @@ W.addEventListener('bd:experiencechange',()=>{apply(D);updateSOS(D)});
 W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 })();
 </script>
-<style id="bd-v155-dynamic-media-only">
-/* Canonical profile-media lock:
-   cover/avatar must come from that profile's live data only. */
-.cover-art{
-  background-image:none!important;
-  background:
-    linear-gradient(135deg,rgba(236,241,249,.78),rgba(248,246,251,.80))!important;
-}
-.cover-art img{
-  width:100%!important;
-  height:100%!important;
-  object-fit:cover!important;
-  object-position:center!important;
-  display:block!important;
-}
-.avatar-main{
-  background:linear-gradient(145deg,#eef3f8,#fafbfd)!important;
-}
-.avatar-main img{
-  width:100%!important;
-  height:100%!important;
-  object-fit:cover!important;
-  object-position:center!important;
-  display:block!important;
-}
-html[data-theme="dark"] .cover-art{
-  background:linear-gradient(135deg,rgba(39,53,70,.88),rgba(25,35,49,.92))!important;
-}
-html[data-theme="dark"] .avatar-main{
-  background:linear-gradient(145deg,#263647,#172433)!important;
-}
-</style>
-</head>
+<style id="bd-v161-follow-state">
+.bd140-follow.is-following{background:linear-gradient(135deg,#13231c,#07100c)!important;color:#fff!important}
+.bd140-follow.is-following .bd140-plus{font-size:15px!important}
+</style></head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
 <div class="shell">
@@ -1042,7 +1113,7 @@ function renderActions(){
   }else{
   const secondaryLabel='Ask Me Anything',secondaryClass='bd140-ama',secondaryHref=`messages.html?user=${encodeURIComponent(targetId)}&ask=1`;
     h.innerHTML=`<div class="bd140-visitor-row">
-      <button class="bd140-follow" type="button" data-click="follow" aria-label="Follow"><span class="bd140-plus">+</span><span>Follow</span></button>
+      <button class="bd140-follow ${state.followed?'is-following':''}" type="button" data-click="follow" aria-label="${state.followed?'Following':(state.targetFollowsMe?'Follow Back':'Follow')}"><span class="bd140-plus">${state.followed?'✓':'+'}</span><span>${state.followed?'Following':(state.targetFollowsMe?'Follow Back':'Follow')}</span></button>
       <a class="bd140-secondary ${secondaryClass}" href="${secondaryHref}" aria-label="${secondaryLabel}">
         <span class="bd140-copy">${secondaryLabel}</span>
         <span class="bd140-send"><svg viewBox="0 0 24 24"><path d="m6 5 13 7-13 7 3-7-3-7Z"/><path d="M9 12h9"/></svg></span>
@@ -1074,18 +1145,34 @@ async function loadFollowState(){
   }catch(_){}
   renderActions()
 }
+function bdV161LatinNumber(v){const s=String(v??'').replace(/[০-৯]/g,d=>'০১২৩৪৫৬৭৮৯'.indexOf(d));const n=parseInt(s.replace(/[^\d-]/g,''),10);return Number.isFinite(n)?n:0}
+function bdV161SetFollowerCount(n){
+  n=Math.max(0,Number(n)||0);
+  const out=typeof bn==='function'?bn(n):String(n);
+  document.querySelectorAll('#followersCount,[data-v75-followers-count]').forEach(x=>x.textContent=out);
+}
+function bdV161FollowerCount(){const x=document.querySelector('[data-v75-followers-count]')||document.querySelector('#followersCount');return bdV161LatinNumber(x?.textContent||0)}
+function bdV161FollowCopy(key){
+  const lang=String(window.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||'en').toLowerCase();
+  const B={login:'Follow করতে লগইন করুন',on:'Follow করা হয়েছে',off:'Follow বাতিল করা হয়েছে',fail:'Follow আপডেট হয়নি'};
+  const E={login:'Log in to follow.',on:'Now following.',off:'Unfollowed.',fail:'Follow could not be updated.'};
+  return (lang==='bn'?B:E)[key]
+}
 async function toggleFollow(){
-  if(!state.me){toast('Follow করতে লগইন করুন');return}
-  if(state.owner)return;
+  if(!state.me){toast(bdV161FollowCopy('login'));return}
+  if(state.owner||!state.target?.id)return;
+  const me=String(state.me.id||''),other=String(state.target.id||'');if(!me||!other||me===other)return;
+  const previous=!!state.followed,previousCount=bdV161FollowerCount();
   try{
-    const me=state.me.id,other=state.target.id;
-    if(state.followed){
+    if(previous){
       const r=await sb.from('follows').delete().eq('follower_id',me).eq('following_id',other);if(r.error)throw r.error;
       state.followed=false;
+      bdV161SetFollowerCount(previousCount-1);
       try{await sb.from('friendships').delete().or('and(user_a.eq.'+me+',user_b.eq.'+other+'),and(user_a.eq.'+other+',user_b.eq.'+me+')')}catch(_){}
     }else{
       const r=await sb.from('follows').upsert({follower_id:me,following_id:other},{onConflict:'follower_id,following_id'});if(r.error)throw r.error;
       state.followed=true;
+      bdV161SetFollowerCount(previousCount+1);
       try{
         const rev=await sb.from('follows').select('follower_id').eq('follower_id',other).eq('following_id',me).maybeSingle();
         state.targetFollowsMe=!!rev.data;
@@ -1094,11 +1181,24 @@ async function toggleFollow(){
           await sb.from('friendships').upsert({user_a:a,user_b:b,status:'accepted',source:'mutual_follow'},{onConflict:'user_a,user_b'})
         }
       }catch(_){}
-      try{await window.BD_SIGNAL_CENTER?.sendNotification?.({recipientId:other,actorId:me,actorName:state.me.display_name||state.me.username||'একজন সদস্য',type:'follow',title:(state.me.display_name||state.me.username||'একজন সদস্য')+' আপনাকে Follow করেছেন',message:state.targetFollowsMe?'আপনারা এখন পরস্পরকে Follow করছেন':'নতুন Follow',url:'profile.html?user='+encodeURIComponent(me)})}catch(_){}
+      try{
+        const lang=String(window.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||'en').toLowerCase(),actor=state.me.display_name||state.me.username||'A member';
+        await window.BD_SIGNAL_CENTER?.sendNotification?.({
+          recipientId:other,actorId:me,actorName:actor,type:'follow',
+          title:lang==='bn'?actor+' আপনাকে Follow করেছেন':actor+' followed you',
+          message:lang==='bn'?(state.targetFollowsMe?'আপনারা এখন পরস্পরকে Follow করছেন':'নতুন Follow'):(state.targetFollowsMe?'You now follow each other.':'New follower'),
+          url:'profile.html?user='+encodeURIComponent(me)
+        })
+      }catch(_){}
     }
-    renderActions();await loadStats();await loadFriends();
-    toast(state.followed?'Follow করা হয়েছে':'Follow বাতিল করা হয়েছে')
-  }catch(e){toast(e.message||'Follow আপডেট হয়নি')}
+    renderActions();
+    window.dispatchEvent(new CustomEvent('bd:followchange',{detail:{targetId:other,followed:state.followed,delta:state.followed?1:-1}}));
+    toast(bdV161FollowCopy(state.followed?'on':'off'));
+    setTimeout(()=>{loadStats().catch(()=>{});loadFriends().catch(()=>{})},350);
+  }catch(e){
+    state.followed=previous;bdV161SetFollowerCount(previousCount);renderActions();
+    toast(e?.message||bdV161FollowCopy('fail'))
+  }
 }
 async function loadPoets(){const names=new Map();try{if(sb){const [a,b]=await Promise.all([sb.from('poets').select('id,slug,display_name').order('display_name').limit(500),sb.from('famous_poets').select('id,slug,display_name,name').order('display_name').limit(500)]);for(const r of [a,b])if(!r.error)(r.data||[]).forEach(x=>{const n=x.display_name||x.name;if(n)names.set(slug(n),{...x,display_name:n})})}}catch{}state.poets=[...names.values()];$('#poetDirectory').innerHTML=state.poets.map(x=>'<option value="'+esc(x.display_name)+'"></option>').join('')}
 function normalizePost(x){const meta=(x.metadata&&typeof x.metadata==='object')?x.metadata:{},rawType=String(x.type||x.category||'').toLowerCase(),txt=String(x.title||'')+' '+String(x.body||x.content||''),isCover=rawType==='cover-update'||rawType==='cover_update'||meta.profile_update==='cover'||meta.update_kind==='cover'||/কভার ছবি (পরিবর্তন|যোগ)|changed (his |her |their )?cover photo/i.test(txt),isAvatar=rawType==='profile-update'||rawType==='profile_update'||meta.profile_update==='avatar'||meta.update_kind==='profile'||/প্রোফাইল ছবি (পরিবর্তন|যোগ)|changed (his |her |their )?profile (photo|picture)/i.test(txt),type=isCover?'cover-update':(isAvatar?'profile-update':(x.type||'poem'));return{id:String(x.id||x.postId||''),author_id:x.author_id||x.authorId||'',author_username:x.author_username||x.authorUsername||'',author_name:x.author_name||x.authorName||'ভুবনডাঙ্গার সদস্য',author_avatar:x.author_avatar||x.authorAvatar||'',author_role:x.author_role||x.authorRole||'',type,category:x.category||typeLabels[type]||'প্রকাশনা',title:x.title||(isCover?'কভার ছবি পরিবর্তন করেছেন':isAvatar?'প্রোফাইল ছবি পরিবর্তন করেছেন':'শিরোনামহীন সাহিত্যকর্ম'),body:(isCover||isAvatar)?'':(x.body||x.content||''),original_author:x.original_author||x.originalAuthor||'',images:[...new Set([...(Array.isArray(x.images)?x.images:[]),...(Array.isArray(meta.images)?meta.images:[]),x.media_url||x.media||x.image_url||'',x.news_image_2||x.newsImage2||meta.news_image_2||''].filter(Boolean))],media_url:x.media_url||x.media||x.image_url||'',media_type:x.media_type||x.media_kind||x.mediaKind||((x.media_url||x.media||x.image_url)?'image':''),caption:(()=>{const v=String(x.caption||x.media_caption||'').trim();return /(?:নতুন\s+)?(?:প্রোফাইল|কভার)\s*ছবি\s*(?:পরিবর্তন|যোগ|আপডেট)\s*করেছেন/i.test(v)?'':v})(),card_style:(isCover||isAvatar)?'none':(x.card_style||x.cardStyle||'pearl'),news_card:(isCover||isAvatar)?false:Boolean(x.news_card||x.newsCard||meta.news_card||String(x.card_style||x.cardStyle||'').includes('news-card')),news_image_2:x.news_image_2||x.newsImage2||meta.news_image_2||'',status:x.status||'published',visibility:x.visibility||x.privacy||'public',likes_count:Number(x.likes_count||x.likes||0),comments_count:Number(x.comments_count||x.comments||0),created_at:x.created_at||x.createdAt||new Date().toISOString()}}
@@ -2321,6 +2421,7 @@ let timer;
 const obs=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(refreshCounts,180)});
 obs.observe(D.documentElement,{childList:true,subtree:true});
 setTimeout(refreshCounts,650);
+W.addEventListener('bd:followchange',()=>setTimeout(refreshCounts,520));
 window.addEventListener('bd:profile-privacy-updated',refreshCounts);
 window.BD77_CONNECTIONS={open:openConnections,refresh:refreshCounts};
 (function openFriendsFromSidebar(){try{if(new URLSearchParams(location.search).get('friends')!=='1')return;let tries=0;const tick=()=>{tries++;if(targetId()){openConnections('friends');return}if(tries<24)setTimeout(tick,180)};setTimeout(tick,220)}catch(_){}})();
