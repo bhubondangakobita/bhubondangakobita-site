@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="bn" data-theme="light"><head><meta charset="utf-8">
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content,maximum-scale=1">
-<meta name="theme-color" content="#07100c"><title>নিবন্ধন | ভুবনডাঙ্গার কবিতা</title>
+<meta name="theme-color" content="#07100c"><title>Create Account | BongDang</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@500;600;700;800&display=swap');
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Noto Sans Bengali',system-ui,sans-serif}html{color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans Bengali',sans-serif}html{color-scheme:light}
 :root{--bg:#edf4f0;--card:#fff;--card2:#f7faf8;--ink:#102b21;--soft:#667a70;--muted:#8b9a92;--line:rgba(16,79,57,.14);--green:#087654;--green2:#21ad7a;--red:#d7334d;--black:#07100c;--shadow:0 20px 60px rgba(23,62,47,.11),inset 0 1px 0 rgba(255,255,255,.94)}
 html[data-theme="dark"]{color-scheme:dark;--bg:#050e0a;--card:#0e1d17;--card2:#14251d;--ink:#f3fbf7;--soft:#bad0c5;--muted:#8fa398;--line:rgba(123,203,166,.17);--green:#55d69f;--green2:#7ce7b9;--red:#ff7188;--black:#010302;--shadow:0 22px 65px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.04)}
 body{background:radial-gradient(circle at 8% 2%,rgba(20,153,94,.10),transparent 29%),radial-gradient(circle at 94% 5%,rgba(215,51,77,.055),transparent 26%),var(--bg);color:var(--ink)}
@@ -30,39 +30,150 @@ a{color:inherit;text-decoration:none}button,input{font:inherit}button{cursor:poi
 .spin{width:42px;height:42px;margin:16px auto;border:4px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:s .7s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
 @media(max-width:820px){.shell{grid-template-columns:1fr}.hero{min-height:auto;padding:24px;order:2}.panel{min-height:auto;padding:24px;order:1}.trust{margin-top:24px}.wrap{padding:8px 10px 24px}}
 @media(max-width:520px){.top small{display:none}.grid2{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:21px 15px}.hero{padding:22px 16px}.trust{grid-template-columns:1fr}.links{align-items:flex-start;flex-direction:column}.row>*{flex:1}.hero h1{font-size:28px}}
+
+.select-wrap{position:relative}.select-wrap:after{content:'⌄';position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--soft);font-size:15px}
+select.input{appearance:none;-webkit-appearance:none;padding-right:34px}
+.quote-tools{display:flex;justify-content:flex-end;margin-top:8px}.quote-translate{min-height:30px;padding:0 10px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.06);color:#bdeed6;font-size:7px;font-weight:900}.quote-translation{display:none;margin-top:8px;color:#b7ccc1;font:500 10px/1.65 system-ui,sans-serif}.quote-translation.show{display:block}
+.profile-seed-note{margin-top:-2px;color:var(--muted);font-size:7px;line-height:1.5}
+@media(max-width:520px){.grid2 .field.country-field,.grid2 .field.birthday-field{grid-column:auto}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <script src="supabase-config.js"></script>
 <script src="supabase-auth.js"></script></head><body>
-<div class="wrap"><header class="top"><a href="index.html" class="logo">BDK</a><div><strong>ভুবনডাঙ্গার কবিতা</strong><small>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</small></div><span class="spacer"></span><button class="theme" id="themeBtn" type="button">◐</button></header>
-<main class="shell"><section class="hero"><div><span class="kicker">Create Account</span><h1>নিজের একটি সাহিত্যিক ভুবন তৈরি করুন</h1><p>প্রথম ধাপটি ছোট—নাম, username, email। এরপর আপনার লেখা, আবৃত্তি, স্মৃতি এবং সম্পর্ক ধীরে ধীরে নিজের ভুবন তৈরি করবে।</p><div class="quote">“শব্দের ভেতরেই মানুষ নিজের আরেকটি ঠিকানা খুঁজে পায়।”<small>— ভুবনডাঙ্গার কবিতা</small></div></div><div class="trust"><div><b>Supabase Auth</b><span>Session protected</span></div><div><b>Publishable key</b><span>No secret in browser</span></div><div><b>Profile bridge</b><span>Auth → Profile</span></div></div></section>
+<div class="wrap"><header class="top"><a href="index.html" class="logo">BDK</a><div><strong>BongDang</strong><small>Literature · Humanity · Community</small></div><span class="spacer"></span><button class="theme" id="themeBtn" type="button" aria-label="Toggle theme">◐</button></header>
+<main class="shell"><section class="hero"><div><span class="kicker">CREATE ACCOUNT</span><h1>Create your own literary world</h1><p>Your name, home country and birthday establish your profile identity. Emergency or rescue location can be added later and remains separate.</p><div class="quote" id="mahmudQuote" lang="bn">“নিজের প্রতিও শ্রদ্ধা রেখো, ভালোবাসা রেখো মনে,<br>
+কেউ মুগ্ধ হবে না জেনেও যেমন ফুল ফুটে বনে।”<small>— মাহমুদ সোহেল</small><div class="quote-tools"><button class="quote-translate" id="quoteTranslate" type="button">Translate</button></div><div class="quote-translation" id="quoteTranslation">Keep respect and love for yourself,<br>
+like a flower that blooms in the wild even knowing no one may be enchanted.<br><small>— Mahmud Sohel</small></div></div></div><div class="trust"><div><b>Secure Account</b><span>Supabase Auth</span></div><div><b>Home Country</b><span>Profile identity</span></div><div><b>Birthday</b><span>Birthday experience</span></div></div></section>
 <section class="panel">
-<h2>নতুন আপন ভুবন</h2><p>নাম, একটি unique username এবং ইমেইল দিয়ে account তৈরি করুন।</p>
-<div class="already" id="already"><b>এই browser-এ একটি account লগইন করা আছে</b><p>ভুল করে দ্বিতীয় account তৈরি না করে আগে logout করুন।</p><div class="row"><a class="subbtn" id="continueBtn" style="display:grid;place-items:center" href="profile.html">বর্তমান প্রোফাইল</a><button class="subbtn" id="logoutBtn" type="button">Logout করে নতুন account</button></div></div>
+<h2>Create account</h2><p>Use your real home country. Your rescue/emergency location can be set separately later.</p>
+<div class="already" id="already"><b>An account is already signed in on this browser</b><p>Continue with the current account or sign out before creating another one.</p><div class="row"><a class="subbtn" id="continueBtn" style="display:grid;place-items:center" href="profile.html">Current profile</a><button class="subbtn" id="logoutBtn" type="button">Sign out</button></div></div>
 <form class="form" id="registerForm">
-<div class="grid2"><div class="field full"><label>আপনার নাম</label><input class="input" id="fullName" autocomplete="name" required placeholder="আপনার পূর্ণ নাম"></div>
-<div class="field"><label>ইউজারনেম</label><input class="input" id="username" autocomplete="username" inputmode="latin" required placeholder="mahmud-sohel"></div>
-<div class="field"><label>শহর / দেশ <span style="font-weight:500;color:var(--muted)">(ঐচ্ছিক)</span></label><input class="input" id="location" autocomplete="address-level2" placeholder="ঢাকা, বাংলাদেশ"></div>
-<div class="field full"><label>ইমেইল</label><input class="input" id="email" type="email" autocomplete="email" required placeholder="name@example.com"></div>
-<div class="field"><label>পাসওয়ার্ড</label><div class="control"><input class="input" id="password" type="password" autocomplete="new-password" required placeholder="কমপক্ষে ৮ অক্ষর"><button class="eye" type="button" data-eye="#password">👁</button></div><div class="meter" id="meter" data-n="0"><i></i></div></div>
-<div class="field"><label>পাসওয়ার্ড আবার লিখুন</label><div class="control"><input class="input" id="confirm" type="password" autocomplete="new-password" required placeholder="একই পাসওয়ার্ড"><button class="eye" type="button" data-eye="#confirm">👁</button></div></div></div>
-<label class="check"><input id="agree" type="checkbox"><span>আমি ভুবনডাঙ্গার কবিতার নীতিমালা ও গোপনীয়তা নীতিতে সম্মত।</span></label>
-<div class="status" id="status"></div><button class="btn" id="submit" type="submit">আমার ভুবন তৈরি করুন →</button>
-<div class="links"><span>আগে থেকেই account আছে?</span><a href="login.html">লগইন করুন</a></div>
+<div class="grid2">
+<div class="field full"><label for="fullName">Full name</label><input class="input" id="fullName" autocomplete="name" required placeholder="Your full name"></div>
+<div class="field"><label for="username">Username</label><input class="input" id="username" autocomplete="username" inputmode="latin" required placeholder="mahmud-sohel"></div>
+<div class="field country-field"><label for="countryCode">Home country</label><div class="select-wrap"><select class="input" id="countryCode" autocomplete="country" required><option value="">Select country</option><option value="AF">Afghanistan</option><option value="AL">Albania</option><option value="DZ">Algeria</option><option value="AS">American Samoa</option><option value="AD">Andorra</option><option value="AO">Angola</option><option value="AI">Anguilla</option><option value="AQ">Antarctica</option><option value="AG">Antigua and Barbuda</option><option value="AR">Argentina</option><option value="AM">Armenia</option><option value="AW">Aruba</option><option value="AU">Australia</option><option value="AT">Austria</option><option value="AZ">Azerbaijan</option><option value="BS">Bahamas</option><option value="BH">Bahrain</option><option value="BD">Bangladesh</option><option value="BB">Barbados</option><option value="BY">Belarus</option><option value="BE">Belgium</option><option value="BZ">Belize</option><option value="BJ">Benin</option><option value="BM">Bermuda</option><option value="BT">Bhutan</option><option value="BO">Bolivia, Plurinational State of</option><option value="BQ">Bonaire, Sint Eustatius and Saba</option><option value="BA">Bosnia and Herzegovina</option><option value="BW">Botswana</option><option value="BV">Bouvet Island</option><option value="BR">Brazil</option><option value="IO">British Indian Ocean Territory</option><option value="BN">Brunei Darussalam</option><option value="BG">Bulgaria</option><option value="BF">Burkina Faso</option><option value="BI">Burundi</option><option value="CV">Cabo Verde</option><option value="KH">Cambodia</option><option value="CM">Cameroon</option><option value="CA">Canada</option><option value="KY">Cayman Islands</option><option value="CF">Central African Republic</option><option value="TD">Chad</option><option value="CL">Chile</option><option value="CN">China</option><option value="CX">Christmas Island</option><option value="CC">Cocos (Keeling) Islands</option><option value="CO">Colombia</option><option value="KM">Comoros</option><option value="CG">Congo</option><option value="CD">Congo, The Democratic Republic of the</option><option value="CK">Cook Islands</option><option value="CR">Costa Rica</option><option value="HR">Croatia</option><option value="CU">Cuba</option><option value="CW">Curaçao</option><option value="CY">Cyprus</option><option value="CZ">Czechia</option><option value="CI">Côte d&#39;Ivoire</option><option value="DK">Denmark</option><option value="DJ">Djibouti</option><option value="DM">Dominica</option><option value="DO">Dominican Republic</option><option value="EC">Ecuador</option><option value="EG">Egypt</option><option value="SV">El Salvador</option><option value="GQ">Equatorial Guinea</option><option value="ER">Eritrea</option><option value="EE">Estonia</option><option value="SZ">Eswatini</option><option value="ET">Ethiopia</option><option value="FK">Falkland Islands (Malvinas)</option><option value="FO">Faroe Islands</option><option value="FJ">Fiji</option><option value="FI">Finland</option><option value="FR">France</option><option value="GF">French Guiana</option><option value="PF">French Polynesia</option><option value="TF">French Southern Territories</option><option value="GA">Gabon</option><option value="GM">Gambia</option><option value="GE">Georgia</option><option value="DE">Germany</option><option value="GH">Ghana</option><option value="GI">Gibraltar</option><option value="GR">Greece</option><option value="GL">Greenland</option><option value="GD">Grenada</option><option value="GP">Guadeloupe</option><option value="GU">Guam</option><option value="GT">Guatemala</option><option value="GG">Guernsey</option><option value="GN">Guinea</option><option value="GW">Guinea-Bissau</option><option value="GY">Guyana</option><option value="HT">Haiti</option><option value="HM">Heard Island and McDonald Islands</option><option value="VA">Holy See (Vatican City State)</option><option value="HN">Honduras</option><option value="HK">Hong Kong</option><option value="HU">Hungary</option><option value="IS">Iceland</option><option value="IN">India</option><option value="ID">Indonesia</option><option value="IR">Iran, Islamic Republic of</option><option value="IQ">Iraq</option><option value="IE">Ireland</option><option value="IM">Isle of Man</option><option value="IL">Israel</option><option value="IT">Italy</option><option value="JM">Jamaica</option><option value="JP">Japan</option><option value="JE">Jersey</option><option value="JO">Jordan</option><option value="KZ">Kazakhstan</option><option value="KE">Kenya</option><option value="KI">Kiribati</option><option value="KP">Korea, Democratic People&#39;s Republic of</option><option value="KR">Korea, Republic of</option><option value="XK">Kosovo</option><option value="KW">Kuwait</option><option value="KG">Kyrgyzstan</option><option value="LA">Lao People&#39;s Democratic Republic</option><option value="LV">Latvia</option><option value="LB">Lebanon</option><option value="LS">Lesotho</option><option value="LR">Liberia</option><option value="LY">Libya</option><option value="LI">Liechtenstein</option><option value="LT">Lithuania</option><option value="LU">Luxembourg</option><option value="MO">Macao</option><option value="MG">Madagascar</option><option value="MW">Malawi</option><option value="MY">Malaysia</option><option value="MV">Maldives</option><option value="ML">Mali</option><option value="MT">Malta</option><option value="MH">Marshall Islands</option><option value="MQ">Martinique</option><option value="MR">Mauritania</option><option value="MU">Mauritius</option><option value="YT">Mayotte</option><option value="MX">Mexico</option><option value="FM">Micronesia, Federated States of</option><option value="MD">Moldova, Republic of</option><option value="MC">Monaco</option><option value="MN">Mongolia</option><option value="ME">Montenegro</option><option value="MS">Montserrat</option><option value="MA">Morocco</option><option value="MZ">Mozambique</option><option value="MM">Myanmar</option><option value="NA">Namibia</option><option value="NR">Nauru</option><option value="NP">Nepal</option><option value="NL">Netherlands</option><option value="NC">New Caledonia</option><option value="NZ">New Zealand</option><option value="NI">Nicaragua</option><option value="NE">Niger</option><option value="NG">Nigeria</option><option value="NU">Niue</option><option value="NF">Norfolk Island</option><option value="MK">North Macedonia</option><option value="MP">Northern Mariana Islands</option><option value="NO">Norway</option><option value="OM">Oman</option><option value="PK">Pakistan</option><option value="PW">Palau</option><option value="PS">Palestine, State of</option><option value="PA">Panama</option><option value="PG">Papua New Guinea</option><option value="PY">Paraguay</option><option value="PE">Peru</option><option value="PH">Philippines</option><option value="PN">Pitcairn</option><option value="PL">Poland</option><option value="PT">Portugal</option><option value="PR">Puerto Rico</option><option value="QA">Qatar</option><option value="RO">Romania</option><option value="RU">Russian Federation</option><option value="RW">Rwanda</option><option value="RE">Réunion</option><option value="BL">Saint Barthélemy</option><option value="SH">Saint Helena, Ascension and Tristan da Cunha</option><option value="KN">Saint Kitts and Nevis</option><option value="LC">Saint Lucia</option><option value="MF">Saint Martin (French part)</option><option value="PM">Saint Pierre and Miquelon</option><option value="VC">Saint Vincent and the Grenadines</option><option value="WS">Samoa</option><option value="SM">San Marino</option><option value="ST">Sao Tome and Principe</option><option value="SA">Saudi Arabia</option><option value="SN">Senegal</option><option value="RS">Serbia</option><option value="SC">Seychelles</option><option value="SL">Sierra Leone</option><option value="SG">Singapore</option><option value="SX">Sint Maarten (Dutch part)</option><option value="SK">Slovakia</option><option value="SI">Slovenia</option><option value="SB">Solomon Islands</option><option value="SO">Somalia</option><option value="ZA">South Africa</option><option value="GS">South Georgia and the South Sandwich Islands</option><option value="SS">South Sudan</option><option value="ES">Spain</option><option value="LK">Sri Lanka</option><option value="SD">Sudan</option><option value="SR">Suriname</option><option value="SJ">Svalbard and Jan Mayen</option><option value="SE">Sweden</option><option value="CH">Switzerland</option><option value="SY">Syrian Arab Republic</option><option value="TW">Taiwan, Province of China</option><option value="TJ">Tajikistan</option><option value="TZ">Tanzania, United Republic of</option><option value="TH">Thailand</option><option value="TL">Timor-Leste</option><option value="TG">Togo</option><option value="TK">Tokelau</option><option value="TO">Tonga</option><option value="TT">Trinidad and Tobago</option><option value="TN">Tunisia</option><option value="TM">Turkmenistan</option><option value="TC">Turks and Caicos Islands</option><option value="TV">Tuvalu</option><option value="TR">Türkiye</option><option value="UG">Uganda</option><option value="UA">Ukraine</option><option value="AE">United Arab Emirates</option><option value="GB">United Kingdom</option><option value="US">United States</option><option value="UM">United States Minor Outlying Islands</option><option value="UY">Uruguay</option><option value="UZ">Uzbekistan</option><option value="VU">Vanuatu</option><option value="VE">Venezuela, Bolivarian Republic of</option><option value="VN">Viet Nam</option><option value="VG">Virgin Islands, British</option><option value="VI">Virgin Islands, U.S.</option><option value="WF">Wallis and Futuna</option><option value="EH">Western Sahara</option><option value="YE">Yemen</option><option value="ZM">Zambia</option><option value="ZW">Zimbabwe</option><option value="AX">Åland Islands</option></select></div></div>
+<div class="field birthday-field"><label for="birthday">Birthday</label><input class="input" id="birthday" type="date" autocomplete="bday" required></div>
+<div class="field"><label for="city">Home city / district <span style="font-weight:500;color:var(--muted)">(optional)</span></label><input class="input" id="city" autocomplete="address-level2" placeholder="Cumilla"></div>
+<div class="field"><label for="email">Email</label><input class="input" id="email" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+<div class="field"><label for="password">Password</label><div class="control"><input class="input" id="password" type="password" autocomplete="new-password" required placeholder="At least 8 characters"><button class="eye" type="button" data-eye="#password" aria-label="Show password">👁</button></div><div class="meter" id="meter" data-n="0"><i></i></div></div>
+<div class="field"><label for="confirm">Confirm password</label><div class="control"><input class="input" id="confirm" type="password" autocomplete="new-password" required placeholder="Repeat password"><button class="eye" type="button" data-eye="#confirm" aria-label="Show password">👁</button></div></div>
+<div class="field full"><div class="profile-seed-note">Default interface language: <b>English</b>. Home country sets your default home feed. Emergency/Rescue location remains optional and separate.</div></div>
+</div>
+<label class="check"><input id="agree" type="checkbox"><span>I agree to the BongDang Terms and Privacy Policy.</span></label>
+<div class="status" id="status"></div><button class="btn" id="submit" type="submit">Create account →</button>
+<div class="links"><span>Already have an account?</span><a href="login.html">Log in</a></div>
 </form>
-<div class="notice" id="notice"><strong>ইমেইল নিশ্চিত করুন</strong><span id="noticeText">Confirmation link পাঠানো হয়েছে।</span><div class="row" style="margin-top:10px"><button class="subbtn" id="resend" type="button">Confirmation আবার পাঠান</button><a class="subbtn" style="display:grid;place-items:center" href="login.html">লগইন পেজ</a></div></div>
-</section></main><footer class="foot">নিজে ভালো থাকবেন এবং অন্যকেও ভালো রাখবেন।</footer></div>
+<div class="notice" id="notice"><strong>Confirm your email</strong><span id="noticeText">A confirmation link has been sent.</span><div class="row" style="margin-top:10px"><button class="subbtn" id="resend" type="button">Resend confirmation</button><a class="subbtn" style="display:grid;place-items:center" href="login.html">Login page</a></div></div>
+</section></main><footer class="foot">Respect yourself, and help others stay well.</footer></div>
 <script>
 (()=>{const t=localStorage.getItem('bhubondangaTheme')||'light';document.documentElement.dataset.theme=t;document.getElementById('themeBtn').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;localStorage.setItem('bhubondangaTheme',n)}})();
 </script>
 <script>
 const A=window.BhubondangaAuth,$=s=>document.querySelector(s),status=(t,c='')=>{$('#status').textContent=t;$('#status').className='status '+c};
 let pendingEmail='';
+
+const COUNTRY_NAMES={"AF":"Afghanistan","AL":"Albania","DZ":"Algeria","AS":"American Samoa","AD":"Andorra","AO":"Angola","AI":"Anguilla","AQ":"Antarctica","AG":"Antigua and Barbuda","AR":"Argentina","AM":"Armenia","AW":"Aruba","AU":"Australia","AT":"Austria","AZ":"Azerbaijan","BS":"Bahamas","BH":"Bahrain","BD":"Bangladesh","BB":"Barbados","BY":"Belarus","BE":"Belgium","BZ":"Belize","BJ":"Benin","BM":"Bermuda","BT":"Bhutan","BO":"Bolivia, Plurinational State of","BQ":"Bonaire, Sint Eustatius and Saba","BA":"Bosnia and Herzegovina","BW":"Botswana","BV":"Bouvet Island","BR":"Brazil","IO":"British Indian Ocean Territory","BN":"Brunei Darussalam","BG":"Bulgaria","BF":"Burkina Faso","BI":"Burundi","CV":"Cabo Verde","KH":"Cambodia","CM":"Cameroon","CA":"Canada","KY":"Cayman Islands","CF":"Central African Republic","TD":"Chad","CL":"Chile","CN":"China","CX":"Christmas Island","CC":"Cocos (Keeling) Islands","CO":"Colombia","KM":"Comoros","CG":"Congo","CD":"Congo, The Democratic Republic of the","CK":"Cook Islands","CR":"Costa Rica","HR":"Croatia","CU":"Cuba","CW":"Curaçao","CY":"Cyprus","CZ":"Czechia","CI":"Côte d'Ivoire","DK":"Denmark","DJ":"Djibouti","DM":"Dominica","DO":"Dominican Republic","EC":"Ecuador","EG":"Egypt","SV":"El Salvador","GQ":"Equatorial Guinea","ER":"Eritrea","EE":"Estonia","SZ":"Eswatini","ET":"Ethiopia","FK":"Falkland Islands (Malvinas)","FO":"Faroe Islands","FJ":"Fiji","FI":"Finland","FR":"France","GF":"French Guiana","PF":"French Polynesia","TF":"French Southern Territories","GA":"Gabon","GM":"Gambia","GE":"Georgia","DE":"Germany","GH":"Ghana","GI":"Gibraltar","GR":"Greece","GL":"Greenland","GD":"Grenada","GP":"Guadeloupe","GU":"Guam","GT":"Guatemala","GG":"Guernsey","GN":"Guinea","GW":"Guinea-Bissau","GY":"Guyana","HT":"Haiti","HM":"Heard Island and McDonald Islands","VA":"Holy See (Vatican City State)","HN":"Honduras","HK":"Hong Kong","HU":"Hungary","IS":"Iceland","IN":"India","ID":"Indonesia","IR":"Iran, Islamic Republic of","IQ":"Iraq","IE":"Ireland","IM":"Isle of Man","IL":"Israel","IT":"Italy","JM":"Jamaica","JP":"Japan","JE":"Jersey","JO":"Jordan","KZ":"Kazakhstan","KE":"Kenya","KI":"Kiribati","KP":"Korea, Democratic People's Republic of","KR":"Korea, Republic of","XK":"Kosovo","KW":"Kuwait","KG":"Kyrgyzstan","LA":"Lao People's Democratic Republic","LV":"Latvia","LB":"Lebanon","LS":"Lesotho","LR":"Liberia","LY":"Libya","LI":"Liechtenstein","LT":"Lithuania","LU":"Luxembourg","MO":"Macao","MG":"Madagascar","MW":"Malawi","MY":"Malaysia","MV":"Maldives","ML":"Mali","MT":"Malta","MH":"Marshall Islands","MQ":"Martinique","MR":"Mauritania","MU":"Mauritius","YT":"Mayotte","MX":"Mexico","FM":"Micronesia, Federated States of","MD":"Moldova, Republic of","MC":"Monaco","MN":"Mongolia","ME":"Montenegro","MS":"Montserrat","MA":"Morocco","MZ":"Mozambique","MM":"Myanmar","NA":"Namibia","NR":"Nauru","NP":"Nepal","NL":"Netherlands","NC":"New Caledonia","NZ":"New Zealand","NI":"Nicaragua","NE":"Niger","NG":"Nigeria","NU":"Niue","NF":"Norfolk Island","MK":"North Macedonia","MP":"Northern Mariana Islands","NO":"Norway","OM":"Oman","PK":"Pakistan","PW":"Palau","PS":"Palestine, State of","PA":"Panama","PG":"Papua New Guinea","PY":"Paraguay","PE":"Peru","PH":"Philippines","PN":"Pitcairn","PL":"Poland","PT":"Portugal","PR":"Puerto Rico","QA":"Qatar","RO":"Romania","RU":"Russian Federation","RW":"Rwanda","RE":"Réunion","BL":"Saint Barthélemy","SH":"Saint Helena, Ascension and Tristan da Cunha","KN":"Saint Kitts and Nevis","LC":"Saint Lucia","MF":"Saint Martin (French part)","PM":"Saint Pierre and Miquelon","VC":"Saint Vincent and the Grenadines","WS":"Samoa","SM":"San Marino","ST":"Sao Tome and Principe","SA":"Saudi Arabia","SN":"Senegal","RS":"Serbia","SC":"Seychelles","SL":"Sierra Leone","SG":"Singapore","SX":"Sint Maarten (Dutch part)","SK":"Slovakia","SI":"Slovenia","SB":"Solomon Islands","SO":"Somalia","ZA":"South Africa","GS":"South Georgia and the South Sandwich Islands","SS":"South Sudan","ES":"Spain","LK":"Sri Lanka","SD":"Sudan","SR":"Suriname","SJ":"Svalbard and Jan Mayen","SE":"Sweden","CH":"Switzerland","SY":"Syrian Arab Republic","TW":"Taiwan, Province of China","TJ":"Tajikistan","TZ":"Tanzania, United Republic of","TH":"Thailand","TL":"Timor-Leste","TG":"Togo","TK":"Tokelau","TO":"Tonga","TT":"Trinidad and Tobago","TN":"Tunisia","TM":"Turkmenistan","TC":"Turks and Caicos Islands","TV":"Tuvalu","TR":"Türkiye","UG":"Uganda","UA":"Ukraine","AE":"United Arab Emirates","GB":"United Kingdom","US":"United States","UM":"United States Minor Outlying Islands","UY":"Uruguay","UZ":"Uzbekistan","VU":"Vanuatu","VE":"Venezuela, Bolivarian Republic of","VN":"Viet Nam","VG":"Virgin Islands, British","VI":"Virgin Islands, U.S.","WF":"Wallis and Futuna","EH":"Western Sahara","YE":"Yemen","ZM":"Zambia","ZW":"Zimbabwe","AX":"Åland Islands"};
+
 document.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=$(b.dataset.eye);i.type=i.type==='password'?'text':'password';b.textContent=i.type==='password'?'👁':'🙈'});
 $('#username').oninput=e=>e.target.value=A.cleanUsername(e.target.value);
 $('#password').oninput=e=>{const v=e.target.value;let n=0;if(v.length>=8)n++;if(/[A-Za-z]/.test(v)&&/\d/.test(v))n++;if(/[A-Z]/.test(v)&&/[a-z]/.test(v))n++;if(/[^A-Za-z0-9]/.test(v))n++;$('#meter').dataset.n=String(n)};
+
+const qt=$('#quoteTranslate'),qv=$('#quoteTranslation');
+qt.onclick=()=>{const open=qv.classList.toggle('show');qt.textContent=open?'Hide translation':'Translate'};
+
+function birthdayValid(v){
+  if(!v)return false;
+  const d=new Date(v+'T00:00:00'),now=new Date();
+  if(Number.isNaN(d.getTime())||d>now)return false;
+  const age=(now-d)/(365.2425*24*3600*1000);
+  return age<120;
+}
+function homeCountryRecord(){
+  const code=$('#countryCode').value;
+  return {countryCode:code,countryName:COUNTRY_NAMES[code]||'',city:$('#city').value.trim(),birthday:$('#birthday').value,preferredLanguage:'en'};
+}
+function saveLocalSeed(seed){
+  try{
+    localStorage.setItem('bd-home-country-v1',JSON.stringify({countryCode:seed.countryCode,countryName:seed.countryName,city:seed.city||'',birthday:seed.birthday||''}));
+    localStorage.setItem('bd-feed-region-mode-v1','home');
+    localStorage.setItem('bd-ui-language-v2','en');
+    localStorage.setItem('bd-experience-mode-v1','home');
+    localStorage.setItem('bd-preferred-language-v1','en');
+  }catch(_){}
+}
+async function persistProfileSeed(user,seed){
+  if(!user)return;
+  saveLocalSeed(seed);
+  const md={...(user.user_metadata||{}),home_country_code:seed.countryCode,home_country_name:seed.countryName,home_city:seed.city||'',birthday:seed.birthday,preferred_language:'en',bd_ui_language:'en',bd_feed_region_mode:'home',bd_home_country:{countryCode:seed.countryCode,countryName:seed.countryName,city:seed.city||'',birthday:seed.birthday},bd_experience_mode:'home'};
+  try{
+    const sb=window.BD_SUPABASE||window.supabaseClient||window.bhubondangaSupabase||window.__BD_SUPABASE_CLIENT__||((window.supabase&&window.supabase.auth)?window.supabase:null);
+    if(sb?.auth?.updateUser)await sb.auth.updateUser({data:md});
+    if(sb?.from){
+      const attempts=[
+        {home_country_code:seed.countryCode,home_country_name:seed.countryName,home_city:seed.city||null,birthday:seed.birthday,preferred_language:'en'},
+        {country_code:seed.countryCode,country:seed.countryName,city:seed.city||null,birthday:seed.birthday,preferred_language:'en'},
+        {country_code:seed.countryCode,country_name:seed.countryName,city:seed.city||null,birthday:seed.birthday}
+      ];
+      for(const row of attempts){
+        try{const r=await sb.from('profiles').update(row).eq('id',user.id);if(!r.error)break}catch(_){}
+      }
+    }
+  }catch(_){}
+}
+
 (async()=>{const s=await A.currentSession();if(s?.user){$('#already').classList.add('show');$('#continueBtn').href=await A.routeForUser(s.user)}})();
-$('#logoutBtn').onclick=async()=>{await A.signOut();$('#already').classList.remove('show');status('এখন নতুন account তৈরি করতে পারবেন।','success')};
+$('#logoutBtn').onclick=async()=>{await A.signOut();$('#already').classList.remove('show');status('You can now create a new account.','success')};
+
 function callback(){return new URL('auth-callback.html?next=profile.html',location.href).href}
-$('#registerForm').onsubmit=async e=>{e.preventDefault();const b=$('#submit'),fullName=$('#fullName').value.trim(),username=A.cleanUsername($('#username').value),email=$('#email').value.trim().toLowerCase(),password=$('#password').value,confirm=$('#confirm').value;if(fullName.length<2)return status('আপনার নাম লিখুন।','error');if(username.length<3)return status('ইউজারনেম অন্তত ৩ অক্ষরের করুন।','error');if(!/^[a-z0-9][a-z0-9._-]{2,29}$/.test(username))return status('ইউজারনেমে ইংরেজি অক্ষর, সংখ্যা, . _ - ব্যবহার করুন।','error');if(!/^\S+@\S+\.\S+$/.test(email))return status('সঠিক ইমেইল লিখুন।','error');if(password.length<8||!/[A-Za-z]/.test(password)||!/\d/.test(password))return status('পাসওয়ার্ড অন্তত ৮ অক্ষর এবং একটি অক্ষর + একটি সংখ্যা রাখুন।','error');if(password!==confirm)return status('দুইটি পাসওয়ার্ড মিলছে না।','error');if(!$('#agree').checked)return status('নীতিমালা ও গোপনীয়তা শর্তে সম্মতি দিন।','error');b.disabled=true;status('Account তৈরি হচ্ছে…');try{pendingEmail=email;const r=await A.signUp({email,password,fullName,username,location:$('#location').value,redirectTo:callback()});if(r.session?.user){status('নিবন্ধন সফল।','success');location.href=await A.routeForUser(r.session.user)}else{$('#registerForm').style.display='none';$('#notice').classList.add('show');$('#noticeText').textContent=email+' ঠিকানায় confirmation link পাঠানো হয়েছে। Inbox/Spam দেখুন।'}}catch(err){b.disabled=false;status(A.friendlyError(err),'error')}};
-$('#resend').onclick=async()=>{if(!pendingEmail)return;const b=$('#resend');b.disabled=true;try{await A.resendConfirmation(pendingEmail,callback());$('#noticeText').textContent='Confirmation email আবার পাঠানো হয়েছে। Inbox/Spam দেখুন।'}catch(err){$('#noticeText').textContent=A.friendlyError(err)}finally{setTimeout(()=>b.disabled=false,4000)}};
-</script></body></html>
+
+$('#registerForm').onsubmit=async e=>{
+  e.preventDefault();
+  const b=$('#submit'),fullName=$('#fullName').value.trim(),username=A.cleanUsername($('#username').value),email=$('#email').value.trim().toLowerCase(),password=$('#password').value,confirm=$('#confirm').value,seed=homeCountryRecord();
+  if(fullName.length<2)return status('Enter your full name.','error');
+  if(username.length<3)return status('Username must be at least 3 characters.','error');
+  if(!/^[a-z0-9][a-z0-9._-]{2,29}$/.test(username))return status('Use English letters, numbers, . _ - in your username.','error');
+  if(!seed.countryCode)return status('Select your home country.','error');
+  if(!birthdayValid(seed.birthday))return status('Enter a valid birthday.','error');
+  if(!/^\S+@\S+\.\S+$/.test(email))return status('Enter a valid email address.','error');
+  if(password.length<8||!/[A-Za-z]/.test(password)||!/\d/.test(password))return status('Password needs at least 8 characters, one letter and one number.','error');
+  if(password!==confirm)return status('Passwords do not match.','error');
+  if(!$('#agree').checked)return status('Please agree to the Terms and Privacy Policy.','error');
+
+  b.disabled=true;status('Creating your account…');
+  try{
+    pendingEmail=email;
+    const location=[seed.city,seed.countryName].filter(Boolean).join(', ');
+    const r=await A.signUp({
+      email,password,fullName,username,location,
+      countryCode:seed.countryCode,countryName:seed.countryName,
+      birthday:seed.birthday,preferredLanguage:'en',
+      redirectTo:callback()
+    });
+    saveLocalSeed(seed);
+    if(r?.user)await persistProfileSeed(r.user,seed);
+    if(r.session?.user){
+      await persistProfileSeed(r.session.user,seed);
+      status('Account created successfully.','success');
+      location.href=await A.routeForUser(r.session.user);
+    }else{
+      $('#registerForm').style.display='none';
+      $('#notice').classList.add('show');
+      $('#noticeText').textContent='A confirmation link was sent to '+email+'. Check Inbox/Spam.';
+    }
+  }catch(err){
+    b.disabled=false;
+    status(A.friendlyError(err),'error')
+  }
+};
+
+$('#resend').onclick=async()=>{
+  if(!pendingEmail)return;
+  const b=$('#resend');b.disabled=true;
+  try{
+    await A.resendConfirmation(pendingEmail,callback());
+    $('#noticeText').textContent='Confirmation email sent again. Check Inbox/Spam.';
+  }catch(err){
+    $('#noticeText').textContent=A.friendlyError(err)
+  }finally{
+    setTimeout(()=>b.disabled=false,4000)
+  }
+};</script></body></html>

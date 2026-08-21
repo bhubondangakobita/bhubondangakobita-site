@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="bn" data-theme="light"><head><meta charset="utf-8">
+<html lang="en" data-theme="light"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content,maximum-scale=1">
-<meta name="theme-color" content="#07100c"><title>লগইন | ভুবনডাঙ্গার কবিতা</title>
+<meta name="theme-color" content="#07100c"><title>Login | BongDang</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@500;600;700;800&display=swap');
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:'Noto Sans Bengali',system-ui,sans-serif}html{color-scheme:light}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,'Segoe UI','Noto Sans Bengali',sans-serif}html{color-scheme:light}
 :root{--bg:#edf4f0;--card:#fff;--card2:#f7faf8;--ink:#102b21;--soft:#667a70;--muted:#8b9a92;--line:rgba(16,79,57,.14);--green:#087654;--green2:#21ad7a;--red:#d7334d;--black:#07100c;--shadow:0 20px 60px rgba(23,62,47,.11),inset 0 1px 0 rgba(255,255,255,.94)}
 html[data-theme="dark"]{color-scheme:dark;--bg:#050e0a;--card:#0e1d17;--card2:#14251d;--ink:#f3fbf7;--soft:#bad0c5;--muted:#8fa398;--line:rgba(123,203,166,.17);--green:#55d69f;--green2:#7ce7b9;--red:#ff7188;--black:#010302;--shadow:0 22px 65px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.04)}
 body{background:radial-gradient(circle at 8% 2%,rgba(20,153,94,.10),transparent 29%),radial-gradient(circle at 94% 5%,rgba(215,51,77,.055),transparent 26%),var(--bg);color:var(--ink)}
@@ -30,29 +30,34 @@ a{color:inherit;text-decoration:none}button,input{font:inherit}button{cursor:poi
 .spin{width:42px;height:42px;margin:16px auto;border:4px solid var(--line);border-top-color:var(--green);border-radius:50%;animation:s .7s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
 @media(max-width:820px){.shell{grid-template-columns:1fr}.hero{min-height:auto;padding:24px;order:2}.panel{min-height:auto;padding:24px;order:1}.trust{margin-top:24px}.wrap{padding:8px 10px 24px}}
 @media(max-width:520px){.top small{display:none}.grid2{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:21px 15px}.hero{padding:22px 16px}.trust{grid-template-columns:1fr}.links{align-items:flex-start;flex-direction:column}.row>*{flex:1}.hero h1{font-size:28px}}
+
+.quote-tools{display:flex;justify-content:flex-end;margin-top:8px}.quote-translate{min-height:30px;padding:0 10px;border:1px solid rgba(255,255,255,.13);border-radius:999px;background:rgba(255,255,255,.06);color:#bdeed6;font-size:7px;font-weight:900}.quote-translation{display:none;margin-top:8px;color:#b7ccc1;font:500 10px/1.65 system-ui,sans-serif}.quote-translation.show{display:block}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.min.js"></script>
 <script src="supabase-config.js"></script>
 <script src="supabase-auth.js"></script></head><body>
-<div class="wrap"><header class="top"><a href="index.html" class="logo">BDK</a><div><strong>ভুবনডাঙ্গার কবিতা</strong><small>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</small></div><span class="spacer"></span><button class="theme" id="themeBtn" type="button">◐</button></header>
-<main class="shell"><section class="hero"><div><span class="kicker">Welcome Back</span><h1>আপনার ভুবনে ফিরে আসুন</h1><p>নিজের লেখা, পাঠ, প্রোফাইল এবং মানুষের সঙ্গে সংযোগ—সবকিছু আপনার account-এর সঙ্গে নিরাপদে যুক্ত থাকবে।</p><div class="quote">নিজের প্রতিও শ্রদ্ধা রেখো—<br>ভালোবাসা রেখো মনে,<br>কেউ মুগ্ধ হবে না জেনেও যেমন,<br>ফুল ফুটে বনে।<small>— মাহমুদ সোহেল</small></div></div><div class="trust"><div><b>Supabase Auth</b><span>Session protected</span></div><div><b>Publishable key</b><span>No secret in browser</span></div><div><b>Profile bridge</b><span>Auth → Profile</span></div></div></section>
+<div class="wrap"><header class="top"><a href="index.html" class="logo">BDK</a><div><strong>BongDang</strong><small>Literature · Humanity · Community</small></div><span class="spacer"></span><button class="theme" id="themeBtn" type="button" aria-label="Toggle theme">◐</button></header>
+<main class="shell"><section class="hero"><div><span class="kicker">WELCOME BACK</span><h1>Return to your world</h1><p>Your writing, profile, memories and connections remain securely linked to your account.</p><div class="quote" id="mahmudQuote" lang="bn">“নিজের প্রতিও শ্রদ্ধা রেখো, ভালোবাসা রেখো মনে,<br>
+কেউ মুগ্ধ হবে না জেনেও যেমন ফুল ফুটে বনে।”<small>— মাহমুদ সোহেল</small><div class="quote-tools"><button class="quote-translate" id="quoteTranslate" type="button">Translate</button></div><div class="quote-translation" id="quoteTranslation">Keep respect and love for yourself,<br>
+like a flower that blooms in the wild even knowing no one may be enchanted.<br><small>— Mahmud Sohel</small></div></div></div><div class="trust"><div><b>Secure Login</b><span>Supabase Auth</span></div><div><b>Home Identity</b><span>Your country stays yours</span></div><div><b>Language</b><span>English default</span></div></div></section>
 <section class="panel">
-<h2>লগইন করুন</h2><p>আপনার নিবন্ধিত ইমেইল এবং পাসওয়ার্ড ব্যবহার করুন।</p>
-<div class="already" id="already"><b id="alreadyName">আপনি ইতিমধ্যে লগইন করেছেন</b><p>এই session ব্যবহার করতে পারেন অথবা অন্য account-এর জন্য logout করুন।</p><div class="row"><a class="subbtn" id="continueBtn" style="display:grid;place-items:center" href="profile.html">প্রোফাইলে যান</a><button class="subbtn" id="logoutBtn" type="button">অন্য account</button></div></div>
+<h2>Log in</h2><p>Use your registered email and password.</p>
+<div class="already" id="already"><b id="alreadyName">You are already logged in</b><p>Continue with this session or sign out to use another account.</p><div class="row"><a class="subbtn" id="continueBtn" style="display:grid;place-items:center" href="profile.html">Open profile</a><button class="subbtn" id="logoutBtn" type="button">Use another account</button></div></div>
 <form class="form" id="loginForm">
-<div class="field"><label for="email">ইমেইল</label><input class="input" id="email" type="email" autocomplete="email" required placeholder="name@example.com"></div>
-<div class="field"><label for="password">পাসওয়ার্ড</label><div class="control"><input class="input" id="password" type="password" autocomplete="current-password" required placeholder="আপনার পাসওয়ার্ড"><button class="eye" type="button" data-eye="#password">👁</button></div></div>
-<div class="status" id="status"></div><button class="btn" id="submit" type="submit">লগইন করুন →</button>
-<div class="links"><a href="forgot-password.html">পাসওয়ার্ড ভুলে গেছেন?</a><span>নতুন? <a href="register.html">নিবন্ধন করুন</a></span></div>
-<div class="note">Session এই browser-এ সংরক্ষিত থাকবে এবং token স্বয়ংক্রিয়ভাবে refresh হবে।</div>
+<div class="field"><label for="email">Email</label><input class="input" id="email" type="email" autocomplete="email" required placeholder="name@example.com"></div>
+<div class="field"><label for="password">Password</label><div class="control"><input class="input" id="password" type="password" autocomplete="current-password" required placeholder="Your password"><button class="eye" type="button" data-eye="#password">👁</button></div></div>
+<div class="status" id="status"></div><button class="btn" id="submit" type="submit">Log in →</button>
+<div class="links"><a href="forgot-password.html">Forgot password?</a><span>New here? <a href="register.html">Create account</a></span></div>
+<div class="note">Your session stays securely available in this browser and the token refreshes automatically.</div>
 </form>
-</section></main><footer class="foot">নিজে ভালো থাকবেন এবং অন্যকেও ভালো রাখবেন।</footer></div>
+</section></main><footer class="foot">Respect yourself, and help others stay well.</footer></div>
 <script>
 (()=>{const t=localStorage.getItem('bhubondangaTheme')||'light';document.documentElement.dataset.theme=t;document.getElementById('themeBtn').onclick=()=>{const n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;localStorage.setItem('bhubondangaTheme',n)}})();
 </script>
 <script>
 const A=window.BhubondangaAuth,$=s=>document.querySelector(s),status=(t,c='')=>{$('#status').textContent=t;$('#status').className='status '+c};
+const qt=$('#quoteTranslate'),qv=$('#quoteTranslation');qt.onclick=()=>{const open=qv.classList.toggle('show');qt.textContent=open?'Hide translation':'Translate'};
 document.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=$(b.dataset.eye);i.type=i.type==='password'?'text':'password';b.textContent=i.type==='password'?'👁':'🙈'});
-(async()=>{const s=await A.currentSession();if(s?.user){const x=await A.syncUser(s.user);$('#already').classList.add('show');$('#alreadyName').textContent=(x?.legacyUser?.name||'আপনি')+' লগইন করা আছে';$('#continueBtn').href=await A.routeForUser(s.user)}})();
-$('#logoutBtn').onclick=async()=>{await A.signOut();$('#already').classList.remove('show');status('এখন অন্য account দিয়ে লগইন করুন।','success')};
-$('#loginForm').onsubmit=async e=>{e.preventDefault();const b=$('#submit');b.disabled=true;status('লগইন যাচাই হচ্ছে…');try{const r=await A.signIn($('#email').value,$('#password').value);status('লগইন সফল।','success');const next=A.safeNext(new URLSearchParams(location.search).get('next'),'');location.href=await A.routeForUser(r.user,next)}catch(err){b.disabled=false;status(A.friendlyError(err),'error')}};
+(async()=>{const s=await A.currentSession();if(s?.user){const x=await A.syncUser(s.user);$('#already').classList.add('show');$('#alreadyName').textContent=(x?.legacyUser?.name||'You')+' is logged in';$('#continueBtn').href=await A.routeForUser(s.user)}})();
+$('#logoutBtn').onclick=async()=>{await A.signOut();$('#already').classList.remove('show');status('You can now log in with another account.','success')};
+$('#loginForm').onsubmit=async e=>{e.preventDefault();const b=$('#submit');b.disabled=true;status('Checking your login…');try{const r=await A.signIn($('#email').value,$('#password').value);status('Login successful.','success');const next=A.safeNext(new URLSearchParams(location.search).get('next'),'');location.href=await A.routeForUser(r.user,next)}catch(err){b.disabled=false;status(A.friendlyError(err),'error')}};
 </script></body></html>
