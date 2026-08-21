@@ -1395,8 +1395,9 @@ async function openFullPostViewer(card,focus=false,opts={}){
  hydrateReactionCard(vc,{preferOptimistic:true}).catch(()=>{});
  vc.querySelector('.bd-comment-form')?.remove();const cm=vc.querySelector('[data-comments]');cm.classList.add('open');vc.classList.add('bd-comments-open');
  await loadComments(vc);const cached=data.state.comments.get(socialPostId(vc));if(Array.isArray(cached)&&data.state.userId)cached.forEach(c=>c.owner=String(c.user_id||'')===String(data.state.userId));drawComments(vc,'relevant');
- /* Focused Post deliberately keeps bindPost(vc)'s exact News Feed reaction system.
-    No clone/rebind: same picker, same canonical post ID, same Supabase/local sync. */
+ /* Focused Post uses the same canonical state, with an iOS-safe target binder.
+    The picker buttons still use bindPost(vc)'s canonical applyRx handlers. */
+ bdBindFullViewerLike(vc,card);
  /* Comment action/count are already bound by bindPost(vc) to the fixed bottom dock. */
  BD_FULL_VIEW={sourceCard:card,root,card:vc,state:data.state,post:data.post,commentFile:null,keepPhoto};sc.scrollTop=0;v.classList.toggle('bd-photo-comment-sheet',keepPhoto);D.documentElement.classList.add('bd-focused-post-open');D.body.classList.add('bd-focused-post-open');v.classList.add('open');v.setAttribute('aria-hidden','false');lockViewerPage(true);updateViewerViewport();
  const inp=v.querySelector('[data-full-comment-input]');inp.value='';bdBindCommentDetector(inp);try{const ss=await session(),md=ss?.user?.user_metadata||{},nm=md.full_name||md.name||md.display_name||ss?.user?.email?.split('@')[0]||'আপনি';inp.placeholder='Comment as '+nm}catch(_){}setFullViewerCommentFile(null);if(focus)setTimeout(()=>preserveViewerScrollWhileFocus(inp),60)
@@ -1631,7 +1632,7 @@ async function loadComments(card){
 
 const BD_DEEP_BAD_TERMS=[
  'মাদারচোদ','মাদার চোদ','বাঞ্চোদ','বাইনচোদ','বেহেনচোদ','বোকাচোদা','চুতমারানি','চুতমারা','চুদাচুদি','চোদাচুদি','চোদনা','চোদানি','খানকি','খানকির পোলা','খানকির ছেলে','মাগী','বেশ্যার ছেলে','বেশ্যার মেয়ে','হারামজাদা','হারামজাদী','হারামির বাচ্চা','শুয়োরের বাচ্চা','কুত্তার বাচ্চা','কুত্তার পোলা',
- 'motherfucker','mother fucker','madarchod','maderchod','banchod','behenchod','benchod','bokachoda','chutmara','chutmarani','chodachudi','fuck you','fucking bitch'
+ 'motherfucker','mother fucker','madarchod','maderchod','madarchoda','banchod','bainchod','behenchod','benchod','bokachoda','bokachoda','chutmara','chutmarani','chodachudi','chodachoda','choda','chudi','khanki','khankir pola','khankir chele','khanki magi','haramjada','haramzoda','haramir baccha','kuttar baccha','shuyorer baccha','magi','fuck you','fuck off','fucking bitch','fucker','asshole','son of a bitch'
 ];
 function bdDeepNormalize(text){
  return String(text||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').toLocaleLowerCase('bn-BD').replace(/[“”‘’`´]/g,"'").replace(/[^\p{L}\p{N}' ]+/gu,' ').replace(/\s+/g,' ').trim();
@@ -2934,14 +2935,14 @@ html[data-theme="dark"] .bd-comment-detector{background:#392619;color:#ffd5aa;bo
  function openTray(main){const card=main?.closest?.('.bd-post');if(!card)return;let tray=card.querySelector('[data-rx-tray]');if(!tray)return;closeTray();const home=tray.parentElement;tray.dataset.forPost=String(card.dataset.postId||'');D.body.appendChild(tray);const r=main.getBoundingClientRect(),w=Math.min(326,Math.max(286,W.innerWidth-20)),h=58;let left=Math.max(10,Math.min(r.left-(w-r.width)*.10,W.innerWidth-w-10)),top=r.top-h-10;if(top<8)top=Math.min(W.innerHeight-h-8,r.bottom+8);tray.style.cssText=`display:block;position:fixed;left:${left}px;top:${top}px;width:${w}px;height:${h}px;z-index:2147483645;`;tray.classList.add('open','bd-rx-floating','bd-v107-open');tray.setAttribute('aria-hidden','false');active={tray,home,main,card};clearSelection()}
  function chooseLike(card){if(typeof W.applyRx==='function'){W.applyRx(card,'like');return}card?.querySelector?.('[data-rx-pick="like"]')?.click()}
  const press=new WeakMap();let suppressClickUntil=0;
- D.addEventListener('touchstart',e=>{const main=e.target.closest?.('[data-react-main]');if(!main||e.touches.length!==1)return;e.preventDefault();e.stopImmediatePropagation();clearSelection();const t=e.touches[0],st={x:t.clientX,y:t.clientY,held:false,timer:0};st.timer=setTimeout(()=>{st.held=true;suppressClickUntil=Date.now()+850;openTray(main)},245);press.set(main,st)},{capture:true,passive:false});
- D.addEventListener('touchmove',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(!st||!e.touches[0])return;e.stopImmediatePropagation();const t=e.touches[0];if(Math.hypot(t.clientX-st.x,t.clientY-st.y)>16){clearTimeout(st.timer);press.delete(main)}},{capture:true,passive:true});
- D.addEventListener('touchend',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(!st)return;e.preventDefault();e.stopImmediatePropagation();clearTimeout(st.timer);press.delete(main);suppressClickUntil=Date.now()+700;if(!st.held)chooseLike(main.closest('.bd-post'))},{capture:true,passive:false});
- D.addEventListener('touchcancel',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(st){clearTimeout(st.timer);press.delete(main)}},{capture:true,passive:true});
+ D.addEventListener('touchstart',e=>{const main=e.target.closest?.('[data-react-main]');if(!main||e.touches.length!==1)return;if(main.closest('#bdFullPostViewer'))return;e.preventDefault();e.stopImmediatePropagation();clearSelection();const t=e.touches[0],st={x:t.clientX,y:t.clientY,held:false,timer:0};st.timer=setTimeout(()=>{st.held=true;suppressClickUntil=Date.now()+850;openTray(main)},245);press.set(main,st)},{capture:true,passive:false});
+ D.addEventListener('touchmove',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(main?.closest('#bdFullPostViewer'))return;if(!st||!e.touches[0])return;e.stopImmediatePropagation();const t=e.touches[0];if(Math.hypot(t.clientX-st.x,t.clientY-st.y)>16){clearTimeout(st.timer);press.delete(main)}},{capture:true,passive:true});
+ D.addEventListener('touchend',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(main?.closest('#bdFullPostViewer'))return;if(!st)return;e.preventDefault();e.stopImmediatePropagation();clearTimeout(st.timer);press.delete(main);suppressClickUntil=Date.now()+700;if(!st.held)chooseLike(main.closest('.bd-post'))},{capture:true,passive:false});
+ D.addEventListener('touchcancel',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(main?.closest('#bdFullPostViewer'))return;if(st){clearTimeout(st.timer);press.delete(main)}},{capture:true,passive:true});
  D.addEventListener('pointerdown',e=>{const main=e.target.closest?.('[data-react-main]');if(!main||e.pointerType==='touch'||(e.button!=null&&e.button!==0))return;clearSelection();const st={x:e.clientX,y:e.clientY,held:false,timer:0};st.timer=setTimeout(()=>{st.held=true;suppressClickUntil=Date.now()+700;openTray(main)},260);press.set(main,st)},true);
  D.addEventListener('pointermove',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(!st||e.pointerType==='touch')return;if(Math.hypot(e.clientX-st.x,e.clientY-st.y)>16){clearTimeout(st.timer);press.delete(main)}},true);
  D.addEventListener('pointerup',e=>{const main=e.target.closest?.('[data-react-main]'),st=main&&press.get(main);if(!st||e.pointerType==='touch')return;clearTimeout(st.timer);press.delete(main)},true);
- D.addEventListener('click',e=>{const main=e.target.closest?.('[data-react-main]');if(!main)return;if(Date.now()<suppressClickUntil){e.preventDefault();e.stopImmediatePropagation()}},true);
+ D.addEventListener('click',e=>{const main=e.target.closest?.('[data-react-main]');if(!main)return;if(main.closest('#bdFullPostViewer'))return;if(Date.now()<suppressClickUntil){e.preventDefault();e.stopImmediatePropagation()}},true);
  D.addEventListener('click',e=>{if(e.target.closest?.('[data-rx-pick]'))setTimeout(closeTray,0)},false);D.addEventListener('pointerdown',e=>{if(active&&!e.target.closest?.('[data-rx-tray],[data-react-main]'))closeTray()},true);W.addEventListener('scroll',closeTray,{passive:true,capture:true});W.addEventListener('resize',closeTray,{passive:true});
  D.addEventListener('pointerdown',e=>{if(e.target.closest?.('[data-c-more],[data-c-like],[data-comment-bubble]'))clearSelection()},true);D.addEventListener('click',e=>{const m=e.target.closest?.('[data-c-more]');if(m){clearSelection();m.blur?.()}},true);
  W.BD_IMAGE_MODERATION=W.BD_IMAGE_MODERATION||{provider:'cloudflare-r2 + supabase-moderation',suspensionDays:15,async inspect(input){if(typeof W.BD_IMAGE_MODERATOR==='function')return await W.BD_IMAGE_MODERATOR(input);return{available:false,pendingBackendReview:true}}};
@@ -3141,4 +3142,19 @@ html[data-theme="aurora"] #bdFullPostViewer .bd-viewer-card>.bd-social>.bd-comme
 #bdFullPostViewer .bd-viewer-card [data-comment-open]{touch-action:manipulation!important}
 .bd-rx-tray.bd-rx-floating{z-index:61000!important}
 </style>
+
+<script id="bd-v116-focused-canonical-bridge">
+(()=>{'use strict';const D=document,W=window;if(W.__BD_V116_FOCUS_BRIDGE__)return;W.__BD_V116_FOCUS_BRIDGE__=1;
+ function dockFocus(){
+   const v=D.getElementById('bdFullPostViewer'),inp=v?.querySelector('[data-full-comment-input]');
+   if(!v?.classList.contains('open')||!inp)return false;
+   try{if(typeof W.preserveViewerScrollWhileFocus==='function')W.preserveViewerScrollWhileFocus(inp);else inp.focus({preventScroll:true})}catch(_){try{inp.focus()}catch(__){}}
+   return true
+ }
+ D.addEventListener('click',e=>{
+   if(!e.target.closest?.('#bdFullPostViewer [data-comment-open],#bdFullPostViewer [data-comment-count]'))return;
+   e.preventDefault();e.stopPropagation();dockFocus()
+ },true);
+})();
+</script>
 </body></html>
