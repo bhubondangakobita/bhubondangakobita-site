@@ -1430,7 +1430,9 @@ async function openFullPostViewer(card,focus=false,opts={}){
  const v=D.getElementById('bdFullPostViewer'),root=v.querySelector('[data-full-feed-root]'),sc=v.querySelector('[data-full-scroll]');
  try{const ss=await session();if(ss?.user?.id)data.state.userId=ss.user.id}catch(_){}
  if(BD_FULL_VIEW?.root)STATES.delete(BD_FULL_VIEW.root);
- root.innerHTML=postMarkup(data.post);STATES.set(root,data.state);const vc=root.querySelector('.bd-post');vc.classList.add('bd-viewer-card');bindPost(vc);syncFollowButton(vc);
+ root.innerHTML=postMarkup(data.post);STATES.set(root,data.state);const vc=root.querySelector('.bd-post');vc.classList.add('bd-viewer-card');bindPost(vc);syncFollowButton(vc);syncRxCard(vc);
+ /* Focused view is another surface of the SAME canonical post, never a fresh/fake reaction state. */
+ hydrateReactionCard(vc,{preferOptimistic:true}).catch(()=>{});
  vc.querySelector('.bd-comment-form')?.remove();const cm=vc.querySelector('[data-comments]');cm.classList.add('open');vc.classList.add('bd-comments-open');
  await loadComments(vc);const cached=data.state.comments.get(socialPostId(vc));if(Array.isArray(cached)&&data.state.userId)cached.forEach(c=>c.owner=String(c.user_id||'')===String(data.state.userId));drawComments(vc,'relevant');bdBindFullViewerLike(vc,card);
  vc.querySelector('[data-comment-open]').onclick=()=>preserveViewerScrollWhileFocus(v.querySelector('[data-full-comment-input]'));
@@ -1559,23 +1561,74 @@ function bdReactionLocalKeys(card){return [...new Set([...bdPostAliasIds(card),b
 function localReactionRows(ids){try{const set=new Set((ids||[]).map(String)),a=JSON.parse(localStorage.getItem('bd-local-reactions')||'[]');return Array.isArray(a)?a.filter(x=>set.has(String(x.post_id))):[]}catch(_){return []}}
 function saveLocalReactionKeys(keys,userId,reaction){try{let a=JSON.parse(localStorage.getItem('bd-local-reactions')||'[]');if(!Array.isArray(a))a=[];const set=new Set((keys||[]).filter(Boolean).map(String));a=a.filter(x=>!(set.has(String(x.post_id))&&String(x.user_id)===String(userId)));if(reaction)for(const k of set)a.push({post_id:k,user_id:String(userId),reaction:String(reaction),updated_at:new Date().toISOString()});localStorage.setItem('bd-local-reactions',JSON.stringify(a.slice(-8000)))}catch(_){}}
 function saveLocalReaction(postId,userId,reaction){saveLocalReactionKeys([postId],userId,reaction)}
+
+/* V110 canonical reaction bridge -------------------------------------------------
+   One post/user reaction state is shared by Feed, Focused Post, Profile, Category,
+   photo-related parent surfaces and other open tabs. Supabase remains canonical;
+   localStorage is only an optimistic/offline mirror. */
+const BD_REACTION_SYNC_KEY='bd-canonical-reaction-sync-v110';
+let BD_REACTION_CHANNEL=null;try{BD_REACTION_CHANNEL=('BroadcastChannel'in W)?new BroadcastChannel('bhubondanga-canonical-social'):null}catch(_){}
+function bdReactionRowType(x){return String(x?.reaction||x?.reaction_type||x?.type||'like').toLowerCase()}
+function bdNormalizeReactionRow(x,postId){const t=bdReactionRowType(x);return {...x,post_id:String(postId||x?.post_id||''),reaction:RX.includes(t)?t:'like'}}
+function bdReactionRowsMerge(rows){const m=new Map();for(const x0 of rows||[]){const x=bdNormalizeReactionRow(x0),uid=String(x.user_id||x.author_id||'');if(!uid)continue;m.set(uid,x)}return [...m.values()]}
+async function bdFetchRemoteReactionRows(ids){
+ const c=client(),clean=[...new Set((ids||[]).filter(x=>x&&!String(x).startsWith('sig:')).map(String))];if(!c||!clean.length)return[];
+ const uuid=clean.filter(bdLooksUuid),queryIds=uuid.length?uuid:clean,attempts=[
+  async()=>{const r=await c.from('post_reactions').select('post_id,user_id,reaction').in('post_id',queryIds);return r?.error?null:(r?.data||[])},
+  async()=>{const r=await c.from('post_reactions').select('post_id,user_id,reaction_type').in('post_id',queryIds);return r?.error?null:(r?.data||[]).map(x=>({...x,reaction:x.reaction_type}))},
+  async()=>{const r=await c.from('reactions').select('post_id,user_id,reaction').in('post_id',queryIds);return r?.error?null:(r?.data||[])}
+ ];
+ for(const fn of attempts){try{const rows=await fn();if(Array.isArray(rows))return rows.map(x=>bdNormalizeReactionRow(x))}catch(_){}}
+ return[]
+}
+function bdCardMatchesReactionPayload(card,d){
+ if(!card||!d)return false;const keys=new Set((d.keys||[]).map(String));if(d.postId)keys.add(String(d.postId));
+ if(keys.has(socialPostId(card)))return true;for(const k of bdReactionLocalKeys(card))if(keys.has(String(k)))return true;return false
+}
+function bdApplyReactionSyncPayload(d){
+ if(!d?.userId)return;D.querySelectorAll('.bd-post[data-post-id]').forEach(card=>{if(!bdCardMatchesReactionPayload(card,d))return;const st=stateOf(card);if(!st)return;const id=socialPostId(card),uid=String(d.userId);let rows=(st.reactions.get(id)||[]).filter(x=>String(x.user_id)!==uid);if(d.reaction)rows.push({post_id:id,user_id:uid,reaction:String(d.reaction),updated_at:d.at||Date.now()});st.reactions.set(id,rows);if(!st.userId)st.userId=uid;syncRxCard(card)});
+ if(BD_PHOTO_VIEW?.card&&d.parentPostId&&String(d.parentPostId)===String(bdPhotoCanonical(BD_PHOTO_VIEW.post)))renderPhotoViewer()
+}
+function bdEmitCanonicalReactionSync(card,userId,reaction){
+ const detail={postId:socialPostId(card),keys:bdReactionLocalKeys(card),userId:String(userId||''),reaction:String(reaction||''),at:Date.now()};
+ try{localStorage.setItem(BD_REACTION_SYNC_KEY,JSON.stringify(detail))}catch(_){}try{W.dispatchEvent(new CustomEvent('bd:canonical-reaction-sync',{detail}))}catch(_){}try{BD_REACTION_CHANNEL?.postMessage(detail)}catch(_){}
+}
+W.addEventListener('bd:canonical-reaction-sync',e=>bdApplyReactionSyncPayload(e.detail));
+W.addEventListener('storage',e=>{if(e.key!==BD_REACTION_SYNC_KEY||!e.newValue)return;try{bdApplyReactionSyncPayload(JSON.parse(e.newValue))}catch(_){}});
+if(BD_REACTION_CHANNEL)BD_REACTION_CHANNEL.onmessage=e=>bdApplyReactionSyncPayload(e.data);
+
 function syncReactionEverywhere(card){const keys=new Set(bdPostAliasIds(card).map(String));const sig=bdReactionSignature(card);D.querySelectorAll('.bd-post[data-post-id]').forEach(other=>{if(other===card){syncRxCard(other);return}const osig=bdReactionSignature(other),sameSig=!!(sig&&osig===sig),same=[...bdPostAliasIds(other)].some(x=>keys.has(String(x)));if(same||sameSig){const src=stateOf(card),dst=stateOf(other),id=socialPostId(card),oid=socialPostId(other),rows=src?.reactions.get(id)||[];if(dst)dst.reactions.set(oid,rows.map(x=>({...x,post_id:oid})));syncRxCard(other)}})}
-async function bdNotifyPostOwner(card,kind,label,ss){try{const recipient=String(card?.dataset?.authorId||''),actor=String(ss?.user?.id||'');if(!recipient||!actor||recipient===actor)return;const md=ss.user.user_metadata||{},name=md.full_name||md.name||ss.user.email?.split('@')[0]||'একজন সদস্য',postId=(card?.classList?.contains('bd-photo-virtual-card')||card?.classList?.contains('bd-photo-comment-card'))?(BD_PHOTO_VIEW?bdPhotoCanonical(BD_PHOTO_VIEW.post):socialPostId(card)):socialPostId(card),type=kind==='comment'?'post_comment':'post_reaction',title=kind==='comment'?`${name} আপনার পোস্টে মন্তব্য করেছেন`:`${name} আপনার পোস্টে ${label||'রিঅ্যাক্ট'} করেছেন`,message=kind==='comment'?String(label||'').slice(0,160):`${label||'Reaction'} reaction`,url=`index.html?post=${encodeURIComponent(postId)}`;if(W.BD_SIGNAL_CENTER?.sendNotification){await W.BD_SIGNAL_CENTER.sendNotification({recipientId:recipient,actorId:actor,actorName:name,type,title,message,url,postId});return}const now=new Date().toISOString(),base={recipient_id:recipient,actor_id:actor,type,title,message,url,post_id:postId,created_at:now,read:false};try{const a=JSON.parse(localStorage.getItem('bhubondangaNotifications')||'[]');a.unshift({...base,id:'local-n-'+Date.now()});localStorage.setItem('bhubondangaNotifications',JSON.stringify(a.slice(0,1200)))}catch(_){}const c=client();if(!c)return;for(const row of [base,{user_id:recipient,actor_id:actor,type,title,message,url,post_id:postId,created_at:now,read:false},{recipient_id:recipient,actor_id:actor,type,title,created_at:now},{user_id:recipient,actor_id:actor,type,title,created_at:now}]){try{const r=await c.from('notifications').insert(row);if(!r.error)break}catch(_){}}}catch(_){}}
+async function bdNotifyPostOwner(card,kind,label,ss){try{const recipient=String(card?.dataset?.authorId||''),actor=String(ss?.user?.id||'');if(!recipient||!actor||recipient===actor)return;const md=ss.user.user_metadata||{},name=md.full_name||md.name||ss.user.email?.split('@')[0]||'একজন সদস্য',postId=(card?.classList?.contains('bd-photo-virtual-card')||card?.classList?.contains('bd-photo-comment-card'))?(BD_PHOTO_VIEW?bdPhotoCanonical(BD_PHOTO_VIEW.post):socialPostId(card)):socialPostId(card),type=kind==='comment'?'post_comment':'post_reaction',title=kind==='comment'?`${name} আপনার পোস্টে মন্তব্য করেছেন`:`${name} আপনার পোস্টে ${label||'রিঅ্যাক্ট'} করেছেন`,message=kind==='comment'?String(label||'').slice(0,160):`${label||'Reaction'} reaction`,url=`index.html?post=${encodeURIComponent(postId)}`;if(W.BD_SIGNAL_CENTER?.sendNotification){await W.BD_SIGNAL_CENTER.sendNotification({recipientId:recipient,actorId:actor,actorName:name,type,title,message,url,postId});return}const now=new Date().toISOString(),base={recipient_id:recipient,actor_id:actor,type,title,message,url,post_id:postId,created_at:now,read:false};try{const a=JSON.parse(localStorage.getItem('bhubondangaNotifications')||'[]');a.unshift({...base,id:'local-n-'+Date.now()});localStorage.setItem('bhubondangaNotifications',JSON.stringify(a.slice(0,1200)))}catch(_){}const c=client();if(!c)return;for(const row of [base,{user_id:recipient,actor_id:actor,type,title,message,url,post_id:postId,created_at:now,read:false},{recipient_id:recipient,actor_id:actor,type,title,created_at:now},{user_id:recipient,actor_id:actor,type,title,created_at:now}]){try{const r=await c.from('notifications').insert(row);if(!r.error)break}catch(_){}}}catch(_){} }
+
+async function hydrateReactionCard(card,opt={}){
+ const st=stateOf(card);if(!st||!card)return[];const id=socialPostId(card),aliases=bdPostAliasIds(card),localKeys=bdReactionLocalKeys(card);
+ const remote=await bdFetchRemoteReactionRows(aliases),existing=st.reactions.get(id)||[],local=localReactionRows(localKeys);
+ const merged=new Map();const put=(x,source)=>{x=bdNormalizeReactionRow(x,id);const uid=String(x.user_id||'');if(!uid)return;const prev=merged.get(uid);if(source==='local'&&prev){const t=Date.parse(x.updated_at||x.created_at||0)||0;if(!opt.preferOptimistic&&Date.now()-t>60000)return}merged.set(uid,x)};
+ remote.forEach(x=>put(x,'remote'));existing.forEach(x=>put(x,'existing'));local.forEach(x=>put(x,'local'));
+ const rows=[...merged.values()];st.reactions.set(id,rows);syncReactionEverywhere(card);return rows
+}
 async function hydrateReactions(root){
  const st=STATES.get(root),cards=[...root.querySelectorAll('.bd-post[data-post-id]')];if(!cards.length)return;st.reactions.clear();
  const localToCanonical=new Map(),dbToCanonical=new Map(),localKeys=[],dbIds=[];
  for(const card of cards){const id=socialPostId(card),aliases=bdPostAliasIds(card),locals=bdReactionLocalKeys(card);aliases.forEach(x=>{dbToCanonical.set(String(x),id);dbIds.push(String(x))});locals.forEach(x=>{localToCanonical.set(String(x),id);localKeys.push(String(x))})}
- const add=(x,map)=>{const canonical=map.get(String(x.post_id))||String(x.post_id),row={...x,post_id:canonical},a=st.reactions.get(canonical)||[],i=a.findIndex(y=>String(y.user_id)===String(row.user_id));if(i>=0)a[i]=row;else a.push(row);st.reactions.set(canonical,a)};
- localReactionRows([...new Set(localKeys)]).forEach(x=>add(x,localToCanonical));
- const rawIds=[...new Set(dbIds.filter(Boolean))],uuidIds=rawIds.filter(bdLooksUuid),ids=uuidIds.length?uuidIds:rawIds,c=client();if(c&&ids.length){try{const r=await c.from('post_reactions').select('post_id,user_id,reaction').in('post_id',ids);if(!r.error&&Array.isArray(r.data))r.data.forEach(x=>add(x,dbToCanonical))}catch(_){}}
+ const add=(x,map,source)=>{const canonical=map.get(String(x.post_id))||String(x.post_id),row=bdNormalizeReactionRow(x,canonical),a=st.reactions.get(canonical)||[],i=a.findIndex(y=>String(y.user_id)===String(row.user_id));if(i>=0){if(source==='local'){const t=Date.parse(row.updated_at||row.created_at||0)||0;if(Date.now()-t>60000)return}a[i]=row}else a.push(row);st.reactions.set(canonical,a)};
+ const remote=await bdFetchRemoteReactionRows([...new Set(dbIds)]);remote.forEach(x=>add(x,dbToCanonical,'remote'));
+ localReactionRows([...new Set(localKeys)]).forEach(x=>add(x,localToCanonical,'local'));
  cards.forEach(syncRxCard)
 }
-async function bdPersistReactionRemote(ids,uid,type){const c=client();if(!c||!uid)return;const dbIds=[...new Set((ids||[]).filter(x=>x&&!String(x).startsWith('sig:')).map(String))],canonical=dbIds.find(bdLooksUuid)||dbIds[0];if(!canonical)return;if(!type){try{await c.from('post_reactions').delete().in('post_id',dbIds).eq('user_id',uid)}catch(_){}return}const attempts=[
+async function bdPersistReactionRemote(ids,uid,type){const c=client();if(!c||!uid)return false;const dbIds=[...new Set((ids||[]).filter(x=>x&&!String(x).startsWith('sig:')).map(String))],canonical=dbIds.find(bdLooksUuid)||dbIds[0];if(!canonical)return false;if(!type){for(const table of ['post_reactions','reactions']){try{const r=await c.from(table).delete().in('post_id',dbIds).eq('user_id',uid);if(!r?.error)return true}catch(_){}}return false}const attempts=[
  ()=>c.from('post_reactions').upsert({post_id:canonical,user_id:uid,reaction:type},{onConflict:'post_id,user_id'}),
  ()=>c.from('post_reactions').upsert({post_id:canonical,user_id:uid,reaction_type:type},{onConflict:'post_id,user_id'}),
  ()=>c.from('reactions').upsert({post_id:canonical,user_id:uid,reaction:type},{onConflict:'post_id,user_id'})
-];for(const fn of attempts){try{const r=await fn();if(!r?.error)return}catch(_){}}}
-async function applyRx(card,type,opt={}){const s=stateOf(card);if(!s)return;let uid=s.userId;if(!uid){const ss=await session();uid=ss?.user?.id||W.BD_SESSION?.user?.id||'';if(uid)s.userId=uid}if(!uid){toast('রিঅ্যাক্ট করতে লগইন করুন');return}const id=socialPostId(card),localKeys=bdReactionLocalKeys(card),dbIds=bdPostAliasIds(card);let arr=s.reactions.get(id)||[];const old=arr.find(x=>String(x.user_id)===String(uid));if(old?.reaction===type&&!opt.force){arr=arr.filter(x=>String(x.user_id)!==String(uid));s.reactions.set(id,arr);saveLocalReactionKeys(localKeys,uid,'');syncReactionEverywhere(card);closeFloatingTray();bdPersistReactionRemote(dbIds,uid,'');return}if(old?.reaction===type&&opt.force){saveLocalReactionKeys(localKeys,uid,type);syncReactionEverywhere(card);closeFloatingTray();return}arr=arr.filter(x=>String(x.user_id)!==String(uid));arr.push({post_id:id,user_id:uid,reaction:type});s.reactions.set(id,arr);saveLocalReactionKeys(localKeys,uid,type);syncReactionEverywhere(card);closeFloatingTray();bdPersistReactionRemote(dbIds,uid,type);try{const ss=await session();await bdNotifyPostOwner(card,'reaction',({like:'Like',love:'Love',care:'Care',haha:'Haha',wow:'Wow',sad:'Sad',angry:'Angry'})[type]||type,ss||{user:W.BD_SESSION?.user})}catch(_){}}
+];for(const fn of attempts){try{const r=await fn();if(!r?.error)return true}catch(_){}}return false}
+async function applyRx(card,type,opt={}){
+ const s=stateOf(card);if(!s)return;let uid=s.userId;if(!uid){const ss=await session();uid=ss?.user?.id||W.BD_SESSION?.user?.id||'';if(uid)s.userId=uid}if(!uid){toast('রিঅ্যাক্ট করতে লগইন করুন');return}
+ type=RX.includes(String(type||'').toLowerCase())?String(type).toLowerCase():'like';const id=socialPostId(card),localKeys=bdReactionLocalKeys(card),dbIds=bdPostAliasIds(card);let arr=s.reactions.get(id)||[];const old=arr.find(x=>String(x.user_id)===String(uid));
+ if(old?.reaction===type&&!opt.force){arr=arr.filter(x=>String(x.user_id)!==String(uid));s.reactions.set(id,arr);saveLocalReactionKeys(localKeys,uid,'');syncReactionEverywhere(card);bdEmitCanonicalReactionSync(card,uid,'');closeFloatingTray();bdPersistReactionRemote(dbIds,uid,'').catch(()=>{});return}
+ if(old?.reaction===type&&opt.force){saveLocalReactionKeys(localKeys,uid,type);syncReactionEverywhere(card);bdEmitCanonicalReactionSync(card,uid,type);closeFloatingTray();bdPersistReactionRemote(dbIds,uid,type).catch(()=>{});return}
+ arr=arr.filter(x=>String(x.user_id)!==String(uid));arr.push({post_id:id,user_id:uid,reaction:type,updated_at:new Date().toISOString()});s.reactions.set(id,arr);saveLocalReactionKeys(localKeys,uid,type);syncReactionEverywhere(card);bdEmitCanonicalReactionSync(card,uid,type);closeFloatingTray();bdPersistReactionRemote(dbIds,uid,type).catch(()=>{});
+ try{const ss=await session();await bdNotifyPostOwner(card,'reaction',({like:'Like',love:'Love',care:'Care',haha:'Haha',wow:'Wow',sad:'Sad',angry:'Angry'})[type]||type,ss||{user:W.BD_SESSION?.user})}catch(_){}
+}
 W.applyRx=applyRx;window.applyRx=applyRx;
 function doubleLove(card){const b=card.querySelector('.bd-love-burst');applyRx(card,'love',{force:true});if(b){b.classList.remove('show');void b.offsetWidth;b.classList.add('show')}}
 function mapComment(r,uid){const md=(r&&typeof r.metadata==='object'&&r.metadata)||{};return {id:r.id||('c-'+Date.now()),post_id:r.post_id,parent_id:r.parent_id||r.reply_to||null,user_id:r.user_id||r.author_id||'',name:r.author_name||r.user_name||r.profile?.full_name||r.profiles?.full_name||'সদস্য',avatar:r.author_avatar||r.avatar_url||r.profile?.avatar_url||r.profiles?.avatar_url||'',text:r.content||r.text||r.body||'',media:r.media_url||r.image_url||md.media_url||md.image_url||'',at:Date.parse(r.created_at||r.createdAt||new Date())||Date.now(),score:Number(r.score||r.reaction_count||0),owner:String(r.user_id||r.author_id||'')===String(uid||''),pending:(r.status||'')==='pending_review',edited:!!(r.edited_at||md.edited_at||r.is_edited||md.is_edited),pinned:!!(r.pinned||md.pinned)}}
@@ -2997,7 +3050,7 @@ html[data-theme="aurora"] #bdFullPostViewer .bd-viewer-card>.bd-social>.bd-comme
 (()=>{'use strict';
  const D=document,W=window;if(W.__BD_V109_MASTER_LOCK__)return;W.__BD_V109_MASTER_LOCK__=1;
  W.BD_FEED_MASTER_LOCK=Object.freeze({
-  version:'2026-08-21-v109',selectedPostOnly:true,canonicalPostState:true,canonicalCommentState:true,canonicalMediaState:true,
+  version:'2026-08-21-v110',selectedPostOnly:true,canonicalPostState:true,canonicalCommentState:true,canonicalMediaState:true,canonicalReactionState:true,
   noUnderlyingFeedInFocusedView:true,noBrowserZoom:true,noKeyboardJump:true,noNativeCopyOnProtectedSurfaces:true,
   abuseDetector:true,imageModeration:{provider:'Cloudflare R2 + Supabase moderation metadata',suspensionDays:15,review:['founder','admin']},
   reactionOrder:['like','love','care','haha','wow','sad','angry'],doubleTap:'love',tripleTap:'wow',reactionArtworkBackground:'transparent',
