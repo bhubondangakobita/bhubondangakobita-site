@@ -490,17 +490,39 @@ function bd133MessageMode(p){
   if(['off','closed','disabled','none','nobody','no','false','0','request','requests_only','message_request'].includes(x))return'request';
   return'direct'
 }
+function bd133MessageMode(p){
+  const v=p||{},meta=(v.metadata&&typeof v.metadata==='object')?v.metadata:{},settings=(v.settings&&typeof v.settings==='object')?v.settings:{};
+  const raw=v.allow_messages ?? v.messages_enabled ?? v.message_enabled ?? v.allow_message ?? v.allow_direct_messages ??
+            v.message_privacy ?? v.message_setting ?? v.inbox_mode ??
+            settings.allow_messages ?? settings.messages_enabled ?? settings.message_privacy ??
+            meta.allow_messages ?? meta.messages_enabled ?? meta.message_privacy;
+  if(raw===false||raw===0)return'request';
+  const x=String(raw??'').trim().toLowerCase();
+  if(['off','closed','disabled','none','nobody','no','false','0','request','requests_only','message_request'].includes(x))return'request';
+  return'direct'
+}
 function renderActions(){
   const h=$('#profileActions');if(!h)return;
-  h.classList.remove('bd-v842-visitor','bd-v841-visitor-actions','bd129-owner-actions','bd129-visitor-actions','bd130-owner-actions','bd130-visitor-actions','bd132-owner-actions','bd132-visitor-actions');
+  h.classList.remove('bd-v842-visitor','bd-v841-visitor-actions','bd129-owner-actions','bd129-visitor-actions','bd130-owner-actions','bd130-visitor-actions','bd132-owner-actions','bd132-visitor-actions','bd134-owner-actions');
   const owner=!!state.owner,targetId=String(state.target?.id||''),messageMode=bd133MessageMode(state.target);
   if(owner){
-    h.classList.add('bd132-owner-actions');
-    h.innerHTML=`<div class="bd132-owner-grid">
-      <button class="action bd132-owner-edit" type="button" data-click="edit-profile">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/><path d="M14 19h6"/></svg>
+    h.classList.add('bd134-owner-actions');
+    h.innerHTML=`<div class="bd134-owner-row">
+      <button class="action bd134-edit-profile" type="button" data-click="edit-profile">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/></svg>
         <span>Edit Profile</span>
       </button>
+      <div class="bd134-owner-tools" aria-label="Owner quick tools">
+        <a class="bd134-round" href="notifications.html" aria-label="Notifications" title="Notifications">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 6-3 7-3 9h18c0-2-3-3-3-9Z"/><path d="M10 21h4"/></svg>
+        </a>
+        <a class="bd134-round" href="messages.html" aria-label="Messages" title="Messages">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v12H8l-4 3V5Z"/><path d="M8 10h8M8 13h5"/></svg>
+        </a>
+        <a class="bd134-round" href="index.html" aria-label="Home" title="Home">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg>
+        </a>
+      </div>
     </div>`;
   }else{
     const msgLabel=messageMode==='request'?'Message Request':'Message';
@@ -1901,6 +1923,77 @@ html[data-theme="dark"] .bd132-owner-tools{background:rgba(13,28,22,.94)!importa
   .bd132-owner-grid,.bd132-visitor-actions{gap:7px!important}
   .bd132-owner-grid .action,.bd132-visitor-actions .action{font-size:9.8px!important;padding:0 10px!important}
   .bd132-message{padding-left:13px!important;padding-right:12px!important}
+}
+</style>
+
+<style id="bd-v134-deep-green-glass-owner">
+#profileActions.actions.bd134-owner-actions{margin:15px 0 4px!important;width:100%!important}
+.bd134-owner-row{
+  width:100%!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;gap:18px!important;
+}
+.bd134-edit-profile{
+  min-height:55px!important;border-radius:999px!important;justify-content:center!important;
+  color:#073f31!important;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.62),rgba(231,247,239,.48)),
+    linear-gradient(180deg,rgba(10,116,84,.06),rgba(10,116,84,.015))!important;
+  border:1px solid rgba(6,106,77,.28)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    inset 0 -1px 0 rgba(10,101,75,.06),
+    0 10px 24px rgba(4,74,54,.10),
+    0 1px 3px rgba(4,74,54,.06)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(145%)!important;
+  backdrop-filter:blur(18px) saturate(145%)!important;
+  font-weight:900!important;font-size:15px!important;letter-spacing:-.2px!important;
+}
+.bd134-edit-profile svg{
+  width:23px!important;height:23px!important;fill:none!important;stroke:#07513d!important;
+  stroke-width:1.85!important;stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+.bd134-owner-tools{display:flex!important;align-items:center!important;gap:14px!important}
+.bd134-round{
+  width:55px!important;height:55px!important;border-radius:50%!important;display:grid!important;place-items:center!important;
+  color:#0a3f33!important;text-decoration:none!important;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.68),rgba(236,247,242,.46)),
+    linear-gradient(180deg,rgba(5,103,75,.04),rgba(5,103,75,.015))!important;
+  border:1px solid rgba(9,96,72,.18)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.96),
+    0 8px 22px rgba(15,58,48,.09),
+    0 1px 3px rgba(15,58,48,.05)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(145%)!important;
+  backdrop-filter:blur(18px) saturate(145%)!important;
+}
+.bd134-round svg{
+  width:25px!important;height:25px!important;fill:none!important;stroke:currentColor!important;
+  stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+.bd134-round:active,.bd134-edit-profile:active{transform:scale(.98)!important}
+html[data-theme="dark"] .bd134-edit-profile{
+  color:#dffbef!important;
+  background:linear-gradient(135deg,rgba(17,66,52,.82),rgba(10,48,38,.74))!important;
+  border-color:rgba(106,220,178,.28)!important;
+}
+html[data-theme="dark"] .bd134-edit-profile svg{stroke:#dffbef!important}
+html[data-theme="dark"] .bd134-round{
+  color:#d9f9ec!important;background:linear-gradient(145deg,rgba(24,62,51,.86),rgba(11,41,33,.78))!important;
+  border-color:rgba(105,205,169,.22)!important
+}
+@media(max-width:720px){
+  .bd134-owner-row{gap:11px!important}
+  .bd134-edit-profile{min-height:50px!important;font-size:12.5px!important}
+  .bd134-owner-tools{gap:9px!important}
+  .bd134-round{width:48px!important;height:48px!important}
+  .bd134-round svg{width:22px!important;height:22px!important}
+}
+@media(max-width:390px){
+  .bd134-owner-row{gap:8px!important}
+  .bd134-edit-profile{min-height:47px!important;font-size:11px!important;padding:0 12px!important}
+  .bd134-owner-tools{gap:6px!important}
+  .bd134-round{width:44px!important;height:44px!important}
 }
 </style>
 </body>
