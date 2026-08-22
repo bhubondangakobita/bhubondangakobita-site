@@ -819,7 +819,7 @@ W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 #bd897TopArrow{mix-blend-mode:normal!important}
 </style>
 
-</head>
+<style id="bd-v140-delete-visible">.post-menu-panel button.danger,[data-post-option="delete"]{color:#bd3349!important;font-weight:900!important}</style></head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
 <div class="shell">
@@ -985,7 +985,7 @@ async function deleteOwnedPost(id,card){
   const anchor=card?.nextElementSibling||card?.previousElementSibling||null,top=anchor?.getBoundingClientRect?.().top||0;removeLocalPostEverywhere(pid);state.posts=state.posts.filter(x=>String(x.id)!==pid);card?.remove();loadStats();if(anchor?.isConnected)requestAnimationFrame(()=>{const now=anchor.getBoundingClientRect().top;const d=now-top;if(Math.abs(d)>2)window.scrollBy(0,d)});return true;
 }
 function formatDate(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch{return''}}
-function profileRoute(p){const role=String(p?.role||p?.author_role||'user').toLowerCase(),id=p?.id||p?.author_id||'',u=p?.username||p?.author_username||'';if(role==='founder')return'founder-profile.html';if(role==='admin')return'admin-profile.html?user='+encodeURIComponent(id||u);return'profile.html?user='+encodeURIComponent(id||u)}
+function profileRoute(p){const role=String(p?.role||p?.author_role||p?.profile_role||'user').trim().toLowerCase(),id=p?.id||p?.user_id||p?.author_id||p?.profile_id||'',u=p?.username||p?.author_username||'';if(role==='founder'||role==='প্রতিষ্ঠাতা')return'founder-profile.html';if(role==='admin'||role==='অ্যাডমিন')return'admin-profile.html?user='+encodeURIComponent(id||u);return'profile.html?user='+encodeURIComponent(id||u)}
 function typeRoute(p){const q=encodeURIComponent(p.id||'');if(p.type==='poem')return'poem.html?post='+q;if(p.type==='recitation')return'recitation.html?id='+q;if(p.type==='prolap')return'small-prolap.html?post='+q;if(p.type==='midnight')return'madhyorater-prolap.html?post='+q;if(p.type==='letter')return'letter.html?post='+q;if(p.type==='environment')return'environment.html?post='+q;if(p.type==='humanitarian')return'humanitarian.html?request='+q;if(p.type==='discussion')return'discussion.html?id='+q;if(p.type==='advice')return'index.html?category=advice&post='+q;return'index.html?post='+q}
 function roleText(role){return role==='founder'?'FOUNDER':role==='admin'?'ADMIN':'সদস্য'}
 function roleBn(role){return role==='founder'?'প্রতিষ্ঠাতা':role==='admin'?'অ্যাডমিন':'সদস্য'}
@@ -1141,6 +1141,7 @@ function renderActions(){
   if(!owner&&$('#inlineProfileEditor'))$('#inlineProfileEditor').hidden=true;
   if(composer)composer.hidden=false;
   renderProfileMenu();
+  try{window.BDRegion?.apply?.(h);window.BDRegion?.apply?.($('#profileMenu'))}catch(_){}
 }
 const BD_FOLLOW_CACHE_KEY='bd-follow-state-v135';
 const BD_FOLLOW_COUNT_CACHE_KEY='bd-follow-count-v135';
@@ -2581,10 +2582,10 @@ window.BD77_CONNECTIONS={open:openConnections,refresh:refreshCounts};
 .bd140-edit{
   width:100%!important;min-width:0!important;height:54px!important;min-height:54px!important;
   padding:0 22px!important;border-radius:999px!important;
-  border:1px solid rgba(8,112,81,.30)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.84),rgba(240,250,245,.65))!important;
-  color:#07583f!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 9px 23px rgba(4,81,58,.08)!important;
+  border:1.5px solid #e5515c!important;
+  background:linear-gradient(180deg,#050505,#111)!important;
+  color:#fff!important;
+  box-shadow:0 9px 23px rgba(35,12,17,.14),inset 0 1px 0 rgba(255,255,255,.08)!important;
   -webkit-backdrop-filter:blur(19px) saturate(140%)!important;backdrop-filter:blur(19px) saturate(140%)!important;
   display:flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;
   white-space:nowrap!important;font-size:14px!important;font-weight:900!important;
@@ -2593,10 +2594,10 @@ window.BD77_CONNECTIONS={open:openConnections,refresh:refreshCounts};
 .bd140-tools{display:flex!important;align-items:center!important;gap:9px!important;flex:none!important}
 .bd140-tool{
   width:53px!important;height:53px!important;min-width:53px!important;border-radius:50%!important;
-  display:grid!important;place-items:center!important;text-decoration:none!important;color:#07583f!important;
-  border:1px solid rgba(8,106,78,.18)!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.86),rgba(241,249,246,.67))!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 8px 20px rgba(3,74,53,.075)!important;
+  display:grid!important;place-items:center!important;text-decoration:none!important;color:#17233a!important;
+  border:1.35px solid rgba(229,81,92,.58)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(253,247,248,.90))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 8px 20px rgba(99,31,42,.08)!important;
   -webkit-backdrop-filter:blur(18px) saturate(140%)!important;backdrop-filter:blur(18px) saturate(140%)!important;
 }
 .bd140-tool svg{width:23px!important;height:23px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.75!important;stroke-linecap:round!important;stroke-linejoin:round!important}
