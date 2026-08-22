@@ -569,6 +569,27 @@ const LANGS={
  sk:{name:'Slovak',native:'Slovenčina',dir:'ltr',letters:['A','B','C','D','E']},
  sl:{name:'Slovenian',native:'Slovenščina',dir:'ltr',letters:['A','B','C','D','E']}
 };
+
+Object.assign(LANGS,{
+ lg:{name:'Luganda',native:'Luganda',dir:'ltr',letters:['A','B','C','D','E']},
+ am:{name:'Amharic',native:'አማርኛ',dir:'ltr',letters:['ሀ','ለ','ሐ','መ','ሠ']},
+ so:{name:'Somali',native:'Soomaali',dir:'ltr',letters:['A','B','C','D','E']},
+ zu:{name:'Zulu',native:'isiZulu',dir:'ltr',letters:['A','B','C','D','E']},
+ xh:{name:'Xhosa',native:'isiXhosa',dir:'ltr',letters:['A','B','C','D','E']},
+ ha:{name:'Hausa',native:'Hausa',dir:'ltr',letters:['A','B','C','D','E']},
+ yo:{name:'Yoruba',native:'Yorùbá',dir:'ltr',letters:['A','B','D','E','F']},
+ ig:{name:'Igbo',native:'Igbo',dir:'ltr',letters:['A','B','C','D','E']},
+ ps:{name:'Pashto',native:'پښتو',dir:'rtl',letters:['ا','ب','پ','ت','ټ']},
+ my:{name:'Burmese',native:'မြန်မာ',dir:'ltr',letters:['က','ခ','ဂ','ဃ','င']},
+ km:{name:'Khmer',native:'ខ្មែរ',dir:'ltr',letters:['ក','ខ','គ','ឃ','ង']},
+ lo:{name:'Lao',native:'ລາວ',dir:'ltr',letters:['ກ','ຂ','ຄ','ງ','ຈ']},
+ ka:{name:'Georgian',native:'ქართული',dir:'ltr',letters:['ა','ბ','გ','დ','ე']},
+ hy:{name:'Armenian',native:'Հայերեն',dir:'ltr',letters:['Ա','Բ','Գ','Դ','Ե']},
+ az:{name:'Azerbaijani',native:'Azərbaycanca',dir:'ltr',letters:['A','B','C','Ç','D']},
+ uz:{name:'Uzbek',native:"O‘zbekcha",dir:'ltr',letters:['A','B','D','E','F']},
+ kk:{name:'Kazakh',native:'Қазақша',dir:'ltr',letters:['А','Ә','Б','В','Г']}
+});
+
 const LANG_OPTIONS=Object.entries(LANGS).sort((a,b)=>a[1].name.localeCompare(b[1].name)).map(([code,x])=>`<option value="${code}">${x.native} · ${x.name}</option>`).join('');
 
 let home=inferHome(),rescue=inferRescue();
@@ -936,6 +957,7 @@ W.BDRegion={
   setHomeCountry:(v)=>setHome(v,{persist:true}),
   setRescueLocation:(v)=>setRescue(v,{persist:true}),
   setOperationalLocation:(v)=>setRescue(v,{persist:true}),
+  languages:()=>Object.fromEntries(Object.entries(LANGS).map(([k,v])=>[k,{...v,letters:[...(v.letters||[])]}])),
   apply,t:tr,letters:()=>[...langInfo().letters],renderDateTicker,
   openHomeCountry:openHomeModal,
   openRescueLocation:openRescueModal,
@@ -1645,13 +1667,22 @@ function home(){try{return W.BDRegion?.getHomeCountry?.()||{}}catch(_){return{}}
 function rescue(){try{return W.BDRegion?.getRescueLocation?.()||{}}catch(_){return{}}}
 function feedMode(){return String(W.BDRegion?.mode||localStorage.getItem('bd-feed-region-mode-v2')||'home').toLowerCase()==='local'?'local':'home'}
 function name(code){const L=langs();return L[code]?.native||L[code]?.name||String(code||'').toUpperCase()}
-function optionHTML(){
+function languageEntries(){
  const L=langs();
- return Object.keys(L).sort((a,b)=>name(a).localeCompare(name(b))).map(k=>`<option value="${esc(k)}">${esc(name(k))}</option>`).join('')
+ return Object.keys(L).sort((a,b)=>name(a).localeCompare(name(b))).map(k=>({code:k,label:name(k),english:L[k]?.name||name(k),dir:L[k]?.dir||'ltr'}))
+}
+function optionHTML(){
+ return languageEntries().map(x=>`<option value="${esc(x.code)}">${esc(x.label)} · ${esc(x.english)}</option>`).join('')
+}
+function languageButtonsHTML(ui){
+ return languageEntries().map(x=>`<button type="button" class="bd-v140-language-option ${x.code===ui?'active':''}" data-bd-v140-lang="${esc(x.code)}" data-lang-search="${esc((x.label+' '+x.english+' '+x.code).toLowerCase())}"><span>${esc(x.label)}</span><small>${esc(x.english)} · ${esc(x.code.toUpperCase())}</small><i>${x.code===ui?'✓':'›'}</i></button>`).join('')
 }
 function copy(){
- const bn=current()==='bn';
- return bn?{head:'আমার ভাষা',sub:'প্রোফাইলের দেশ না বদলিয়েও এখান থেকে ভাষা বদলান',home:'আমার দেশ',local:'লোকাল',default:'English',mine:'আমার ভাষা',near:'লোকাল ভাষা',all:'সব ভাষা থেকে বেছে নিন',foot:'ভাষা বদলালে Sidebar, Feed এবং নির্দেশনা নির্বাচিত ভাষায় আপডেট হবে। Home country অপরিবর্তিত থাকবে।'}:{head:'My Language',sub:'Change language here without changing your profile country',home:'Home',local:'Local',default:'English',mine:'My Language',near:'Local language',all:'Choose from all languages',foot:'Changing language updates the Sidebar, Feed and guidance. Your Home country stays unchanged.'}
+ const l=current();
+ if(l==='bn')return{head:'আমার ভাষা',sub:'প্রোফাইলের দেশ না বদলিয়েও এখান থেকে ভাষা বদলান',home:'আমার দেশ',local:'লোকাল',default:'English',mine:'আমার ভাষা',near:'লোকাল ভাষা',all:'সব ভাষা দেখুন',search:'ভাষা খুঁজুন…',foot:'ভাষা বদলালে Sidebar, Feed এবং নির্দেশনা নির্বাচিত ভাষায় আপডেট হবে। Home country অপরিবর্তিত থাকবে।'};
+ if(l==='hi')return{head:'मेरी भाषा',sub:'प्रोफ़ाइल देश बदले बिना यहाँ से भाषा बदलें',home:'मेरा देश',local:'लोकल',default:'English',mine:'मेरी भाषा',near:'स्थानीय भाषा',all:'सभी भाषाएँ देखें',search:'भाषा खोजें…',foot:'भाषा बदलने पर Sidebar, Feed और निर्देश बदलेंगे। Home country नहीं बदलेगा।'};
+ if(l==='ar')return{head:'لغتي',sub:'غيّر اللغة من هنا بدون تغيير بلد الملف الشخصي',home:'بلدي',local:'محلي',default:'English',mine:'لغتي',near:'اللغة المحلية',all:'عرض كل اللغات',search:'ابحث عن لغة…',foot:'سيتم تحديث الشريط الجانبي والخلاصة والإرشادات. سيبقى بلد الملف الشخصي كما هو.'};
+ return{head:'My Language',sub:'Change language here without changing your profile country',home:'Home',local:'Local',default:'English',mine:'My Language',near:'Local language',all:'Show all languages',search:'Search language…',foot:'Changing language updates the Sidebar, Feed and guidance. Your Home country stays unchanged.'}
 }
 function render(){
  const c=copy(),ui=current(),h=home(),r=rescue(),hl=String(h.lang||h.language||'bn').toLowerCase(),rl=String(r.lang||r.language||'en').toLowerCase();
@@ -1666,10 +1697,15 @@ function render(){
     <button type="button" class="bd-v131-lang-choice ${ui===hl?'active':''}" data-bd-v131-lang="${esc(hl)}"><strong>${esc(name(hl))}</strong><small>${esc(c.mine)}</small></button>
     <button type="button" class="bd-v131-lang-choice ${ui===rl?'active':''}" data-bd-v131-lang="${esc(rl)}"><strong>${esc(name(rl))}</strong><small>${esc(c.near)}</small></button>
    </div>
-   <label class="bd-v131-lang-all"><select data-bd-v131-lang-all aria-label="${esc(c.all)}"><option value="">${esc(c.all)}…</option>${optionHTML()}</select></label>
+   <div class="bd-v140-language-browser">
+    <button type="button" class="bd-v140-language-toggle" data-bd-v140-language-toggle aria-expanded="false"><span><b>${esc(name(ui))}</b><small>${esc(c.all)}</small></span><i>⌄</i></button>
+    <div class="bd-v140-language-panel" data-bd-v140-language-panel hidden>
+      <div class="bd-v140-language-search"><span>⌕</span><input type="search" data-bd-v140-language-search placeholder="${esc(c.search)}" autocomplete="off" spellcheck="false"></div>
+      <div class="bd-v140-language-list" data-bd-v140-language-list>${languageButtonsHTML(ui)}</div>
+    </div>
+   </div>
    <div class="bd-v131-lang-foot"><i>◎</i><span>${esc(c.foot)}</span></div>
   </div>`;
-  const sel=card.querySelector('[data-bd-v131-lang-all]');if(sel)sel.value=ui
  })
 }
 async function setLanguage(v){
@@ -1685,10 +1721,25 @@ async function setLanguage(v){
 }
 function setFeed(v){try{W.BDRegion?.setFeedMode?.(v)}catch(_){}setTimeout(render,20)}
 D.addEventListener('click',e=>{
+ const all=e.target.closest?.('[data-bd-v140-language-toggle]');
+ if(all){
+   e.preventDefault();e.stopPropagation();
+   const panel=all.parentElement?.querySelector('[data-bd-v140-language-panel]'),open=!!panel&&!panel.hidden;
+   D.querySelectorAll('[data-bd-v140-language-panel]').forEach(x=>x.hidden=true);
+   D.querySelectorAll('[data-bd-v140-language-toggle]').forEach(x=>x.setAttribute('aria-expanded','false'));
+   if(panel){panel.hidden=open;all.setAttribute('aria-expanded',open?'false':'true');if(!open)setTimeout(()=>panel.querySelector('[data-bd-v140-language-search]')?.focus({preventScroll:true}),20)}
+   return
+ }
+ const full=e.target.closest?.('[data-bd-v140-lang]');
+ if(full){e.preventDefault();e.stopPropagation();setLanguage(full.dataset.bdV140Lang);return}
  const l=e.target.closest?.('[data-bd-v131-lang]');if(l){e.preventDefault();e.stopPropagation();setLanguage(l.dataset.bdV131Lang);return}
  const f=e.target.closest?.('[data-bd-v131-feed]');if(f){e.preventDefault();e.stopPropagation();setFeed(f.dataset.bdV131Feed)}
 },true);
-D.addEventListener('change',e=>{const s=e.target.closest?.('[data-bd-v131-lang-all]');if(s?.value){setLanguage(s.value)}},true);
+D.addEventListener('input',e=>{
+ const s=e.target.closest?.('[data-bd-v140-language-search]');if(!s)return;
+ const q=String(s.value||'').trim().toLowerCase(),panel=s.closest('[data-bd-v140-language-panel]');
+ panel?.querySelectorAll('[data-lang-search]').forEach(b=>b.hidden=!!q&&!String(b.dataset.langSearch||'').includes(q))
+},true);
 ['bd:languagechange','bd:experiencechange','bd:homechange','bd:rescuechange','bd:sidebars-hydrated'].forEach(n=>W.addEventListener(n,()=>setTimeout(render,25)));
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>setTimeout(render,60),{once:true});else setTimeout(render,60);
 W.BDSidebarLanguageV131={render,setLanguage};
@@ -1957,6 +2008,62 @@ function apply(){
 ['bd:languagechange','bd:experiencechange','bd:sidebars-hydrated'].forEach(n=>W.addEventListener(n,()=>setTimeout(apply,30)));
 D.addEventListener('click',e=>{if(e.target.closest?.('a[href="#story-touch"],a[href="#magic-touch"]')){setTimeout(apply,120);setTimeout(apply,650)}},true);
 if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>setTimeout(apply,120),{once:true});else setTimeout(apply,120);
+})();
+</script>
+
+
+<style id="bd-sidebars-v140-language-browser">
+.bd-v140-language-browser{position:relative;display:grid;gap:7px}
+.bd-v140-language-toggle{width:100%;min-height:54px;padding:8px 13px;border:1px solid rgba(59,92,78,.12);border-radius:15px;background:linear-gradient(180deg,#fff,#f8fbfa);display:flex;align-items:center;justify-content:space-between;gap:10px;color:#153c2f;text-align:start;box-shadow:0 7px 17px rgba(22,56,44,.04)}
+.bd-v140-language-toggle span{min-width:0;display:grid;gap:2px}.bd-v140-language-toggle b{font:900 15px/1.15 Georgia,'Noto Serif Bengali',serif;overflow:hidden;text-overflow:ellipsis}.bd-v140-language-toggle small{font:750 6.5px/1.2 system-ui;color:#82918c}.bd-v140-language-toggle>i{font-style:normal;font-size:17px;color:#71837c;transition:transform .15s ease}.bd-v140-language-toggle[aria-expanded="true"]>i{transform:rotate(180deg)}
+.bd-v140-language-panel{display:grid;gap:7px;padding:8px;border-radius:15px;border:1px solid rgba(46,103,81,.13);background:rgba(252,255,253,.99);box-shadow:0 16px 34px rgba(20,55,42,.12);max-height:330px;overflow:hidden}
+.bd-v140-language-search{min-height:39px;display:grid;grid-template-columns:22px minmax(0,1fr);align-items:center;padding:0 8px;border:1px solid rgba(66,95,84,.10);border-radius:11px;background:#f5f8f7}.bd-v140-language-search span{color:#74857e}.bd-v140-language-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;font-size:16px;color:#183b30}
+.bd-v140-language-list{display:grid;gap:5px;max-height:260px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-right:2px}
+.bd-v140-language-option{width:100%;min-height:43px;padding:7px 8px;border:1px solid rgba(73,101,91,.08);border-radius:11px;background:#fff;display:grid;grid-template-columns:minmax(0,1fr) 22px;grid-template-rows:auto auto;text-align:start;color:#173b2f}
+.bd-v140-language-option span{grid-column:1;font-size:8.2px;font-weight:900}.bd-v140-language-option small{grid-column:1;font-size:6.1px;color:#81918a}.bd-v140-language-option i{grid-column:2;grid-row:1/3;align-self:center;justify-self:center;font-style:normal;color:#7a8a84}.bd-v140-language-option.active{background:#eaf8f1;border-color:rgba(11,126,85,.25);color:#0b6e4c}.bd-v140-language-option.active i{color:#0b8a5f;font-weight:900}
+html[data-theme="dark"] .bd-v140-language-toggle,html[data-theme="dark"] .bd-v140-language-panel,html[data-theme="dark"] .bd-v140-language-option{background:#13261f;color:#edf8f3;border-color:rgba(178,207,195,.11)}
+html[data-theme="dark"] .bd-v140-language-search{background:#0f211a;border-color:rgba(178,207,195,.10)}html[data-theme="dark"] .bd-v140-language-search input{color:#eef8f4}
+</style>
+
+
+<script data-bd-module="sidebars-residual-language-v140" id="bd-sidebars-residual-language-v140">
+(()=>{
+'use strict';
+const W=window,D=document;if(W.__BD_RESIDUAL_LANG_V140__)return;W.__BD_RESIDUAL_LANG_V140__=1;
+const BN_TO={
+ 'আপন ভুবন':{en:'Your World',hi:'आपका संसार',ar:'مساحتك'},
+ 'প্রোফাইল':{en:'Profile',hi:'प्रोफ़ाइल',ar:'الملف الشخصي'},
+ 'মেসেজ':{en:'Messages',hi:'संदेश',ar:'الرسائل'},
+ 'নোটিফিকেশন':{en:'Notifications',hi:'सूचनाएँ',ar:'الإشعارات'},
+ 'লগ আউট':{en:'Log out',hi:'लॉग आउट',ar:'تسجيل الخروج'},
+ 'সক্রিয় লেখক ও সহায়তা':{en:'Active Writers & Support',hi:'सक्रिय लेखक और सहायता',ar:'الكتّاب النشطون والمساعدة'},
+ 'আজকের নতুন সদস্য':{en:"Today's New Members",hi:'आज के नए सदस्य',ar:'أعضاء جدد اليوم'},
+ 'নতুন আগমন · চলমান':{en:'New arrivals · live',hi:'नए सदस्य · लाइव',ar:'أعضاء جدد · مباشر'},
+ 'স্বাগতম আপন ভুবনে':{en:'Welcome to Your World',hi:'आपके संसार में स्वागत',ar:'مرحباً بك في مساحتك'},
+ 'সাহিত্যিক সংযোগ':{en:'Literary connection',hi:'साहित्यिक संबंध',ar:'تواصل أدبي'},
+ 'আপনার পরিচিত হতে পারে':{en:'People You May Know',hi:'जिन्हें आप जान सकते हैं',ar:'أشخاص قد تعرفهم'},
+ 'সক্রিয় লেখক':{en:'Active Writers',hi:'सक्रिय लेखक',ar:'كتّاب نشطون'},
+ 'এখন কোনো সক্রিয় লেখক দেখা যাচ্ছে না।':{en:'No active writers right now.',hi:'अभी कोई सक्रिय लेखक नहीं दिख रहा।',ar:'لا يوجد كتّاب نشطون الآن.'},
+ 'সরকারি নিয়ন্ত্রণ':{en:'Founder Control',hi:'संस्थापक नियंत्रण',ar:'تحكم المؤسس'},
+ 'সরাসরি নিয়ন্ত্রণ':{en:'Direct Control',hi:'تحكم مباشر',ar:'تحكم مباشر'},
+ 'দ্রুত প্রবেশ':{en:'Quick access',hi:'त्वरित पहुँच',ar:'وصول سريع'},
+ 'নির্বাচিত':{en:'Selected',hi:'चयनित',ar:'مختار'},
+ 'গুরুত্বপূর্ণ':{en:'Important',hi:'महत्वपूर्ण',ar:'مهم'},
+ 'পরিবর্তন':{en:'Change',hi:'बदलें',ar:'تغيير'},
+ 'বর্তমান:':{en:'Current:',hi:'वर्तमान:',ar:'الحالي:'},
+ 'আপনার ব্যক্তিগত ভুবন':{en:'Your private literary space',hi:'आपकी निजी साहित्यिक दुनिया',ar:'مساحتك الأدبية الخاصة'},
+ 'এখন কোনো সক্রিয় লেখক দেখা যাচ্ছে না':{en:'No active writers right now',hi:'अभी कोई सक्रिय लेखक नहीं दिख रहा',ar:'لا يوجد كتّاب نشطون الآن'}
+};
+function l(){const x=String(W.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||D.documentElement.lang||'en').toLowerCase();return ['bn','hi','ar'].includes(x)?x:'en'}
+function apply(root=D){
+ const lang=l();if(lang==='bn')return;
+ const walker=D.createTreeWalker(root,NodeFilter.SHOW_TEXT),arr=[];while(walker.nextNode())arr.push(walker.currentNode);
+ arr.forEach(n=>{const p=n.parentElement;if(!p||p.closest('script,style,input,textarea,select,option'))return;const raw=String(n.nodeValue||''),t=raw.trim(),v=BN_TO[t]?.[lang];if(v)n.nodeValue=raw.replace(t,v)});
+ D.documentElement.lang=String(W.BDRegion?.uiLanguage||lang);D.documentElement.dir=['ar','ur','fa','ps','he'].includes(String(W.BDRegion?.uiLanguage||''))?'rtl':'ltr'
+}
+['bd:languagechange','bd:experiencechange','bd:sidebars-hydrated'].forEach(n=>W.addEventListener(n,()=>setTimeout(()=>apply(D),35)));
+D.addEventListener('click',e=>{if(e.target.closest?.('#leftDrawer,#rightDrawer,[href="#story-touch"],[href="#magic-touch"]')){setTimeout(()=>apply(D),100);setTimeout(()=>apply(D),550)}},true);
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>setTimeout(()=>apply(D),120),{once:true});else setTimeout(()=>apply(D),120);
 })();
 </script>
 

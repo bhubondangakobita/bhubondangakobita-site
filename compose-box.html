@@ -2435,6 +2435,7 @@ html[data-theme="dark"] .bdc-media-studio,html[data-theme="dark"] .bdc-premium-s
     root.querySelectorAll?.('[data-category-choice="midnight"] span').forEach(x=>x.textContent='মধ্যরাতের প্রলাপ');
   }
   function apply(root=document){
+    const __l=String(window.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||document.documentElement.lang||'en').toLowerCase();if(__l!=='en')return;
     root.querySelectorAll?.('input,textarea').forEach(el=>{
       const p=el.getAttribute('placeholder');
       if(placeholders.has(p))el.setAttribute('placeholder',placeholders.get(p));
@@ -2464,6 +2465,7 @@ html[data-theme="dark"] .bdc-media-studio,html[data-theme="dark"] .bdc-premium-s
   ['Premium Studio সুবিধা','Premium Studio'],['প্রথমে অডিও বা ভিডিও নির্বাচন করুন','Choose audio or video first.'],['Music Mix-এর আগে BG Music নির্বাচন করুন','Choose background music before Music Mix.']
  ]);
  function clean(root=document){
+  const __l=String(window.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||document.documentElement.lang||'en').toLowerCase();if(__l!=='en')return;
   const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),a=[];while(w.nextNode())a.push(w.currentNode);
   for(const n of a){const p=n.parentElement;if(!p||p.closest('script,style')||p.closest('[data-category-choice="midnight"]'))continue;const t=(n.nodeValue||'').trim();if(exact.has(t))n.nodeValue=n.nodeValue.replace(t,exact.get(t))}
   root.querySelectorAll?.('[data-category-choice="midnight"] span').forEach(x=>x.textContent='মধ্যরাতের প্রলাপ');
@@ -2510,32 +2512,27 @@ function promptCopy(category){
   const placeEN=city||region||country||'your place';
   let collapsed,title,bodyBase,mediaTitle,mediaBody;
 
-  if(key==='IN_HI'||ui==='hi'||String(r.lang||'').toLowerCase()==='hi'){
-    collapsed=(city?city+' में ':'')+'आज आपके मन में कौन-सी बात ठहर गई है?';
+  if(ui==='ar'){
+    collapsed=(city?city+' · ':'')+'ما الذي يدور في بالك اليوم؟';
+    title='اكتب عنوانًا';
+    bodyBase='اكتب فكرتك أو قصيدتك أو رسالتك هنا…';
+    mediaTitle='اكتب عنوانًا — مطلوب';
+    mediaBody='اكتب الوصف أو النص…';
+  }else if(ui==='hi'){
+    collapsed=(city?city+' · ':'')+'आज आपके मन में क्या है?';
     title='एक शीर्षक लिखिए';
     bodyBase='यहाँ अपनी बात, कविता या विचार लिखिए…';
     mediaTitle='शीर्षक लिखिए — आवश्यक';
     mediaBody='कैप्शन या विवरण लिखिए…';
-  }else if(key==='IN_WB'||(cc==='IN'&&/west bengal|kolkata|calcutta/i.test((region+' '+city).toLowerCase()))){
-    collapsed=(city?city+'র আকাশের নিচে ':'')+'আজ মনখানির ভেতর কোন কথাটা জমে আছে?';
-    title='একটি শিরোনাম লিখুন';
-    bodyBase='এখানে আপনার ভাবনা, কবিতা বা কথাগুলো লিখুন…';
-    mediaTitle='শিরোনাম লিখুন — আবশ্যক';
-    mediaBody='ক্যাপশন বা বিস্তারিত লিখুন…';
-  }else if(cc==='BD'||ui==='bn'){
-    collapsed=(city?placeBN+' থেকে ':'')+'আজ আপনার ভেতরে কী কথা জমে আছে?';
+  }else if(ui==='bn'){
+    if(key==='IN_WB'||(cc==='IN'&&/west bengal|kolkata|calcutta/i.test((region+' '+city).toLowerCase())))collapsed=(city?city+'র আকাশের নিচে ':'')+'আজ মনখানির ভেতর কোন কথাটা জমে আছে?';
+    else collapsed=(city?placeBN+' থেকে ':'')+'আজ আপনার ভেতরে কী কথা জমে আছে?';
     title='একটি শিরোনাম লিখুন';
     bodyBase='এখানে আপনার মনের কথা, কবিতা বা ভাবনা লিখুন…';
     mediaTitle='শিরোনাম লিখুন — আবশ্যক';
     mediaBody='ক্যাপশন বা মূল কথা লিখুন…';
-  }else if(ui==='ar'){
-    collapsed=(city?city+' · ':'')+'ما الكلمات التي تجمعت داخلك اليوم؟';
-    title='اكتب عنوانًا';
-    bodyBase='اكتب هنا فكرتك أو قصيدتك أو رسالتك…';
-    mediaTitle='اكتب عنوانًا — مطلوب';
-    mediaBody='اكتب الوصف أو النص…';
   }else{
-    collapsed='What thought from '+placeEN+' wants to be written today?';
+    collapsed=city?`What’s on your mind in ${city} today?`:"What's on your mind today?";
     title='Write a title';
     bodyBase='Write your thought, poem or message here…';
     mediaTitle='Write a title — required';
@@ -2543,12 +2540,13 @@ function promptCopy(category){
   }
 
   let body=bodyBase;
+  const localText=(bn,en,hi,ar)=>ui==='bn'?bn:ui==='hi'?hi:ui==='ar'?ar:en;
   switch(String(category||'poem').toLowerCase()){
-    case 'reels': body=ui==='hi'?'रील के लिए छोटा कैप्शन लिखिए…':ui==='ar'?'اكتب كابشن قصيرًا لهذا الريل…':'রিলসের জন্য ছোট্ট ক্যাপশন লিখুন…'; break;
-    case 'children': body=ui==='hi'?'बच्चों के लिए कविता, तुकबंदी या कहानी लिखिए…':ui==='ar'?'اكتب للأطفال قصة أو أنشودة جميلة…':'শিশুদের জন্য ছড়া, গল্প বা মিষ্টি কথা লিখুন…'; break;
-    case 'letter': body=ui==='hi'?'अपना पत्र यहाँ लिखिए…':ui==='ar'?'اكتب رسالتك هنا…':'আপনার চিঠিটি এখানে লিখুন…'; break;
-    case 'environment': body=ui==='hi'?'प्रकृति, नदी, हरियाली या पर्यावरण का विचार लिखिए…':ui==='ar'?'اكتب فكرة عن البيئة أو الطبيعة…':'প্রকৃতি, নদী, সবুজ বা পরিবেশ নিয়ে লিখুন…'; break;
-    case 'news': body=ui==='hi'?'समाचार का मुख्य विवरण लिखिए…':ui==='ar'?'اكتب تفاصيل الخبر…':'সংবাদের মূল বিবরণ লিখুন…'; break;
+    case 'reels': body=localText('রিলসের জন্য ছোট্ট ক্যাপশন লিখুন…','Write a short caption for this reel…','रील के लिए छोटा कैप्शन लिखिए…','اكتب تعليقًا قصيرًا لهذا الريل…'); break;
+    case 'children': body=localText('শিশুদের জন্য ছড়া, গল্প বা মিষ্টি কথা লিখুন…',"Write a rhyme, story or gentle words for children…",'बच्चों के लिए कविता, तुकबंदी या कहानी लिखिए…','اكتب للأطفال قصة أو أنشودة جميلة…'); break;
+    case 'letter': body=localText('আপনার চিঠিটি এখানে লিখুন…','Write your letter here…','अपना पत्र यहाँ लिखिए…','اكتب رسالتك هنا…'); break;
+    case 'environment': body=localText('প্রকৃতি, নদী, সবুজ বা পরিবেশ নিয়ে লিখুন…','Write about nature, rivers, greenery or the environment…','प्रकृति, नदी, हरियाली या पर्यावरण का विचार लिखिए…','اكتب فكرة عن البيئة أو الطبيعة…'); break;
+    case 'news': body=localText('সংবাদের মূল বিবরণ লিখুন…','Write the main news details…','समाचार का मुख्य विवरण लिखिए…','اكتب تفاصيل الخبر…'); break;
   }
   return {collapsed,title,body,mediaTitle,mediaBody}
 }
