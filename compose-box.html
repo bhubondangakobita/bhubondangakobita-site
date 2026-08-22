@@ -1058,6 +1058,37 @@ W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
  .bdc-editor .bdc-context{max-height:min(34dvh,270px)!important}
 }
 </style>
+
+<style id="bd-compose-v131-white-screen-failsafe">
+.bdc-editor.open{
+  background:#10141a!important;
+  color:#f4f7fb!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
+.bdc-editor.open .bdc-topbar,
+.bdc-editor.open .bdc-modebar,
+.bdc-editor.open .bdc-workspace{
+  visibility:visible!important;
+  opacity:1!important;
+}
+.bdc-editor.open .bdc-workspace{background:#0e1217!important}
+.bdc-editor.open:not([data-category="news"]) [data-panel="ordinary"].active{
+  display:block!important;
+  visibility:visible!important;
+}
+.bdc-editor[data-bdc-ready="1"]{pointer-events:auto!important}
+@media(max-width:720px){
+  .bdc-editor.open{
+    width:100vw!important;
+    height:100dvh!important;
+    min-height:100svh!important;
+    max-height:100dvh!important;
+    overflow:hidden!important;
+  }
+}
+</style>
+
 </head>
 <body style="margin:0;background:transparent">
 <main id="bdComposeDemo"></main>
@@ -1184,7 +1215,7 @@ const COMPOSER_CATEGORIES=[
 ];
 function categoryPickerHTML(s){const items=COMPOSER_CATEGORIES.map(c=>{const locked=(c.id==='news'&&!canNews(s.role))||(c.id==='midnight'&&!canMidnightWrite(s.role));const lockLabel=c.id==='midnight'?'Founder Only':(c.id==='news'?'Page / Founder':'Premium');return `<button class="bdc-category-btn${locked?' locked':''}" type="button" data-category-choice="${c.id}" data-lock-label="${lockLabel}" aria-label="${c.label}" ${locked?'aria-disabled="true"':''}><img src="${c.asset}" alt=""><span>${c.label}</span></button>`}).join('');return `<div class="bdc-category-layer" data-category-layer><section class="bdc-category-sheet" role="dialog" aria-modal="true" aria-label="Choose what to publish"><div class="bdc-category-head"><div><h3>What would you like to publish?</h3><p>Choose a category, then the editor will open.</p></div><button class="bdc-category-close" type="button" data-category-close aria-label="Close">×</button></div><div class="bdc-category-grid">${items}</div><div class="bdc-category-note">Free members use the clean default writing page with media upload. Premium unlocks category templates, visual design, advanced media tools and custom assets.</div></section></div>`}
 function closeCategoryPicker(s){if(!s.categoryPicker)return;s.categoryPicker.classList.remove('open');setTimeout(()=>{if(s.categoryPicker&&!s.categoryPicker.classList.contains('open')){s.categoryPicker.remove();s.categoryPicker=null}},160)}
-function openCategoryPicker(s){if(s.categoryPicker){s.categoryPicker.classList.add('open');return}const wrap=D.createElement('div');wrap.innerHTML=categoryPickerHTML(s);s.categoryPicker=wrap.firstElementChild;D.body.appendChild(s.categoryPicker);s.categoryPicker.classList.add('open');Q('[data-category-close]',s.categoryPicker).onclick=()=>closeCategoryPicker(s);s.categoryPicker.addEventListener('click',e=>{if(e.target===s.categoryPicker)closeCategoryPicker(s)});QA('[data-category-choice]',s.categoryPicker).forEach(b=>b.onclick=()=>{const id=b.dataset.categoryChoice;if(id==='news'&&!canNews(s.role)){toast(s,'News can be published only by an approved Page or Founder.');return}if(id==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}closeCategoryPicker(s);setTimeout(()=>openEditor(s,id),80)})}
+function openCategoryPicker(s){if(s.categoryPicker){s.categoryPicker.classList.add('open');return}const wrap=D.createElement('div');wrap.innerHTML=categoryPickerHTML(s);s.categoryPicker=wrap.firstElementChild;D.body.appendChild(s.categoryPicker);s.categoryPicker.classList.add('open');Q('[data-category-close]',s.categoryPicker).onclick=()=>closeCategoryPicker(s);s.categoryPicker.addEventListener('click',e=>{if(e.target===s.categoryPicker)closeCategoryPicker(s)});QA('[data-category-choice]',s.categoryPicker).forEach(b=>b.onclick=()=>{const id=b.dataset.categoryChoice;if(id==='news'&&!canNews(s.role)){toast(s,'News can be published only by an approved Page or Founder.');return}if(id==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}closeCategoryPicker(s);setTimeout(()=>openEditorSafe(s,id),80)})}
 function shell(){return `<section class="bdc-root"><div class="bdc-card"><div class="bdc-collapsed"><div class="bdc-avatar" data-avatar>🌿</div><button class="bdc-prompt" type="button" data-open>What's on your mind today?</button><div class="bdc-letters"><button class="bdc-letter" data-cat="poem" aria-label="কবিতা">অ</button><button class="bdc-letter" data-cat="recitation" aria-label="আবৃত্তি">আ</button><button class="bdc-letter" data-cat="prolap" aria-label="প্রলাপ">ক</button><button class="bdc-letter" data-cat="letter" aria-label="চিঠি">খ</button><button class="bdc-letter" data-cat="environment" aria-label="পরিবেশ">ম</button></div></div></div></section>`}
 function avatar(s){const u=s.session?.user,src=u?.user_metadata?.avatar_url||u?.user_metadata?.picture||'';return src?`<img src="${esc(src)}" alt="">`:'🌿'}
 function editorHTML(){return `<div class="bdc-editor" data-editor><header class="bdc-topbar"><button type="button" data-close aria-label="Back">‹</button><div class="bdc-editor-title"><strong>Studio Composer</strong><small data-studio-category>Write</small></div><button type="button" class="bdc-draft" data-draft-save>Draft</button><button type="button" class="bdc-publish" data-publish>Publish</button></header><nav class="bdc-modebar"><button class="bdc-mode active" data-mode="ordinary">Write</button><button class="bdc-mode bdc-media-mode" type="button" data-media-toggle>Media</button><button class="bdc-mode" data-mode="template">Templates</button><button class="bdc-mode premium" data-mode="premium">Studio</button></nav><section class="bdc-media-studio" data-media-studio hidden><div class="bdc-media-studio-head"><div><small>Docked below the writing surface</small><b>Media Studio</b></div><button type="button" data-media-close aria-label="Close media studio">×</button></div><div class="bdc-media-compose-fields"><label><span>Title <b>*</b></span><input type="text" maxlength="180" data-media-title placeholder="Write a title — required"></label><label><span>Caption / Body</span><textarea rows="3" data-media-body placeholder="Write a caption or body…"></textarea></label></div><div class="bdc-media-stage"><div class="bdc-recitation-preview bdc-media-main-preview" data-rec-preview>Choose audio or video</div><div class="bdc-media-timeline" aria-hidden="true"><span class="bdc-playhead"></span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="bdc-record-hero" data-record-hero>
@@ -1215,7 +1246,18 @@ externalTemplate:'',externalTemplateFile:null,activeReference:'',
 newsCustomTemplate:'',newsCustomTemplateFile:null,newsArrange:false,
 newsTitlePos:{x:50,y:17,scale:1},newsBodyPos:{x:50,y:68,scale:1},
 newsTemplatePos:{x:50,y:50,scale:1},newsImagePos:[{x:50,y:50,scale:1},{x:50,y:50,scale:1},{x:50,y:50,scale:1},{x:50,y:50,scale:1}],recorder:null,recordStream:null,recordChunks:[],recordStartedAt:0,recordTimer:null,discardRecording:false,mediaAccepted:false,editor:null,categoryPicker:null,editingId:null}}
-async function hydrate(s){s.session=await session();s.role=await roleOf(s.session);s.privileged=isPrivileged(s.role);s.premium=s.privileged||premiumLocal(s.session?.user?.id)||await premiumRemote(s.session?.user?.id);s.root.querySelector('[data-avatar]').innerHTML=avatar(s);try{localStorage.setItem('bd-role',s.role)}catch(_){}return s}
+function bdComposeTimeout(p,ms,fallback=null){return Promise.race([Promise.resolve(p).catch(()=>fallback),new Promise(r=>setTimeout(()=>r(fallback),ms))])}
+async function hydrate(s){
+ const ss=await bdComposeTimeout(session(),1400,W.BD_SESSION||null);
+ if(ss)s.session=ss;
+ s.role=String(W.BD_ROLE||await bdComposeTimeout(roleOf(s.session),900,s.role||'user')||s.role||'user').toLowerCase();
+ s.privileged=isPrivileged(s.role);
+ const localPremium=s.privileged||premiumLocal(s.session?.user?.id);
+ s.premium=localPremium||!!(await bdComposeTimeout(premiumRemote(s.session?.user?.id),900,false));
+ const av=s.root?.querySelector?.('[data-avatar]');if(av)av.innerHTML=avatar(s);
+ try{localStorage.setItem('bd-role',s.role)}catch(_){}
+ return s
+}
 function toast(s,msg){const t=Q('[data-toast]',s.editor);t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),1700)}
 function lockPage(on){D.documentElement.style.overflow=on?'hidden':'';D.body.style.overflow=on?'hidden':''}
 function editingField(el){return !!el?.matches?.('[data-title],[data-body],[data-news-title],[data-news-body]')}
@@ -1312,6 +1354,36 @@ function wireEditor(s){
  wireFreeTransform(s);renderPremium(s);renderRecitationStudio(s)
 }
 function openEditor(s,cat='poem'){const next=cat||s.category;if(next==='news'&&!canNews(s.role)){toast(s,'News can be published only by an approved Page or Founder.');return}if(next==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}s.category=next;const allowedFilters=CATEGORY_FILTERS[s.category]||['Normal'];if(!allowedFilters.includes(s.filter))s.filter=allowedFilters[0]||'Normal';if(s.premium){const cp=categoryPack(s.category);if(cp.length&&(!s.preset||s.preset.category!==s.category)){s.preset=cp[0];applyCategoryPresetState(s,s.preset)}}if(s.editor){const ps=Q('[data-premium-strip]',s.editor);if(ps){ps.dataset.ready='0';ps.dataset.cat=''}}s.discardRecording=false;s.mediaStudioVisited=false;if(!s.editor){const box=D.createElement('div');box.innerHTML=editorHTML();s.editor=box.firstElementChild;D.body.appendChild(s.editor);wireEditor(s)}s.editor.classList.toggle('is-premium',!!s.premium);s.editor.dataset.category=s.category;const catDef=COMPOSER_CATEGORIES.find(x=>x.id===s.category);const catLabel=Q('[data-studio-category]',s.editor);if(catLabel)catLabel.textContent=catDef?.label||'Write';restoreComposerDraft(s);syncAll(s);syncCategoryMedia(s);s.editor.classList.add('open');lockPage(true);requestAnimationFrame(()=>{cleanTitleAutofill(s);Q('[data-title]',Q('[data-panel="ordinary"]',s.editor))?.focus({preventScroll:true})});setTimeout(()=>cleanTitleAutofill(s),120);setTimeout(()=>cleanTitleAutofill(s),650)}
+
+function openEditorSafe(s,cat='poem'){
+ try{
+  openEditor(s,cat);
+  requestAnimationFrame(()=>{
+   try{
+    const ed=s.editor;
+    if(!ed||!ed.classList.contains('open'))throw new Error('editor-not-open');
+    const active=ed.querySelector('.bdc-panel.active:not([hidden])');
+    if(!active&&String(ed.dataset.category||'')!=='news'){
+      const ordinary=ed.querySelector('[data-panel="ordinary"]');
+      if(ordinary){ordinary.hidden=false;ordinary.classList.add('active');s.mode='ordinary'}
+    }
+    ed.dataset.bdcReady='1';
+   }catch(err){
+    try{s.editor?.classList.remove('open')}catch(_){}
+    lockPage(false);
+    console.error('[Bhubondanga Composer] editor recovery',err)
+   }
+  })
+ }catch(err){
+  try{s.editor?.classList.remove('open')}catch(_){}
+  lockPage(false);
+  try{s.editor?.remove()}catch(_){}
+  s.editor=null;
+  console.error('[Bhubondanga Composer] open failed',err);
+  return false
+ }
+ return true
+}
 function discardStagedMedia(s){
  const revoke=v=>{if(String(v||'').startsWith('blob:'))try{URL.revokeObjectURL(v)}catch(_){}};
  revoke(s.audio);revoke(s.video);s.audio='';s.video='';s.audioFile=null;s.videoFile=null;s.audioOriginalFile=null;s.videoOriginalFile=null;s.audioProcessed=false;s.videoAudioProcessed=false;s.noiseReduced=false;s.mastered=false;s.mixedBgm=false;s.audioPreset='original';s.voiceLevel=100;try{s.captionRecognition?.stop?.()}catch(_){}s.captionRecognition=null;s.captionActive=false;disposeVideoAudioPreview(s);s.mediaType='';s.mediaAccepted=false;s.recordChunks=[];
@@ -1642,24 +1714,41 @@ function saveLocal(p){
  }catch(_){}
 }
 
+function bdLocalFingerprintFast(p){
+ const id=String(p?.canonical_id||p?.canonicalId||p?.id||'').trim();
+ if(id)return 'id:'+id;
+ const norm=v=>String(v||'').normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase();
+ const author=String(p?.author_id||p?.user_id||p?.authorId||'').trim().toLowerCase();
+ const title=norm(p?.title),body=norm(p?.body||p?.content);
+ const media=String(p?.image_url||p?.media_url||p?.video_url||p?.audio_url||'').split('?')[0].trim();
+ const t=Date.parse(p?.created_at||p?.createdAt||0)||0,bucket=t?Math.floor(t/120000):0;
+ return ['fp',author,title,body,media,bucket].join('|')
+}
 function bdMigrateLegacyPublishedPosts(){
  try{
-  const base=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]'),all=Array.isArray(base)?base.slice():[];
+  const all=[];
+  const base=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]');
+  if(Array.isArray(base))all.push(...base);
   for(const k of BD_LEGACY_LOCAL_POST_KEYS){
    try{const a=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(a))all.push(...a)}catch(_){}
   }
-  const clean=[];
+  const map=new Map();
   for(const p of all){
    if(!p)continue;
-   const i=clean.findIndex(x=>bdSameLocalPost(x,p));
-   if(i>=0)clean[i]={...clean[i],...p};else clean.push(p)
+   const fp=bdLocalFingerprintFast(p);
+   if(!map.has(fp))map.set(fp,p);
+   else map.set(fp,{...map.get(fp),...p})
   }
-  clean.sort((a,b)=>(Date.parse(b.created_at||b.createdAt||0)||0)-(Date.parse(a.created_at||a.createdAt||0)||0));
+  const clean=[...map.values()].sort((a,b)=>(Date.parse(b.created_at||b.createdAt||0)||0)-(Date.parse(a.created_at||a.createdAt||0)||0));
   localStorage.setItem(BD_CANONICAL_LOCAL_POSTS_KEY,JSON.stringify(clean.slice(0,1200)));
   for(const k of BD_LEGACY_LOCAL_POST_KEYS)localStorage.removeItem(k)
  }catch(_){}
 }
-bdMigrateLegacyPublishedPosts();
+function bdScheduleLegacyPostMigration(){
+ const run=()=>{try{bdMigrateLegacyPublishedPosts()}catch(_){}};
+ if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:1200});
+ else setTimeout(run,450)
+}
 
 function saveLocalUpdate(p){
  try{
@@ -1670,7 +1759,7 @@ function saveLocalUpdate(p){
   bdRemoveLegacyLocalCopies(p)
  }catch(_){}
 }
-function editPost(s,p){if(!p)return;const cat=p.type||p.category||'poem';if(cat==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ শুধু Founder সম্পাদনা করতে পারবেন');return}if(cat==='news'&&!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'নিউজ পোস্ট সম্পাদনার অনুমতি নেই');return}s.editingId=p.id||null;s.category=cat;s.title=p.title||'';s.body=p.body||p.content||'';s.template=p.template||'plain';s.photo=p.photo||p.image_url||'';s.mode=p.composerMode||p.composer_mode||((s.template&&s.template!=='none'&&s.template!=='plain')?'premium':'ordinary');const sd=p.metadata?.studio_design||{};s.titleSize=sd.title_size||s.titleSize;s.bodySize=sd.body_size||s.bodySize;s.lineHeight=sd.line_height||s.lineHeight;s.letterSpacing=sd.letter_spacing??s.letterSpacing;s.align=sd.align||s.align;s.filter=sd.filter||s.filter;s.motion=sd.motion||s.motion;s.effect=sd.effect||s.effect;s.canvasRatio=sd.canvas_ratio||s.canvasRatio;openEditor(s,s.category);syncAll(s);setMode(s,s.mode==='premium'&&s.premium?'premium':'ordinary');const top=Q('.bdc-topbar strong',s.editor);if(top)top.textContent='পোস্ট সম্পাদনা';}
+function editPost(s,p){if(!p)return;const cat=p.type||p.category||'poem';if(cat==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ শুধু Founder সম্পাদনা করতে পারবেন');return}if(cat==='news'&&!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'নিউজ পোস্ট সম্পাদনার অনুমতি নেই');return}s.editingId=p.id||null;s.category=cat;s.title=p.title||'';s.body=p.body||p.content||'';s.template=p.template||'plain';s.photo=p.photo||p.image_url||'';s.mode=p.composerMode||p.composer_mode||((s.template&&s.template!=='none'&&s.template!=='plain')?'premium':'ordinary');const sd=p.metadata?.studio_design||{};s.titleSize=sd.title_size||s.titleSize;s.bodySize=sd.body_size||s.bodySize;s.lineHeight=sd.line_height||s.lineHeight;s.letterSpacing=sd.letter_spacing??s.letterSpacing;s.align=sd.align||s.align;s.filter=sd.filter||s.filter;s.motion=sd.motion||s.motion;s.effect=sd.effect||s.effect;s.canvasRatio=sd.canvas_ratio||s.canvasRatio;openEditorSafe(s,s.category);syncAll(s);setMode(s,s.mode==='premium'&&s.premium?'premium':'ordinary');const top=Q('.bdc-topbar strong',s.editor);if(top)top.textContent='পোস্ট সম্পাদনা';}
 
 
 const BD_DEEP_BAD_TERMS=[
@@ -1739,8 +1828,69 @@ const LETTER_MAGIC={
 'ম':{cat:'environment',accent:'#a16b18',glow:'#ffd889',quote:'মানুষ মানুষের জন্য—মানবতার চেয়ে বড় কোনো পরিচয় নেই।'}
 };
 let LETTER_MAGIC_BUSY=false;
-function playLetterMagic(s,btn){const letter=(btn?.textContent||'').trim(),cfg=LETTER_MAGIC[letter]||LETTER_MAGIC['অ'];if(LETTER_MAGIC_BUSY)return;LETTER_MAGIC_BUSY=true;btn?.classList.add('bdc-letter-lit');const old=Q('.bdc-magic-overlay');if(old)old.remove();const layer=D.createElement('div');layer.className='bdc-magic-overlay';layer.style.setProperty('--magic-accent',cfg.accent);layer.style.setProperty('--magic-glow',cfg.glow);layer.setAttribute('aria-hidden','true');layer.innerHTML=`<span class="bdc-magic-rays"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><div class="bdc-magic-quote" data-letter="${letter}"><p>${cfg.quote}</p></div>`;D.body.appendChild(layer);if(navigator.vibrate)try{navigator.vibrate(8)}catch(_){};const finish=()=>{layer.remove();btn?.classList.remove('bdc-letter-lit');LETTER_MAGIC_BUSY=false;openEditor(s,btn?.dataset.cat||cfg.cat)};setTimeout(finish,1450)}
-async function mount(target,opt={}){const box=D.createElement('div');box.innerHTML=shell();const root=box.firstElementChild;target.appendChild(root);const s=state(root);await hydrate(s);const fixed=String(opt.defaultCategory||'').trim().toLowerCase();s.lockedCategory=fixed;if(fixed==='midnight'&&!canMidnightWrite(s.role)){root.hidden=true;root.setAttribute('aria-hidden','true')}Q('[data-open]',root).onclick=()=>{if(fixed){if(fixed==='news'&&!canNews(s.role)){toast(s,'News can be published only by an approved Page or Founder.');return}if(fixed==='midnight'&&!canMidnightWrite(s.role))return;openEditor(s,fixed);return}openCategoryPicker(s)};QA('[data-cat]',root).forEach(b=>b.onclick=()=>{if(fixed){if(fixed==='midnight'&&!canMidnightWrite(s.role))return;const old=b.dataset.cat;b.dataset.cat=fixed;playLetterMagic(s,b);queueMicrotask(()=>{if(old)b.dataset.cat=old});return}playLetterMagic(s,b)});const onEdit=e=>{if(!e.detail)return;const type=String(e.detail.type||e.detail.category||'').toLowerCase();if(type==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ সম্পাদনা শুধু Founder করতে পারবেন');return}if(fixed&&type&&type!==fixed)return;editPost(s,e.detail)};W.addEventListener('bd:edit-post',onEdit);s.destroy=()=>W.removeEventListener('bd:edit-post',onEdit);return s}
+function playLetterMagic(s,btn){const letter=(btn?.textContent||'').trim(),cfg=LETTER_MAGIC[letter]||LETTER_MAGIC['অ'];if(LETTER_MAGIC_BUSY)return;LETTER_MAGIC_BUSY=true;btn?.classList.add('bdc-letter-lit');const old=Q('.bdc-magic-overlay');if(old)old.remove();const layer=D.createElement('div');layer.className='bdc-magic-overlay';layer.style.setProperty('--magic-accent',cfg.accent);layer.style.setProperty('--magic-glow',cfg.glow);layer.setAttribute('aria-hidden','true');layer.innerHTML=`<span class="bdc-magic-rays"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><div class="bdc-magic-quote" data-letter="${letter}"><p>${cfg.quote}</p></div>`;D.body.appendChild(layer);if(navigator.vibrate)try{navigator.vibrate(8)}catch(_){};const finish=()=>{layer.remove();btn?.classList.remove('bdc-letter-lit');LETTER_MAGIC_BUSY=false;openEditorSafe(s,btn?.dataset.cat||cfg.cat)};setTimeout(finish,1450)}
+function mount(target,opt={}){
+ const box=D.createElement('div');box.innerHTML=shell();
+ const root=box.firstElementChild;target.appendChild(root);
+ const s=state(root);
+
+ // Synchronous state from Index boot. Do not wait for network before Feed mounts.
+ s.session=W.BD_SESSION||null;
+ s.role=String(W.BD_ROLE||s.session?.user?.app_metadata?.role||s.session?.user?.user_metadata?.role||'user').toLowerCase();
+ s.privileged=isPrivileged(s.role);
+ s.premium=s.privileged||premiumLocal(s.session?.user?.id);
+ const av=root.querySelector('[data-avatar]');if(av)av.innerHTML=avatar(s);
+
+ const fixed=String(opt.defaultCategory||'').trim().toLowerCase();
+ s.lockedCategory=fixed;
+ const applyFixedVisibility=()=>{if(fixed==='midnight'){root.hidden=!canMidnightWrite(s.role);root.setAttribute('aria-hidden',root.hidden?'true':'false')}};
+ applyFixedVisibility();
+
+ Q('[data-open]',root).onclick=()=>{
+  if(fixed){
+   if(fixed==='news'&&!canNews(s.role)){if(s.editor)toast(s,'News can be published only by an approved Page or Founder.');return}
+   if(fixed==='midnight'&&!canMidnightWrite(s.role))return;
+   openEditorSafe(s,fixed);return
+  }
+  openCategoryPicker(s)
+ };
+
+ QA('[data-cat]',root).forEach(b=>b.onclick=()=>{
+  if(fixed){
+   if(fixed==='midnight'&&!canMidnightWrite(s.role))return;
+   const old=b.dataset.cat;b.dataset.cat=fixed;playLetterMagic(s,b);
+   queueMicrotask(()=>{if(old)b.dataset.cat=old});return
+  }
+  playLetterMagic(s,b)
+ });
+
+ const onEdit=e=>{
+  if(!e.detail)return;
+  const type=String(e.detail.type||e.detail.category||'').toLowerCase();
+  if(type==='midnight'&&!canMidnightWrite(s.role)){if(s.editor)toast(s,'মধ্যরাতের প্রলাপ সম্পাদনা শুধু Founder করতে পারবেন');return}
+  if(fixed&&type&&type!==fixed)return;
+  editPost(s,e.detail)
+ };
+ W.addEventListener('bd:edit-post',onEdit);
+
+ let alive=true;
+ s.destroy=()=>{alive=false;W.removeEventListener('bd:edit-post',onEdit)};
+
+ // Hydrate permissions/profile asynchronously; never block Index/Feed.
+ setTimeout(async()=>{
+  try{
+   await hydrate(s);
+   if(!alive)return;
+   applyFixedVisibility();
+   root.dataset.bdComposeHydrated='1';
+   W.dispatchEvent(new CustomEvent('bd:compose-hydrated',{detail:{role:s.role,premium:!!s.premium}}))
+  }catch(_){}
+ },0);
+
+ bdScheduleLegacyPostMigration();
+ root.dataset.bdComposeReady='1';
+ return s
+}
 W.addEventListener('pagehide',()=>{QA('.bdc-editor').forEach(x=>x.remove());D.documentElement.style.overflow='';D.body.style.overflow=''});
 W.BD_MODULES.compose={version:'v210-category-studio-20260822',mount};if(location.pathname.endsWith('compose-box.html')||Q('#bdComposeDemo')){const h=Q('#bdComposeDemo');if(h&&!h.dataset.mounted){h.dataset.mounted='1';mount(h,{context:'standalone'})}}
 })(window,document);
