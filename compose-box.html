@@ -1251,7 +1251,12 @@ function wireEditor(s){
   const t=ev.target.closest('button,[data-news-slot]');if(!t)return;
   if(t.matches('[data-close]'))return closeEditor(s);
   if(t.matches('[data-draft-save]'))return saveComposerDraft(s,true);
-  if(t.matches('[data-publish]'))return publish(s);
+  if(t.matches('[data-publish]')){
+   if(s.publishing||t.disabled)return;
+   s.publishing=true;t.disabled=true;t.setAttribute('aria-busy','true');
+   Promise.resolve(publish(s)).catch(()=>{}).finally(()=>{s.publishing=false;t.disabled=false;t.removeAttribute('aria-busy')});
+   return
+  }
   if(t.matches('[data-mode]'))return setMode(s,t.dataset.mode);
   if(t.matches('[data-media-toggle],[data-media-toggle-inline]'))return toggleMediaStudio(s);
   if(t.matches('[data-media-close]'))return toggleMediaStudio(s,false);
@@ -1584,11 +1589,89 @@ async function redeem(s){if(s.privileged){s.premium=true;Q('[data-gate]',s.edito
 async function requestPremium(s){if(!s.session)s.session=await session();if(!s.session){toast(s,'Request করতে লগইন করুন');return}try{const c=await supa();await c.from('premium_requests').insert({user_id:s.session.user.id,status:'requested',amount_bdt:50,source:'composer_opening_offer_first_500'});toast(s,'Premium Request পাঠানো হয়েছে');Q('[data-gate]',s.editor).classList.remove('open')}catch(_){toast(s,'Request পাঠানো যায়নি')}}
 async function upload(s){if(!s.photoFile||!s.session)return'';try{const c=await supa(),ext=(s.photoFile.name.split('.').pop()||'jpg').toLowerCase(),path=`${s.session.user.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`,r=await c.storage.from('post-media').upload(path,s.photoFile,{upsert:false,cacheControl:'3600'});if(r.error)return'';return c.storage.from('post-media').getPublicUrl(path).data?.publicUrl||''}catch{return''}}
 async function uploadOne(s,file,prefix='media'){if(!file||!s.session)return'';try{const c=await supa(),ext=(file.name.split('.').pop()||'bin').toLowerCase(),path=`${s.session.user.id}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`,r=await c.storage.from('post-media').upload(path,file,{upsert:false,cacheControl:'3600'});if(r.error)return'';return c.storage.from('post-media').getPublicUrl(path).data?.publicUrl||''}catch{return''}}
-async function insertPost(s,p){try{const c=await supa();if(!c||!s.session)return null;const uid=s.session.user.id;const attempts=[{author_id:uid,country_code:p.country_code||null,country_name:p.country_name||null,region:p.region||null,language_code:p.language_code||null,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode,metadata:p.metadata},{author_id:uid,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode},{user_id:uid,title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,metadata:p.metadata},{user_id:uid,title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null},{author_id:uid,title:p.title,content:p.body,category:p.type,status:p.status}];for(const row of attempts){try{const r=await c.from('posts').insert(row).select('*').single();if(!r.error)return r.data}catch(_){} }}catch(_){}return null}
+async function insertPost(s,p){
+ try{
+  const c=await supa();if(!c||!s.session)return null;
+  const uid=s.session.user.id,id=String(p.id||('post-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)));
+  p.id=id;
+  const attempts=[
+   {id,author_id:uid,country_code:p.country_code||null,country_name:p.country_name||null,region:p.region||null,language_code:p.language_code||null,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode,metadata:p.metadata},
+   {id,author_id:uid,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode},
+   {id,user_id:uid,title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,metadata:p.metadata},
+   {id,user_id:uid,title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null},
+   {id,author_id:uid,title:p.title,content:p.body,category:p.type,status:p.status}
+  ];
+  for(const row of attempts){
+   try{
+    const r=await c.from('posts').insert(row);
+    if(!r.error)return {...p,...row,id}
+    const msg=String(r.error?.message||'').toLowerCase();
+    if(/duplicate|unique|already exists/.test(msg))return {...p,id}
+   }catch(_){}
+  }
+ }catch(_){}
+ return null
+}
 async function updateExistingPost(s,p){try{const c=await supa();if(!c||!s.session||!s.editingId)return null;const id=s.editingId;const rows=[{country_code:p.country_code||null,country_name:p.country_name||null,region:p.region||null,language_code:p.language_code||null,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode,metadata:p.metadata},{title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,composer_mode:p.composer_mode},{title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null}];for(const row of rows){try{const r=await c.from('posts').update(row).eq('id',id).select('*').single();if(!r.error)return r.data}catch(_){}}}catch(_){}return null}
-function saveLocalUpdate(p){for(const k of ['bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts'])try{const a=JSON.parse(localStorage.getItem(k)||'[]'),arr=Array.isArray(a)?a:[];const i=arr.findIndex(x=>String(x.id)===String(p.id));if(i>=0)arr[i]={...arr[i],...p};else arr.unshift(p);localStorage.setItem(k,JSON.stringify(arr.slice(0,1200)))}catch(_){}}
+const BD_CANONICAL_LOCAL_POSTS_KEY='bd-local-posts';
+const BD_LEGACY_LOCAL_POST_KEYS=['bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts'];
+function bdSameLocalPost(a,b){
+ const ai=String(a?.canonical_id||a?.canonicalId||a?.id||''),bi=String(b?.canonical_id||b?.canonicalId||b?.id||'');
+ if(ai&&bi&&ai===bi)return true;
+ const aa=String(a?.author_id||a?.user_id||a?.authorId||''),ba=String(b?.author_id||b?.user_id||b?.authorId||'');
+ if(aa&&ba&&aa!==ba)return false;
+ const norm=v=>String(v||'').normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase();
+ if(norm(a?.title)!==norm(b?.title))return false;
+ if(norm(a?.body||a?.content)!==norm(b?.body||b?.content))return false;
+ const at=Date.parse(a?.created_at||a?.createdAt||0)||0,bt=Date.parse(b?.created_at||b?.createdAt||0)||0;
+ return !!(at&&bt&&Math.abs(at-bt)<=120000)
+}
+function bdRemoveLegacyLocalCopies(p){
+ for(const k of BD_LEGACY_LOCAL_POST_KEYS)try{
+  const a=JSON.parse(localStorage.getItem(k)||'[]'),arr=Array.isArray(a)?a:[];
+  const next=arr.filter(x=>!bdSameLocalPost(x,p));
+  if(next.length!==arr.length)localStorage.setItem(k,JSON.stringify(next.slice(0,1200)))
+ }catch(_){}
+}
+function saveLocal(p){
+ try{
+  const a=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]'),arr=Array.isArray(a)?a:[];
+  const next=[p,...arr.filter(x=>!bdSameLocalPost(x,p))];
+  localStorage.setItem(BD_CANONICAL_LOCAL_POSTS_KEY,JSON.stringify(next.slice(0,1200)));
+  bdRemoveLegacyLocalCopies(p)
+ }catch(_){}
+}
+
+function bdMigrateLegacyPublishedPosts(){
+ try{
+  const base=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]'),all=Array.isArray(base)?base.slice():[];
+  for(const k of BD_LEGACY_LOCAL_POST_KEYS){
+   try{const a=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(a))all.push(...a)}catch(_){}
+  }
+  const clean=[];
+  for(const p of all){
+   if(!p)continue;
+   const i=clean.findIndex(x=>bdSameLocalPost(x,p));
+   if(i>=0)clean[i]={...clean[i],...p};else clean.push(p)
+  }
+  clean.sort((a,b)=>(Date.parse(b.created_at||b.createdAt||0)||0)-(Date.parse(a.created_at||a.createdAt||0)||0));
+  localStorage.setItem(BD_CANONICAL_LOCAL_POSTS_KEY,JSON.stringify(clean.slice(0,1200)));
+  for(const k of BD_LEGACY_LOCAL_POST_KEYS)localStorage.removeItem(k)
+ }catch(_){}
+}
+bdMigrateLegacyPublishedPosts();
+
+function saveLocalUpdate(p){
+ try{
+  const a=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]'),arr=Array.isArray(a)?a:[];
+  const i=arr.findIndex(x=>bdSameLocalPost(x,p));
+  if(i>=0)arr[i]={...arr[i],...p};else arr.unshift(p);
+  localStorage.setItem(BD_CANONICAL_LOCAL_POSTS_KEY,JSON.stringify(arr.slice(0,1200)));
+  bdRemoveLegacyLocalCopies(p)
+ }catch(_){}
+}
 function editPost(s,p){if(!p)return;const cat=p.type||p.category||'poem';if(cat==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ শুধু Founder সম্পাদনা করতে পারবেন');return}if(cat==='news'&&!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'নিউজ পোস্ট সম্পাদনার অনুমতি নেই');return}s.editingId=p.id||null;s.category=cat;s.title=p.title||'';s.body=p.body||p.content||'';s.template=p.template||'plain';s.photo=p.photo||p.image_url||'';s.mode=p.composerMode||p.composer_mode||((s.template&&s.template!=='none'&&s.template!=='plain')?'premium':'ordinary');const sd=p.metadata?.studio_design||{};s.titleSize=sd.title_size||s.titleSize;s.bodySize=sd.body_size||s.bodySize;s.lineHeight=sd.line_height||s.lineHeight;s.letterSpacing=sd.letter_spacing??s.letterSpacing;s.align=sd.align||s.align;s.filter=sd.filter||s.filter;s.motion=sd.motion||s.motion;s.effect=sd.effect||s.effect;s.canvasRatio=sd.canvas_ratio||s.canvasRatio;openEditor(s,s.category);syncAll(s);setMode(s,s.mode==='premium'&&s.premium?'premium':'ordinary');const top=Q('.bdc-topbar strong',s.editor);if(top)top.textContent='পোস্ট সম্পাদনা';}
-function saveLocal(p){for(const k of ['bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts'])try{const a=JSON.parse(localStorage.getItem(k)||'[]'),arr=Array.isArray(a)?a:[];arr.unshift(p);localStorage.setItem(k,JSON.stringify(arr.slice(0,1200)))}catch(_){}}
+
 
 const BD_DEEP_BAD_TERMS=[
 "শালা","শালী","হারামজাদা","হারামজাদী","হারামির বাচ্চা","শুয়োর","শুয়োর","শুয়ার","শুয়ার",
