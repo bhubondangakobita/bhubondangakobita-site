@@ -603,7 +603,7 @@ async function quickSOS(scope=D){
   const payload={kind:'bongdang_sos',createdAt:new Date().toISOString(),region:op,gps:g,voiceId,
   protocols:{nearby_device:caps.bluetooth,rescue_gateway:caps.lora,remote_hardware:caps.satellite},
   routingTargets:['BongDang sos emergency queue','verified local rescue/support team','approved nearby helpers','configured emergency contacts where integrated'],
-  misusePolicy:'False/prank SOS or intentional misuse may trigger a 15-day SOS suspension; repeated/serious misuse may lead to permanent SOS restriction and Founder/Admin review.',
+  misusePolicy:'False or prank SOS, intentionally false location or voice information, harassment, impersonation, or misuse of rescue resources may violate applicable local law. Depending on the jurisdiction and seriousness, legal action, fines, account restrictions, or imprisonment may apply.',
   title:'BongDang sos · Emergency Life Support Message',
   description:'Emergency Life Support Message with location and optional voice note. Route to verified rescue/support channels when available.'};
   localStorage.setItem('bd-sos-last-payload',JSON.stringify(payload));
@@ -626,18 +626,60 @@ D.addEventListener('click',async e=>{
 });
 function sosPanelHTML(){
   return `<section class="bd-sos-panel" data-bd-sos-panel>
-  <div class="bd-sos-head"><div class="bd-sos-brand">BongDang <small>sos</small></div><b>জরুরি জীবনরক্ষা সহায়তা</b></div>
-  <div class="bd-sos-features">
-    <button class="bd-sos-feature life" type="button" data-bd-sos-action="send"><span class="bd-sos-feature-icon">SOS</span><span><b>ইমার্জেন্সি লাইফ সাপোর্ট মেসেজ</b><small>এক ক্লিকে জরুরি বার্তা পাঠানোর চেষ্টা</small></span></button>
-    <button class="bd-sos-feature" type="button" data-bd-sos-action="gps"><span class="bd-sos-feature-icon">⌖</span><span><b>লোকেশন শেয়ার</b><small>হার্ডওয়্যার GPS থাকলে বর্তমান অবস্থান যুক্ত হবে</small></span></button>
-    <button class="bd-sos-feature" type="button" data-bd-sos-action="record"><span class="bd-sos-feature-icon">◉</span><span><b>ভয়েস মেসেজ</b><small>সর্বোচ্চ ৩০ সেকেন্ডের জরুরি ভয়েস নোট</small></span></button>
-    <a class="bd-sos-feature" href="humanitarian.html#sosRescue"><span class="bd-sos-feature-icon">✚</span><span><b>স্থানীয় রেসকিউ টিম সহায়তা</b><small>যাচাইকৃত স্থানীয় সহায়তা/রেসকিউ রুটিং</small></span></a>
+  <div class="bd-sos-head">
+    <div class="bd-sos-brand">BongDang <small>sos</small></div>
+    <b>জরুরি জীবনরক্ষা সহায়তা</b>
   </div>
-  <div class="bd-sos-offline"><b>লো/নো-ইন্টারনেট সহায়তা:</b> ইন্টারনেট না থাকলে, সমর্থিত কাছাকাছি ডিভাইস, স্থানীয় রেসকিউ গেটওয়ে বা যুক্ত হার্ডওয়্যার relay পাওয়া গেলে বার্তা ফরওয়ার্ড করার চেষ্টা হবে। সাধারণ ওয়েব ব্রাউজার একা LoRa/স্যাটেলাইট পাঠাতে পারে না।</div>
-  <div class="bd-sos-routing"><b>জরুরি বার্তার রাউটিং লক্ষ্য:</b> BongDang sos emergency queue → যাচাইকৃত স্থানীয় rescue/support team → অনুমোদিত কাছাকাছি সহায়তাকারী → সংযুক্ত থাকলে আপনার configured emergency contacts। Exact GPS/voice public feed-এ দেখানো হবে না; private rescue relay-এ ব্যবহারের জন্য রাখা হবে যেখানে backend/hardware support আছে।</div>
-  <div class="bd-sos-actions"><button class="sos" type="button" data-bd-sos-action="send">জরুরি বার্তা পাঠান</button><button type="button" data-bd-sos-action="record">৩০s ভয়েস</button><button type="button" data-bd-sos-action="gps">লোকেশন</button></div>
-  <div class="bd-sos-status" data-bd-sos-status>জরুরি অবস্থায় ব্যবহার করুন। ডিভাইস/নেটওয়ার্ক/রেসকিউ integration অনুযায়ী relay availability পরিবর্তিত হতে পারে।</div>
-  <details class="bd-sos-policy"><summary>⚠ অপব্যবহার নীতি ও শাস্তি</summary><p>মিথ্যা SOS, prank, ইচ্ছাকৃত ভুল লোকেশন/ভয়েস, অন্যকে হয়রানি বা rescue resource নষ্ট করার চেষ্টা করলে প্রথমবার সর্বোচ্চ ১৫ দিনের SOS suspension হতে পারে। পুনরাবৃত্ত বা গুরুতর অপব্যবহারে স্থায়ী SOS restriction, Founder/Admin review এবং প্রযোজ্য স্থানীয় আইন অনুযায়ী অতিরিক্ত ব্যবস্থা হতে পারে। সত্যিকারের জরুরি অবস্থায় ব্যবহারকারীকে শাস্তি দেওয়ার জন্য এই নীতি নয়।</p></details>
+
+  <div class="bd-sos-user-guide">
+    <div class="bd-sos-user-guide-title">জরুরি হলে এখন যা করবেন</div>
+    <div class="bd-sos-user-steps">
+      <span><b>১</b> লোকেশন দিন</span>
+      <span><b>২</b> ভয়েস রেকর্ড করুন</span>
+      <span><b>৩</b> জরুরি বার্তা পাঠান</span>
+      <span><b>৪</b> Received / Approved দেখুন</span>
+    </div>
+  </div>
+
+  <div class="bd-sos-features">
+    <button class="bd-sos-feature life" type="button" data-bd-sos-action="send">
+      <span class="bd-sos-feature-icon">SOS</span>
+      <span><b>ইমার্জেন্সি লাইফ সাপোর্ট মেসেজ</b><small>জরুরি বার্তা পাঠান</small></span>
+    </button>
+
+    <button class="bd-sos-feature" type="button" data-bd-sos-action="gps">
+      <span class="bd-sos-feature-icon">⌖</span>
+      <span><b>লোকেশন শেয়ার</b><small>আপনার বর্তমান অবস্থান যুক্ত করুন</small></span>
+    </button>
+
+    <button class="bd-sos-feature" type="button" data-bd-sos-action="record">
+      <span class="bd-sos-feature-icon">◉</span>
+      <span><b>ভয়েস মেসেজ</b><small>৩০ সেকেন্ড পর্যন্ত জরুরি ভয়েস নোট দিন</small></span>
+    </button>
+
+    <a class="bd-sos-feature" href="humanitarian.html#sosRescue">
+      <span class="bd-sos-feature-icon">✚</span>
+      <span><b>স্থানীয় রেসকিউ টিম</b><small>নিকটবর্তী সহায়তা ও রেসকিউ দেখুন</small></span>
+    </a>
+  </div>
+
+  <div class="bd-sos-live-note">
+    <b>বার্তা পাঠানোর পর</b>
+    <span>কতটি ডিভাইস Received করেছে, কতজন Approved করেছে এবং Rescue Team acknowledgement এসেছে কি না—এই স্ট্যাটাস এখানে দেখানো হবে।</span>
+  </div>
+
+  <div class="bd-sos-actions">
+    <button class="sos" type="button" data-bd-sos-action="send">জরুরি বার্তা পাঠান</button>
+    <button type="button" data-bd-sos-action="record">৩০s ভয়েস</button>
+    <button type="button" data-bd-sos-action="gps">লোকেশন</button>
+  </div>
+
+  <div class="bd-sos-status" data-bd-sos-status>প্রথমে লোকেশন ও প্রয়োজন হলে ভয়েস দিন, তারপর জরুরি বার্তা পাঠান।</div>
+
+  <details class="bd-sos-policy">
+    <summary>⚠ অপব্যবহার ও আইনি দায়</summary>
+    <p>মিথ্যা SOS, ইচ্ছাকৃত ভুল লোকেশন বা ভয়েস তথ্য, prank, হয়রানি, অন্যের পরিচয় ব্যবহার, অথবা rescue resource অপব্যবহার করা নিষিদ্ধ। এমন কাজ প্রযোজ্য স্থানীয় আইন লঙ্ঘন করতে পারে। ঘটনার গুরুত্ব ও দেশের আইন অনুযায়ী অ্যাকাউন্ট সীমাবদ্ধতা, আইনগত ব্যবস্থা, জরিমানা বা কারাদণ্ড হতে পারে।</p>
+  </details>
   </section>`;
 }
 
@@ -672,6 +714,104 @@ W.addEventListener('bd:experiencechange',()=>{apply(D);updateSOS(D)});
 W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 })();
 </script>
+
+<style id="bd-sos-v155-user-facing-red">
+.bd-sos-user-guide{
+  margin:0 0 10px;
+  padding:11px;
+  border:1px solid rgba(193,24,53,.14);
+  border-radius:14px;
+  background:linear-gradient(145deg,#fff9fa,#fff);
+}
+.bd-sos-user-guide-title{
+  margin-bottom:8px;
+  color:#9e152a;
+  font-size:10px;
+  font-weight:900;
+}
+.bd-sos-user-steps{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px;
+}
+.bd-sos-user-steps span{
+  min-height:46px;
+  padding:7px 6px;
+  border-radius:11px;
+  background:#fff;
+  border:1px solid rgba(193,24,53,.10);
+  color:#5d343b;
+  display:grid;
+  align-content:center;
+  justify-items:center;
+  gap:4px;
+  text-align:center;
+  font-size:7.4px;
+  line-height:1.3;
+  font-weight:800;
+}
+.bd-sos-user-steps b{
+  width:21px;
+  height:21px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#c61131;
+  color:#fff;
+  font:900 8px/1 system-ui,-apple-system,sans-serif;
+}
+.bd-sos-live-note{
+  margin-top:9px;
+  padding:10px 11px;
+  border-radius:13px;
+  border-left:4px solid #c61131;
+  background:rgba(198,17,49,.045);
+  color:#65444b;
+  display:grid;
+  gap:3px;
+  font-size:7.8px;
+  line-height:1.55;
+}
+.bd-sos-live-note b{
+  color:#9c172b;
+  font-size:8.4px;
+}
+.bd-sos-policy{
+  border-color:rgba(195,22,49,.18)!important;
+  background:#fffafa!important;
+}
+.bd-sos-policy summary{
+  color:#a5152c!important;
+  font-size:8.4px!important;
+}
+.bd-sos-policy p{
+  color:#6b3c45!important;
+  font-size:7.8px!important;
+  line-height:1.7!important;
+}
+html[data-theme="dark"] .bd-sos-user-guide,
+html[data-theme="dark"] .bd-sos-user-steps span,
+html[data-theme="dark"] .bd-sos-live-note,
+html[data-theme="dark"] .bd-sos-policy{
+  background:#2b1c20!important;
+  border-color:rgba(255,130,149,.15)!important;
+}
+html[data-theme="dark"] .bd-sos-user-guide-title,
+html[data-theme="dark"] .bd-sos-live-note b,
+html[data-theme="dark"] .bd-sos-policy summary{
+  color:#ff9daf!important;
+}
+html[data-theme="dark"] .bd-sos-user-steps span,
+html[data-theme="dark"] .bd-sos-live-note,
+html[data-theme="dark"] .bd-sos-policy p{
+  color:#e6cbd1!important;
+}
+@media(max-width:560px){
+  .bd-sos-user-steps{grid-template-columns:1fr 1fr}
+  .bd-sos-user-steps span{min-height:42px}
+}
+</style>
+
 </head>
 <body>
 <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.7c-2.1-2.1-5.5-2.1-7.6 0L12 5.9l-1.2-1.2c-2.1-2.1-5.5-2.1-7.6 0s-2.1 5.5 0 7.6L12 21l8.8-8.7c2.1-2.1 2.1-5.5 0-7.6Z"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 5.5-8 11-8 11S4 15.5 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></symbol><symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-7 9 7M5 10v10h14V10M9 20v-6h6v6"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></symbol><symbol id="i-theme" viewBox="0 0 24 24"><path d="M20 15.5A8 8 0 0 1 8.5 4 8 8 0 1 0 20 15.5Z"/></symbol></svg>
