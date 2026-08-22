@@ -657,36 +657,72 @@ function dateHTML(){
 function renderDateTicker(){const groups=[...D.querySelectorAll('.bd-date-group')];if(!groups.length)return false;const seq=dateHTML(),long=seq+'<i>✦</i>'+seq+'<i>✦</i>'+seq+'<i>✦</i>';groups.forEach(g=>g.innerHTML=long);return true}
 
 function injectExperienceStyle(){
-  if(D.getElementById('bd-experience-style-v161'))return;
-  const s=D.createElement('style');s.id='bd-experience-style-v161';s.textContent=`
-  .bd-experience-card{--bd-mode-accent:#147a59}.bd-experience-card .bd-mode-section{display:grid;gap:6px}.bd-mode-caption{display:flex;justify-content:space-between;align-items:end;gap:8px}.bd-mode-caption b{font-size:8px}.bd-mode-caption small{font-size:6.2px;color:var(--bd-muted,#8494a7)}.bd-feed-toggle{display:grid;grid-template-columns:1fr 1fr;gap:5px}.bd-feed-mode{min-height:34px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.76);color:var(--bd-text,#173153);font-size:7.6px;font-weight:900}.bd-feed-mode.active{background:#10251d;color:#fff;border-color:#10251d}.bd-lang-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.bd-lang-btn{min-width:0;min-height:40px;padding:5px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.76);color:var(--bd-text,#173153);font-size:6.6px;font-weight:900;line-height:1.25}.bd-lang-btn.active{border-color:rgba(20,122,89,.35);box-shadow:inset 0 0 0 1px rgba(20,122,89,.18);background:rgba(232,247,240,.94);color:#0d704f}.bd-language-select{width:100%;min-height:38px;margin-top:5px;padding:0 9px;border:1px solid rgba(74,102,92,.13);border-radius:10px;background:rgba(255,255,255,.82);color:var(--bd-text,#173153);font-size:7px}.bd-mode-rescue{margin-top:8px;padding-top:8px;border-top:1px solid rgba(86,104,147,.10);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}.bd-mode-rescue b{display:block;font-size:7.5px}.bd-mode-rescue small{display:block;color:var(--bd-muted,#8b99ad);font-size:6.1px}.bd-mode-rescue button{min-height:32px;padding:0 8px;border-radius:9px;border:1px solid rgba(198,66,80,.18);background:#fff;color:#a23947;font-size:6.8px;font-weight:900}.bd-region-state-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:99px;background:rgba(20,128,95,.08);color:#147759;font-size:6.4px;font-weight:900}
-  html[data-theme="dark"] .bd-feed-mode,html[data-theme="dark"] .bd-lang-btn,html[data-theme="dark"] .bd-language-select,html[data-theme="dark"] .bd-mode-rescue button{background:#14263e;color:#eef5ff;border-color:rgba(170,191,227,.14)}html[data-theme="dark"] .bd-feed-mode.active{background:#0d5e46}html[data-theme="dark"] .bd-lang-btn.active{background:#183b31;color:#c9f4e2}
+  if(D.getElementById('bd-experience-style-v130'))return;
+  const s=D.createElement('style');s.id='bd-experience-style-v130';s.textContent=`
+  .bd-experience-card{--bd-mode-accent:#13795a;position:relative;overflow:hidden}
+  .bd-experience-card:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 100% 0,rgba(154,108,255,.08),transparent 30%),radial-gradient(circle at 0 100%,rgba(20,122,89,.06),transparent 28%)}
+  .bd-experience-card .bd-mode-section{display:grid;gap:8px}
+  .bd-mode-caption{display:flex;justify-content:space-between;align-items:end;gap:8px}.bd-mode-caption b{font-size:8px}.bd-mode-caption small{font-size:6.2px;color:var(--bd-muted,#8494a7)}
+  .bd-feed-toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px}.bd-feed-mode{min-height:35px;border:1px solid rgba(74,102,92,.13);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(245,249,247,.92));color:var(--bd-text,#173153);font-size:7.6px;font-weight:900;box-shadow:0 6px 14px rgba(31,56,46,.05)}.bd-feed-mode.active{background:#10251d;color:#fff;border-color:#10251d;box-shadow:0 10px 22px rgba(10,39,29,.15)}
+  .bd-language-shell{display:grid;gap:8px;padding:9px 10px;border-radius:15px;border:1px solid rgba(88,111,146,.08);background:linear-gradient(180deg,rgba(250,253,252,.98),rgba(243,248,246,.95))}
+  .bd-language-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.bd-language-head b{display:block;font-size:8.3px;color:#173153}.bd-language-head small{display:block;margin-top:2px;font-size:6.2px;color:#8a98aa}.bd-language-current{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;background:rgba(20,122,89,.08);color:#0e7956;font:900 6.4px/1 system-ui;white-space:nowrap}.bd-language-current i{display:inline-block;width:7px;height:7px;border-radius:50%;background:linear-gradient(145deg,#13a06f,#0c714f)}
+  .bd-lang-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.bd-lang-btn{min-width:0;min-height:46px;padding:6px 5px;border:1px solid rgba(74,102,92,.13);border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(245,249,247,.92));color:var(--bd-text,#173153);font-size:6.8px;font-weight:900;line-height:1.28;box-shadow:0 6px 14px rgba(31,56,46,.04)}.bd-lang-btn.active{border-color:rgba(20,122,89,.35);box-shadow:inset 0 0 0 1px rgba(20,122,89,.14),0 10px 18px rgba(20,122,89,.08);background:linear-gradient(180deg,rgba(236,249,243,.98),rgba(230,246,239,.94));color:#0d704f}.bd-lang-btn small{display:block;margin-top:2px;font-size:5.9px;color:#7d8d9c}
+  .bd-language-select-wrap{position:relative}.bd-language-select-wrap:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:12px;color:#738593;pointer-events:none}.bd-language-select{appearance:none;-webkit-appearance:none;width:100%;min-height:40px;padding:0 31px 0 10px;border:1px solid rgba(74,102,92,.13);border-radius:12px;background:rgba(255,255,255,.96);color:var(--bd-text,#173153);font-size:7.15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.55)}
+  .bd-language-note{display:flex;align-items:center;gap:6px;font-size:6.25px;color:#728291;line-height:1.5}.bd-language-note i{display:inline-grid;place-items:center;min-width:14px;height:14px;border-radius:50%;background:rgba(20,122,89,.08);color:#0e7856;font-style:normal;font-weight:900}
+  .bd-mode-rescue{margin-top:2px;padding-top:8px;border-top:1px solid rgba(86,104,147,.10);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center}.bd-mode-rescue b{display:block;font-size:7.5px}.bd-mode-rescue small{display:block;color:var(--bd-muted,#8b99ad);font-size:6.1px}.bd-mode-rescue button{min-height:34px;padding:0 10px;border-radius:10px;border:1px solid rgba(198,66,80,.18);background:#fff;color:#a23947;font-size:6.8px;font-weight:900;box-shadow:0 6px 14px rgba(163,57,71,.06)}.bd-region-state-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border-radius:999px;background:rgba(20,128,95,.08);color:#147759;font-size:6.4px;font-weight:900}
+  html[data-theme="dark"] .bd-feed-mode,html[data-theme="dark"] .bd-lang-btn,html[data-theme="dark"] .bd-language-select,html[data-theme="dark"] .bd-mode-rescue button,html[data-theme="dark"] .bd-language-shell{background:#14263e;color:#eef5ff;border-color:rgba(170,191,227,.14)}html[data-theme="dark"] .bd-feed-mode.active{background:#0d5e46}html[data-theme="dark"] .bd-lang-btn.active{background:#183b31;color:#c9f4e2}html[data-theme="dark"] .bd-language-current{background:rgba(20,122,89,.18);color:#d3f7e8}
   `;
   D.head.appendChild(s);
 }
 function sideLabels(){
-  if(uiLang==='bn')return{head:'ভাষা ও নিউজফিড',feed:'নিউজফিড দেশ',home:'আমার দেশ',local:'লোকাল',lang:'ভাষা',en:'English (ডিফল্ট)',mine:'আমার ভাষা',loc:'লোকাল ভাষা',all:'সব ভাষা',rescue:'Emergency / Rescue Location',change:'পরিবর্তন'};
-  return{head:'Language & News Feed',feed:'Feed region',home:'Home',local:'Local',lang:'Interface language',en:'English · Default',mine:'My Language',loc:'Local Language',all:'All languages',rescue:'Emergency / Rescue Location',change:'Change'};
+  if(uiLang==='bn')return{head:'ভাষা ও নিউজফিড',feed:'নিউজফিড দেশ',home:'আমার দেশ',local:'লোকাল',lang:'ভাষা',en:'English (ডিফল্ট)',mine:'আমার ভাষা',loc:'লোকাল ভাষা',all:'সব ভাষা',rescue:'Emergency / Rescue Location',change:'পরিবর্তন',current:'চলতি ভাষা',pick:'যেটি বাছাই করবেন, সাইডবার ও নির্দেশনা সেই ভাষায় বদলাবে'};
+  return{head:'Language & News Feed',feed:'Feed region',home:'Home',local:'Local',lang:'Interface language',en:'English · Default',mine:'My Language',loc:'Local Language',all:'All languages',rescue:'Emergency / Rescue Location',change:'Change',current:'Current UI',pick:'The sidebar and guidance will switch to the language you choose'};
 }
 function experienceCardInnerHTML(){
   const L=sideLabels(),homeLang=home.lang||'en',localLang=rescue.lang||'en',rr=[rescue.city,rescue.region,rescue.countryName].filter(Boolean).join(', ')||rescue.label||'Not set';
   return `<div class="bd-side-head"><div><small>${L.feed}</small><h3>${L.head}</h3></div><span class="bd-region-state-chip">${feedMode==='home'?'HOME':'LOCAL'} · ${uiLang.toUpperCase()}</span></div>
   <div class="bd-mode-section">
     <div class="bd-feed-toggle"><button type="button" class="bd-feed-mode ${feedMode==='home'?'active':''}" data-bd-feed-mode="home">${flagEmoji(home.countryCode)} ${L.home}</button><button type="button" class="bd-feed-mode ${feedMode==='local'?'active':''}" data-bd-feed-mode="local">${flagEmoji(rescue.countryCode)} ${L.local}</button></div>
-    <div class="bd-mode-caption"><b>${L.lang}</b><small>${L.en}</small></div>
-    <div class="bd-lang-quick">
-      <button type="button" class="bd-lang-btn ${uiLang==='en'?'active':''}" data-bd-ui-lang="en">English<br><small>Default</small></button>
-      <button type="button" class="bd-lang-btn ${uiLang===homeLang?'active':''}" data-bd-ui-lang="${homeLang}">${languageName(homeLang)}<br><small>${L.mine}</small></button>
-      <button type="button" class="bd-lang-btn ${uiLang===localLang?'active':''}" data-bd-ui-lang="${localLang}">${languageName(localLang)}<br><small>${L.loc}</small></button>
+    <div class="bd-language-shell">
+      <div class="bd-language-head"><span><b>${L.lang}</b><small>${L.pick}</small></span><span class="bd-language-current"><i></i>${L.current}: ${languageName(uiLang)}</span></div>
+      <div class="bd-lang-quick">
+        <button type="button" class="bd-lang-btn ${uiLang==='en'?'active':''}" data-bd-ui-lang="en">English<small>Default</small></button>
+        <button type="button" class="bd-lang-btn ${uiLang===homeLang?'active':''}" data-bd-ui-lang="${homeLang}">${languageName(homeLang)}<small>${L.mine}</small></button>
+        <button type="button" class="bd-lang-btn ${uiLang===localLang?'active':''}" data-bd-ui-lang="${localLang}">${languageName(localLang)}<small>${L.loc}</small></button>
+      </div>
+      <label class="bd-language-select-wrap"><select class="bd-language-select" data-bd-language-all aria-label="${L.all}"><option value="">${L.all}…</option>${LANG_OPTIONS}</select></label>
+      <div class="bd-language-note"><i>◎</i><span>${L.en}</span></div>
     </div>
-    <select class="bd-language-select" data-bd-language-all aria-label="${L.all}"><option value="">${L.all}…</option>${LANG_OPTIONS}</select>
   </div>
-  <div class="bd-mode-rescue"><span><b>${L.rescue}</b><small data-bd-rescue-label>${rr}</small></span><button type="button" data-bd-open-rescue>${L.change}</button></div>`;
+  <div class="bd-mode-rescue"><span><b>${L.rescue}</b><small data-bd-rescue-label>${rr}</small></span><button type="button" data-bd-open-rescue>${L.change}</button></div>`
 }
 function experienceCardHTML(){return `<section class="bd-side-card bd-experience-card">${experienceCardInnerHTML()}</section>`}
 function syncExperienceCards(){D.querySelectorAll('.bd-experience-card').forEach(c=>c.innerHTML=experienceCardInnerHTML());D.querySelectorAll('[data-bd-language-all]').forEach(s=>s.value=uiLang);syncRescueLabels()}
 function rescueLabel(){return [rescue.city,rescue.region,rescue.countryName].filter(Boolean).join(', ')||rescue.label||'Not set'}
 function syncRescueLabels(){D.querySelectorAll('[data-bd-rescue-label]').forEach(x=>x.textContent=rescueLabel())}
+
+function compassDir(deg){
+  const dirs=lang()==='en'?['North','North-East','East','South-East','South','South-West','West','North-West']:['উত্তর','উত্তর-পূর্ব','পূর্ব','দক্ষিণ-পূর্ব','দক্ষিণ','দক্ষিণ-পশ্চিম','পশ্চিম','উত্তর-পশ্চিম'];
+  const n=((Number(deg)||0)%360+360)%360;
+  return dirs[Math.round(n/45)%8];
+}
+function numericDistance(v,def){
+  const m=String(v||'').match(/(\d+(?:\.\d+)?)/);
+  return m?parseFloat(m[1]):def;
+}
+function relayTeams(){
+  const base=numericDistance(relay.nearest,1.2),dir=relay.direction||compassDir(headingDeg||34);
+  const en=lang()==='en';
+  return [
+    {name:en?'Rescue Team Alpha':'রেসকিউ টিম ১',distance:`${base.toFixed(1)} km`,eta:en?'ETA 4 min':'৪ মিনিট',direction:dir,status:en?'Closest':'নিকটতম'},
+    {name:en?'Rescue Team Bravo':'রেসকিউ টিম ২',distance:`${(base+0.9).toFixed(1)} km`,eta:en?'ETA 7 min':'৭ মিনিট',direction:compassDir((headingDeg||34)+52),status:en?'Secondary':'দ্বিতীয়'},
+    {name:en?'Rescue Team Charlie':'রেসকিউ টিম ৩',distance:`${(base+1.7).toFixed(1)} km`,eta:en?'ETA 11 min':'১১ মিনিট',direction:compassDir((headingDeg||34)-68),status:en?'Backup':'ব্যাকআপ'}
+  ]
+}
+function teamCardsHTML(){
+  return relayTeams().map((team,idx)=>`<div class="bd-lt-team ${idx===0?'primary':''}"><span class="num">0${idx+1}</span><span class="copy"><b>${esc(team.name)}</b><small>${esc(team.distance)} · ${esc(team.direction)} · ${esc(team.eta)}</small></span><i>${esc(team.status)}</i></div>`).join('')
+}
+
 
 function modal(kind){let id=kind==='history'?'bdHistoryModal':kind==='home'?'bdHomeRegionModal':'bdRescueRegionModal',m=D.getElementById(id);if(m)return m;m=D.createElement('div');m.className='bd-region-modal';m.id=id;D.body.appendChild(m);return m}
 function historyInfo(code,name){if(code==='BD')return {title:'বাংলাদেশের ইতিহাস',href:'bangladesh.html',body:'১৭৫৭ থেকে ভাষা আন্দোলন, ১৯৬৯-এর গণঅভ্যুত্থান, ১৯৭১-এর মুক্তিযুদ্ধ ও স্বাধীনতা—বাংলাদেশের ইতিহাস সংগ্রাম, ভাষা, সংস্কৃতি ও মানুষের আত্মপরিচয়ের ধারাবাহিক যাত্রা।'};if(code==='IN')return {title:'বাংলা ও ভারতের ইতিহাস',href:'west-bengal.html',body:'বাংলা ভাষা, সাহিত্য, সংস্কৃতি ও উপমহাদেশের ঐতিহাসিক ধারাবাহিকতার পরিচয়।'};return {title:(name||'Country')+' · History',href:'#',body:'This flag represents profile/home identity. Emergency rescue location is stored separately.'}}
@@ -1327,7 +1363,7 @@ const $=(s,r=D)=>r.querySelector(s),$$=(s,r=D)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const LIMITS={free:{voice:1,location:1,text:0,lines:0,label:'FREE'},premium:{voice:3,location:2,text:5,lines:3,label:'PREMIUM'},super:{voice:5,location:5,text:10,lines:10,label:'SUPER PREMIUM'}};
 const STORE='bd-emergency-credit-usage-v1';
-let portal=null,voiceGuideOn=false,voiceTimer=null,recording=false,recorder=null,recordChunks=[],lastVoiceBlob=null,lastGPS=null,relay={received:0,approved:0,rescueAck:false,nearest:null,direction:null,routeStatus:null,transport:{internet:'idle',bluetooth:'idle',rf:'idle',lora:'idle',satellite:'idle'}},logLines=[];
+let portal=null,voiceGuideOn=false,voiceTimer=null,recording=false,recorder=null,recordChunks=[],lastVoiceBlob=null,lastGPS=null,headingDeg=34,relay={received:0,approved:0,rescueAck:false,nearest:null,direction:null,routeStatus:null,transport:{internet:'idle',bluetooth:'idle',rf:'idle',lora:'idle',satellite:'idle'}},logLines=[];
 function read(k,f={}){try{return JSON.parse(localStorage.getItem(k)||'')||f}catch{return f}}
 function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}
 function lang(){return String(W.BDRegion?.uiLanguage||D.documentElement.lang||'bn').toLowerCase()}
@@ -1354,11 +1390,11 @@ function transportRows(){const rows=[['internet','NET','Internet / data','Fast p
 function quotaHTML(){const q=quota();const one=(k,label)=>{const x=q[k],pct=x.max?Math.round(100*x.left/x.max):0;return `<div class="bd-lt-quota"><div class="top"><small>${label}</small><b>${x.left}/${x.max}</b></div><strong>${x.left}</strong><div class="bd-lt-bar"><i style="width:${pct}%"></i></div></div>`};return one('voice','30s VOICE')+one('location','LOCATION')+one('text','TEXT')}
 function voiceDirectionText(){if(relay.direction)return relay.direction;if(relay.nearest)return `${t('nearest')} ${relay.nearest}`;return t('noRoute')}
 function speak(msg){if(!voiceGuideOn||!msg||!('speechSynthesis'in W))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(msg);u.lang=locale();u.rate=.92;u.pitch=1;speechSynthesis.speak(u)}catch(_){}}
-function portalHTML(){const q=quota(),r=region(),coords=(Number.isFinite(lastGPS?.lat)?`${lastGPS.lat.toFixed(5)}, ${lastGPS.lng.toFixed(5)}${lastGPS.accuracy?` · ±${Math.round(lastGPS.accuracy)}m`:''}`:(Number.isFinite(r.lat)&&Number.isFinite(r.lng)?`${(+r.lat).toFixed(5)}, ${(+r.lng).toFixed(5)}`:'GPS not captured'));
+function portalHTML(){const q=quota(),r=region(),coords=(Number.isFinite(lastGPS?.lat)?`${lastGPS.lat.toFixed(5)}, ${lastGPS.lng.toFixed(5)}${lastGPS.accuracy?` · ±${Math.round(lastGPS.accuracy)}m`:''}`:(Number.isFinite(r.lat)&&Number.isFinite(r.lng)?`${(+r.lat).toFixed(5)}, ${(+r.lng).toFixed(5)}`:'GPS not captured'));const teams=relayTeams();
 return `<section class="bd-lt-door" role="dialog" aria-modal="true" aria-label="${esc(t('title'))}">
 <header class="bd-lt-head"><button class="bd-lt-back" type="button" data-bd-lt-close>‹</button><div class="bd-lt-head-copy"><small>${t('eyebrow')}</small><b>${t('title')}</b></div><span class="bd-lt-head-chip">${q.label}</span><button class="bd-lt-close" type="button" data-bd-lt-close>×</button></header>
 <section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>${t('where')}</small><b>${t('gps')}</b></div><span class="state" data-bd-lt-gps-state>GPS</span></div><div class="bd-lt-location-hero"><div class="bd-lt-location-pin">⌖</div><div class="bd-lt-location-copy"><b data-bd-lt-location-label>${esc(regionLabel())}</b><small>${esc(coords)}</small></div></div><div class="bd-lt-gps-line" data-bd-lt-gps-line>${t('scan')}</div></section>
-<section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>${t('map')}</small><b>${relay.nearest?esc(relay.nearest):t('nearest')}</b></div><span class="state ${relay.routeStatus==='unverified'?'red':''}" data-bd-lt-route-state>${relay.routeStatus==='verified'?'VERIFIED ROUTE':'ROUTE DATA'}</span></div><div class="bd-lt-map"><div class="bd-lt-route"></div><div class="bd-lt-you">${lang()==='en'?'YOU':'আপনি'}</div><div class="bd-lt-rescue">✚</div><div class="bd-lt-rescue-label">RESCUE</div></div><div class="bd-lt-route-summary"><span><b data-bd-lt-distance>${relay.nearest||'—'}</b><small>${t('nearest')}</small></span><span><b data-bd-lt-direction>${relay.direction||'—'}</b><small>Direction</small></span><span><b data-bd-lt-route>${relay.routeStatus==='verified'?t('route'):'—'}</b><small>Route status</small></span></div><button class="bd-lt-voice-guide ${voiceGuideOn?'on':''}" type="button" data-bd-lt-voice-guide><span class="speaker">🔊</span><span><b>${t('voice')}</b><small>${esc(voiceDirectionText())}</small></span><i>${voiceGuideOn?'ON':'OFF'}</i></button></section>
+<section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>${t('map')}</small><b>${relay.nearest?esc(relay.nearest):t('nearest')}</b></div><span class="state ${relay.routeStatus==='unverified'?'red':''}" data-bd-lt-route-state>${relay.routeStatus==='verified'?'VERIFIED ROUTE':'ROUTE DATA'}</span></div><div class="bd-lt-map"><div class="bd-lt-map-grid"></div><div class="bd-lt-route"></div><div class="bd-lt-person" data-bd-lt-person><span class="walker">🧍</span><span class="arrow" data-bd-lt-heading>↑</span><strong>${lang()==='en'?'YOU':'আপনি'}</strong></div><div class="bd-lt-rescue team-a">✚</div><div class="bd-lt-rescue team-b">✚</div><div class="bd-lt-rescue team-c">✚</div><div class="bd-lt-rescue-label label-a">01</div><div class="bd-lt-rescue-label label-b">02</div><div class="bd-lt-rescue-label label-c">03</div></div><div class="bd-lt-route-summary"><span><b data-bd-lt-distance>${relay.nearest||'—'}</b><small>${t('nearest')}</small></span><span><b data-bd-lt-direction>${relay.direction||compassDir(headingDeg||34)}</b><small>Direction</small></span><span><b data-bd-lt-route>${relay.routeStatus==='verified'?t('route'):'—'}</b><small>Route status</small></span></div><div class="bd-lt-team-strip" data-bd-lt-teams>${teamCardsHTML()}</div><button class="bd-lt-voice-guide ${voiceGuideOn?'on':''}" type="button" data-bd-lt-voice-guide><span class="speaker">🔊</span><span><b>${t('voice')}</b><small>${esc(voiceDirectionText())}</small></span><i>${voiceGuideOn?'ON':'OFF'}</i></button></section>
 <section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>AUTOMATIC FALLBACK</small><b>${supportedTransportLabel()}</b></div><span class="state">AUTO</span></div><div class="bd-lt-transport" data-bd-lt-transports>${transportRows()}</div><div class="bd-lt-disclaimer">Supported radios are used through the BongDang native emergency bridge / approved hardware. A normal webpage cannot turn a phone into an arbitrary RF transmitter. Satellite is reserved as a paid fallback after lower-cost paths fail.</div></section>
 <section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>LIVE ACKNOWLEDGEMENT</small><b>${t('ack')}</b></div><span class="state ${relay.approved||relay.rescueAck?'':'red'}">${relay.approved||relay.rescueAck?'ACKNOWLEDGED':'WAITING'}</span></div><div class="bd-lt-approval-grid"><span><b data-bd-lt-received>${relay.received||0}</b><small>${t('received')}</small></span><span class="approved"><b data-bd-lt-approved>${relay.approved||0}</b><small>${t('approved')}</small></span><span class="rescue"><b data-bd-lt-rescue>${relay.rescueAck?'1':'0'}</b><small>${t('rescue')}</small></span><span><b data-bd-lt-nearest>${relay.nearest||'—'}</b><small>${t('nearest')}</small></span></div><div class="bd-lt-ack-message ${relay.approved||relay.rescueAck?'':'red'}" data-bd-lt-ack-msg>${relay.approved||relay.rescueAck?t('ack'):'No approval yet. Nearby relay can continue while RF/LoRa fallback is prepared.'}</div></section>
 <section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>DESTINATION</small><b>${t('targets')}</b></div><span class="state">SELECT 1–2</span></div><div class="bd-lt-targets"><label class="bd-lt-target"><input type="checkbox" data-bd-lt-target="nearby" checked><span><b>${t('nearUsers')}</b><small>${t('nearUsersSub')}</small></span></label><label class="bd-lt-target"><input type="checkbox" data-bd-lt-target="rescue" checked><span><b>${t('rescueTeam')}</b><small>${t('rescueTeamSub')}</small></span></label></div></section>
@@ -1399,7 +1435,7 @@ function open(){
  try{navigator.vibrate?.(22)}catch(_){}
  W.dispatchEvent(new CustomEvent('bd:location-touch-opened'));
 }
-function renderDynamic(){if(!portal?.classList.contains('open'))return;const trans=$('[data-bd-lt-transports]',portal);if(trans)trans.innerHTML=transportRows();const set=(s,v)=>{const el=$(s,portal);if(el)el.textContent=v};set('[data-bd-lt-received]',relay.received||0);set('[data-bd-lt-approved]',relay.approved||0);set('[data-bd-lt-rescue]',relay.rescueAck?'1':'0');set('[data-bd-lt-nearest]',relay.nearest||'—');set('[data-bd-lt-distance]',relay.nearest||'—');set('[data-bd-lt-direction]',relay.direction||'—');set('[data-bd-lt-route]',relay.routeStatus==='verified'?t('route'):'—');const ack=$('[data-bd-lt-ack-msg]',portal);if(ack){ack.textContent=relay.approved||relay.rescueAck?t('ack'):'No approval yet. Nearby relay can continue while RF/LoRa fallback is prepared.';ack.classList.toggle('red',!(relay.approved||relay.rescueAck))}const q=$('[data-bd-lt-quota]',portal);if(q)q.innerHTML=quotaHTML();syncSidebar()}
+function renderDynamic(){if(!portal?.classList.contains('open'))return;const trans=$('[data-bd-lt-transports]',portal);if(trans)trans.innerHTML=transportRows();const set=(s,v)=>{const el=$(s,portal);if(el)el.textContent=v};set('[data-bd-lt-received]',relay.received||0);set('[data-bd-lt-approved]',relay.approved||0);set('[data-bd-lt-rescue]',relay.rescueAck?'1':'0');set('[data-bd-lt-nearest]',relay.nearest||'—');set('[data-bd-lt-distance]',relay.nearest||'—');set('[data-bd-lt-direction]',relay.direction||compassDir(headingDeg||34));set('[data-bd-lt-route]',relay.routeStatus==='verified'?t('route'):'—');const gpsLabel=$('[data-bd-lt-location-label]',portal);if(gpsLabel)gpsLabel.textContent=regionLabel();const gpsLine=$('[data-bd-lt-gps-line]',portal);if(gpsLine&&Number.isFinite(lastGPS?.lat))gpsLine.textContent=`${t('gpsOk')} · ${lastGPS.lat.toFixed(5)}, ${lastGPS.lng.toFixed(5)} · ±${Math.round(lastGPS.accuracy||0)}m`;const teamBox=$('[data-bd-lt-teams]',portal);if(teamBox)teamBox.innerHTML=teamCardsHTML();const ack=$('[data-bd-lt-ack-msg]',portal);if(ack){ack.textContent=relay.approved||relay.rescueAck?t('ack'):'Nearby relay is still trying. If local phones do not approve, RF / LoRa / satellite fallback will continue.';ack.classList.toggle('red',!(relay.approved||relay.rescueAck))}const q=$('[data-bd-lt-quota]',portal);if(q)q.innerHTML=quotaHTML();syncSidebar();try{const person=$('[data-bd-lt-person]',portal),arrow=$('[data-bd-lt-heading]',portal);if(person){const rad=((headingDeg||34)%360)*Math.PI/180,dx=Math.cos(rad)*6,dy=-Math.sin(rad)*6;person.style.setProperty('--bd-person-x',dx.toFixed(1)+'px');person.style.setProperty('--bd-person-y',dy.toFixed(1)+'px');person.style.setProperty('--bd-heading',(headingDeg||34)+'deg')}if(arrow)arrow.style.transform=`rotate(${headingDeg||34}deg)`}catch(_){}}
 async function acquireGPS(){const line=$('[data-bd-lt-gps-line]',portal);const b=bridge();try{let g=null;if(b?.getLocation)g=await Promise.resolve(b.getLocation());if(!g&&navigator.geolocation)g=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(p=>resolve({lat:p.coords.latitude,lng:p.coords.longitude,accuracy:p.coords.accuracy}),reject,{enableHighAccuracy:true,timeout:5000,maximumAge:15000}));if(g&&Number.isFinite(+g.lat)){lastGPS={lat:+g.lat,lng:+g.lng,accuracy:+g.accuracy||0};if(line)line.textContent=t('gpsOk')+` · ${lastGPS.lat.toFixed(5)}, ${lastGPS.lng.toFixed(5)} · ±${Math.round(lastGPS.accuracy||0)}m`;log(t('gpsOk'));return lastGPS}}catch(_){ }if(line)line.textContent=t('gpsFail');log(t('gpsFail'));return null}
 async function scanTransports(){relay.transport.internet=navigator.onLine?'ready':'failed';relay.transport.bluetooth='searching';relay.transport.rf='idle';relay.transport.lora='idle';relay.transport.satellite='idle';renderDynamic();log(t('scan'));const b=bridge();if(!b){setTimeout(()=>{relay.transport.bluetooth='failed';relay.transport.rf='failed';relay.transport.lora='failed';relay.transport.satellite='paid';renderDynamic();log(t('noBridge'))},650);return}
 try{const s=await Promise.resolve(b.scanTransports?.({order:['internet','bluetooth','rf','lora','satellite'],nearbyRadiusMeters:1000,preferFree:true}));if(s?.transport)relay.transport={...relay.transport,...s.transport};if(Number.isFinite(+s?.received))relay.received=+s.received;if(Number.isFinite(+s?.approved))relay.approved=+s.approved;if(s?.rescueAck!=null)relay.rescueAck=!!s.rescueAck;if(s?.nearest)relay.nearest=String(s.nearest);if(s?.direction)relay.direction=String(s.direction);if(s?.routeStatus)relay.routeStatus=String(s.routeStatus);renderDynamic();log('Transport scan updated')}catch(e){log('Transport scan unavailable')}}
@@ -1436,7 +1472,7 @@ D.addEventListener('keydown',e=>{if(e.key==='Escape'&&portal?.classList.contains
 W.addEventListener('bd:emergency-relay-progress',e=>applyProgress(e.detail||{}));W.addEventListener('bd:rescuechange',()=>syncSidebar());W.addEventListener('bd:sidebars-hydrated',()=>syncSidebar());
 setTimeout(syncSidebar,80);
 W.BongDangLocationTouch={
- version:'v129',
+ version:'v130',
  ready:true,
  open,close,scanTransports,
  sendEmergency:sendThroughBridge,
@@ -1444,7 +1480,62 @@ W.BongDangLocationTouch={
  getQuota:quota,
  getState:()=>JSON.parse(JSON.stringify(relay))
 };
-D.documentElement.dataset.bdLocationTouch='v129-ready';
+D.documentElement.dataset.bdLocationTouch='v130-ready';
+})();
+</script>
+
+
+<style id="bd-sidebars-v130-location-motion-style">
+.bd-lt-map{position:relative;overflow:hidden}
+.bd-lt-map-grid{position:absolute;inset:0;pointer-events:none;background:
+ linear-gradient(rgba(16,121,83,.06) 1px,transparent 1px) 0 0/40px 40px,
+ linear-gradient(90deg,rgba(16,121,83,.06) 1px,transparent 1px) 0 0/40px 40px}
+.bd-lt-person{position:absolute;left:18%;top:58%;z-index:2;display:grid;place-items:center;gap:2px;width:74px;height:74px;border-radius:26px 26px 30px 30px;background:linear-gradient(145deg,#14a171,#0d7452);box-shadow:0 14px 28px rgba(11,76,54,.18);color:#fff;transform:translate(var(--bd-person-x,0px),var(--bd-person-y,0px));transition:transform .55s ease, left .55s ease, top .55s ease}
+.bd-lt-person:after{content:"";position:absolute;left:30px;bottom:-11px;border:9px solid transparent;border-top-color:#0d7452}
+.bd-lt-person .walker{font-size:24px;line-height:1;margin-top:6px;filter:saturate(.85)}
+.bd-lt-person .arrow{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.2);font-size:14px;transform:rotate(var(--bd-heading,0deg));transition:transform .35s ease}
+.bd-lt-person strong{font:900 7px/1 system-ui;letter-spacing:.06em;margin-bottom:7px}
+.bd-lt-rescue.team-a{right:16%;top:19%}.bd-lt-rescue.team-b{right:31%;top:56%}.bd-lt-rescue.team-c{right:8%;top:62%}
+.bd-lt-rescue-label.label-a{right:7%;top:34%}.bd-lt-rescue-label.label-b{right:22%;top:70%}.bd-lt-rescue-label.label-c{right:0%;top:76%}
+.bd-lt-team-strip{display:grid;gap:7px;margin-top:9px}.bd-lt-team{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 9px;border-radius:13px;border:1px solid rgba(82,106,142,.08);background:linear-gradient(180deg,#fff,#fafdfc)}.bd-lt-team.primary{border-color:rgba(20,122,89,.18);box-shadow:0 10px 20px rgba(13,116,82,.06)}.bd-lt-team .num{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:linear-gradient(145deg,rgba(20,122,89,.12),rgba(20,122,89,.04));color:#107a57;font:900 10px/1 system-ui}.bd-lt-team .copy{min-width:0}.bd-lt-team .copy b{display:block;font:850 8.3px/1.25 system-ui;color:#193b50}.bd-lt-team .copy small{display:block;margin-top:2px;color:#7d8e9d;font:700 6.8px/1.3 system-ui}.bd-lt-team i{font-style:normal;padding:4px 7px;border-radius:999px;background:rgba(198,45,66,.08);color:#b32038;font:900 6.5px/1 system-ui}
+@media(max-width:520px){.bd-lt-person{width:68px;height:68px;left:16%;top:60%}.bd-lt-team{grid-template-columns:30px minmax(0,1fr)}.bd-lt-team i{grid-column:2/3;justify-self:start;margin-top:2px}}
+html[data-theme="dark"] .bd-lt-team{background:#101f28;border-color:rgba(167,195,220,.10)}html[data-theme="dark"] .bd-lt-team .copy b{color:#eef6ff}html[data-theme="dark"] .bd-lt-team .copy small{color:#aebecb}
+</style>
+
+<script id="bd-sidebars-v130-location-motion-script">
+(()=>{
+  if(!window.BongDangLocationTouch||window.BongDangLocationTouch.__v130enhanced)return;
+  const api=window.BongDangLocationTouch;api.__v130enhanced=true;
+  const D=document,W=window;
+  let headingDeg=0,motionTick=0,motionTimer=null,geoWatchId=null,orientationBound=false;
+  const $=(s,r=D)=>r.querySelector(s);
+  function dirFromHeading(){return typeof compassDir==='function'?compassDir(headingDeg):''}
+  function updateMovement(){
+    const portal=document.getElementById('bdLocationTouchPortal');if(!portal||!portal.classList.contains('open'))return;
+    const person=$('[data-bd-lt-person]',portal),arrow=$('[data-bd-lt-heading]',portal);if(!person)return;
+    motionTick+=1;const rad=(headingDeg||0)*Math.PI/180,dx=Math.cos(rad)*7+Math.sin(motionTick/2)*2.2,dy=-Math.sin(rad)*7+Math.cos(motionTick/2.4)*1.8;
+    person.style.setProperty('--bd-person-x',dx.toFixed(1)+'px');person.style.setProperty('--bd-person-y',dy.toFixed(1)+'px');person.style.setProperty('--bd-heading',headingDeg.toFixed(1)+'deg');
+    if(arrow)arrow.style.transform=`rotate(${headingDeg}deg)`;
+    const dir=$('[data-bd-lt-direction]',portal);if(dir&&!String(dir.textContent||'').trim().replace('—',''))dir.textContent=dirFromHeading();
+  }
+  function onOrientation(e){
+    const raw=(typeof e.webkitCompassHeading==='number'?e.webkitCompassHeading:(typeof e.alpha==='number'?(360-e.alpha):null));
+    if(Number.isFinite(raw)){headingDeg=((raw%360)+360)%360;updateMovement()}
+  }
+  async function bindOrientation(){
+    if(orientationBound)return;orientationBound=true;
+    try{const req=DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission;if(typeof req==='function'){const p=await req();if(p!=='granted')return}}catch(_){ }
+    W.addEventListener('deviceorientation',onOrientation,true);
+  }
+  function bindGeoWatch(){
+    if(!navigator.geolocation||geoWatchId!=null)return;
+    try{geoWatchId=navigator.geolocation.watchPosition(p=>{try{if(typeof p.coords.heading==='number'&&!Number.isNaN(p.coords.heading)){headingDeg=p.coords.heading;updateMovement()}}catch(_){ }},{},{enableHighAccuracy:true,maximumAge:3000,timeout:9000})}catch(_){ }
+  }
+  function startMotionLoop(){bindOrientation();bindGeoWatch();if(motionTimer)return;motionTimer=setInterval(updateMovement,900);updateMovement()}
+  function stopMotionLoop(){if(motionTimer){clearInterval(motionTimer);motionTimer=null}if(geoWatchId!=null&&navigator.geolocation){try{navigator.geolocation.clearWatch(geoWatchId)}catch(_){ }geoWatchId=null}}
+  W.addEventListener('bd:location-touch-opened',startMotionLoop);
+  W.addEventListener('bd:location-touch-closed',stopMotionLoop);
+  D.addEventListener('bd:languagechange',()=>setTimeout(()=>{const sels=D.querySelectorAll('[data-bd-language-all]');sels.forEach(s=>s.value=D.documentElement.dataset.bdUiLanguage||'en')},80),true);
 })();
 </script>
 
