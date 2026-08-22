@@ -1755,6 +1755,12 @@ function mapPost(r){
  let newsTemplate=Number(r.news_template||r.newsTemplate||meta.news_template||0);
  if(!newsTemplate){const fromStyle=(rawStyle.match(/(?:news-card-|newspaper-)?(\d{1,2})/)||[])[1];newsTemplate=Number(fromStyle||layouts[rawNews]||layouts[(rawStyle.match(/news-card-([a-z]+)/)||[])[1]]||1)}
  newsTemplate=Math.max(1,Math.min(10,newsTemplate||1));
+ const composerMode=String(r.composer_mode||meta.composer_mode||'ordinary').toLowerCase();
+ const designState=(meta.design_state&&typeof meta.design_state==='object')?meta.design_state:{};
+ const studioDesign=(meta.studio_design&&typeof meta.studio_design==='object')?meta.studio_design:{};
+ const templateMeta=(meta.template_meta&&typeof meta.template_meta==='object')?meta.template_meta:{};
+ const mappedImage=String(r.photo||r.photo_url||r.image_url||r.news_image||meta.image_url||(((r.media_type==='image'||r.media_kind==='image'||r.mediaKind==='image'||profileUpdateKind)&&(r.media_url||r.media||meta.media_url||meta.media))?(r.media_url||r.media||meta.media_url||meta.media):'')||'');
+ const mediaTemplate=!!(meta.media_template||r.media_template||(mappedImage&&['template','premium'].includes(composerMode)));
  return {id:r.id||r.post_id||('row-'+Math.random()),canonicalId:r.canonical_post_id||meta.canonical_post_id||r.parent_post_id||meta.parent_post_id||r.original_post_id||meta.original_post_id||r.id||r.post_id||'',type,title:r.title||r.headline||r.news_title||meta.title||'',body:r.body||r.content||r.text||r.news_body||r.caption||meta.body||'',template:isNews?'news-card-'+newsTemplate:(r.template||r.template_key||r.template_id||r.card_style||'plain'),newsTemplate,font:r.font||r.font_key||meta.font||'serif',titleFont:r.title_font||meta.title_font||meta.titleFont||r.font||'Noto Serif Bengali',bodyFont:r.body_font||meta.body_font||meta.bodyFont||r.font||'Noto Serif Bengali',titleColor:r.title_color||meta.title_color||meta.titleColor||'',bodyColor:r.body_color||meta.body_color||meta.bodyColor||'',titleBold:(r.title_bold??meta.title_bold??meta.titleBold??true)!==false,bodyBold:(r.body_bold??meta.body_bold??meta.bodyBold??false)===true,photo:r.photo||r.photo_url||r.image_url||r.news_image||meta.image_url||
     (((r.media_type==='image'||r.media_kind==='image'||r.mediaKind==='image'||profileUpdateKind)&&
       (r.media_url||r.media||meta.media_url||meta.media))?(r.media_url||r.media||meta.media_url||meta.media):'')||'',
@@ -1765,7 +1771,7 @@ images:[...new Set([
   ...(Array.isArray(r.media_images)?r.media_images:[]),
   ...(Array.isArray(r.images)?r.images:[])
 ].filter(Boolean).map(String))],
-newsImages:Array.isArray(meta.news_images)?meta.news_images:(Array.isArray(r.news_images)?r.news_images:[]),audio:r.audio_url||meta.audio_url||((r.media_type==='audio')?r.media_url:'')||'',video:r.video_url||meta.video_url||((r.media_type==='video')?r.media_url:'')||'',mediaCommitted:(r.media_committed===true||meta.media_committed===true),bgm:r.bgm_url||meta.bgm_url||'',bgmVolume:Number(meta.bgm_volume||28),audioProcessing:(meta.audio_processing&&typeof meta.audio_processing==='object')?meta.audio_processing:{},author:meta.page_name||meta.author_name||meta.author_display_name||r.author_name||r.display_name||r.profile?.full_name||r.profiles?.full_name||r.user_name||meta.author_username||'ভুবনডাঙ্গার সদস্য',authorId:r.author_id||r.user_id||r.profile_id||r.created_by||r.created_by_id||r.owner_id||r.account_id||meta.author_id||meta.user_id||meta.owner_id||meta.created_by||'',avatar:meta.page_logo_url||meta.author_avatar||r.author_avatar||r.avatar_url||r.profile?.avatar_url||r.profiles?.avatar_url||'',mediaTemplate:!!(meta.media_template||r.media_template),profileUpdate:!!profileUpdateKind,canonicalPoet:!!(meta.canonical_poet||r.canonical_poet),originalAuthor:meta.original_author||r.original_author||'',editorName:meta.editor_name||r.editor_name||'',editorId:meta.editor_id||r.editor_id||'',role:meta.author_type==='page'?'অনুমোদিত সংবাদ প্রকাশনা':(r.author_role||r.role||r.profile?.role||r.profiles?.role||'সদস্য'),authorType:meta.author_type||'user',pageId:meta.page_id||'',pageUsername:meta.page_username||'',pagePortal:meta.page_portal_url||'',createdAt:r.created_at||r.createdAt||r.published_at||new Date().toISOString(),status,reactionCount:Number(r.reaction_count||r.reactions_count||0),commentCount:Number(r.comment_count||r.comments_count||0),shareCount:Number(r.share_count||r.shares_count||meta.share_count||0),humanitarianPinned:!!(r.humanitarian_pinned||r.feed_pinned||r.priority_pin||meta.humanitarian_pinned),feedPinned:!!(r.feed_pinned||r.priority_pin||meta.feed_pinned),showInFeed:(r.show_in_feed??r.feed_visible??meta.show_in_feed??true)!==false,feedVisible:(r.feed_visible??r.show_in_feed??meta.feed_visible??true)!==false,profileOnly:(r.profile_only??meta.profile_only??false)===true,
+newsImages:Array.isArray(meta.news_images)?meta.news_images:(Array.isArray(r.news_images)?r.news_images:[]),audio:r.audio_url||meta.audio_url||((r.media_type==='audio')?r.media_url:'')||'',video:r.video_url||meta.video_url||((r.media_type==='video')?r.media_url:'')||'',mediaCommitted:(r.media_committed===true||meta.media_committed===true),bgm:r.bgm_url||meta.bgm_url||'',bgmVolume:Number(meta.bgm_volume||28),audioProcessing:(meta.audio_processing&&typeof meta.audio_processing==='object')?meta.audio_processing:{},author:meta.page_name||meta.author_name||meta.author_display_name||r.author_name||r.display_name||r.profile?.full_name||r.profiles?.full_name||r.user_name||meta.author_username||'ভুবনডাঙ্গার সদস্য',authorId:r.author_id||r.user_id||r.profile_id||r.created_by||r.created_by_id||r.owner_id||r.account_id||meta.author_id||meta.user_id||meta.owner_id||meta.created_by||'',avatar:meta.page_logo_url||meta.author_avatar||r.author_avatar||r.avatar_url||r.profile?.avatar_url||r.profiles?.avatar_url||'',composerMode,designState,studioDesign,templateMeta,mediaTemplate,profileUpdate:!!profileUpdateKind,canonicalPoet:!!(meta.canonical_poet||r.canonical_poet),originalAuthor:meta.original_author||r.original_author||'',editorName:meta.editor_name||r.editor_name||'',editorId:meta.editor_id||r.editor_id||'',role:meta.author_type==='page'?'অনুমোদিত সংবাদ প্রকাশনা':(r.author_role||r.role||r.profile?.role||r.profiles?.role||'সদস্য'),authorType:meta.author_type||'user',pageId:meta.page_id||'',pageUsername:meta.page_username||'',pagePortal:meta.page_portal_url||'',createdAt:r.created_at||r.createdAt||r.published_at||new Date().toISOString(),status,reactionCount:Number(r.reaction_count||r.reactions_count||0),commentCount:Number(r.comment_count||r.comments_count||0),shareCount:Number(r.share_count||r.shares_count||meta.share_count||0),humanitarianPinned:!!(r.humanitarian_pinned||r.feed_pinned||r.priority_pin||meta.humanitarian_pinned),feedPinned:!!(r.feed_pinned||r.priority_pin||meta.feed_pinned),showInFeed:(r.show_in_feed??r.feed_visible??meta.show_in_feed??true)!==false,feedVisible:(r.feed_visible??r.show_in_feed??meta.feed_visible??true)!==false,profileOnly:(r.profile_only??meta.profile_only??false)===true,
 countryCode:String(r.country_code||r.audience_country||r.feed_country||meta.country_code||meta.audience_country||meta.feed_country||'').toUpperCase(),
 countryName:r.country_name||meta.country_name||'',
 region:r.region||r.admin_area1||r.state||meta.region||meta.admin_area1||'',
@@ -1884,7 +1890,48 @@ function tray(){return `<div class="bd-rx-tray" data-rx-tray aria-label="রি�
 function typeLabel(t){return ({poem:'কবিতা',prolap:'প্রলাপ',letter:'চিঠিপত্র',recitation:'আবৃত্তি',reels:'রিলস',environment:'পরিবেশ',children:'শিশুতোষ',midnight:'মধ্যরাতের প্রলাপ',news:'নিউজ'})[t]||'লেখা'}
 function isLightHex(v){const x=colorCSS(v);if(!x)return false;let h=x.slice(1);if(h.length===3)h=h.split('').map(c=>c+c).join('');if(h.length<6)return false;const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return (0.2126*r+0.7152*g+0.0722*b)>172}
 function premiumTemplateBG(p){if(!/^p\d+$/i.test(String(p.template||'')))return '';const light=isLightHex(p.bodyColor)||isLightHex(p.titleColor);if(light)return 'radial-gradient(circle at 82% 14%,rgba(255,231,151,.9) 0 4%,transparent 4.5%),linear-gradient(150deg,#10294b,#171c3f)';const n=parseInt(String(p.template).replace(/\D/g,''),10)||1;const h=(178+n*37)%360,h2=(h+52+n%29)%360;return `linear-gradient(145deg,hsl(${h} 72% 96%),hsl(${h2} 56% 88%))`}
-function fontCSS(v){return String(v||'').replace(/[;{}]/g,'').slice(0,120)}function colorCSS(v){return /^#[0-9a-f]{3,8}$/i.test(String(v||''))?String(v):''}function profileUpdateCaption(p){
+function fontCSS(v){return String(v||'').replace(/[;{}]/g,'').slice(0,120)}function colorCSS(v){return /^#[0-9a-f]{3,8}$/i.test(String(v||''))?String(v):''}
+function bdDesignPos(v,fallback){
+ const p=(v&&typeof v==='object')?v:{};
+ return {
+  x:Math.max(0,Math.min(100,Number(p.x??fallback.x)||fallback.x)),
+  y:Math.max(0,Math.min(100,Number(p.y??fallback.y)||fallback.y)),
+  scale:Math.max(.45,Math.min(3,Number(p.scale??1)||1))
+ }
+}
+function bdDesignRatio(p){
+ const r=String(p?.studioDesign?.canvas_ratio||p?.studioDesign?.canvasRatio||'auto').toLowerCase();
+ if(r==='1:1')return '1 / 1';
+ if(r==='4:5')return '4 / 5';
+ if(r==='9:16')return '9 / 16';
+ if(r==='16:9')return '16 / 9';
+ return '4 / 5'
+}
+function bdComposedMediaMarkup(p,ts,bs){
+ if(!p?.mediaTemplate||!p?.photo)return '';
+ const ds=p.designState||{},tm=p.templateMeta||{},sd=p.studioDesign||{};
+ const tp=bdDesignPos(ds.title,{x:50,y:14}),bp=bdDesignPos(ds.body,{x:50,y:52}),pp=bdDesignPos(ds.photo,{x:50,y:50});
+ const tw=Math.max(38,Math.min(96,Number(tm.titleWidth)||84)),bw=Math.max(38,Math.min(96,Number(tm.bodyWidth)||84));
+ const bg=String(tm.bg||premiumTemplateBG(p)||'#101b22').replace(/[<>]/g,'');
+ const align=String(sd.align||'center').replace(/[^a-z-]/gi,'')||'center';
+ const titleSize=Math.max(17,Math.min(48,Number(sd.title_size||sd.titleSize)||34));
+ const bodySize=Math.max(12,Math.min(30,Number(sd.body_size||sd.bodySize)||19));
+ const lineHeight=Math.max(1.15,Math.min(2.4,Number(sd.line_height||sd.lineHeight)||1.75));
+ const letter=Math.max(-1,Math.min(8,Number(sd.letter_spacing||sd.letterSpacing)||0));
+ const pShiftX=(pp.x-50)*.52,pShiftY=(pp.y-50)*.52;
+ const pScale=Math.max(.55,Math.min(2.5,pp.scale||1));
+ return `<div class="bd-composed-media" data-composed-media style="--bdcm-bg:${bg};aspect-ratio:${bdDesignRatio(p)}">
+   <button type="button" class="bd-composed-media-open" data-photo-open="0" aria-label="Open photo">
+     <img src="${esc(p.photo)}" alt="" loading="lazy" decoding="async" style="transform:translate(${pShiftX}%,${pShiftY}%) scale(${pScale})">
+   </button>
+   <span class="bd-composed-media-shade" aria-hidden="true"></span>
+   <div class="bd-composed-title" style="left:${tp.x}%;top:${tp.y}%;width:${tw}%;transform:translate(-50%,-50%) scale(${tp.scale});${ts};font-size:${titleSize}px;letter-spacing:${letter}px;text-align:${align}">${esc(p.title)}</div>
+   <div class="bd-composed-body" style="left:${bp.x}%;top:${bp.y}%;width:${bw}%;transform:translate(-50%,-50%) scale(${bp.scale});${bs};font-size:${bodySize}px;line-height:${lineHeight};letter-spacing:${letter}px;text-align:${align}">${esc(p.body)}</div>
+   <span class="bd-composed-mark">BongDang</span>
+ </div>`
+}
+
+function profileUpdateCaption(p){
  let body=String(p?.body||'').trim();
  if(!body)return '';
  const who='(?:.+?\\s+)?';
@@ -1910,6 +1957,8 @@ function templateMarkup(p){
    const gallery=imgs.length?`<div class="bd-news-gallery">${imgs.map(x=>`<img src="${esc(x)}" alt="" loading="lazy" decoding="async">`).join('')}</div>`:'';
    return `<div class="bd-news" data-news="${n}"><div class="bd-news-mast"><span class="bd-news-feed-logo">${p.avatar?`<img src="${esc(p.avatar)}" alt="" loading="lazy">`:esc((p.author||'N')[0])}</span><span><b>${esc(p.author||'নিউজ পেজ')}</b><small>অনুমোদিত সংবাদ প্রকাশনা</small></span><em>${String(n).padStart(2,'0')}</em></div><h2 style="${ts}"><a class="bd-news-title-link" href="${ph}">${esc(p.title)}</a></h2>${gallery}<p style="${bs}">${esc(p.body)}</p><div class="bd-news-feed-foot"><i></i><i></i><i></i></div></div>`
  }
+ const composed=bdComposedMediaMarkup(p,ts,bs);
+ if(composed)return composed;
  const hasStandaloneMedia=!!(p.photo||p.video||p.audio);
  const allowedTemplate=!!(p.template&&p.template!=='plain'&&p.template!=='none'&&(!hasStandaloneMedia||p.mediaTemplate));
  if(allowedTemplate){
@@ -2184,7 +2233,7 @@ function closePhotoViewer(unlock=true){
 }
 W.visualViewport?.addEventListener('resize',updateViewerViewport,{passive:true});W.visualViewport?.addEventListener('scroll',updateViewerViewport,{passive:true});
 
-function postMarkup(p){const rr=String(p.role||'').toLowerCase(),updateAction=p.profileUpdate?(p.type==='cover-update'?'কভার ছবি পরিবর্তন করেছেন':'প্রোফাইল ছবি পরিবর্তন করেছেন'):'',href=p.canonicalPoet?`famous-poet.html?q=${encodeURIComponent(p.originalAuthor||p.author||'')}`:(rr==='founder'?'founder-profile.html':rr==='admin'?`admin-profile.html?user=${encodeURIComponent(p.authorId||'')}`:(p.authorId?`profile.html?user=${encodeURIComponent(p.authorId)}`:'profile.html'));const editorCredit=p.editorName?`<a class="bd-editor-credit" href="${p.editorId?`profile.html?user=${encodeURIComponent(p.editorId)}`:'#'}">সম্পাদনা: ${esc(p.editorName)}</a>`:'';return `<article class="bd-post bd-glass" data-post-id="${esc(p.id)}" data-canonical-post-id="${esc(p.canonicalId||p.id)}" data-author-id="${esc(p.authorId||'')}" data-own-post="${p._ownedByCurrentUser?'1':'0'}" data-type="${esc(p.type)}"><header class="bd-post-head"><a class="bd-author" href="${href}"><span class="bd-author-avatar">${p.avatar?`<img src="${esc(p.avatar)}" alt="" loading="lazy" decoding="async">`:esc((p.author||'ভ')[0])}</span><span><b class="bd-author-name">${esc(p.author)}${updateAction?`<span class="bd-profile-update-action"> ${esc(updateAction)}</span>`:''}<span class="bd-role">${esc(p.role)}</span><span class="bd-follow" data-follow hidden role="button" tabindex="0" aria-pressed="false">Follow</span></b><small>${new Date(p.createdAt).toLocaleString('bn-BD')}</small></span></a><button class="bd-more" data-post-more aria-label="আরও"><svg class="bd-icon"><use href="#bd-i-more"/></svg></button></header>${p.profileUpdate?'':`<span class="bd-tag">${esc(typeLabel(p.type))}</span>`}${editorCredit}${isHumanFeedPinned(p)?`<span class="bd-human-pin-badge">জরুরি · পিন</span>`:' '}<div data-double-love-zone>${templateMarkup(p)}${p.type!=='news'?galleryMarkup(p):''}${p.video&&(p.type!=='news'||p.mediaCommitted)?`<div class="bd-post-av"><video controls playsinline preload="metadata" src="${esc(p.video)}" data-bd-video-audio data-bd-denoise="${p.audioProcessing?.noise_reduction?1:0}" data-bd-master="${p.audioProcessing?.mastering?1:0}" data-bd-mix="${p.audioProcessing?.music_mix?1:0}" data-bd-bgm="${esc(p.bgm||'')}" data-bd-bgm-volume="${Number(p.bgmVolume||28)}"></video></div>`:''}${p.audio&&(p.type!=='news'||p.mediaCommitted)?`<div class="bd-post-av"><audio controls preload="metadata" src="${esc(p.audio)}"></audio></div>`:''}</div><div class="bd-love-burst"><span class="bd-love-burst-sprite" aria-hidden="true"></span></div><section class="bd-social"><div class="bd-social-summary"><button data-reactors aria-label="See reactions"><span class="bd-summary-reactions" data-summary-icons>${p.reactionCount?rxMini('love')+rxMini('like'):''}<span data-rx-count>${socialCount(p.reactionCount)}</span></span></button><span class="bd-summary-meta"><button data-comment-count>${socialCount(p.commentCount)} comments</button><button data-share-count>${socialCount(p.shareCount)} shares</button></span></div><div class="bd-actions"><div class="bd-react-host"><button class="bd-action" data-react-main aria-label="Like"><svg class="bd-icon"><use href="#bd-i-react"/></svg><span class="bd-rx-label">Like</span></button>${tray()}</div><button class="bd-action" data-comment-open aria-label="Comment"><svg class="bd-icon"><use href="#bd-i-comment"/></svg><span class="bd-action-label">Comment</span></button><button class="bd-action" data-share aria-label="Share"><svg class="bd-icon"><use href="#bd-i-share"/></svg><span class="bd-action-label">Share</span></button></div><div class="bd-comments" data-comments><div class="bd-comment-toolbar"><select data-comment-sort aria-label="Comment sorting"><option value="relevant">Most relevant</option><option value="new">Newest</option><option value="old">Oldest</option></select></div><div class="bd-comment-list" data-comment-list></div><form class="bd-comment-form"><input placeholder="Write a comment…" aria-label="Write a comment"><button aria-label="Send comment"><svg class="bd-icon"><use href="#bd-i-send"/></svg></button></form></div></section><div class="bd-post-menu" hidden><div data-owner-menu hidden><button data-privacy>প্রাইভেসি সেট করুন</button><div class="bd-privacy-box" data-privacy-box hidden><button data-privacy-value="public">Public</button><button data-privacy-value="friends">Friends</button><button data-privacy-value="only_me">Only Me</button></div><button data-edit-post>লেখা সম্পাদনা করুন</button><button data-card-post>কার্ড / টেমপ্লেট পরিবর্তন</button><button data-feed-visibility>শুধু News Feed থেকে সরান</button><button data-owner-notify-post>পোস্ট নোটিফিকেশন বন্ধ করুন</button><button data-pin-profile>প্রোফাইলে পিন করুন</button><button data-owner-archive>আর্কাইভ করুন</button><button class="danger" data-delete-post>পোস্ট মুছুন</button></div><div data-visitor-menu hidden><button data-save>সংরক্ষণ করুন</button><button data-hide-post>এই পোস্টটি লুকান</button><button data-report>রিপোর্ট করুন</button><button data-show-less>এ ধরনের পোস্ট কম দেখান</button><button data-show-more>এ ধরনের পোস্ট বেশি দেখান</button><button data-notify-post>এই পোস্টের নোটিফিকেশন নিন</button></div></div></article>`}
+function postMarkup(p){const rr=String(p.role||'').toLowerCase(),updateAction=p.profileUpdate?(p.type==='cover-update'?'কভার ছবি পরিবর্তন করেছেন':'প্রোফাইল ছবি পরিবর্তন করেছেন'):'',href=p.canonicalPoet?`famous-poet.html?q=${encodeURIComponent(p.originalAuthor||p.author||'')}`:(rr==='founder'?'founder-profile.html':rr==='admin'?`admin-profile.html?user=${encodeURIComponent(p.authorId||'')}`:(p.authorId?`profile.html?user=${encodeURIComponent(p.authorId)}`:'profile.html'));const editorCredit=p.editorName?`<a class="bd-editor-credit" href="${p.editorId?`profile.html?user=${encodeURIComponent(p.editorId)}`:'#'}">সম্পাদনা: ${esc(p.editorName)}</a>`:'';return `<article class="bd-post bd-glass" data-post-id="${esc(p.id)}" data-canonical-post-id="${esc(p.canonicalId||p.id)}" data-author-id="${esc(p.authorId||'')}" data-own-post="${p._ownedByCurrentUser?'1':'0'}" data-type="${esc(p.type)}"><header class="bd-post-head"><a class="bd-author" href="${href}"><span class="bd-author-avatar">${p.avatar?`<img src="${esc(p.avatar)}" alt="" loading="lazy" decoding="async">`:esc((p.author||'ভ')[0])}</span><span><b class="bd-author-name">${esc(p.author)}${updateAction?`<span class="bd-profile-update-action"> ${esc(updateAction)}</span>`:''}<span class="bd-role">${esc(p.role)}</span><span class="bd-follow" data-follow hidden role="button" tabindex="0" aria-pressed="false">Follow</span></b><small>${new Date(p.createdAt).toLocaleString('bn-BD')}</small></span></a><button class="bd-more" data-post-more aria-label="আরও"><svg class="bd-icon"><use href="#bd-i-more"/></svg></button></header>${p.profileUpdate?'':`<span class="bd-tag">${esc(typeLabel(p.type))}</span>`}${editorCredit}${isHumanFeedPinned(p)?`<span class="bd-human-pin-badge">জরুরি · পিন</span>`:' '}<div data-double-love-zone>${templateMarkup(p)}${p.type!=='news'&&!p.mediaTemplate?galleryMarkup(p):''}${p.video&&(p.type!=='news'||p.mediaCommitted)?`<div class="bd-post-av"><video controls playsinline preload="metadata" src="${esc(p.video)}" data-bd-video-audio data-bd-denoise="${p.audioProcessing?.noise_reduction?1:0}" data-bd-master="${p.audioProcessing?.mastering?1:0}" data-bd-mix="${p.audioProcessing?.music_mix?1:0}" data-bd-bgm="${esc(p.bgm||'')}" data-bd-bgm-volume="${Number(p.bgmVolume||28)}"></video></div>`:''}${p.audio&&(p.type!=='news'||p.mediaCommitted)?`<div class="bd-post-av"><audio controls preload="metadata" src="${esc(p.audio)}"></audio></div>`:''}</div><div class="bd-love-burst"><span class="bd-love-burst-sprite" aria-hidden="true"></span></div><section class="bd-social"><div class="bd-social-summary"><button data-reactors aria-label="See reactions"><span class="bd-summary-reactions" data-summary-icons>${p.reactionCount?rxMini('love')+rxMini('like'):''}<span data-rx-count>${socialCount(p.reactionCount)}</span></span></button><span class="bd-summary-meta"><button data-comment-count>${socialCount(p.commentCount)} comments</button><button data-share-count>${socialCount(p.shareCount)} shares</button></span></div><div class="bd-actions"><div class="bd-react-host"><button class="bd-action" data-react-main aria-label="Like"><svg class="bd-icon"><use href="#bd-i-react"/></svg><span class="bd-rx-label">Like</span></button>${tray()}</div><button class="bd-action" data-comment-open aria-label="Comment"><svg class="bd-icon"><use href="#bd-i-comment"/></svg><span class="bd-action-label">Comment</span></button><button class="bd-action" data-share aria-label="Share"><svg class="bd-icon"><use href="#bd-i-share"/></svg><span class="bd-action-label">Share</span></button></div><div class="bd-comments" data-comments><div class="bd-comment-toolbar"><select data-comment-sort aria-label="Comment sorting"><option value="relevant">Most relevant</option><option value="new">Newest</option><option value="old">Oldest</option></select></div><div class="bd-comment-list" data-comment-list></div><form class="bd-comment-form"><input placeholder="Write a comment…" aria-label="Write a comment"><button aria-label="Send comment"><svg class="bd-icon"><use href="#bd-i-send"/></svg></button></form></div></section><div class="bd-post-menu" hidden><div data-owner-menu hidden><button data-privacy>প্রাইভেসি সেট করুন</button><div class="bd-privacy-box" data-privacy-box hidden><button data-privacy-value="public">Public</button><button data-privacy-value="friends">Friends</button><button data-privacy-value="only_me">Only Me</button></div><button data-edit-post>লেখা সম্পাদনা করুন</button><button data-card-post>কার্ড / টেমপ্লেট পরিবর্তন</button><button data-feed-visibility>শুধু News Feed থেকে সরান</button><button data-owner-notify-post>পোস্ট নোটিফিকেশন বন্ধ করুন</button><button data-pin-profile>প্রোফাইলে পিন করুন</button><button data-owner-archive>আর্কাইভ করুন</button><button class="danger" data-delete-post>পোস্ট মুছুন</button></div><div data-visitor-menu hidden><button data-save>সংরক্ষণ করুন</button><button data-hide-post>এই পোস্টটি লুকান</button><button data-report>রিপোর্ট করুন</button><button data-show-less>এ ধরনের পোস্ট কম দেখান</button><button data-show-more>এ ধরনের পোস্ট বেশি দেখান</button><button data-notify-post>এই পোস্টের নোটিফিকেশন নিন</button></div></div></article>`}
 function findScroller(el){let n=el.parentElement;while(n&&n!==D.body){const s=getComputedStyle(n);if(/auto|scroll/.test(s.overflowY)&&n.scrollHeight>n.clientHeight+3)return n;n=n.parentElement}return W}
 function anchor(card,fn){const top=card.getBoundingClientRect().top,sc=findScroller(card);fn();requestAnimationFrame(()=>{const d=card.getBoundingClientRect().top-top;if(Math.abs(d)>1&&Math.abs(d)<innerHeight*.85){if(sc===W)W.scrollBy(0,d);else sc.scrollTop+=d}})}
 function stateOf(card){if(!card)return null;return STATES.get(card.closest?.('.bd-feed-root'))||STATES.get(card)||null}
@@ -4085,4 +4134,120 @@ html[data-theme="dark"] .bd-life-support-arrow{background:rgba(255,95,111,.12)!i
 .bd-feed-empty{min-height:92px!important;display:grid!important;place-items:center!important;padding:18px!important;border:1px solid var(--bd-line)!important;border-radius:18px!important;background:var(--bd-card)!important;color:var(--bd-soft)!important;font-size:10px!important;text-align:center!important}
 @media(max-width:620px){.bd-human-v94{padding:11px!important}.bd-human-v94-actions{gap:7px!important}.bd-human-v94-actions a{min-height:38px!important}.bd-sos-mini-v95 .bd-sos-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 </style>
+
+<style id="bd-v133-composed-photo-reaction-lock">
+.bd-composed-media{
+  position:relative;
+  width:100%;
+  min-height:360px;
+  margin-top:9px;
+  overflow:hidden;
+  border-radius:16px;
+  isolation:isolate;
+  background:var(--bdcm-bg,#101b22);
+  box-shadow:none;
+}
+.bd-composed-media-open{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  width:100%;
+  height:100%;
+  padding:0;
+  margin:0;
+  border:0;
+  background:transparent;
+  overflow:hidden;
+  cursor:zoom-in;
+  touch-action:manipulation;
+}
+.bd-composed-media-open img{
+  width:100%;
+  height:100%;
+  max-height:none!important;
+  object-fit:cover;
+  transform-origin:center;
+  display:block;
+  pointer-events:none;
+}
+.bd-composed-media-shade{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(4,12,18,.18),rgba(4,12,18,.04) 33%,rgba(4,12,18,.16)),
+    radial-gradient(circle at 50% 45%,transparent 35%,rgba(0,0,0,.10));
+}
+.bd-composed-title,.bd-composed-body{
+  position:absolute;
+  z-index:3;
+  pointer-events:none;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  text-shadow:0 1px 3px rgba(255,255,255,.32),0 2px 12px rgba(0,0,0,.24);
+  transform-origin:center;
+}
+.bd-composed-title{
+  font-family:'Noto Serif Bengali',serif;
+  line-height:1.28;
+}
+.bd-composed-body{
+  font-family:'Noto Serif Bengali',serif;
+}
+.bd-composed-mark{
+  position:absolute;
+  z-index:3;
+  right:10px;
+  bottom:8px;
+  pointer-events:none;
+  font:800 7px/1 system-ui,-apple-system,sans-serif;
+  letter-spacing:.08em;
+  color:rgba(255,255,255,.60);
+  text-shadow:0 1px 5px rgba(0,0,0,.38);
+}
+
+/* Social controls always sit above media and never become a photo tap target. */
+.bd-post>.bd-social{position:relative!important;z-index:30!important}
+.bd-post .bd-actions,.bd-post .bd-react-host,[data-react-main],[data-rx-tray],[data-rx-pick]{
+  position:relative;
+  z-index:31;
+}
+[data-rx-tray].open,[data-rx-tray].bd-rx-floating,[data-rx-tray].bd-v107-open{
+  z-index:2147483645!important;
+  pointer-events:auto!important;
+}
+[data-rx-pick]{pointer-events:auto!important;touch-action:none!important}
+@media(max-width:520px){
+  .bd-composed-media{min-height:330px;border-radius:14px}
+  .bd-composed-title{max-font-size:38px}
+}
+</style>
+
+<script data-bd-module="feed-reaction-photo-guard-v133" id="bd-v133-reaction-photo-guard">
+(()=>{'use strict';
+ if(window.__BD_V133_REACTION_PHOTO_GUARD__)return;
+ window.__BD_V133_REACTION_PHOTO_GUARD__=1;
+ const D=document;
+ let guardUntil=0;
+ const mark=()=>{guardUntil=Date.now()+1100};
+ const isReaction=t=>!!t?.closest?.('[data-react-main],[data-rx-tray],[data-rx-pick],[data-reactors],.bd-social-summary');
+ ['touchstart','pointerdown','touchend','pointerup'].forEach(type=>{
+   D.addEventListener(type,e=>{if(isReaction(e.target))mark()},{capture:true,passive:true})
+ });
+ D.addEventListener('click',e=>{
+   if(isReaction(e.target)){mark();return}
+   if(Date.now()<guardUntil&&e.target?.closest?.('[data-photo-open]')){
+     e.preventDefault();e.stopImmediatePropagation();e.stopPropagation()
+   }
+ },true);
+ D.addEventListener('pointerup',e=>{
+   if(Date.now()<guardUntil&&e.target?.closest?.('[data-photo-open]')){
+     e.preventDefault();e.stopImmediatePropagation();e.stopPropagation()
+   }
+ },true);
+ window.BDReactionPhotoGuard={version:'v133',ready:true};
+})();
+</script>
+
 </body></html>
