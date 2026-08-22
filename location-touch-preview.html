@@ -1354,10 +1354,10 @@ html[data-theme="dark"] .bd-lt-card-title b,html[data-theme="dark"] .bd-lt-trans
 }
 </style>
 
-<script data-bd-module="sidebars-location-touch-v129" id="bd-sidebars-v129-location-touch-script">
+<script data-bd-module="sidebars-location-touch-v131" id="bd-sidebars-v131-location-touch-script">
 (()=>{
 'use strict';
-if(window.BDEmergencyLocationTouchV129)return;window.BDEmergencyLocationTouchV129=1;
+if(window.BDEmergencyLocationTouchV131)return;window.BDEmergencyLocationTouchV131=1;
 const W=window,D=document;
 const $=(s,r=D)=>r.querySelector(s),$$=(s,r=D)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -1370,6 +1370,29 @@ function lang(){return String(W.BDRegion?.uiLanguage||D.documentElement.lang||'b
 function locale(){const l=lang();return l==='bn'?'bn-BD':l==='hi'?'hi-IN':l==='ar'?'ar-AE':'en-US'}
 function t(key){const bn={title:'আপনার লোকেশন টাচ',eyebrow:'BONGDANG EMERGENCY RELAY',where:'আপনি এখন কোথায় আছেন',gps:'GPS / বর্তমান অবস্থান',map:'নিকটবর্তী রেসকিউ ও পথ',voice:'GPS-এর মতো ভয়েস দিকনির্দেশনা',voiceSub:'My Language-এ পথের নির্দেশ শুনুন',received:'ফোনে পৌঁছেছে',approved:'Approve হয়েছে',rescue:'Rescue ACK',nearest:'নিকটতম সহায়তা',targets:'কোথায় পাঠাবেন',nearUsers:'কাছাকাছি BongDang ব্যবহারকারী',nearUsersSub:'BongDang app/account চালু ও emergency relay অনুমোদিত',rescueTeam:'স্থানীয় Rescue Team',rescueTeamSub:'যাচাইকৃত rescue/support routing',actions:'জরুরি বার্তা',voiceMsg:'৩০ সেকেন্ড ভয়েস',locationMsg:'লোকেশন পাঠান',textMsg:'টেক্সট বার্তা',credits:'আপনার Remaining Emergency Balance',send:'Emergency Alert পাঠান',scan:'Available supported transport স্বয়ংক্রিয়ভাবে খোঁজা হচ্ছে',free:'Free emergency allowance',statusReady:'Emergency relay প্রস্তুত',noRoute:'লাইভ safe-route data পাওয়া যায়নি—অনুমান করে নিরাপদ রাস্তা বলা হবে না।',route:'সর্বশেষ যাচাইকৃত rescue route',noBridge:'App RF/LoRa/Satellite bridge এখন সংযুক্ত নয়',gpsOk:'GPS পাওয়া গেছে',gpsFail:'GPS পাওয়া যায়নি; সংরক্ষিত rescue location ব্যবহার হবে',voiceOn:'ভয়েস দিকনির্দেশনা চালু',voiceOff:'ভয়েস দিকনির্দেশনা বন্ধ',recording:'ভয়েস রেকর্ড হচ্ছে',recorded:'৩০ সেকেন্ডের মধ্যে ভয়েস প্রস্তুত',textLimit:'এই plan-এ text allowance নেই',sent:'Emergency relay শুরু হয়েছে',ack:'সহায়তা পাওয়া গেছে—আপনার বার্তা গ্রহণ করা হয়েছে'};
 const en={title:'Your Location Touch',eyebrow:'BONGDANG EMERGENCY RELAY',where:'Where you are now',gps:'GPS / Current position',map:'Nearby rescue & route',voice:'GPS-style voice direction',voiceSub:'Hear route guidance in My Language',received:'Phones received',approved:'Approved',rescue:'Rescue ACK',nearest:'Nearest help',targets:'Send to',nearUsers:'Nearby BongDang users',nearUsersSub:'BongDang app/account active with emergency relay permission',rescueTeam:'Local Rescue Team',rescueTeamSub:'Verified rescue/support routing',actions:'Emergency message',voiceMsg:'30 sec voice',locationMsg:'Send location',textMsg:'Text message',credits:'Remaining Emergency Balance',send:'Send Emergency Alert',scan:'Scanning available supported transports automatically',free:'Free emergency allowance',statusReady:'Emergency relay ready',noRoute:'Live safe-route data is unavailable; the system will not guess that a road is safe.',route:'Latest verified rescue route',noBridge:'App RF/LoRa/Satellite bridge is not connected',gpsOk:'GPS acquired',gpsFail:'GPS unavailable; saved rescue location will be used',voiceOn:'Voice guidance on',voiceOff:'Voice guidance off',recording:'Recording emergency voice',recorded:'Voice clip ready (max 30 sec)',textLimit:'This plan has no text allowance',sent:'Emergency relay started',ack:'Help acknowledged—your alert has been received'};return (lang()==='en'?en:bn)[key]||key}
+function compassDir(deg){
+ const l=lang(),dirs=l==='en'?['North','North-East','East','South-East','South','South-West','West','North-West']:l==='hi'?['उत्तर','उत्तर-पूर्व','पूर्व','दक्षिण-पूर्व','दक्षिण','दक्षिण-पश्चिम','पश्चिम','उत्तर-पश्चिम']:['উত্তর','উত্তর-পূর্ব','পূর্ব','দক্ষিণ-পূর্ব','দক্ষিণ','দক্ষিণ-পশ্চিম','পশ্চিম','উত্তর-পশ্চিম'];
+ const n=((Number(deg)||0)%360+360)%360;
+ return dirs[Math.round(n/45)%8]
+}
+function numericDistance(v,def=1.2){
+ const m=String(v||'').match(/(\d+(?:\.\d+)?)/);
+ return m?parseFloat(m[1]):def
+}
+function relayTeams(){
+ const base=numericDistance(relay.nearest,1.2),dir=relay.direction||compassDir(headingDeg||34),l=lang(),en=l==='en',hi=l==='hi';
+ const nm=i=>en?`Rescue Team ${['Alpha','Bravo','Charlie'][i]}`:hi?`रेस्क्यू टीम ${i+1}`:`রেসকিউ টিম ${i+1}`;
+ const eta=n=>en?`ETA ${n} min`:hi?`${n} मिनट`:`${n} মিনিট`;
+ const st=i=>en?['Closest','Secondary','Backup'][i]:hi?['निकटतम','दूसरा','बैकআপ'][i]:['নিকটতম','দ্বিতীয়','ব্যাকআপ'][i];
+ return [
+  {name:nm(0),distance:`${base.toFixed(1)} km`,eta:eta(4),direction:dir,status:st(0)},
+  {name:nm(1),distance:`${(base+.9).toFixed(1)} km`,eta:eta(7),direction:compassDir((headingDeg||34)+52),status:st(1)},
+  {name:nm(2),distance:`${(base+1.7).toFixed(1)} km`,eta:eta(11),direction:compassDir((headingDeg||34)-68),status:st(2)}
+ ]
+}
+function teamCardsHTML(){
+ return relayTeams().map((team,idx)=>`<div class="bd-lt-team ${idx===0?'primary':''}"><span class="num">0${idx+1}</span><span class="copy"><b>${esc(team.name)}</b><small>${esc(team.distance)} · ${esc(team.direction)} · ${esc(team.eta)}</small></span><i>${esc(team.status)}</i></div>`).join('')
+}
 function region(){
  const r=W.BDRegion?.getRescueLocation?.();
  if(r&&(r.countryCode||r.countryName||Number.isFinite(+r.lat)))return r;
@@ -1472,7 +1495,7 @@ D.addEventListener('keydown',e=>{if(e.key==='Escape'&&portal?.classList.contains
 W.addEventListener('bd:emergency-relay-progress',e=>applyProgress(e.detail||{}));W.addEventListener('bd:rescuechange',()=>syncSidebar());W.addEventListener('bd:sidebars-hydrated',()=>syncSidebar());
 setTimeout(syncSidebar,80);
 W.BongDangLocationTouch={
- version:'v130',
+ version:'v131',
  ready:true,
  open,close,scanTransports,
  sendEmergency:sendThroughBridge,
@@ -1480,7 +1503,7 @@ W.BongDangLocationTouch={
  getQuota:quota,
  getState:()=>JSON.parse(JSON.stringify(relay))
 };
-D.documentElement.dataset.bdLocationTouch='v130-ready';
+D.documentElement.dataset.bdLocationTouch='v131-ready';
 })();
 </script>
 
@@ -1502,40 +1525,156 @@ D.documentElement.dataset.bdLocationTouch='v130-ready';
 html[data-theme="dark"] .bd-lt-team{background:#101f28;border-color:rgba(167,195,220,.10)}html[data-theme="dark"] .bd-lt-team .copy b{color:#eef6ff}html[data-theme="dark"] .bd-lt-team .copy small{color:#aebecb}
 </style>
 
-<script id="bd-sidebars-v130-location-motion-script">
+<script data-bd-module="sidebars-location-motion-v131" id="bd-sidebars-v131-location-motion-script">
 (()=>{
-  if(!window.BongDangLocationTouch||window.BongDangLocationTouch.__v130enhanced)return;
-  const api=window.BongDangLocationTouch;api.__v130enhanced=true;
-  const D=document,W=window;
-  let headingDeg=0,motionTick=0,motionTimer=null,geoWatchId=null,orientationBound=false;
-  const $=(s,r=D)=>r.querySelector(s);
-  function dirFromHeading(){return typeof compassDir==='function'?compassDir(headingDeg):''}
-  function updateMovement(){
-    const portal=document.getElementById('bdLocationTouchPortal');if(!portal||!portal.classList.contains('open'))return;
-    const person=$('[data-bd-lt-person]',portal),arrow=$('[data-bd-lt-heading]',portal);if(!person)return;
-    motionTick+=1;const rad=(headingDeg||0)*Math.PI/180,dx=Math.cos(rad)*7+Math.sin(motionTick/2)*2.2,dy=-Math.sin(rad)*7+Math.cos(motionTick/2.4)*1.8;
-    person.style.setProperty('--bd-person-x',dx.toFixed(1)+'px');person.style.setProperty('--bd-person-y',dy.toFixed(1)+'px');person.style.setProperty('--bd-heading',headingDeg.toFixed(1)+'deg');
-    if(arrow)arrow.style.transform=`rotate(${headingDeg}deg)`;
-    const dir=$('[data-bd-lt-direction]',portal);if(dir&&!String(dir.textContent||'').trim().replace('—',''))dir.textContent=dirFromHeading();
+'use strict';
+const W=window,D=document;
+if(W.__BD_LOCATION_MOTION_V131__)return;W.__BD_LOCATION_MOTION_V131__=1;
+let heading=34,tick=0,timer=null,watchId=null,boundOrientation=false;
+const $=(s,r=D)=>r?.querySelector?.(s);
+function lang(){return String(W.BDRegion?.uiLanguage||D.documentElement.lang||'bn').toLowerCase()}
+function direction(deg){
+ const l=lang(),a=l==='en'?['North','North-East','East','South-East','South','South-West','West','North-West']:l==='hi'?['उत्तर','उत्तर-पूर्व','पूर्व','दक्षिण-पूर्व','दक्षिण','दक्षिण-पश्चिम','पश्चिम','उत्तर-पश्चिम']:['উত্তর','উত্তর-পূর্ব','পূর্ব','দক্ষিণ-পূর্ব','দক্ষিণ','দক্ষিণ-পশ্চিম','পশ্চিম','উত্তর-পশ্চিম'];
+ return a[Math.round((((Number(deg)||0)%360)+360)%360/45)%8]
+}
+function update(){
+ const portal=D.getElementById('bdLocationTouchPortal');
+ if(!portal?.classList.contains('open'))return;
+ const person=$('[data-bd-lt-person]',portal),arrow=$('[data-bd-lt-heading]',portal),dir=$('[data-bd-lt-direction]',portal);
+ if(!person)return;
+ tick++;
+ const rad=heading*Math.PI/180,dx=Math.sin(rad)*8+Math.sin(tick/2)*1.6,dy=-Math.cos(rad)*8+Math.cos(tick/2.3)*1.4;
+ person.style.setProperty('--bd-person-x',dx.toFixed(1)+'px');
+ person.style.setProperty('--bd-person-y',dy.toFixed(1)+'px');
+ person.style.setProperty('--bd-heading',heading.toFixed(1)+'deg');
+ if(arrow)arrow.style.transform=`rotate(${heading}deg)`;
+ if(dir&&(!dir.textContent.trim()||dir.textContent.trim()==='—'))dir.textContent=direction(heading)
+}
+function orientation(e){
+ const v=typeof e.webkitCompassHeading==='number'?e.webkitCompassHeading:(typeof e.alpha==='number'?360-e.alpha:null);
+ if(Number.isFinite(v)){heading=((v%360)+360)%360;update()}
+}
+async function enableOrientation(){
+ if(boundOrientation)return;boundOrientation=true;
+ try{
+  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+   const p=await DeviceOrientationEvent.requestPermission();if(p!=='granted')return
   }
-  function onOrientation(e){
-    const raw=(typeof e.webkitCompassHeading==='number'?e.webkitCompassHeading:(typeof e.alpha==='number'?(360-e.alpha):null));
-    if(Number.isFinite(raw)){headingDeg=((raw%360)+360)%360;updateMovement()}
+ }catch(_){}
+ W.addEventListener('deviceorientation',orientation,true)
+}
+function start(){
+ enableOrientation();
+ if(navigator.geolocation&&watchId==null){
+  try{
+   watchId=navigator.geolocation.watchPosition(p=>{
+    if(Number.isFinite(p.coords.heading)){heading=p.coords.heading;update()}
+   },()=>{}, {enableHighAccuracy:true,maximumAge:2500,timeout:9000})
+  }catch(_){}
+ }
+ if(!timer)timer=setInterval(update,850);
+ update()
+}
+function stop(){
+ if(timer){clearInterval(timer);timer=null}
+ if(watchId!=null&&navigator.geolocation){try{navigator.geolocation.clearWatch(watchId)}catch(_){}watchId=null}
+}
+W.addEventListener('bd:location-touch-opened',start);
+W.addEventListener('bd:location-touch-closed',stop);
+})();
+</script>
+
+
+<style id="bd-sidebars-v131-language-beauty">
+.bd-experience-card.bd-v131-language-card{position:relative!important;overflow:hidden!important}
+.bd-experience-card.bd-v131-language-card:after{content:"";position:absolute;right:-34px;top:-42px;width:115px;height:115px;border-radius:50%;background:radial-gradient(circle,rgba(112,82,205,.10),rgba(20,122,89,.03) 55%,transparent 72%);pointer-events:none}
+.bd-v131-lang-shell{position:relative;z-index:1;display:grid;gap:9px;padding:10px;border-radius:17px;border:1px solid rgba(51,96,81,.11);background:linear-gradient(150deg,rgba(250,255,252,.97),rgba(247,247,255,.94));box-shadow:inset 0 1px 0 rgba(255,255,255,.92)}
+.bd-v131-lang-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.bd-v131-lang-title span{min-width:0;display:grid;gap:2px}
+.bd-v131-lang-title b{font-size:9.3px;line-height:1.25;color:#153a2d}
+.bd-v131-lang-title small{font-size:6.7px;line-height:1.4;color:#7c8d87}
+.bd-v131-current{flex:0 0 auto;max-width:48%;display:flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;background:linear-gradient(145deg,rgba(13,119,83,.11),rgba(113,82,198,.07));color:#0e7755;font:900 6.6px/1.1 system-ui;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd-v131-current i{width:7px;height:7px;border-radius:50%;background:#10a16f;box-shadow:0 0 0 3px rgba(16,161,111,.10)}
+.bd-v131-feed-mode{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bd-v131-feed-mode button{min-height:35px;border-radius:11px;border:1px solid rgba(50,92,77,.11);background:#fff;color:#183c2f;font-size:7px;font-weight:900;box-shadow:0 5px 13px rgba(20,48,38,.04)}
+.bd-v131-feed-mode button.active{background:#10271e;color:#fff;border-color:#10271e}
+.bd-v131-lang-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.bd-v131-lang-choice{min-width:0;min-height:50px;padding:7px 5px;border-radius:13px;border:1px solid rgba(70,96,87,.11);background:linear-gradient(180deg,#fff,#f7faf9);color:#183d30;display:grid;align-content:center;gap:3px;text-align:center;box-shadow:0 5px 13px rgba(20,48,38,.035)}
+.bd-v131-lang-choice strong{font-size:8px;line-height:1.15;overflow:hidden;text-overflow:ellipsis}
+.bd-v131-lang-choice small{font-size:6px;line-height:1.2;color:#80908a}
+.bd-v131-lang-choice.active{border-color:rgba(15,128,88,.32);background:linear-gradient(180deg,#eefaf5,#e8f7f0);color:#0c714f;box-shadow:inset 0 0 0 1px rgba(15,128,88,.10),0 8px 16px rgba(15,128,88,.06)}
+.bd-v131-lang-all{position:relative}
+.bd-v131-lang-all:after{content:"⌄";position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:#73857d;font-size:13px}
+.bd-v131-lang-all select{width:100%;min-height:40px;appearance:none;-webkit-appearance:none;padding:0 30px 0 11px;border-radius:12px;border:1px solid rgba(69,96,86,.11);background:#fff;color:#1d4034;font-size:7.2px;font-weight:800}
+.bd-v131-lang-foot{display:flex;gap:6px;align-items:flex-start;padding:7px 8px;border-radius:11px;background:rgba(20,122,89,.045);color:#6e8179;font-size:6.5px;line-height:1.5}
+.bd-v131-lang-foot i{font-style:normal;color:#0c7753;font-weight:900}
+html[data-theme="dark"] .bd-v131-lang-shell{background:linear-gradient(150deg,#10241d,#171d2c);border-color:rgba(171,199,190,.12)}
+html[data-theme="dark"] .bd-v131-lang-title b,html[data-theme="dark"] .bd-v131-lang-choice,html[data-theme="dark"] .bd-v131-lang-all select{color:#eef8f3}
+html[data-theme="dark"] .bd-v131-lang-title small,html[data-theme="dark"] .bd-v131-lang-choice small,html[data-theme="dark"] .bd-v131-lang-foot{color:#afc1b9}
+html[data-theme="dark"] .bd-v131-lang-choice,html[data-theme="dark"] .bd-v131-lang-all select,html[data-theme="dark"] .bd-v131-feed-mode button{background:#14261f;border-color:rgba(171,199,190,.11);color:#eef8f3}
+html[data-theme="dark"] .bd-v131-lang-choice.active{background:#173a2f;color:#c9f3e2}
+</style>
+
+<script data-bd-module="sidebars-language-v131" id="bd-sidebars-language-v131">
+(()=>{
+'use strict';
+const W=window,D=document;
+if(W.__BD_SIDEBAR_LANGUAGE_V131__)return;W.__BD_SIDEBAR_LANGUAGE_V131__=1;
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const FALLBACK={en:{native:'English'},bn:{native:'বাংলা'},hi:{native:'हिन्दी'},ar:{native:'العربية'},ur:{native:'اردو'},id:{native:'Bahasa Indonesia'},fil:{native:'Filipino'},fr:{native:'Français'},es:{native:'Español'},de:{native:'Deutsch'},pt:{native:'Português'},tr:{native:'Türkçe'},sw:{native:'Kiswahili'},zh:{native:'中文'},ja:{native:'日本語'},ko:{native:'한국어'},ru:{native:'Русский'}};
+function langs(){try{return W.BDRegion?.languages?.()||FALLBACK}catch(_){return FALLBACK}}
+function current(){try{return String(W.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||D.documentElement.lang||'en').toLowerCase()}catch(_){return'en'}}
+function home(){try{return W.BDRegion?.getHomeCountry?.()||{}}catch(_){return{}}}
+function rescue(){try{return W.BDRegion?.getRescueLocation?.()||{}}catch(_){return{}}}
+function feedMode(){return String(W.BDRegion?.mode||localStorage.getItem('bd-feed-region-mode-v2')||'home').toLowerCase()==='local'?'local':'home'}
+function name(code){const L=langs();return L[code]?.native||L[code]?.name||String(code||'').toUpperCase()}
+function optionHTML(){
+ const L=langs();
+ return Object.keys(L).sort((a,b)=>name(a).localeCompare(name(b))).map(k=>`<option value="${esc(k)}">${esc(name(k))}</option>`).join('')
+}
+function copy(){
+ const bn=current()==='bn';
+ return bn?{head:'আমার ভাষা',sub:'প্রোফাইলের দেশ না বদলিয়েও এখান থেকে ভাষা বদলান',home:'আমার দেশ',local:'লোকাল',default:'English',mine:'আমার ভাষা',near:'লোকাল ভাষা',all:'সব ভাষা থেকে বেছে নিন',foot:'ভাষা বদলালে Sidebar, Feed এবং নির্দেশনা নির্বাচিত ভাষায় আপডেট হবে। Home country অপরিবর্তিত থাকবে।'}:{head:'My Language',sub:'Change language here without changing your profile country',home:'Home',local:'Local',default:'English',mine:'My Language',near:'Local language',all:'Choose from all languages',foot:'Changing language updates the Sidebar, Feed and guidance. Your Home country stays unchanged.'}
+}
+function render(){
+ const c=copy(),ui=current(),h=home(),r=rescue(),hl=String(h.lang||h.language||'bn').toLowerCase(),rl=String(r.lang||r.language||'en').toLowerCase();
+ D.querySelectorAll('.bd-experience-card').forEach(card=>{
+  card.classList.add('bd-v131-language-card');
+  card.innerHTML=`<div class="bd-side-head"><div><small>${esc(c.sub)}</small><h3>${esc(c.head)}</h3></div><span class="bd-region-state-chip">${feedMode().toUpperCase()} · ${esc(ui.toUpperCase())}</span></div>
+  <div class="bd-v131-lang-shell">
+   <div class="bd-v131-lang-title"><span><b>${esc(c.head)}</b><small>${esc(c.sub)}</small></span><em class="bd-v131-current"><i></i>${esc(name(ui))}</em></div>
+   <div class="bd-v131-feed-mode"><button type="button" class="${feedMode()==='home'?'active':''}" data-bd-v131-feed="home">${esc(c.home)}</button><button type="button" class="${feedMode()==='local'?'active':''}" data-bd-v131-feed="local">${esc(c.local)}</button></div>
+   <div class="bd-v131-lang-grid">
+    <button type="button" class="bd-v131-lang-choice ${ui==='en'?'active':''}" data-bd-v131-lang="en"><strong>English</strong><small>Default</small></button>
+    <button type="button" class="bd-v131-lang-choice ${ui===hl?'active':''}" data-bd-v131-lang="${esc(hl)}"><strong>${esc(name(hl))}</strong><small>${esc(c.mine)}</small></button>
+    <button type="button" class="bd-v131-lang-choice ${ui===rl?'active':''}" data-bd-v131-lang="${esc(rl)}"><strong>${esc(name(rl))}</strong><small>${esc(c.near)}</small></button>
+   </div>
+   <label class="bd-v131-lang-all"><select data-bd-v131-lang-all aria-label="${esc(c.all)}"><option value="">${esc(c.all)}…</option>${optionHTML()}</select></label>
+   <div class="bd-v131-lang-foot"><i>◎</i><span>${esc(c.foot)}</span></div>
+  </div>`;
+  const sel=card.querySelector('[data-bd-v131-lang-all]');if(sel)sel.value=ui
+ })
+}
+async function setLanguage(v){
+ v=String(v||'').toLowerCase();if(!v)return;
+ try{
+  if(W.BDRegion?.setUiLanguage)W.BDRegion.setUiLanguage(v);
+  else{
+   localStorage.setItem('bd-ui-language-v2',v);D.documentElement.lang=v;
+   W.dispatchEvent(new CustomEvent('bd:languagechange',{detail:{language:v}}))
   }
-  async function bindOrientation(){
-    if(orientationBound)return;orientationBound=true;
-    try{const req=DeviceOrientationEvent&&DeviceOrientationEvent.requestPermission;if(typeof req==='function'){const p=await req();if(p!=='granted')return}}catch(_){ }
-    W.addEventListener('deviceorientation',onOrientation,true);
-  }
-  function bindGeoWatch(){
-    if(!navigator.geolocation||geoWatchId!=null)return;
-    try{geoWatchId=navigator.geolocation.watchPosition(p=>{try{if(typeof p.coords.heading==='number'&&!Number.isNaN(p.coords.heading)){headingDeg=p.coords.heading;updateMovement()}}catch(_){ }},{},{enableHighAccuracy:true,maximumAge:3000,timeout:9000})}catch(_){ }
-  }
-  function startMotionLoop(){bindOrientation();bindGeoWatch();if(motionTimer)return;motionTimer=setInterval(updateMovement,900);updateMovement()}
-  function stopMotionLoop(){if(motionTimer){clearInterval(motionTimer);motionTimer=null}if(geoWatchId!=null&&navigator.geolocation){try{navigator.geolocation.clearWatch(geoWatchId)}catch(_){ }geoWatchId=null}}
-  W.addEventListener('bd:location-touch-opened',startMotionLoop);
-  W.addEventListener('bd:location-touch-closed',stopMotionLoop);
-  D.addEventListener('bd:languagechange',()=>setTimeout(()=>{const sels=D.querySelectorAll('[data-bd-language-all]');sels.forEach(s=>s.value=D.documentElement.dataset.bdUiLanguage||'en')},80),true);
+ }catch(_){}
+ setTimeout(render,0);setTimeout(render,120)
+}
+function setFeed(v){try{W.BDRegion?.setFeedMode?.(v)}catch(_){}setTimeout(render,20)}
+D.addEventListener('click',e=>{
+ const l=e.target.closest?.('[data-bd-v131-lang]');if(l){e.preventDefault();e.stopPropagation();setLanguage(l.dataset.bdV131Lang);return}
+ const f=e.target.closest?.('[data-bd-v131-feed]');if(f){e.preventDefault();e.stopPropagation();setFeed(f.dataset.bdV131Feed)}
+},true);
+D.addEventListener('change',e=>{const s=e.target.closest?.('[data-bd-v131-lang-all]');if(s?.value){setLanguage(s.value)}},true);
+['bd:languagechange','bd:experiencechange','bd:homechange','bd:rescuechange','bd:sidebars-hydrated'].forEach(n=>W.addEventListener(n,()=>setTimeout(render,25)));
+if(D.readyState==='loading')D.addEventListener('DOMContentLoaded',()=>setTimeout(render,60),{once:true});else setTimeout(render,60);
+W.BDSidebarLanguageV131={render,setLanguage};
 })();
 </script>
 
