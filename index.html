@@ -454,12 +454,8 @@ if(!['home','local'].includes(feedMode)){
   const legacy=String(localStorage.getItem(LEGACY_MODE_STORE)||'');
   feedMode=(legacy==='local'||legacy==='local_en')?'local':'home';
 }
-const UI_LANG_EXPLICIT_STORE='bd-ui-language-explicit-v1';
-let storedUiLang='';try{storedUiLang=String(localStorage.getItem(UI_LANG_STORE)||'').toLowerCase()}catch(_){}
-let uiLang=storedUiLang||((home.key==='BD'||home.key==='IN_WB')?'bn':(home.lang||'en'));
+let uiLang=String(localStorage.getItem(UI_LANG_STORE)||'en').toLowerCase();
 if(!LANGS[uiLang])uiLang='en';
-/* First-run regional default: Bangladesh / West Bengal starts in Bengali. Once the member explicitly chooses a language, that choice is respected forever. */
-try{if(!localStorage.getItem(UI_LANG_EXPLICIT_STORE)&&(home.key==='BD'||home.key==='IN_WB')){uiLang='bn';localStorage.setItem(UI_LANG_STORE,'bn')}}catch(_){}
 
 function feedRegion(){return feedMode==='local'?rescue:home}
 function langInfo(lang=uiLang){return LANGS[lang]||LANGS.en}
@@ -520,31 +516,28 @@ function brand(root=D){
   const generic=root.querySelector?.('.brand h1');if(generic)generic.innerHTML=isDomesticBrand()?'ভুবনডাঙ্গার কবিতা':'BongDang <sup class="bd-sos-miniword">sos</sup>';
   if(root===D)D.title=isDomesticBrand()?'ভুবনডাঙ্গার কবিতা':'BongDang sos';
 }
-function countryDisplayName(region){
-  const code=String(region?.countryCode||'').toUpperCase(),fallback=region?.countryName||region?.label||'International';
-  if(!code)return fallback;
-  try{const dn=new Intl.DisplayNames([uiLang||'en'],{type:'region'}),n=dn.of(code);if(n&&n!==code)return n}catch(_){}
-  return fallback;
-}
-function countryGatewayLine(){
-  const m={bn:'আমার দেশ · আমার শিকড়',en:'Home · Roots · Pride',ar:'الوطن · الجذور · الفخر',hi:'वतन · जड़ें · गर्व',ur:'وطن · جڑیں · فخر',id:'Tanah air · Akar · Bangga',fil:'Bayan · Ugat · Dangal',ms:'Tanah air · Akar · Bangga',fr:'Patrie · Racines · Fierté',es:'Patria · Raíces · Orgullo',pt:'Pátria · Raízes · Orgulho',de:'Heimat · Wurzeln · Stolz',it:'Patria · Radici · Orgoglio',tr:'Vatan · Kökler · Gurur',ru:'Родина · Корни · Гордость',zh:'故土 · 根脉 · 自豪',ja:'故郷 · ルーツ · 誇り',ko:'고향 · 뿌리 · 자부심'};
-  return m[uiLang]||m.en;
-}
 function historyCard(root=D){
   const a=root.querySelector?.('.bd-history');if(!a)return;
   const region=feedRegion(),b=a.querySelector('b'),sm=a.querySelector('small'),flag=a.querySelector('.bd-flag');
-  const cardKey=region.key||region.countryCode||'INTL';
-  a.dataset.bdHomeCard=cardKey;a.dataset.bdCountryCode=region.countryCode||'';a.dataset.bdCountryName=countryDisplayName(region);
+  a.dataset.bdHomeCard=region.key||region.countryCode||'INTL';
   if(feedMode==='home'&&(region.key==='BD'||region.key==='IN_WB')){
-    const wb=region.key==='IN_WB';if(b)b.textContent=uiLang==='bn'?(wb?'পশ্চিমবঙ্গ':'বাংলাদেশ'):(wb?'West Bengal':'Bangladesh');if(sm)sm.textContent=uiLang==='bn'?(wb?'ইতিহাস · বাংলা সংস্কৃতি':'ইতিহাস · ১৭৫৭—আজ'):(wb?'Bengali heritage & history':'History · 1757—today');a.href=wb?'west-bengal.html':'bangladesh.html';delete a.dataset.bdCountryLove;flag?.classList.remove('bd-flag-emoji');if(flag){flag.textContent='';flag.title=wb?'West Bengal / India':'Bangladesh'};
+    const wb=region.key==='IN_WB';if(b)b.textContent=uiLang==='bn'?(wb?'পশ্চিমবঙ্গ':'বাংলাদেশ'):(wb?'West Bengal':'Bangladesh');if(sm)sm.textContent=uiLang==='bn'?(wb?'ইতিহাস · বাংলা সংস্কৃতি':'ইতিহাস · ১৭৫৭—আজ'):'Home literature & history';a.href=wb?'west-bengal.html':'bangladesh.html';flag?.classList.remove('bd-flag-emoji');if(flag)flag.textContent='';
   }else{
-    if(b)b.textContent=countryDisplayName(region);if(sm)sm.textContent=countryGatewayLine();
-    a.href='#';a.dataset.bdCountryLove='1';if(flag){flag.classList.add('bd-flag-emoji');flag.textContent=flagEmoji(region.countryCode)||'🌐';flag.title=countryDisplayName(region)}
+    if(b)b.textContent=region.label||region.countryName||'BongDang';if(sm)sm.textContent=feedMode==='local'?'Local feed':'Home feed';
+    a.href='#';if(flag){flag.classList.add('bd-flag-emoji');flag.textContent=flagEmoji(region.countryCode)||'🌐'}
   }
 }
 function flagEmoji(code){code=String(code||'').toUpperCase();if(!/^[A-Z]{2}$/.test(code))return'🌐';return String.fromCodePoint(...[...code].map(c=>127397+c.charCodeAt()))}
 function dateHTML(){
-  const now=new Date(),region=feedRegion();
+  const now=new Date();let region=feedRegion();
+  /* bd-user-selected-ticker-country-v1 */
+  const tickerCountry=String(localStorage.getItem('bd-ticker-country-v1')||'').toUpperCase();
+  const tickerPresets={
+   BD:{key:'BD',countryCode:'BD',countryName:'Bangladesh',label:'Bangladesh',locale:'bn-BD',timeZone:'Asia/Dhaka'},IN:{key:'IN',countryCode:'IN',countryName:'India',label:'India',locale:'en-IN',timeZone:'Asia/Kolkata'},
+   AE:{key:'AE',countryCode:'AE',countryName:'United Arab Emirates',label:'United Arab Emirates',locale:'en-AE',timeZone:'Asia/Dubai'},SA:{key:'SA',countryCode:'SA',countryName:'Saudi Arabia',label:'Saudi Arabia',locale:'ar-SA',timeZone:'Asia/Riyadh'},PK:{key:'PK',countryCode:'PK',countryName:'Pakistan',label:'Pakistan',locale:'ur-PK',timeZone:'Asia/Karachi'},
+   GB:{key:'GB',countryCode:'GB',countryName:'United Kingdom',label:'United Kingdom',locale:'en-GB',timeZone:'Europe/London'},NL:{key:'NL',countryCode:'NL',countryName:'Netherlands',label:'Netherlands',locale:'nl-NL',timeZone:'Europe/Amsterdam'},DE:{key:'DE',countryCode:'DE',countryName:'Germany',label:'Germany',locale:'de-DE',timeZone:'Europe/Berlin'},FR:{key:'FR',countryCode:'FR',countryName:'France',label:'France',locale:'fr-FR',timeZone:'Europe/Paris'},ES:{key:'ES',countryCode:'ES',countryName:'Spain',label:'Spain',locale:'es-ES',timeZone:'Europe/Madrid'},IT:{key:'IT',countryCode:'IT',countryName:'Italy',label:'Italy',locale:'it-IT',timeZone:'Europe/Rome'},TR:{key:'TR',countryCode:'TR',countryName:'Türkiye',label:'Türkiye',locale:'tr-TR',timeZone:'Europe/Istanbul'},BE:{key:'BE',countryCode:'BE',countryName:'Belgium',label:'Belgium',locale:'nl-BE',timeZone:'Europe/Brussels'},CH:{key:'CH',countryCode:'CH',countryName:'Switzerland',label:'Switzerland',locale:'de-CH',timeZone:'Europe/Zurich'},AT:{key:'AT',countryCode:'AT',countryName:'Austria',label:'Austria',locale:'de-AT',timeZone:'Europe/Vienna'},SE:{key:'SE',countryCode:'SE',countryName:'Sweden',label:'Sweden',locale:'sv-SE',timeZone:'Europe/Stockholm'},NO:{key:'NO',countryCode:'NO',countryName:'Norway',label:'Norway',locale:'nb-NO',timeZone:'Europe/Oslo'},DK:{key:'DK',countryCode:'DK',countryName:'Denmark',label:'Denmark',locale:'da-DK',timeZone:'Europe/Copenhagen'},FI:{key:'FI',countryCode:'FI',countryName:'Finland',label:'Finland',locale:'fi-FI',timeZone:'Europe/Helsinki'},IE:{key:'IE',countryCode:'IE',countryName:'Ireland',label:'Ireland',locale:'en-IE',timeZone:'Europe/Dublin'},PT:{key:'PT',countryCode:'PT',countryName:'Portugal',label:'Portugal',locale:'pt-PT',timeZone:'Europe/Lisbon'},GR:{key:'GR',countryCode:'GR',countryName:'Greece',label:'Greece',locale:'el-GR',timeZone:'Europe/Athens'},US:{key:'US',countryCode:'US',countryName:'United States',label:'United States',locale:'en-US',timeZone:'America/New_York'}
+  };
+  if(tickerPresets[tickerCountry])region=tickerPresets[tickerCountry];
   const bengalRegion=(region.key==='BD'||region.key==='IN_WB'||region.countryCode==='BD');
   if(bengalRegion){
     const tz=region.key==='IN_WB'?'Asia/Kolkata':'Asia/Dhaka';
@@ -563,8 +556,8 @@ function dateHTML(){
     ].filter(Boolean).join('<i>✦</i>');
   }
   const locale=uiLang==='en'?(region.countryCode?`en-${region.countryCode}`:'en'):(region.locale||uiLang);
-  const date=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
-  const time=new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(now);
+  const date=new Intl.DateTimeFormat(locale,{weekday:'long',day:'numeric',month:'long',year:'numeric',...(region.timeZone?{timeZone:region.timeZone}:{})}).format(now);
+  const time=new Intl.DateTimeFormat(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit',...(region.timeZone?{timeZone:region.timeZone}:{})}).format(now);
   const place=[region.city,region.region,region.countryName].filter(Boolean).join(' · ')||region.label||'International';
   return `<span class="greg">${date}</span><i>✦</i><span class="greet">${time}</span><i>✦</i><span>${place}</span>`;
 }
@@ -603,23 +596,8 @@ function rescueLabel(){return [rescue.city,rescue.region,rescue.countryName].fil
 function syncRescueLabels(){D.querySelectorAll('[data-bd-rescue-label]').forEach(x=>x.textContent=rescueLabel())}
 
 function modal(kind){let id=kind==='history'?'bdHistoryModal':kind==='home'?'bdHomeRegionModal':'bdRescueRegionModal',m=D.getElementById(id);if(m)return m;m=D.createElement('div');m.className='bd-region-modal';m.id=id;D.body.appendChild(m);return m}
-function escText(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-function loveLines(name){
-  name=escText(name||'your country');
-  const m={
-    bn:[`${name} শুধু মানচিত্রের একটি নাম নয়—এটি শিকড়, স্মৃতি আর আপন মানুষের অনুভূতি।`,`দূরে থাকলেও ভাষা, মাটি ও সংস্কৃতির টান হৃদয়ের ভেতর দেশকে বাঁচিয়ে রাখে।`,`নিজের দেশকে ভালোবাসুন, তার সৌন্দর্যকে সম্মান করুন, আর মানুষকে নিয়ে গর্ব করুন।`],
-    en:[`${name} is more than a place on a map — it is roots, memories and belonging.`,`Wherever life takes you, language, people and homeland travel quietly in the heart.`,`Love what is beautiful in your country, care for its people, and carry its dignity with pride.`],
-    ar:[`${name} ليست مجرد مكان على الخريطة؛ إنها الجذور والذكريات والانتماء.`,`أينما أخذتك الحياة، تبقى اللغة والناس والوطن في القلب.`,`أحب جمال وطنك، واعتنِ بأهله، واحمل كرامته بفخر.`],
-    hi:[`${name} नक्शे पर सिर्फ़ एक जगह नहीं—यह जड़ें, यादें और अपनापन है।`,`ज़िंदगी जहाँ भी ले जाए, भाषा, लोग और मातृभूमि दिल के साथ चलते हैं।`,`अपने देश की सुंदरता से प्रेम करें, लोगों का सम्मान करें और उसकी गरिमा पर गर्व करें।`],
-    ur:[`${name} نقشے پر صرف ایک جگہ نہیں؛ یہ جڑیں، یادیں اور اپنائیت ہے۔`,`زندگی جہاں بھی لے جائے، زبان، لوگ اور وطن دل میں ساتھ رہتے ہیں۔`,`اپنے ملک کی خوبصورتی سے محبت کریں، لوگوں کا خیال رکھیں اور اس کی عزت پر فخر کریں۔`],
-    id:[`${name} bukan sekadar tempat di peta—ia adalah akar, kenangan, dan rasa memiliki.`,`Ke mana pun hidup membawa kita, bahasa, manusia, dan tanah air tetap hidup di hati.`,`Cintai keindahan negerimu, pedulilah pada manusianya, dan banggalah pada martabatnya.`],
-    fil:[`Ang ${name} ay higit pa sa isang lugar sa mapa—ito ay ugat, alaala, at pakiramdam ng pag-aari.`,`Saan man dalhin ng buhay, dala natin sa puso ang wika, mga tao, at bayan.`,`Mahalin ang ganda ng iyong bansa, alagaan ang mga tao nito, at ipagmalaki ang dangal nito.`]
-  };
-  return m[uiLang]||m.en;
-}
-function historyInfo(code,name){if(code==='BD')return {title:'বাংলাদেশের ইতিহাস',href:'bangladesh.html',body:'১৭৫৭ থেকে ভাষা আন্দোলন, ১৯৬৯-এর গণঅভ্যুত্থান, ১৯৭১-এর মুক্তিযুদ্ধ ও স্বাধীনতা—বাংলাদেশের ইতিহাস সংগ্রাম, ভাষা, সংস্কৃতি ও মানুষের আত্মপরিচয়ের ধারাবাহিক যাত্রা।'};if(code==='IN')return {title:'বাংলা ও ভারতের ইতিহাস',href:'west-bengal.html',body:'বাংলা ভাষা, সাহিত্য, সংস্কৃতি ও উপমহাদেশের ঐতিহাসিক ধারাবাহিকতার পরিচয়।'};const n=name||'Country',lines=loveLines(n);return {title:uiLang==='bn'?`${n} · আমার দেশ, আমার গর্ব`:`${n} · Home & Pride`,href:'#',body:`<div class="bd-country-love-lines"><p>${lines[0]}</p><p>${lines[1]}</p><p>${lines[2]}</p></div>`}}
+function historyInfo(code,name){if(code==='BD')return {title:'বাংলাদেশের ইতিহাস',href:'bangladesh.html',body:'১৭৫৭ থেকে ভাষা আন্দোলন, ১৯৬৯-এর গণঅভ্যুত্থান, ১৯৭১-এর মুক্তিযুদ্ধ ও স্বাধীনতা—বাংলাদেশের ইতিহাস সংগ্রাম, ভাষা, সংস্কৃতি ও মানুষের আত্মপরিচয়ের ধারাবাহিক যাত্রা।'};if(code==='IN')return {title:'বাংলা ও ভারতের ইতিহাস',href:'west-bengal.html',body:'বাংলা ভাষা, সাহিত্য, সংস্কৃতি ও উপমহাদেশের ঐতিহাসিক ধারাবাহিকতার পরিচয়।'};return {title:(name||'Country')+' · History',href:'#',body:'This flag represents profile/home identity. Emergency rescue location is stored separately.'}}
 function openHistory(flag){const c=flag?.dataset?.country||'',info=historyInfo(c,flag?.title?.split('—')[0]?.trim());const m=modal('history');m.innerHTML=`<section class="bd-region-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>${info.title}</h3><button class="bd-region-x" data-bd-close>×</button></div><div class="bd-history-body">${info.body}</div>${info.href!=='#'?`<a class="bd-history-link" href="${info.href}">Open full history</a>`:''}</section>`;m.classList.add('open');m.querySelector('[data-bd-close]').onclick=()=>m.classList.remove('open');m.onclick=e=>{if(e.target===m)m.classList.remove('open')}}
-D.addEventListener('click',e=>{const a=e.target.closest?.('.bd-history[data-bd-country-love="1"]');if(!a)return;e.preventDefault();e.stopPropagation();const info=historyInfo(a.dataset.bdCountryCode||'',a.dataset.bdCountryName||'Country'),m=modal('history');m.innerHTML=`<section class="bd-region-sheet bd-country-love-sheet" role="dialog" aria-modal="true"><div class="bd-region-head"><h3>${info.title}</h3><button class="bd-region-x" data-bd-close>×</button></div><div class="bd-history-body">${info.body}</div></section>`;m.classList.add('open');m.querySelector('[data-bd-close]').onclick=()=>m.classList.remove('open');m.onclick=x=>{if(x.target===m)m.classList.remove('open')}},true);
 const REGION_OPTIONS=`<option value="BD">Bangladesh</option><option value="IN_WB">West Bengal / Kolkata</option><option value="AE">UAE</option><option value="SA">Saudi Arabia</option><option value="QA">Qatar</option><option value="KW">Kuwait</option><option value="OM">Oman</option><option value="BH">Bahrain</option><option value="PK">Pakistan</option><option value="ID">Indonesia</option><option value="PH">Philippines</option><option value="IN_HI">India / Hindi</option><option value="INTL">International / English</option>`;
 function presetToRegion(key,fields={}){if(key==='IN_WB')return normalizeRegion({...PRESETS.IN_WB,...fields,preset:key,key});if(key==='IN_HI')return normalizeRegion({...PRESETS.IN_HI,...fields,preset:key,key});if(PRESETS[key])return normalizeRegion({...PRESETS[key],...fields,preset:key,key});return normalizeRegion({...fields,preset:key,key})}
 function openHomeModal(){
@@ -643,7 +621,7 @@ function attachFlag(flag){
 function attachFlags(root=D){root.querySelectorAll?.('#bd27CountryFlag,.bd27-country-flag').forEach(attachFlag)}
 function getClient(){return W.BD_SUPABASE||W.supabaseClient||W.bhubondangaSupabase||W.__BD_SUPABASE_CLIENT__||((W.supabase&&W.supabase.auth)?W.supabase:null)}
 function setFeedMode(v,{persist=true}={}){v=v==='local'?'local':'home';feedMode=v;try{localStorage.setItem(FEED_MODE_STORE,v)}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistPrefs()}
-function setUiLanguage(v,{persist=true}={}){v=String(v||'en').toLowerCase();uiLang=LANGS[v]?v:'en';try{localStorage.setItem(UI_LANG_STORE,uiLang);if(persist)localStorage.setItem(UI_LANG_EXPLICIT_STORE,'1')}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:languagechange',{detail:{language:uiLang}}));W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistPrefs()}
+function setUiLanguage(v,{persist=true}={}){v=String(v||'en').toLowerCase();uiLang=LANGS[v]?v:'en';try{localStorage.setItem(UI_LANG_STORE,uiLang)}catch(_){}active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:languagechange',{detail:{language:uiLang}}));W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistPrefs()}
 function setHome(v,{persist=false}={}){home=normalizeRegion(v);writeStore(HOME_STORE,home);active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:homechange',{detail:{...home}}));W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistHome(home)}
 function setRescue(v,{persist=false}={}){rescue=normalizeRegion(v);writeStore(RESCUE_STORE,rescue);writeStore(LEGACY_OPERATIONAL_STORE,rescue);if(Number.isFinite(rescue.lat)&&Number.isFinite(rescue.lng))writeStore('bd-humanitarian-location',{lat:rescue.lat,lng:rescue.lng,accuracy:rescue.accuracy||0,countryCode:rescue.countryCode,countryName:rescue.countryName,region:rescue.region,city:rescue.city,saved_at:new Date().toISOString()});active=experience();apply(D);syncExperienceCards();W.dispatchEvent(new CustomEvent('bd:rescuechange',{detail:{...rescue}}));if(feedMode==='local')W.dispatchEvent(new CustomEvent('bd:experiencechange',{detail:getExperience()}));if(persist)persistRescue(rescue)}
 async function persistPrefs(){try{const c=getClient(),u=(await c?.auth?.getUser?.()).data?.user;if(u)await c.auth.updateUser({data:{...(u.user_metadata||{}),preferred_language:uiLang,bd_ui_language:uiLang,bd_feed_region_mode:feedMode}})}catch(_){}}
@@ -927,177 +905,17 @@ html[data-theme="dark"][data-bd-bengali-letters="on"] body .bdc-letters .bdc-let
 }
 </style>
 
-<style id="bd-v143-country-identity-bright-compact">
-/* Final compact regional identity lock. */
-.bd-history,.bd-history[data-bd-home-card]{
-  background:#0b6f52!important;
-  border:1px solid rgba(0,76,56,.72)!important;
-  color:#fff!important;
-  box-shadow:0 5px 13px rgba(7,75,57,.14)!important;
-}
-.bd-history:before,.bd-history:after{display:none!important;content:none!important;background:none!important;box-shadow:none!important}
-.bd-history b{color:#fff!important;font-weight:700!important}
-.bd-history small{color:rgba(255,255,255,.82)!important;font-weight:500!important}
-.bd-history[data-bd-home-card="BD"]{background:#006a4e!important;border-color:#005d45!important}
-.bd-history[data-bd-home-card="IN_WB"]{background:#076b4c!important;border-color:#075b43!important}
-.bd-history .bd-flag{
-  width:21px!important;height:21px!important;min-width:21px!important;flex:0 0 21px!important;
-  border-radius:50%!important;background:#006a4e!important;
-  box-shadow:0 0 0 2px rgba(255,255,255,.96)!important;
-}
-.bd-history .bd-flag:after{width:8px!important;height:8px!important;background:#f42a41!important;transform:translateX(-1px)!important}
-.bd-history .bd-flag.bd-flag-emoji{
-  width:25px!important;height:19px!important;min-width:25px!important;flex-basis:25px!important;
-  border-radius:3px!important;background:transparent!important;box-shadow:none!important;
-  font-size:19px!important;line-height:1!important;overflow:visible!important;
-}
-.bd-history .bd-flag.bd-flag-emoji:after{display:none!important;content:none!important}
-html[data-theme="dark"] .bd-history,html[data-theme="mid"] .bd-history{background:#075f46!important;border-color:#128160!important;color:#fff!important}
-html[data-theme="dark"] .bd-history[data-bd-home-card="BD"],html[data-theme="mid"] .bd-history[data-bd-home-card="BD"]{background:#006a4e!important}
-
-html[data-bd-bengali-letters="off"] .bdc-letters{display:none!important}
-html[data-bd-bengali-letters="on"] body .bdc-letters{
-  width:auto!important;max-width:none!important;margin:6px auto 0!important;padding:0!important;
-  display:flex!important;flex-flow:row nowrap!important;justify-content:center!important;align-items:center!important;gap:5px!important;
-  background:transparent!important;border:0!important;box-shadow:none!important;
-}
-html[data-bd-bengali-letters="on"] body .bdc-letters .bdc-letter{
-  flex:0 0 31px!important;width:31px!important;min-width:31px!important;max-width:31px!important;
-  height:31px!important;min-height:31px!important;max-height:31px!important;margin:0!important;padding:0!important;
-  display:grid!important;place-items:center!important;border-radius:7px!important;
-  border:1px solid #00c98b!important;background:#00a874!important;color:#fff!important;
-  box-shadow:0 3px 8px rgba(0,168,116,.17),inset 0 1px 0 rgba(255,255,255,.20)!important;
-  font-size:16px!important;font-weight:600!important;line-height:1!important;
-}
-html[data-bd-bengali-letters="on"] body .bdc-letters .bdc-letter:hover{background:#00b980!important}
-html[data-bd-bengali-letters="on"] body .bdc-letters .bdc-letter:active{background:#008d62!important;transform:translateY(1px) scale(.97)!important}
-html[data-theme="dark"][data-bd-bengali-letters="on"] body .bdc-letters .bdc-letter{background:#00a874!important;border-color:#20d49b!important;color:#fff!important;box-shadow:0 4px 10px rgba(0,0,0,.22),0 0 10px rgba(0,168,116,.09)!important}
-.bd-country-love-sheet{max-width:500px!important}.bd-country-love-lines{display:grid;gap:9px;font-size:13px;line-height:1.7}.bd-country-love-lines p{margin:0}.bd-country-love-sheet .bd-region-head h3{font-weight:700}
-@media(max-width:520px){
-  .bd-history{padding-left:7px!important;padding-right:7px!important;gap:6px!important}
-  .bd-history .bd-flag{width:20px!important;height:20px!important;min-width:20px!important;flex-basis:20px!important}
-  .bd-history .bd-flag:after{width:7px!important;height:7px!important}
-  html[data-bd-bengali-letters="on"] body .bdc-letters{gap:4px!important;margin-top:5px!important}
-  html[data-bd-bengali-letters="on"] body .bdc-letters .bdc-letter{flex-basis:29px!important;width:29px!important;min-width:29px!important;max-width:29px!important;height:29px!important;min-height:29px!important;max-height:29px!important;border-radius:6px!important;font-size:15px!important}
-}
-</style>
-
-<style id="bd-history-flag-motion-20260823">
-/* Final Bangladesh history/flag gateway refinement */
-.bd-history{
-  position:relative!important;
-  isolation:isolate!important;
-  overflow:visible!important;
-  justify-self:center!important;
-  width:min(100%,378px)!important;
-  height:42px!important;
-  padding:0 18px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  gap:10px!important;
-  border:1px solid rgba(145,177,168,.34)!important;
-  border-left-color:rgba(174,196,189,.52)!important;
-  border-right-color:rgba(174,196,189,.52)!important;
-  border-radius:0!important;
-  clip-path:polygon(4% 0,96% 0,100% 50%,96% 100%,4% 100%,0 50%)!important;
-  background:linear-gradient(180deg,#ffffff 0%,#fbfdfc 100%)!important;
-  box-shadow:0 6px 16px rgba(35,78,63,.06)!important;
-  color:#173c44!important;
-  text-decoration:none!important;
-}
-.bd-history::before,.bd-history::after{
-  content:""!important;
-  position:absolute!important;
-  left:7%!important;
-  right:7%!important;
-  height:3px!important;
-  border-radius:999px!important;
-  pointer-events:none!important;
-  z-index:0!important;
-  opacity:.95!important;
-  background:
-    linear-gradient(90deg,transparent 0%,rgba(14,126,91,.18) 8%,rgba(39,181,128,.92) 22%,rgba(255,255,255,.98) 49%,rgba(39,181,128,.92) 78%,rgba(14,126,91,.18) 92%,transparent 100%)!important;
-  box-shadow:0 0 8px rgba(31,172,120,.14)!important;
-  animation:bdHistorySweep 5.8s linear infinite!important;
-}
-.bd-history::before{top:-3px!important}
-.bd-history::after{bottom:-3px!important;animation-duration:7.1s!important;animation-direction:reverse!important;opacity:.82!important}
-.bd-history>*{position:relative!important;z-index:1!important}
-.bd-history > span:last-child{line-height:1.05!important}
-.bd-history b{
-  display:block!important;
-  color:#173f48!important;
-  font-weight:900!important;
-  font-size:12px!important;
-  letter-spacing:-.01em!important;
-}
-.bd-history small{
-  display:block!important;
-  margin-top:2px!important;
-  color:#cb4b57!important;
-  font-size:8.5px!important;
-  font-weight:800!important;
-}
-.bd-flag{
-  width:34px!important;
-  height:34px!important;
-  flex:0 0 34px!important;
-  display:grid!important;
-  place-items:center!important;
-  position:relative!important;
-  border-radius:50%!important;
-  background:radial-gradient(circle at 42% 38%,#0b8a63 0%,#087652 52%,#006a4e 100%)!important;
-  box-shadow:0 0 0 2px rgba(255,255,255,.98),0 0 0 5px rgba(9,131,92,.16),0 7px 14px rgba(0,0,0,.12)!important;
-}
-.bd-flag::before{
-  content:""!important;
-  position:absolute!important;
-  inset:-9px!important;
-  border-radius:50%!important;
-  background:conic-gradient(from 18deg,transparent 0 12%,rgba(255,255,255,.96) 18%,transparent 28%,rgba(122,229,186,.72) 40%,transparent 52%,rgba(255,255,255,.94) 65%,transparent 77%,rgba(122,229,186,.62) 88%,transparent 100%)!important;
-  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));
-  mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));
-  opacity:.95!important;
-  animation:bdFlagOrbit 7.5s linear infinite!important;
-}
-.bd-flag::after{
-  content:""!important;
-  width:14px!important;
-  height:14px!important;
-  border-radius:50%!important;
-  background:radial-gradient(circle at 36% 36%,#ff596b 0%,#ef3348 72%,#da1e36 100%)!important;
-  transform:translateX(-2px)!important;
-  box-shadow:0 0 0 1px rgba(255,255,255,.05),0 0 10px rgba(242,70,89,.18)!important;
-}
-html[data-theme="dark"] .bd-history{
-  background:linear-gradient(180deg,#0f1d2c 0%,#0b1522 100%)!important;
-  border-color:rgba(73,119,108,.62)!important;
-  box-shadow:0 8px 20px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.03)!important;
-}
-html[data-theme="dark"] .bd-history b{color:#eff8f6!important}
-html[data-theme="dark"] .bd-history small{color:#ff8893!important}
-html[data-theme="dark"] .bd-history::before,html[data-theme="dark"] .bd-history::after{
-  background:linear-gradient(90deg,transparent 0%,rgba(24,143,104,.22) 8%,#16bc7f 22%,rgba(255,255,255,.28) 49%,#16bc7f 78%,rgba(24,143,104,.22) 92%,transparent 100%)!important;
-  box-shadow:0 0 10px rgba(28,204,140,.22)!important;
-}
-html[data-theme="mid"] .bd-history{background:linear-gradient(180deg,#ffffff 0%,#f7fbfa 100%)!important}
-@keyframes bdHistorySweep{0%{background-position:-140% 0}100%{background-position:140% 0}}
-@keyframes bdFlagOrbit{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-@media(max-width:899px){
-  .bd-history{width:min(100%,360px)!important;height:40px!important;padding:0 12px!important;gap:8px!important}
-  .bd-history b{font-size:11px!important}.bd-history small{font-size:7.6px!important}
-  .bd-flag{width:30px!important;height:30px!important;flex-basis:30px!important}
-  .bd-flag::before{inset:-8px!important}
-}
-@media(max-width:430px){
-  .bd-history{width:min(100%,332px)!important;height:38px!important;padding:0 10px!important}
-  .bd-history b{font-size:10.5px!important}.bd-history small{font-size:7.2px!important}
-  .bd-flag{width:28px!important;height:28px!important;flex-basis:28px!important}
-  .bd-flag::before{inset:-7px!important}
-  .bd-flag::after{width:12px!important;height:12px!important}
-}
-</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script defer src="offline-db.js"></script>
+<script defer src="localization.js"></script>
+<script defer src="prayer-times.js"></script>
+<script defer src="diary-lock.js"></script>
+<script defer src="gift-box.js"></script>
+<script defer src="social-permissions.js"></script>
+<script defer src="app.js"></script>
 </head><body><svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="bd-i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol><symbol id="bd-i-home" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5M9.5 20v-6h5v6"/></symbol><symbol id="bd-i-spirit" viewBox="0 0 24 24"><path d="M5 18c4-6 7-10 14-12-1.5 6-5 10-11 12H5Z"/><path d="M7.5 17c3-3.5 6-6 10-8.5M4 6l.6 1.5L6 8l-1.4.5L4 10l-.6-1.5L2 8l1.4-.5L4 6ZM19 15l.7 1.7 1.8.8-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.8L19 15Z"/></symbol><symbol id="bd-i-mystic" viewBox="0 0 24 24"><path d="M4.2 13.1c3.1-5.3 7.3-7.6 15.4-7.8-2 6.7-6.3 10.7-13.1 12.1"/><path d="M7 16.4c2.7-3.7 5.8-6.3 10.1-8.1"/><path d="M4.2 5.2l.7 1.7 1.7.7-1.7.7-.7 1.7-.7-1.7-1.7-.7 1.7-.7.7-1.7ZM18.6 14.7l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8.8-2Z"/><circle cx="11.7" cy="11.5" r="1.2"/></symbol><symbol id="bd-i-comment" viewBox="0 0 24 24"><path d="M4 5.5h16v11H9l-5 3v-14Z"/></symbol><symbol id="bd-i-share" viewBox="0 0 24 24"><path d="M8 12h9M14 8l4 4-4 4"/><path d="M5 6.5v11h9"/></symbol><symbol id="bd-i-react" viewBox="0 0 24 24"><path d="M8.2 10.3 11 4.8c.55-1.08 2.2-.7 2.2.52v3.25h4.45c1.2 0 2.08 1.12 1.78 2.28l-1.42 5.62A2 2 0 0 1 16.07 18H8.2V10.3Z"/><path d="M8.2 10.3H4.6A1.6 1.6 0 0 0 3 11.9v4.5A1.6 1.6 0 0 0 4.6 18h3.6v-7.7Z"/></symbol><symbol id="bd-i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/></symbol><symbol id="bd-i-send" viewBox="0 0 24 24"><path d="m3 4 18 8-18 8 3-8-3-8Z"/><path d="M6 12h15"/></symbol><symbol id="bd-i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol><symbol id="bd-i-back" viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></symbol><symbol id="bd-i-template" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4v16M8 9h13"/></symbol><symbol id="bd-i-font" viewBox="0 0 24 24"><path d="M5 19 10 5h4l5 14M7.5 13h9"/></symbol><symbol id="bd-i-color" viewBox="0 0 24 24"><path d="M12 3c5 0 9 3.5 9 8 0 2.4-1.4 3.5-3 3.5h-1.8c-1.1 0-1.6.9-1.2 1.8.7 1.8-.7 4.7-4.5 4.7C6 21 3 17.5 3 12.5 3 7 7 3 12 3Z"/><circle cx="8" cy="9" r="1"/><circle cx="12" cy="7" r="1"/><circle cx="16" cy="9" r="1"/></symbol><symbol id="bd-i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m4 18 5-5 3 3 3-3 5 5"/></symbol><symbol id="bd-i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol><symbol id="bd-i-adjust" viewBox="0 0 24 24"><path d="M4 6h8M16 6h4M4 12h3M11 12h9M4 18h10M18 18h2"/><circle cx="14" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="16" cy="18" r="2"/></symbol><symbol id="bd-i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></symbol><symbol id="bd-i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M5 16H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol><symbol id="bd-i-edit" viewBox="0 0 24 24"><path d="m4 20 4-1 11-11-3-3L5 16l-1 4ZM14 6l3 3"/></symbol><symbol id="bd-i-report" viewBox="0 0 24 24"><path d="M5 21V4M5 5h12l-2 4 2 4H5"/></symbol></svg><header class="bd-site-header"><div class="bd-head-inner"><a class="bd-brand" href="index.html" data-bd-home-refresh="brand"><span class="bd-logo">BDK</span><span class="bd-brand-copy"><h1><b>ভুবনডাঙ্গার</b> <em>কবিতা</em></h1><p>বাংলা কবিতা ও সাহিত্যচর্চার একটি মুক্ত ভুবন</p></span></a><form class="bd-search" id="bdSearch"><span class="bd-search-ico"><svg class="bd-icon"><use href="#bd-i-search"/></svg></span><input id="bdSearchInput" type="search" placeholder="কবিতা, লেখক বা বিষয় খুঁজুন…" aria-label="সার্চ"><button aria-label="সার্চ"><svg class="bd-icon"><use href="#bd-i-search"/></svg></button></form><div class="bd-head-actions"><a href="notifications.html" aria-label="নোটিফিকেশন">◌</a><a href="messages.html" aria-label="বার্তা">□</a><button id="bdTheme" aria-label="থিম">◐</button></div></div></header><div class="bd-datebar"><div class="bd-date-track"><div class="bd-date-group"></div><div class="bd-date-group"></div></div></div><nav class="bd-quicknav" aria-label="দ্রুত নেভিগেশন"><div class="bd-quick-inner"><a class="bd-quick-button bd-press" href="index.html" data-bd-home-refresh="home"><svg class="bd-icon"><use href="#bd-i-home"/></svg><span>হোম</span></a><a class="bd-history bd-press" href="bangladesh.html"><span class="bd-flag"></span><span><b>বাংলাদেশ</b><br><small>ইতিহাস · ১৭৫৭—আজ</small></span></a><a class="bd-quick-button spirit bd-press" href="madhyorater-prolap.html"><img class="bd-midnight-logo" src="midnight-prolap-logo.webp" alt=""><span>মধ্যরাতের প্রলাপ</span></a></div></nav><main class="bd-workspace"><aside class="bd-sidehost" id="leftHost"></aside><section class="bd-centerhost" id="centerHost"></section><aside class="bd-sidehost" id="rightHost"></aside></main><div id="bdSearchPanel" class="bd-search-panel" hidden></div><div id="bdToast" class="bd-toast" role="status"></div><button id="bdScrollTop" class="bd-scroll-top" type="button" aria-label="Back to top"><svg viewBox="0 0 24 24"><path d="m6 14 6-6 6 6"/></svg></button><script>
 (()=>{'use strict';
 const D=document,W=window,H=D.documentElement;const Q=(s,r=D)=>r.querySelector(s);const QA=(s,r=D)=>[...r.querySelectorAll(s)];
@@ -1254,19 +1072,19 @@ document.addEventListener('click',e=>{const a=e.target.closest?.('[data-bd-home-
      row.style.setProperty('flex-wrap','nowrap','important');
      row.style.setProperty('justify-content','center','important');
      row.style.setProperty('align-items','center','important');
-     row.style.setProperty('gap',innerWidth<=520?'4px':'5px','important');
+     row.style.setProperty('gap',innerWidth<=520?'7px':'8px','important');
      row.querySelectorAll('.bdc-letter').forEach(btn=>{
-       const s=innerWidth<=520?'29px':'31px';
+       const s=innerWidth<=520?'38px':'40px';
        ['width','min-width','max-width','height','min-height','max-height'].forEach(p=>btn.style.setProperty(p,s,'important'));
        btn.style.setProperty('flex','0 0 '+s,'important');
        btn.style.setProperty('margin','0','important');
        btn.style.setProperty('padding','0','important');
        btn.style.setProperty('display','grid','important');
        btn.style.setProperty('place-items','center','important');
-       btn.style.setProperty('background','#00a874','important');
+       btn.style.setProperty('background','#006a4e','important');
        btn.style.setProperty('color','#fff','important');
-       btn.style.setProperty('border','1px solid #00c98b','important');
-       btn.style.setProperty('border-radius',innerWidth<=520?'6px':'7px','important');
+       btn.style.setProperty('border','1px solid #075b45','important');
+       btn.style.setProperty('border-radius',innerWidth<=520?'8px':'9px','important');
        btn.style.setProperty('font-weight','600','important');
      });
    });

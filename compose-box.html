@@ -1334,4 +1334,1308 @@ const COMPOSER_CATEGORIES=[
  {id:'children',label:'Children / Rhyme',asset:'category-children.webp'},
  {id:'news',label:'News',asset:'category-news.webp'}
 ];
-function categoryPickerHTML(s){const items=COMPOSER_CATEGORIES.map(c=>{const locked=(c.id==='news'&&!canNews(s.role))||(c.id==='midnight'&&!canMidnightWrite(s.role));const lockLabel=c.id==='midnight'?'Founder Only':(c.id==='news'?'Page / Founder':'Premium');return `<button class="bdc-category-btn${locked?' locked':''}" type="button" data-category-choice="${c.id}" data-lock-label="${lockLabel}" aria-label="${c.label}" ${locked?'aria-disabled="true"':''}><img src="${c.asset}" alt=""><span>${c.label}</span></button>`}).join('');return `<div class="bdc-category-layer" data-category-layer><section class="bdc-category-sheet" role="dialog" aria-modal="true" aria-label="Choose what t
+function categoryPickerHTML(s){const items=COMPOSER_CATEGORIES.map(c=>{const locked=(c.id==='news'&&!canNews(s.role))||(c.id==='midnight'&&!canMidnightWrite(s.role));const lockLabel=c.id==='midnight'?'Founder Only':(c.id==='news'?'Page / Founder':'Premium');return `<button class="bdc-category-btn${locked?' locked':''}" type="button" data-category-choice="${c.id}" data-lock-label="${lockLabel}" aria-label="${c.label}" ${locked?'aria-disabled="true"':''}><img src="${c.asset}" alt=""><span>${c.label}</span></button>`}).join('');return `<div class="bdc-category-layer" data-category-layer><section class="bdc-category-sheet" role="dialog" aria-modal="true" aria-label="Choose what to publish"><div class="bdc-category-head"><div><h3>What would you like to publish?</h3><p>Choose a category, then the editor will open.</p></div><button class="bdc-category-close" type="button" data-category-close aria-label="Close">×</button></div><div class="bdc-category-grid">${items}</div><div class="bdc-category-note">Free members use the clean default writing page with media upload. Premium unlocks category templates, visual design, advanced media tools and custom assets.</div></section></div>`}
+function closeCategoryPicker(s){if(!s.categoryPicker)return;s.categoryPicker.classList.remove('open');setTimeout(()=>{if(s.categoryPicker&&!s.categoryPicker.classList.contains('open')){s.categoryPicker.remove();s.categoryPicker=null}},160)}
+function openCategoryPicker(s){if(s.categoryPicker){s.categoryPicker.classList.add('open');return}const wrap=D.createElement('div');wrap.innerHTML=categoryPickerHTML(s);s.categoryPicker=wrap.firstElementChild;D.body.appendChild(s.categoryPicker);s.categoryPicker.classList.add('open');Q('[data-category-close]',s.categoryPicker).onclick=()=>closeCategoryPicker(s);s.categoryPicker.addEventListener('click',e=>{if(e.target===s.categoryPicker)closeCategoryPicker(s)});QA('[data-category-choice]',s.categoryPicker).forEach(b=>b.onclick=()=>{const id=b.dataset.categoryChoice;if(id==='news'&&!canNews(s.role)){toast(s,'News can be published only by an approved Page or Founder.');return}if(id==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}closeCategoryPicker(s);setTimeout(()=>openEditorSafe(s,id),80)})}
+function shell(){return `<section class="bdc-root"><div class="bdc-card"><div class="bdc-collapsed"><div class="bdc-avatar" data-avatar>🌿</div><button class="bdc-prompt" type="button" data-open>What's on your mind today?</button><div class="bdc-letters"><button class="bdc-letter" data-cat="poem" aria-label="কবিতা">অ</button><button class="bdc-letter" data-cat="recitation" aria-label="আবৃত্তি">আ</button><button class="bdc-letter" data-cat="prolap" aria-label="প্রলাপ">ক</button><button class="bdc-letter" data-cat="letter" aria-label="চিঠি">খ</button><button class="bdc-letter" data-cat="environment" aria-label="পরিবেশ">ম</button></div></div></div></section>`}
+function avatar(s){const u=s.session?.user,src=u?.user_metadata?.avatar_url||u?.user_metadata?.picture||'';return src?`<img src="${esc(src)}" alt="">`:'🌿'}
+function editorHTML(){return `<div class="bdc-editor" data-editor><header class="bdc-topbar"><button type="button" data-close aria-label="Back">‹</button><div class="bdc-editor-title"><strong>Studio Composer</strong><small data-studio-category>Write</small></div><button type="button" class="bdc-draft" data-draft-save>Draft</button><button type="button" class="bdc-publish" data-publish>Publish</button></header><nav class="bdc-modebar"><button class="bdc-mode active" data-mode="ordinary">Write</button><button class="bdc-mode bdc-media-mode" type="button" data-media-toggle>Media</button><button class="bdc-mode" data-mode="template">Templates</button><button class="bdc-mode premium" data-mode="premium">Studio</button></nav><section class="bdc-media-studio" data-media-studio hidden><div class="bdc-media-studio-head"><div><small>Docked below the writing surface</small><b>Media Studio</b></div><button type="button" data-media-close aria-label="Close media studio">×</button></div><div class="bdc-media-compose-fields"><label><span>Title <b>*</b></span><input type="text" maxlength="180" data-media-title placeholder="Write a title — required"></label><label><span>Caption / Body</span><textarea rows="3" data-media-body placeholder="Write a caption or body…"></textarea></label></div><div class="bdc-media-stage"><div class="bdc-recitation-preview bdc-media-main-preview" data-rec-preview>Choose audio or video</div><div class="bdc-media-timeline" aria-hidden="true"><span class="bdc-playhead"></span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="bdc-record-hero" data-record-hero>
+<button type="button" class="bdc-record-main" data-rec-record>
+<span class="bdc-record-mic" aria-hidden="true">🎙</span>
+<span class="bdc-record-copy"><b data-record-label>Record voice</b><small data-record-help>Tap to start recording</small></span>
+<span class="bdc-record-time" data-record-time>00:00</span>
+</button>
+<div class="bdc-record-status" data-record-status><i></i><span>Ready to record</span></div>
+</div>
+<div class="bdc-media-basic"><button type="button" data-rec-audio>♫ Upload Audio</button><button type="button" data-rec-video>▻ Upload Video</button><button type="button" data-media-done>✓ Back to Writing</button></div><div class="bdc-media-premium"><div class="bdc-media-premium-title"><span>Premium Studio</span><small>Noise Reduction · Mastering · Music Mix</small></div><div class="bdc-recitation-dock"><button type="button" data-rec-noise>⌁ Voice Clean</button><button type="button" data-rec-master>◇ Studio Master</button><button type="button" data-rec-bgm>♫ Music</button><button type="button" data-rec-mix>⊕ Mix</button><button type="button" data-rec-reset>↺ Original</button></div><div class="bdc-audio-suite" data-audio-suite><div class="bdc-audio-suite-head"><b>Voice & Noise Lab</b><small>Browser Web Audio · preset replaces preset, never stacks blindly</small></div><div class="bdc-audio-group"><span>Noise control</span><div class="bdc-audio-grid"><button class="bdc-audio-preset" type="button" data-audio-action="voice-clean">Voice Clean</button><button class="bdc-audio-preset" type="button" data-audio-action="fan">Fan / Aircon</button><button class="bdc-audio-preset" type="button" data-audio-action="machine">Machine Noise</button><button class="bdc-audio-preset" type="button" data-audio-action="hum50">50Hz Hum</button><button class="bdc-audio-preset" type="button" data-audio-action="hum60">60Hz Hum</button><button class="bdc-audio-preset" type="button" data-audio-action="deesser">De-Esser</button></div></div><div class="bdc-audio-group"><span>Voice finish</span><div class="bdc-audio-grid"><button class="bdc-audio-preset" type="button" data-audio-action="presence">Voice Presence</button><button class="bdc-audio-preset" type="button" data-audio-action="smooth">Smooth Voice</button><button class="bdc-audio-preset" type="button" data-audio-action="studio">Studio Feel</button><button class="bdc-audio-preset" type="button" data-audio-action="broadcast">Broadcast</button><button class="bdc-audio-preset" type="button" data-audio-action="normalize">Normalize</button><button class="bdc-audio-preset" type="button" data-audio-action="limiter">Limiter</button></div></div><div class="bdc-audio-sliders"><label>Voice level <output data-voice-level-out>100%</output><input type="range" min="55" max="145" value="100" data-voice-level></label><label>Music level <output data-bgm-volume-out>28%</output><input type="range" min="0" max="100" value="28" data-bgm-volume-2></label></div><div class="bdc-video-lab"><span>Video enhance · live preview</span><div class="bdc-video-look-row"><button class="bdc-video-look" type="button" data-video-look="clean">Clean</button><button class="bdc-video-look" type="button" data-video-look="crisp">Crisp</button><button class="bdc-video-look" type="button" data-video-look="warm">Warm</button><button class="bdc-video-look" type="button" data-video-look="film">Film</button><button class="bdc-video-look" type="button" data-video-look="night">Night</button><button class="bdc-video-look" type="button" data-video-look="mono">Mono</button></div><div class="bdc-video-range"><label>Brightness<output data-video-bright-out>100%</output><input type="range" min="70" max="135" value="100" data-video-bright></label><label>Contrast<output data-video-contrast-out>100%</output><input type="range" min="70" max="145" value="100" data-video-contrast></label><label>Saturation<output data-video-sat-out>100%</output><input type="range" min="0" max="165" value="100" data-video-sat></label><label>Preview speed<output data-video-speed-out>1.0×</output><input type="range" min="50" max="200" step="10" value="100" data-video-speed></label></div><small style="color:#7f8da0;font-size:6px">Visual controls are applied to the live browser preview and saved as post studio metadata for compatible feed/video rendering.</small></div><div class="bdc-audio-caption"><button type="button" data-live-caption>Auto Caption · Live</button><small>Uses browser Speech Recognition when available. Uploaded-file transcription will use the future AI service, not a fake browser result.</small></div></div><div class="bdc-recitation-meta"><div><div class="bdc-audio-process-status" data-audio-process-status>Premium: Noise Reduction · Mastering · Music Mix</div></div><label class="bdc-bgm-volume">Music volume<input type="range" min="0" max="100" value="28" data-bgm-volume></label></div><label class="bdc-copyright"><input type="checkbox" data-copyright-ok><span>I have the necessary rights to use imported audio, music, fonts or other assets.</span></label></div></section><section class="bdc-category-studio" data-category-studio><div class="bdc-news-designer"><div class="bdc-news-layouts"><button class="bdc-news-layout active" type="button" data-news-layout="1"><i></i><span>01 · Grid</span></button><button class="bdc-news-layout" type="button" data-news-layout="2"><i></i><span>02 · Lead</span></button><button class="bdc-news-layout" type="button" data-news-layout="3"><i></i><span>03 · Split</span></button><button class="bdc-news-layout" type="button" data-news-layout="4"><i></i><span>04 · Hero</span></button><button class="bdc-news-layout" type="button" data-news-layout="5"><i></i><span>05 · Magazine</span></button><button class="bdc-news-layout" type="button" data-news-layout="6"><i></i><span>06 · Story</span></button><button class="bdc-news-layout" type="button" data-news-layout="7"><i></i><span>07 · Column</span></button><button class="bdc-news-layout" type="button" data-news-layout="8"><i></i><span>08 · Feature</span></button><button class="bdc-news-layout" type="button" data-news-layout="9"><i></i><span>09 · Editorial</span></button><button class="bdc-news-layout" type="button" data-news-layout="10"><i></i><span>10 · Angle</span></button><button class="bdc-news-layout bdc-news-own-template" type="button" data-news-template-upload><i>＋</i><span>Custom Template</span></button><button class="bdc-news-layout bdc-news-arrange" type="button" data-news-arrange><i>↕</i><span>Free Position</span></button></div><article class="bdc-news-card-editor" data-news-card data-news-template="1"><img class="bdc-news-custom-template" data-news-custom-template hidden alt=""><div class="bdc-news-arrange-hint" data-news-arrange-hint hidden>Title/লেখা টেনে নিন · দুই আঙুলে সাইজ করুন</div><div class="bdc-news-brand"><span class="bdc-news-account-logo" data-news-account-logo aria-hidden="true">N</span><div class="bdc-news-account-copy"><b data-news-brand-label></b><small>Verified News Page</small></div><span class="bdc-news-template-id" data-news-template-id>01</span></div><input class="bdc-news-title" data-news-title data-title autocomplete="off" placeholder="Write news headline"><div class="bdc-news-images"><div class="bdc-news-slot" data-news-slot="0"><button type="button">＋ Lead Image</button></div><div class="bdc-news-slot" data-news-slot="1"><button type="button">＋ Image 2</button></div><div class="bdc-news-slot" data-news-slot="2"><button type="button">＋ Image 3</button></div><div class="bdc-news-slot" data-news-slot="3"><button type="button">＋ Image 4</button></div></div><textarea class="bdc-news-body" data-news-body data-body placeholder="Write the story…"></textarea><div class="bdc-news-empty-foot" aria-hidden="true"><span></span><span></span><span></span></div></article></div><div class="bdc-recitation-studio"><div class="bdc-recitation-dock"><button type="button" data-rec-audio>◉ Upload Audio</button><button type="button" data-rec-video>▷ Upload Video</button><button type="button" data-rec-record>● Record</button><button type="button" data-rec-noise>⌁ Noise Reduction</button><button type="button" data-rec-master>◇ Mastering</button><button type="button" data-rec-bgm>♫ BG Music</button><button type="button" data-rec-mix>⊕ Music Mix</button><button type="button" data-rec-reset>↺ Original</button></div><div class="bdc-recitation-meta"><div><div class="bdc-recitation-preview" data-rec-preview>Choose audio/video</div><div class="bdc-audio-process-status" data-audio-process-status>Premium Studio: Noise Reduction · Mastering · Music Mix</div></div><label class="bdc-bgm-volume">BG Music volume<input type="range" min="0" max="100" value="28" data-bgm-volume></label></div><label class="bdc-copyright"><input type="checkbox" data-copyright-ok><span>I confirm that I have the necessary rights for imported fonts, audio and background music.</span></label></div></section><div class="bdc-workspace">
+<section class="bdc-panel bdc-ordinary active" data-panel="ordinary"><article class="bdc-paper"><input class="bdc-title" data-title type="text" name="bd-post-title" autocomplete="off" autocapitalize="sentences" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore placeholder="Write a title" maxlength="180"><textarea class="bdc-body" data-body name="bd-post-body" autocomplete="off" placeholder="Write here…"></textarea><div class="bdc-media-preview" data-normal-preview hidden></div><div class="bdc-plain-presets" aria-label="Page style"><button type="button" class="active" data-plain-style="white"><i></i><span>Default</span></button><button type="button" data-plain-style="paper"><i></i><span>Paper</span></button><button type="button" data-plain-style="mist"><i></i><span>Mist</span></button><button type="button" data-plain-style="soft"><i></i><span>Soft</span></button></div><div class="bdc-paper-foot"><span>Title required · Writing stays live</span><div class="bdc-media-actions"><button class="bdc-media-btn" data-normal-image type="button">▧ Image</button><button class="bdc-media-btn bdc-media-launch" data-media-toggle-inline type="button">♫ Media</button><button class="bdc-media-btn bdc-av-only" data-normal-audio type="button" hidden aria-hidden="true">◉ অডিও</button><button class="bdc-media-btn bdc-av-only" data-normal-video type="button" hidden aria-hidden="true">▷ ভিডিও</button></div></div></article></section>
+<section class="bdc-panel bdc-template" data-panel="template" hidden><div class="bdc-strip" data-free-strip></div><div class="bdc-stage"><article class="bdc-canvas" data-free-canvas><span class="bdc-badge">Template</span><input class="bdc-template-title" data-title type="text" name="bd-template-title" autocomplete="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore placeholder="Write a title"><textarea class="bdc-template-body" data-body placeholder="Write here"></textarea><div class="bdc-template-note" data-template-note>BongDang</div></article><div class="bdc-free-status">Premium template canvas</div></div></section>
+<section class="bdc-panel bdc-premium" data-panel="premium"><div class="bdc-premium-strip"><button class="bdc-add-template" type="button" data-import-template>＋ Custom Template</button><div data-premium-strip style="display:flex;gap:7px"></div></div><div class="bdc-premium-stage"><article class="bdc-canvas" data-premium-canvas>
+<img class="bdc-external-template" data-external-template hidden alt="">
+<img class="bdc-photo" data-photo hidden alt="">
+<div class="bdc-shade" data-shade></div><span class="bdc-badge">Premium</span>
+<input class="bdc-template-title bdc-free-object" data-title data-free-object="title" type="text" name="bd-template-title" autocomplete="off" autocorrect="off" spellcheck="false" data-lpignore="true" data-1p-ignore placeholder="Write a title">
+<textarea class="bdc-template-body bdc-free-object" data-body data-free-object="body" placeholder="Write here"></textarea>
+<div class="bdc-template-note" data-template-note>BongDang</div>
+<div class="bdc-freeplace-hint" data-freeplace-hint hidden>Drag with one finger · pinch with two fingers</div>
+</article></div><div class="bdc-toolbar">${['template','font','color','image','filter','spacing','motion','adjust','audio','effect'].map(k=>`<button class="bdc-tool" type="button" data-tool="${k}">${ICONS[k]}<span>${({template:'Templates',font:'Font',color:'Color',image:'Image',filter:'Filters',spacing:'Type',motion:'Motion',adjust:'Position',audio:'Audio',effect:'Finish'})[k]}</span></button>`).join('')}</div><div class="bdc-context" data-context></div><div class="bdc-gate" data-gate><div class="bdc-gate-card"><h3>Premium Features</h3><p>Template+, custom templates, custom fonts, separate title/body fonts and colors, filters and Advanced Editing are available to Premium members.</p><div class="bdc-opening-offer"><b>Opening Offer:</b> First 500 members — ৳50/month. After the first 500 members — ৳100/month.</div><div class="bdc-gate-actions"><button class="request" type="button" data-request>Request</button><button type="button" data-pin-check>Enter PIN</button></div><button class="bdc-back-normal" type="button" data-back-normal>Use Normal Post</button><input class="bdc-pin" data-pin placeholder="Premium PIN" inputmode="numeric"></div></div></section>
+<input type="file" hidden data-normal-file accept="image/*"><input type="file" hidden data-audio-file accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg"><input type="file" hidden data-video-file accept="video/*,.mp4,.mov,.m4v,.webm"><input type="file" hidden data-template-file accept="image/*"><input type="file" hidden data-image-file accept="image/*"><input type="file" hidden data-font-file accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf,font/woff,font/woff2"><input type="file" hidden data-news-file accept="image/*"><input type="file" hidden data-news-template-file accept="image/*"><input type="file" hidden data-bgm-file accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg"></div><div class="bdc-toast" data-toast></div></div>`}
+function state(root){return{root,session:null,role:'user',privileged:false,premium:false,category:'poem',mode:'ordinary',title:'',body:'',template:'plain',preset:FREE[0],formatTarget:'title',titleFontFamily:"'Noto Serif Bengali',serif",bodyFontFamily:"'Noto Serif Bengali',serif",titleColor:'#102b4b',bodyColor:'#193a5c',titleBold:true,bodyBold:false,customFonts:[],align:'center',filter:'Normal',photo:'',photoFile:null,audio:'',audioFile:null,video:'',videoFile:null,mediaType:'',newsTemplate:1,newsImages:[null,null,null,null],newsImageFiles:[null,null,null,null],newsTarget:0,draftVersion:0,keyboardOpen:false,bgm:'',bgmFile:null,bgmVolume:28,copyrightOk:false,audioOriginalFile:null,audioProcessed:false,noiseReduced:false,mastered:false,mixedBgm:false,audioPreset:'original',voiceLevel:100,captionRecognition:null,captionActive:false,videoLook:'clean',videoBrightness:100,videoContrast:100,videoSaturation:100,videoSpeed:1,plainStyle:'white',colorHue:210,colorSat:72,colorVal:72,designTarget:'title',freeplace:false,titleSize:34,bodySize:19,lineHeight:1.85,letterSpacing:0,canvasRatio:'auto',motion:'none',effect:'none',draftDirty:false,draftTimer:null,
+titlePos:{x:50,y:14,scale:1},bodyPos:{x:50,y:52,scale:1},
+templatePos:{x:50,y:50,scale:1},photoPos:{x:50,y:50,scale:1},
+externalTemplate:'',externalTemplateFile:null,activeReference:'',
+newsCustomTemplate:'',newsCustomTemplateFile:null,newsArrange:false,
+newsTitlePos:{x:50,y:17,scale:1},newsBodyPos:{x:50,y:68,scale:1},
+newsTemplatePos:{x:50,y:50,scale:1},newsImagePos:[{x:50,y:50,scale:1},{x:50,y:50,scale:1},{x:50,y:50,scale:1},{x:50,y:50,scale:1}],recorder:null,recordStream:null,recordChunks:[],recordStartedAt:0,recordTimer:null,discardRecording:false,mediaAccepted:false,editor:null,categoryPicker:null,editingId:null}}
+function bdComposeTimeout(p,ms,fallback=null){return Promise.race([Promise.resolve(p).catch(()=>fallback),new Promise(r=>setTimeout(()=>r(fallback),ms))])}
+async function hydrate(s){
+ const ss=await bdComposeTimeout(session(),1400,W.BD_SESSION||null);
+ if(ss)s.session=ss;
+ s.role=String(W.BD_ROLE||await bdComposeTimeout(roleOf(s.session),900,s.role||'user')||s.role||'user').toLowerCase();
+ s.privileged=isPrivileged(s.role);
+ const localPremium=s.privileged||premiumLocal(s.session?.user?.id);
+ s.premium=localPremium||!!(await bdComposeTimeout(premiumRemote(s.session?.user?.id),900,false));
+ const av=s.root?.querySelector?.('[data-avatar]');if(av)av.innerHTML=avatar(s);
+ try{localStorage.setItem('bd-role',s.role)}catch(_){}
+ return s
+}
+function toast(s,msg){const t=Q('[data-toast]',s.editor);t.textContent=msg;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),1700)}
+function lockPage(on){D.documentElement.style.overflow=on?'hidden':'';D.body.style.overflow=on?'hidden':''}
+function editingField(el){return !!el?.matches?.('[data-title],[data-body],[data-news-title],[data-news-body]')}
+function setKeyboardState(s,on,field){if(!s?.editor)return;s.keyboardOpen=!!on;s.editor.classList.toggle('bdc-keyboard-open',!!on);if(on&&field)requestAnimationFrame(()=>{try{field.scrollIntoView({block:'center',inline:'nearest',behavior:'smooth'})}catch(_){}});else requestAnimationFrame(()=>{Q('.bdc-premium-stage',s.editor)?.scrollTo({top:0,behavior:'smooth'});Q('.bdc-stage',s.editor)?.scrollTo({top:0,behavior:'smooth'})})}
+function blurWriting(s){const a=D.activeElement;if(editingField(a)){a.blur();setKeyboardState(s,false)}}
+
+function isAVCategory(s){return ['recitation','reels','song','gaan','music','audio'].includes(String(s.category||'').toLowerCase())}
+function syncCategoryMedia(s){if(!s.editor)return;const yes=isAVCategory(s);s.editor.dataset.category=s.category||'poem';const studio=Q('[data-category-studio]',s.editor);if(studio)studio.classList.toggle('show',s.category==='news');if(s.category==='news')renderNewsStudio(s);const body=Q('[data-panel="ordinary"] [data-body]',s.editor);if(body)body.placeholder=s.category==='reels'?'Write a reel caption…':(s.category==='children'?'Write a rhyme / children’s story…':s.category==='letter'?'Write your letter…':s.category==='environment'?'Write an environment story / idea…':(yes?'Write a caption / body…':'Write here…'));renderRecitationStudio(s)}
+function cleanTitleAutofill(s){if(!s.editor||s.title)return;const email=String(s.session?.user?.email||'').trim().toLowerCase();if(!email)return;QA('[data-title]',s.editor).forEach(x=>{if(String(x.value||'').trim().toLowerCase()===email)x.value=''})}
+function draftKey(s,cat=s.category){const uid=s.session?.user?.id||'guest';return `bd-compose-draft-v200:${uid}:${cat||'poem'}`}
+function saveComposerDraft(s,manual=false){if(!s?.editor)return;saveVisible(s);const data={title:s.title,body:s.body,category:s.category,mode:s.mode==='premium'?'premium':'ordinary',template:s.preset?.id||s.template||'plain',titleFontFamily:s.titleFontFamily,bodyFontFamily:s.bodyFontFamily,titleColor:s.titleColor,bodyColor:s.bodyColor,titleBold:s.titleBold,bodyBold:s.bodyBold,titleSize:s.titleSize,bodySize:s.bodySize,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing,align:s.align,filter:s.filter,motion:s.motion,effect:s.effect,audioPreset:s.audioPreset,voiceLevel:s.voiceLevel,videoLook:s.videoLook,videoBrightness:s.videoBrightness,videoContrast:s.videoContrast,videoSaturation:s.videoSaturation,videoSpeed:s.videoSpeed,titlePos:s.titlePos,bodyPos:s.bodyPos,photoPos:s.photoPos,templatePos:s.templatePos,updated_at:Date.now()};try{localStorage.setItem(draftKey(s),JSON.stringify(data));s.draftDirty=false;const x=Q('[data-draft-save]',s.editor);if(x){x.textContent='Saved';setTimeout(()=>{if(x)x.textContent='Draft'},900)}if(manual)toast(s,'Draft saved')}catch(_){if(manual)toast(s,'Draft could not be saved')}}
+function scheduleDraft(s){s.draftDirty=true;clearTimeout(s.draftTimer);s.draftTimer=setTimeout(()=>saveComposerDraft(s,false),700)}
+function restoreComposerDraft(s){if(s.editingId||s.title||s.body)return;try{const d=JSON.parse(localStorage.getItem(draftKey(s))||'null');if(!d||Date.now()-(d.updated_at||0)>14*864e5)return;s.title=d.title||'';s.body=d.body||'';s.titleFontFamily=d.titleFontFamily||s.titleFontFamily;s.bodyFontFamily=d.bodyFontFamily||s.bodyFontFamily;s.titleColor=d.titleColor||s.titleColor;s.bodyColor=d.bodyColor||s.bodyColor;s.titleBold=d.titleBold??s.titleBold;s.bodyBold=d.bodyBold??s.bodyBold;s.titleSize=d.titleSize||s.titleSize;s.bodySize=d.bodySize||s.bodySize;s.lineHeight=d.lineHeight||s.lineHeight;s.letterSpacing=d.letterSpacing??s.letterSpacing;s.align=d.align||s.align;s.filter=d.filter||s.filter;s.motion=d.motion||'none';s.effect=d.effect||'none';s.audioPreset=d.audioPreset||s.audioPreset;s.voiceLevel=d.voiceLevel||s.voiceLevel;s.videoLook=d.videoLook||s.videoLook;s.videoBrightness=d.videoBrightness||s.videoBrightness;s.videoContrast=d.videoContrast||s.videoContrast;s.videoSaturation=d.videoSaturation||s.videoSaturation;s.videoSpeed=d.videoSpeed||s.videoSpeed;if(d.titlePos)s.titlePos=d.titlePos;if(d.bodyPos)s.bodyPos=d.bodyPos;if(d.photoPos)s.photoPos=d.photoPos;if(d.templatePos)s.templatePos=d.templatePos;toast(s,'Draft restored')}catch(_){}}
+
+function setComposerPhoto(s,file){
+ if(!file||!String(file.type||'').startsWith('image/'))return;
+ if(s.photo?.startsWith('blob:'))try{URL.revokeObjectURL(s.photo)}catch(_){}
+ s.photoFile=file;s.photo=URL.createObjectURL(file);s.photoPos={x:50,y:52,scale:1};updateCanvases(s);const pr=Q('[data-normal-preview]',s.editor);if(pr){pr.hidden=false;pr.innerHTML=`<img src="${s.photo}" alt="" style="max-width:100%;height:auto;border-radius:14px">`}scheduleDraft(s)
+}
+function setComposerAudio(s,file){
+ if(!file)return;if(s.audio?.startsWith('blob:'))try{URL.revokeObjectURL(s.audio)}catch(_){}
+ s.audioFile=file;s.audioOriginalFile=file;s.audio=URL.createObjectURL(file);s.mediaType='audio';s.video='';s.videoFile=null;s.audioPreset='original';s.audioProcessed=false;s.mediaAccepted=true;toggleMediaStudio(s,true);renderRecitationStudio(s)
+}
+function setComposerVideo(s,file){
+ if(!file)return;if(s.video?.startsWith('blob:'))try{URL.revokeObjectURL(s.video)}catch(_){}
+ s.videoFile=file;s.video=URL.createObjectURL(file);s.mediaType='video';s.audio='';s.audioFile=null;s.audioOriginalFile=null;s.audioPreset='original';s.videoAudioProcessed=false;s.mediaAccepted=true;toggleMediaStudio(s,true);renderRecitationStudio(s)
+}
+function setComposerBgm(s,file){if(!file)return;if(s.bgm?.startsWith('blob:'))try{URL.revokeObjectURL(s.bgm)}catch(_){}s.bgmFile=file;s.bgm=URL.createObjectURL(file);renderRecitationStudio(s);toast(s,'Background music selected.')}
+function setExternalTemplateFile(s,file){if(!file||!s.premium)return;if(!s.copyrightOk){toast(s,'Confirm copyright/usage rights first.');return}if(s.externalTemplate?.startsWith('blob:'))try{URL.revokeObjectURL(s.externalTemplate)}catch(_){}s.externalTemplateFile=file;s.externalTemplate=URL.createObjectURL(file);s.templatePos={x:50,y:50,scale:1};updateCanvases(s);scheduleDraft(s)}
+function wireEditor(s){
+ const e=s.editor;if(!e||e.dataset.v210Wired==='1')return;e.dataset.v210Wired='1';
+ e.addEventListener('click',ev=>{
+  const t=ev.target.closest('button,[data-news-slot]');if(!t)return;
+  if(t.matches('[data-close]'))return closeEditor(s);
+  if(t.matches('[data-draft-save]'))return saveComposerDraft(s,true);
+  if(t.matches('[data-publish]')){
+   if(s.publishing||t.disabled)return;
+   const oldLabel=t.textContent||'Publish';
+   s.publishing=true;
+   t.disabled=true;
+   t.setAttribute('aria-busy','true');
+   t.classList.add('bdc-publishing');
+   t.textContent='Publishing…';
+   try{navigator.vibrate?.(18)}catch(_){}
+   Promise.resolve(publish(s)).catch(()=>{}).finally(()=>{
+     s.publishing=false;
+     t.disabled=false;
+     t.removeAttribute('aria-busy');
+     t.classList.remove('bdc-publishing');
+     t.textContent=oldLabel
+   });
+   return
+  }
+  if(t.matches('[data-mode]'))return setMode(s,t.dataset.mode);
+  if(t.matches('[data-media-toggle],[data-media-toggle-inline]'))return toggleMediaStudio(s);
+  if(t.matches('[data-media-close]'))return toggleMediaStudio(s,false);
+  if(t.matches('[data-media-done]'))return returnFromMedia(s);
+  if(t.matches('[data-normal-image]'))return Q('[data-normal-file]',e)?.click();
+  if(t.matches('[data-normal-audio],[data-rec-audio]'))return Q('[data-audio-file]',e)?.click();
+  if(t.matches('[data-normal-video],[data-rec-video]'))return Q('[data-video-file]',e)?.click();
+  if(t.matches('[data-rec-record]'))return toggleRecording(s);
+  if(t.matches('[data-rec-bgm]')){if(!s.premium)return toast(s,'Premium Studio is required.');return Q('[data-bgm-file]',e)?.click()}
+  if(t.matches('[data-rec-noise]'))return processPremiumAudio(s,'voice-clean');
+  if(t.matches('[data-rec-master]'))return processPremiumAudio(s,'studio');
+  if(t.matches('[data-rec-mix]'))return processPremiumAudio(s,'mix');
+  if(t.matches('[data-rec-reset]'))return processPremiumAudio(s,'original');
+  if(t.dataset.audioAction)return processPremiumAudio(s,t.dataset.audioAction);
+  if(t.matches('[data-live-caption]'))return toggleLiveCaption(s);
+  if(t.dataset.videoLook){s.videoLook=t.dataset.videoLook;applyVideoLookState(s);scheduleDraft(s);return}
+  if(t.dataset.template){if(!s.premium)return toast(s,'Premium Studio is required.');const p=presetBy(s,t.dataset.template);s.preset=p;applyCategoryPresetState(s,p);QA('[data-template]',e).forEach(x=>x.classList.toggle('active',x===t));updateCanvases(s);scheduleDraft(s);return}
+  if(t.matches('[data-import-template]')){if(!s.premium)return toast(s,'Premium Studio is required.');return Q('[data-template-file]',e)?.click()}
+  if(t.dataset.plainStyle){s.plainStyle=t.dataset.plainStyle;applyPlainStyle(s);return}
+  if(t.dataset.tool){if(!s.premium)return toast(s,'Premium Studio is required.');return tool(s,t)}
+  if(t.matches('[data-request]'))return requestPremium(s);
+  if(t.matches('[data-pin-check]'))return redeem(s);
+  if(t.matches('[data-back-normal]'))return setMode(s,'ordinary');
+  if(t.dataset.newsLayout){s.newsCustomTemplate='';s.newsCustomTemplateFile=null;s.newsTemplate=Number(t.dataset.newsLayout)||1;s.newsArrange=false;renderNewsStudio(s);return}
+  if(t.matches('[data-news-template-upload]'))return Q('[data-news-template-file]',e)?.click();
+  if(t.matches('[data-news-arrange]')){if(!s.newsCustomTemplate)return toast(s,'Add a custom news template first.');s.newsArrange=!s.newsArrange;renderNewsStudio(s);return}
+  const slot=t.closest?.('[data-news-slot]');if(slot){chooseNewsImage(s,Number(slot.dataset.newsSlot)||0);return}
+ },true);
+ e.addEventListener('input',ev=>{
+  const t=ev.target;
+  if(t.matches('[data-title]')){s.title=t.value.trimStart();if(s.category==='news')renderNewsStudio(s);else{QA('[data-title]',e).forEach(x=>{if(x!==t&&D.activeElement!==x)x.value=s.title});updateCanvases(s)}scheduleDraft(s)}
+  else if(t.matches('[data-body]')){s.body=t.value;QA('[data-body]',e).forEach(x=>{if(x!==t&&D.activeElement!==x)x.value=s.body});updateCanvases(s);scheduleDraft(s)}
+  else if(t.matches('[data-bgm-volume],[data-bgm-volume-2]')){s.bgmVolume=Number(t.value)||0;QA('[data-bgm-volume],[data-bgm-volume-2]',e).forEach(x=>x.value=s.bgmVolume);renderRecitationStudio(s)}
+  else if(t.matches('[data-voice-level]')){s.voiceLevel=Number(t.value)||100;renderRecitationStudio(s)}
+  else if(t.matches('[data-video-bright]')){s.videoBrightness=Number(t.value)||100;applyVideoLookState(s)}
+  else if(t.matches('[data-video-contrast]')){s.videoContrast=Number(t.value)||100;applyVideoLookState(s)}
+  else if(t.matches('[data-video-sat]')){s.videoSaturation=Number(t.value)||100;applyVideoLookState(s)}
+  else if(t.matches('[data-video-speed]')){s.videoSpeed=(Number(t.value)||100)/100;applyVideoLookState(s)}
+ },true);
+ e.addEventListener('change',ev=>{
+  const t=ev.target,file=t.files?.[0];
+  if(t.matches('[data-normal-file],[data-image-file]')){setComposerPhoto(s,file);t.value=''}
+  else if(t.matches('[data-audio-file]')){setComposerAudio(s,file);t.value=''}
+  else if(t.matches('[data-video-file]')){setComposerVideo(s,file);t.value=''}
+  else if(t.matches('[data-bgm-file]')){setComposerBgm(s,file);t.value=''}
+  else if(t.matches('[data-template-file]')){setExternalTemplateFile(s,file);t.value=''}
+  else if(t.matches('[data-font-file]')){importFont(s,file);t.value=''}
+  else if(t.matches('[data-news-file]')){setNewsImage(s,file);t.value=''}
+  else if(t.matches('[data-news-template-file]')){setNewsCustomTemplate(s,file);t.value=''}
+  else if(t.matches('[data-copyright-ok]')){s.copyrightOk=!!t.checked}
+ },true);
+ const vv=W.visualViewport;if(vv){s._vv=()=>setKeyboardState(s,Math.max(0,W.innerHeight-vv.height)>120);vv.addEventListener('resize',s._vv,{passive:true})}
+ wireFreeTransform(s);renderPremium(s);renderRecitationStudio(s)
+}
+function openEditor(s,cat='poem'){const next=cat||s.category;if(next==='news'&&!canNews(s.role)){toast(s,'News can be published only by an approved Page or Founder.');return}if(next==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}s.category=next;const allowedFilters=CATEGORY_FILTERS[s.category]||['Normal'];if(!allowedFilters.includes(s.filter))s.filter=allowedFilters[0]||'Normal';if(s.premium){const cp=categoryPack(s.category);if(cp.length&&(!s.preset||s.preset.category!==s.category)){s.preset=cp[0];applyCategoryPresetState(s,s.preset)}}if(s.editor){const ps=Q('[data-premium-strip]',s.editor);if(ps){ps.dataset.ready='0';ps.dataset.cat=''}}s.discardRecording=false;s.mediaStudioVisited=false;if(!s.editor){const box=D.createElement('div');box.innerHTML=editorHTML();s.editor=box.firstElementChild;D.body.appendChild(s.editor);wireEditor(s)}s.editor.classList.toggle('is-premium',!!s.premium);s.editor.dataset.category=s.category;const catDef=COMPOSER_CATEGORIES.find(x=>x.id===s.category);const catLabel=Q('[data-studio-category]',s.editor);if(catLabel)catLabel.textContent=catDef?.label||'Write';restoreComposerDraft(s);syncAll(s);syncCategoryMedia(s);s.editor.classList.add('open');lockPage(true);requestAnimationFrame(()=>{cleanTitleAutofill(s);Q('[data-title]',Q('[data-panel="ordinary"]',s.editor))?.focus({preventScroll:true})});setTimeout(()=>cleanTitleAutofill(s),120);setTimeout(()=>cleanTitleAutofill(s),650)}
+
+function openEditorSafe(s,cat='poem'){
+ try{
+  openEditor(s,cat);
+  requestAnimationFrame(()=>{
+   try{
+    const ed=s.editor;
+    if(!ed||!ed.classList.contains('open'))throw new Error('editor-not-open');
+    const active=ed.querySelector('.bdc-panel.active:not([hidden])');
+    if(!active&&String(ed.dataset.category||'')!=='news'){
+      const ordinary=ed.querySelector('[data-panel="ordinary"]');
+      if(ordinary){ordinary.hidden=false;ordinary.classList.add('active');s.mode='ordinary'}
+    }
+    ed.dataset.bdcReady='1';bdcStudioMount(s);bdcStudioBottomNav(s);bdcStudioViewportLock(s);
+    if(String(s.category||'').toLowerCase()==='normal'){
+      const ws=ed.querySelector('.bdc-workspace')||ed;
+      if(!ed.querySelector('[data-normal-post-note]')){
+        const n=D.createElement('div');n.className='bdc-normal-post-note';n.dataset.normalPostNote='1';n.innerHTML='<b>সাধারণ পোস্ট</b> — শিরোনাম বাধ্যতামূলক নয়। এই পোস্ট শুধু Index এবং Profile Home-এ থাকবে; কোনো সাহিত্যিক Archive/Category-তে যোগ হবে না।';
+        ws.prepend(n)
+      }
+    }
+   }catch(err){
+    try{s.editor?.classList.remove('open')}catch(_){}
+    lockPage(false);
+    console.error('[Bhubondanga Composer] editor recovery',err)
+   }
+  })
+ }catch(err){
+  try{s.editor?.classList.remove('open')}catch(_){}
+  lockPage(false);
+  try{s.editor?.remove()}catch(_){}
+  s.editor=null;
+  console.error('[Bhubondanga Composer] open failed',err);
+  return false
+ }
+ return true
+}
+function discardStagedMedia(s){
+ const revoke=v=>{if(String(v||'').startsWith('blob:'))try{URL.revokeObjectURL(v)}catch(_){}};
+ revoke(s.audio);revoke(s.video);s.audio='';s.video='';s.audioFile=null;s.videoFile=null;s.audioOriginalFile=null;s.videoOriginalFile=null;s.audioProcessed=false;s.videoAudioProcessed=false;s.noiseReduced=false;s.mastered=false;s.mixedBgm=false;s.audioPreset='original';s.voiceLevel=100;try{s.captionRecognition?.stop?.()}catch(_){}s.captionRecognition=null;s.captionActive=false;disposeVideoAudioPreview(s);s.mediaType='';s.mediaAccepted=false;s.recordChunks=[];
+ const p=Q('[data-normal-preview]',s.editor);if(p){p.hidden=true;p.innerHTML=''}renderRecitationStudio(s)
+}
+function closeEditor(s){
+ if((s.title||s.body)&&!s.editingId)try{saveComposerDraft(s,false)}catch(_){}
+ if(s._vv&&W.visualViewport){try{W.visualViewport.removeEventListener('resize',s._vv)}catch(_){}s._vv=null}closeContext(s);s.discardRecording=true;
+ if(s.recorder?.state==='recording'){try{s.recorder.onstop=null;s.recorder.stop()}catch(_){}}try{s.captionRecognition?.stop?.()}catch(_){}s.captionRecognition=null;s.captionActive=false;s.recorder=null;s.recordStream?.getTracks?.().forEach(t=>t.stop());s.recordStream=null;
+ discardStagedMedia(s);s.editor?.classList.remove('open');lockPage(false);for(const f of s.customFonts.splice(0))try{D.fonts.delete(f.face);URL.revokeObjectURL(f.url)}catch(_){}
+ if(s.photo?.startsWith('blob:'))try{URL.revokeObjectURL(s.photo)}catch(_){}s.photo='';s.photoFile=null;if(s.bgm?.startsWith('blob:'))try{URL.revokeObjectURL(s.bgm)}catch(_){};s.bgm='';s.bgmFile=null;s.newsImages.forEach(x=>{if(x?.startsWith?.('blob:'))try{URL.revokeObjectURL(x)}catch(_){}});s.newsImages=[null,null,null,null];s.newsImageFiles=[null,null,null,null];if(s.externalTemplate?.startsWith('blob:'))try{URL.revokeObjectURL(s.externalTemplate)}catch(_){};s.externalTemplate='';s.externalTemplateFile=null;if(s.newsCustomTemplate?.startsWith('blob:'))try{URL.revokeObjectURL(s.newsCustomTemplate)}catch(_){};s.newsCustomTemplate='';s.newsCustomTemplateFile=null;s.freeplace=false;s.newsArrange=false
+}function setMode(s,mode){saveVisible(s);closeContext(s);let wanted=String(mode||'ordinary');if(wanted==='template')wanted='premium';if(wanted==='premium'&&!s.premium){toast(s,'Premium Studio is required for templates and advanced design.');return}if(!['ordinary','premium'].includes(wanted))return;s.mode=wanted;QA('[data-mode]',s.editor).forEach(b=>b.classList.toggle('active',(b.dataset.mode==='template'?'premium':b.dataset.mode)===wanted));QA('[data-panel]',s.editor).forEach(p=>{const key=p.dataset.panel==='template'?'premium':p.dataset.panel;const yes=key===wanted&&(p.dataset.panel!=='template');p.classList.toggle('active',yes);p.hidden=!yes});Q('[data-gate]',s.editor)?.classList.remove('open');syncAll(s);setTimeout(()=>Q(`[data-panel="${wanted}"] [data-title]`,s.editor)?.focus({preventScroll:true}),30)}
+function visiblePanel(s){return Q(`[data-panel="${s.mode}"]`,s.editor)}
+function saveVisible(s){if(!s.editor)return;if(s.category==='news'){const nt=Q('[data-news-title]',s.editor),nb=Q('[data-news-body]',s.editor);if(nt)s.title=nt.value.trimStart();if(nb)s.body=nb.value;return}const p=visiblePanel(s);if(!p)return;{const raw=(Q('[data-title]',p)?.value||s.title).trimStart(),em=String(s.session?.user?.email||'').trim().toLowerCase();s.title=(!s.title&&em&&raw.trim().toLowerCase()===em)?'':raw;}s.body=Q('[data-body]',p)?.value??s.body}
+function syncAll(s){if(!s.editor)return;QA('[data-title]',s.editor).forEach(x=>{if(D.activeElement!==x)x.value=s.title});QA('[data-body]',s.editor).forEach(x=>{if(D.activeElement!==x)x.value=s.body});renderFree(s);renderPremium(s);updateCanvases(s);syncCategoryMedia(s);cleanTitleAutofill(s)}
+function thumb(t,free=false){const pv=t.asset?`background-image:url('${esc(t.asset)}');background-size:cover;background-position:center`:`--preview:${esc(t.bg)};background:${esc(t.bg)}`;const child=t.meta?.pack==='children';return `<button class="bdc-thumb${t.id===((free?'plain':null))?' active':''}" type="button" data-template="${esc(t.id)}" ${child?'data-v210-child="1"':''} title="${esc(t.name)}"><i style="${pv};--mini-accent:${esc(t.accent||'#5aa')}"></i><span>${esc(t.name)}</span></button>`}
+function renderFree(s){const strip=Q('[data-free-strip]',s.editor);if(strip){strip.innerHTML='';strip.dataset.ready='1'}}
+function proceduralPremiumPreset(index){const n=Math.max(1,Number(index)||1),h=(168+n*31)%360,h2=(h+42+(n%37))%360;return {id:'g'+n,name:'নিজস্ব '+n,bg:`linear-gradient(148deg,hsl(${h} 68% 95%),hsl(${h2} 54% 86%))`,ink:'#132e4c',accent:`hsl(${(h+95)%360} 62% 46%)`,motif:['leaf','quote','line','grain','dot'][n%5],border:`1px solid hsla(${h},38%,52%,.20)`,shadow:`0 18px 48px hsla(${h},28%,24%,.16)`,titleWeight:700,bodyTracking:0.02,frameRadius:22+(n%9)};}
+function renderPremium(s){const strip=Q('[data-premium-strip]',s.editor);if(!strip)return;if(!s.premium){strip.innerHTML='';strip.dataset.ready='0';return}if(strip.dataset.ready==='1'&&strip.dataset.cat===s.category)return;const pack=categoryPack(s.category),refs=REF_TEMPLATES.filter(x=>x.category===s.category),same=PREMIUM.filter(x=>x.meta?.recommended===s.category).slice(0,12),visible=[...pack,...refs,...same];strip.innerHTML=visible.map(thumb).join('');strip.dataset.ready='1';strip.dataset.cat=s.category}
+function presetBy(s,id){
+ const cat=String(s.category||'poem');
+ return categoryPack(cat).find(x=>x.id===id)
+   ||REF_TEMPLATES.find(x=>x.id===id&&x.category===cat)
+   ||PREMIUM.find(x=>x.id===id&&x.meta?.recommended===cat)
+   ||categoryPack(cat)[0]||s.preset||FREE[0]
+}
+function applyPreset(canvas,t,s){
+ if(!canvas||!t)return;
+ canvas.style.setProperty('--bg',t.bg);canvas.style.setProperty('--ink',t.ink||'#102b4b');canvas.style.setProperty('--accent',t.accent||'#7357da');
+ canvas.style.borderRadius=(t.frameRadius||22)+'px';canvas.style.border=t.border||'0';canvas.style.boxShadow=t.shadow||'0 22px 70px rgba(0,0,0,.32)';
+ const m=t.meta||{};canvas.dataset.layout=m.layout||'center';canvas.dataset.paper=m.paper||'';canvas.dataset.pack=m.pack||t.category||'';
+}
+function applyPlainStyle(s){const paper=Q('[data-panel="ordinary"] .bdc-paper',s.editor);if(!paper)return;const styles={white:['#ffffff','#102b4a'],paper:['#fffdf6','#1e344c'],mist:['linear-gradient(145deg,#ffffff,#f3f2ff)','#102b4a'],soft:['linear-gradient(145deg,#fbfeff,#edf7ff)','#12314f']},v=styles[s.plainStyle]||styles.white;paper.style.background=v[0];paper.style.color=v[1];QA('[data-plain-style]',s.editor).forEach(b=>b.classList.toggle('active',b.dataset.plainStyle===s.plainStyle))}
+function applyTypography(s){if(!s.editor)return;const tf=s.titleFontFamily,bf=s.bodyFontFamily,tc=s.titleColor,bc=s.bodyColor;QA('[data-panel="premium"] [data-title]',s.editor).forEach(x=>{x.style.fontFamily=tf;x.style.color=tc;x.style.webkitTextFillColor=tc;x.style.fontWeight=s.titleBold?'800':'400';x.style.fontSize=(s.titleSize||34)+'px';x.style.letterSpacing=(s.letterSpacing||0)+'px'});QA('[data-panel="premium"] [data-body]',s.editor).forEach(x=>{x.style.fontFamily=bf;x.style.color=bc;x.style.webkitTextFillColor=bc;x.style.fontWeight=s.bodyBold?'700':'400';x.style.textAlign=s.align;x.style.fontSize=(s.bodySize||19)+'px';x.style.lineHeight=String(s.lineHeight||1.85);x.style.letterSpacing=(s.letterSpacing||0)+'px'})}
+function positionFree(el,p){if(!el||!p)return;el.style.left=p.x+'%';el.style.top=p.y+'%';el.style.right='auto';el.style.transform=`translate(-50%,-50%) scale(${Math.max(.45,Math.min(3,p.scale||1))})`}
+function updateCanvases(s){const lines=lineCount(s.body),h=Math.max(390,Math.min(780,360+lines*28));applyPlainStyle(s);applyTypography(s);const free=Q('[data-free-canvas]',s.editor),prem=Q('[data-premium-canvas]',s.editor);if(free){free.style.setProperty('--card-h',h+'px');applyPreset(free,presetBy(s,s.template),{...s,mode:'template'})}if(prem){const ratio=s.canvasRatio||'auto';prem.style.removeProperty('aspect-ratio');prem.style.removeProperty('height');if(ratio==='1:1'){prem.style.aspectRatio='1/1';prem.style.height='auto'}else if(ratio==='4:5'){prem.style.aspectRatio='4/5';prem.style.height='auto'}else if(ratio==='9:16'){prem.style.aspectRatio='9/16';prem.style.height='auto'}else if(ratio==='16:9'){prem.style.aspectRatio='16/9';prem.style.height='auto'}else prem.style.setProperty('--card-h',h+'px');const p=s.preset||categoryPack(s.category)[0]||PREMIUM[0]||FREE[0];applyPreset(prem,p,s);prem.dataset.motion=s.motion||'none';prem.dataset.finish=s.effect||'none';const ext=Q('[data-external-template]',prem);const asset=s.externalTemplate||p.asset||'';if(asset){ext.hidden=false;if(ext.src!==asset)ext.src=asset;positionFree(ext,s.templatePos);prem.classList.add('has-external-template')}else{ext.hidden=true;ext.removeAttribute('src');prem.classList.remove('has-external-template')}const tt=Q('[data-template-title]',prem),bb=Q('[data-template-body]',prem),meta=p.meta||{};if(tt){tt.style.fontFamily=s.titleFontFamily;tt.style.color=s.titleColor;tt.style.fontWeight=s.titleBold?'800':'400';tt.style.fontSize=(s.titleSize||34)+'px';tt.style.letterSpacing=(s.letterSpacing||0)+'px';tt.style.width=(meta.titleWidth||82)+'%';positionFree(tt,s.titlePos)}if(bb){bb.style.fontFamily=s.bodyFontFamily;bb.style.color=s.bodyColor;bb.style.fontWeight=s.bodyBold?'700':'400';bb.style.textAlign=s.align||'center';bb.style.fontSize=(s.bodySize||19)+'px';bb.style.lineHeight=String(s.lineHeight||1.85);bb.style.letterSpacing=(s.letterSpacing||0)+'px';bb.style.width=(meta.bodyWidth||80)+'%';positionFree(bb,s.bodyPos)}const img=Q('[data-photo]',prem);if(s.photo){img.hidden=false;img.src=s.photo;img.style.filter=FILTERS[s.filter]||'none';const slot=meta.photoSlot;if(slot){img.style.width=slot[0]+'%';img.style.height=slot[1]+'%';img.style.objectFit=(meta.layout==='full-picture'?'cover':'contain')}else{img.style.width='100%';img.style.height='100%';img.style.objectFit='cover'}positionFree(img,s.photoPos)}else img.hidden=true;const note=Q('[data-template-note]',prem);if(note)note.textContent=s.category==='midnight'?'ভুবনডাঙ্গার কবিতা':'BongDang';const hint=Q('[data-freeplace-hint]',prem);if(hint)hint.hidden=!s.freeplace;prem.dataset.designTarget=s.designTarget||'title';prem.style.filter=s.effect==='soft'?'drop-shadow(0 12px 22px rgba(86,82,140,.18))':s.effect==='deep'?'contrast(1.035) saturate(1.04)':s.effect==='paper'?'sepia(.03) contrast(.99)':'none'}}
+function setNewsCustomTemplate(s,file){if(!file)return;if(!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'নিউজ টেমপ্লেট শুধু Verified News Page/Founder ব্যবহার করতে পারবেন');return}if(!s.copyrightOk){toast(s,'নিজস্ব নিউজ টেমপ্লেট ব্যবহারের আগে কপিরাইট দায় স্বীকার করুন');return}if(s.newsCustomTemplate?.startsWith('blob:'))try{URL.revokeObjectURL(s.newsCustomTemplate)}catch(_){}s.newsCustomTemplate=URL.createObjectURL(file);s.newsCustomTemplateFile=file;s.newsArrange=true;s.newsTemplatePos={x:50,y:50,scale:1};renderNewsStudio(s);toast(s,'নিজস্ব নিউজ টেমপ্লেট যোগ হয়েছে—নিজের মতো Adjust')}
+function positionNews(el,p){if(!el||!p)return;el.style.left=p.x+'%';el.style.top=p.y+'%';el.style.transform=`translate(-50%,-50%) scale(${Math.max(.45,Math.min(3,p.scale||1))})`}
+function wireNewsTransform(s){const card=Q('[data-news-card]',s.editor);if(!card||card.dataset.arrangeWired)return;card.dataset.arrangeWired='1';const pts=new Map();let key='',base=null,start=null;const get=k=>k==='title'?s.newsTitlePos:k==='body'?s.newsBodyPos:s.newsTemplatePos;const dist=()=>{const a=[...pts.values()];return a.length<2?0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)};card.addEventListener('pointerdown',e=>{if(!s.newsArrange||!s.newsCustomTemplate)return;key=e.target.closest('[data-news-title]')?'title':e.target.closest('[data-news-body]')?'body':'template';const st=get(key);e.preventDefault();blurWriting(s);card.setPointerCapture?.(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});base={...st};start={x:e.clientX,y:e.clientY,d:0};if(pts.size===2)start.d=dist()},{passive:false});card.addEventListener('pointermove',e=>{if(!s.newsArrange||!pts.has(e.pointerId)||!base)return;e.preventDefault();pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const st=get(key),r=card.getBoundingClientRect();if(pts.size===1){const p=[...pts.values()][0];st.x=Math.max(0,Math.min(100,base.x+(p.x-start.x)/r.width*100));st.y=Math.max(0,Math.min(100,base.y+(p.y-start.y)/r.height*100))}else{if(!start.d)start.d=dist();st.scale=Math.max(.45,Math.min(3,base.scale*(dist()/Math.max(1,start.d))))}renderNewsStudio(s)},{passive:false});const end=e=>{pts.delete(e.pointerId);if(pts.size===1){const p=[...pts.values()][0];base={...get(key)};start={x:p.x,y:p.y,d:0}}else if(!pts.size){key='';base=null;start=null}};card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end)}
+function wireNewsImageGestures(s){const card=Q('[data-news-card]',s.editor);if(!card||card.dataset.imageGestureWired)return;card.dataset.imageGestureWired='1';const pts=new Map();let index=-1,base=null,start=null;const dist=()=>{const a=[...pts.values()];return a.length<2?0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)};card.addEventListener('pointerdown',e=>{const img=e.target.closest?.('[data-news-img]');if(!img)return;index=Number(img.dataset.newsImg);if(!Number.isFinite(index))return;e.preventDefault();img.setPointerCapture?.(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});base={...(s.newsImagePos[index]||{x:50,y:50,scale:1})};start={x:e.clientX,y:e.clientY,d:0};if(pts.size===2)start.d=dist()},{passive:false});card.addEventListener('pointermove',e=>{if(index<0||!pts.has(e.pointerId)||!base)return;e.preventDefault();pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const img=card.querySelector(`[data-news-img="${index}"]`),slot=img?.closest('[data-news-slot]'),r=slot?.getBoundingClientRect();if(!img||!r)return;const st=s.newsImagePos[index]||(s.newsImagePos[index]={x:50,y:50,scale:1});if(pts.size===1){const p=[...pts.values()][0];st.x=Math.max(0,Math.min(100,base.x+(p.x-start.x)/r.width*100));st.y=Math.max(0,Math.min(100,base.y+(p.y-start.y)/r.height*100))}else{if(!start.d)start.d=dist();st.scale=Math.max(1,Math.min(3.4,base.scale*(dist()/Math.max(1,start.d))))}img.style.objectPosition=`${st.x}% ${st.y}%`;img.style.transform=`scale(${st.scale})`},{passive:false});const end=e=>{pts.delete(e.pointerId);if(pts.size===1){const p=[...pts.values()][0];base={...(s.newsImagePos[index]||base)};start={x:p.x,y:p.y,d:0}}else if(!pts.size){index=-1;base=null;start=null;scheduleDraft(s)}};card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end);card.addEventListener('dblclick',e=>{const img=e.target.closest?.('[data-news-img]');if(!img)return;const i=Number(img.dataset.newsImg);s.newsImagePos[i]={x:50,y:50,scale:1};renderNewsStudio(s)})}
+function renderNewsStudio(s){if(!s.editor)return;const t=Q('[data-news-title]',s.editor),b=Q('[data-news-body]',s.editor),card=Q('[data-news-card]',s.editor);if(t&&D.activeElement!==t)t.value=s.title;if(b&&D.activeElement!==b)b.value=s.body;if(card)card.dataset.newsTemplate=s.newsCustomTemplate?'custom':String(Math.max(1,Math.min(10,Number(s.newsTemplate)||1)));const pg=bdPageSession(),md=s.session?.user?.user_metadata||{},brand=pg?.page_name||md.page_name||md.full_name||md.name||md.display_name||md.username||s.session?.user?.email?.split('@')[0]||'নিউজ পেজ',av=pg?.logo_url||md.avatar_url||md.picture||'';const bl=Q('[data-news-brand-label]',s.editor),logo=Q('[data-news-account-logo]',s.editor),tid=Q('[data-news-template-id]',s.editor);if(bl)bl.textContent=pg?.username?brand+' · @'+pg.username:brand;if(logo){logo.innerHTML=av?`<img src="${esc(av)}" alt="">`:esc((brand||'N')[0]);}if(tid)tid.textContent=s.newsCustomTemplate?'নিজস্ব':String(s.newsTemplate||1).padStart(2,'0');QA('[data-news-layout]',s.editor).forEach(x=>{if(x.dataset.newsLayout)x.classList.toggle('active',!s.newsCustomTemplate&&Number(x.dataset.newsLayout)===Number(s.newsTemplate))});QA('[data-news-slot]',s.editor).forEach(slot=>{const i=Number(slot.dataset.newsSlot),url=s.newsImages[i];slot.querySelector('img')?.remove();if(url){const pos=s.newsImagePos?.[i]||{x:50,y:50,scale:1};slot.insertAdjacentHTML('afterbegin',`<img src="${url}" alt="" data-news-img="${i}" style="object-position:${pos.x}% ${pos.y}%;transform:scale(${pos.scale});filter:${FILTERS[s.filter]||'none'}">`)}});const own=Q('[data-news-custom-template]',s.editor),hint=Q('[data-news-arrange-hint]',s.editor),arr=Q('[data-news-arrange]',s.editor);if(own){if(s.newsCustomTemplate){own.hidden=false;own.src=s.newsCustomTemplate;positionNews(own,s.newsTemplatePos)}else{own.hidden=true;own.removeAttribute('src')}}if(hint)hint.hidden=!(s.newsCustomTemplate&&s.newsArrange);if(arr)arr.classList.toggle('active',!!s.newsArrange);if(card){card.classList.toggle('bdc-news-custom',!!s.newsCustomTemplate);card.classList.toggle('bdc-news-arranging',!!s.newsArrange);if(s.newsCustomTemplate){positionNews(t,s.newsTitlePos);positionNews(b,s.newsBodyPos)}else{t?.style.removeProperty('left');t?.style.removeProperty('top');t?.style.removeProperty('transform');b?.style.removeProperty('left');b?.style.removeProperty('top');b?.style.removeProperty('transform')}}wireNewsTransform(s);wireNewsImageGestures(s)}
+
+function videoLookFilter(s){
+ const base={clean:'none',crisp:'contrast(1.08) saturate(1.06)',warm:'sepia(.08) saturate(1.08)',film:'sepia(.12) contrast(1.08) saturate(.88)',night:'brightness(.84) contrast(1.16) saturate(.9)',mono:'grayscale(1) contrast(1.08)'}[s.videoLook||'clean']||'none';
+ return `${base} brightness(${(s.videoBrightness||100)/100}) contrast(${(s.videoContrast||100)/100}) saturate(${(s.videoSaturation||100)/100})`
+}
+function applyVideoLookState(s){
+ const v=Q('[data-studio-video]',s.editor);if(v){v.style.filter=videoLookFilter(s);v.playbackRate=Math.max(.5,Math.min(2,Number(s.videoSpeed)||1))}
+ QA('[data-video-look]',s.editor).forEach(b=>b.classList.toggle('active',b.dataset.videoLook===s.videoLook));
+ const vals=[['[data-video-bright]',s.videoBrightness,'[data-video-bright-out]',Math.round(s.videoBrightness||100)+'%'],['[data-video-contrast]',s.videoContrast,'[data-video-contrast-out]',Math.round(s.videoContrast||100)+'%'],['[data-video-sat]',s.videoSaturation,'[data-video-sat-out]',Math.round(s.videoSaturation||100)+'%'],['[data-video-speed]',Math.round((s.videoSpeed||1)*100),'[data-video-speed-out]',Number(s.videoSpeed||1).toFixed(1)+'×']];
+ for(const [sel,val,outSel,label] of vals){const x=Q(sel,s.editor),o=Q(outSel,s.editor);if(x)x.value=val;if(o)o.textContent=label}
+}
+function renderRecitationStudio(s){
+ if(!s.editor)return;
+ const p=Q('[data-rec-preview]',s.editor),mt=Q('[data-media-title]',s.editor),mb=Q('[data-media-body]',s.editor);
+ if(mt&&D.activeElement!==mt)mt.value=s.title||'';if(mb&&D.activeElement!==mb)mb.value=s.body||'';
+ if(p){if(s.video)p.innerHTML=`<video controls playsinline preload="metadata" src="${s.video}" data-studio-video></video>`;else if(s.audio)p.innerHTML=`<audio controls preload="metadata" src="${s.audio}"></audio>`;else p.textContent='Choose audio or video'}
+ const premiumBtns=QA('[data-rec-bgm],[data-rec-noise],[data-rec-master],[data-rec-mix],[data-rec-reset],[data-audio-action],[data-live-caption]',s.editor),vol=Q('[data-bgm-volume]',s.editor),vol2=Q('[data-bgm-volume-2]',s.editor),voice=Q('[data-voice-level]',s.editor);
+ premiumBtns.forEach(btn=>{btn.hidden=false;btn.style.opacity=s.premium?'1':'.52';btn.title=s.premium?'':'Premium only'});
+ QA('[data-audio-action]',s.editor).forEach(btn=>btn.classList.toggle('active',btn.dataset.audioAction===s.audioPreset));
+ Q('[data-rec-noise]',s.editor)?.classList.toggle('active',['voice-clean','fan','machine','hum50','hum60','deesser'].includes(s.audioPreset));
+ Q('[data-rec-master]',s.editor)?.classList.toggle('active',['studio','broadcast','normalize','limiter','presence','smooth'].includes(s.audioPreset));
+ Q('[data-rec-mix]',s.editor)?.classList.toggle('active',!!s.mixedBgm);Q('[data-live-caption]',s.editor)?.classList.toggle('active',!!s.captionActive);
+ if(vol){vol.value=s.bgmVolume;vol.disabled=!s.premium}if(vol2){vol2.value=s.bgmVolume;vol2.disabled=!s.premium}if(voice){voice.value=s.voiceLevel;voice.disabled=!s.premium}
+ const vo=Q('[data-voice-level-out]',s.editor),bo=Q('[data-bgm-volume-out]',s.editor);if(vo)vo.textContent=Math.round(s.voiceLevel||100)+'%';if(bo)bo.textContent=Math.round(s.bgmVolume||0)+'%';
+ const st=Q('[data-audio-process-status]',s.editor);if(st){const kind=s.videoFile?'Video':(s.audioFile?'Audio':'Studio'),parts=[];if(s.audioPreset&&s.audioPreset!=='original')parts.push(AUDIO_PRESET_LABELS[s.audioPreset]||s.audioPreset);if(s.mixedBgm)parts.push('Music Mix');st.textContent=s.premium?(parts.length?kind+' · '+parts.join(' · '):kind+' ready · choose a Voice/Noise preset'):'Premium: Voice Clean · Noise Lab · Studio Master'}
+ if(s.video)requestAnimationFrame(()=>{applyVideoLookState(s);const v=Q('[data-studio-video]',s.editor);if(v)applyVideoAudioPreview(s,v)});
+ setRecordUi(s,s.recorder?.state==='recording'?'recording':'ready')
+}
+function chooseNewsImage(s,i){s.newsTarget=i;Q('[data-news-file]',s.editor)?.click()}
+function setNewsImage(s,file){if(!file)return;const i=s.newsTarget||0;if(s.newsImages[i]?.startsWith('blob:'))try{URL.revokeObjectURL(s.newsImages[i])}catch(_){};s.newsImageFiles[i]=file;s.newsImages[i]=URL.createObjectURL(file);renderNewsStudio(s)}
+function requiresCopyright(s){return !!(s.bgmFile||s.customFonts.length)}
+function audioBufferToWav(buffer){const n=buffer.numberOfChannels,rate=buffer.sampleRate,len=buffer.length,bytes=44+len*n*2,ab=new ArrayBuffer(bytes),v=new DataView(ab);let o=0;const w=x=>{for(let i=0;i<x.length;i++)v.setUint8(o++,x.charCodeAt(i))};w('RIFF');v.setUint32(o,bytes-8,true);o+=4;w('WAVE');w('fmt ');v.setUint32(o,16,true);o+=4;v.setUint16(o,1,true);o+=2;v.setUint16(o,n,true);o+=2;v.setUint32(o,rate,true);o+=4;v.setUint32(o,rate*n*2,true);o+=4;v.setUint16(o,n*2,true);o+=2;v.setUint16(o,16,true);o+=2;w('data');v.setUint32(o,len*n*2,true);o+=4;for(let i=0;i<len;i++)for(let ch=0;ch<n;ch++){let x=Math.max(-1,Math.min(1,buffer.getChannelData(ch)[i]||0));v.setInt16(o,x<0?x*0x8000:x*0x7fff,true);o+=2}return ab}
+async function decodeAudioFile(file){const AC=W.AudioContext||W.webkitAudioContext;if(!AC)throw Error('AudioContext unsupported');const ac=new AC();try{return await ac.decodeAudioData(await file.arrayBuffer())}finally{try{await ac.close()}catch(_){}}}
+function disposeVideoAudioPreview(s){try{s._videoBgm?.pause?.()}catch(_){}s._videoBgm=null;try{s._videoAudioCtx?.close?.()}catch(_){}s._videoAudioCtx=null}
+
+const AUDIO_PRESET_LABELS={
+ 'original':'Original','voice-clean':'Voice Clean','fan':'Fan / Aircon','machine':'Machine Noise','hum50':'50Hz Hum','hum60':'60Hz Hum',
+ 'deesser':'De-Esser','presence':'Voice Presence','smooth':'Smooth Voice','studio':'Studio Feel','broadcast':'Broadcast','normalize':'Normalize','limiter':'Limiter'
+};
+function audioFilter(ctx,type,freq,Qv=1,gain=0){
+ const f=ctx.createBiquadFilter();f.type=type;f.frequency.value=freq;if(Number.isFinite(Qv))f.Q.value=Qv;if(Number.isFinite(gain))f.gain.value=gain;return f
+}
+function connectAudioNode(node,next){node.connect(next);return next}
+function buildAudioPresetChain(ctx,node,preset='original',voiceLevel=100){
+ const add=(type,f,q=1,g=0)=>{const x=audioFilter(ctx,type,f,q,g);node.connect(x);node=x;return x};
+ const comp=(threshold=-20,ratio=3,knee=18,attack=.008,release=.22)=>{const c=ctx.createDynamicsCompressor();c.threshold.value=threshold;c.ratio.value=ratio;c.knee.value=knee;c.attack.value=attack;c.release.value=release;node.connect(c);node=c;return c};
+ const gain=v=>{const g=ctx.createGain();g.gain.value=v;node.connect(g);node=g;return g};
+ if(preset==='voice-clean'){add('highpass',88,.72);add('peaking',180,1.1,-2.5);add('peaking',3200,1.0,2);add('lowpass',14500,.55);comp(-22,3.1)}
+ else if(preset==='fan'){add('highpass',110,.8);add('peaking',165,1.4,-5);add('peaking',330,1.2,-3);add('lowpass',12500,.7);comp(-23,3.2)}
+ else if(preset==='machine'){add('highpass',120,.85);[50,60,100,120,150,180].forEach(f=>add('notch',f,18));add('peaking',260,1.1,-4);add('lowpass',11800,.7);comp(-22,3.6)}
+ else if(preset==='hum50'){[50,100,150,200].forEach(f=>add('notch',f,28));add('highpass',72,.7)}
+ else if(preset==='hum60'){[60,120,180,240].forEach(f=>add('notch',f,28));add('highpass',72,.7)}
+ else if(preset==='deesser'){add('highpass',72,.7);add('peaking',6500,1.6,-4.8);add('peaking',8500,1.2,-2)}
+ else if(preset==='presence'){add('highpass',76,.7);add('peaking',2800,1,3);add('peaking',4500,1.1,1.4);comp(-24,2.3)}
+ else if(preset==='smooth'){add('highpass',72,.7);add('peaking',2400,1,.9);add('peaking',6800,1.2,-2.8);add('highshelf',10000,.7,-1.4);comp(-24,2.1,20,.01,.28)}
+ else if(preset==='studio'){add('highpass',82,.72);add('lowshelf',150,.7,-2);add('peaking',2850,1,2.5);add('peaking',6900,1.3,-2);comp(-20,3.4,18,.006,.24);gain(1.06)}
+ else if(preset==='broadcast'){add('highpass',88,.72);add('peaking',2600,1,3.1);add('peaking',7000,1.3,-1.8);comp(-18,4.2,15,.004,.18);const lim=ctx.createDynamicsCompressor();lim.threshold.value=-3.5;lim.ratio.value=18;lim.knee.value=2;lim.attack.value=.002;lim.release.value=.08;node.connect(lim);node=lim}
+ else if(preset==='limiter'){const lim=ctx.createDynamicsCompressor();lim.threshold.value=-3;lim.ratio.value=20;lim.knee.value=1;lim.attack.value=.002;lim.release.value=.08;node.connect(lim);node=lim}
+ else if(preset==='normalize'){comp(-24,2.2,20,.01,.24);gain(1.12)}
+ const level=Math.max(.55,Math.min(1.45,(Number(voiceLevel)||100)/100));if(Math.abs(level-1)>.001)gain(level);
+ return node
+}
+async function applyVideoAudioPreview(s,video){
+ if(!video||!s.videoFile)return;disposeVideoAudioPreview(s);
+ const preset=s.audioPreset||'original';if(preset==='original'&&!s.mixedBgm&&Number(s.voiceLevel||100)===100)return;
+ const AC=W.AudioContext||W.webkitAudioContext;if(!AC)return;
+ try{
+  const ac=new AC(),src=ac.createMediaElementSource(video);let node=buildAudioPresetChain(ac,src,preset,s.voiceLevel);node.connect(ac.destination);s._videoAudioCtx=ac;
+  video.addEventListener('play',()=>ac.resume?.(),{passive:true});
+  if(s.mixedBgm&&s.bgm){const bg=new Audio(s.bgm);bg.loop=true;bg.preload='auto';bg.volume=Math.max(0,Math.min(.42,(s.bgmVolume||28)/100*.42));s._videoBgm=bg;video.addEventListener('play',()=>bg.play?.().catch?.(()=>{}));video.addEventListener('pause',()=>bg.pause?.());video.addEventListener('ended',()=>bg.pause?.())}
+  await ac.resume?.()
+ }catch(err){console.warn('Video audio preview unavailable',err)}
+}
+async function processPremiumAudio(s,mode){
+ if(!s.premium){toast(s,'Premium Studio is required.');return}
+ const presetMap={noise:'voice-clean',master:'studio',reset:'original'};
+ mode=presetMap[mode]||mode||'voice-clean';
+ if(mode==='mix'&&!s.bgmFile){toast(s,'Choose background music before Music Mix.');return}
+ if(!s.audioFile&&!s.videoFile){toast(s,'Choose audio or video first.');return}
+ const buttons=QA('[data-rec-noise],[data-rec-master],[data-rec-mix],[data-rec-reset],[data-audio-action]',s.editor);buttons.forEach(b=>b.disabled=true);
+ try{
+  if(mode==='original'){
+   s.audioPreset='original';s.noiseReduced=s.mastered=s.mixedBgm=false;s.videoAudioProcessed=false;
+   if(s.audioOriginalFile){if(s.audio?.startsWith('blob:'))try{URL.revokeObjectURL(s.audio)}catch(_){}s.audioFile=s.audioOriginalFile;s.audio=URL.createObjectURL(s.audioOriginalFile);s.audioProcessed=false}
+   disposeVideoAudioPreview(s);renderRecitationStudio(s);toast(s,'Original media restored.');return
+  }
+  if(mode==='mix'){s.mixedBgm=true;mode=s.audioPreset&&s.audioPreset!=='original'?s.audioPreset:'studio'}else{s.audioPreset=mode;s.noiseReduced=['voice-clean','fan','machine','hum50','hum60','deesser'].includes(mode);s.mastered=['studio','broadcast','normalize','limiter','presence','smooth'].includes(mode)}
+  if(s.videoFile&&!s.audioFile){
+   s.videoAudioProcessed=true;renderRecitationStudio(s);toast(s,(AUDIO_PRESET_LABELS[s.audioPreset]||'Audio')+' preview enabled for video.');return
+  }
+  const sourceFile=s.audioOriginalFile||s.audioFile;if(!sourceFile)throw Error('No source audio');
+  if(!s.audioOriginalFile)s.audioOriginalFile=sourceFile;
+  toast(s,'Processing audio…');
+  const main=await decodeAudioFile(sourceFile),bgm=s.mixedBgm&&s.bgmFile?await decodeAudioFile(s.bgmFile):null,rate=main.sampleRate,frames=main.length,channels=Math.min(2,Math.max(1,main.numberOfChannels)),OAC=W.OfflineAudioContext||W.webkitOfflineAudioContext;
+  if(!OAC)throw Error('OfflineAudioContext unsupported');
+  const ctx=new OAC(channels,frames,rate),src=ctx.createBufferSource();src.buffer=main;let node=buildAudioPresetChain(ctx,src,s.audioPreset,s.voiceLevel);node.connect(ctx.destination);
+  if(bgm){const m=ctx.createBufferSource();m.buffer=bgm;m.loop=true;const mg=ctx.createGain();mg.gain.value=Math.max(0,Math.min(.42,(s.bgmVolume||28)/100*.42));m.connect(mg);mg.connect(ctx.destination);m.start(0);m.stop(main.duration)}
+  src.start(0);const rendered=await ctx.startRendering(),wav=audioBufferToWav(rendered),file=new File([wav],`bd-${s.audioPreset}-${Date.now()}.wav`,{type:'audio/wav'});
+  if(s.audio?.startsWith('blob:'))try{URL.revokeObjectURL(s.audio)}catch(_){}s.audioFile=file;s.audio=URL.createObjectURL(file);s.mediaType='audio';s.audioProcessed=true;
+  renderRecitationStudio(s);toast(s,(AUDIO_PRESET_LABELS[s.audioPreset]||s.audioPreset)+' complete.')
+ }catch(err){console.error(err);toast(s,'This browser could not process the selected audio.')}
+ finally{buttons.forEach(b=>b.disabled=false)}
+}
+function toggleLiveCaption(s){
+ if(!s.premium){toast(s,'Premium Studio is required.');return}
+ const SR=W.SpeechRecognition||W.webkitSpeechRecognition;
+ if(!SR){toast(s,'Live Speech Recognition is not available in this browser.');return}
+ if(s.captionActive){try{s.captionRecognition?.stop?.()}catch(_){}return}
+ const rec=new SR();rec.continuous=true;rec.interimResults=true;rec.lang=(W.BDRegion?.uiLanguage==='bn'?'bn-BD':navigator.language||'en-US');s.captionRecognition=rec;s.captionActive=true;
+ rec.onresult=e=>{let final='';for(let i=e.resultIndex;i<e.results.length;i++)if(e.results[i].isFinal)final+=(e.results[i][0]?.transcript||'')+' ';if(final.trim()){s.body=(s.body+(s.body&&!/\s$/.test(s.body)?' ':'')+final.trim()).trimStart();QA('[data-body],[data-media-body]',s.editor).forEach(x=>{if(D.activeElement!==x)x.value=s.body});updateCanvases(s);scheduleDraft(s)}};
+ rec.onerror=()=>{};rec.onend=()=>{s.captionActive=false;renderRecitationStudio(s)};try{rec.start();renderRecitationStudio(s);toast(s,'Live Auto Caption started.')}catch(_){s.captionActive=false}
+}
+function recordClock(ms){
+ const total=Math.max(0,Math.floor(ms/1000)),m=Math.floor(total/60),sec=total%60;
+ return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0')
+}
+function setRecordUi(s,mode='ready'){
+ const e=s.editor;if(!e)return;
+ const hero=Q('[data-record-hero]',e),btn=Q('[data-rec-record]',e),label=Q('[data-record-label]',e),
+ help=Q('[data-record-help]',e),time=Q('[data-record-time]',e),status=Q('[data-record-status]',e);
+ const recording=mode==='recording';
+ hero?.classList.toggle('recording',recording);
+ btn?.classList.toggle('recording',recording);
+ if(label)label.textContent=recording?'Recording — tap to stop':'Record voice';
+ if(help)help.textContent=recording?'Your voice is being recorded':'Tap to start recording';
+ if(status){status.classList.toggle('live',recording);const sp=status.querySelector('span');if(sp)sp.textContent=recording?'LIVE · Recording':'Ready to record'}
+ if(time&&!recording)time.textContent='00:00';
+}
+function stopRecordTimer(s){
+ if(s.recordTimer){clearInterval(s.recordTimer);s.recordTimer=null}
+}
+function startRecordTimer(s){
+ stopRecordTimer(s);s.recordStartedAt=Date.now();
+ const tick=()=>{const el=Q('[data-record-time]',s.editor);if(el)el.textContent=recordClock(Date.now()-s.recordStartedAt)};
+ tick();s.recordTimer=setInterval(tick,250)
+}
+async function toggleRecording(s){
+ const btn=Q('[data-rec-record]',s.editor);
+ if(s.recorder&&s.recorder.state==='recording'){s.recorder.stop();return}
+ if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){toast(s,'Direct recording is not supported in this browser.');return}
+ try{
+  s.discardRecording=false;
+  s.recordStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+  s.recordChunks=[];
+  let opts={};
+  try{
+   const candidates=['audio/mp4','audio/webm;codecs=opus','audio/webm'];
+   const type=candidates.find(x=>MediaRecorder.isTypeSupported?.(x));
+   if(type)opts.mimeType=type
+  }catch(_){}
+  s.recorder=new MediaRecorder(s.recordStream,opts);
+  s.recorder.ondataavailable=e=>{if(e.data?.size)s.recordChunks.push(e.data)};
+  s.recorder.onerror=()=>{stopRecordTimer(s);setRecordUi(s,'ready');toast(s,'রেকর্ডিংয়ে সমস্যা হয়েছে')};
+  s.recorder.onstop=()=>{
+   stopRecordTimer(s);
+   const discard=s.discardRecording||!s.editor?.classList.contains('open');
+   if(!discard&&s.recordChunks.length){
+    const mime=s.recorder?.mimeType||s.recordChunks[0]?.type||'audio/webm';
+    const ext=mime.includes('mp4')?'m4a':mime.includes('ogg')?'ogg':'webm';
+    const blob=new Blob(s.recordChunks,{type:mime});
+    const file=new File([blob],`bhubondanga-recording-${Date.now()}.${ext}`,{type:mime});
+    normalMedia(s,'audio',file);
+    toast(s,'রেকর্ডিং সম্পন্ন — এখন শুনে নিতে পারেন')
+   }
+   s.recordStream?.getTracks().forEach(t=>t.stop());
+   s.recordStream=null;s.recorder=null;s.recordChunks=[];
+   setRecordUi(s,'ready');renderRecitationStudio(s)
+  };
+  s.recorder.start(250);
+  setRecordUi(s,'recording');startRecordTimer(s);
+  toast(s,'রেকর্ডিং শুরু হয়েছে')
+ }catch(err){
+  stopRecordTimer(s);setRecordUi(s,'ready');
+  toast(s,err?.name==='NotAllowedError'?'Allow microphone access and try again.':'Microphone could not be started.')
+ }
+}
+function toggleMediaStudio(s,force){if(!s?.editor)return;const panel=Q('[data-media-studio]',s.editor);if(!panel)return;const open=force===true?true:force===false?false:panel.hidden;panel.hidden=!open;s.editor.classList.toggle('media-open',open);Q('[data-media-toggle]',s.editor)?.classList.toggle('active',open);if(open){renderRecitationStudio(s);requestAnimationFrame(()=>panel.scrollIntoView?.({block:'nearest'}))}}
+function returnFromMedia(s){s.mediaStudioVisited=true;const mt=Q('[data-media-title]',s.editor),mb=Q('[data-media-body]',s.editor);if(mt)s.title=mt.value.trimStart();if(mb)s.body=mb.value;s.mediaAccepted=!!(s.audioFile||s.videoFile);toggleMediaStudio(s,false);setMode(s,'ordinary');syncAll(s);requestAnimationFrame(()=>{const t=s.title.trim()?Q('[data-panel="ordinary"] [data-body]',s.editor):Q('[data-panel="ordinary"] [data-title]',s.editor);t?.scrollIntoView?.({block:'center',behavior:'smooth'});setTimeout(()=>t?.focus?.({preventScroll:true}),140)})}
+function freeState(s,key){return key==='title'?s.titlePos:key==='body'?s.bodyPos:key==='template'?s.templatePos:s.photoPos}
+function wireFreeTransform(s){const c=Q('[data-premium-canvas]',s.editor);if(!c||c.dataset.freeWired)return;c.dataset.freeWired='1';const pts=new Map();let key='',start=null,base=null;const hit=e=>{const o=e.target.closest?.('[data-free-object]');if(o)return o.dataset.freeObject;if(e.target.closest?.('[data-photo]'))return'photo';if(e.target.closest?.('[data-external-template]'))return'template';return s.designTarget||'title'};const distance=()=>{const a=[...pts.values()];return a.length<2?0:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)};c.addEventListener('pointerdown',e=>{if(!s.premium)return;key=hit(e);const direct=key==='photo'||key==='template';if(!direct&&!s.freeplace)return;const st=freeState(s,key);if(!st)return;e.preventDefault();if(direct)blurWriting(s);c.setPointerCapture?.(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});base={...st};start={x:e.clientX,y:e.clientY,d:0};if(pts.size===2)start.d=distance();s.designTarget=key;updateCanvases(s)},{passive:false});c.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId)||!base)return;e.preventDefault();pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const st=freeState(s,key),r=c.getBoundingClientRect();if(pts.size===1){const p=[...pts.values()][0];st.x=Math.max(0,Math.min(100,base.x+(p.x-start.x)/r.width*100));st.y=Math.max(0,Math.min(100,base.y+(p.y-start.y)/r.height*100))}else{if(!start.d)start.d=distance();st.scale=Math.max(.45,Math.min(3.4,base.scale*(distance()/Math.max(1,start.d))))}updateCanvases(s)},{passive:false});const end=e=>{pts.delete(e.pointerId);if(pts.size===1){const p=[...pts.values()][0],st=freeState(s,key);base={...st};start={x:p.x,y:p.y,d:0}}else if(!pts.size){key='';start=null;base=null;scheduleDraft(s)}};c.addEventListener('pointerup',end);c.addEventListener('pointercancel',end);c.addEventListener('dblclick',e=>{const k=hit(e);if(k==='photo')s.photoPos={x:50,y:50,scale:1};else if(k==='template')s.templatePos={x:50,y:50,scale:1};updateCanvases(s)})}
+function closeContext(s){const p=Q('[data-context]',s.editor);if(p){p.classList.remove('open');p.innerHTML=''}QA('[data-tool]',s.editor).forEach(x=>x.classList.remove('active'))}function context(s,html,label='Editing'){const p=Q('[data-context]',s.editor);p.innerHTML=`<div class="bdc-context-head"><b>${esc(label)}</b><button type="button" data-context-close aria-label="Close editing controls">×</button></div><div class="bdc-context-body">${html}</div>`;p.classList.add('open');p.onclick=ev=>contextClick(s,ev);p.oninput=ev=>contextInput(s,ev);p.onchange=ev=>contextInput(s,ev)}
+function contextInput(s,ev){const t=ev.target;if(t.matches('[data-native-color]')){const c=t.value;if(s.formatTarget==='title')s.titleColor=c;else s.bodyColor=c;updateCanvases(s);scheduleDraft(s)}else if(t.matches('[data-type-size]')){const v=Number(t.value)||16;if(t.dataset.typeSize==='title')s.titleSize=v;else s.bodySize=v;updateCanvases(s);scheduleDraft(s)}else if(t.matches('[data-line-height]')){s.lineHeight=Number(t.value)||1.85;updateCanvases(s);scheduleDraft(s)}else if(t.matches('[data-letter-spacing]')){s.letterSpacing=Number(t.value)||0;updateCanvases(s);scheduleDraft(s)}}
+function formatHead(s){const t=s.formatTarget==='body'?'body':'title',bold=t==='title'?s.titleBold:s.bodyBold;return `<div class="bdc-format-head"><span class="bdc-format-label">Edit:</span><button class="bdc-target ${t==='title'?'active':''}" data-format-target="title">Title</button><button class="bdc-target ${t==='body'?'active':''}" data-format-target="body">Body</button><button class="bdc-target ${bold?'active':''}" data-toggle-bold><span class="bdc-boldmark">B</span> ${bold?'Bold':'Normal'}</button><span class="bdc-format-state">Title and body are independent</span></div>`}
+function hsvRgb(h,s,v){s/=100;v/=100;const c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c;let r=0,g=0,b=0;if(h<60){r=c;g=x}else if(h<120){r=x;g=c}else if(h<180){g=c;b=x}else if(h<240){g=x;b=c}else if(h<300){r=x;b=c}else{r=c;b=x}return [r,g,b].map(n=>Math.round((n+m)*255))}
+function rgbHex(rgb){return '#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join('')}
+function setPickedColor(s,hex){if(s.formatTarget==='title')s.titleColor=hex;else s.bodyColor=hex;updateCanvases(s);const pv=Q('[data-color-preview]',s.editor),tx=Q('[data-color-value]',s.editor);if(pv)pv.style.background=hex;if(tx)tx.textContent=hex.toUpperCase()}
+function initColorPicker(s){const root=Q('[data-color-picker]',s.editor);if(!root)return;const sv=Q('[data-sv]',root),thumb=Q('[data-sv-thumb]',root),hue=Q('[data-hue]',root);const paint=()=>{sv.style.setProperty('--h',s.colorHue);thumb.style.left=s.colorSat+'%';thumb.style.top=(100-s.colorVal)+'%';setPickedColor(s,rgbHex(hsvRgb(s.colorHue,s.colorSat,s.colorVal)))};const pick=e=>{const r=sv.getBoundingClientRect();s.colorSat=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));s.colorVal=100-Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100));paint()};sv.onpointerdown=e=>{e.preventDefault();sv.setPointerCapture?.(e.pointerId);pick(e)};sv.onpointermove=e=>{if(e.buttons||e.pressure>0)pick(e)};hue.oninput=e=>{s.colorHue=Number(e.target.value)||0;paint()};paint()}
+function tool(s,b){
+  QA('[data-tool]',s.editor).forEach(x=>x.classList.toggle('active',x===b));
+  const k=b.dataset.tool;
+  s.freeplace=(k==='adjust');
+  updateCanvases(s);
+  const filterNames=CATEGORY_FILTERS[s.category]||Object.keys(FILTERS);
+  if(k==='template'){
+    const names=categoryPack(s.category),catDef=COMPOSER_CATEGORIES.find(x=>x.id===s.category)||{};
+    const h='<div class="bdc-dock-note"><b>'+esc(catDef.label||'Category')+' templates · '+names.length+'</b><small>Only this category\'s template/filter pack is shown. Your writing canvas stays visible while you edit.</small></div><div class="bdc-chiprow"><button class="bdc-chip" data-scroll-templates>Browse '+(names.length||'premium')+' presets</button><button class="bdc-chip" data-import-template2>＋ Custom Template</button><button class="bdc-chip" data-reset-design>Reset Design</button></div>';
+    return context(s,h,'Templates');
+  }
+  if(k==='font'){
+    const current=s.formatTarget==='title'?s.titleFontFamily:s.bodyFontFamily;
+    let h=formatHead(s)+'<div class="bdc-chiprow">';
+    for(const f of [['Noto Serif Bengali','Noto Serif'],['Tiro Bangla','Tiro Bangla'],['Hind Siliguri','Hind Siliguri'],['Georgia','Georgia']]) h+='<button class="bdc-chip '+(current.includes(f[0])?'active':'')+'" data-font="'+esc(f[0])+'">'+esc(f[1])+'</button>';
+    for(const f of s.customFonts) h+='<button class="bdc-chip '+(current.includes(f.family)?'active':'')+'" data-font="'+esc(f.family)+'">'+esc(f.name)+'</button>';
+    h+='<button class="bdc-chip" data-import-font>＋ Import Font</button></div>';
+    return context(s,h,'Typography');
+  }
+  if(k==='color'){
+    const current=s.formatTarget==='title'?s.titleColor:s.bodyColor,colors=['#111827','#12304d','#0b7a5c','#12a77c','#1889c9','#2757d7','#6946d9','#9c4fd3','#d14f87','#df4052','#f06b35','#e59b22','#f0c62e','#7bbf39','#2fc4bb','#ffffff'];
+    const swatches=colors.map(c=>'<button class="bdc-spectrum-color" type="button" data-color="'+c+'" style="--c:'+c+'" aria-label="'+c+'"></button>').join('');
+    return context(s,formatHead(s)+'<div class="bdc-spectrum-swatches">'+swatches+'</div><label class="bdc-inline-color"><span>Custom color</span><input type="color" data-native-color value="'+current+'"></label>','Color');
+  }
+  if(k==='image') return context(s,'<div class="bdc-chiprow"><button class="bdc-chip" data-add-image>＋ Add Image</button><button class="bdc-chip" data-remove-image>Remove Image</button></div><div class="bdc-dock-section"><b>Canvas ratio</b><div class="bdc-chiprow"><button class="bdc-chip" data-canvas-ratio="auto">Auto</button><button class="bdc-chip" data-canvas-ratio="1:1">1:1</button><button class="bdc-chip" data-canvas-ratio="4:5">4:5</button><button class="bdc-chip" data-canvas-ratio="9:16">9:16</button><button class="bdc-chip" data-canvas-ratio="16:9">16:9</button></div><small>Drag the image directly. Pinch with two fingers to zoom. Double-tap to reset.</small></div>','Image');
+  if(k==='filter'){
+    const h='<div class="bdc-filter-grid">'+filterNames.map(x=>'<button class="bdc-filter-tile '+(s.filter===x?'active':'')+'" data-filter="'+esc(x)+'"><i style="filter:'+esc(FILTERS[x]||'none')+'"></i><span>'+esc(x)+'</span></button>').join('')+'</div>';
+    return context(s,h,'Category Filters');
+  }
+  if(k==='spacing'){
+    const h=formatHead(s)+'<div class="bdc-range-grid"><label>Title size <output>'+s.titleSize+'</output><input type="range" min="20" max="62" value="'+s.titleSize+'" data-type-size="title"></label><label>Body size <output>'+s.bodySize+'</output><input type="range" min="13" max="34" value="'+s.bodySize+'" data-type-size="body"></label><label>Line height <output>'+Number(s.lineHeight).toFixed(2)+'</output><input type="range" min="1.2" max="2.6" step=".05" value="'+s.lineHeight+'" data-line-height></label><label>Letter spacing <output>'+Number(s.letterSpacing).toFixed(1)+'</output><input type="range" min="-1" max="5" step=".2" value="'+s.letterSpacing+'" data-letter-spacing></label></div><div class="bdc-chiprow"><button class="bdc-chip" data-align="left">Left</button><button class="bdc-chip" data-align="center">Center</button><button class="bdc-chip" data-align="right">Right</button><button class="bdc-chip" data-align="justify">Justify</button></div>';
+    return context(s,h,'Type & Spacing');
+  }
+  if(k==='motion'){
+    const motions=['none','fade','rise','slide','zoom','float'];
+    const h='<div class="bdc-chiprow">'+motions.map(x=>'<button class="bdc-chip '+(s.motion===x?'active':'')+'" data-motion="'+x+'">'+x.charAt(0).toUpperCase()+x.slice(1)+'</button>').join('')+'</div><small class="bdc-dock-help">Motion is stored in post metadata for supported surfaces. The writing canvas stays visible during preview.</small>';
+    return context(s,h,'Motion');
+  }
+  if(k==='adjust') return context(s,'<div class="bdc-free-targets"><button class="bdc-chip" data-design-target="title">Title</button><button class="bdc-chip" data-design-target="body">Body</button><button class="bdc-chip" data-design-target="template">Template</button><button class="bdc-chip" data-design-target="photo">Image</button></div><div class="bdc-free-copy"><b>Free Position</b><small>Title/body: choose a target, then drag. Image/template: drag directly and pinch to zoom.</small></div>','Position');
+  if(k==='audio') return context(s,'<div class="bdc-chiprow"><button class="bdc-chip" data-open-media>Open Media Studio</button><button class="bdc-chip" data-audio-action="voice-clean">Voice Clean</button><button class="bdc-chip" data-audio-action="fan">Fan / Aircon</button><button class="bdc-chip" data-audio-action="machine">Machine</button><button class="bdc-chip" data-audio-action="studio">Studio Feel</button><button class="bdc-chip" data-audio-action="broadcast">Broadcast</button><button class="bdc-chip" data-audio-action="original">Original</button></div><small class="bdc-dock-help">Each preset reprocesses from the original source, so one audio filter does not accidentally stack on another.</small>','Audio');
+  if(k==='effect') return context(s,'<div class="bdc-chiprow"><button class="bdc-chip" data-effect="none">Clean</button><button class="bdc-chip" data-effect="soft">Soft Depth</button><button class="bdc-chip" data-effect="deep">Deep Contrast</button><button class="bdc-chip" data-effect="paper">Paper Finish</button></div>','Finish');
+}
+function insertEmojiText(s,ch){const p=Q('[data-panel="premium"]',s.editor),el=s.formatTarget==='body'?Q('[data-body]',p):Q('[data-title]',p);if(!el)return;const a=Number.isFinite(el.selectionStart)?el.selectionStart:el.value.length,b=Number.isFinite(el.selectionEnd)?el.selectionEnd:a;el.value=el.value.slice(0,a)+ch+el.value.slice(b);el.selectionStart=el.selectionEnd=a+ch.length;if(s.formatTarget==='body')s.body=el.value;else s.title=el.value;el.focus({preventScroll:true});updateCanvases(s)}
+function contextClick(s,ev){const t=ev.target.closest('button');if(!t)return;if(t.dataset.contextClose!==undefined){s.freeplace=false;updateCanvases(s);closeContext(s);return}if(t.dataset.scrollTemplates!==undefined){Q('[data-premium-strip]',s.editor)?.scrollIntoView?.({block:'nearest',behavior:'smooth'});return}if(t.dataset.formatTarget){s.formatTarget=t.dataset.formatTarget;const active=Q('.bdc-tool.active',s.editor);if(active)tool(s,active);return}if(t.dataset.toggleBold!==undefined){if(s.formatTarget==='title')s.titleBold=!s.titleBold;else s.bodyBold=!s.bodyBold;updateCanvases(s);scheduleDraft(s);const active=Q('.bdc-tool.active',s.editor);if(active)tool(s,active);return}if(t.dataset.importTemplate2!==undefined){if(!s.premium){toast(s,'Premium Studio is required.');return}Q('[data-template-file]',s.editor).click();return}if(t.dataset.importFont!==undefined){if(!s.premium){toast(s,'Premium Studio is required.');return}Q('[data-font-file]',s.editor).click();Q('[data-font-file]',s.editor).onchange=e=>importFont(s,e.target.files?.[0]);return}if(t.dataset.addImage!==undefined){Q('[data-image-file]',s.editor).click();return}if(t.dataset.removeImage!==undefined){s.photo='';s.photoFile=null;updateCanvases(s);scheduleDraft(s);return}if(t.dataset.designTarget){s.designTarget=t.dataset.designTarget;s.freeplace=true;updateCanvases(s);QA('[data-design-target]',Q('[data-context]',s.editor)).forEach(x=>x.classList.toggle('active',x===t));return}if(t.dataset.emojiChar){insertEmojiText(s,t.dataset.emojiChar);return}if(t.dataset.font){const f=`'${t.dataset.font}',serif`;if(s.formatTarget==='title')s.titleFontFamily=f;else s.bodyFontFamily=f;updateCanvases(s);scheduleDraft(s);const active=Q('.bdc-tool.active',s.editor);if(active)tool(s,active);return}if(t.dataset.color){if(s.formatTarget==='title')s.titleColor=t.dataset.color;else s.bodyColor=t.dataset.color;updateCanvases(s);scheduleDraft(s);return}if(t.dataset.filter){s.filter=t.dataset.filter;updateCanvases(s);renderNewsStudio(s);scheduleDraft(s);const active=Q('.bdc-tool.active',s.editor);if(active)tool(s,active);return}if(t.dataset.align){s.align=t.dataset.align;updateCanvases(s);scheduleDraft(s);return}if(t.dataset.canvasRatio){s.canvasRatio=t.dataset.canvasRatio;updateCanvases(s);scheduleDraft(s);return}if(t.dataset.motion){s.motion=t.dataset.motion;updateCanvases(s);const c=Q('[data-premium-canvas]',s.editor);if(c){c.classList.remove('bdc-motion-preview');void c.offsetWidth;c.classList.add('bdc-motion-preview');setTimeout(()=>c.classList.remove('bdc-motion-preview'),900)}scheduleDraft(s);return}if(t.dataset.openMedia!==undefined){toggleMediaStudio(s,true);return}if(t.dataset.audioAction){processPremiumAudio(s,t.dataset.audioAction);return}if(t.dataset.resetDesign!==undefined){s.preset=categoryPack(s.category)[0]||PREMIUM[0]||FREE[0];s.externalTemplate='';s.externalTemplateFile=null;s.titlePos={x:50,y:14,scale:1};s.bodyPos={x:50,y:52,scale:1};s.photoPos={x:50,y:50,scale:1};s.templatePos={x:50,y:50,scale:1};s.titleSize=34;s.bodySize=19;s.lineHeight=1.85;s.letterSpacing=0;s.filter=(CATEGORY_FILTERS[s.category]||['Normal'])[0]||'Normal';s.motion='none';s.effect='none';s.canvasRatio='auto';updateCanvases(s);scheduleDraft(s);return}if(t.dataset.effect){s.effect=t.dataset.effect;updateCanvases(s);scheduleDraft(s);return}}
+async function importFont(s,file){if(!file||!s.premium)return;if(!s.copyrightOk){toast(s,'নিজস্ব Font ব্যবহারের আগে কপিরাইট দায় স্বীকার করুন');return}const ext=(file.name.split('.').pop()||'').toLowerCase();if(!['ttf','otf','woff','woff2'].includes(ext)){toast(s,'TTF, OTF, WOFF বা WOFF2 Font দিন');return}const url=URL.createObjectURL(file),family='BDCustom'+Date.now();try{const face=new FontFace(family,`url(${url})`);await face.load();D.fonts.add(face);s.customFonts.push({family,name:file.name.replace(/\.[^.]+$/,''),face,url});if(s.formatTarget==='title')s.titleFontFamily=`'${family}',serif`;else s.bodyFontFamily=`'${family}',serif`;updateCanvases(s);toast(s,(s.formatTarget==='title'?'Title':'Body')+' Font এই সেশনেই যোগ হয়েছে')}catch(_){URL.revokeObjectURL(url);toast(s,'Font লোড করা যায়নি')}}
+async function redeem(s){if(s.privileged){s.premium=true;Q('[data-gate]',s.editor).classList.remove('open');setMode(s,'premium');return}if(!s.session)s.session=await session();if(!s.session){toast(s,'Premium চালু করতে লগইন করুন');return}const pin=Q('[data-pin]',s.editor).value.trim();if(pin.length<4){toast(s,'সঠিক Enter PIN');return}try{const c=await supa(),r=await c.rpc('redeem_premium_pin',{p_pin:pin});if(r.error)throw r.error;const d=Array.isArray(r.data)?r.data[0]:r.data,ok=d===true||d?.ok||d?.active;if(!ok){toast(s,'PIN সক্রিয় নয় বা অন্য অ্যাকাউন্টে ব্যবহৃত');return}let until=Date.now()+30*864e5;if(d?.expires_at){const z=Date.parse(d.expires_at);if(Number.isFinite(z))until=z}localStorage.setItem('bd-premium-access',JSON.stringify({until,user_id:s.session.user.id}));s.premium=true;Q('[data-gate]',s.editor).classList.remove('open');setMode(s,'premium');toast(s,'Premium সক্রিয় হয়েছে')}catch(_){toast(s,'PIN যাচাই করা যায়নি')}}
+async function requestPremium(s){if(!s.session)s.session=await session();if(!s.session){toast(s,'Request করতে লগইন করুন');return}try{const c=await supa();await c.from('premium_requests').insert({user_id:s.session.user.id,status:'requested',amount_bdt:50,source:'composer_opening_offer_first_500'});toast(s,'Premium Request পাঠানো হয়েছে');Q('[data-gate]',s.editor).classList.remove('open')}catch(_){toast(s,'Request পাঠানো যায়নি')}}
+async function upload(s){if(!s.photoFile||!s.session)return'';try{const c=await supa(),ext=(s.photoFile.name.split('.').pop()||'jpg').toLowerCase(),path=`${s.session.user.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`,r=await c.storage.from('post-media').upload(path,s.photoFile,{upsert:false,cacheControl:'3600'});if(r.error)return'';return c.storage.from('post-media').getPublicUrl(path).data?.publicUrl||''}catch{return''}}
+async function uploadOne(s,file,prefix='media'){if(!file||!s.session)return'';try{const c=await supa(),ext=(file.name.split('.').pop()||'bin').toLowerCase(),path=`${s.session.user.id}/${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`,r=await c.storage.from('post-media').upload(path,file,{upsert:false,cacheControl:'3600'});if(r.error)return'';return c.storage.from('post-media').getPublicUrl(path).data?.publicUrl||''}catch{return''}}
+async function insertPost(s,p){
+ /* bd-offline-post-create */
+ if(!s.session)return null;
+ if(!navigator.onLine&&window.BDOffline){
+  const uid=s.session.user.id,id=String(p.id||(crypto.randomUUID?crypto.randomUUID():('post-'+Date.now()+'-'+Math.random().toString(36).slice(2,8))));
+  p.id=id;const offlineRow={...p,id,author_id:uid,user_id:uid,created_at:p.created_at||new Date().toISOString(),_offline_pending:true};
+  try{await window.BDOffline.cachePost(offlineRow);await window.BDOffline.queueAction({kind:'post.create',dedupe_key:'post:'+id,payload:offlineRow});return offlineRow}catch(_){}
+ }
+ try{
+  const c=await supa();if(!c||!s.session)return null;
+  const uid=s.session.user.id,id=String(p.id||('post-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)));
+  p.id=id;
+  const attempts=[
+   {id,author_id:uid,country_code:p.country_code||null,country_name:p.country_name||null,region:p.region||null,language_code:p.language_code||null,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode,metadata:p.metadata},
+   {id,author_id:uid,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode},
+   {id,user_id:uid,title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,metadata:p.metadata},
+   {id,user_id:uid,title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null},
+   {id,author_id:uid,title:p.title,content:p.body,category:p.type,status:p.status}
+  ];
+  for(const row of attempts){
+   try{
+    const r=await c.from('posts').insert(row);
+    if(!r.error)return {...p,...row,id}
+    const msg=String(r.error?.message||'').toLowerCase();
+    if(/duplicate|unique|already exists/.test(msg))return {...p,id}
+   }catch(_){}
+  }
+ }catch(_){}
+ /* bd-offline-post-fallback */
+ if(!navigator.onLine&&s.session&&window.BDOffline){try{const uid=s.session.user.id,id=String(p.id||(crypto.randomUUID?crypto.randomUUID():('post-'+Date.now())));const offlineRow={...p,id,author_id:uid,user_id:uid,created_at:p.created_at||new Date().toISOString(),_offline_pending:true};await window.BDOffline.cachePost(offlineRow);await window.BDOffline.queueAction({kind:'post.create',dedupe_key:'post:'+id,payload:offlineRow});return offlineRow}catch(_){}}
+ return null
+}
+async function updateExistingPost(s,p){try{const c=await supa();if(!c||!s.session||!s.editingId)return null;const id=s.editingId;const rows=[{country_code:p.country_code||null,country_name:p.country_name||null,region:p.region||null,language_code:p.language_code||null,title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,audio_url:p.audio_url||null,video_url:p.video_url||null,composer_mode:p.composer_mode,metadata:p.metadata},{title:p.title,body:p.body,type:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null,composer_mode:p.composer_mode},{title:p.title,content:p.body,category:p.type,status:p.status,template:p.template,font:p.font,image_url:p.image_url||null,media_url:p.media_url||null,media_type:p.media_type||null}];for(const row of rows){try{const r=await c.from('posts').update(row).eq('id',id).select('*').single();if(!r.error)return r.data}catch(_){}}}catch(_){}return null}
+const BD_CANONICAL_LOCAL_POSTS_KEY='bd-local-posts';
+const BD_LEGACY_LOCAL_POST_KEYS=['bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts'];
+function bdSameLocalPost(a,b){
+ const ai=String(a?.canonical_id||a?.canonicalId||a?.id||''),bi=String(b?.canonical_id||b?.canonicalId||b?.id||'');
+ if(ai&&bi&&ai===bi)return true;
+ const aa=String(a?.author_id||a?.user_id||a?.authorId||''),ba=String(b?.author_id||b?.user_id||b?.authorId||'');
+ if(aa&&ba&&aa!==ba)return false;
+ const norm=v=>String(v||'').normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase();
+ if(norm(a?.title)!==norm(b?.title))return false;
+ if(norm(a?.body||a?.content)!==norm(b?.body||b?.content))return false;
+ const at=Date.parse(a?.created_at||a?.createdAt||0)||0,bt=Date.parse(b?.created_at||b?.createdAt||0)||0;
+ return !!(at&&bt&&Math.abs(at-bt)<=120000)
+}
+function bdRemoveLegacyLocalCopies(p){
+ for(const k of BD_LEGACY_LOCAL_POST_KEYS)try{
+  const a=JSON.parse(localStorage.getItem(k)||'[]'),arr=Array.isArray(a)?a:[];
+  const next=arr.filter(x=>!bdSameLocalPost(x,p));
+  if(next.length!==arr.length)localStorage.setItem(k,JSON.stringify(next.slice(0,1200)))
+ }catch(_){}
+}
+function saveLocal(p){
+ try{
+  const a=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]'),arr=Array.isArray(a)?a:[];
+  const next=[p,...arr.filter(x=>!bdSameLocalPost(x,p))];
+  localStorage.setItem(BD_CANONICAL_LOCAL_POSTS_KEY,JSON.stringify(next.slice(0,1200)));
+  bdRemoveLegacyLocalCopies(p)
+ }catch(_){}
+}
+
+function bdLocalFingerprintFast(p){
+ const id=String(p?.canonical_id||p?.canonicalId||p?.id||'').trim();
+ if(id)return 'id:'+id;
+ const norm=v=>String(v||'').normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase();
+ const author=String(p?.author_id||p?.user_id||p?.authorId||'').trim().toLowerCase();
+ const title=norm(p?.title),body=norm(p?.body||p?.content);
+ const media=String(p?.image_url||p?.media_url||p?.video_url||p?.audio_url||'').split('?')[0].trim();
+ const t=Date.parse(p?.created_at||p?.createdAt||0)||0,bucket=t?Math.floor(t/120000):0;
+ return ['fp',author,title,body,media,bucket].join('|')
+}
+function bdMigrateLegacyPublishedPosts(){
+ try{
+  const all=[];
+  const base=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]');
+  if(Array.isArray(base))all.push(...base);
+  for(const k of BD_LEGACY_LOCAL_POST_KEYS){
+   try{const a=JSON.parse(localStorage.getItem(k)||'[]');if(Array.isArray(a))all.push(...a)}catch(_){}
+  }
+  const map=new Map();
+  for(const p of all){
+   if(!p)continue;
+   const fp=bdLocalFingerprintFast(p);
+   if(!map.has(fp))map.set(fp,p);
+   else map.set(fp,{...map.get(fp),...p})
+  }
+  const clean=[...map.values()].sort((a,b)=>(Date.parse(b.created_at||b.createdAt||0)||0)-(Date.parse(a.created_at||a.createdAt||0)||0));
+  localStorage.setItem(BD_CANONICAL_LOCAL_POSTS_KEY,JSON.stringify(clean.slice(0,1200)));
+  for(const k of BD_LEGACY_LOCAL_POST_KEYS)localStorage.removeItem(k)
+ }catch(_){}
+}
+function bdScheduleLegacyPostMigration(){
+ const run=()=>{try{bdMigrateLegacyPublishedPosts()}catch(_){}};
+ if('requestIdleCallback' in window)requestIdleCallback(run,{timeout:1200});
+ else setTimeout(run,450)
+}
+
+function saveLocalUpdate(p){
+ try{
+  const a=JSON.parse(localStorage.getItem(BD_CANONICAL_LOCAL_POSTS_KEY)||'[]'),arr=Array.isArray(a)?a:[];
+  const i=arr.findIndex(x=>bdSameLocalPost(x,p));
+  if(i>=0)arr[i]={...arr[i],...p};else arr.unshift(p);
+  localStorage.setItem(BD_CANONICAL_LOCAL_POSTS_KEY,JSON.stringify(arr.slice(0,1200)));
+  bdRemoveLegacyLocalCopies(p)
+ }catch(_){}
+}
+function editPost(s,p){if(!p)return;const cat=p.type||p.category||'poem';if(cat==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ শুধু Founder সম্পাদনা করতে পারবেন');return}if(cat==='news'&&!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'নিউজ পোস্ট সম্পাদনার অনুমতি নেই');return}s.editingId=p.id||null;s.category=cat;s.title=p.title||'';s.body=p.body||p.content||'';s.template=p.template||'plain';s.photo=p.photo||p.image_url||'';s.mode=p.composerMode||p.composer_mode||((s.template&&s.template!=='none'&&s.template!=='plain')?'premium':'ordinary');const sd=p.metadata?.studio_design||{};s.titleSize=sd.title_size||s.titleSize;s.bodySize=sd.body_size||s.bodySize;s.lineHeight=sd.line_height||s.lineHeight;s.letterSpacing=sd.letter_spacing??s.letterSpacing;s.align=sd.align||s.align;s.filter=sd.filter||s.filter;s.motion=sd.motion||s.motion;s.effect=sd.effect||s.effect;s.canvasRatio=sd.canvas_ratio||s.canvasRatio;openEditorSafe(s,s.category);syncAll(s);setMode(s,s.mode==='premium'&&s.premium?'premium':'ordinary');const top=Q('.bdc-topbar strong',s.editor);if(top)top.textContent='পোস্ট সম্পাদনা';}
+
+
+const BD_DEEP_BAD_TERMS=[
+"শালা","শালী","হারামজাদা","হারামজাদী","হারামির বাচ্চা","শুয়োর","শুয়োর","শুয়ার","শুয়ার",
+"শুয়োরের বাচ্চা","শুয়োরের বাচ্চা","কুত্তা","কুত্তার বাচ্চা","খানকি","খানকির পোলা","খানকির ছেলে",
+"মাগী","বেশ্যা","চোদা","চুদি","চুদ","চোদন","চোদাচুদি","মাদারচোদ","মাদারচোদা","বাঞ্চোদ","বাইনচোদ",
+"বাইঞ্চোদ","বোকাচোদা","বাল","গুদ","লাউড়া","লাউড়া","হারামি",
+"fuck","fuck you","fuck off","fucking","fucker","motherfucker","mother fucker","asshole","bitch",
+"son of a bitch","dickhead","bullshit","bastard","cunt"
+];
+function bdDeepNormalize(v){
+  return String(v||"").normalize("NFKC")
+    .replace(/[\u200B-\u200D\uFEFF\u2060]/g,"")
+    .toLocaleLowerCase("bn-BD")
+    .replace(/[০-৯]/g,d=>"০১২৩৪৫৬৭৮৯".indexOf(d))
+    .replace(/[@4]/g,"a").replace(/[3]/g,"e").replace(/[1!|]/g,"i").replace(/[0]/g,"o").replace(/[5$]/g,"s").replace(/[7]/g,"t")
+    .replace(/([a-z])\1{2,}/g,"$1$1")
+    .replace(/([অ-হড়ঢ়য়])\1{2,}/g,"$1$1")
+    .replace(/[^\p{L}\p{M}\p{N}]+/gu," ")
+    .replace(/\s+/g," ").trim();
+}
+function bdDeepBadTerms(text){
+  const n=bdDeepNormalize(text), words=n.split(" ").filter(Boolean), compact=n.replace(/\s+/g,""), found=[];
+  for(const raw of BD_DEEP_BAD_TERMS){
+    const t=bdDeepNormalize(raw), tw=t.split(" ").filter(Boolean), tc=t.replace(/\s+/g,"");
+    let hit=false;
+    for(let i=0;i<=words.length-tw.length;i++){
+      if(tw.every((w,j)=>words[i+j]===w)){hit=true;break}
+    }
+    if(!hit && tc.length>=5 && compact.includes(tc))hit=true;
+    if(hit)found.push(raw);
+  }
+  return [...new Set(found)];
+}
+function bdDeepModerationLocal(kind,payload,terms,contentId){
+  try{
+    const item={id:"mod-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),kind,status:"pending_review",content_id:contentId||payload?.post_id||payload?.comment_id||"",matched_terms:[...terms],payload,route:["founder","admin"],created_at:new Date().toISOString()};
+    for(const key of ["bhubondangaAdminModerationQueue","bhubondangaFounderModerationQueue"]){const a=JSON.parse(localStorage.getItem(key)||"[]");a.unshift(item);localStorage.setItem(key,JSON.stringify(a.slice(0,1000)))}return item
+  }catch(_){return null}
+}
+
+function bdDetectorNotice(message){let box=document.getElementById('bdDeepDetectorNotice');if(!box){box=document.createElement('div');box.id='bdDeepDetectorNotice';box.style.cssText='position:fixed;z-index:999999;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(520px,calc(100vw - 26px));padding:15px 16px;border-radius:18px;background:linear-gradient(145deg,#101713,#1c2a21);color:#f2fff7;border:1px solid rgba(111,232,168,.22);box-shadow:0 20px 60px rgba(0,0,0,.30);font:600 12px/1.72 "Noto Sans Bengali",sans-serif;opacity:0;transition:.2s;pointer-events:none';document.body.appendChild(box)}box.textContent=message;box.style.opacity='1';clearTimeout(box._t);box._t=setTimeout(()=>box.style.opacity='0',6500)}
+async function publish(s){const mp=Q('[data-media-studio]',s.editor);if(mp&&!mp.hidden){const mt=Q('[data-media-title]',s.editor),mb=Q('[data-media-body]',s.editor);if(mt)s.title=mt.value.trimStart();if(mb)s.body=mb.value;const op=Q('[data-panel="ordinary"]',s.editor);const ot=op&&Q('[data-title]',op),ob=op&&Q('[data-body]',op);if(ot)ot.value=s.title;if(ob)ob.value=s.body;s.mediaAccepted=!!(s.audioFile||s.videoFile)}saveVisible(s);if(!s.title.trim()&&String(s.category||'').toLowerCase()!=='normal'){toast(s,'A title is required.');Q('[data-title]',visiblePanel(s))?.focus({preventScroll:true});return}if(!s.body.trim()){toast(s,'Write the post body.');return}if(s.category!=='news'&&s.mode==='template'&&lineCount(s.body)>10){toast(s,'দীর্ঘ লেখা সাধারণ পোস্টে নেওয়া হচ্ছে');setMode(s,'ordinary');return}if(!s.session)s.session=await session();if(!s.session){toast(s,'Log in to publish.');return}s.role=await roleOf(s.session);s.privileged=isPrivileged(s.role);if(s.category==='news'&&!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'News can be published only by an approved Page or Founder.');return}if(s.category==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}if(requiresCopyright(s)&&!s.copyrightOk){toast(s,'Font/BG Music ব্যবহারের আগে কপিরাইট দায় স্বীকার করুন');return}
+const moderationTerms=bdDeepBadTerms((s.title||'')+'\n'+(s.body||''));
+const literaryPoem=(s.category==='poem');
+const status=(moderationTerms.length&&!literaryPoem)?'pending_review':'published';
+const image_url=await upload(s),audio_url=await uploadOne(s,s.mediaAccepted?s.audioFile:null,'audio'),video_url=await uploadOne(s,s.mediaAccepted?s.videoFile:null,'video'),media_url=video_url||audio_url||image_url||'',news_images=s.category==='news'?await Promise.all(s.newsImageFiles.filter(Boolean).map((f,i)=>uploadOne(s,f,'news-'+i))):[],template_asset_url=await uploadOne(s,s.externalTemplateFile,'template'),news_template_url=await uploadOne(s,s.newsCustomTemplateFile,'news-template'),bgm_url=await uploadOne(s,s.bgmFile,'bgm');const typography={title_font:s.mode==='premium'?s.titleFontFamily:'Noto Serif Bengali',body_font:s.mode==='premium'?s.bodyFontFamily:'Noto Serif Bengali',title_color:s.mode==='premium'?s.titleColor:'#102b4b',body_color:s.mode==='premium'?s.bodyColor:'#102b4b',title_bold:s.mode==='premium'?!!s.titleBold:true,body_bold:s.mode==='premium'?!!s.bodyBold:false};const pg=bdPageSession(),mdUser=s.session.user.user_metadata||{},author_name=(s.category==='news'&&pg?.page_name)?pg.page_name:(mdUser.full_name||mdUser.name||mdUser.display_name||mdUser.username||s.session.user.email?.split('@')[0]||'সদস্য'),author_avatar=(s.category==='news'&&pg?.logo_url)?pg.logo_url:(mdUser.avatar_url||mdUser.picture||'');const bdExp=W.BDRegion?.getExperience?.()||{},bdFeedRegion=W.BDRegion?.getFeedRegion?.()||{};
+const media_template=!!(image_url&&['template','premium'].includes(String(s.mode||'').toLowerCase()));
+const template_meta={...(s.preset?.meta||{}),bg:s.preset?.bg||'',ink:s.preset?.ink||'',accent:s.preset?.accent||'',frameRadius:s.preset?.frameRadius||0};
+if(String(s.category||'').toLowerCase()==='normal')s.mode='ordinary';
+const p={id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),author_id:s.session.user.id,author_name,author_avatar,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',language_code:bdExp.uiLanguage||'bn',title:s.title.trim(),body:s.body.trim(),type:s.category,status,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),font:typography.body_font,title_font:typography.title_font,body_font:typography.body_font,title_color:typography.title_color,body_color:typography.body_color,title_bold:typography.title_bold,body_bold:typography.body_bold,metadata:{...typography,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',feed_mode:bdExp.mode||'home',language_code:bdExp.uiLanguage||'bn',author_type:(s.category==='news'&&pg)?'page':'user',page_id:(s.category==='news'&&pg)?pg.page_id:null,page_name:(s.category==='news'&&pg)?pg.page_name:null,page_username:(s.category==='news'&&pg)?pg.username:null,page_logo_url:(s.category==='news'&&pg)?pg.logo_url:null,page_portal_url:(s.category==='news'&&pg)?pg.portal_url:null,page_verified:(s.category==='news'&&pg)?true:false,composer_mode:s.mode,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),news_template:s.category==='news'?(s.newsCustomTemplate?'custom':s.newsTemplate):null,news_template_url:news_template_url||'',news_images,template_asset_url:template_asset_url||((s.preset?.asset&&!String(s.preset.asset).startsWith('blob:'))?s.preset.asset:''),design_state:{title:s.titlePos,body:s.bodyPos,template:s.templatePos,photo:s.photoPos,news_title:s.newsTitlePos,news_body:s.newsBodyPos,news_template:s.newsTemplatePos,news_images:s.newsImagePos},studio_design:{title_size:s.titleSize,body_size:s.bodySize,line_height:s.lineHeight,letter_spacing:s.letterSpacing,align:s.align,filter:s.filter,motion:s.motion,effect:s.effect,canvas_ratio:s.canvasRatio},bgm_url:bgm_url||'',bgm_volume:s.bgmVolume||0,copyright_ack:!!s.copyrightOk,media_committed:!!s.mediaAccepted,media_template,template_meta,...bdcNormalPostMeta(s),studio:{filter:s.studio?.filter||'clean',filterIntensity:Number(s.studio?.filterIntensity||1),effect:s.studio?.effect||'fade',autoEnhance:!!s.studio?.autoEnhance,stabilize:!!s.studio?.stabilize,normalize:!!s.studio?.normalize,denoise:!!s.studio?.denoise,dehum:!!s.studio?.dehum,compress:!!s.studio?.compress},audio_processing:{media:s.videoFile?'video':'audio',preset:s.audioPreset||'original',voice_level:s.voiceLevel||100,noise_reduction:!!s.noiseReduced,mastering:!!s.mastered,music_mix:!!s.mixedBgm,processed:!!(s.audioProcessed||s.videoAudioProcessed),preview_chain:!!s.videoAudioProcessed,live_caption_supported:!!(W.SpeechRecognition||W.webkitSpeechRecognition)},video_studio:{look:s.videoLook||'clean',brightness:s.videoBrightness||100,contrast:s.videoContrast||100,saturation:s.videoSaturation||100,preview_speed:s.videoSpeed||1}},image_url,audio_url,video_url,bgm_url,media_url,media_type:video_url?'video':audio_url?'audio':image_url?'image':'',created_at:new Date().toISOString(),composer_mode:s.mode,media_template};const editing=!!s.editingId;if(editing)p.id=s.editingId;const db=editing?await updateExistingPost(s,p):await insertPost(s,p),final={...p,...(db||{})};if(status==='pending_review'){
+  bdDeepModerationLocal('post',{post_id:final.id,title:final.title,body:final.body,category:final.type,user_id:final.author_id},moderationTerms,final.id);
+  try{const a=JSON.parse(localStorage.getItem('bhubondangaPendingReviewPosts')||'[]');a.unshift(final);localStorage.setItem('bhubondangaPendingReviewPosts',JSON.stringify(a.slice(0,1000)))}catch(_){}
+  try{const mc=await supa();if(mc)await mc.from('moderation_queue').insert({content_type:'post',content_id:final.id,submitted_by:final.author_id,matched_terms:moderationTerms,status:'pending'})}catch(_){}
+  W.dispatchEvent(new CustomEvent('bd:post-pending-review',{detail:final}));
+  bdDetectorNotice('বস, আপনার লেখাটা অত্যন্ত সুন্দর! তবে আমার গালি-রাডারে কিছু আপত্তিকর শব্দ ধরা পড়েছে। আমি যেহেতু গালি ডিটেক্টর, গালি দেখলেই আমার মাথা একটু গরম হয়ে যায় 😄 তাই নিজের মাথা ঠান্ডা রাখতে লেখাটা Founder আর Admin-এর ড্যাশবোর্ডে পাঠিয়ে দিলাম। তারা শব্দগুলোর প্রেক্ষাপট দেখে হজম করতে পারলেই আপনার লেখাটি অতি শীঘ্রই সবখানে প্রকাশ হয়ে যাবে। কবিতার চরিত্র বা সাহিত্যিক প্রয়োজনে ব্যবহৃত শব্দকে আমরা এই আটকে রাখার নিয়মে ফেলি না।')
+}else if(editing){
+  saveLocalUpdate(final);W.dispatchEvent(new CustomEvent('bd:post-updated',{detail:final}));toast(s,'পোস্ট সম্পাদনা হয়েছে')
+}else{
+  saveLocal(final);W.dispatchEvent(new CustomEvent('bd:post-published',{detail:final}));if(moderationTerms.length&&literaryPoem)toast(s,'কবিতার সাহিত্যিক প্রেক্ষাপট রাখা হয়েছে—পোস্ট প্রকাশিত হয়েছে');else toast(s,'পোস্ট প্রকাশিত হয়েছে')
+}try{localStorage.removeItem(draftKey(s))}catch(_){}s.editingId=null;setTimeout(()=>closeEditor(s),500)}
+function copyProtection(e){if(e.type==='contextmenu'||e.type==='copy'||e.type==='cut'||e.type==='dragstart'){e.preventDefault();e.stopPropagation()}}
+D.addEventListener('contextmenu',copyProtection,true);D.addEventListener('copy',copyProtection,true);D.addEventListener('cut',copyProtection,true);D.addEventListener('dragstart',copyProtection,true);
+const LETTER_MAGIC={
+'অ':{cat:'poem',accent:'#16856a',glow:'#7ee2bf',quote:'অন্যায় যে করে আর অন্যায় যে সহে, তব ঘৃণা তারে যেন তৃণসম দহে।'},
+'আ':{cat:'recitation',accent:'#d34b61',glow:'#ff9fb5',quote:'আত্মসম্মান হারিয়ে কারও মন জয় করার চেয়ে, সম্মান নিয়ে একা চলা শ্রেয়।'},
+'ক':{cat:'prolap',accent:'#7048d4',glow:'#b7a0ff',quote:'কর্মই মানুষের প্রকৃত পরিচয়, কথায় নয় কাজে নিজেকে প্রমাণ করো।'},
+'খ':{cat:'letter',accent:'#278bc0',glow:'#88d8ff',quote:'খারাপ সময়ে ধৈর্য হারিয়ো না, কারণ অন্ধকারের পরেই আলো আসে।'},
+'ম':{cat:'environment',accent:'#a16b18',glow:'#ffd889',quote:'মানুষ মানুষের জন্য—মানবতার চেয়ে বড় কোনো পরিচয় নেই।'}
+};
+let LETTER_MAGIC_BUSY=false;
+function playLetterMagic(s,btn){const letter=(btn?.textContent||'').trim(),cfg=LETTER_MAGIC[letter]||LETTER_MAGIC['অ'];if(LETTER_MAGIC_BUSY)return;LETTER_MAGIC_BUSY=true;btn?.classList.add('bdc-letter-lit');const old=Q('.bdc-magic-overlay');if(old)old.remove();const layer=D.createElement('div');layer.className='bdc-magic-overlay';layer.style.setProperty('--magic-accent',cfg.accent);layer.style.setProperty('--magic-glow',cfg.glow);layer.setAttribute('aria-hidden','true');layer.innerHTML=`<span class="bdc-magic-rays"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><div class="bdc-magic-quote" data-letter="${letter}"><p>${cfg.quote}</p></div>`;D.body.appendChild(layer);if(navigator.vibrate)try{navigator.vibrate(8)}catch(_){};const finish=()=>{layer.remove();btn?.classList.remove('bdc-letter-lit');LETTER_MAGIC_BUSY=false;openEditorSafe(s,btn?.dataset.cat||cfg.cat)};setTimeout(finish,1450)}
+
+function bdcStudioFilterCSS(name,intensity=1){
+ const n=String(name||'clean');
+ const x=Math.max(0,Math.min(2,Number(intensity)||1));
+ const map={
+  clean:'none',
+  soft:`contrast(${1+.04*x}) saturate(${1+.10*x}) brightness(${1+.02*x})`,
+  cinematic:`contrast(${1+.17*x}) saturate(${.92+.04*x}) brightness(${.95+.01*x})`,
+  vivid:`contrast(${1+.09*x}) saturate(${1+.28*x}) brightness(${1+.02*x})`,
+  mono:`grayscale(${Math.min(1,.7*x)}) contrast(${1+.10*x})`,
+  night:`brightness(${.82+.03*x}) contrast(${1+.22*x}) saturate(${.84+.03*x})`,
+  warm:`sepia(${.10*x}) saturate(${1+.18*x}) hue-rotate(${-5*x}deg)`,
+  cool:`saturate(${1+.10*x}) hue-rotate(${6*x}deg)`
+ };
+ return map[n]||'none'
+}
+function bdcStudioTemplateHTML(s){
+ const cat=String(s.category||'').toLowerCase(),media=s.mediaFile||null,kind=s.mediaKind||'';
+ const FILTERS={
+  recitation:['clean','soft','cinematic','warm','mono','night'],
+  reels:['clean','vivid','cinematic','cool','warm','night'],
+  poem:['clean','soft','warm','mono','cinematic'],
+  children:['clean','vivid','warm','cool','soft'],
+  environment:['clean','vivid','cool','warm','cinematic'],
+  letter:['clean','warm','mono','soft','cinematic'],
+  news:['clean','vivid','cool','cinematic','mono']
+ };
+ const EFFECTS={
+  recitation:['fade','poetry-glow','subtle-grain','focus-center'],
+  reels:['fade','vignette','film-grain','focus-center'],
+  poem:['poetry-glow','fade','subtle-grain','focus-center'],
+  children:['soft-pop','bright-edge','fade','focus-center'],
+  environment:['green-depth','sunlight','fade','vignette'],
+  letter:['paper-soft','warm-edge','fade','subtle-grain'],
+  news:['news-clean','focus-center','fade','vignette']
+ };
+ const filters=FILTERS[cat]||FILTERS.poem,fx=EFFECTS[cat]||EFFECTS.poem;
+ return `<section class="bdc-studio-shell" data-studio-shell>
+  <div class="bdc-studio-preview" data-studio-preview style="--bd-studio-filter:${bdcStudioFilterCSS(s.studio?.filter,s.studio?.filterIntensity||1)}">
+    <span class="bdc-studio-live-badge">LIVE PREVIEW</span>
+    <div class="bdc-studio-empty" data-studio-empty>ভিডিও/অডিও/ছবি বাছাই করলে Filter, Effect ও Mastering-এর ফল এখানে সঙ্গে সঙ্গে দেখা যাবে।</div>
+  </div>
+  <div class="bdc-studio-tools">
+    <div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>Filter</b><small>Live preview</small></div><div class="bdc-studio-chiprow">${filters.map(f=>`<button type="button" class="bdc-studio-chip ${s.studio?.filter===f?'active':''}" data-studio-filter="${f}">${f}</button>`).join('')}</div><div class="bdc-studio-range"><label>Intensity</label><input type="range" min="0" max="2" value="${Number(s.studio?.filterIntensity||1)}" step=".05" data-studio-filter-intensity><output>${Math.round(Number(s.studio?.filterIntensity||1)*50)}%</output></div></div>
+    <div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>Effect</b><small>Category specific</small></div><div class="bdc-studio-chiprow">${fx.map(f=>`<button type="button" class="bdc-studio-chip ${s.studio?.effect===f?'active':''}" data-studio-effect="${f}">${f}</button>`).join('')}</div></div>
+    <div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>JavaScript Mastering</b><small>Browser-safe processing</small></div><div class="bdc-studio-master">
+      <button type="button" class="${s.studio?.autoEnhance?'on':''}" data-studio-master="autoEnhance">Auto Enhance</button>
+      <button type="button" class="${s.studio?.stabilize?'on':''}" data-studio-master="stabilize">Visual Smooth</button>
+      <button type="button" class="${s.studio?.normalize?'on':''}" data-studio-master="normalize">Normalize</button>
+      <button type="button" class="${s.studio?.denoise?'on':''}" data-studio-master="denoise">Denoise</button>
+      <button type="button" class="${s.studio?.dehum?'on':''}" data-studio-master="dehum">Hum Reduce</button>
+      <button type="button" class="${s.studio?.compress?'on':''}" data-studio-master="compress">Voice Compress</button>
+    </div></div>
+    ${cat==='recitation'?`<div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>Audio / Recitation Studio</b><small>Record directly</small></div>
+      <div class="bdc-studio-record"><button type="button" class="bdc-studio-record-btn" data-studio-record>REC</button><span class="bdc-studio-record-copy"><b>সরাসরি আবৃত্তি রেকর্ড করুন</b><small>Noise suppression · echo cancellation · auto gain · low-frequency hum reduction</small></span><span class="bdc-studio-timer" data-studio-timer>00:00</span></div>
+      <div class="bdc-audio-chain"><span class="on">Noise Suppression</span><span class="on">Echo Cancel</span><span class="on">Auto Gain</span><span class="on">High-pass / Hum</span></div>
+    </div>`:''}
+  </div>
+ </section>`
+}
+function bdcStudioEnsureState(s){
+ s.studio=s.studio||{filter:'clean',filterIntensity:1,effect:'fade',autoEnhance:true,stabilize:false,normalize:true,denoise:true,dehum:true,compress:true,recordedBlob:null,recordedUrl:'',recording:false,recordStart:0};
+ return s.studio
+}
+function bdcStudioApplyVisual(s){
+ const st=bdcStudioEnsureState(s),box=s.editor?.querySelector?.('[data-studio-preview]'),media=box?.querySelector?.('video,img');
+ if(!box)return;
+ box.style.setProperty('--bd-studio-filter',bdcStudioFilterCSS(st.filter,st.filterIntensity));
+ if(media)media.style.filter=bdcStudioFilterCSS(st.filter,st.filterIntensity);
+ box.classList.toggle('effect-vignette',st.effect==='vignette');
+ box.classList.toggle('effect-grain',st.effect==='film-grain'||st.effect==='subtle-grain');
+ box.classList.toggle('effect-glow',st.effect==='poetry-glow')
+}
+function bdcStudioLoadMedia(s){
+ const box=s.editor?.querySelector?.('[data-studio-preview]');if(!box)return;
+ const file=s.mediaFile||null,url=s.mediaURL||s.mediaUrl||s.mediaObjectURL||'';
+ let src=url;
+ if(file&&!src){try{src=URL.createObjectURL(file);s.mediaObjectURL=src}catch(_){}}
+ if(!src&&s.studio?.recordedUrl)src=s.studio.recordedUrl;
+ if(!src)return;
+ const kind=String(s.mediaKind||file?.type?.split('/')[0]||'').toLowerCase();
+ const old=box.querySelector('video,img,audio,[data-studio-empty]');old?.remove();
+ let el;
+ if(kind==='video'){el=D.createElement('video');el.src=src;el.controls=true;el.playsInline=true;el.preload='metadata'}
+ else if(kind==='audio'||s.studio?.recordedUrl===src){el=D.createElement('audio');el.src=src;el.controls=true;el.preload='metadata'}
+ else {el=D.createElement('img');el.src=src;el.alt=''}
+ box.appendChild(el);bdcStudioApplyVisual(s)
+}
+async function bdcStudioToggleRecord(s){
+ const st=bdcStudioEnsureState(s),btn=s.editor?.querySelector?.('[data-studio-record]'),timer=s.editor?.querySelector?.('[data-studio-timer]');
+ if(st.recording){try{st.recorder?.stop()}catch(_){};return}
+ if(!navigator.mediaDevices?.getUserMedia||!W.MediaRecorder){toast(s,'এই ডিভাইসে সরাসরি অডিও রেকর্ডিং সাপোর্ট পাওয়া যায়নি');return}
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}});
+  const ctx=new (W.AudioContext||W.webkitAudioContext)(),source=ctx.createMediaStreamSource(stream),hp=ctx.createBiquadFilter(),comp=ctx.createDynamicsCompressor(),dest=ctx.createMediaStreamDestination();
+  hp.type='highpass';hp.frequency.value=90;hp.Q.value=.7;
+  comp.threshold.value=-24;comp.knee.value=18;comp.ratio.value=3;comp.attack.value=.008;comp.release.value=.25;
+  source.connect(hp);hp.connect(comp);comp.connect(dest);
+  const rec=new MediaRecorder(dest.stream),chunks=[];
+  st.recorder=rec;st.recording=true;st.recordStart=Date.now();btn?.classList.add('recording');if(btn)btn.textContent='STOP';
+  rec.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data)};
+  rec.onstop=()=>{
+   try{stream.getTracks().forEach(t=>t.stop());ctx.close()}catch(_){}
+   st.recording=false;btn?.classList.remove('recording');if(btn)btn.textContent='REC';
+   st.recordedBlob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});if(st.recordedUrl)try{URL.revokeObjectURL(st.recordedUrl)}catch(_){}
+   st.recordedUrl=URL.createObjectURL(st.recordedBlob);s.mediaKind='audio';s.mediaFile=st.recordedBlob;s.mediaObjectURL=st.recordedUrl;bdcStudioLoadMedia(s)
+  };
+  rec.start(300);
+  st.timer=setInterval(()=>{if(!st.recording){clearInterval(st.timer);return}const sec=Math.floor((Date.now()-st.recordStart)/1000);if(timer)timer.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')},250)
+ }catch(e){toast(s,'Microphone permission পাওয়া যায়নি')}
+}
+function bdcStudioBind(s){
+ const ed=s.editor;if(!ed||ed.dataset.studioBound==='1')return;ed.dataset.studioBound='1';bdcStudioEnsureState(s);
+ ed.addEventListener('click',e=>{
+  const f=e.target.closest?.('[data-studio-filter]');if(f){s.studio.filter=f.dataset.studioFilter;ed.querySelectorAll('[data-studio-filter]').forEach(x=>x.classList.toggle('active',x===f));bdcStudioApplyVisual(s);return}
+  const fx=e.target.closest?.('[data-studio-effect]');if(fx){s.studio.effect=fx.dataset.studioEffect;ed.querySelectorAll('[data-studio-effect]').forEach(x=>x.classList.toggle('active',x===fx));bdcStudioApplyVisual(s);return}
+  const m=e.target.closest?.('[data-studio-master]');if(m){const k=m.dataset.studioMaster;s.studio[k]=!s.studio[k];m.classList.toggle('on',!!s.studio[k]);return}
+  if(e.target.closest?.('[data-studio-record]')){bdcStudioToggleRecord(s);return}
+ });
+ ed.addEventListener('input',e=>{if(e.target.matches?.('[data-studio-filter-intensity]')){s.studio.filterIntensity=+e.target.value;e.target.nextElementSibling&&(e.target.nextElementSibling.value=Math.round(s.studio.filterIntensity*50)+'%');bdcStudioApplyVisual(s)}});
+}
+function bdcStudioMount(s){
+ if(!s?.editor)return;
+ const cat=String(s.category||s.editor.dataset.category||'').toLowerCase();
+ if(!['recitation','reels','news','environment','children','poem','letter'].includes(cat))return;
+ bdcStudioEnsureState(s);
+ let host=s.editor.querySelector('[data-bdc-studio-host]');
+ if(!host){host=D.createElement('div');host.dataset.bdcStudioHost='1';const ws=s.editor.querySelector('.bdc-workspace')||s.editor;ws.prepend(host)}
+ host.innerHTML=bdcStudioTemplateHTML(s);bdcStudioBind(s);bdcStudioLoadMedia(s)
+}
+function bdcNormalPostMeta(s){
+ return String(s.category||'').toLowerCase()==='normal'?{distribution_scope:'index_profile_home_only',archive:false,requires_title:false,ordinary_post:true}:{}
+}
+function bdcStudioBottomNav(s){
+ if(!s?.editor)return;let nav=s.editor.querySelector('[data-studio-bottomnav]');
+ if(!nav){nav=D.createElement('nav');nav.className='bdc-studio-bottomnav';nav.dataset.studioBottomnav='1';nav.innerHTML='<button type="button" data-studio-jump="write">Write</button><button type="button" data-studio-jump="media">Media</button><button type="button" data-studio-jump="studio">Studio</button><button type="button" data-studio-jump="template">Template</button><button type="button" data-studio-jump="publish">Publish</button>';s.editor.appendChild(nav);nav.onclick=e=>{const b=e.target.closest('[data-studio-jump]');if(!b)return;const k=b.dataset.studioJump;if(k==='publish'){s.editor.querySelector('[data-publish]')?.click();return}if(k==='studio'){s.editor.querySelector('[data-bdc-studio-host]')?.scrollIntoView({behavior:'smooth',block:'start'});return}if(k==='media'){s.editor.querySelector('[data-media-toggle],[data-add-media]')?.click();return}if(k==='template'){s.editor.querySelector('[data-mode="template"],[data-mode="premium"]')?.click();return}const t=s.editor.querySelector('[data-body],[data-news-body]');t?.focus({preventScroll:false})}}
+}
+function bdcStudioViewportLock(s){
+ if(!s?.editor||s.editor.dataset.vvBound==='1')return;s.editor.dataset.vvBound='1';
+ const vv=W.visualViewport;const sync=()=>{const open=vv&&vv.height<innerHeight*.78;s.editor.classList.toggle('bdc-keyboard-open',!!open)};
+ vv?.addEventListener('resize',sync,{passive:true});vv?.addEventListener('scroll',sync,{passive:true});sync()
+}
+
+function mount(target,opt={}){
+ const box=D.createElement('div');box.innerHTML=shell();
+ const root=box.firstElementChild;target.appendChild(root);
+ const s=state(root);
+
+ // Synchronous state from Index boot. Do not wait for network before Feed mounts.
+ s.session=W.BD_SESSION||null;
+ s.role=String(W.BD_ROLE||s.session?.user?.app_metadata?.role||s.session?.user?.user_metadata?.role||'user').toLowerCase();
+ s.privileged=isPrivileged(s.role);
+ s.premium=s.privileged||premiumLocal(s.session?.user?.id);
+ const av=root.querySelector('[data-avatar]');if(av)av.innerHTML=avatar(s);
+
+ const fixed=String(opt.defaultCategory||'').trim().toLowerCase();
+ s.lockedCategory=fixed;
+ const applyFixedVisibility=()=>{if(fixed==='midnight'){root.hidden=!canMidnightWrite(s.role);root.setAttribute('aria-hidden',root.hidden?'true':'false')}};
+ applyFixedVisibility();
+
+ Q('[data-open]',root).onclick=()=>{
+  if(fixed){
+   if(fixed==='news'&&!canNews(s.role)){if(s.editor)toast(s,'News can be published only by an approved Page or Founder.');return}
+   if(fixed==='midnight'&&!canMidnightWrite(s.role))return;
+   openEditorSafe(s,fixed);return
+  }
+  openCategoryPicker(s)
+ };
+
+ QA('[data-cat]',root).forEach(b=>b.onclick=()=>{
+  if(fixed){
+   if(fixed==='midnight'&&!canMidnightWrite(s.role))return;
+   const old=b.dataset.cat;b.dataset.cat=fixed;playLetterMagic(s,b);
+   queueMicrotask(()=>{if(old)b.dataset.cat=old});return
+  }
+  playLetterMagic(s,b)
+ });
+
+ const onEdit=e=>{
+  if(!e.detail)return;
+  const type=String(e.detail.type||e.detail.category||'').toLowerCase();
+  if(type==='midnight'&&!canMidnightWrite(s.role)){if(s.editor)toast(s,'মধ্যরাতের প্রলাপ সম্পাদনা শুধু Founder করতে পারবেন');return}
+  if(fixed&&type&&type!==fixed)return;
+  editPost(s,e.detail)
+ };
+ W.addEventListener('bd:edit-post',onEdit);
+
+ let alive=true;
+ s.destroy=()=>{alive=false;W.removeEventListener('bd:edit-post',onEdit)};
+
+ // Hydrate permissions/profile asynchronously; never block Index/Feed.
+ setTimeout(async()=>{
+  try{
+   await hydrate(s);
+   if(!alive)return;
+   applyFixedVisibility();
+   root.dataset.bdComposeHydrated='1';
+   W.dispatchEvent(new CustomEvent('bd:compose-hydrated',{detail:{role:s.role,premium:!!s.premium}}))
+  }catch(_){}
+ },0);
+
+ bdScheduleLegacyPostMigration();
+ root.dataset.bdComposeReady='1';
+ return s
+}
+W.addEventListener('pagehide',()=>{QA('.bdc-editor').forEach(x=>x.remove());D.documentElement.style.overflow='';D.body.style.overflow=''});
+W.BD_MODULES.compose={version:'v210-category-studio-20260822',mount};if(location.pathname.endsWith('compose-box.html')||Q('#bdComposeDemo')){const h=Q('#bdComposeDemo');if(h&&!h.dataset.mounted){h.dataset.mounted='1';mount(h,{context:'standalone'})}}
+})(window,document);
+</script>
+<script type="application/json" id="bd-compose-compatibility">[{"id":1,"viewport":320,"mode":"ordinary","theme":"light","expected":"তাৎক্ষণিক সম্পাদনা, Title দৃশ্যমান, কোনো layout jump নয়, right-click/copy callout নিষ্ক্রিয়, বাংলা লেখা স্পষ্ট।"}]</script>
+<style id="bd-compose-final-access-performance-20260817">
+/* Free users: one clean default writing surface. Templates and advanced studio are Premium only. */
+.bdc-canvas .bdc-template-title,.bdc-canvas .bdc-template-body{ text-shadow:none!important;-webkit-text-stroke:0!important;filter:none!important }
+.bdc-panel[hidden]{display:none!important}.bdc-premium[hidden]{display:none!important}
+.bdc-gate{contain:layout paint style}.bdc-editor{overscroll-behavior:none;touch-action:pan-y}.bdc-stage,.bdc-premium-stage{scroll-behavior:auto;-webkit-overflow-scrolling:touch}
+@media print{html,body{visibility:hidden!important;background:#000!important}.bdc-editor,.bdc-root{display:none!important}}
+</style>
+<script id="bd-compose-capture-deterrence-20260817">
+(function(D,W){'use strict';if(W.__BD_COMPOSER_CAPTURE_GUARD__)return;W.__BD_COMPOSER_CAPTURE_GUARD__=1;
+D.addEventListener('keydown',e=>{if(e.key==='PrintScreen'){try{navigator.clipboard?.writeText?.('')}catch(_){};const ed=D.querySelector('.bdc-editor.open');if(ed){ed.dataset.captureGuard='1';setTimeout(()=>delete ed.dataset.captureGuard,700)}}},true);
+})(document,window);
+</script>
+
+<style id="bd-production-compose-overlap-lock-20260817">
+/* Composer remains full-featured while avoiding stacked panels and excess glass. */
+.bdc-editor{isolation:isolate;overflow:hidden!important}
+.bdc-panel[hidden]{display:none!important}
+.bdc-paper,.bdc-template-canvas,.bdc-premium-canvas{contain:layout style;overflow:hidden!important}
+.bdc-modebar,.bdc-premium-strip,.bdc-free-strip{overscroll-behavior-x:contain;scrollbar-width:none}
+.bdc-modebar::-webkit-scrollbar,.bdc-premium-strip::-webkit-scrollbar,.bdc-free-strip::-webkit-scrollbar{display:none}
+.bdc-title,.bdc-body,[data-title],[data-body]{overflow-wrap:anywhere;word-break:normal}
+</style>
+
+<script id="bd-runtime-overlap-audit-20260817">
+(()=>{if(window.BDOverlapAudit)return;window.BDOverlapAudit=function(root=document){const nodes=[...root.querySelectorAll('button,a,input,select,textarea,[role="button"]')].filter(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&r.width>8&&r.height>8});const overlaps=[];for(let i=0;i<nodes.length;i++){const a=nodes[i],ra=a.getBoundingClientRect();for(let j=i+1;j<nodes.length;j++){const b=nodes[j];if(a.contains(b)||b.contains(a))continue;const rb=b.getBoundingClientRect(),x=Math.max(0,Math.min(ra.right,rb.right)-Math.max(ra.left,rb.left)),y=Math.max(0,Math.min(ra.bottom,rb.bottom)-Math.max(ra.top,rb.top));if(x*y>64)overlaps.push({a:a.getAttribute('aria-label')||a.textContent.trim().slice(0,28)||a.tagName,b:b.getAttribute('aria-label')||b.textContent.trim().slice(0,28)||b.tagName,area:Math.round(x*y)});}}return overlaps;};})();
+</script>
+<style id="bd-compose-premium-audio-nextlevel-20260817">
+/* V18 composer polish: same engine, cleaner controls, modern button icon language. */
+.bdc-trigger{border-radius:999px!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.78)!important}.bdc-editor-head{backdrop-filter:blur(16px)!important;-webkit-backdrop-filter:blur(16px)!important}.bdc-modebar{gap:7px!important}.bdc-modebar button,.bdc-toolbar button,.bdc-studio-tools button{border-radius:12px!important;box-shadow:none!important;transition:transform .11s ease,background .11s ease,border-color .11s ease!important}.bdc-modebar button:active,.bdc-toolbar button:active,.bdc-studio-tools button:active{transform:scale(.985)!important}.bdc-category-grid{gap:10px!important}.bdc-category-card{border-radius:18px!important;box-shadow:0 8px 20px rgba(54,65,104,.07)!important}.bdc-media-studio,.bdc-premium-studio{border-radius:20px!important;background:linear-gradient(155deg,color-mix(in srgb,var(--bdc-card2) 96%,transparent),color-mix(in srgb,var(--bdc-card) 92%,transparent))!important}.bdc-studio-tools button[data-active="1"]{background:linear-gradient(135deg,#467ef0,#7957de)!important;color:#fff!important;border-color:transparent!important}.bdc-publish{border-radius:13px!important;background:linear-gradient(135deg,#3179ee,#7b55df)!important;box-shadow:0 9px 22px rgba(81,89,201,.18)!important}.bdc-back,.bdc-close{border-radius:12px!important}.bdc-letters{justify-content:center!important}
+html[data-theme="dark"] .bdc-media-studio,html[data-theme="dark"] .bdc-premium-studio{background:linear-gradient(155deg,#111f35,#0c192b)!important;border-color:rgba(170,190,226,.14)!important}
+</style>
+
+<script id="bdc-v70-spectrum-superpremium-js">
+(()=>{
+  if(window.__BDC_V70_ENHANCED__) return; window.__BDC_V70_ENHANCED__ = true;
+  const D=document;
+  const $=(s,r=D)=>r.querySelector(s), $$=(s,r=D)=>Array.from(r.querySelectorAll(s));
+  const LAYOUT_NAMES={1:'গ্রিড',2:'প্রধান',3:'স্প্লিট',4:'হিরো',5:'ম্যাগাজিন',6:'স্টোরি',7:'কলাম',8:'ফিচার',9:'এডিটোরিয়াল',10:'ডায়াগোনাল'};
+  const SPECTRUMS=[
+    {id:'bars-pink', name:'Pink Bars', note:'Free', premium:false, type:'bars'},
+    {id:'line-aurora', name:'Aurora Line', note:'Free', premium:false, type:'line'},
+    {id:'bars-teal', name:'Teal Pulse', note:'Premium', premium:true, type:'bars'},
+    {id:'white-wave', name:'White Wave', note:'Premium', premium:true, type:'whitebars'},
+    {id:'dots-stereo', name:'Stereo Dots', note:'Premium', premium:true, type:'dots'},
+    {id:'vinyl-spin', name:'Vinyl Loop', note:'Premium', premium:true, type:'vinyl'},
+    {id:'bars-fire', name:'Fire Stack', note:'Super', premium:true, super:true, type:'bars'},
+    {id:'line-neon', name:'Neon Voice', note:'Super', premium:true, super:true, type:'line'}
+  ];
+  function premiumFromStorage(){
+    try{
+      const role=(localStorage.getItem('bd-role')||'').toLowerCase();
+      if(['founder','admin','page_admin'].includes(role)) return true;
+      const raw=localStorage.getItem('bd-premium-access'); if(!raw) return false;
+      const v=JSON.parse(raw); return !!(v && Number(v.until||0) > Date.now());
+    }catch(_){ return false; }
+  }
+  function flashToast(root,msg){
+    const t=$('[data-toast]', root.closest('.bdc-root')||D); if(!t) return;
+    t.textContent=msg; t.classList.add('show'); clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove('show'),2100);
+  }
+  function spectrumMini(type){
+    if(type==='line') return '<div class="mini-line"></div>';
+    if(type==='dots') return '<div class="mini-dots">'+Array.from({length:18},()=>'<i></i>').join('')+'</div>';
+    if(type==='vinyl') return '<div class="mini-vinyl"></div>';
+    return '<div class="mini-bars">'+Array.from({length:14},()=>'<i></i>').join('')+'</div>';
+  }
+  function packHTML(){
+    return `<div class="bdc-spectrum-pack" data-spectrum-pack>
+      <div class="bdc-spectrum-pack-head">
+        <div><b>Music / Audio Animation Templates</b><small>রেকর্ড বা অডিও পোস্ট করলে এখানে প্রিভিউ স্টাইল বেছে নিন। Premium সদস্যরা পূর্ণ spectrum pack ব্যবহার করতে পারবেন।</small></div>
+        <span class="bdc-spectrum-chip">Audio Pack</span>
+      </div>
+      <div class="bdc-spectrum-grid">${SPECTRUMS.map(sp=>`<button type="button" class="bdc-spectrum-card ${sp.premium?'locked':''} ${sp.super?'is-super':''}" data-spectrum-card data-spectrum-id="${sp.id}">
+          <div class="bdc-spectrum-mini" data-mini="${sp.type}">${spectrumMini(sp.type)}</div>
+          <b>${sp.name}</b>
+          <span>${sp.note}</span>
+      </button>`).join('')}</div>
+      <div class="bdc-spectrum-help">Free: basic line/bar preview · Premium: full spectrum templates · Super Premium: advanced spectrum + creator-ready showcase styles.</div>
+    </div>`;
+  }
+  function superPremiumHTML(){
+    return `<div class="bdc-superpremium-panel" data-superpremium-panel>
+      <h4>Super Premium — Creator / Newsroom Pro</h4>
+      <p>তোমার জন্য আমি এই স্তরে আরও শক্তিশালী জিনিস রেখেছি, যাতে কবিতা, আবৃত্তি, নিউজ ও ব্র্যান্ড পোস্ট সবকিছু আরও professional হয়।</p>
+      <ul class="bdc-superpremium-list">
+        <li><b>Brand Kit</b>নিজের saved font pair, colors, signature label, page-style preset।</li>
+        <li><b>Pro Audio Pack</b>অতিরিক্ত spectrum, intro/outro look, music card cover style।</li>
+        <li><b>Newsroom Pack</b>multi-photo hero layout, breaking-news ribbons, editorial visual presets।</li>
+        <li><b>Smart Draft Tools</b>saved reusable template, duplicate as new, fast layout recall।</li>
+        <li><b>Creator Stage</b>quote card, audio card, cover card, reels cover একসাথে design workflow।</li>
+        <li><b>Visual Scheduling Ready</b>future-ready publish queue, campaign grouping, post set management UI।</li>
+      </ul>
+    </div>`;
+  }
+  function liveOverlayHTML(){
+    return `<div class="bdc-live-spectrum" data-live-spectrum>
+      <div class="bdc-spectrum-topline">
+        <span class="bdc-live-rec-badge"><i></i><em data-live-rec-text>Recording Ready</em></span>
+        <b data-spectrum-label>Pink Bars</b>
+      </div>
+      <div class="bdc-spectrum-center"><div class="bdc-spectrum-canvas">
+        <div class="bdc-spectrum-bars" data-spectrum-visual="bars">${Array.from({length:22},()=>'<i></i>').join('')}</div>
+        <div class="bdc-spectrum-bars2" data-spectrum-visual="whitebars" hidden>${Array.from({length:26},()=>'<i></i>').join('')}</div>
+        <div class="bdc-spectrum-line" data-spectrum-visual="line" hidden></div>
+        <div class="bdc-spectrum-dots" data-spectrum-visual="dots" hidden>${Array.from({length:22},()=>'<i></i>').join('')}</div>
+        <div class="bdc-spectrum-vinyl" data-spectrum-visual="vinyl" hidden></div>
+      </div></div>
+      <div class="bdc-spectrum-footer">রেকর্ড করলে বা অডিও আপলোড করলে এই ভিজ্যুয়াল বুঝিয়ে দেবে যে অডিওটি সক্রিয় আছে।</div>
+    </div>`;
+  }
+  function ensureOverlay(editor){
+    const preview=$('[data-rec-preview]', editor); if(!preview) return;
+    let live=$('[data-live-spectrum]', preview);
+    if(!live){ preview.insertAdjacentHTML('beforeend', liveOverlayHTML()); live=$('[data-live-spectrum]', preview); }
+    updateSpectrumVisual(editor);
+    const hasMedia=!!$('audio,video', preview);
+    editor.classList.toggle('has-recorded', hasMedia);
+  }
+  function selectedSpectrum(editor){ return editor.dataset.spectrumStyle || 'bars-pink'; }
+  function updateSpectrumVisual(editor){
+    const preview=$('[data-rec-preview]', editor); if(!preview) return;
+    const live=$('[data-live-spectrum]', preview); if(!live) return;
+    const id=selectedSpectrum(editor);
+    const sp=SPECTRUMS.find(x=>x.id===id) || SPECTRUMS[0];
+    const label=$('[data-spectrum-label]', live); if(label) label.textContent=sp.name;
+    const recText=$('[data-live-rec-text]', live); if(recText) recText.textContent=editor.classList.contains('is-recording')?'LIVE · Recording':($('audio,video',preview)?'Audio Ready':'Recording Ready');
+    $$('[data-spectrum-visual]', live).forEach(el=>el.hidden=true);
+    const wanted=$(`[data-spectrum-visual="${sp.type}"]`, live); if(wanted) wanted.hidden=false;
+    editor.dataset.spectrumVisual = sp.type;
+    $$('[data-spectrum-card]', editor).forEach(btn=>btn.classList.toggle('active', btn.dataset.spectrumId===id));
+  }
+  function isPremium(editor){
+    return premiumFromStorage() || !!($('[data-premium-strip] [data-template]', editor));
+  }
+  function openGate(editor, msg){
+    $('[data-gate]', editor)?.classList.add('open');
+    if(msg) flashToast(editor, msg);
+  }
+  function enhanceNews(editor){
+    $$('[data-news-layout]', editor).forEach(btn=>{
+      const id=btn.dataset.newsLayout; if(!id) return;
+      btn.dataset.layoutType = LAYOUT_NAMES[id] || ('Layout '+id);
+    });
+    const arrangeBtn=$('[data-news-arrange]', editor);
+    if(arrangeBtn && !arrangeBtn.parentElement.querySelector('[data-news-freehand-toggle]')){
+      const b=D.createElement('button');
+      b.type='button'; b.className='bdc-news-freehand-toggle'; b.setAttribute('data-news-freehand-toggle','');
+      b.textContent='✥ টেক্সট & ছবি ফ্রি এডজাস্ট';
+      arrangeBtn.insertAdjacentElement('afterend', b);
+      b.addEventListener('click',()=>{
+        const card=$('[data-news-card]', editor); if(!card) return;
+        const on = card.dataset.freeNews === '1';
+        card.dataset.freeNews = on ? '0' : '1';
+        b.classList.toggle('active', !on);
+        flashToast(editor, !on ? 'নিউজ Title/লেখা/ছবি adjust mode চালু' : 'নিউজ adjust mode বন্ধ');
+      });
+    }
+    $$('[data-news-slot]', editor).forEach(slot=>{
+      const img=$('img', slot);
+      slot.classList.toggle('has-image', !!img);
+      if(img && !$('[data-slot-adjust-badge]', slot)){
+        const badge=D.createElement('span'); badge.className='bdc-slot-adjust-badge'; badge.setAttribute('data-slot-adjust-badge',''); badge.textContent='Drag'; slot.appendChild(badge);
+      }
+      if(slot.dataset.dragWired==='1') return; slot.dataset.dragWired='1';
+      let dragging=false,startX=0,startY=0,ox=50,oy=50;
+      slot.addEventListener('pointerdown',e=>{
+        const image=$('img',slot); if(!image || !slot.closest('[data-news-card]')) return;
+        dragging=true; slot.classList.add('dragging'); startX=e.clientX; startY=e.clientY;
+        ox=parseFloat(slot.dataset.ox||'50'); oy=parseFloat(slot.dataset.oy||'50');
+        slot.setPointerCapture?.(e.pointerId); e.preventDefault();
+      }, {passive:false});
+      slot.addEventListener('pointermove',e=>{
+        if(!dragging) return; const image=$('img',slot); if(!image) return;
+        const r=slot.getBoundingClientRect();
+        const nx=Math.max(0,Math.min(100,ox + ((e.clientX-startX)/Math.max(1,r.width))*100));
+        const ny=Math.max(0,Math.min(100,oy + ((e.clientY-startY)/Math.max(1,r.height))*100));
+        slot.dataset.ox=nx.toFixed(2); slot.dataset.oy=ny.toFixed(2); image.style.objectPosition=`${nx}% ${ny}%`;
+      }, {passive:true});
+      const end=()=>{ dragging=false; slot.classList.remove('dragging'); };
+      slot.addEventListener('pointerup',end); slot.addEventListener('pointercancel',end); slot.addEventListener('lostpointercapture',end);
+    });
+    const designer=$('.bdc-news-designer', editor);
+    if(designer && !$('[data-news-quickhint]', designer)) designer.insertAdjacentHTML('beforeend','<div class="bdc-news-quickhint" data-news-quickhint>After adding a News image, drag it to adjust the position. Premium / Super Premium unlocks custom templates, free placement and additional newsroom visual controls.</div>');
+  }
+  function enhancePremium(editor){
+    const premStage=$('.bdc-premium-stage', editor);
+    if(premStage && !$('[data-photo-quickhint]', premStage)) premStage.insertAdjacentHTML('afterend','<div class="bdc-photo-quickhint" data-photo-quickhint>Premium users: Title, লেখা, template background এবং যোগ করা ছবি হাতে ধরে সরানো/বড়-ছোট করা যাবে। ছবি ভিত্তিক টেমপ্লেটেও একই কাজ করা যাবে।</div>');
+    const gateCard=$('.bdc-gate-card', editor);
+    if(gateCard && !$('[data-superpremium-panel]', gateCard)) gateCard.insertAdjacentHTML('beforeend', superPremiumHTML());
+  }
+  function enhanceMedia(editor){
+    const hero=$('[data-record-hero]', editor); if(hero && !$('[data-spectrum-pack]', editor)) hero.insertAdjacentHTML('afterend', packHTML());
+    ensureOverlay(editor);
+    const pack=$('[data-spectrum-pack]', editor); if(pack && !pack.dataset.bound){
+      pack.dataset.bound='1';
+      pack.addEventListener('click',e=>{
+        const btn=e.target.closest('[data-spectrum-card]'); if(!btn) return;
+        const id=btn.dataset.spectrumId; const sp=SPECTRUMS.find(x=>x.id===id); if(!sp) return;
+        if(sp.premium && !isPremium(editor)) return openGate(editor,'Music spectrum template শুধু Premium সদস্যরা ব্যবহার করতে পারবেন');
+        editor.dataset.spectrumStyle=id; updateSpectrumVisual(editor);
+        flashToast(editor, `${sp.name} নির্বাচন করা হয়েছে`);
+      });
+    }
+    const recBtn=$('[data-rec-record]', editor);
+    if(recBtn && !recBtn.dataset.boundRecWatch){
+      recBtn.dataset.boundRecWatch='1';
+      const mo=new MutationObserver(()=>{
+        const active=recBtn.classList.contains('recording');
+        editor.classList.toggle('is-recording', active);
+        ensureOverlay(editor);
+      });
+      mo.observe(recBtn,{attributes:true,attributeFilter:['class']});
+      recBtn.addEventListener('click',()=>setTimeout(()=>{editor.classList.toggle('is-recording', recBtn.classList.contains('recording')); ensureOverlay(editor);},40));
+    }
+    const preview=$('[data-rec-preview]', editor);
+    if(preview && !preview.dataset.boundPreviewWatch){
+      preview.dataset.boundPreviewWatch='1';
+      const mo=new MutationObserver(()=>ensureOverlay(editor));
+      mo.observe(preview,{childList:true,subtree:false});
+    }
+    const premiumBox=$('.bdc-media-premium', editor);
+    if(premiumBox && !$('[data-superpremium-audio]', premiumBox)) premiumBox.insertAdjacentHTML('beforeend','<div class="bdc-superpremium-panel" data-superpremium-audio><h4>Audio Template Access</h4><p>Free user basic audio/video post করতে পারবে। Premium user music spectrum template, BG music mix, denoise, mastering ব্যবহার করতে পারবে। Super Premium user extra creator-ready spectrum pack, saved audio cover style এবং pro presentation pack পাবে।</p></div>');
+  }
+  function enhanceEditor(editor){
+    if(!editor || editor.dataset.v70Enhanced==='1') return; editor.dataset.v70Enhanced='1';
+    editor.dataset.spectrumStyle='bars-pink';
+    enhanceMedia(editor); enhancePremium(editor); enhanceNews(editor); updateSpectrumVisual(editor);
+    const mo=new MutationObserver(()=>{ensureOverlay(editor); enhanceNews(editor); updateSpectrumVisual(editor);});
+    mo.observe(editor,{childList:true,subtree:true});
+  }
+  function scan(){ $$('[data-editor]').forEach(enhanceEditor); }
+  new MutationObserver(scan).observe(D.documentElement,{childList:true,subtree:true});
+  if(D.readyState==='loading') D.addEventListener('DOMContentLoaded', scan, {once:true}); else scan();
+})();
+</script>
+
+<script id="bd-compose-english-lock-v163">
+(()=>{
+  if(window.__BD_COMPOSE_ENGLISH_V163__)return;
+  window.__BD_COMPOSE_ENGLISH_V163__=1;
+  const exact=new Map([
+    ['কবিতা','Poetry'],['আবৃত্তি','Recitation'],['রিলস','Reels'],['প্রলাপ','Prose'],
+    ['চিঠিপত্র','Letters'],['চিঠি','Letter'],['পরিবেশ','Environment'],['শিশুতোষ','Children'],['নিউজ','News'],
+    ['কবিতা + ছবি','Poetry + Image'],['পরিবেশ + ছবি','Environment + Image'],
+    ['টেমপ্লেট','Template'],['ফন্ট','Font'],['কালার','Color'],['ছবি','Image'],['ইমোজি','Emoji'],
+    ['ফিল্টার','Filter'],['ইফেক্ট','Effect'],['এডিটিং','Editing'],['শিরোনাম','Title'],['মূল লেখা','Body'],
+    ['প্রকাশ','Publish'],['সম্পাদনা','Edit'],['ফিরুন','Back'],['বাতিল','Cancel'],['সংরক্ষণ','Save'],
+    ['বন্ধ করুন','Close'],['সাধারণ পোস্ট','Normal Post'],['অডিও/ভিডিও','Audio/Video'],
+    ['স্বাভাবিক','Normal'],['স্বচ্ছ','Clear'],['গ্লসি','Glossy'],['উষ্ণ','Warm'],['শীতল','Cool'],['ম্যাট','Matte'],['নাটকীয়','Dramatic'],
+    ['Premium সুবিধা','Premium Features'],['রিকোয়েস্ট','Request'],['PIN দিন','Enter PIN'],
+    ['অডিও প্রস্তুত','Audio Ready'],['রেকর্ড প্রস্তুত','Recording Ready']
+  ]);
+  const placeholders=new Map([
+    ['আজ আপনার ভেতরে কী কথা জমে আছে?',"What's on your mind today?"],
+    ['শিরোনাম লিখুন — এটি বাধ্যতামূলক','Write a title — required'],
+    ['ক্যাপশন বা মূল লেখা লিখুন…','Write a caption or main text…']
+  ]);
+  function lockMidnight(root){
+    root.querySelectorAll?.('[data-category-choice="midnight"] span').forEach(x=>x.textContent='মধ্যরাতের প্রলাপ');
+  }
+  function apply(root=document){
+    const __l=String(window.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||document.documentElement.lang||'en').toLowerCase();if(__l!=='en')return;
+    root.querySelectorAll?.('input,textarea').forEach(el=>{
+      const p=el.getAttribute('placeholder');
+      if(placeholders.has(p))el.setAttribute('placeholder',placeholders.get(p));
+    });
+    const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+    for(const n of nodes){
+      const p=n.parentElement;if(!p||p.closest('script,style'))continue;
+      if(p.closest('[data-category-choice="midnight"]')){n.nodeValue='মধ্যরাতের প্রলাপ';continue}
+      const t=(n.nodeValue||'').trim();
+      if(exact.has(t))n.nodeValue=n.nodeValue.replace(t,exact.get(t));
+    }
+    lockMidnight(root);
+  }
+  apply(document);
+  new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)apply(n)}).observe(document.documentElement,{childList:true,subtree:true});
+  window.addEventListener('bd:languagechange',()=>setTimeout(()=>apply(document),0));
+})();
+</script>
+
+<script id="bd-compose-v200-runtime-polish">
+(()=>{
+ if(window.__BD_COMPOSE_V200_POLISH__)return;window.__BD_COMPOSE_V200_POLISH__=1;
+ const exact=new Map([
+  ['টেমপ্লেট','Templates'],['কালার','Color'],['ছবি','Image'],['ফিল্টার','Filters'],['ইফেক্ট','Finish'],['সেট করুন','Position'],
+  ['অডিও নিন','Upload Audio'],['ভিডিও নিন','Upload Video'],['সরাসরি রেকর্ড','Record'],['নিজের মতো Adjust','Free Position'],
+  ['Premium Studio সুবিধা','Premium Studio'],['প্রথমে অডিও বা ভিডিও নির্বাচন করুন','Choose audio or video first.'],['Music Mix-এর আগে BG Music নির্বাচন করুন','Choose background music before Music Mix.']
+ ]);
+ function clean(root=document){
+  const __l=String(window.BDRegion?.uiLanguage||localStorage.getItem('bd-ui-language-v2')||document.documentElement.lang||'en').toLowerCase();if(__l!=='en')return;
+  const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),a=[];while(w.nextNode())a.push(w.currentNode);
+  for(const n of a){const p=n.parentElement;if(!p||p.closest('script,style')||p.closest('[data-category-choice="midnight"]'))continue;const t=(n.nodeValue||'').trim();if(exact.has(t))n.nodeValue=n.nodeValue.replace(t,exact.get(t))}
+  root.querySelectorAll?.('[data-category-choice="midnight"] span').forEach(x=>x.textContent='মধ্যরাতের প্রলাপ');
+ }
+ clean();new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1)clean(n)}).observe(document.documentElement,{subtree:true,childList:true});
+})();
+</script>
+<style id="bd-compose-location-hotfix-20260822">
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.bdc-prompt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bdc-editor input,.bdc-editor textarea{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+</style>
+<script data-bd-module="compose-location-v132" id="bd-compose-location-script-v132">
+(()=>{'use strict';
+if(window.__BD_COMPOSE_LOCATION_V132__)return;
+window.__BD_COMPOSE_LOCATION_V132__=1;
+
+const W=window,D=document;
+const q=(s,r=D)=>r&&r.querySelector?r.querySelector(s):null;
+const qa=(s,r=D)=>Array.from(r&&r.querySelectorAll?r.querySelectorAll(s):[]);
+const mounted=new Set();
+
+function activeRegion(){
+  try{
+    const B=W.BDRegion||{};
+    const feed=String(B.mode||B.feedMode||'').toLowerCase();
+    const local=typeof B.getRescueLocation==='function'?B.getRescueLocation():null;
+    const home=typeof B.getHomeCountry==='function'?B.getHomeCountry():null;
+    return (feed==='local'?(local||home):(home||local))||local||home||{};
+  }catch(_){return {}}
+}
+function uiLanguage(r){
+  try{
+    const B=W.BDRegion||{};
+    const raw=typeof B.uiLanguage==='function'?B.uiLanguage():B.uiLanguage;
+    return String(raw||r.lang||D.documentElement.lang||'bn').toLowerCase()
+  }catch(_){return String(r.lang||D.documentElement.lang||'bn').toLowerCase()}
+}
+function promptCopy(category){
+  const r=activeRegion(),cc=String(r.countryCode||'').toUpperCase(),key=String(r.key||''),
+        city=String(r.city||'').trim(),region=String(r.region||'').trim(),
+        country=String(r.countryName||'').trim(),ui=uiLanguage(r);
+  const placeBN=city||region||country||'এখানে';
+  const placeEN=city||region||country||'your place';
+  let collapsed,title,bodyBase,mediaTitle,mediaBody;
+
+  if(ui==='ar'){
+    collapsed=(city?city+' · ':'')+'ما الذي يدور في بالك اليوم؟';
+    title='اكتب عنوانًا';
+    bodyBase='اكتب فكرتك أو قصيدتك أو رسالتك هنا…';
+    mediaTitle='اكتب عنوانًا — مطلوب';
+    mediaBody='اكتب الوصف أو النص…';
+  }else if(ui==='hi'){
+    collapsed=(city?city+' · ':'')+'आज आपके मन में क्या है?';
+    title='एक शीर्षक लिखिए';
+    bodyBase='यहाँ अपनी बात, कविता या विचार लिखिए…';
+    mediaTitle='शीर्षक लिखिए — आवश्यक';
+    mediaBody='कैप्शन या विवरण लिखिए…';
+  }else if(ui==='bn'){
+    if(key==='IN_WB'||(cc==='IN'&&/west bengal|kolkata|calcutta/i.test((region+' '+city).toLowerCase())))collapsed=(city?city+'র আকাশের নিচে ':'')+'আজ মনখানির ভেতর কোন কথাটা জমে আছে?';
+    else collapsed=(city?placeBN+' থেকে ':'')+'আজ আপনার ভেতরে কী কথা জমে আছে?';
+    title='একটি শিরোনাম লিখুন';
+    bodyBase='এখানে আপনার মনের কথা, কবিতা বা ভাবনা লিখুন…';
+    mediaTitle='শিরোনাম লিখুন — আবশ্যক';
+    mediaBody='ক্যাপশন বা মূল কথা লিখুন…';
+  }else{
+    collapsed=city?`What’s on your mind in ${city} today?`:"What's on your mind today?";
+    title='Write a title';
+    bodyBase='Write your thought, poem or message here…';
+    mediaTitle='Write a title — required';
+    mediaBody='Write a caption or body…';
+  }
+
+  let body=bodyBase;
+  const localText=(bn,en,hi,ar)=>ui==='bn'?bn:ui==='hi'?hi:ui==='ar'?ar:en;
+  switch(String(category||'poem').toLowerCase()){
+    case 'reels': body=localText('রিলসের জন্য ছোট্ট ক্যাপশন লিখুন…','Write a short caption for this reel…','रील के लिए छोटा कैप्शन लिखिए…','اكتب تعليقًا قصيرًا لهذا الريل…'); break;
+    case 'children': body=localText('শিশুদের জন্য ছড়া, গল্প বা মিষ্টি কথা লিখুন…',"Write a rhyme, story or gentle words for children…",'बच्चों के लिए कविता, तुकबंदी या कहानी लिखिए…','اكتب للأطفال قصة أو أنشودة جميلة…'); break;
+    case 'letter': body=localText('আপনার চিঠিটি এখানে লিখুন…','Write your letter here…','अपना पत्र यहाँ लिखिए…','اكتب رسالتك هنا…'); break;
+    case 'environment': body=localText('প্রকৃতি, নদী, সবুজ বা পরিবেশ নিয়ে লিখুন…','Write about nature, rivers, greenery or the environment…','प्रकृति, नदी, हरियाली या पर्यावरण का विचार लिखिए…','اكتب فكرة عن البيئة أو الطبيعة…'); break;
+    case 'news': body=localText('সংবাদের মূল বিবরণ লিখুন…','Write the main news details…','समाचार का मुख्य विवरण लिखिए…','اكتب تفاصيل الخبر…'); break;
+  }
+  return {collapsed,title,body,mediaTitle,mediaBody}
+}
+
+function setText(el,value){
+  if(el&&el.textContent!==value)el.textContent=value;
+}
+function setPlaceholder(el,value){
+  if(el&&el.getAttribute('placeholder')!==value&&!el.value)el.setAttribute('placeholder',value);
+}
+function applyComposePatch(entry){
+  const root=entry?.root;
+  if(!root||!root.isConnected)return;
+  const s=entry.state||null;
+  const editor=s?.editor&&s.editor.isConnected?s.editor:q('.bdc-editor.open')||q('.bdc-editor');
+  const category=String(editor?.dataset?.category||root.dataset.bdComposerCategory||s?.category||'poem');
+  const copy=promptCopy(category);
+
+  const promptBtn=q('[data-open]',root);
+  if(promptBtn){
+    setText(promptBtn,copy.collapsed);
+    if(promptBtn.title!==copy.collapsed)promptBtn.title=copy.collapsed;
+  }
+  if(editor){
+    qa('[data-panel="ordinary"] [data-title], .bdc-template [data-title], [data-news-title]',editor)
+      .forEach(el=>setPlaceholder(el,copy.title));
+    qa('[data-panel="ordinary"] [data-body], .bdc-template [data-body], [data-news-body]',editor)
+      .forEach(el=>setPlaceholder(el,copy.body));
+    setPlaceholder(q('[data-media-title]',editor),copy.mediaTitle);
+    setPlaceholder(q('[data-media-body]',editor),copy.mediaBody);
+  }
+}
+function applyAll(){
+  for(const entry of [...mounted]){
+    if(!entry.root?.isConnected){mounted.delete(entry);continue}
+    applyComposePatch(entry)
+  }
+}
+function scheduleApply(delay=0){setTimeout(applyAll,delay)}
+
+const mod=W.BD_MODULES&&W.BD_MODULES.compose;
+if(mod&&!mod.__bdLocationPatchedV132){
+  const oldMount=mod.mount.bind(mod);
+  mod.mount=function(target,opt={}){
+    const state=oldMount(target,opt);
+    const root=(target&&target.querySelector&&target.querySelector('.bdc-root:last-child'))||state?.root||null;
+    if(root){
+      if(opt?.defaultCategory)root.dataset.bdComposerCategory=String(opt.defaultCategory);
+      const entry={root,state};
+      mounted.add(entry);
+      applyComposePatch(entry);
+      scheduleApply(80);
+      scheduleApply(450);
+    }
+    return state
+  };
+  mod.__bdLocationPatchedV132=true;
+}
+
+/* Event-driven only. No DOM mutation watcher: avoids the former self-triggering loop. */
+['bd:experiencechange','bd:rescuechange','bd:languagechange','bd:compose-hydrated']
+  .forEach(name=>W.addEventListener(name,()=>scheduleApply(0)));
+
+D.addEventListener('click',e=>{
+  if(e.target.closest?.('[data-open],[data-category-choice],[data-mode],[data-media-toggle]')){
+    scheduleApply(0);scheduleApply(120)
+  }
+},true);
+
+W.BDComposeLocationV132={ready:true,apply:applyAll};
+D.documentElement.dataset.bdComposeLocation='v132-ready';
+})();
+</script>
+
+</body></html>

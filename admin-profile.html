@@ -844,6 +844,17 @@ W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 }
 html[data-theme="dark"] .bd140-secondary .bd140-send{color:#f16e79!important}
 </style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="style.css">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<script defer src="offline-db.js"></script>
+<script defer src="localization.js"></script>
+<script defer src="prayer-times.js"></script>
+<script defer src="gift-box.js"></script>
+<script defer src="social-permissions.js"></script>
+<script defer src="app.js"></script>
 </head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
@@ -1267,6 +1278,8 @@ async function toggleFollow(){
   if(state.owner||!state.target?.id)return;
   const me=String(state.me.id||''),other=String(state.target.id||'');if(!me||!other||me===other)return;
   const previous=!!state.followed,previousCount=bdV161FollowerCount(),next=!previous;
+  /* profile-follow-permission-v1 */
+  if(next&&window.BDSocialPermissions){try{const pd=await window.BDSocialPermissions.decision('follow',other,{fresh:true});if(!pd.allowed){toast('এই ব্যবহারকারী এখন Follow গ্রহণ করছেন না');return}if(pd.requires_approval){const rr=await window.BDSocialPermissions.requestFollow(other);if(rr.requested){toast('Follow request পাঠানো হয়েছে');return}}}catch(e){toast(e?.message||'Follow request পাঠানো যায়নি');return}}
   state.followed=next;
   bdWriteFollowCache(me,other,next);
   bdV161SetFollowerCount(previousCount+(next?1:-1));
@@ -1307,6 +1320,8 @@ function bdV93DedupeProfileUpdates(rows){const out=[];for(const p of rows||[]){i
 async function loadPosts(){
   let rows=[];
   const tid=String(state.target?.id||'').trim(),tu=String(state.target?.username||'').replace(/^@/,'').toLowerCase().trim();
+  /* profile-private-load-guard-v1 */
+  if(!state.owner&&tid&&window.BDSocialPermissions){try{const pd=await window.BDSocialPermissions.decision('profile_view',tid,{fresh:true});if(!pd.allowed){state.posts=[];state.postsLoaded=true;renderContent();loadStats();return}}catch(_){}}
   initSupabaseClient();
   if(sb&&(tid||tu)&&!state.target?.__unresolved){
     try{
