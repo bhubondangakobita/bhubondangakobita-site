@@ -1127,6 +1127,81 @@ W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 }
 </style>
 
+
+<style id="bd-compose-v136-studio">
+/* =========================================================
+   V136 STUDIO — category-specific editor, always-visible canvas
+   ========================================================= */
+.bdc-editor{--bd-studio-bottom:78px}
+.bdc-workspace{padding-bottom:calc(var(--bd-studio-bottom) + env(safe-area-inset-bottom) + 16px)!important}
+.bdc-studio-shell{display:grid;gap:10px;min-height:0}
+.bdc-studio-preview{position:relative;min-height:280px;border-radius:18px;overflow:hidden;background:linear-gradient(145deg,#0d151a,#13252f);border:1px solid rgba(131,155,173,.12);box-shadow:0 12px 28px rgba(9,20,29,.13)}
+.bdc-studio-preview video,.bdc-studio-preview img{width:100%;height:100%;min-height:280px;max-height:56vh;object-fit:contain;background:#000;display:block;filter:var(--bd-studio-filter,none);transform:translateZ(0)}
+.bdc-studio-preview audio{width:calc(100% - 24px);margin:120px 12px 0}
+.bdc-studio-preview .bdc-studio-empty{min-height:280px;display:grid;place-items:center;text-align:center;padding:30px;color:#b8c6d0;font-size:12px;line-height:1.6}
+.bdc-studio-live-badge{position:absolute;left:10px;top:10px;z-index:3;padding:5px 8px;border-radius:999px;background:rgba(8,18,22,.72);color:#fff;font:900 7px/1 system-ui;backdrop-filter:blur(8px)}
+.bdc-studio-tools{display:grid;gap:9px}
+.bdc-studio-group{padding:10px;border-radius:16px;border:1px solid rgba(93,119,144,.09);background:rgba(255,255,255,.75)}
+.bdc-studio-group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.bdc-studio-group-head b{font-size:9px;color:#17364a}.bdc-studio-group-head small{font-size:6.5px;color:#8494a0}
+.bdc-studio-chiprow{display:flex;gap:7px;overflow-x:auto;padding:1px 1px 4px;scrollbar-width:none}.bdc-studio-chiprow::-webkit-scrollbar{display:none}
+.bdc-studio-chip{flex:0 0 auto;min-height:34px;padding:0 10px;border-radius:999px;border:1px solid rgba(81,106,143,.10);background:#fff;color:#18384d;font-size:7px;font-weight:900}
+.bdc-studio-chip.active{background:#0d7251;color:#fff;border-color:#0d7251}
+.bdc-studio-range{display:grid;grid-template-columns:92px minmax(0,1fr) 34px;gap:8px;align-items:center;margin-top:8px}
+.bdc-studio-range label{font-size:7px;color:#657988;font-weight:850}
+.bdc-studio-range input[type=range]{width:100%;accent-color:#0d7653}
+.bdc-studio-range output{font-size:7px;color:#17364a;text-align:right}
+.bdc-studio-master{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.bdc-studio-master button{min-height:44px;border-radius:12px;border:1px solid rgba(82,107,143,.10);background:linear-gradient(180deg,#fff,#f6faf8);color:#19384d;font-size:7px;font-weight:900}
+.bdc-studio-master button.on{background:linear-gradient(145deg,#0c7350,#149568);color:#fff}
+.bdc-studio-record{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px;border-radius:15px;background:linear-gradient(145deg,#fff7f8,#fff);border:1px solid rgba(204,46,66,.12)}
+.bdc-studio-record-btn{width:58px;height:58px;border-radius:50%;border:0;background:radial-gradient(circle at 35% 30%,#ff6376,#d41e38 68%,#a91029);color:#fff;font-size:11px;font-weight:900;box-shadow:0 10px 24px rgba(202,31,55,.20)}
+.bdc-studio-record-btn.recording{animation:bdcRecPulse .8s ease-in-out infinite alternate}
+@keyframes bdcRecPulse{to{transform:scale(1.05);box-shadow:0 0 0 8px rgba(218,31,57,.08),0 12px 26px rgba(202,31,55,.24)}}
+.bdc-studio-record-copy b{display:block;font-size:9px;color:#18384d}.bdc-studio-record-copy small{display:block;margin-top:3px;font-size:6.7px;line-height:1.45;color:#81909d}
+.bdc-studio-timer{font:900 8px/1 system-ui;color:#a61a30}
+.bdc-audio-chain{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.bdc-audio-chain span{padding:7px 5px;border-radius:10px;background:#f6f8fa;color:#6e7f8d;font-size:6.3px;font-weight:850;text-align:center}
+.bdc-audio-chain span.on{background:#e9f7f1;color:#0c7451}
+.bdc-normal-post-note{padding:9px 10px;border-radius:12px;background:rgba(20,122,89,.055);color:#5f766d;font-size:7px;line-height:1.55}
+.bdc-normal-post-note b{color:#0c7150}
+
+/* Fixed bottom toolbar: never jumps above keyboard. */
+.bdc-studio-bottomnav{
+ position:fixed!important;
+ left:0!important;right:0!important;bottom:0!important;
+ z-index:2147482500!important;
+ min-height:var(--bd-studio-bottom)!important;
+ padding:7px 10px calc(7px + env(safe-area-inset-bottom))!important;
+ display:flex!important;gap:7px!important;align-items:center!important;
+ overflow-x:auto!important;overflow-y:hidden!important;
+ background:rgba(12,18,24,.92)!important;
+ border-top:1px solid rgba(255,255,255,.08)!important;
+ backdrop-filter:blur(18px) saturate(125%)!important;
+ -webkit-backdrop-filter:blur(18px) saturate(125%)!important;
+ scrollbar-width:none!important;
+ transform:translateZ(0)!important;
+}
+.bdc-studio-bottomnav::-webkit-scrollbar{display:none}
+.bdc-studio-bottomnav button{flex:0 0 auto;min-width:72px;min-height:48px;border:1px solid rgba(255,255,255,.10);border-radius:13px;background:rgba(255,255,255,.06);color:#fff;font-size:7px;font-weight:900}
+.bdc-studio-bottomnav button.active{background:#0e7352;border-color:#0e7352}
+.bdc-editor.bdc-keyboard-open .bdc-studio-bottomnav{transform:none!important;bottom:0!important}
+
+/* Prevent iOS from lifting the toolbar with visual viewport. */
+@supports(height:100dvh){
+ .bdc-editor.open{height:100dvh!important;max-height:100dvh!important}
+}
+html[data-theme="dark"] .bdc-studio-group{background:#12202b;border-color:rgba(163,190,213,.10)}
+html[data-theme="dark"] .bdc-studio-group-head b,html[data-theme="dark"] .bdc-studio-range output,html[data-theme="dark"] .bdc-studio-record-copy b{color:#eef6ff}
+html[data-theme="dark"] .bdc-studio-chip,html[data-theme="dark"] .bdc-studio-master button{background:#162734;color:#eef6ff;border-color:rgba(163,190,213,.10)}
+@media(max-width:520px){
+ .bdc-studio-master{grid-template-columns:1fr 1fr}
+ .bdc-audio-chain{grid-template-columns:1fr 1fr}
+ .bdc-studio-preview{min-height:240px}
+ .bdc-studio-preview video,.bdc-studio-preview img{min-height:240px;max-height:50vh}
+}
+</style>
+
 </head>
 <body style="margin:0;background:transparent">
 <main id="bdComposeDemo"></main>
@@ -1417,7 +1492,14 @@ function openEditorSafe(s,cat='poem'){
       const ordinary=ed.querySelector('[data-panel="ordinary"]');
       if(ordinary){ordinary.hidden=false;ordinary.classList.add('active');s.mode='ordinary'}
     }
-    ed.dataset.bdcReady='1';
+    ed.dataset.bdcReady='1';bdcStudioMount(s);bdcStudioBottomNav(s);bdcStudioViewportLock(s);
+    if(String(s.category||'').toLowerCase()==='normal'){
+      const ws=ed.querySelector('.bdc-workspace')||ed;
+      if(!ed.querySelector('[data-normal-post-note]')){
+        const n=D.createElement('div');n.className='bdc-normal-post-note';n.dataset.normalPostNote='1';n.innerHTML='<b>সাধারণ পোস্ট</b> — শিরোনাম বাধ্যতামূলক নয়। এই পোস্ট শুধু Index এবং Profile Home-এ থাকবে; কোনো সাহিত্যিক Archive/Category-তে যোগ হবে না।';
+        ws.prepend(n)
+      }
+    }
    }catch(err){
     try{s.editor?.classList.remove('open')}catch(_){}
     lockPage(false);
@@ -1852,14 +1934,15 @@ function bdDeepModerationLocal(kind,payload,terms,contentId){
 }
 
 function bdDetectorNotice(message){let box=document.getElementById('bdDeepDetectorNotice');if(!box){box=document.createElement('div');box.id='bdDeepDetectorNotice';box.style.cssText='position:fixed;z-index:999999;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(520px,calc(100vw - 26px));padding:15px 16px;border-radius:18px;background:linear-gradient(145deg,#101713,#1c2a21);color:#f2fff7;border:1px solid rgba(111,232,168,.22);box-shadow:0 20px 60px rgba(0,0,0,.30);font:600 12px/1.72 "Noto Sans Bengali",sans-serif;opacity:0;transition:.2s;pointer-events:none';document.body.appendChild(box)}box.textContent=message;box.style.opacity='1';clearTimeout(box._t);box._t=setTimeout(()=>box.style.opacity='0',6500)}
-async function publish(s){const mp=Q('[data-media-studio]',s.editor);if(mp&&!mp.hidden){const mt=Q('[data-media-title]',s.editor),mb=Q('[data-media-body]',s.editor);if(mt)s.title=mt.value.trimStart();if(mb)s.body=mb.value;const op=Q('[data-panel="ordinary"]',s.editor);const ot=op&&Q('[data-title]',op),ob=op&&Q('[data-body]',op);if(ot)ot.value=s.title;if(ob)ob.value=s.body;s.mediaAccepted=!!(s.audioFile||s.videoFile)}saveVisible(s);if(!s.title.trim()){toast(s,'A title is required.');Q('[data-title]',visiblePanel(s))?.focus({preventScroll:true});return}if(!s.body.trim()){toast(s,'Write the post body.');return}if(s.category!=='news'&&s.mode==='template'&&lineCount(s.body)>10){toast(s,'দীর্ঘ লেখা সাধারণ পোস্টে নেওয়া হচ্ছে');setMode(s,'ordinary');return}if(!s.session)s.session=await session();if(!s.session){toast(s,'Log in to publish.');return}s.role=await roleOf(s.session);s.privileged=isPrivileged(s.role);if(s.category==='news'&&!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'News can be published only by an approved Page or Founder.');return}if(s.category==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}if(requiresCopyright(s)&&!s.copyrightOk){toast(s,'Font/BG Music ব্যবহারের আগে কপিরাইট দায় স্বীকার করুন');return}
+async function publish(s){const mp=Q('[data-media-studio]',s.editor);if(mp&&!mp.hidden){const mt=Q('[data-media-title]',s.editor),mb=Q('[data-media-body]',s.editor);if(mt)s.title=mt.value.trimStart();if(mb)s.body=mb.value;const op=Q('[data-panel="ordinary"]',s.editor);const ot=op&&Q('[data-title]',op),ob=op&&Q('[data-body]',op);if(ot)ot.value=s.title;if(ob)ob.value=s.body;s.mediaAccepted=!!(s.audioFile||s.videoFile)}saveVisible(s);if(!s.title.trim()&&String(s.category||'').toLowerCase()!=='normal'){toast(s,'A title is required.');Q('[data-title]',visiblePanel(s))?.focus({preventScroll:true});return}if(!s.body.trim()){toast(s,'Write the post body.');return}if(s.category!=='news'&&s.mode==='template'&&lineCount(s.body)>10){toast(s,'দীর্ঘ লেখা সাধারণ পোস্টে নেওয়া হচ্ছে');setMode(s,'ordinary');return}if(!s.session)s.session=await session();if(!s.session){toast(s,'Log in to publish.');return}s.role=await roleOf(s.session);s.privileged=isPrivileged(s.role);if(s.category==='news'&&!canNews(s.role)&&!bdPageNewsAllowed()){toast(s,'News can be published only by an approved Page or Founder.');return}if(s.category==='midnight'&&!canMidnightWrite(s.role)){toast(s,'মধ্যরাতের প্রলাপ — Founder Mahmud Sohel only.');return}if(requiresCopyright(s)&&!s.copyrightOk){toast(s,'Font/BG Music ব্যবহারের আগে কপিরাইট দায় স্বীকার করুন');return}
 const moderationTerms=bdDeepBadTerms((s.title||'')+'\n'+(s.body||''));
 const literaryPoem=(s.category==='poem');
 const status=(moderationTerms.length&&!literaryPoem)?'pending_review':'published';
 const image_url=await upload(s),audio_url=await uploadOne(s,s.mediaAccepted?s.audioFile:null,'audio'),video_url=await uploadOne(s,s.mediaAccepted?s.videoFile:null,'video'),media_url=video_url||audio_url||image_url||'',news_images=s.category==='news'?await Promise.all(s.newsImageFiles.filter(Boolean).map((f,i)=>uploadOne(s,f,'news-'+i))):[],template_asset_url=await uploadOne(s,s.externalTemplateFile,'template'),news_template_url=await uploadOne(s,s.newsCustomTemplateFile,'news-template'),bgm_url=await uploadOne(s,s.bgmFile,'bgm');const typography={title_font:s.mode==='premium'?s.titleFontFamily:'Noto Serif Bengali',body_font:s.mode==='premium'?s.bodyFontFamily:'Noto Serif Bengali',title_color:s.mode==='premium'?s.titleColor:'#102b4b',body_color:s.mode==='premium'?s.bodyColor:'#102b4b',title_bold:s.mode==='premium'?!!s.titleBold:true,body_bold:s.mode==='premium'?!!s.bodyBold:false};const pg=bdPageSession(),mdUser=s.session.user.user_metadata||{},author_name=(s.category==='news'&&pg?.page_name)?pg.page_name:(mdUser.full_name||mdUser.name||mdUser.display_name||mdUser.username||s.session.user.email?.split('@')[0]||'সদস্য'),author_avatar=(s.category==='news'&&pg?.logo_url)?pg.logo_url:(mdUser.avatar_url||mdUser.picture||'');const bdExp=W.BDRegion?.getExperience?.()||{},bdFeedRegion=W.BDRegion?.getFeedRegion?.()||{};
 const media_template=!!(image_url&&['template','premium'].includes(String(s.mode||'').toLowerCase()));
 const template_meta={...(s.preset?.meta||{}),bg:s.preset?.bg||'',ink:s.preset?.ink||'',accent:s.preset?.accent||'',frameRadius:s.preset?.frameRadius||0};
-const p={id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),author_id:s.session.user.id,author_name,author_avatar,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',language_code:bdExp.uiLanguage||'bn',title:s.title.trim(),body:s.body.trim(),type:s.category,status,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),font:typography.body_font,title_font:typography.title_font,body_font:typography.body_font,title_color:typography.title_color,body_color:typography.body_color,title_bold:typography.title_bold,body_bold:typography.body_bold,metadata:{...typography,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',feed_mode:bdExp.mode||'home',language_code:bdExp.uiLanguage||'bn',author_type:(s.category==='news'&&pg)?'page':'user',page_id:(s.category==='news'&&pg)?pg.page_id:null,page_name:(s.category==='news'&&pg)?pg.page_name:null,page_username:(s.category==='news'&&pg)?pg.username:null,page_logo_url:(s.category==='news'&&pg)?pg.logo_url:null,page_portal_url:(s.category==='news'&&pg)?pg.portal_url:null,page_verified:(s.category==='news'&&pg)?true:false,composer_mode:s.mode,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),news_template:s.category==='news'?(s.newsCustomTemplate?'custom':s.newsTemplate):null,news_template_url:news_template_url||'',news_images,template_asset_url:template_asset_url||((s.preset?.asset&&!String(s.preset.asset).startsWith('blob:'))?s.preset.asset:''),design_state:{title:s.titlePos,body:s.bodyPos,template:s.templatePos,photo:s.photoPos,news_title:s.newsTitlePos,news_body:s.newsBodyPos,news_template:s.newsTemplatePos,news_images:s.newsImagePos},studio_design:{title_size:s.titleSize,body_size:s.bodySize,line_height:s.lineHeight,letter_spacing:s.letterSpacing,align:s.align,filter:s.filter,motion:s.motion,effect:s.effect,canvas_ratio:s.canvasRatio},bgm_url:bgm_url||'',bgm_volume:s.bgmVolume||0,copyright_ack:!!s.copyrightOk,media_committed:!!s.mediaAccepted,media_template,template_meta,audio_processing:{media:s.videoFile?'video':'audio',preset:s.audioPreset||'original',voice_level:s.voiceLevel||100,noise_reduction:!!s.noiseReduced,mastering:!!s.mastered,music_mix:!!s.mixedBgm,processed:!!(s.audioProcessed||s.videoAudioProcessed),preview_chain:!!s.videoAudioProcessed,live_caption_supported:!!(W.SpeechRecognition||W.webkitSpeechRecognition)},video_studio:{look:s.videoLook||'clean',brightness:s.videoBrightness||100,contrast:s.videoContrast||100,saturation:s.videoSaturation||100,preview_speed:s.videoSpeed||1}},image_url,audio_url,video_url,bgm_url,media_url,media_type:video_url?'video':audio_url?'audio':image_url?'image':'',created_at:new Date().toISOString(),composer_mode:s.mode,media_template};const editing=!!s.editingId;if(editing)p.id=s.editingId;const db=editing?await updateExistingPost(s,p):await insertPost(s,p),final={...p,...(db||{})};if(status==='pending_review'){
+if(String(s.category||'').toLowerCase()==='normal')s.mode='ordinary';
+const p={id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),author_id:s.session.user.id,author_name,author_avatar,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',language_code:bdExp.uiLanguage||'bn',title:s.title.trim(),body:s.body.trim(),type:s.category,status,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),font:typography.body_font,title_font:typography.title_font,body_font:typography.body_font,title_color:typography.title_color,body_color:typography.body_color,title_bold:typography.title_bold,body_bold:typography.body_bold,metadata:{...typography,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',feed_mode:bdExp.mode||'home',language_code:bdExp.uiLanguage||'bn',author_type:(s.category==='news'&&pg)?'page':'user',page_id:(s.category==='news'&&pg)?pg.page_id:null,page_name:(s.category==='news'&&pg)?pg.page_name:null,page_username:(s.category==='news'&&pg)?pg.username:null,page_logo_url:(s.category==='news'&&pg)?pg.logo_url:null,page_portal_url:(s.category==='news'&&pg)?pg.portal_url:null,page_verified:(s.category==='news'&&pg)?true:false,composer_mode:s.mode,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),news_template:s.category==='news'?(s.newsCustomTemplate?'custom':s.newsTemplate):null,news_template_url:news_template_url||'',news_images,template_asset_url:template_asset_url||((s.preset?.asset&&!String(s.preset.asset).startsWith('blob:'))?s.preset.asset:''),design_state:{title:s.titlePos,body:s.bodyPos,template:s.templatePos,photo:s.photoPos,news_title:s.newsTitlePos,news_body:s.newsBodyPos,news_template:s.newsTemplatePos,news_images:s.newsImagePos},studio_design:{title_size:s.titleSize,body_size:s.bodySize,line_height:s.lineHeight,letter_spacing:s.letterSpacing,align:s.align,filter:s.filter,motion:s.motion,effect:s.effect,canvas_ratio:s.canvasRatio},bgm_url:bgm_url||'',bgm_volume:s.bgmVolume||0,copyright_ack:!!s.copyrightOk,media_committed:!!s.mediaAccepted,media_template,template_meta,...bdcNormalPostMeta(s),studio:{filter:s.studio?.filter||'clean',filterIntensity:Number(s.studio?.filterIntensity||1),effect:s.studio?.effect||'fade',autoEnhance:!!s.studio?.autoEnhance,stabilize:!!s.studio?.stabilize,normalize:!!s.studio?.normalize,denoise:!!s.studio?.denoise,dehum:!!s.studio?.dehum,compress:!!s.studio?.compress},audio_processing:{media:s.videoFile?'video':'audio',preset:s.audioPreset||'original',voice_level:s.voiceLevel||100,noise_reduction:!!s.noiseReduced,mastering:!!s.mastered,music_mix:!!s.mixedBgm,processed:!!(s.audioProcessed||s.videoAudioProcessed),preview_chain:!!s.videoAudioProcessed,live_caption_supported:!!(W.SpeechRecognition||W.webkitSpeechRecognition)},video_studio:{look:s.videoLook||'clean',brightness:s.videoBrightness||100,contrast:s.videoContrast||100,saturation:s.videoSaturation||100,preview_speed:s.videoSpeed||1}},image_url,audio_url,video_url,bgm_url,media_url,media_type:video_url?'video':audio_url?'audio':image_url?'image':'',created_at:new Date().toISOString(),composer_mode:s.mode,media_template};const editing=!!s.editingId;if(editing)p.id=s.editingId;const db=editing?await updateExistingPost(s,p):await insertPost(s,p),final={...p,...(db||{})};if(status==='pending_review'){
   bdDeepModerationLocal('post',{post_id:final.id,title:final.title,body:final.body,category:final.type,user_id:final.author_id},moderationTerms,final.id);
   try{const a=JSON.parse(localStorage.getItem('bhubondangaPendingReviewPosts')||'[]');a.unshift(final);localStorage.setItem('bhubondangaPendingReviewPosts',JSON.stringify(a.slice(0,1000)))}catch(_){}
   try{const mc=await supa();if(mc)await mc.from('moderation_queue').insert({content_type:'post',content_id:final.id,submitted_by:final.author_id,matched_terms:moderationTerms,status:'pending'})}catch(_){}
@@ -1881,6 +1964,149 @@ const LETTER_MAGIC={
 };
 let LETTER_MAGIC_BUSY=false;
 function playLetterMagic(s,btn){const letter=(btn?.textContent||'').trim(),cfg=LETTER_MAGIC[letter]||LETTER_MAGIC['অ'];if(LETTER_MAGIC_BUSY)return;LETTER_MAGIC_BUSY=true;btn?.classList.add('bdc-letter-lit');const old=Q('.bdc-magic-overlay');if(old)old.remove();const layer=D.createElement('div');layer.className='bdc-magic-overlay';layer.style.setProperty('--magic-accent',cfg.accent);layer.style.setProperty('--magic-glow',cfg.glow);layer.setAttribute('aria-hidden','true');layer.innerHTML=`<span class="bdc-magic-rays"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><span class="bdc-magic-spark"></span><div class="bdc-magic-quote" data-letter="${letter}"><p>${cfg.quote}</p></div>`;D.body.appendChild(layer);if(navigator.vibrate)try{navigator.vibrate(8)}catch(_){};const finish=()=>{layer.remove();btn?.classList.remove('bdc-letter-lit');LETTER_MAGIC_BUSY=false;openEditorSafe(s,btn?.dataset.cat||cfg.cat)};setTimeout(finish,1450)}
+
+function bdcStudioFilterCSS(name,intensity=1){
+ const n=String(name||'clean');
+ const x=Math.max(0,Math.min(2,Number(intensity)||1));
+ const map={
+  clean:'none',
+  soft:`contrast(${1+.04*x}) saturate(${1+.10*x}) brightness(${1+.02*x})`,
+  cinematic:`contrast(${1+.17*x}) saturate(${.92+.04*x}) brightness(${.95+.01*x})`,
+  vivid:`contrast(${1+.09*x}) saturate(${1+.28*x}) brightness(${1+.02*x})`,
+  mono:`grayscale(${Math.min(1,.7*x)}) contrast(${1+.10*x})`,
+  night:`brightness(${.82+.03*x}) contrast(${1+.22*x}) saturate(${.84+.03*x})`,
+  warm:`sepia(${.10*x}) saturate(${1+.18*x}) hue-rotate(${-5*x}deg)`,
+  cool:`saturate(${1+.10*x}) hue-rotate(${6*x}deg)`
+ };
+ return map[n]||'none'
+}
+function bdcStudioTemplateHTML(s){
+ const cat=String(s.category||'').toLowerCase(),media=s.mediaFile||null,kind=s.mediaKind||'';
+ const FILTERS={
+  recitation:['clean','soft','cinematic','warm','mono','night'],
+  reels:['clean','vivid','cinematic','cool','warm','night'],
+  poem:['clean','soft','warm','mono','cinematic'],
+  children:['clean','vivid','warm','cool','soft'],
+  environment:['clean','vivid','cool','warm','cinematic'],
+  letter:['clean','warm','mono','soft','cinematic'],
+  news:['clean','vivid','cool','cinematic','mono']
+ };
+ const EFFECTS={
+  recitation:['fade','poetry-glow','subtle-grain','focus-center'],
+  reels:['fade','vignette','film-grain','focus-center'],
+  poem:['poetry-glow','fade','subtle-grain','focus-center'],
+  children:['soft-pop','bright-edge','fade','focus-center'],
+  environment:['green-depth','sunlight','fade','vignette'],
+  letter:['paper-soft','warm-edge','fade','subtle-grain'],
+  news:['news-clean','focus-center','fade','vignette']
+ };
+ const filters=FILTERS[cat]||FILTERS.poem,fx=EFFECTS[cat]||EFFECTS.poem;
+ return `<section class="bdc-studio-shell" data-studio-shell>
+  <div class="bdc-studio-preview" data-studio-preview style="--bd-studio-filter:${bdcStudioFilterCSS(s.studio?.filter,s.studio?.filterIntensity||1)}">
+    <span class="bdc-studio-live-badge">LIVE PREVIEW</span>
+    <div class="bdc-studio-empty" data-studio-empty>ভিডিও/অডিও/ছবি বাছাই করলে Filter, Effect ও Mastering-এর ফল এখানে সঙ্গে সঙ্গে দেখা যাবে।</div>
+  </div>
+  <div class="bdc-studio-tools">
+    <div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>Filter</b><small>Live preview</small></div><div class="bdc-studio-chiprow">${filters.map(f=>`<button type="button" class="bdc-studio-chip ${s.studio?.filter===f?'active':''}" data-studio-filter="${f}">${f}</button>`).join('')}</div><div class="bdc-studio-range"><label>Intensity</label><input type="range" min="0" max="2" value="${Number(s.studio?.filterIntensity||1)}" step=".05" data-studio-filter-intensity><output>${Math.round(Number(s.studio?.filterIntensity||1)*50)}%</output></div></div>
+    <div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>Effect</b><small>Category specific</small></div><div class="bdc-studio-chiprow">${fx.map(f=>`<button type="button" class="bdc-studio-chip ${s.studio?.effect===f?'active':''}" data-studio-effect="${f}">${f}</button>`).join('')}</div></div>
+    <div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>JavaScript Mastering</b><small>Browser-safe processing</small></div><div class="bdc-studio-master">
+      <button type="button" class="${s.studio?.autoEnhance?'on':''}" data-studio-master="autoEnhance">Auto Enhance</button>
+      <button type="button" class="${s.studio?.stabilize?'on':''}" data-studio-master="stabilize">Visual Smooth</button>
+      <button type="button" class="${s.studio?.normalize?'on':''}" data-studio-master="normalize">Normalize</button>
+      <button type="button" class="${s.studio?.denoise?'on':''}" data-studio-master="denoise">Denoise</button>
+      <button type="button" class="${s.studio?.dehum?'on':''}" data-studio-master="dehum">Hum Reduce</button>
+      <button type="button" class="${s.studio?.compress?'on':''}" data-studio-master="compress">Voice Compress</button>
+    </div></div>
+    ${cat==='recitation'?`<div class="bdc-studio-group"><div class="bdc-studio-group-head"><b>Audio / Recitation Studio</b><small>Record directly</small></div>
+      <div class="bdc-studio-record"><button type="button" class="bdc-studio-record-btn" data-studio-record>REC</button><span class="bdc-studio-record-copy"><b>সরাসরি আবৃত্তি রেকর্ড করুন</b><small>Noise suppression · echo cancellation · auto gain · low-frequency hum reduction</small></span><span class="bdc-studio-timer" data-studio-timer>00:00</span></div>
+      <div class="bdc-audio-chain"><span class="on">Noise Suppression</span><span class="on">Echo Cancel</span><span class="on">Auto Gain</span><span class="on">High-pass / Hum</span></div>
+    </div>`:''}
+  </div>
+ </section>`
+}
+function bdcStudioEnsureState(s){
+ s.studio=s.studio||{filter:'clean',filterIntensity:1,effect:'fade',autoEnhance:true,stabilize:false,normalize:true,denoise:true,dehum:true,compress:true,recordedBlob:null,recordedUrl:'',recording:false,recordStart:0};
+ return s.studio
+}
+function bdcStudioApplyVisual(s){
+ const st=bdcStudioEnsureState(s),box=s.editor?.querySelector?.('[data-studio-preview]'),media=box?.querySelector?.('video,img');
+ if(!box)return;
+ box.style.setProperty('--bd-studio-filter',bdcStudioFilterCSS(st.filter,st.filterIntensity));
+ if(media)media.style.filter=bdcStudioFilterCSS(st.filter,st.filterIntensity);
+ box.classList.toggle('effect-vignette',st.effect==='vignette');
+ box.classList.toggle('effect-grain',st.effect==='film-grain'||st.effect==='subtle-grain');
+ box.classList.toggle('effect-glow',st.effect==='poetry-glow')
+}
+function bdcStudioLoadMedia(s){
+ const box=s.editor?.querySelector?.('[data-studio-preview]');if(!box)return;
+ const file=s.mediaFile||null,url=s.mediaURL||s.mediaUrl||s.mediaObjectURL||'';
+ let src=url;
+ if(file&&!src){try{src=URL.createObjectURL(file);s.mediaObjectURL=src}catch(_){}}
+ if(!src&&s.studio?.recordedUrl)src=s.studio.recordedUrl;
+ if(!src)return;
+ const kind=String(s.mediaKind||file?.type?.split('/')[0]||'').toLowerCase();
+ const old=box.querySelector('video,img,audio,[data-studio-empty]');old?.remove();
+ let el;
+ if(kind==='video'){el=D.createElement('video');el.src=src;el.controls=true;el.playsInline=true;el.preload='metadata'}
+ else if(kind==='audio'||s.studio?.recordedUrl===src){el=D.createElement('audio');el.src=src;el.controls=true;el.preload='metadata'}
+ else {el=D.createElement('img');el.src=src;el.alt=''}
+ box.appendChild(el);bdcStudioApplyVisual(s)
+}
+async function bdcStudioToggleRecord(s){
+ const st=bdcStudioEnsureState(s),btn=s.editor?.querySelector?.('[data-studio-record]'),timer=s.editor?.querySelector?.('[data-studio-timer]');
+ if(st.recording){try{st.recorder?.stop()}catch(_){};return}
+ if(!navigator.mediaDevices?.getUserMedia||!W.MediaRecorder){toast(s,'এই ডিভাইসে সরাসরি অডিও রেকর্ডিং সাপোর্ট পাওয়া যায়নি');return}
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,channelCount:1}});
+  const ctx=new (W.AudioContext||W.webkitAudioContext)(),source=ctx.createMediaStreamSource(stream),hp=ctx.createBiquadFilter(),comp=ctx.createDynamicsCompressor(),dest=ctx.createMediaStreamDestination();
+  hp.type='highpass';hp.frequency.value=90;hp.Q.value=.7;
+  comp.threshold.value=-24;comp.knee.value=18;comp.ratio.value=3;comp.attack.value=.008;comp.release.value=.25;
+  source.connect(hp);hp.connect(comp);comp.connect(dest);
+  const rec=new MediaRecorder(dest.stream),chunks=[];
+  st.recorder=rec;st.recording=true;st.recordStart=Date.now();btn?.classList.add('recording');if(btn)btn.textContent='STOP';
+  rec.ondataavailable=e=>{if(e.data?.size)chunks.push(e.data)};
+  rec.onstop=()=>{
+   try{stream.getTracks().forEach(t=>t.stop());ctx.close()}catch(_){}
+   st.recording=false;btn?.classList.remove('recording');if(btn)btn.textContent='REC';
+   st.recordedBlob=new Blob(chunks,{type:rec.mimeType||'audio/webm'});if(st.recordedUrl)try{URL.revokeObjectURL(st.recordedUrl)}catch(_){}
+   st.recordedUrl=URL.createObjectURL(st.recordedBlob);s.mediaKind='audio';s.mediaFile=st.recordedBlob;s.mediaObjectURL=st.recordedUrl;bdcStudioLoadMedia(s)
+  };
+  rec.start(300);
+  st.timer=setInterval(()=>{if(!st.recording){clearInterval(st.timer);return}const sec=Math.floor((Date.now()-st.recordStart)/1000);if(timer)timer.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')},250)
+ }catch(e){toast(s,'Microphone permission পাওয়া যায়নি')}
+}
+function bdcStudioBind(s){
+ const ed=s.editor;if(!ed||ed.dataset.studioBound==='1')return;ed.dataset.studioBound='1';bdcStudioEnsureState(s);
+ ed.addEventListener('click',e=>{
+  const f=e.target.closest?.('[data-studio-filter]');if(f){s.studio.filter=f.dataset.studioFilter;ed.querySelectorAll('[data-studio-filter]').forEach(x=>x.classList.toggle('active',x===f));bdcStudioApplyVisual(s);return}
+  const fx=e.target.closest?.('[data-studio-effect]');if(fx){s.studio.effect=fx.dataset.studioEffect;ed.querySelectorAll('[data-studio-effect]').forEach(x=>x.classList.toggle('active',x===fx));bdcStudioApplyVisual(s);return}
+  const m=e.target.closest?.('[data-studio-master]');if(m){const k=m.dataset.studioMaster;s.studio[k]=!s.studio[k];m.classList.toggle('on',!!s.studio[k]);return}
+  if(e.target.closest?.('[data-studio-record]')){bdcStudioToggleRecord(s);return}
+ });
+ ed.addEventListener('input',e=>{if(e.target.matches?.('[data-studio-filter-intensity]')){s.studio.filterIntensity=+e.target.value;e.target.nextElementSibling&&(e.target.nextElementSibling.value=Math.round(s.studio.filterIntensity*50)+'%');bdcStudioApplyVisual(s)}});
+}
+function bdcStudioMount(s){
+ if(!s?.editor)return;
+ const cat=String(s.category||s.editor.dataset.category||'').toLowerCase();
+ if(!['recitation','reels','news','environment','children','poem','letter'].includes(cat))return;
+ bdcStudioEnsureState(s);
+ let host=s.editor.querySelector('[data-bdc-studio-host]');
+ if(!host){host=D.createElement('div');host.dataset.bdcStudioHost='1';const ws=s.editor.querySelector('.bdc-workspace')||s.editor;ws.prepend(host)}
+ host.innerHTML=bdcStudioTemplateHTML(s);bdcStudioBind(s);bdcStudioLoadMedia(s)
+}
+function bdcNormalPostMeta(s){
+ return String(s.category||'').toLowerCase()==='normal'?{distribution_scope:'index_profile_home_only',archive:false,requires_title:false,ordinary_post:true}:{}
+}
+function bdcStudioBottomNav(s){
+ if(!s?.editor)return;let nav=s.editor.querySelector('[data-studio-bottomnav]');
+ if(!nav){nav=D.createElement('nav');nav.className='bdc-studio-bottomnav';nav.dataset.studioBottomnav='1';nav.innerHTML='<button type="button" data-studio-jump="write">Write</button><button type="button" data-studio-jump="media">Media</button><button type="button" data-studio-jump="studio">Studio</button><button type="button" data-studio-jump="template">Template</button><button type="button" data-studio-jump="publish">Publish</button>';s.editor.appendChild(nav);nav.onclick=e=>{const b=e.target.closest('[data-studio-jump]');if(!b)return;const k=b.dataset.studioJump;if(k==='publish'){s.editor.querySelector('[data-publish]')?.click();return}if(k==='studio'){s.editor.querySelector('[data-bdc-studio-host]')?.scrollIntoView({behavior:'smooth',block:'start'});return}if(k==='media'){s.editor.querySelector('[data-media-toggle],[data-add-media]')?.click();return}if(k==='template'){s.editor.querySelector('[data-mode="template"],[data-mode="premium"]')?.click();return}const t=s.editor.querySelector('[data-body],[data-news-body]');t?.focus({preventScroll:false})}}
+}
+function bdcStudioViewportLock(s){
+ if(!s?.editor||s.editor.dataset.vvBound==='1')return;s.editor.dataset.vvBound='1';
+ const vv=W.visualViewport;const sync=()=>{const open=vv&&vv.height<innerHeight*.78;s.editor.classList.toggle('bdc-keyboard-open',!!open)};
+ vv?.addEventListener('resize',sync,{passive:true});vv?.addEventListener('scroll',sync,{passive:true});sync()
+}
+
 function mount(target,opt={}){
  const box=D.createElement('div');box.innerHTML=shell();
  const root=box.firstElementChild;target.appendChild(root);
