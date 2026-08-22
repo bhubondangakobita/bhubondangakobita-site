@@ -916,7 +916,24 @@ W.addEventListener('bd:experiencechange',()=>{apply(D);updateSOS(D)});
 W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 })();
 </script>
-</head><body><div id="bdSidebarDemo" class="bd-demo-shell"><div data-l class="bd-side-stack"></div><div data-r class="bd-side-stack"></div></div><script data-bd-module="sidebars">
+</head><body><div id="bdSidebarDemo" class="bd-demo-shell"><div data-l class="bd-side-stack"></div><div data-r class="bd-side-stack"></div></div>
+<script id="bd-preview-emergency-bridge">
+window.BD_PLAN='super';
+window.BongDangEmergencyBridge={
+ async getLocation(){return {lat:23.81033,lng:90.41252,accuracy:12}},
+ async scanTransports(){return {transport:{internet:'failed',bluetooth:'ready',rf:'searching',lora:'idle',satellite:'paid'},received:4,approved:2,rescueAck:false,nearest:'1.2 km',direction:'North-East',routeStatus:'verified'}},
+ async sendEmergency(payload){
+   const emit=(d,ms)=>setTimeout(()=>window.dispatchEvent(new CustomEvent('bd:emergency-relay-progress',{detail:d})),ms);
+   emit({received:3,approved:1,transport:{bluetooth:'ready'},message:'3 nearby BongDang devices received the emergency alert',voiceDirection:'সামনে এগিয়ে যান। নিকটবর্তী সহায়তা উত্তর-পূর্ব দিকে।'},700);
+   emit({received:7,approved:3,transport:{rf:'ready'},message:'BongDang RF relay acknowledged by nearby devices'},1600);
+   emit({received:8,approved:4,rescueAck:true,nearest:'850 m',direction:'North-East · approx 8 min',routeStatus:'verified',transport:{lora:'acked'},message:'Local rescue gateway acknowledged the emergency',voiceDirection:'নিকটবর্তী রেসকিউ সহায়তা প্রায় আটশ পঞ্চাশ মিটার উত্তর-পূর্ব দিকে।'},2600);
+   return {ok:true,received:1,approved:0,transport:{bluetooth:'searching'},message:'Emergency relay started'};
+ },
+ async startVoiceGuidance(){return {ok:true}},async stopVoiceGuidance(){return {ok:true}}
+};
+</script>
+
+<script data-bd-module="sidebars">
 (()=>{'use strict';
 const D=document,W=window;W.BD_MODULES=W.BD_MODULES||{};if(W.BD_MODULES.sidebars)return;
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -1293,4 +1310,4 @@ W.BongDangLocationTouch={open,close,scanTransports,sendEmergency:sendThroughBrid
 })();
 </script>
 
-</body></html>
+<script>setTimeout(()=>window.BongDangLocationTouch?.open?.(),650);</script></body></html>
