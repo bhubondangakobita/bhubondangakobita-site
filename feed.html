@@ -1564,11 +1564,7 @@ function capability(){
     voice:!!(navigator.mediaDevices?.getUserMedia&&W.MediaRecorder)
   };
 }
-function status(msg,scope=D){
-  const el=scope.querySelector?.('[data-bd-sos-status]')||D.querySelector('[data-bd-sos-status]')||D.querySelector('#bdSOSStatus');
-  if(el)el.textContent=msg;
-  try{W.BDToast?.(msg)}catch(_){}
-}
+function status(msg,scope=D){const el=scope?.querySelector?.('[data-bd-sos-status]');if(!el)return;const s=String(msg||'');if(/not allowed|denied permission|user agent|platform in the current context/i.test(s)){el.textContent='';el.hidden=true;return}el.hidden=false;el.textContent=s}
 function updateSOS(root=D){
   const c=capability();
   root.querySelectorAll?.('[data-sos-tier="bluetooth"] .bd-sos-dot').forEach(x=>x.className='bd-sos-dot '+(c.bluetooth?'ready':'bridge'));
@@ -1741,18 +1737,7 @@ const toBn=n=>String(n??0).replace(/\d/g,d=>'০১২৩৪৫৬৭৮৯'[d])
 function toast(m){if(W.BDToast)return W.BDToast(m);let t=D.getElementById('bdFeedToast');if(!t){t=D.createElement('div');t.id='bdFeedToast';t.className='bd-feed-toast';D.body.appendChild(t)}t.textContent=m;t.classList.add('show');clearTimeout(t._x);t._x=setTimeout(()=>t.classList.remove('show'),2100)}
 function client(){return W.BD_SUPABASE||W.supabaseClient||W.bhubondangaSupabase||W.__supabaseClient||((W.supabase&&W.supabase.auth)?W.supabase:null)||null}
 async function session(){try{return (await client()?.auth?.getSession?.()).data?.session||null}catch(_){return null}}
-function rootTpl(){return `<section class="bd-feed-root"><section class="bd-human bd-human-v94 bd-glass" aria-label="মানবিক আবেদন ও জরুরি সহায়তা"><div class="bd-human-v94-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.7 4.8a5.4 5.4 0 0 0-7.6 0L12 5.9l-1.1-1.1a5.4 5.4 0 0 0-7.6 7.6L12 21l8.7-8.6a5.4 5.4 0 0 0 0-7.6Z"/></svg></div><div class="bd-human-v94-copy"><strong>মানবিক আবেদন ও জরুরি সহায়তা</strong><small>প্রয়োজনের আবেদন করুন অথবা আজকের জরুরি আবেদন দেখুন</small></div><div class="bd-human-v94-actions"><a href="humanitarian-request.html" class="primary">+ আবেদন করুন</a><a href="humanitarian.html#urgentFeed">জরুরি আবেদন দেখুন</a></div><div class="bd-sos-mini" data-bd-sos-mini>
-<div class="bd-sos-mini-title"><b>BongDang <small>sos</small> · Emergency Support</b><small>Use only for a real emergency</small></div>
-<div class="bd-sos-mini-grid">
-<a class="life" href="humanitarian-request.html?sos=1">Emergency Life Support Message</a>
-<button type="button" data-bd-sos-action="gps">Location Share</button>
-<button type="button" data-bd-sos-action="record">Voice Message</button>
-<a class="rescue" href="humanitarian.html#sosRescue">Local Rescue Support</a>
-</div>
-<div class="bd-sos-mini-note">If internet is unavailable, relay can be attempted through supported nearby devices, configured rescue gateways or connected hardware. A normal browser alone cannot guarantee offline radio or satellite delivery.</div>
-<a class="bd-sos-mini-policy" href="humanitarian-request.html?sos=1#sosMisusePolicy">Misuse policy & penalties</a>
-<div class="bd-sos-status" data-bd-sos-status></div>
-</div></section><section class="bd-feed-filter bd-feed-filter-v94 bd-glass"><h3>আপনার নিউজফিড</h3><select data-feed-filter aria-hidden="true" tabindex="-1" class="bd-feed-filter-native"><option value="all">সব</option><option value="poem">কবিতা</option><option value="recitation">আবৃত্তি</option><option value="reels">রিলস</option><option value="children">শিশুতোষ</option><option value="prolap">প্রলাপ</option><option value="letter">চিঠিপত্র</option><option value="environment">পরিবেশ</option><option value="news">নিউজ</option></select><div class="bd-feed-category-strip" data-feed-category-strip role="tablist" aria-label="নিউজফিড বিভাগ"><button type="button" data-feed-filter-button="all">সব</button><button type="button" data-feed-filter-button="poem">কবিতা</button><button type="button" data-feed-filter-button="recitation">আবৃত্তি</button><button type="button" data-feed-filter-button="reels">রিলস</button><button type="button" data-feed-filter-button="children">শিশুতোষ</button><button type="button" data-feed-filter-button="prolap">প্রলাপ</button><button type="button" data-feed-filter-button="letter">চিঠিপত্র</button><button type="button" data-feed-filter-button="environment">পরিবেশ</button><button type="button" data-feed-filter-button="news">নিউজ</button></div></section><div class="bd-posts" data-posts></div><button class="bd-see-more bd-see-more-v8" type="button" data-see-more hidden>See More</button><button class="bd-feed-top" type="button" data-feed-top aria-label="উপরে যান">⌃</button></section>`}
+function rootTpl(){return `<section class="bd-feed-root"><section class="bd-human bd-human-v94 bd-glass" aria-label="মানবিক আবেদন ও জরুরি সহায়তা"><div class="bd-human-v94-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.7 4.8a5.4 5.4 0 0 0-7.6 0L12 5.9l-1.1-1.1a5.4 5.4 0 0 0-7.6 7.6L12 21l8.7-8.6a5.4 5.4 0 0 0 0-7.6Z"/></svg></div><div class="bd-human-v94-copy"><strong>মানবিক আবেদন ও জরুরি সহায়তা</strong><small>প্রয়োজনের আবেদন করুন অথবা আজকের জরুরি আবেদন দেখুন</small></div><div class="bd-human-v94-actions"><a href="humanitarian-request.html" class="primary">+ আবেদন করুন</a><a href="humanitarian.html#urgentFeed">জরুরি আবেদন দেখুন</a></div><a class="bd-life-support-entry" href="humanitarian-request.html?sos=1#emergencyLifeSupport" aria-label="Emergency Life Support"><span class="bd-life-support-accent" aria-hidden="true"></span><span class="bd-life-support-copy"><b>Emergency Life Support</b><small>No Internet · No Local Network</small></span><span class="bd-life-support-arrow" aria-hidden="true">›</span></a></section><section class="bd-feed-filter bd-feed-filter-v94 bd-glass"><h3>আপনার নিউজফিড</h3><select data-feed-filter aria-hidden="true" tabindex="-1" class="bd-feed-filter-native"><option value="all">সব</option><option value="poem">কবিতা</option><option value="recitation">আবৃত্তি</option><option value="reels">রিলস</option><option value="children">শিশুতোষ</option><option value="prolap">প্রলাপ</option><option value="letter">চিঠিপত্র</option><option value="environment">পরিবেশ</option><option value="news">নিউজ</option></select><div class="bd-feed-category-strip" data-feed-category-strip role="tablist" aria-label="নিউজফিড বিভাগ"><button type="button" data-feed-filter-button="all">সব</button><button type="button" data-feed-filter-button="poem">কবিতা</button><button type="button" data-feed-filter-button="recitation">আবৃত্তি</button><button type="button" data-feed-filter-button="reels">রিলস</button><button type="button" data-feed-filter-button="children">শিশুতোষ</button><button type="button" data-feed-filter-button="prolap">প্রলাপ</button><button type="button" data-feed-filter-button="letter">চিঠিপত্র</button><button type="button" data-feed-filter-button="environment">পরিবেশ</button><button type="button" data-feed-filter-button="news">নিউজ</button></div></section><div class="bd-posts" data-posts></div><button class="bd-see-more bd-see-more-v8" type="button" data-see-more hidden>See More</button><button class="bd-feed-top" type="button" data-feed-top aria-label="উপরে যান">⌃</button></section>`}
 function mapPost(r){
  const meta=(r&&typeof r.metadata==='object'&&r.metadata)||{};
  const rawType=String(r.type||r.category||r.post_type||meta.type||'post').toLowerCase();
@@ -3778,117 +3763,147 @@ html[data-theme="aurora"] #bdFullPostViewer .bd-viewer-card>.bd-social>.bd-comme
  },true);
 })();
 </script>
-<style id="bd-feed-humanitarian-hotfix-20260822">
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-.bd-feed-root,.bd-feed-root *{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-.bd-human.bd-human-v94{grid-template-columns:1fr!important;gap:10px!important;padding:12px!important;align-items:stretch!important}
-.bd-human-v95-head{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center}
-.bd-human-v95-copy{min-width:0}
-.bd-human-v95-copy strong{display:block;font:800 13px/1.25 'Noto Serif Bengali',serif;color:var(--bd-text)}
-.bd-human-v95-copy small{display:block;margin-top:4px;color:var(--bd-soft);font-size:10px;line-height:1.45;white-space:normal}
-.bd-human-v94-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;width:100%!important}
-.bd-human-v94-actions a{min-height:40px!important;padding:0 12px!important;font-size:10.5px!important;border-radius:12px!important;white-space:normal!important}
-.bd-sos-mini-v95{margin-top:2px!important;padding:12px!important;border-radius:16px!important;border:1px solid rgba(86,105,147,.12)!important;background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(248,251,255,.94))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.75)}
-.bd-sos-mini-v95 .bd-sos-mini-title{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;margin-bottom:7px}
-.bd-sos-mini-v95 .bd-sos-mini-title b{font-size:12px;line-height:1.2}
-.bd-sos-mini-v95 .bd-sos-mini-title small{font-size:9px;line-height:1.25;color:var(--bd-soft)}
-.bd-sos-mini-copy{font-size:10px;line-height:1.6;color:var(--bd-text);padding:8px 10px;border-radius:11px;background:rgba(13,103,78,.06)}
-.bd-sos-mini-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.bd-sos-mini-tags span{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:999px;background:rgba(16,34,29,.06);font-size:9.5px;font-weight:800;color:var(--bd-text)}
-.bd-sos-mini-v95 .bd-sos-mini-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin-top:9px}
-.bd-sos-mini-v95 .bd-sos-mini-grid a,.bd-sos-mini-v95 .bd-sos-mini-grid button{min-height:40px!important;padding:0 10px!important;border-radius:12px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;line-height:1.25!important;font-size:10px!important;font-weight:900!important}
-.bd-sos-mini-v95 .bd-sos-mini-note{margin-top:9px;font-size:9px;line-height:1.55;color:var(--bd-soft);white-space:normal}
-.bd-sos-mini-v95 .bd-sos-mini-policy{display:inline-flex!important;margin-top:8px;font-size:9px!important}
-.bd-sos-mini-v95 .bd-sos-status{margin-top:8px}
-@media(max-width:620px){.bd-human-v95-head{grid-template-columns:40px minmax(0,1fr)}.bd-human-v95-copy strong{font-size:12px}.bd-human-v95-copy small{font-size:9.2px}.bd-human-v94-actions a{min-height:38px!important;font-size:10px!important}.bd-sos-mini-v95 .bd-sos-mini-grid{grid-template-columns:1fr 1fr!important}.bd-sos-mini-tags span{font-size:9px}}
-html[data-theme="dark"] .bd-sos-mini-v95{background:linear-gradient(145deg,#102437,#0e1f31)!important;border-color:rgba(170,191,227,.16)!important}
-html[data-theme="dark"] .bd-human-v95-copy strong,html[data-theme="dark"] .bd-human-v95-copy small,html[data-theme="dark"] .bd-sos-mini-copy,html[data-theme="dark"] .bd-sos-mini-v95 .bd-sos-mini-title b,html[data-theme="dark"] .bd-sos-mini-v95 .bd-sos-mini-title small,html[data-theme="dark"] .bd-sos-mini-tags span,html[data-theme="dark"] .bd-sos-mini-v95 .bd-sos-mini-note{color:#eef5ff!important}
-html[data-theme="dark"] .bd-sos-mini-copy{background:rgba(147,201,182,.08)!important}
-html[data-theme="dark"] .bd-sos-mini-tags span{background:#14263e!important;border:1px solid rgba(170,191,227,.14)}
-</style>
-<script data-bd-module id="bd-feed-humanitarian-hotfix-script-20260822">
-(()=>{'use strict';
-const W=window,D=document;
-const qa=(s,r=D)=>Array.from(r&&r.querySelectorAll?r.querySelectorAll(s):[]);
-function activeRegion(){
-  try{const B=W.BDRegion||{};return (typeof B.getRescueLocation==='function'&&B.getRescueLocation())||(typeof B.getHomeCountry==='function'&&B.getHomeCountry())||{}}catch(_){return {}}
-}
-function humanText(){
-  const r=activeRegion(),cc=String(r.countryCode||'').toUpperCase(),key=String(r.key||''),city=String(r.city||'').trim(),region=String(r.region||'').trim(),country=String(r.countryName||'').trim();
-  const ui=String((W.BDRegion&&((typeof W.BDRegion.uiLanguage==='function'&&W.BDRegion.uiLanguage())||W.BDRegion.uiLanguage||W.BDRegion.uiLang))||r.lang||D.documentElement.lang||'bn').toLowerCase();
-  const place=[city,region,country].filter(Boolean).join(', ');
-  if(key==='IN_HI' || ui==='hi' || String(r.lang||'').toLowerCase()==='hi') return {
-    note:(place||'आपका क्षेत्र')+' · मदद, आपात संदेश और स्थानीय सहायता — एक ही जगह।',
-    tag:'केवल वास्तविक आपात स्थिति के लिए',
-    copy:'यहाँ से मानवीय अनुरोध, लोकेशन शेयर, 30 सेकंड की वॉइस और स्थानीय रेस्क्यू सपोर्ट तक तेज़ पहुँच मिलेगी।',
-    route:'प्राइवेट लोकेशन रिले और नज़दीकी सहायता केवल उपलब्ध होने पर सक्रिय होंगे।'
-  };
-  if(key==='IN_WB' || (cc==='IN' && /west bengal|kolkata|calcutta/i.test((region+' '+city).toLowerCase()))) return {
-    note:(place||'পশ্চিমবঙ্গ')+' · মানবিক সহায়তা, জরুরি বার্তা ও লোকাল সাপোর্ট—সব এক জায়গায়।',
-    tag:'শুধু সত্যিকারের জরুরির জন্য',
-    copy:'আবেদন, লোকেশন শেয়ার, ৩০ সেকেন্ডের ভয়েস আর স্থানীয় রেসকিউ সাপোর্ট—সবকিছু রাখা হলো আরও গুছিয়ে, দ্রুত ও পরিষ্কারভাবে।',
-    route:'যখন সম্ভব, প্রাইভেট রেসকিউ রুটিং নিকটবর্তী সহায়তাকারী ও কনফিগার্ড সাপোর্টের দিকে যাবে।'
-  };
-  if(cc==='BD' || ui==='bn') return {
-    note:(place||'বাংলাদেশ')+' · প্রয়োজন হলে আবেদন করুন, জরুরিতে SOS পাঠান, আর লোকাল সাপোর্ট দ্রুত খুঁজুন।',
-    tag:'শুধু সত্যিকারের জরুরির জন্য',
-    copy:'আবেদন, লোকেশন শেয়ার, ৩০ সেকেন্ডের ভয়েস ও স্থানীয় রেসকিউ সাপোর্ট—সবকিছু এখন আরও পরিপাটি, দ্রুত ও সহজ বোঝার মতো।',
-    route:'প্রাইভেট রেসকিউ রিলে সক্রিয় হলে নিকটবর্তী সহায়তা, অনুমোদিত টিম ও কনফিগার্ড কন্ট্যাক্টের দিকে রুট হতে পারে।'
-  };
-  if(ui==='ar') return {
-    note:(place||'منطقتك')+' · المساعدة الإنسانية ورسائل الطوارئ والدعم المحلي في مكان واحد.',
-    tag:'للطوارئ الحقيقية فقط',
-    copy:'يمكنك هنا إرسال طلب إنساني أو مشاركة الموقع أو تسجيل رسالة صوتية قصيرة وطلب دعم الإنقاذ المحلي بشكل أسرع وأوضح.',
-    route:'سيتم تفعيل التوجيه الخاص للمساعدة والإنقاذ فقط عند توفر التكامل أو القنوات القريبة.'
-  };
-  return {
-    note:(place||'Your area')+' · Humanitarian help, SOS messages and local support in one place.',
-    tag:'Use only for a real emergency',
-    copy:'Humanitarian request, location share, 30-second voice and local rescue support are now presented in a cleaner, faster and easier-to-read layout.',
-    route:'Private rescue relay can route toward nearby helpers and configured contacts when such support is available.'
-  };
-}
-function buildHumanHTML(){
-  const t=humanText();
-  return `
-  <div class="bd-human-v95-head">
-    <div class="bd-human-v94-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.7 4.8a5.4 5.4 0 0 0-7.6 0L12 5.9l-1.1-1.1a5.4 5.4 0 0 0-7.6 7.6L12 21l8.7-8.6a5.4 5.4 0 0 0 0-7.6Z"/></svg></div>
-    <div class="bd-human-v95-copy"><strong>মানবিক আবেদন ও জরুরি সহায়তা</strong><small>${t.note}</small></div>
-  </div>
-  <div class="bd-human-v94-actions"><a href="humanitarian-request.html" class="primary">+ আবেদন করুন</a><a href="humanitarian.html#urgentFeed">জরুরি আবেদন দেখুন</a></div>
-  <div class="bd-sos-mini bd-sos-mini-v95" data-bd-sos-mini>
-    <div class="bd-sos-mini-title"><b>BongDang <small>sos</small> · Emergency Support</b><small>${t.tag}</small></div>
-    <div class="bd-sos-mini-copy">${t.copy}</div>
-    <div class="bd-sos-mini-tags"><span>Location Share</span><span>30s Voice</span><span>Local Rescue</span></div>
-    <div class="bd-sos-mini-grid">
-      <a class="life" href="humanitarian-request.html?sos=1">Emergency Life Support</a>
-      <button type="button" data-bd-sos-action="gps">Location Share</button>
-      <button type="button" data-bd-sos-action="record">30s Voice</button>
-      <a class="rescue" href="humanitarian.html#sosRescue">Local Rescue Support</a>
-    </div>
-    <div class="bd-sos-mini-note">${t.route}</div>
-    <a class="bd-sos-mini-policy" href="humanitarian-request.html?sos=1#sosMisusePolicy">Misuse policy & penalties</a>
-    <div class="bd-sos-status" data-bd-sos-status></div>
-  </div>`;
-}
-function patchHuman(root){
-  const human=root&&root.querySelector?root.querySelector('.bd-human'):null;
-  if(!human) return;
-  human.innerHTML=buildHumanHTML();
-}
-function patchAll(){qa('.bd-feed-root').forEach(patchHuman)}
-const mod=W.BD_MODULES&&W.BD_MODULES.feed;
-if(mod && !mod.__bdHumanHotfix){
-  const oldMount=mod.mount.bind(mod);
-  mod.mount=async function(target,opt={}){const root=await oldMount(target,opt); patchHuman(root); return root};
-  mod.__bdHumanHotfix=true;
-}
-patchAll();
-W.addEventListener('bd:experiencechange',patchAll);
-W.addEventListener('bd:rescuechange',patchAll);
-})();
-</script>
 
+<style id="bd-feed-v127-compact-life-support">
+.bd-human.bd-human-v94{
+  display:grid!important;
+  grid-template-columns:44px minmax(0,1fr)!important;
+  gap:10px 11px!important;
+  align-items:center!important;
+  padding:12px!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+}
+.bd-human-v94-mark{
+  grid-column:1!important;
+  grid-row:1!important;
+  width:42px!important;
+  height:42px!important;
+  align-self:start!important;
+}
+.bd-human-v94-copy{
+  grid-column:2!important;
+  grid-row:1!important;
+  min-width:0!important;
+}
+.bd-human-v94-copy strong{
+  display:block!important;
+  font-size:13px!important;
+  line-height:1.25!important;
+}
+.bd-human-v94-copy small{
+  display:block!important;
+  margin-top:3px!important;
+  font-size:9px!important;
+  line-height:1.35!important;
+  color:var(--bd-soft)!important;
+  white-space:normal!important;
+}
+.bd-human-v94-actions{
+  grid-column:1/-1!important;
+  grid-row:2!important;
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:8px!important;
+  width:100%!important;
+}
+.bd-human-v94-actions a{
+  min-height:38px!important;
+  padding:0 11px!important;
+  border-radius:12px!important;
+  font-size:10px!important;
+  line-height:1.2!important;
+}
+.bd-life-support-entry{
+  grid-column:1/-1!important;
+  grid-row:3!important;
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:4px minmax(0,1fr) 24px!important;
+  gap:10px!important;
+  align-items:center!important;
+  min-height:50px!important;
+  margin-top:1px!important;
+  padding:8px 9px 8px 0!important;
+  overflow:hidden!important;
+  border:1px solid rgba(198,45,58,.16)!important;
+  border-radius:12px!important;
+  background:linear-gradient(90deg,rgba(217,46,60,.095),rgba(217,46,60,.035) 72%,rgba(255,255,255,.42))!important;
+  color:var(--bd-text)!important;
+  text-decoration:none!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)!important;
+  -webkit-tap-highlight-color:transparent!important;
+  touch-action:manipulation!important;
+}
+.bd-life-support-entry::before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:0!important;
+  height:2px!important;
+  background:linear-gradient(90deg,#c91e31,#e83a4a 55%,rgba(232,58,74,.18))!important;
+}
+.bd-life-support-accent{
+  width:4px!important;
+  height:30px!important;
+  border-radius:0 4px 4px 0!important;
+  background:#d9273b!important;
+}
+.bd-life-support-copy{
+  min-width:0!important;
+  display:grid!important;
+  gap:2px!important;
+}
+.bd-life-support-copy b{
+  font:900 11px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  color:#7f1d2b!important;
+}
+.bd-life-support-copy small{
+  font:750 9px/1.25 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  color:#6f747d!important;
+  white-space:normal!important;
+}
+.bd-life-support-arrow{
+  display:grid!important;
+  place-items:center!important;
+  width:24px!important;
+  height:24px!important;
+  border-radius:50%!important;
+  background:rgba(207,34,52,.08)!important;
+  color:#b7192c!important;
+  font:500 22px/1 system-ui!important;
+}
+.bd-life-support-entry:active{
+  transform:translateY(1px)!important;
+  background:linear-gradient(90deg,rgba(217,46,60,.13),rgba(217,46,60,.05))!important;
+}
+
+/* Feed itself must never print raw browser permission errors. */
+.bd-sos-status,[data-bd-sos-status]{display:none!important}
+
+@media(max-width:520px){
+  .bd-human.bd-human-v94{
+    grid-template-columns:40px minmax(0,1fr)!important;
+    padding:11px!important;
+    gap:9px 10px!important;
+  }
+  .bd-human-v94-mark{width:40px!important;height:40px!important}
+  .bd-human-v94-copy strong{font-size:12px!important}
+  .bd-human-v94-copy small{font-size:8.6px!important}
+  .bd-human-v94-actions a{min-height:36px!important;font-size:9.6px!important}
+  .bd-life-support-entry{min-height:48px!important}
+  .bd-life-support-copy b{font-size:10.5px!important}
+  .bd-life-support-copy small{font-size:8.5px!important}
+}
+html[data-theme="dark"] .bd-life-support-entry{
+  border-color:rgba(255,101,115,.22)!important;
+  background:linear-gradient(90deg,rgba(117,27,38,.38),rgba(71,25,32,.18))!important;
+}
+html[data-theme="dark"] .bd-life-support-copy b{color:#ffb8c0!important}
+html[data-theme="dark"] .bd-life-support-copy small{color:#e2dadd!important}
+html[data-theme="dark"] .bd-life-support-arrow{background:rgba(255,95,111,.12)!important;color:#ff9aa7!important}
+</style>
 
 <style id="bd-feed-v118-noskeleton-runtime-fix">
 .bd-feed-loading,.bd-post-skeleton,.skeleton,[data-skeleton]{display:none!important}
