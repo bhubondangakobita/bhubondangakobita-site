@@ -1089,6 +1089,44 @@ W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 }
 </style>
 
+
+<style id="bd-compose-v133-publish-feedback">
+.bdc-publish{
+  position:relative!important;
+  overflow:hidden!important;
+  transition:transform .10s ease,filter .12s ease,box-shadow .12s ease!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+.bdc-publish:active{
+  transform:scale(.94)!important;
+  filter:brightness(.90)!important;
+}
+.bdc-publish.bdc-publishing,
+.bdc-publish[aria-busy="true"]{
+  cursor:progress!important;
+  opacity:1!important;
+  background:linear-gradient(135deg,#146f52,#1d9b70)!important;
+  box-shadow:0 0 0 3px rgba(55,190,139,.15),0 8px 22px rgba(18,121,84,.22)!important;
+  animation:bdcPublishPulse .85s ease-in-out infinite alternate!important;
+}
+.bdc-publish.bdc-publishing::after,
+.bdc-publish[aria-busy="true"]::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:translateX(-110%);
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.26),transparent);
+  animation:bdcPublishSweep 1s linear infinite;
+  pointer-events:none;
+}
+@keyframes bdcPublishPulse{to{filter:brightness(1.12)}}
+@keyframes bdcPublishSweep{to{transform:translateX(110%)}}
+@media(prefers-reduced-motion:reduce){
+ .bdc-publish.bdc-publishing,.bdc-publish[aria-busy="true"],
+ .bdc-publish.bdc-publishing::after,.bdc-publish[aria-busy="true"]::after{animation:none!important}
+}
+</style>
+
 </head>
 <body style="margin:0;background:transparent">
 <main id="bdComposeDemo"></main>
@@ -1295,8 +1333,20 @@ function wireEditor(s){
   if(t.matches('[data-draft-save]'))return saveComposerDraft(s,true);
   if(t.matches('[data-publish]')){
    if(s.publishing||t.disabled)return;
-   s.publishing=true;t.disabled=true;t.setAttribute('aria-busy','true');
-   Promise.resolve(publish(s)).catch(()=>{}).finally(()=>{s.publishing=false;t.disabled=false;t.removeAttribute('aria-busy')});
+   const oldLabel=t.textContent||'Publish';
+   s.publishing=true;
+   t.disabled=true;
+   t.setAttribute('aria-busy','true');
+   t.classList.add('bdc-publishing');
+   t.textContent='Publishing…';
+   try{navigator.vibrate?.(18)}catch(_){}
+   Promise.resolve(publish(s)).catch(()=>{}).finally(()=>{
+     s.publishing=false;
+     t.disabled=false;
+     t.removeAttribute('aria-busy');
+     t.classList.remove('bdc-publishing');
+     t.textContent=oldLabel
+   });
    return
   }
   if(t.matches('[data-mode]'))return setMode(s,t.dataset.mode);
@@ -1807,7 +1857,9 @@ const moderationTerms=bdDeepBadTerms((s.title||'')+'\n'+(s.body||''));
 const literaryPoem=(s.category==='poem');
 const status=(moderationTerms.length&&!literaryPoem)?'pending_review':'published';
 const image_url=await upload(s),audio_url=await uploadOne(s,s.mediaAccepted?s.audioFile:null,'audio'),video_url=await uploadOne(s,s.mediaAccepted?s.videoFile:null,'video'),media_url=video_url||audio_url||image_url||'',news_images=s.category==='news'?await Promise.all(s.newsImageFiles.filter(Boolean).map((f,i)=>uploadOne(s,f,'news-'+i))):[],template_asset_url=await uploadOne(s,s.externalTemplateFile,'template'),news_template_url=await uploadOne(s,s.newsCustomTemplateFile,'news-template'),bgm_url=await uploadOne(s,s.bgmFile,'bgm');const typography={title_font:s.mode==='premium'?s.titleFontFamily:'Noto Serif Bengali',body_font:s.mode==='premium'?s.bodyFontFamily:'Noto Serif Bengali',title_color:s.mode==='premium'?s.titleColor:'#102b4b',body_color:s.mode==='premium'?s.bodyColor:'#102b4b',title_bold:s.mode==='premium'?!!s.titleBold:true,body_bold:s.mode==='premium'?!!s.bodyBold:false};const pg=bdPageSession(),mdUser=s.session.user.user_metadata||{},author_name=(s.category==='news'&&pg?.page_name)?pg.page_name:(mdUser.full_name||mdUser.name||mdUser.display_name||mdUser.username||s.session.user.email?.split('@')[0]||'সদস্য'),author_avatar=(s.category==='news'&&pg?.logo_url)?pg.logo_url:(mdUser.avatar_url||mdUser.picture||'');const bdExp=W.BDRegion?.getExperience?.()||{},bdFeedRegion=W.BDRegion?.getFeedRegion?.()||{};
-const p={id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),author_id:s.session.user.id,author_name,author_avatar,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',language_code:bdExp.uiLanguage||'bn',title:s.title.trim(),body:s.body.trim(),type:s.category,status,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),font:typography.body_font,title_font:typography.title_font,body_font:typography.body_font,title_color:typography.title_color,body_color:typography.body_color,title_bold:typography.title_bold,body_bold:typography.body_bold,metadata:{...typography,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',feed_mode:bdExp.mode||'home',language_code:bdExp.uiLanguage||'bn',author_type:(s.category==='news'&&pg)?'page':'user',page_id:(s.category==='news'&&pg)?pg.page_id:null,page_name:(s.category==='news'&&pg)?pg.page_name:null,page_username:(s.category==='news'&&pg)?pg.username:null,page_logo_url:(s.category==='news'&&pg)?pg.logo_url:null,page_portal_url:(s.category==='news'&&pg)?pg.portal_url:null,page_verified:(s.category==='news'&&pg)?true:false,composer_mode:s.mode,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),news_template:s.category==='news'?(s.newsCustomTemplate?'custom':s.newsTemplate):null,news_template_url:news_template_url||'',news_images,template_asset_url:template_asset_url||((s.preset?.asset&&!String(s.preset.asset).startsWith('blob:'))?s.preset.asset:''),design_state:{title:s.titlePos,body:s.bodyPos,template:s.templatePos,photo:s.photoPos,news_title:s.newsTitlePos,news_body:s.newsBodyPos,news_template:s.newsTemplatePos,news_images:s.newsImagePos},studio_design:{title_size:s.titleSize,body_size:s.bodySize,line_height:s.lineHeight,letter_spacing:s.letterSpacing,align:s.align,filter:s.filter,motion:s.motion,effect:s.effect,canvas_ratio:s.canvasRatio},bgm_url:bgm_url||'',bgm_volume:s.bgmVolume||0,copyright_ack:!!s.copyrightOk,media_committed:!!s.mediaAccepted,audio_processing:{media:s.videoFile?'video':'audio',preset:s.audioPreset||'original',voice_level:s.voiceLevel||100,noise_reduction:!!s.noiseReduced,mastering:!!s.mastered,music_mix:!!s.mixedBgm,processed:!!(s.audioProcessed||s.videoAudioProcessed),preview_chain:!!s.videoAudioProcessed,live_caption_supported:!!(W.SpeechRecognition||W.webkitSpeechRecognition)},video_studio:{look:s.videoLook||'clean',brightness:s.videoBrightness||100,contrast:s.videoContrast||100,saturation:s.videoSaturation||100,preview_speed:s.videoSpeed||1}},image_url,audio_url,video_url,bgm_url,media_url,media_type:video_url?'video':audio_url?'audio':image_url?'image':'',created_at:new Date().toISOString(),composer_mode:s.mode};const editing=!!s.editingId;if(editing)p.id=s.editingId;const db=editing?await updateExistingPost(s,p):await insertPost(s,p),final={...p,...(db||{})};if(status==='pending_review'){
+const media_template=!!(image_url&&['template','premium'].includes(String(s.mode||'').toLowerCase()));
+const template_meta={...(s.preset?.meta||{}),bg:s.preset?.bg||'',ink:s.preset?.ink||'',accent:s.preset?.accent||'',frameRadius:s.preset?.frameRadius||0};
+const p={id:'local-'+Date.now()+'-'+Math.random().toString(36).slice(2,8),author_id:s.session.user.id,author_name,author_avatar,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',language_code:bdExp.uiLanguage||'bn',title:s.title.trim(),body:s.body.trim(),type:s.category,status,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),font:typography.body_font,title_font:typography.title_font,body_font:typography.body_font,title_color:typography.title_color,body_color:typography.body_color,title_bold:typography.title_bold,body_bold:typography.body_bold,metadata:{...typography,country_code:bdFeedRegion.countryCode||'',country_name:bdFeedRegion.countryName||'',region:bdFeedRegion.region||'',feed_mode:bdExp.mode||'home',language_code:bdExp.uiLanguage||'bn',author_type:(s.category==='news'&&pg)?'page':'user',page_id:(s.category==='news'&&pg)?pg.page_id:null,page_name:(s.category==='news'&&pg)?pg.page_name:null,page_username:(s.category==='news'&&pg)?pg.username:null,page_logo_url:(s.category==='news'&&pg)?pg.logo_url:null,page_portal_url:(s.category==='news'&&pg)?pg.portal_url:null,page_verified:(s.category==='news'&&pg)?true:false,composer_mode:s.mode,template:s.category==='news'?(s.newsCustomTemplate?'news-custom':('news-card-'+s.newsTemplate)):(s.mode==='ordinary'?'none':(s.mode==='template'?s.template:(s.preset?.id||'premium'))),news_template:s.category==='news'?(s.newsCustomTemplate?'custom':s.newsTemplate):null,news_template_url:news_template_url||'',news_images,template_asset_url:template_asset_url||((s.preset?.asset&&!String(s.preset.asset).startsWith('blob:'))?s.preset.asset:''),design_state:{title:s.titlePos,body:s.bodyPos,template:s.templatePos,photo:s.photoPos,news_title:s.newsTitlePos,news_body:s.newsBodyPos,news_template:s.newsTemplatePos,news_images:s.newsImagePos},studio_design:{title_size:s.titleSize,body_size:s.bodySize,line_height:s.lineHeight,letter_spacing:s.letterSpacing,align:s.align,filter:s.filter,motion:s.motion,effect:s.effect,canvas_ratio:s.canvasRatio},bgm_url:bgm_url||'',bgm_volume:s.bgmVolume||0,copyright_ack:!!s.copyrightOk,media_committed:!!s.mediaAccepted,media_template,template_meta,audio_processing:{media:s.videoFile?'video':'audio',preset:s.audioPreset||'original',voice_level:s.voiceLevel||100,noise_reduction:!!s.noiseReduced,mastering:!!s.mastered,music_mix:!!s.mixedBgm,processed:!!(s.audioProcessed||s.videoAudioProcessed),preview_chain:!!s.videoAudioProcessed,live_caption_supported:!!(W.SpeechRecognition||W.webkitSpeechRecognition)},video_studio:{look:s.videoLook||'clean',brightness:s.videoBrightness||100,contrast:s.videoContrast||100,saturation:s.videoSaturation||100,preview_speed:s.videoSpeed||1}},image_url,audio_url,video_url,bgm_url,media_url,media_type:video_url?'video':audio_url?'audio':image_url?'image':'',created_at:new Date().toISOString(),composer_mode:s.mode,media_template};const editing=!!s.editingId;if(editing)p.id=s.editingId;const db=editing?await updateExistingPost(s,p):await insertPost(s,p),final={...p,...(db||{})};if(status==='pending_review'){
   bdDeepModerationLocal('post',{post_id:final.id,title:final.title,body:final.body,category:final.type,user_id:final.author_id},moderationTerms,final.id);
   try{const a=JSON.parse(localStorage.getItem('bhubondangaPendingReviewPosts')||'[]');a.unshift(final);localStorage.setItem('bhubondangaPendingReviewPosts',JSON.stringify(a.slice(0,1000)))}catch(_){}
   try{const mc=await supa();if(mc)await mc.from('moderation_queue').insert({content_type:'post',content_id:final.id,submitted_by:final.author_id,matched_terms:moderationTerms,status:'pending'})}catch(_){}
