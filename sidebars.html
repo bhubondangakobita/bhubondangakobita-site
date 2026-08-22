@@ -1,4 +1,4 @@
-<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><meta name="bhubondanga-component" content="sidebars-20260818-v27-readable"><style id="bd-sidebars-master" data-bd-component-style="sidebars">
+<!doctype html><html lang="bn"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><meta name="bhubondanga-component" content="sidebars-v129-location-touch-open-fix-20260822"><style id="bd-sidebars-master" data-bd-component-style="sidebars">
 :root{--bd-bg:#eef3fa;--bd-card:rgba(255,255,255,.86);--bd-card2:rgba(255,255,255,.96);--bd-text:#173153;--bd-soft:#6d7d96;--bd-muted:#95a1b4;--bd-line:rgba(82,104,154,.16);--bd-green:#167a5d;--bd-red:#c64250;--bd-blue:#287bd8;--bd-violet:#7856d8;--bd-pink:#d05d9e;--bd-gold:#a8752a;--bd-shadow:0 15px 38px rgba(69,82,137,.11),inset 0 1px 0 rgba(255,255,255,.94);--bd-shadow2:0 7px 20px rgba(58,72,120,.09);--bd-grad:radial-gradient(circle at 5% 0,rgba(98,168,227,.15),transparent 30%),radial-gradient(circle at 95% 2%,rgba(182,132,225,.13),transparent 31%),linear-gradient(150deg,#fbfdff,#eef3fa 54%,#f8f5fc);--bd-head:68px;--bd-tick:30px;--bd-nav:48px;--bd-top:calc(var(--bd-head) + var(--bd-tick) + var(--bd-nav));}
 html[data-theme="dark"]{--bd-bg:#081526;--bd-card:rgba(14,29,51,.88);--bd-card2:rgba(14,29,51,.97);--bd-text:#edf4ff;--bd-soft:#c0cde1;--bd-muted:#8fa3bd;--bd-line:rgba(154,179,225,.17);--bd-green:#82cbb2;--bd-red:#ff9bb1;--bd-blue:#89b5ff;--bd-violet:#b0a0ff;--bd-pink:#f39cca;--bd-gold:#e8c780;--bd-shadow:0 18px 44px rgba(0,0,0,.31),inset 0 1px 0 rgba(255,255,255,.07);--bd-shadow2:0 8px 22px rgba(0,0,0,.22);--bd-grad:radial-gradient(circle at 9% 2%,rgba(83,118,210,.10),transparent 28%),radial-gradient(circle at 92% 5%,rgba(147,99,205,.10),transparent 30%),linear-gradient(150deg,#071320,#09192b 58%,#10182a)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;width:100%}body{background:var(--bd-grad);color:var(--bd-text);font-family:'Noto Sans Bengali','Hind Siliguri',system-ui,sans-serif}button,input,textarea,select{font:inherit;color:inherit}button,a{-webkit-tap-highlight-color:transparent}button{cursor:pointer}a{text-decoration:none;color:inherit}img{display:block;max-width:100%}.bd-glass{border:1px solid var(--bd-line);background:var(--bd-card);box-shadow:var(--bd-shadow);backdrop-filter:blur(10px) saturate(112%);-webkit-backdrop-filter:blur(10px) saturate(112%)}.bd-press{transition:transform .13s ease,box-shadow .13s ease,filter .13s ease}.bd-press:hover{transform:translateY(-2px);filter:saturate(1.03)}.bd-press:active{transform:translateY(1px) scale(.985);box-shadow:inset 0 2px 5px rgba(34,47,77,.13)}.bd-icon{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}.bd-sr{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
@@ -1224,10 +1224,104 @@ html[data-theme="dark"] .bd-lt-card-title b,html[data-theme="dark"] .bd-lt-trans
 @media(max-width:520px){.bd-lt-door{inset:6px;width:auto;right:6px;left:6px;padding:10px;border-radius:23px}.bd-lt-head{top:-10px;margin:-10px -10px 10px;padding:10px}.bd-lt-head-chip{display:none}.bd-lt-map{height:205px}.bd-lt-route-summary{grid-template-columns:1fr}.bd-lt-approval-grid{grid-template-columns:1fr 1fr}.bd-lt-targets{grid-template-columns:1fr}.bd-lt-actions{grid-template-columns:1fr 1fr 1fr}.bd-lt-quota-grid{grid-template-columns:1fr}.bd-location-touch-main{grid-template-columns:46px minmax(0,1fr) 32px}.bd-location-touch-icon{width:46px;height:46px}}
 </style>
 
-<script id="bd-sidebars-v128-location-touch-script">
+
+<style id="bd-sidebars-v129-location-touch-open-style">
+/* Actual two-wing opening gate. The interactive panel is always behind it. */
+.bd-lt-portal{
+  overflow:hidden!important;
+  touch-action:manipulation!important;
+}
+.bd-lt-gate{
+  position:fixed;
+  z-index:9753;
+  top:0;
+  bottom:0;
+  width:50.5vw;
+  pointer-events:none;
+  transition:transform .42s cubic-bezier(.22,.82,.25,1),opacity .24s ease;
+  opacity:1;
+}
+.bd-lt-gate.left{
+  left:0;
+  background:
+    radial-gradient(circle at 78% 28%,rgba(255,255,255,.28),transparent 22%),
+    linear-gradient(145deg,#0d7452,#09533d 70%,#073e2e);
+  box-shadow:18px 0 38px rgba(4,42,31,.18);
+}
+.bd-lt-gate.right{
+  right:0;
+  background:
+    radial-gradient(circle at 22% 28%,rgba(255,255,255,.24),transparent 22%),
+    linear-gradient(215deg,#e7354c,#b91932 70%,#8f1027);
+  box-shadow:-18px 0 38px rgba(88,11,29,.18);
+}
+.bd-lt-gate::after{
+  content:"";
+  position:absolute;
+  top:50%;
+  width:38px;
+  height:76px;
+  transform:translateY(-50%);
+  border-radius:18px;
+  background:rgba(255,255,255,.17);
+  border:1px solid rgba(255,255,255,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+}
+.bd-lt-gate.left::after{right:12px}
+.bd-lt-gate.right::after{left:12px}
+.bd-lt-portal.open .bd-lt-gate.left{transform:translateX(-102%);opacity:.12}
+.bd-lt-portal.open .bd-lt-gate.right{transform:translateX(102%);opacity:.12}
+
+.bd-lt-door{
+  z-index:9752!important;
+  opacity:0;
+  transform:translateY(8px) scale(.985);
+  transition:opacity .22s ease .12s,transform .28s ease .12s!important;
+}
+.bd-lt-portal.open .bd-lt-door{
+  opacity:1;
+  transform:none;
+}
+
+/* Make the sidebar card unmistakably tappable on iPhone Safari. */
+[data-bd-open-location-touch]{
+  cursor:pointer!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:rgba(214,40,63,.08)!important;
+  position:relative!important;
+  z-index:2!important;
+}
+[data-bd-open-location-touch]::after{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border-radius:inherit;
+}
+
+/* GPS state should remain legible even before permission is granted. */
+.bd-lt-location-copy small,
+[data-bd-lt-gps-line]{
+  overflow-wrap:anywhere!important;
+  white-space:normal!important;
+}
+
+/* Mobile = full rescue surface after the two wings open. */
+@media(max-width:520px){
+  .bd-lt-gate{width:50.5vw}
+  .bd-lt-door{
+    top:max(6px,env(safe-area-inset-top))!important;
+    bottom:max(6px,env(safe-area-inset-bottom))!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .bd-lt-gate,.bd-lt-door{transition:none!important}
+}
+</style>
+
+<script data-bd-module="sidebars-location-touch-v129" id="bd-sidebars-v129-location-touch-script">
 (()=>{
 'use strict';
-if(window.BDEmergencyLocationTouchV128)return;window.BDEmergencyLocationTouchV128=1;
+if(window.BDEmergencyLocationTouchV129)return;window.BDEmergencyLocationTouchV129=1;
 const W=window,D=document;
 const $=(s,r=D)=>r.querySelector(s),$$=(s,r=D)=>[...r.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -1240,7 +1334,11 @@ function lang(){return String(W.BDRegion?.uiLanguage||D.documentElement.lang||'b
 function locale(){const l=lang();return l==='bn'?'bn-BD':l==='hi'?'hi-IN':l==='ar'?'ar-AE':'en-US'}
 function t(key){const bn={title:'আপনার লোকেশন টাচ',eyebrow:'BONGDANG EMERGENCY RELAY',where:'আপনি এখন কোথায় আছেন',gps:'GPS / বর্তমান অবস্থান',map:'নিকটবর্তী রেসকিউ ও পথ',voice:'GPS-এর মতো ভয়েস দিকনির্দেশনা',voiceSub:'My Language-এ পথের নির্দেশ শুনুন',received:'ফোনে পৌঁছেছে',approved:'Approve হয়েছে',rescue:'Rescue ACK',nearest:'নিকটতম সহায়তা',targets:'কোথায় পাঠাবেন',nearUsers:'কাছাকাছি BongDang ব্যবহারকারী',nearUsersSub:'BongDang app/account চালু ও emergency relay অনুমোদিত',rescueTeam:'স্থানীয় Rescue Team',rescueTeamSub:'যাচাইকৃত rescue/support routing',actions:'জরুরি বার্তা',voiceMsg:'৩০ সেকেন্ড ভয়েস',locationMsg:'লোকেশন পাঠান',textMsg:'টেক্সট বার্তা',credits:'আপনার Remaining Emergency Balance',send:'Emergency Alert পাঠান',scan:'Available supported transport স্বয়ংক্রিয়ভাবে খোঁজা হচ্ছে',free:'Free emergency allowance',statusReady:'Emergency relay প্রস্তুত',noRoute:'লাইভ safe-route data পাওয়া যায়নি—অনুমান করে নিরাপদ রাস্তা বলা হবে না।',route:'সর্বশেষ যাচাইকৃত rescue route',noBridge:'App RF/LoRa/Satellite bridge এখন সংযুক্ত নয়',gpsOk:'GPS পাওয়া গেছে',gpsFail:'GPS পাওয়া যায়নি; সংরক্ষিত rescue location ব্যবহার হবে',voiceOn:'ভয়েস দিকনির্দেশনা চালু',voiceOff:'ভয়েস দিকনির্দেশনা বন্ধ',recording:'ভয়েস রেকর্ড হচ্ছে',recorded:'৩০ সেকেন্ডের মধ্যে ভয়েস প্রস্তুত',textLimit:'এই plan-এ text allowance নেই',sent:'Emergency relay শুরু হয়েছে',ack:'সহায়তা পাওয়া গেছে—আপনার বার্তা গ্রহণ করা হয়েছে'};
 const en={title:'Your Location Touch',eyebrow:'BONGDANG EMERGENCY RELAY',where:'Where you are now',gps:'GPS / Current position',map:'Nearby rescue & route',voice:'GPS-style voice direction',voiceSub:'Hear route guidance in My Language',received:'Phones received',approved:'Approved',rescue:'Rescue ACK',nearest:'Nearest help',targets:'Send to',nearUsers:'Nearby BongDang users',nearUsersSub:'BongDang app/account active with emergency relay permission',rescueTeam:'Local Rescue Team',rescueTeamSub:'Verified rescue/support routing',actions:'Emergency message',voiceMsg:'30 sec voice',locationMsg:'Send location',textMsg:'Text message',credits:'Remaining Emergency Balance',send:'Send Emergency Alert',scan:'Scanning available supported transports automatically',free:'Free emergency allowance',statusReady:'Emergency relay ready',noRoute:'Live safe-route data is unavailable; the system will not guess that a road is safe.',route:'Latest verified rescue route',noBridge:'App RF/LoRa/Satellite bridge is not connected',gpsOk:'GPS acquired',gpsFail:'GPS unavailable; saved rescue location will be used',voiceOn:'Voice guidance on',voiceOff:'Voice guidance off',recording:'Recording emergency voice',recorded:'Voice clip ready (max 30 sec)',textLimit:'This plan has no text allowance',sent:'Emergency relay started',ack:'Help acknowledged—your alert has been received'};return (lang()==='en'?en:bn)[key]||key}
-function region(){return W.BDRegion?.getRescueLocation?.()||read('bd-humanitarian-location',{})||{}}
+function region(){
+ const r=W.BDRegion?.getRescueLocation?.();
+ if(r&&(r.countryCode||r.countryName||Number.isFinite(+r.lat)))return r;
+ return read('bd-humanitarian-location',{})||{}
+}
 function regionLabel(){const r=region();return [r.city,r.region,r.countryName||r.country_name].filter(Boolean).join(', ')||r.label||'—'}
 function plan(){let p=String(W.BD_ENTITLEMENT?.tier||W.BD_PLAN||'').toLowerCase();if(!p){try{const x=localStorage.getItem('bd-premium-access')||'';p=/super/i.test(x)?'super':x?'premium':'free'}catch(_){p='free'}}if(p.includes('super'))return'super';if(p.includes('premium'))return'premium';return'free'}
 function usage(){const u=read(STORE,{});const k=plan();return {voice:+u[k]?.voice||0,location:+u[k]?.location||0,text:+u[k]?.text||0}}
@@ -1267,9 +1365,40 @@ return `<section class="bd-lt-door" role="dialog" aria-modal="true" aria-label="
 <section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>VOICE · LOCATION · TEXT</small><b>${t('actions')}</b></div><span class="state">30s VOICE</span></div><div class="bd-lt-actions"><button class="bd-lt-action voice" type="button" data-bd-lt-record><span>●</span><b>${t('voiceMsg')}</b></button><button class="bd-lt-action location" type="button" data-bd-lt-send-location><span>⌖</span><b>${t('locationMsg')}</b></button><button class="bd-lt-action" type="button" data-bd-lt-text-toggle><span>✎</span><b>${t('textMsg')}</b></button></div><div class="bd-lt-textbox" data-bd-lt-textbox hidden><textarea data-bd-lt-text placeholder="Emergency message"></textarea><div class="bd-lt-text-foot"><small data-bd-lt-text-limit>${q.text.left} messages · ${q.lines||0} lines each</small><button class="bd-lt-text-send" type="button" data-bd-lt-send-text>${t('send')}</button></div></div></section>
 <section class="bd-lt-card"><div class="bd-lt-card-title"><div><small>${q.label}</small><b>${t('credits')}</b></div><span class="state">NO EXPIRY UI</span></div><div class="bd-lt-quota-grid" data-bd-lt-quota>${quotaHTML()}</div><div class="bd-lt-planline"><span>${q.plan==='free'?t('free'):`${q.label} emergency allowance`} · Voice ${q.voice.max}×30s · Location ${q.location.max} · Text ${q.text.max}${q.lines?` × ${q.lines} lines`:''}</span><b>${q.label}</b></div><button class="bd-lt-send-master" type="button" data-bd-lt-send-master>${t('send')}</button><div class="bd-lt-statuslog" data-bd-lt-log>${t('statusReady')}</div></section>
 </section>`}
-function ensurePortal(){if(portal)return portal;portal=D.createElement('div');portal.className='bd-lt-portal';portal.id='bdLocationTouchPortal';D.body.appendChild(portal);portal.addEventListener('click',e=>{if(e.target===portal)close()});return portal}
-function close(){if(!portal)return;portal.classList.remove('open');try{speechSynthesis.cancel()}catch(_){}voiceGuideOn=false;if(voiceTimer){clearInterval(voiceTimer);voiceTimer=null}}
-function open(){try{W.BD_MODULES?.sidebars?.closeDrawers?.()}catch(_){}ensurePortal();portal.innerHTML=portalHTML();bindPortal();portal.classList.add('open');syncSidebar();acquireGPS();scanTransports()}
+function ensurePortal(){
+ if(portal&&portal.isConnected)return portal;
+ portal=D.getElementById('bdLocationTouchPortal');
+ if(!portal){
+   portal=D.createElement('div');
+   portal.className='bd-lt-portal';
+   portal.id='bdLocationTouchPortal';
+   portal.innerHTML='<div class="bd-lt-gate left" aria-hidden="true"></div><div class="bd-lt-gate right" aria-hidden="true"></div>';
+   D.body.appendChild(portal);
+   portal.addEventListener('click',e=>{if(e.target===portal)close()});
+ }
+ return portal
+}
+function close(){
+ if(!portal)return;
+ portal.classList.remove('open');
+ try{speechSynthesis.cancel()}catch(_){}
+ voiceGuideOn=false;
+ if(voiceTimer){clearInterval(voiceTimer);voiceTimer=null}
+ W.dispatchEvent(new CustomEvent('bd:location-touch-closed'));
+}
+function open(){
+ try{W.BD_MODULES?.sidebars?.closeDrawers?.()}catch(_){}
+ ensurePortal();
+ portal.querySelector('.bd-lt-door')?.remove();
+ portal.insertAdjacentHTML('beforeend',portalHTML());
+ bindPortal();
+ requestAnimationFrame(()=>portal.classList.add('open'));
+ syncSidebar();
+ Promise.resolve(acquireGPS()).then(()=>renderDynamic()).catch(()=>{});
+ Promise.resolve(scanTransports()).catch(()=>{});
+ try{navigator.vibrate?.(22)}catch(_){}
+ W.dispatchEvent(new CustomEvent('bd:location-touch-opened'));
+}
 function renderDynamic(){if(!portal?.classList.contains('open'))return;const trans=$('[data-bd-lt-transports]',portal);if(trans)trans.innerHTML=transportRows();const set=(s,v)=>{const el=$(s,portal);if(el)el.textContent=v};set('[data-bd-lt-received]',relay.received||0);set('[data-bd-lt-approved]',relay.approved||0);set('[data-bd-lt-rescue]',relay.rescueAck?'1':'0');set('[data-bd-lt-nearest]',relay.nearest||'—');set('[data-bd-lt-distance]',relay.nearest||'—');set('[data-bd-lt-direction]',relay.direction||'—');set('[data-bd-lt-route]',relay.routeStatus==='verified'?t('route'):'—');const ack=$('[data-bd-lt-ack-msg]',portal);if(ack){ack.textContent=relay.approved||relay.rescueAck?t('ack'):'No approval yet. Nearby relay can continue while RF/LoRa fallback is prepared.';ack.classList.toggle('red',!(relay.approved||relay.rescueAck))}const q=$('[data-bd-lt-quota]',portal);if(q)q.innerHTML=quotaHTML();syncSidebar()}
 async function acquireGPS(){const line=$('[data-bd-lt-gps-line]',portal);const b=bridge();try{let g=null;if(b?.getLocation)g=await Promise.resolve(b.getLocation());if(!g&&navigator.geolocation)g=await new Promise((resolve,reject)=>navigator.geolocation.getCurrentPosition(p=>resolve({lat:p.coords.latitude,lng:p.coords.longitude,accuracy:p.coords.accuracy}),reject,{enableHighAccuracy:true,timeout:5000,maximumAge:15000}));if(g&&Number.isFinite(+g.lat)){lastGPS={lat:+g.lat,lng:+g.lng,accuracy:+g.accuracy||0};if(line)line.textContent=t('gpsOk')+` · ${lastGPS.lat.toFixed(5)}, ${lastGPS.lng.toFixed(5)} · ±${Math.round(lastGPS.accuracy||0)}m`;log(t('gpsOk'));return lastGPS}}catch(_){ }if(line)line.textContent=t('gpsFail');log(t('gpsFail'));return null}
 async function scanTransports(){relay.transport.internet=navigator.onLine?'ready':'failed';relay.transport.bluetooth='searching';relay.transport.rf='idle';relay.transport.lora='idle';relay.transport.satellite='idle';renderDynamic();log(t('scan'));const b=bridge();if(!b){setTimeout(()=>{relay.transport.bluetooth='failed';relay.transport.rf='failed';relay.transport.lora='failed';relay.transport.satellite='paid';renderDynamic();log(t('noBridge'))},650);return}
@@ -1285,11 +1414,37 @@ async function sendText(){const q=quota();if(q.text.left<=0){log(t('textLimit'))
 function toggleVoiceGuide(){voiceGuideOn=!voiceGuideOn;const b=$('[data-bd-lt-voice-guide]',portal);if(b){b.classList.toggle('on',voiceGuideOn);const i=$('i',b);if(i)i.textContent=voiceGuideOn?'ON':'OFF'}log(voiceGuideOn?t('voiceOn'):t('voiceOff'));if(voiceGuideOn){speak(voiceDirectionText());const br=bridge();try{br?.startVoiceGuidance?.({language:lang(),location:lastGPS||region(),preferSafestVerifiedRoute:true})}catch(_){}}else{try{speechSynthesis.cancel();bridge()?.stopVoiceGuidance?.()}catch(_){}}}
 async function sendMaster(){const q=quota();const text=String($('[data-bd-lt-text]',portal)?.value||'').trim();const p={kind:'sos',voice:lastVoiceBlob?'attached':null,text:text||null,quota:q};await sendThroughBridge(p)}
 function bindPortal(){$$('[data-bd-lt-close]',portal).forEach(b=>b.onclick=close);const vg=$('[data-bd-lt-voice-guide]',portal);if(vg)vg.onclick=toggleVoiceGuide;const rec=$('[data-bd-lt-record]',portal);if(rec)rec.onclick=startRecording;const loc=$('[data-bd-lt-send-location]',portal);if(loc)loc.onclick=sendLocation;const tt=$('[data-bd-lt-text-toggle]',portal);if(tt)tt.onclick=()=>{const box=$('[data-bd-lt-textbox]',portal);box.hidden=!box.hidden};const st=$('[data-bd-lt-send-text]',portal);if(st)st.onclick=sendText;const sm=$('[data-bd-lt-send-master]',portal);if(sm)sm.onclick=sendMaster}
-D.addEventListener('click',e=>{const x=e.target.closest?.('[data-bd-open-location-touch]');if(!x)return;e.preventDefault();e.stopPropagation();open()},true);
+let bdLtLastOpenAt=0;
+function bdLtOpenFromEvent(e){
+ const x=e.target?.closest?.('[data-bd-open-location-touch]');
+ if(!x)return;
+ e.preventDefault();
+ e.stopPropagation();
+ const now=Date.now();
+ if(now-bdLtLastOpenAt<350)return;
+ bdLtLastOpenAt=now;
+ open();
+}
+D.addEventListener('click',bdLtOpenFromEvent,true);
+D.addEventListener('pointerup',e=>{
+ if(e.pointerType==='mouse')return;
+ const x=e.target?.closest?.('[data-bd-open-location-touch]');
+ if(!x)return;
+ bdLtOpenFromEvent(e);
+},{capture:true,passive:false});
 D.addEventListener('keydown',e=>{if(e.key==='Escape'&&portal?.classList.contains('open'))close()});
 W.addEventListener('bd:emergency-relay-progress',e=>applyProgress(e.detail||{}));W.addEventListener('bd:rescuechange',()=>syncSidebar());W.addEventListener('bd:sidebars-hydrated',()=>syncSidebar());
 setTimeout(syncSidebar,80);
-W.BongDangLocationTouch={open,close,scanTransports,sendEmergency:sendThroughBridge,applyProgress,getQuota:quota,getState:()=>JSON.parse(JSON.stringify(relay))};
+W.BongDangLocationTouch={
+ version:'v129',
+ ready:true,
+ open,close,scanTransports,
+ sendEmergency:sendThroughBridge,
+ applyProgress,
+ getQuota:quota,
+ getState:()=>JSON.parse(JSON.stringify(relay))
+};
+D.documentElement.dataset.bdLocationTouch='v129-ready';
 })();
 </script>
 
