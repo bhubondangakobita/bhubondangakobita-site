@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <html data-page-role="user" lang="bn">
-<head><meta content="V130-PROFILE-ACTIONS-REFINED" name="bhubondanga-build"/>
+<head><meta content="V131-PERSISTENT-DELETE" name="bhubondanga-build"/>
 <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control"/>
 <meta content="no-cache" http-equiv="Pragma">
 <meta content="0" http-equiv="Expires"/>
@@ -930,10 +930,14 @@ function pushUnique(k,p){const a=localArr(k).filter(x=>String(x.id||x.postId)!==
 function containsBad(text){const norm=v=>String(v||'').normalize('NFKC').replace(/[\u200B-\u200D\uFEFF]/g,'').toLocaleLowerCase('bn-BD').replace(/[^\p{L}\p{M}\p{N}]+/gu,' ').replace(/\s+/g,' ').trim(),words=norm(text).split(' ').filter(Boolean),found=[];for(const term of badWords){const t=norm(term).split(' ').filter(Boolean);for(let i=0;i<=words.length-t.length;i++){if(t.every((w,j)=>words[i+j]===w)){found.push(term);break}}}return [...new Set(found)]}
 
 const moderationFunny="বস, আপনার কবিতাটা অত্যন্ত সুন্দর, কিন্তু আমি তো গালি ডিটেক্টর—গালি দেখলেই আমার মাথা খারাপ হয়ে যায়! 😄 তাই আপনার পোস্টটা ফাউন্ডার এবং অ্যাডমিনের ড্যাশবোর্ডে পাঠিয়ে দিচ্ছি। তারা যদি হজম করতে পারেন, তাহলে অতি শীঘ্রই আপনার প্রোফাইল এবং ইনডেক্সে পোস্ট হয়ে যাবে।";
+const BD_DELETED_POSTS_KEY='bd-deleted-posts-v2';
+function bdDeletedPostSet(){try{const a=JSON.parse(localStorage.getItem(BD_DELETED_POSTS_KEY)||'[]');return new Set((Array.isArray(a)?a:[]).map(String).filter(Boolean))}catch{return new Set()}}
+function bdRememberDeleted(ids){try{const s=bdDeletedPostSet();for(const id of ids||[])if(id)s.add(String(id));localStorage.setItem(BD_DELETED_POSTS_KEY,JSON.stringify([...s].slice(-2000)))}catch{}}
+function bdProfilePostDeleted(p){const s=bdDeletedPostSet();return [p?.id,p?.postId,p?.post_id,p?.canonicalId,p?.canonical_post_id,...(p?._aliasIds||[])].filter(Boolean).map(String).some(v=>s.has(v))}
 function removeLocalPostEverywhere(id){
   const pid=String(id||'');if(!pid)return;
-  const keys=['bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts','bhubondangaTodayPoemPosts','bhubondangaPublishedPoems','bhubondangaRecitationPosts','bhubondangaPublishedRecitations','bhubondangaTodayProlapPosts','bhubondangaPublishedProlaps','bhubondangaPublishedMidnightProlaps','bhubondangaMidnightProlaps','bhubondangaLetterPosts','bhubondangaPublishedEnvironmentPosts','bhubondangaEnvironmentPosts','bhubondangaHumanitarianPosts','bhubondangaDiscussionPosts','bhubondangaPendingReviewPosts'];
-  for(const k of keys){const a=localArr(k);if(!a.length)continue;const b=a.filter(x=>String(x?.id||x?.postId||'')!==pid);if(b.length!==a.length)localSave(k,b)}
+  const keys=['bd-local-posts','bd-posts','bhubondanga-posts','bhubondanga_posts','bhubondangaHomeUserPosts','bhubondangaPublishedPosts','bhubondangaIndexFeedPosts','bhubondangaNewsfeedPosts','bhubondangaHomeFeedPosts','bhubondangaProfilePosts','bhubondangaTodayPoemPosts','bhubondangaPublishedPoems','bhubondangaRecitationPosts','bhubondangaPublishedRecitations','bhubondangaTodayProlapPosts','bhubondangaPublishedProlaps','bhubondangaPublishedMidnightProlaps','bhubondangaMidnightProlaps','bhubondangaLetterPosts','bhubondangaPublishedEnvironmentPosts','bhubondangaEnvironmentPosts','bhubondangaHumanitarianPosts','bhubondangaDiscussionPosts','bhubondangaPendingReviewPosts','bd-feed-canonical-cache-v1'];
+  for(const k of keys){const a=localArr(k);if(!a.length)continue;const b=a.filter(x=>![x?.id,x?.postId,x?.post_id,x?.canonicalId,x?.canonical_post_id].filter(Boolean).map(String).includes(pid));if(b.length!==a.length)localSave(k,b)}
   for(const k of ['bhubondangaAdminModerationQueue','bhubondangaFounderModerationQueue']){const a=localArr(k);if(!a.length)continue;const b=a.filter(x=>String(x?.postId||x?.post?.id||'')!==pid);if(b.length!==a.length)localSave(k,b)}
   try{const all=JSON.parse(localStorage.getItem('bhubondangaProfileTitleArchive')||'{}');let changed=false;for(const k of Object.keys(all||{}))if(Array.isArray(all[k])){const b=all[k].filter(x=>String(x?.id||x?.postId||'')!==pid);if(b.length!==all[k].length){all[k]=b;changed=true}}if(changed)localStorage.setItem('bhubondangaProfileTitleArchive',JSON.stringify(all))}catch{}
 }
@@ -982,7 +986,7 @@ async function deleteOwnedPost(id,card){
       if(!del.data?.length){const verify=await sb.from('posts').select('id').eq('id',pid).limit(1).maybeSingle();if(!verify.error&&verify.data)throw new Error('Supabase পোস্টটি মুছতে অনুমতি দেয়নি')}
     }
   }
-  const anchor=card?.nextElementSibling||card?.previousElementSibling||null,top=anchor?.getBoundingClientRect?.().top||0;removeLocalPostEverywhere(pid);state.posts=state.posts.filter(x=>String(x.id)!==pid);card?.remove();loadStats();if(anchor?.isConnected)requestAnimationFrame(()=>{const now=anchor.getBoundingClientRect().top;const d=now-top;if(Math.abs(d)>2)window.scrollBy(0,d)});return true;
+  const anchor=card?.nextElementSibling||card?.previousElementSibling||null,top=anchor?.getBoundingClientRect?.().top||0;bdRememberDeleted([pid]);removeLocalPostEverywhere(pid);state.posts=state.posts.filter(x=>String(x.id)!==pid&&!bdProfilePostDeleted(x));card?.remove();loadStats();if(anchor?.isConnected)requestAnimationFrame(()=>{const now=anchor.getBoundingClientRect().top;const d=now-top;if(Math.abs(d)>2)window.scrollBy(0,d)});return true;
 }
 function formatDate(v){try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka',day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date(v))}catch{return''}}
 function profileRoute(p){const role=String(p?.role||p?.author_role||p?.profile_role||'user').trim().toLowerCase(),id=p?.id||p?.user_id||p?.author_id||p?.profile_id||'',u=p?.username||p?.author_username||'';if(role==='founder'||role==='প্রতিষ্ঠাতা')return'founder-profile.html';if(role==='admin'||role==='অ্যাডমিন')return'admin-profile.html?user='+encodeURIComponent(id||u);return'profile.html?user='+encodeURIComponent(id||u)}
@@ -1296,7 +1300,7 @@ async function loadPosts(){
       return !!((tid&&aid&&aid===tid)||(tu&&au&&au===tu))
     }).sort((a,b)=>new Date(b.created_at)-new Date(a.created_at))
   }
-  rows=rows.filter(p=>['published','published_flagged'].includes(String(p.status||'published')));
+  rows=rows.filter(p=>['published','published_flagged'].includes(String(p.status||'published'))&&!bdProfilePostDeleted(p));
   if(!state.owner)rows=rows.filter(p=>String(p.visibility||p.privacy||'public')!=='only_me');
   rows=bdV93DedupeProfileUpdates(rows);
   // One canonical identity: a profile/cover/name change is reflected on every post without rewriting post IDs.
@@ -1939,7 +1943,7 @@ function say(s){try{if(typeof toast==='function')toast(s);else alert(s)}catch{}}
 function client(){try{return (typeof sb!=='undefined'&&sb)||window.bdSupabase||window.supabaseClient||window.bhubondangaSupabase||null}catch{return window.bdSupabase||window.supabaseClient||null}}
 function meId(){try{return state?.me?.id||state?.session?.user?.id||''}catch{return''}}
 async function hardDelete(card){const id=pid(card);if(!id)return;const uid=meId();if(!confirm('এই পোস্টটি স্থায়ীভাবে মুছে ফেলবেন?'))return;const c=client();if(c){let r;try{let q=c.from('posts').delete().eq('id',id);if(uid)q=q.eq('author_id',uid);r=await q.select('id')}catch(err){throw err}if(r?.error)throw r.error;if(!r?.data?.length){try{const v=await c.from('posts').select('id').eq('id',id).limit(1).maybeSingle();if(!v.error&&v.data)throw new Error('Supabase এই পোস্টটি মুছতে অনুমতি দেয়নি।')}catch(err){if(err?.message?.includes('অনুমতি'))throw err}}}
-removeLocal(id);try{if(typeof state!=='undefined'&&Array.isArray(state.posts))state.posts=state.posts.filter(x=>String(x.id)!==id)}catch{}card.remove();try{if(typeof loadStats==='function')loadStats()}catch{}say('পোস্ট মুছে ফেলা হয়েছে');}
+bdRememberDeleted([id]);removeLocalPostEverywhere(id);removeLocal(id);try{if(typeof state!=='undefined'&&Array.isArray(state.posts))state.posts=state.posts.filter(x=>String(x.id)!==id&&!bdProfilePostDeleted(x))}catch{}card.remove();try{if(typeof loadStats==='function')loadStats()}catch{}say('পোস্ট মুছে ফেলা হয়েছে');}
 function openCaption(card){const id=pid(card);if(!id)return;D.querySelectorAll('.bd57-caption-editor').forEach(x=>x.remove());let current='';try{current=state?.posts?.find?.(p=>String(p.id)===id)?.caption||''}catch{}const old=card.querySelector('.post-caption');if(!current&&old)current=old.textContent.trim();const box=D.createElement('div');box.className='bd57-caption-editor';box.innerHTML='<textarea maxlength="500" aria-label="ক্যাপশন" placeholder="ক্যাপশন লিখুন…"></textarea><div><button type="button" data-bd57-cap-cancel>বাতিল</button><button class="save" type="button" data-bd57-cap-save>সংরক্ষণ</button></div>';box.querySelector('textarea').value=current;(card.querySelector('.post-media,.post-body')||card).insertAdjacentElement('afterend',box);box.querySelector('textarea').focus({preventScroll:true})}
 async function saveCaption(box){const card=box.closest('.post'),id=pid(card),value=box.querySelector('textarea')?.value.trim()||'',c=client(),uid=meId();let online=false;if(c){for(const patch of [{caption:value},{media_caption:value}]){try{let q=c.from('posts').update({...patch,updated_at:new Date().toISOString()}).eq('id',id);if(uid)q=q.eq('author_id',uid);const r=await q;if(!r.error){online=true;break}}catch{}}}patchLocal(id,{caption:value,media_caption:value});try{const p=state?.posts?.find?.(p=>String(p.id)===id);if(p)p.caption=value}catch{}let cap=card.querySelector('.post-caption');if(value){if(!cap){cap=D.createElement('div');cap.className='post-caption';(card.querySelector('.post-media,.post-body')||card).insertAdjacentElement('afterend',cap)}cap.textContent=value}else cap?.remove();box.remove();say(online?'ক্যাপশন সংরক্ষণ হয়েছে':'ক্যাপশন এই ডিভাইসে সংরক্ষণ হয়েছে')}
 D.addEventListener('click',async e=>{const del=e.target.closest('[data-post-option="delete"]');if(del){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{await hardDelete(del.closest('.post'))}catch(err){console.error('V8.57 delete',err);say(err?.message||'পোস্ট মুছতে সমস্যা হয়েছে')}return}const cap=e.target.closest('[data-post-option="caption"]');if(cap){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openCaption(cap.closest('.post'));return}const cancel=e.target.closest('[data-bd57-cap-cancel]');if(cancel){e.preventDefault();cancel.closest('.bd57-caption-editor')?.remove();return}const save=e.target.closest('[data-bd57-cap-save]');if(save){e.preventDefault();await saveCaption(save.closest('.bd57-caption-editor'));return}},true);
@@ -2792,6 +2796,103 @@ W.addEventListener('storage',e=>{
   if(c){bdV161SetFollowerCount(c.followers);document.querySelectorAll('[data-v75-following-count]').forEach(x=>x.textContent=typeof bn==='function'?bn(c.following):String(c.following))}
  }catch(_){}
 });
+})();
+</script>
+
+
+<style id="bd-v142-reference-profile-visual-lock">
+:root{--bd-ref-red:#ff2432;--bd-ref-blue:#168dff;--bd-ref-purple:#7c3cff;--bd-ref-dark:#07101b;--bd-ref-card:#0c1624}
+/* Reference screen outline: one clean red perimeter, no extra page frame. */
+#bdReferenceScreenOutline{position:fixed;inset:1px;z-index:2147483646;pointer-events:none;border:2px solid var(--bd-ref-red);border-radius:30px;box-shadow:none!important}
+@media(max-width:520px){#bdReferenceScreenOutline{border-width:2px;border-radius:26px}}
+
+/* Visitor actions follow the supplied reference. Keep the rest of Profile untouched. */
+#profileActions.bd140-actions{background:transparent!important;border:0!important;box-shadow:none!important}
+.bd140-visitor-row{gap:10px!important}
+.bd140-follow,.bd140-secondary{height:48px!important;min-height:48px!important;max-height:48px!important;border-radius:999px!important;font-weight:500!important;letter-spacing:0!important}
+.bd140-follow{
+  background:linear-gradient(180deg,#050706,#0a0d0b)!important;
+  color:#fff!important;
+  border:1.25px solid var(--bd-ref-blue)!important;
+  box-shadow:0 0 0 1px rgba(30,150,255,.42),0 0 12px rgba(28,124,255,.20)!important;
+  font-size:13px!important;font-weight:500!important
+}
+.bd140-follow.is-following{background:linear-gradient(180deg,#09110e,#0e1713)!important;color:#fff!important}
+.bd140-follow .bd140-plus{font-weight:400!important;font-size:24px!important;color:#fff!important}
+.bd140-secondary{
+  padding:0!important;overflow:hidden!important;
+  display:flex!important;flex-direction:row-reverse!important;align-items:stretch!important;justify-content:stretch!important;gap:0!important;
+  background:#fff!important;border:1.25px solid var(--bd-ref-blue)!important;
+  box-shadow:0 0 0 1px rgba(30,150,255,.25)!important
+}
+.bd140-secondary.bd140-request{border-style:solid!important}
+.bd140-secondary .bd140-copy{
+  flex:1 1 auto!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  color:#25365c!important;font-size:12px!important;font-weight:500!important;padding:0 10px!important
+}
+.bd140-secondary .bd140-send{
+  flex:0 0 31%!important;width:auto!important;min-width:56px!important;height:100%!important;
+  display:grid!important;place-items:center!important;margin:0!important;
+  color:#fff!important;background:linear-gradient(145deg,#a34eff,#6338f2 58%,#315ee9)!important;
+  border-right:1px solid rgba(34,108,224,.42)!important
+}
+.bd140-secondary .bd140-send svg{display:none!important}
+.bd140-secondary .bd140-send::before{
+  content:"•••"!important;display:grid!important;place-items:center!important;
+  width:25px!important;height:21px!important;padding-bottom:3px!important;
+  border:1.55px solid currentColor!important;border-radius:50%!important;
+  font:500 10px/1 Arial,sans-serif!important;letter-spacing:1px!important;color:#fff!important
+}
+
+/* Profile feed has only post outlines; the humanitarian/emergency promo never appears here. */
+#feed .bd-human,#feed .bd-human-v94,#feed [data-bd-humanitarian],#feed [data-bd-emergency-life]{display:none!important}
+#feed .bd-post,#feed article.post,#feed .bd-live-post{border-color:rgba(238,48,61,.72)!important;box-shadow:none!important}
+
+/* Dark mode follows the supplied deep navy/black reference, without altering canonical reactions/comments/shares. */
+html[data-theme="dark"] body{background:radial-gradient(circle at 52% -8%,rgba(52,61,97,.14),transparent 32%),linear-gradient(180deg,#070d17,#08111d 52%,#070d17)!important;color:#eef3fb!important}
+html[data-theme="dark"] .profile-card,
+html[data-theme="dark"] .tabs,
+html[data-theme="dark"] .composer,
+html[data-theme="dark"] .archive,
+html[data-theme="dark"] .section-head,
+html[data-theme="dark"] .post-list{background:linear-gradient(155deg,rgba(13,22,36,.98),rgba(8,16,28,.98))!important;border-color:rgba(145,164,196,.12)!important;box-shadow:none!important}
+html[data-theme="dark"] .hero-info{background:linear-gradient(180deg,#0b1421,#0a1320)!important}
+html[data-theme="dark"] .appbar{background:rgba(8,16,28,.96)!important;border-color:rgba(145,164,196,.10)!important}
+html[data-theme="dark"] .name-row h2,
+html[data-theme="dark"] #profileName,
+html[data-theme="dark"] .bio,
+html[data-theme="dark"] .tab{color:#eef3fb!important}
+html[data-theme="dark"] .location{color:#9ba9bc!important}
+html[data-theme="dark"] .tab.active{color:#9b5cff!important}
+html[data-theme="dark"] .tab.active:after{background:#8d47ff!important}
+html[data-theme="dark"] .prompt,
+html[data-theme="dark"] .field,
+html[data-theme="dark"] .textarea{background:#0b1523!important;color:#e9eff8!important;border-color:rgba(145,164,196,.13)!important;box-shadow:none!important}
+html[data-theme="dark"] .bd140-follow{background:linear-gradient(180deg,#030605,#080c09)!important;border-color:#168dff!important;box-shadow:0 0 0 1px rgba(40,156,255,.55),0 0 14px rgba(28,124,255,.25)!important}
+html[data-theme="dark"] .bd140-secondary{background:#0a1320!important;border-color:#168dff!important;box-shadow:0 0 0 1px rgba(40,156,255,.34)!important}
+html[data-theme="dark"] .bd140-secondary .bd140-copy{color:#eef3fb!important;font-weight:500!important}
+html[data-theme="dark"] .bd140-secondary .bd140-send{background:linear-gradient(145deg,#9c48ff,#6735f0 58%,#304fd5)!important}
+html[data-theme="dark"] #feed .bd-post,
+html[data-theme="dark"] #feed article.post,
+html[data-theme="dark"] #feed .bd-live-post{background:linear-gradient(155deg,#0d1725,#09131f)!important;border-color:rgba(238,48,61,.68)!important;box-shadow:none!important}
+
+/* Changed controls stay slim; canonical Like/Comment/Share CSS is deliberately not overridden. */
+@media(max-width:720px){
+  .bd140-follow,.bd140-secondary{height:45px!important;min-height:45px!important;max-height:45px!important}
+  .bd140-follow{font-size:11.5px!important;font-weight:500!important}
+  .bd140-secondary .bd140-copy{font-size:10.8px!important;font-weight:500!important}
+  .bd140-secondary .bd140-send{min-width:50px!important}
+}
+</style>
+
+<script id="bd-v142-profile-reference-runtime">
+(()=>{'use strict';
+ const D=document;
+ if(!D.getElementById('bdReferenceScreenOutline')){const x=D.createElement('div');x.id='bdReferenceScreenOutline';x.setAttribute('aria-hidden','true');D.body.appendChild(x)}
+ const stripHuman=()=>{const f=D.getElementById('feed');if(!f)return;f.querySelectorAll('.bd-human,.bd-human-v94,[data-bd-humanitarian]').forEach(n=>n.remove())};
+ stripHuman();
+ const mo=new MutationObserver(stripHuman);mo.observe(D.documentElement,{subtree:true,childList:true});
+ D.addEventListener('bd:profile-shared-ready',stripHuman);window.addEventListener('bd:supabase-ready',()=>setTimeout(stripHuman,0));
 })();
 </script>
 
