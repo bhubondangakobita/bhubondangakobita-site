@@ -819,7 +819,32 @@ W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 #bd897TopArrow{mix-blend-mode:normal!important}
 </style>
 
-<style id="bd-v140-delete-visible">.post-menu-panel button.danger,[data-post-option="delete"]{color:#bd3349!important;font-weight:900!important}</style></head>
+<style id="bd-v140-delete-visible">.post-menu-panel button.danger,[data-post-option="delete"]{color:#bd3349!important;font-weight:900!important}</style>
+<style id="bd-v142-message-circle-arrow-fix">
+/* Message/Ask icon: the arrow now lives INSIDE the same three-dot circle. */
+.bd140-secondary .bd140-send{
+  width:31px!important;height:31px!important;min-width:31px!important;
+  display:grid!important;place-items:center!important;color:#d94450!important;
+  overflow:visible!important;
+}
+.bd140-secondary .bd140-send svg{
+  width:31px!important;height:31px!important;display:block!important;overflow:visible!important;
+  fill:none!important;stroke:currentColor!important;stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+.bd140-secondary .bd140-send .bd140-chat-ring{stroke-width:1.6!important;fill:transparent!important}
+.bd140-secondary .bd140-send .bd140-chat-dot{stroke:none!important;fill:currentColor!important}
+.bd140-secondary .bd140-send .bd140-chat-arrow{stroke-width:1.65!important;fill:none!important}
+@media(max-width:720px){
+  .bd140-secondary .bd140-send{width:28px!important;height:28px!important;min-width:28px!important}
+  .bd140-secondary .bd140-send svg{width:28px!important;height:28px!important}
+}
+@media(max-width:390px){
+  .bd140-secondary .bd140-send{width:27px!important;height:27px!important;min-width:27px!important}
+  .bd140-secondary .bd140-send svg{width:27px!important;height:27px!important}
+}
+html[data-theme="dark"] .bd140-secondary .bd140-send{color:#f16e79!important}
+</style>
+</head>
 <body>
 <div class="status" id="connectionStatus">প্রোফাইল প্রস্তুত হচ্ছে…</div>
 <div class="shell">
@@ -834,7 +859,7 @@ W.addEventListener('bd:rescuechange',()=>{syncRescueLabels();updateSOS(D)});
 <div class="bio" id="bio" tabindex="0" title="ডাবল ক্লিক/ডাবল ট্যাপ করে Bio সম্পাদনা করুন">বাংলা সাহিত্য, সৃজনশীলতা ও মানবতার সঙ্গে পথ চলি।</div><small class="bio-hint" hidden="" id="bioHint"></small>
 <div class="bd140-actions" id="profileActions"><div class="bd140-visitor-row">
 <button class="bd140-follow" data-click="follow" type="button"><span class="bd140-plus">+</span><span>Follow</span></button>
-<a class="bd140-secondary bd140-message" href="#"><span class="bd140-copy">Message</span><span class="bd140-send">➤</span></a>
+<a class="bd140-secondary bd140-message" href="#"><span class="bd140-copy">Message</span><span class="bd140-send" aria-hidden="true"><svg viewBox="0 0 32 32"><circle class="bd140-chat-ring" cx="16" cy="16" r="12.5"/><circle class="bd140-chat-dot" cx="11.5" cy="14.2" r="1.25"/><circle class="bd140-chat-dot" cx="16" cy="14.2" r="1.25"/><circle class="bd140-chat-dot" cx="20.5" cy="14.2" r="1.25"/><path class="bd140-chat-arrow" d="M12.2 20.2h7.2M16.8 17.6l2.8 2.6-2.8 2.6"/></svg></span></a>
 </div></div>
 <div class="profile-popover" hidden="" id="profileMenu"></div>
 <section class="inline-profile-editor" hidden="" id="inlineProfileEditor">
@@ -1153,7 +1178,7 @@ function renderActions(){
       <button class="bd140-follow ${state.followed?'is-following':''}" type="button" data-click="follow" aria-label="${state.followed?'Following':(state.targetFollowsMe?'Follow Back':'Follow')}"><span class="bd140-plus">${state.followed?'✓':'+'}</span><span>${state.followed?'Following':(state.targetFollowsMe?'Follow Back':'Follow')}</span></button>
       <a class="bd140-secondary ${secondaryClass}" href="${secondaryHref}" aria-label="${secondaryLabel}">
         <span class="bd140-copy">${secondaryLabel}</span>
-        <span class="bd140-send"><svg viewBox="0 0 24 24"><path d="m6 5 13 7-13 7 3-7-3-7Z"/><path d="M9 12h9"/></svg></span>
+        <span class="bd140-send" aria-hidden="true"><svg viewBox="0 0 32 32"><circle class="bd140-chat-ring" cx="16" cy="16" r="12.5"/><circle class="bd140-chat-dot" cx="11.5" cy="14.2" r="1.25"/><circle class="bd140-chat-dot" cx="16" cy="14.2" r="1.25"/><circle class="bd140-chat-dot" cx="20.5" cy="14.2" r="1.25"/><path class="bd140-chat-arrow" d="M12.2 20.2h7.2M16.8 17.6l2.8 2.6-2.8 2.6"/></svg></span>
       </a>
     </div>`;
   }
@@ -2897,29 +2922,56 @@ html[data-theme="dark"] #feed .bd-live-post{background:linear-gradient(155deg,#0
 </script>
 
 
-<style id="bd-v143-continuous-profile-feed-lock">
-/* Profile feeds use the same continuous Bhubondanga surface: no individual post frame. */
-#feed{gap:0!important;}
-#feed .bd-post,#feed article.post,#feed .bd-live-post{
-  border:0!important;
-  border-radius:0!important;
+
+<style id="bd-v144-fullscreen-perimeter-and-profile-card-restore">
+/* One red perimeter around the full viewport only. */
+#bdReferenceScreenOutline{
+  position:fixed!important;
+  top:0!important;right:0!important;bottom:0!important;left:0!important;
+  width:100vw!important;height:100dvh!important;
+  box-sizing:border-box!important;
+  pointer-events:none!important;
+  z-index:2147483646!important;
+  border:2px solid #ff1f2f!important;
+  border-radius:28px!important;
+  outline:0!important;
   box-shadow:none!important;
+}
+@media(max-width:520px){#bdReferenceScreenOutline{border-radius:24px!important}}
+/* Profile feed posts stay individual, readable white cards. No red outline per post. */
+#feed{gap:12px!important;}
+#feed .bd-post,#feed article.post,#feed .bd-live-post{
   margin-top:0!important;
-  margin-bottom:0!important;
-  background:transparent!important;
+  margin-bottom:12px!important;
+  border:1px solid var(--line)!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:var(--shadow)!important;
+  overflow:hidden!important;
 }
-#feed .bd-post::before,#feed .bd-post::after,#feed article.post::before,#feed article.post::after,#feed .bd-live-post::before,#feed .bd-live-post::after{
-  border:0!important;box-shadow:none!important;
-}
+#feed .bd-post::before,#feed article.post::before,#feed .bd-live-post::before{content:none!important;}
 html[data-theme="dark"] #feed .bd-post,
 html[data-theme="dark"] #feed article.post,
 html[data-theme="dark"] #feed .bd-live-post{
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
-  background:transparent!important;
+  border-color:rgba(145,164,196,.13)!important;
+  border-radius:18px!important;
+  background:linear-gradient(155deg,#0d1725,#09131f)!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.025)!important;
 }
-/* Canonical Like / Reaction / Comment / Share controls are not changed here. */
+/* Existing Bhubondanga Like / Reaction / Comment / Share is not overridden. */
 </style>
+
+<style id="bd-v145-profile-feed-edge-to-edge">
+/* On mobile the profile Home feed uses the full available width with no empty side gutter. */
+@media(max-width:960px){
+  #feed{width:calc(100% + 20px)!important;margin-left:-10px!important;margin-right:-10px!important;max-width:none!important;}
+  #feed .bd-feed-root,#feed .bd-posts{width:100%!important;max-width:none!important;}
+  #feed .bd-post,#feed article.post,#feed .bd-live-post{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;}
+}
+@media(max-width:720px){#feed{width:calc(100% + 16px)!important;margin-left:-8px!important;margin-right:-8px!important;}}
+@media(max-width:430px){#feed{width:calc(100% + 12px)!important;margin-left:-6px!important;margin-right:-6px!important;}}
+/* Canonical Like / Reaction / Comment / Share remains untouched. */
+</style>
+
 </body>
 </html>
